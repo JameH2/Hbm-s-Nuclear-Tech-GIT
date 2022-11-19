@@ -83,8 +83,14 @@ public class EntityMissileCustom extends Entity implements IChunkLoader, IRadarD
 	}
 
 	private void killMissile() {
+		ItemMissile part1 = (ItemMissile) Item.getItemById(this.dataWatcher.getWatchableObjectInt(9));
+		WarheadType type1 = (WarheadType) part1.attributes[0];
+		if(type1 == WarheadType.MIRV){
+			mirvSplit();   		
+		}
 		ExplosionLarge.explode(worldObj, posX, posY, posZ, 5, true, false, true);
 		ExplosionLarge.spawnShrapnelShower(worldObj, posX, posY, posZ, motionX, motionY, motionZ, 15, 0.075);
+		
 	}
 
 	public EntityMissileCustom(World world, float x, float y, float z, int a, int b, MissileStruct template) {
@@ -303,8 +309,20 @@ public class EntityMissileCustom extends Entity implements IChunkLoader, IRadarD
 		
 		
 		if(type1 == WarheadType.MIRV){
+			mirvSplit();   		
+		}
 
-			int targetHeight = worldObj.getHeightValue((int)this.posX,(int)this.posZ) + 250;
+		loadNeighboringChunks((int) (posX / 16), (int) (posZ / 16));
+		
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean isInRangeToRenderDist(double distance) {
+		return distance < 2500000;
+	}
+    public void mirvSplit(){
+    	int targetHeight = worldObj.getHeightValue((int)this.posX,(int)this.posZ) + 250;
     		if((motionY <= 0) && this.posY<targetHeight) {
 				MainRegistry.logger.log(Level.INFO, targetHeight + "was the target height");
     			
@@ -335,16 +353,8 @@ public class EntityMissileCustom extends Entity implements IChunkLoader, IRadarD
 					
     			}
     		}
-        
-		loadNeighboringChunks((int) (posX / 16), (int) (posZ / 16));
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean isInRangeToRenderDist(double distance) {
-		return distance < 2500000;
-	}
-
+		
+	
 	public void onImpact() {
 
 		ItemMissile part = (ItemMissile) Item.getItemById(this.dataWatcher.getWatchableObjectInt(9));
