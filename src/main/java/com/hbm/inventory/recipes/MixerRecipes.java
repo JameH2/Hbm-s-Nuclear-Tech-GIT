@@ -30,15 +30,17 @@ public class MixerRecipes {
 
 		recipes.put(Fluids.SOLVENT, new MixerRecipe(1000, 50).setStack1(new FluidStack(Fluids.NAPHTHA, 500)).setStack2(new FluidStack(Fluids.AROMATICS, 500)));
 		recipes.put(Fluids.SULFURIC_ACID, new MixerRecipe(500, 50).setStack1(new FluidStack(Fluids.ACID, 800)).setSolid(new OreDictStack(OreDictManager.S.dust())));
-		recipes.put(Fluids.NITRIC_ACID, new MixerRecipe(500, 50).setStack1(new FluidStack(Fluids.SULFURIC_ACID, 500)).setSolid(new OreDictStack(OreDictManager.KNO.dust())));
+		recipes.put(Fluids.NITRIC_ACID, new MixerRecipe(500, 50).setStack1(new FluidStack(Fluids.AMMONIA, 1000)).setStack2(new FluidStack(Fluids.WATER, 500)));
 		recipes.put(Fluids.SCHRABIDIC, new MixerRecipe(16_000, 100).setStack1(new FluidStack(Fluids.SAS3, 8_000)).setStack2(new FluidStack(Fluids.ACID, 6_000)).setSolid(new ComparableStack(ModItems.pellet_charged)));
-		
+
 		recipes.put(Fluids.LUBRICANT, new MixerRecipe(1_000, 20).setStack1(new FluidStack(Fluids.HEATINGOIL, 500)).setStack2(new FluidStack(Fluids.UNSATURATEDS, 500)));
 		recipes.put(Fluids.PETROIL, new MixerRecipe(1_000, 30).setStack1(new FluidStack(Fluids.RECLAIMED, 800)).setStack2(new FluidStack(Fluids.LUBRICANT, 200)));
 
 		recipes.put(Fluids.PETROIL_LEADED, new MixerRecipe(1_000, 40).setStack1(new FluidStack(Fluids.PETROIL, 800)).setSolid(new ComparableStack(ModItems.antiknock)));
 		recipes.put(Fluids.GASOLINE_LEADED, new MixerRecipe(1_000, 40).setStack1(new FluidStack(Fluids.GASOLINE, 800)).setSolid(new ComparableStack(ModItems.antiknock)));
 		recipes.put(Fluids.COALGAS_LEADED, new MixerRecipe(1_000, 40).setStack1(new FluidStack(Fluids.COALGAS, 800)).setSolid(new ComparableStack(ModItems.antiknock)));
+		
+		recipes.put(Fluids.MINSOL, new MixerRecipe(1_000, 40).setStack1(new FluidStack(Fluids.FRACKSOL, 800)).setSolid(new ComparableStack(ModItems.crystal_mineral)));
 	}
 	
 	public static MixerRecipe getOutput(FluidType type) {
