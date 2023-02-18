@@ -110,6 +110,7 @@ public class HazardRegistry {
 	public static final float saf = 5.85F;
 	public static final float sas3 = 5F;
 	public static final float gh336 = 5.0F;
+	public static final float cn989 = 89.0F;
 	public static final float radsource_mult = 3.0F;
 	public static final float pobe = po210 * radsource_mult;
 	public static final float rabe = ra226 * radsource_mult;

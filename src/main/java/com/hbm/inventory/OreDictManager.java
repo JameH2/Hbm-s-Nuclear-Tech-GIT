@@ -140,6 +140,7 @@ public class OreDictManager {
 	public static final DictFrame SBD = new DictFrame("Schrabidate");
 	public static final DictFrame SRN = new DictFrame("Schraranium");
 	public static final DictFrame GH336 = new DictFrame("Ghiorsium336", "Gh336");
+	public static final DictFrame CN989 = new DictFrame("Chinesium989", "Cn989");
 	/*
 	 * STABLE
 	 */
@@ -320,8 +321,8 @@ public class OreDictManager {
 		AM242	.rad(HazardRegistry.am242)							.nugget(nugget_am242)		.billet(billet_am242)		.ingot(ingot_am242);
 		CM242	.rad(HazardRegistry.cm242)																					.ingot(ingot_cm242);
 		BK247   .rad(HazardRegistry.bk247)							.nugget(nugget_bk247)		.billet(billet_bk247)		.ingot(ingot_bk247);
-		CF251   .rad(HazardRegistry.cf251)																					.ingot(ingot_cf251);
-		CF252	.rad(HazardRegistry.cf252)																					.ingot(ingot_cf252);
+		CF251   .rad(HazardRegistry.cf251)														.billet(billet_cf251)    	.ingot(ingot_cf251);
+		CF252	.rad(HazardRegistry.cf252)														.billet(billet_cf252)		.ingot(ingot_cf252);
 		ES253	.rad(HazardRegistry.es253)																					.ingot(ingot_es253);		
 		ES255	.rad(HazardRegistry.es255)																					.ingot(ingot_es255);
 		AMRG	.rad(HazardRegistry.amrg)							.nugget(nugget_am_mix)		.billet(billet_am_mix)		.ingot(ingot_am_mix);
@@ -338,6 +339,7 @@ public class OreDictManager {
 		SBD		.rad(HazardRegistry.sb)		.blinding(50F)																	.ingot(ingot_schrabidate)	.dust(powder_schrabidate)								.block(block_schrabidate);
 		SRN		.rad(HazardRegistry.sr)		.blinding(50F)																	.ingot(ingot_schraranium)															.block(block_schraranium);
 		GH336	.rad(HazardRegistry.gh336)							.nugget(nugget_gh336)		.billet(billet_gh336)		.ingot(ingot_gh336);
+		CN989   .rad(HazardRegistry.cn989)  .hot(4F)                .nugget(nugget_cn989)       .billet(billet_cn989)       .ingot(ingot_cn989)         .dust(powder_cn989)         .plate(plate_cn989);
 		
 		/*
 		 * STABLE
