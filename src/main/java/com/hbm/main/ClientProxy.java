@@ -224,6 +224,7 @@ public class ClientProxy extends ServerProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineTurbofan.class, new RenderTurbofan());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineEPress.class, new RenderEPress());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineRadGen.class, new RenderRadGen());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineTurbineGas.class, new RenderTurbineGas());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineRadar.class, new RenderRadar());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineSeleniumEngine.class, new RenderSelenium());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityReactorResearch.class, new RenderSmallReactor());
@@ -269,6 +270,8 @@ public class ClientProxy extends ServerProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineCombustionEngine.class, new RenderCombustionEngine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineExcavator.class, new RenderExcavator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineMixer.class, new RenderMixer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineHephaestus.class, new RenderHephaestus());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineAutosaw.class, new RenderAutosaw());
 		//Foundry
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFoundryBasin.class, new RenderFoundry());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFoundryMold.class, new RenderFoundry());
@@ -431,7 +434,6 @@ public class ClientProxy extends ServerProxy {
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_skystinger, new ItemRenderStinger());
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_revolver, new ItemRenderWeaponFFColt(ResourceManager.ff_gun_bright, ResourceManager.ff_iron, ResourceManager.ff_wood));
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_revolver_saturnite, new ItemRenderWeaponFFColt(ResourceManager.ff_saturnite, ResourceManager.ff_iron, ResourceManager.ff_wood));
-		MinecraftForgeClient.registerItemRenderer(ModItems.gun_revolver_iron, new ItemRenderWeaponFFColt(ResourceManager.ff_iron, ResourceManager.ff_iron, ResourceManager.ff_wood));
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_revolver_gold, new ItemRenderWeaponFFColt(ResourceManager.ff_gold, ResourceManager.ff_gold, ResourceManager.ff_gun_dark));
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_revolver_lead, new ItemRenderWeaponFFColt(ResourceManager.ff_lead, ResourceManager.ff_iron, ResourceManager.ff_gun_dark));
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_revolver_schrabidium, new ItemRenderWeaponFFColt(ResourceManager.ff_schrabidium, ResourceManager.ff_schrabidium, ResourceManager.ff_gun_dark));
@@ -474,7 +476,6 @@ public class ClientProxy extends ServerProxy {
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_uzi_saturnite, new ItemRenderUZI());
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_uzi_saturnite_silencer, new ItemRenderUZI());
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_calamity, new ItemRenderWeaponFFMG42());
-		MinecraftForgeClient.registerItemRenderer(ModItems.gun_calamity_dual, new ItemRenderOverkill());
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_minigun, new ItemRenderOverkill());
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_avenger, new ItemRenderOverkill());
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_lacunae, new ItemRenderOverkill());
@@ -499,6 +500,7 @@ public class ClientProxy extends ServerProxy {
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_spas12, new ItemRenderWeaponSpas12());
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_glass_cannon, new ItemRenderWeaponGlass());
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_chemthrower, new ItemRenderWeaponChemthrower());
+		MinecraftForgeClient.registerItemRenderer(ModItems.gun_m2, new ItemRenderM2());	
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_revolver_nopip, new ItemRenderWeaponNovac());
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_revolver_pip, new ItemRenderWeaponNovac());
 		MinecraftForgeClient.registerItemRenderer(ModItems.gun_revolver_blackjack, new ItemRenderWeaponNovac());
@@ -817,10 +819,6 @@ public class ClientProxy extends ServerProxy {
 
 			ParticleRadiationFog fog = new ParticleRadiationFog(man, world, x, y, z);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fog);
-			
-		case 4:
-			ParticleProblem prob = new ParticleProblem(man, world, x, y, z);
-			Minecraft.getMinecraft().effectRenderer.addEffect(prob);
 			break;
 		}
 	}
@@ -858,10 +856,6 @@ public class ClientProxy extends ServerProxy {
 		}
 		if("radSmoke".equals(type)) {
 			ParticleRadiationFog contrail = new ParticleRadiationFog(man, world, x, y, z);
-			Minecraft.getMinecraft().effectRenderer.addEffect(contrail);
-		}
-		if("chance".equals(type)) {
-			ParticleProblem contrail = new ParticleProblem(man, world, x, y, z);
 			Minecraft.getMinecraft().effectRenderer.addEffect(contrail);
 		}
 	}
@@ -1811,13 +1805,15 @@ public class ClientProxy extends ServerProxy {
 			for(int i = 0; i < ejector.getAmount(); i++) {
 				ejector.spawnCasing(man, casingConfig, world, x, y, z, data.getFloat("pitch"), data.getFloat("yaw"), data.getBoolean("crouched"));
 			}
+			
 		}
-		if("contrail".equals(type)) {
-			ParticleProblem prob = new ParticleProblem(man, world, x, y, z);
-			Minecraft.getMinecraft().effectRenderer.addEffect(prob);
+		if("radSmoke".equals(type)) {
+			ParticleRadiationFog contrail = new ParticleRadiationFog(man, world, x, y, z);
+			Minecraft.getMinecraft().effectRenderer.addEffect(contrail);
 			//hopefully......
 		}
 	}
+	
 	
 	private HashMap<Integer, Long> vanished = new HashMap();
 	

@@ -7,7 +7,6 @@ import com.hbm.config.MobConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.entity.mob.EntityFBI;
 import com.hbm.entity.mob.EntityGhost;
-import com.hbm.particle.ParticleProblem;
 import com.hbm.particle.ParticleRadiationFog;
 import com.hbm.entity.mob.EntityMaskMan;
 import com.hbm.entity.mob.EntityRADBeast;
@@ -18,6 +17,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.EntityLiving;
@@ -142,6 +142,8 @@ public class BossSpawnHandler {
 			}
 		}
 	}
+	
+
 	
 	
 	private static void trySpawn(World world, float x, float y, float z, EntityLiving e) {
