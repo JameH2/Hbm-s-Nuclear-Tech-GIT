@@ -13,6 +13,7 @@ import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemChemicalDye.EnumChemDye;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.special.ItemBedrockOre.EnumBedrockOre;
 import com.hbm.items.special.ItemPlasticScrap.ScrapType;
@@ -94,6 +95,7 @@ public class CrystallizerRecipes {
 		registerRecipe(new ComparableStack(ModItems.meteorite_sword_treated),	new CrystallizerRecipe(ModItems.meteorite_sword_etched, baseTime));
 		registerRecipe(new ComparableStack(ModItems.powder_impure_osmiridium),	new CrystallizerRecipe(ModItems.crystal_osmiridium, baseTime), new FluidStack(Fluids.SCHRABIDIC, 1_000));
 		
+		
 		for(int i = 0; i < ScrapType.values().length; i++) {
 			registerRecipe(new ComparableStack(ModItems.scrap_plastic, 1, i), new CrystallizerRecipe(new ItemStack(ModItems.circuit_star_piece, 1, i), baseTime));
 		}
@@ -101,7 +103,7 @@ public class CrystallizerRecipes {
 		FluidStack nitric = new FluidStack(Fluids.NITRIC_ACID, 500);
 		FluidStack organic = new FluidStack(Fluids.SOLVENT, 500);
 		FluidStack chloric = new FluidStack(Fluids.HCL, 500);
-		FluidStack schrabidic = new FluidStack(Fluids.SCHRABIDIC, 500);
+		FluidStack schrabidic = new FluidStack(Fluids.SCHRABIDIC, 1000);
 		
 		int oreTime = 200;
 		
@@ -120,6 +122,14 @@ public class CrystallizerRecipes {
 		registerRecipe(new ComparableStack(ModItems.mineral_dust),	new CrystallizerRecipe(new ItemStack(ModItems.mineral_fragment, 1, 3), mineraltime), organic);
 		registerRecipe(new ComparableStack(ModItems.mineral_dust),	new CrystallizerRecipe(new ItemStack(ModItems.mineral_fragment, 1, 4), mineraltime), chloric);
 		registerRecipe(new ComparableStack(ModItems.mineral_dust),	new CrystallizerRecipe(new ItemStack(ModItems.mineral_fragment, 1, 5), mineraltime), schrabidic);
+		
+		FluidStack woodOil = new FluidStack(Fluids.WOODOIL, 100);
+		registerRecipe(COAL.dust(),		new CrystallizerRecipe(DictFrame.fromOne(ModItems.chemical_dye, EnumChemDye.BLACK, 4), 20), woodOil);
+		registerRecipe(TI.dust(),		new CrystallizerRecipe(DictFrame.fromOne(ModItems.chemical_dye, EnumChemDye.WHITE, 4), 20), woodOil);
+		registerRecipe(IRON.dust(),		new CrystallizerRecipe(DictFrame.fromOne(ModItems.chemical_dye, EnumChemDye.RED, 4), 20), woodOil);
+		registerRecipe(W.dust(),		new CrystallizerRecipe(DictFrame.fromOne(ModItems.chemical_dye, EnumChemDye.YELLOW, 4), 20), woodOil);
+		registerRecipe(CU.dust(),		new CrystallizerRecipe(DictFrame.fromOne(ModItems.chemical_dye, EnumChemDye.GREEN, 4), 20), woodOil);
+		registerRecipe(CO.dust(),		new CrystallizerRecipe(DictFrame.fromOne(ModItems.chemical_dye, EnumChemDye.BLUE, 4), 20), woodOil);
 		
 		List<ItemStack> quartz = OreDictionary.getOres("crystalCertusQuartz");
 		

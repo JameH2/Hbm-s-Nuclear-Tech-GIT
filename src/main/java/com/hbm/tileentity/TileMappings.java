@@ -142,6 +142,7 @@ public class TileMappings {
 		put(TileEntityMachineAmgen.class, "tileentity_amgen");
 		put(TileEntityGeysir.class, "tileentity_geysir");
 		put(TileEntityMachineMissileAssembly.class, "tileentity_missile_assembly");
+		put(TileEntityMachineHephaestus.class, "tileentity_hephaestus");
 		put(TileEntityLaunchTable.class, "tileentity_large_launch_table");
 		put(TileEntityCompactLauncher.class, "tileentity_small_launcher");
 		put(TileEntityMultiblock.class, "tileentity_multi_core");
@@ -267,6 +268,7 @@ public class TileMappings {
 		put(TileEntityDiFurnaceRTG.class, "tileentity_rtg_difurnace");
 		put(TileEntityMachineRadiolysis.class, "tileentity_radiolysis");
 		put(TileEntityUVLamp.class, "tileentity_uv_lamp");
+		put(TileEntityMachineAutosaw.class, "tileentity_autosaw");
 		
 		put(TileEntityCondenser.class, "tileentity_condenser");
 		put(TileEntityTowerSmall.class, "tileentity_cooling_tower_small");

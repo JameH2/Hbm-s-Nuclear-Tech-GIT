@@ -76,6 +76,8 @@ public class SmeltingRecipes {
 		GameRegistry.addSmelting(ModItems.powder_copper, new ItemStack(ModItems.ingot_copper), 1.0F);
 		GameRegistry.addSmelting(ModItems.powder_nickel, new ItemStack(ModItems.ingot_nickel), 1.0F);
 		GameRegistry.addSmelting(ModItems.powder_zinc, new ItemStack(ModItems.ingot_zinc), 1.0F);
+		GameRegistry.addSmelting(ModItems.powder_platnium, new ItemStack(ModItems.ingot_platnium), 1.0F);
+		GameRegistry.addSmelting(ModItems.powder_gallium, new ItemStack(ModItems.ingot_gallium), 1.0F);
 		GameRegistry.addSmelting(ModItems.powder_gold, new ItemStack(Items.gold_ingot), 1.0F);
 		GameRegistry.addSmelting(ModItems.powder_iron, new ItemStack(Items.iron_ingot), 1.0F);
 		GameRegistry.addSmelting(ModItems.powder_titanium, new ItemStack(ModItems.ingot_titanium), 1.0F);
@@ -106,6 +108,8 @@ public class SmeltingRecipes {
 		GameRegistry.addSmelting(ModItems.powder_ra226, new ItemStack(ModItems.ingot_ra226), 1.0F);
 		GameRegistry.addSmelting(ModItems.powder_tantalium, new ItemStack(ModItems.ingot_tantalium), 1.0F);
 		GameRegistry.addSmelting(ModItems.powder_niobium, new ItemStack(ModItems.ingot_niobium), 1.0F);
+		GameRegistry.addSmelting(ModItems.powder_bismuth, new ItemStack(ModItems.ingot_bismuth), 1.0F);
+		GameRegistry.addSmelting(ModItems.powder_calcium, new ItemStack(ModItems.ingot_calcium), 1.0F);
 
 		GameRegistry.addSmelting(ModItems.combine_scrap, new ItemStack(ModItems.ingot_combine_steel), 1.0F);
 		GameRegistry.addSmelting(ModItems.tank_waste, new ItemStack(ModItems.tank_waste), 0.0F);
