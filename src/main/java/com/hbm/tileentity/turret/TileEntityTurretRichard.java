@@ -7,19 +7,11 @@ import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
-import com.hbm.inventory.gui.GUITurretRichard;
 import com.hbm.items.ItemAmmoEnums.AmmoRocket;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import com.hbm.items.ModItems;
 
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 
 public class TileEntityTurretRichard extends TileEntityTurretBaseNT {
 
@@ -172,11 +164,5 @@ public class TileEntityTurretRichard extends TileEntityTurretBaseNT {
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setInteger("loaded", this.loaded);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new GUITurretRichard(player.inventory, this);
 	}
 }

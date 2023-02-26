@@ -15,8 +15,14 @@ float target;
 
 	@Override
 	public float modify(ItemStack stack, EntityLivingBase holder, float level) {
-		double depletion = Math.pow(stack.getItem().getDurabilityForDisplay(stack), 0.4D);
-		level = (float) (level + (this.target - level) * depletion);
+		
+		if(stack.getItem() instanceof ItemFuelRod) {
+			ItemFuelRod fuel = (ItemFuelRod) stack.getItem();
+			double depletion = Math.pow(fuel.getDurabilityForDisplay(stack), 0.4D);
+			
+			level = (float) (level + (this.target - level) * depletion);
+			
+		}
 		
 		return level;
 	}

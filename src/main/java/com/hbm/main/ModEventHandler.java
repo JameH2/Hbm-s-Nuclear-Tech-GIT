@@ -47,7 +47,6 @@ import com.hbm.items.armor.IDamageHandler;
 import com.hbm.items.armor.ItemArmorMod;
 import com.hbm.items.armor.ItemModRevive;
 import com.hbm.items.armor.ItemModShackles;
-import com.hbm.items.food.ItemConserve.EnumFoodType;
 import com.hbm.items.tool.ItemGuideBook.BookType;
 import com.hbm.items.weapon.ItemGunBase;
 import com.hbm.lib.HbmCollection;
@@ -255,7 +254,6 @@ public class ModEventHandler {
 		}
 		
 	}
-	
 	@SubscribeEvent
 	public void onEntityDeath(LivingDeathEvent event) {
 		
@@ -273,7 +271,9 @@ public class ModEventHandler {
 		if(event.entity.getUniqueID().toString().equals(Library.HbMinecraft) || event.entity.getCommandSenderName().equals("HbMinecraft")) {
 			event.entity.dropItem(ModItems.book_of_, 1);
 		}
-		
+		if(event.entityLiving instanceof EntityPlayer&& event.entityLiving.getRNG().nextInt(2) == 0) {
+			event.entityLiving.dropItem(ModItems.flesh, 10);
+	}
 		if(event.entity instanceof EntityTaintedCreeper && event.source == ModDamageSource.boxcar) {
 			
 			for(Object o : event.entity.worldObj.getEntitiesWithinAABB(EntityPlayer.class, event.entity.boundingBox.expand(50, 50, 50))) {
@@ -306,9 +306,12 @@ public class ModEventHandler {
 				if(event.entityLiving instanceof EntityCyberCrab && event.entityLiving.getRNG().nextInt(500) == 0) {
 					event.entityLiving.dropItem(ModItems.wd40, 1);
 				}
+				if(event.entityLiving instanceof EntityVillager&& event.entityLiving.getRNG().nextInt(1) == 0) {
+					event.entityLiving.dropItem(ModItems.flesh, 5);
 			}
 		}
 	}
+}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onEntityDeathLast(LivingDeathEvent event) {
@@ -668,6 +671,23 @@ public class ModEventHandler {
 				        	if(entity instanceof EntityPlayer)
 				        		((EntityPlayer)entity).triggerAchievement(MainRegistry.achRadPoison);
 						}
+						
+			        	if(entity instanceof EntityPlayer)
+			        	{
+			        		EntityPlayer player = (EntityPlayer) entity;
+							int randSlot = rand.nextInt(player.inventory.mainInventory.length);
+							ItemStack stack2 = player.inventory.getStackInSlot(randSlot);
+							if(stack2!=null)
+							{
+								if(stack2.hasTagCompound())
+								{
+									float activation = stack2.stackTagCompound.getFloat("ntmNeutron");
+									if(activation<1e-5)
+										stack2.stackTagCompound.removeTag("ntmNeutron");
+									stack2.stackTagCompound.setFloat("ntmNeutron",activation*0.999916f);		
+								}	
+							}
+			        	}
 					}
 					
 					if(e instanceof EntityItem) {
@@ -963,11 +983,11 @@ public class ModEventHandler {
 		
 		if(event.phase == TickEvent.Phase.START) {
 			int x = MathHelper.floor_double(player.posX);
-			int y = MathHelper.floor_double(player.posY - player.yOffset - 0.01);
+			int y = MathHelper.floor_double(player.posY - player.yOffset - 0.5);
 			int z = MathHelper.floor_double(player.posZ);
 			Block b = player.worldObj.getBlock(x, y, z);
 			
-			if(b instanceof IStepTickReceiver && !player.capabilities.isFlying) {
+			if(b instanceof IStepTickReceiver) {
 				IStepTickReceiver step = (IStepTickReceiver) b;
 				step.onPlayerStep(player.worldObj, x, y, z, player);
 			}
@@ -1145,10 +1165,12 @@ public class ModEventHandler {
 	
 	@SubscribeEvent
 	public void onItemPickup(PlayerEvent.ItemPickupEvent event) {
-		if(event.pickedUp.getEntityItem().getItem() == ModItems.canned_conserve && EnumUtil.grabEnumSafely(EnumFoodType.class, event.pickedUp.getEntityItem().getItemDamage()) == EnumFoodType.JIZZ)
+		if(event.pickedUp.getEntityItem().getItem() == ModItems.canned_jizz)
 			event.player.triggerAchievement(MainRegistry.achC20_5);
 		if(event.pickedUp.getEntityItem().getItem() == Items.slime_ball)
 			event.player.triggerAchievement(MainRegistry.achSlimeball);
+		if(event.pickedUp.getEntityItem().getItem() == ModItems.egg_balefire)
+			event.player.triggerAchievement(MainRegistry.rotConsum);
 	}
 	
 	@SubscribeEvent
@@ -1176,7 +1198,9 @@ public class ModEventHandler {
 		}
 	}
 	
-	private static final String hash = "41eb77f138ce350932e33b6b26b233df9aad0c0c80c6a49cb9a54ddd8fae3f83";
+	//private static final String hash = "41eb77f138ce350932e33b6b26b233df9aad0c0c80c6a49cb9a54ddd8fae3f83";
+	
+	private static final String lol = "popbobisgod";
 	
 	@SubscribeEvent
 	public void onClickSign(PlayerInteractEvent event) {
@@ -1193,10 +1217,10 @@ public class ModEventHandler {
 			String result = smoosh(sign.signText[0], sign.signText[1], sign.signText[2], sign.signText[3]);
 			//System.out.println(result);
 			
-			if(result.equals(hash)) {
+			if(result.equals(lol)) {
 				world.func_147480_a(x, y, z, false);
 				EntityItem entityitem = new EntityItem(world, x, y, z, new ItemStack(ModItems.bobmazon_hidden));
-				entityitem.delayBeforeCanPickup = 10;
+				entityitem.delayBeforeCanPickup = 1;
 				world.spawnEntityInWorld(entityitem);
 			}
 		}

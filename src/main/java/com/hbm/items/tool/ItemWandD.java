@@ -54,6 +54,10 @@ public class ItemWandD extends Item {
 			data.impact = false;
 			data.fire = 0F;
 			data.dust = 0F;
+			data.dtime=(600-pos.blockY);
+			data.time=3600;
+			data.x=pos.blockX;
+			data.z=pos.blockZ;
 			data.markDirty();
 			
 			/*EntityTomBlast tom = new EntityTomBlast(world);

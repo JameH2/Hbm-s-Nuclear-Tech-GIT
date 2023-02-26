@@ -55,6 +55,22 @@ public class Gun357MagnumFactory {
 		return config;
 	}
 	
+	public static GunConfiguration getRevolverIronConfig() {
+		
+		GunConfiguration config = getBaseConfig();
+		
+		config.durability = 2000;
+		
+		config.name = "ffiV";
+		config.manufacturer = EnumGunManufacturer.FLIMFLAM;
+		
+		config.config = new ArrayList<Integer>();
+		config.config.add(BulletConfigSyncingUtil.IRON_REVOLVER);
+		config.config.add(BulletConfigSyncingUtil.DESH_REVOLVER);
+		
+		return config;
+	}
+	
 	public static GunConfiguration getRevolverConfig() {
 		
 		GunConfiguration config = getBaseConfig();
@@ -66,8 +82,6 @@ public class Gun357MagnumFactory {
 		
 		config.config = new ArrayList<Integer>();
 		config.config.add(BulletConfigSyncingUtil.STEEL_REVOLVER);
-		config.config.add(BulletConfigSyncingUtil.IRON_REVOLVER);
-		config.config.add(BulletConfigSyncingUtil.LEAD_REVOLVER);
 		config.config.add(BulletConfigSyncingUtil.DESH_REVOLVER);
 		
 		return config;
@@ -89,6 +103,22 @@ public class Gun357MagnumFactory {
 		return config;
 	}
 	
+	public static GunConfiguration getRevolverLeadConfig() {
+		
+		GunConfiguration config = getBaseConfig();
+		
+		config.durability = 2000;
+		
+		config.name = "ffiVLead";
+		config.manufacturer = EnumGunManufacturer.FLIMFLAM;
+		
+		config.config = new ArrayList<Integer>();
+		config.config.add(BulletConfigSyncingUtil.LEAD_REVOLVER);
+		config.config.add(BulletConfigSyncingUtil.DESH_REVOLVER);
+		
+		return config;
+	}
+	
 	public static GunConfiguration getRevolverGoldConfig() {
 		
 		GunConfiguration config = getBaseConfig();
@@ -100,9 +130,6 @@ public class Gun357MagnumFactory {
 		
 		config.config = new ArrayList<Integer>();
 		config.config.add(BulletConfigSyncingUtil.GOLD_REVOLVER);
-		config.config.add(BulletConfigSyncingUtil.STEEL_REVOLVER);
-		config.config.add(BulletConfigSyncingUtil.IRON_REVOLVER);
-		config.config.add(BulletConfigSyncingUtil.LEAD_REVOLVER);
 		config.config.add(BulletConfigSyncingUtil.DESH_REVOLVER);
 		
 		return config;
@@ -139,10 +166,6 @@ public class Gun357MagnumFactory {
 		
 		config.config = new ArrayList<Integer>();
 		config.config.add(BulletConfigSyncingUtil.SCHRABIDIUM_REVOLVER);
-		config.config.add(BulletConfigSyncingUtil.GOLD_REVOLVER);
-		config.config.add(BulletConfigSyncingUtil.STEEL_REVOLVER);
-		config.config.add(BulletConfigSyncingUtil.IRON_REVOLVER);
-		config.config.add(BulletConfigSyncingUtil.LEAD_REVOLVER);
 		config.config.add(BulletConfigSyncingUtil.DESH_REVOLVER);
 		
 		return config;

@@ -5,39 +5,39 @@ import java.util.List;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.MobConfig;
+import com.hbm.config.RadiationConfig;
 import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
-import com.hbm.inventory.container.ContainerReactorResearch;
-import com.hbm.inventory.gui.GUIReactorResearch;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemPlateFuel;
-import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.util.ContaminationUtil;
+import com.hbm.util.ContaminationUtil.ContaminationType;
+import com.hbm.util.ContaminationUtil.HazardType;
 
-import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import li.cil.oc.api.machine.Arguments;
-import li.cil.oc.api.machine.Callback;
-import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import cpw.mods.fml.common.Optional;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
 //TODO: fix reactor control;
-public class TileEntityReactorResearch extends TileEntityMachineBase implements IControlReceiver, SimpleComponent, IGUIProvider {
+public class TileEntityReactorResearch extends TileEntityMachineBase implements IControlReceiver, SimpleComponent {
 	
 	@SideOnly(Side.CLIENT)
 	public double lastLevel;
@@ -144,7 +144,74 @@ public class TileEntityReactorResearch extends TileEntityMachineBase implements 
 
 			if(level > 0 && heat > 0 && !(blocksRad(xCoord + 1, yCoord + 1, zCoord) && blocksRad(xCoord - 1, yCoord + 1, zCoord) && blocksRad(xCoord, yCoord + 1, zCoord + 1) && blocksRad(xCoord, yCoord + 1, zCoord - 1))) {
 				float rad = (float) heat / (float) maxHeat * 50F;
+				double range = 25D;
 				ChunkRadiationManager.proxy.incrementRad(worldObj, xCoord, yCoord, zCoord, rad);
+				List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5).expand(range, range, range));
+				
+				if(!RadiationConfig.disableNeutron)
+				{
+					for(EntityLivingBase e : entities) {
+					
+					Vec3 vec = Vec3.createVectorHelper(e.posX - (xCoord + 0.5), (e.posY + e.getEyeHeight()) - (yCoord + 0.5), e.posZ - (zCoord + 0.5));
+					double len = vec.lengthVector();
+					vec = vec.normalize();
+					
+					float res = 0;
+					
+					for(int i = 1; i < len; i++) {
+
+						int ix = (int)Math.floor(xCoord + 0.5 + vec.xCoord * i);
+						int iy = (int)Math.floor(yCoord + 0.5 + vec.yCoord * i);
+						int iz = (int)Math.floor(zCoord + 0.5 + vec.zCoord * i);
+						
+						res += worldObj.getBlock(ix, iy, iz).getExplosionResistance(null);
+					}
+					
+					if(res < 1)
+						res = 1;
+					
+					float eRads = rad;
+					eRads /= (float)res;
+					eRads /= (float)(len * len);
+					
+					//ContaminationUtil.contaminate(e, HazardType.RADIATION, ContaminationType.CREATIVE, eRads);
+					ContaminationUtil.contaminate(e, HazardType.NEUTRON, ContaminationType.CREATIVE, eRads);
+					if(e instanceof EntityPlayer) {
+						//Random rand = target.getRNG();
+						EntityPlayer player = (EntityPlayer) e;
+						for(int i2 = 0; i2 < player.inventory.mainInventory.length; i2++)
+						{
+							ItemStack stack2 = player.inventory.getStackInSlot(i2);
+							
+							//if(rand.nextInt(100) == 0) {
+								//stack2 = player.inventory.armorItemInSlot(rand.nextInt(4));
+							//}
+							
+							//only affect unstackables (e.g. tools and armor) so that the NBT tag's stack restrictions isn't noticeable
+							if(stack2 != null) {
+									if(!stack2.hasTagCompound())
+										stack2.stackTagCompound = new NBTTagCompound();
+									float activation = stack2.stackTagCompound.getFloat("ntmNeutron");
+									stack2.stackTagCompound.setFloat("ntmNeutron", activation+(eRads/stack2.stackSize));
+									
+								//}
+							}
+						}
+						for(int i2 = 0; i2 < player.inventory.armorInventory.length; i2++)
+						{
+							ItemStack stack2 = player.inventory.armorItemInSlot(i2);
+							
+							//only affect unstackables (e.g. tools and armor) so that the NBT tag's stack restrictions isn't noticeable
+							if(stack2 != null) {					
+									if(!stack2.hasTagCompound())
+										stack2.stackTagCompound = new NBTTagCompound();
+									float activation = stack2.stackTagCompound.getFloat("ntmNeutron");
+									stack2.stackTagCompound.setFloat("ntmNeutron", activation+(eRads/stack2.stackSize));
+							}
+						}	
+					}
+				}
+				}				
 			}
 			
 			NBTTagCompound data = new NBTTagCompound();
@@ -426,16 +493,5 @@ public class TileEntityReactorResearch extends TileEntityMachineBase implements 
 		}
 		targetLevel = newLevel;
 		return new Object[] {};
-	}
-
-	@Override
-	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new ContainerReactorResearch(player.inventory, this);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new GUIReactorResearch(player.inventory, this);
 	}
 }

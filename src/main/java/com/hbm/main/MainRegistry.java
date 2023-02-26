@@ -192,6 +192,7 @@ public class MainRegistry {
 	public static Achievement digammaKnow;
 	public static Achievement digammaKauaiMoho;
 	public static Achievement digammaUpOnTop;
+	public static Achievement rotConsum;
 	
 	public static Achievement achBurnerPress;
 	public static Achievement achBlastFurnace;
@@ -646,6 +647,7 @@ public class MainRegistry {
 		digammaKnow = new Achievement("achievement.digammaKnow", "digammaKnow", 3, 8, ModItems.digamma_know, digammaFeel).initIndependentStat().registerStat().setSpecial();
 		digammaKauaiMoho = new Achievement("achievement.digammaKauaiMoho", "digammaKauaiMoho", 5, 8, ModItems.digamma_kauai_moho, digammaKnow).initIndependentStat().registerStat().setSpecial();
 		digammaUpOnTop = new Achievement("achievement.digammaUpOnTop", "digammaUpOnTop", 7, 8, ModItems.digamma_up_on_top, digammaKauaiMoho).initIndependentStat().registerStat().setSpecial();
+		rotConsum = new Achievement("achievement.rotConsum", "rotConsum", 7, 8, ModItems.rot_consumes, null).initIndependentStat().registerStat().setSpecial();
 		
 		//progression achieves
 		achBurnerPress = new Achievement("achievement.burnerPress", "burnerPress", 0, 0, new ItemStack(ModBlocks.machine_press), null).initIndependentStat().registerStat();
@@ -964,6 +966,7 @@ public class MainRegistry {
 		ignoreMappings.add("hbm:tile.turret_cwis");
 		ignoreMappings.add("hbm:tile.turret_spitfire");
 		ignoreMappings.add("hbm:tile.turret_cheapo");
+		ignoreMappings.add("hbm:tile.tower_chimney");
 		ignoreMappings.add("hbm:item.turret_light_ammo");
 		ignoreMappings.add("hbm:item.turret_heavy_ammo");
 		ignoreMappings.add("hbm:item.turret_rocket_ammo");
@@ -1001,21 +1004,6 @@ public class MainRegistry {
 		ignoreMappings.add("hbm:item.coin_siege");
 		ignoreMappings.add("hbm:item.source");
 		ignoreMappings.add("hbm:item.gun_brimstone");
-		ignoreMappings.add("hbm:item.stamp_schrabidium_flat");
-		ignoreMappings.add("hbm:item.stamp_schrabidium_plate");
-		ignoreMappings.add("hbm:item.stamp_schrabidium_wire");
-		ignoreMappings.add("hbm:item.stamp_schrabidium_circuit");
-		ignoreMappings.add("hbm:item.blades_combine_steel");
-		ignoreMappings.add("hbm:item.blades_schrabidium");
-		ignoreMappings.add("hbm:item.blades_aluminium");
-		ignoreMappings.add("hbm:item.blades_gold");
-		ignoreMappings.add("hbm:item.blades_iron");
-		ignoreMappings.add("hbm:item.cap_aluminium");
-		ignoreMappings.add("hbm:tile.dummy_block_refinery");
-		ignoreMappings.add("hbm:tile.dummy_port_refinery");
-		ignoreMappings.add("hbm:item.gun_revolver_iron");
-		ignoreMappings.add("hbm:item.gun_calamity_dual");
-		ignoreMappings.add("hbm:item.gun_revolver_lead");
 		
 		/// REMAP ///
 		remapItems.put("hbm:item.gadget_explosive8", ModItems.early_explosive_lenses);

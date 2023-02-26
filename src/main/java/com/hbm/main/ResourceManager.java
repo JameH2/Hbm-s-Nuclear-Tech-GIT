@@ -48,7 +48,6 @@ public class ResourceManager {
 	public static final IModelCustom crucible_heat = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/machines/crucible.obj"));
 	public static final IModelCustom boiler = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/boiler.obj"));
 	public static final IModelCustom boiler_burst = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/boiler_burst.obj"));
-	public static final IModelCustom hephaestus = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/hephaestus.obj"));
 	
 	//Furnaces
 	public static final IModelCustom furnace_iron = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/machines/furnace_iron.obj"));
@@ -85,10 +84,9 @@ public class ResourceManager {
 	public static final IModelCustom orbus = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/orbus.obj"));
 	
 	//Turbofan
+	public static final IModelCustom turbofan_body = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/turbofan_body.obj"));
+	public static final IModelCustom turbofan_blades = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/turbofan_blades.obj"));
 	public static final IModelCustom turbofan = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/turbofan.obj"));
-	
-	//Gas Turbine
-	public static final IModelCustom turbinegas = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/turbinegas.obj"));
 	
 	//Large Turbine
 	public static final IModelCustom steam_engine = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/steam_engine.obj")).asDisplayList();
@@ -98,6 +96,7 @@ public class ResourceManager {
 	//Cooling Tower
 	public static final IModelCustom tower_small = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/tower_small.obj"));
 	public static final IModelCustom tower_large = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/tower_large.obj"));
+	public static final IModelCustom tower_chimney = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/chimney.obj"));
 	
 	//IGen
 	public static final IModelCustom igen = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/igen.obj"));
@@ -171,6 +170,8 @@ public class ResourceManager {
 	
 	//Deuterium Tower
 	public static final IModelCustom deuterium_tower = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/machine_deuterium_tower.obj"));
+	public static final IModelCustom atmo_tower = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/atmo_tower.obj"));
+	public static final IModelCustom atmo_vent = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/atmo_vent.obj"));
 	
 	//Anti Mass Spectrometer
 	public static final IModelCustom ams_base = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/ams_base.obj"));
@@ -222,7 +223,7 @@ public class ResourceManager {
 	
 	//Shredder
 	public static final IModelCustom shredder = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/shredder.obj"));
-	
+
 	//Bombs
 	public static final IModelCustom bomb_gadget = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/TheGadget3.obj"));
 	public static final IModelCustom bomb_boy = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/LilBoy1.obj"));
@@ -373,7 +374,6 @@ public class ResourceManager {
 	public static final ResourceLocation sawmill_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/sawmill.png");
 	public static final ResourceLocation crucible_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/crucible_heat.png");
 	public static final ResourceLocation boiler_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/boiler.png");
-	public static final ResourceLocation hephaestus_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/hephaestus.png");
 	
 	//Furnaces
 	public static final ResourceLocation furnace_iron_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/furnace_iron.png");
@@ -408,9 +408,6 @@ public class ResourceManager {
 	public static final ResourceLocation turbofan_back_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/turbofan_back.png");
 	public static final ResourceLocation turbofan_afterburner_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/turbofan_afterburner.png");
 	
-	//Gas Turbine
-	public static final ResourceLocation turbinegas_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/turbinegas.png");
-
 	//Large Turbine
 	public static final ResourceLocation steam_engine_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/steam_engine.png");
 	public static final ResourceLocation turbine_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/turbine.png");
@@ -419,9 +416,11 @@ public class ResourceManager {
 	//Cooling Tower
 	public static final ResourceLocation tower_small_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/tower_small.png");
 	public static final ResourceLocation tower_large_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/tower_large.png");
-	
+	public static final ResourceLocation tower_chimney_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/chimney.png");
 	//Deuterium Tower
 	public static final ResourceLocation deuterium_tower_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/machine_deuterium_tower.png");
+	public static final ResourceLocation atmo_tower_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/machine_atmo_tower.png");
+	public static final ResourceLocation atmo_vent_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/atmo_vent.png");
 	
 	//IGen
 	public static final ResourceLocation igen_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/igen.png");

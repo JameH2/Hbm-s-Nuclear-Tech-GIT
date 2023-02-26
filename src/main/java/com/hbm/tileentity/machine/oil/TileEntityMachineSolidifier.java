@@ -2,15 +2,12 @@ package com.hbm.tileentity.machine.oil;
 
 import com.hbm.interfaces.IFluidAcceptor;
 import com.hbm.inventory.UpgradeManager;
-import com.hbm.inventory.container.ContainerSolidifier;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
-import com.hbm.inventory.gui.GUISolidifier;
 import com.hbm.inventory.recipes.SolidificationRecipes;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.Library;
-import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.Tuple.Pair;
 import com.hbm.util.fauxpointtwelve.DirPos;
@@ -19,15 +16,11 @@ import api.hbm.energy.IEnergyUser;
 import api.hbm.fluid.IFluidStandardReceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.World;
 
-public class TileEntityMachineSolidifier extends TileEntityMachineBase implements IEnergyUser, IFluidAcceptor, IFluidStandardReceiver, IGUIProvider {
+public class TileEntityMachineSolidifier extends TileEntityMachineBase implements IEnergyUser, IFluidAcceptor, IFluidStandardReceiver {
 
 	public long power;
 	public static final long maxPower = 100000;
@@ -258,16 +251,5 @@ public class TileEntityMachineSolidifier extends TileEntityMachineBase implement
 	@Override
 	public FluidTank[] getAllTanks() {
 		return new FluidTank[] { tank };
-	}
-
-	@Override
-	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new ContainerSolidifier(player.inventory, this);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new GUISolidifier(player.inventory, this);
 	}
 }

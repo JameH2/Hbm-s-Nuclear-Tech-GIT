@@ -34,7 +34,7 @@ public class GunConfiguration implements Cloneable {
 	
 	//animations!
 	public HashMap<AnimType, BusAnimation> animations = new HashMap();
-	//when sneaking, disables crosshair and centers the bullet spawn point
+	//whether or not to disable crosshair when sneaking
 	public boolean hasSights;
 	//texture overlay when sneaking
 	public ResourceLocation scopeTexture;

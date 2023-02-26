@@ -2,8 +2,6 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.UpgradeManager;
-import com.hbm.inventory.container.ContainerMachineMiningDrill;
-import com.hbm.inventory.gui.GUIMachineMiningDrill;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.Library;
 import com.hbm.packet.AuxElectricityPacket;
@@ -11,7 +9,6 @@ import com.hbm.packet.LoopedSoundPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.TEDrillPacket;
 import com.hbm.sound.SoundLoopMachine;
-import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 
 import api.hbm.block.IDrillInteraction;
@@ -22,17 +19,13 @@ import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.World;
 
-public class TileEntityMachineMiningDrill extends TileEntityMachineBase implements IEnergyUser, IMiningDrill, IGUIProvider {
+public class TileEntityMachineMiningDrill extends TileEntityMachineBase implements IEnergyUser, IMiningDrill {
 
 	public long power;
 	public int warning;
@@ -480,16 +473,5 @@ public class TileEntityMachineMiningDrill extends TileEntityMachineBase implemen
 	@Override
 	public int getDrillRating() {
 		return 50;
-	}
-
-	@Override
-	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new ContainerMachineMiningDrill(player.inventory, this);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new GUIMachineMiningDrill(player.inventory, this);
 	}
 }

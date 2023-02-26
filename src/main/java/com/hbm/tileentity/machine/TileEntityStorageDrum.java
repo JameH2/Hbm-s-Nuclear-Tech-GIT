@@ -8,28 +8,20 @@ import com.hbm.hazard.HazardRegistry;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.interfaces.IFluidAcceptor;
 import com.hbm.interfaces.IFluidSource;
-import com.hbm.inventory.container.ContainerStorageDrum;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
-import com.hbm.inventory.gui.GUIStorageDrum;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemWasteLong;
 import com.hbm.items.special.ItemWasteShort;
 import com.hbm.lib.Library;
-import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
 
 import api.hbm.fluid.IFluidStandardSender;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,7 +29,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class TileEntityStorageDrum extends TileEntityMachineBase implements IFluidSource, IFluidStandardSender, IGUIProvider {
+public class TileEntityStorageDrum extends TileEntityMachineBase implements IFluidSource, IFluidStandardSender {
 
 	public FluidTank[] tanks;
 	private static final int[] slots_arr = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
@@ -110,7 +102,7 @@ public class TileEntityStorageDrum extends TileEntityMachineBase implements IFlu
 					if(item == ModItems.ingot_au198 && worldObj.rand.nextInt(VersatileConfig.getShortDecayChance() / 100) == 0) {
 						slots[i] = new ItemStack(ModItems.ingot_mercury, 1, meta);
 					}
-					if(item == ModItems.ingot_au198 && worldObj.rand.nextInt(VersatileConfig.getShortDecayChance() / 20) == 0) {
+					if(item == ModItems.nugget_au198 && worldObj.rand.nextInt(VersatileConfig.getShortDecayChance() / 20) == 0) {
 						slots[i] = new ItemStack(ModItems.nugget_mercury, 1, meta);
 					}
 					
@@ -119,6 +111,16 @@ public class TileEntityStorageDrum extends TileEntityMachineBase implements IFlu
 					}
 					if(item == ModItems.nugget_pb209 && worldObj.rand.nextInt(VersatileConfig.getShortDecayChance() / 10) == 0) {
 						slots[i] = new ItemStack(ModItems.nugget_bismuth, 1, meta);
+					}
+					if(slots[i]!=null)
+					{
+						if(slots[i].hasTagCompound())
+						{
+							float activation = slots[i].stackTagCompound.getFloat("ntmNeutron");
+							slots[i].stackTagCompound.setFloat("ntmNeutron",activation*0.999916f);
+							if(activation<1e-5)
+								slots[i].stackTagCompound.removeTag("ntmNeutron");
+						}
 					}
 				}
 			}
@@ -329,16 +331,5 @@ public class TileEntityStorageDrum extends TileEntityMachineBase implements IFlu
 	@Override
 	public FluidTank[] getAllTanks() {
 		return tanks;
-	}
-
-	@Override
-	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new ContainerStorageDrum(player.inventory, this);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new GUIStorageDrum(player.inventory, this);
 	}
 }

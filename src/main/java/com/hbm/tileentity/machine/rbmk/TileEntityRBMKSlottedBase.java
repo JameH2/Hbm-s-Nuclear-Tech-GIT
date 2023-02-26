@@ -2,7 +2,6 @@ package com.hbm.tileentity.machine.rbmk;
 
 import com.hbm.packet.NBTPacket;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.tileentity.IGUIProvider;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.inventory.ISidedInventory;
@@ -19,7 +18,7 @@ import net.minecraftforge.fluids.FluidTank;
  * @author hbm
  *
  */
-public abstract class TileEntityRBMKSlottedBase extends TileEntityRBMKActiveBase implements ISidedInventory, IGUIProvider {
+public abstract class TileEntityRBMKSlottedBase extends TileEntityRBMKActiveBase implements ISidedInventory {
 
 	public ItemStack slots[];
 

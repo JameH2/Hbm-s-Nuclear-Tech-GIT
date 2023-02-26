@@ -99,9 +99,4 @@ public class ItemSwordAbility extends ItemSword implements IItemAbility {
 	protected boolean canOperate(ItemStack stack) {
 		return true;
 	}
-
-	@Override
-	public boolean isShears(ItemStack stack) {
-		return false;
-	}
 }

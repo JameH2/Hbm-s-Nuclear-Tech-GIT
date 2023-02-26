@@ -7,7 +7,6 @@ import com.hbm.inventory.fluid.Fluids;
 import static com.hbm.inventory.OreDictManager.*;
 
 import com.hbm.items.ItemAmmoEnums.*;
-import com.hbm.items.food.ItemConserve.EnumFoodType;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.GunB92Cell;
 import com.hbm.main.CraftingManager;
@@ -80,6 +79,7 @@ public class WeaponRecipes {
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_revolver, 1), new Object[] { "SSM", " RW", 'S', STEEL.plate(), 'W', KEY_PLANKS, 'R', ModItems.wire_aluminium, 'M', ModItems.mechanism_revolver_1 });
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_revolver_saturnite, 1), new Object[] { "SSM", " RW", 'S', BIGMT.plate(), 'W', KEY_PLANKS, 'R', ModItems.wire_tungsten, 'M', ModItems.mechanism_revolver_2 });
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_revolver_gold, 1), new Object[] { "SSM", " RW", 'S', GOLD.plate(), 'W', W.ingot(), 'R', ModItems.wire_gold, 'M', ModItems.mechanism_revolver_1 });
+		CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_revolver_lead, 1), new Object[] { "SSM", " RW", 'S', PB.plate(), 'W', W.ingot(), 'R', ModItems.wire_tungsten, 'M', ModItems.mechanism_revolver_2 });
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_revolver_schrabidium, 1), new Object[] { "SSM", " RW", 'S', SA326.block(), 'W', W.ingot(), 'R', ModItems.wire_schrabidium, 'M', ModItems.mechanism_special });
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_revolver_pip, 1), new Object[] { " G ", "SSP", " TI", 'G', KEY_ANYPANE, 'S', STEEL.plate(), 'P', ModItems.mechanism_revolver_2, 'T', ModItems.wire_tungsten, 'I', ANY_PLASTIC.ingot() });
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_revolver_nopip, 1), new Object[] { "SSP", " TI", 'S', STEEL.plate(), 'P', ModItems.mechanism_revolver_2, 'T', ModItems.wire_tungsten, 'I', ANY_PLASTIC.ingot() });
@@ -301,12 +301,13 @@ public class WeaponRecipes {
 		CraftingManager.addShapelessAuto(ModItems.ammo_nuke.stackFromEnum(6, AmmoFatman.SAFE), new Object[] { ModItems.ammo_nuke.stackFromEnum(AmmoFatman.MIRV_SAFE) });
 		
 		//MIRV
-		CraftingManager.addRecipeAuto(ModItems.ammo_nuke.stackFromEnum(AmmoFatman.MIRV), new Object[] { "NNN", "CDS", "NNN", 'N', ModItems.ammo_nuke, 'C', AL.plate(), 'D', ModBlocks.det_cord, 'S', ModItems.hull_small_steel });
-		CraftingManager.addRecipeAuto(ModItems.ammo_nuke.stackFromEnum(AmmoFatman.MIRV_LOW), new Object[] { "NNN", "CDS", "NNN", 'N', ModItems.ammo_nuke.stackFromEnum(AmmoFatman.LOW), 'C', AL.plate(), 'D', ModBlocks.det_cord, 'S', ModItems.hull_small_steel });
-		CraftingManager.addRecipeAuto(ModItems.ammo_nuke.stackFromEnum(AmmoFatman.MIRV_HIGH), new Object[] { "NNN", "CDS", "NNN", 'N', ModItems.ammo_nuke.stackFromEnum(AmmoFatman.HIGH), 'C', AL.plate(), 'D', ModBlocks.det_cord, 'S', ModItems.hull_small_steel });
-		CraftingManager.addRecipeAuto(ModItems.ammo_nuke.stackFromEnum(AmmoFatman.MIRV_SAFE), new Object[] { "NNN", "CDS", "NNN", 'N', ModItems.ammo_nuke.stackFromEnum(AmmoFatman.SAFE), 'C', AL.plate(), 'D', ModBlocks.det_cord, 'S', ModItems.hull_small_steel });
+		CraftingManager.addRecipeAuto(ModItems.ammo_nuke.stackFromEnum(AmmoFatman.MIRV), new Object[] { "NNN", "CDS", "NNN", 'N', ModItems.ammo_nuke, 'C', ModItems.plate_aluminium, 'D', ModBlocks.det_cord, 'S', ModItems.hull_small_steel });
+		CraftingManager.addRecipeAuto(ModItems.ammo_nuke.stackFromEnum(AmmoFatman.MIRV_LOW), new Object[] { "NNN", "CDS", "NNN", 'N', ModItems.ammo_nuke.stackFromEnum(AmmoFatman.LOW), 'C', ModItems.plate_aluminium, 'D', ModBlocks.det_cord, 'S', ModItems.hull_small_steel });
+		CraftingManager.addRecipeAuto(ModItems.ammo_nuke.stackFromEnum(AmmoFatman.MIRV_HIGH), new Object[] { "NNN", "CDS", "NNN", 'N', ModItems.ammo_nuke.stackFromEnum(AmmoFatman.HIGH), 'C', ModItems.plate_aluminium, 'D', ModBlocks.det_cord, 'S', ModItems.hull_small_steel });
+		CraftingManager.addRecipeAuto(ModItems.ammo_nuke.stackFromEnum(AmmoFatman.MIRV_SAFE), new Object[] { "NNN", "CDS", "NNN", 'N', ModItems.ammo_nuke.stackFromEnum(AmmoFatman.SAFE), 'C', ModItems.plate_aluminium, 'D', ModBlocks.det_cord, 'S', ModItems.hull_small_steel });
+
 		//since the milk part of the recipe isn't really present in the MIRV's effect, it might as well be replaced with something more sensible, i.e. duct tape
-		CraftingManager.addRecipeAuto(ModItems.ammo_nuke.stackFromEnum(AmmoFatman.MIRV_SPECIAL), new Object[] { "CBC", "MCM", "CBC", 'C', ModItems.canned_conserve.stackFromEnum(EnumFoodType.JIZZ), 'B', ModItems.ammo_nuke.stackFromEnum(AmmoFatman.BALEFIRE), 'M', ModItems.ammo_nuke.stackFromEnum(AmmoFatman.MIRV) });
+		CraftingManager.addRecipeAuto(ModItems.ammo_nuke.stackFromEnum(AmmoFatman.MIRV_SPECIAL), new Object[] { "CBC", "MCM", "CBC", 'C', ModItems.canned_jizz, 'B', ModItems.ammo_nuke.stackFromEnum(AmmoFatman.BALEFIRE), 'M', ModItems.ammo_nuke.stackFromEnum(AmmoFatman.MIRV) });
 		
 		//Flamer fuel
 		CraftingManager.addRecipeAuto(ModItems.ammo_fuel.stackFromEnum(AmmoFlamethrower.DIESEL), new Object[] { " P ", "BDB", " P ", 'P', STEEL.plate(), 'B', ModItems.bolt_tungsten, 'D', Fluids.DIESEL.getDict(1000) });
@@ -317,7 +318,7 @@ public class WeaponRecipes {
 
 		//Fire Extingusisher Tanks
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.ammo_fireext, 1), new Object[] { " P ", "BDB", " P ", 'P', STEEL.plate(), 'B', ModItems.bolt_tungsten, 'D', new ItemStack(ModItems.fluid_tank_full, 1, Fluids.WATER.getID()) });
-		CraftingManager.addRecipeAuto(ModItems.ammo_fireext.stackFromEnum(AmmoFireExt.FOAM), new Object[] { " N ", "NFN", " N ", 'N', KNO.dust(), 'F', ModItems.ammo_fireext });
+		CraftingManager.addRecipeAuto(ModItems.ammo_fireext.stackFromEnum(AmmoFireExt.FOAM), new Object[] { " Z ", "NFN", " Z ", 'N', KNO.dust(), 'F', ModItems.ammo_fireext, 'Z', ModItems.powder_zinc });
 		CraftingManager.addRecipeAuto(ModItems.ammo_fireext.stackFromEnum(AmmoFireExt.SAND), new Object[] { "NNN", "NFN", "NNN", 'N', ModBlocks.sand_boron, 'F', ModItems.ammo_fireext });
 
 		//Grenades
@@ -357,7 +358,6 @@ public class WeaponRecipes {
 		CraftingManager.addRecipeAuto(new ItemStack(ModBlocks.tnt, 1), new Object[] { "DDD", "DSD", "DDD", 'D', ModItems.stick_tnt, 'S', ModItems.safety_fuse });
 		CraftingManager.addRecipeAuto(new ItemStack(ModBlocks.semtex, 1), new Object[] { "DDD", "DSD", "DDD", 'D', ModItems.stick_semtex, 'S', ModItems.safety_fuse });
 		CraftingManager.addRecipeAuto(new ItemStack(ModBlocks.c4, 1), new Object[] { "DDD", "DSD", "DDD", 'D', ModItems.stick_c4, 'S', ModItems.safety_fuse });
-		CraftingManager.addRecipeAuto(new ItemStack(ModBlocks.fissure_bomb, 1), new Object[] { "SUS", "RPR", "SUS", 'S', ModBlocks.semtex, 'U', U238.block(), 'R', OreDictManager.getReflector(), 'P', PU239.billet() });
 
 		
 		//IF Grenades

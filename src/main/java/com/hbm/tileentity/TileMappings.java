@@ -91,7 +91,6 @@ public class TileMappings {
 		put(TileEntityFluidDuct.class, "tileentity_universal_duct");
 		put(TileEntityMachineFluidTank.class, "tileentity_fluid_tank");
 		put(TileEntityMachineTurbofan.class, "tileentity_machine_turbofan");
-		put(TileEntityMachineTurbineGas.class, "tileentity_machine_gasturbine");
 		put(TileEntityCrateIron.class, "tileentity_crate_iron");
 		put(TileEntityCrateSteel.class, "tileentity_crate_steel");
 		put(TileEntityCrateDesh.class, "tileentity_crate_desh");
@@ -141,7 +140,6 @@ public class TileMappings {
 		put(TileEntityCore.class, "tileentity_v0");
 		put(TileEntityMachineArcFurnace.class, "tileentity_arc_furnace");
 		put(TileEntityMachineAmgen.class, "tileentity_amgen");
-		put(TileEntityMachineHephaestus.class, "tileentity_hephaestus");
 		put(TileEntityGeysir.class, "tileentity_geysir");
 		put(TileEntityMachineMissileAssembly.class, "tileentity_missile_assembly");
 		put(TileEntityLaunchTable.class, "tileentity_large_launch_table");
@@ -274,8 +272,11 @@ public class TileMappings {
 		put(TileEntityCondenser.class, "tileentity_condenser");
 		put(TileEntityTowerSmall.class, "tileentity_cooling_tower_small");
 		put(TileEntityTowerLarge.class, "tileentity_cooling_tower_large");
+		put(TileEntityTowerChimney.class, "tileentity_chimney_tower");
 		put(TileEntityDeuteriumExtractor.class, "tileentity_deuterium_extractor");
 		put(TileEntityDeuteriumTower.class, "tileentity_deuterium_tower");
+		put(TileEntityAtmoTower.class, "tileentity_atmospheric_tower");
+		put(TileEntityAtmoVent.class, "tileentity_atmospheric_vent");
 		put(TileEntityMachineLiquefactor.class, "tileentity_liquefactor");
 		put(TileEntityMachineSolidifier.class, "tileentity_solidifier");
 		put(TileEntityElectrolyser.class, "tileentity_electrolyser");
@@ -325,6 +326,7 @@ public class TileMappings {
 		put(TileEntityRBMKModerator.class, "tileentity_rbmk_moderator");
 		put(TileEntityRBMKOutgasser.class, "tileentity_rbmk_outgasser");
 		put(TileEntityRBMKCooler.class, "tileentity_rbmk_cooler");
+		put(TileEntityRBMKBurner.class, "tileentity_rbmk_burner");
 		put(TileEntityRBMKHeater.class, "tileentity_rbmk_heater");
 		put(TileEntityRBMKStorage.class, "tileentity_rbmk_storage");
 		put(TileEntityCraneConsole.class, "tileentity_rbmk_crane_console");

@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 public class MachineMicrowave extends BlockMachineBase {
 
 	public MachineMicrowave(Material mat) {
-		super(mat, 0);
+		super(mat, ModBlocks.guiID_microwave);
 		this.rotatable = true;
 	}
 

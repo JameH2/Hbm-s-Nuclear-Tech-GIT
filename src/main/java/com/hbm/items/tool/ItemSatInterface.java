@@ -1,7 +1,5 @@
 package com.hbm.items.tool;
 
-import com.hbm.inventory.gui.GUIScreenSatCoord;
-import com.hbm.inventory.gui.GUIScreenSatInterface;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemSatChip;
 import com.hbm.main.MainRegistry;
@@ -9,19 +7,16 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.SatPanelPacket;
 import com.hbm.saveddata.SatelliteSavedData;
 import com.hbm.saveddata.satellites.Satellite;
-import com.hbm.tileentity.IGUIProvider;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ItemSatInterface extends ItemSatChip implements IGUIProvider {
+public class ItemSatInterface extends ItemSatChip {
 	
 	@SideOnly(Side.CLIENT)
 	public static Satellite currentSat;
@@ -31,7 +26,10 @@ public class ItemSatInterface extends ItemSatChip implements IGUIProvider {
 		
 		if(world.isRemote) {
 
-			player.openGui(MainRegistry.instance, 0, world, 0, 0, 0);
+			if(this == ModItems.sat_interface)
+				player.openGui(MainRegistry.instance, ModItems.guiID_item_sat_interface, world, 0, 0, 0);
+			if(this == ModItems.sat_coord)
+				player.openGui(MainRegistry.instance, ModItems.guiID_item_sat_coord, world, 0, 0, 0);
 		}
 		
 		return stack;
@@ -51,21 +49,5 @@ public class ItemSatInterface extends ItemSatChip implements IGUIProvider {
     		PacketDispatcher.wrapper.sendTo(new SatPanelPacket(sat), (EntityPlayerMP) entity); //making this one sat that is static might not have been a good idea
     	}
     }
-
-	@Override
-	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return null;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		if(this == ModItems.sat_interface)
-			return new GUIScreenSatInterface(player);
-		else if(this == ModItems.sat_coord)
-			return new GUIScreenSatCoord(player);
-		
-		return null;
-	}
 
 }

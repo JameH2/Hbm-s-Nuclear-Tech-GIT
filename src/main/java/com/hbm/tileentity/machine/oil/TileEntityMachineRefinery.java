@@ -16,15 +16,12 @@ import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
-import com.hbm.inventory.container.ContainerMachineRefinery;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
-import com.hbm.inventory.gui.GUIMachineRefinery;
 import com.hbm.inventory.recipes.RefineryRecipes;
 import com.hbm.items.ModItems;
 import com.hbm.lib.Library;
-import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IOverpressurable;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.IRepairable;
@@ -37,10 +34,8 @@ import api.hbm.energy.IEnergyUser;
 import api.hbm.fluid.IFluidStandardTransceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -50,7 +45,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityMachineRefinery extends TileEntityMachineBase implements IEnergyUser, IFluidContainer, IFluidAcceptor, IFluidSource, IControlReceiver, IOverpressurable, IPersistentNBT, IRepairable, IFluidStandardTransceiver, IGUIProvider {
+public class TileEntityMachineRefinery extends TileEntityMachineBase implements IEnergyUser, IFluidContainer, IFluidAcceptor, IFluidSource, IControlReceiver, IOverpressurable, IPersistentNBT, IRepairable, IFluidStandardTransceiver {
 
 	public long power = 0;
 	public int sulfur = 0;
@@ -138,7 +133,7 @@ public class TileEntityMachineRefinery extends TileEntityMachineBase implements 
 			if(this.getBlockMetadata() < 12) {
 				ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata()).getRotation(ForgeDirection.DOWN);
 				worldObj.removeTileEntity(xCoord, yCoord, zCoord);
-				worldObj.setBlock(xCoord, yCoord, zCoord, ModBlocks.machine_refinery, dir.ordinal() + 10, 3);
+				worldObj.setBlock(xCoord, yCoord, zCoord, ModBlocks.machine_fluidtank, dir.ordinal() + 10, 3);
 				MultiblockHandlerXR.fillSpace(worldObj, xCoord, yCoord, zCoord, ((BlockDummyable) ModBlocks.machine_refinery).getDimensions(), ModBlocks.machine_refinery, dir);
 				NBTTagCompound data = new NBTTagCompound();
 				this.writeToNBT(data);
@@ -429,11 +424,6 @@ public class TileEntityMachineRefinery extends TileEntityMachineBase implements 
 	}
 
 	@Override
-	public boolean canConnect(FluidType type, ForgeDirection dir) {
-		return dir != ForgeDirection.UNKNOWN && dir != ForgeDirection.DOWN;
-	}
-
-	@Override
 	public void explode(World world, int x, int y, int z) {
 		
 		if(this.hasExploded) return;
@@ -479,16 +469,5 @@ public class TileEntityMachineRefinery extends TileEntityMachineBase implements 
 		NBTTagCompound data = nbt.getCompoundTag(NBT_PERSISTENT_KEY);
 		for(int i = 0; i < 5; i++) this.tanks[i].readFromNBT(data, "" + i);
 		this.hasExploded = data.getBoolean("hasExploded");
-	}
-
-	@Override
-	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new ContainerMachineRefinery(player.inventory, this);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new GUIMachineRefinery(player.inventory, this);
 	}
 }

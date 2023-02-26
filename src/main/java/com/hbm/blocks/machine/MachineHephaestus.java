@@ -28,10 +28,7 @@ public class MachineHephaestus extends BlockDummyable implements ILookOverlay {
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		
-		if(meta >= 12) return new TileEntityMachineHephaestus();
-		if(meta >= 6) return new TileEntityProxyCombo().fluid();
-		return null;
+		return new TileEntityMachineHephaestus();
 	}
 
 	@Override
