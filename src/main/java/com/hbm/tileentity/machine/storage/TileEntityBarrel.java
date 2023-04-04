@@ -6,15 +6,23 @@ import java.util.List;
 import java.util.Set;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.entity.effect.EntityCloudFleija;
+import com.hbm.entity.effect.EntityNukeCloudSmall;
+import com.hbm.entity.logic.EntityBalefire;
+import com.hbm.entity.logic.EntityNukeExplosionMK3;
+import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.interfaces.IFluidAcceptor;
 import com.hbm.interfaces.IFluidSource;
 import com.hbm.inventory.FluidContainerRegistry;
+import com.hbm.inventory.container.ContainerBarrel;
 import com.hbm.inventory.fluid.FluidType;
-import com.hbm.inventory.fluid.trait.FT_Corrosive;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.trait.FT_Corrosive;
+import com.hbm.inventory.gui.GUIBarrel;
 import com.hbm.lib.Library;
 import com.hbm.saveddata.TomSaveData;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.fauxpointtwelve.DirPos;
@@ -24,14 +32,19 @@ import api.hbm.fluid.IFluidConnector;
 import api.hbm.fluid.IFluidStandardTransceiver;
 import api.hbm.fluid.IPipeNet;
 import api.hbm.fluid.PipeNet;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
-public class TileEntityBarrel extends TileEntityMachineBase implements IFluidAcceptor, IFluidSource, IFluidStandardTransceiver, IPersistentNBT {
+public class TileEntityBarrel extends TileEntityMachineBase implements IFluidAcceptor, IFluidSource, IFluidStandardTransceiver, IPersistentNBT, IGUIProvider {
 	
 	public FluidTank tank;
 	public short mode = 0;
@@ -330,4 +343,54 @@ public class TileEntityBarrel extends TileEntityMachineBase implements IFluidAcc
 		this.tank.readFromNBT(data, "tank");
 		this.mode = data.getShort("nbt");
 	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerBarrel(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIBarrel(player.inventory, this);
+	}
+	//tileentitybarrel
+	@Override
+    public void invalidate()
+    {
+    	super.invalidate();
+    	
+    	float amat = Math.min(this.getFluidFill(Fluids.AMAT)/200,500);
+    	float aschrab = Math.min(this.getFluidFill(Fluids.ASCHRAB)/66,500);
+    	if(!worldObj.isRemote) {
+    		if(amat>0)
+    		{
+    			if(amat >= 25)
+    			{
+    				EntityBalefire bf = new EntityBalefire(worldObj);
+    	    		bf.setPosition(xCoord, yCoord, zCoord);
+    				bf.destructionRange = (int) amat;
+    				worldObj.spawnEntityInWorld(bf);
+    				worldObj.spawnEntityInWorld(EntityNukeCloudSmall.statFacBale(worldObj, xCoord, yCoord, zCoord, amat * 1.5F, 1000));
+    				return;
+    			}
+    			else
+    			{
+    				new ExplosionVNT(worldObj, xCoord, yCoord, zCoord, amat).makeAmat().explode();
+    			}
+    		}
+    		if(aschrab>0)
+    		{
+    			EntityNukeExplosionMK3 ex = EntityNukeExplosionMK3.statFacFleija(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, (int) aschrab);
+    			if(!ex.isDead) {
+    				worldObj.spawnEntityInWorld(ex);
+    	
+    				EntityCloudFleija cloud = new EntityCloudFleija(worldObj, (int) aschrab);
+    				cloud.setPosition(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
+    				worldObj.spawnEntityInWorld(cloud);
+    			}
+    			return;			
+    		}	
+    	}
+    }
 }

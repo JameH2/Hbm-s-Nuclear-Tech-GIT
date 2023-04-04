@@ -29,6 +29,7 @@ public class BulletConfigSyncingUtil {
 	public static int IRON_HS = i++;
 	public static int STEEL_HS = i++;
 	public static int GOLD_HS = i++;
+	public static int LEAD_HS = i++;
 	public static int DESH_HS = i++;
 
 	public static int G20_NORMAL = i++;
@@ -115,6 +116,7 @@ public class BulletConfigSyncingUtil {
 	public static int ROUND_LUNA_SNIPER_SABOT = i++;
 	public static int ROUND_LUNA_SNIPER_INCENDIARY = i++;
 	public static int ROUND_LUNA_SNIPER_EXPLOSIVE = i++;
+	public static int ROUND_LUNA_SNIPER_DANGER = i++;
 
 	public static int R5_NORMAL = i++;
 	public static int R5_EXPLOSIVE = i++;
@@ -305,6 +307,7 @@ public class BulletConfigSyncingUtil {
 		configSet.put(IRON_HS, Gun357MagnumFactory.getRevIronConfig().setHeadshot(3F));
 		configSet.put(STEEL_HS, Gun357MagnumFactory.getRevCursedConfig().setHeadshot(3F));
 		configSet.put(GOLD_HS, Gun357MagnumFactory.getRevGoldConfig().setHeadshot(3F));
+		configSet.put(LEAD_HS, Gun357MagnumFactory.getRevLeadConfig().setHeadshot(3F));
 		configSet.put(DESH_HS, Gun357MagnumFactory.getRevDeshConfig().setHeadshot(3F));
 
 		configSet.put(G20_NORMAL, Gun20GaugeFactory.get20GaugeConfig());
@@ -397,6 +400,8 @@ public class BulletConfigSyncingUtil {
 		configSet.put(ROUND_LUNA_SNIPER_SABOT, Gun50BMGFactory.getLunaticSabotRound());
 		configSet.put(ROUND_LUNA_SNIPER_INCENDIARY, Gun50BMGFactory.getLunaticIncendiaryRound());
 		configSet.put(ROUND_LUNA_SNIPER_EXPLOSIVE, Gun50BMGFactory.getLunaticExplosiveRound());
+		configSet.put(ROUND_LUNA_SNIPER_DANGER, Gun50BMGFactory.getLunaticDangerRound());
+
 		
 		configSet.put(R5_NORMAL, Gun5mmFactory.get5mmConfig());
 		configSet.put(R5_EXPLOSIVE, Gun5mmFactory.get5mmExplosiveConfig());

@@ -3,6 +3,7 @@ package com.hbm.handler.guncfg;
 import java.util.ArrayList;
 
 import com.hbm.entity.projectile.EntityBulletBase;
+import com.hbm.explosion.ExplosionNukeSmall;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.CasingEjector;
@@ -35,6 +36,7 @@ public class GunGrenadeFactory {
 		config.gunMode = GunConfiguration.MODE_NORMAL;
 		config.firingMode = GunConfiguration.FIRE_MANUAL;
 		config.hasSights = true;
+		config.zoomFOV = 0.66F;
 		config.reloadDuration = 40;
 		config.firingDuration = 0;
 		config.ammoCap = 1;
@@ -215,7 +217,7 @@ public class GunGrenadeFactory {
 
 			@Override
 			public void behaveBlockHit(EntityBulletBase bullet, int x, int y, int z) {
-				BulletConfigFactory.nuclearExplosion(bullet, x, y, z, 1);
+				BulletConfigFactory.nuclearExplosion(bullet, x, y, z, ExplosionNukeSmall.PARAMS_TOTS);
 			}
 		};
 		

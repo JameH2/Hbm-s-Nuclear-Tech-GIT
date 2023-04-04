@@ -20,6 +20,8 @@ import com.hbm.util.Tuple.Quartet;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.world.biome.BiomeGenBase;
 
 public class EntityMappings {
 
@@ -76,7 +78,6 @@ public class EntityMappings {
 		addEntity(EntityGrenadeMk2.class, "entity_grenade_mk2", 500);
 		addEntity(EntityGrenadeZOMG.class, "entity_grenade_zomg", 500);
 		addEntity(EntityGrenadeASchrab.class, "entity_grenade_aschrab", 500);
-		addEntity(EntityNukeCloudNoShroom.class, "entity_nuke_cloud_no", 1000);
 		addEntity(EntityFalloutRain.class, "entity_fallout", 1000);
 		addEntity(EntityDischarge.class, "entity_emp_discharge", 500);
 		addEntity(EntityEMPBlast.class, "entity_emp_blast", 1000);
@@ -230,6 +231,10 @@ public class EntityMappings {
 		for(Quartet<Class<? extends Entity>, String, Integer, Integer> entry : mobMappings) {
 			EntityRegistry.registerGlobalEntityID(entry.getW(), entry.getX(), EntityRegistry.findGlobalUniqueEntityId(), entry.getY(), entry.getZ());
 		}
+		EntityRegistry.addSpawn(EntityDuck.class, 10, 4, 4, EnumCreatureType.creature, BiomeGenBase.swampland);
+		EntityRegistry.addSpawn(EntityDuck.class, 10, 4, 4, EnumCreatureType.creature, BiomeGenBase.river);
+		EntityRegistry.addSpawn(EntityDuck.class, 10, 4, 4, EnumCreatureType.creature, BiomeGenBase.forest);
+		
 	}
 	
 	private static void addEntity(Class<? extends Entity> clazz, String name, int trackingRange) {

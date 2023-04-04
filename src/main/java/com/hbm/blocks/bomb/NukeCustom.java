@@ -2,6 +2,8 @@ package com.hbm.blocks.bomb;
 
 import java.util.Random;
 
+import org.apache.logging.log4j.Level;
+
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.effect.EntityCloudFleija;
 import com.hbm.entity.effect.EntityNukeCloudSmall;
@@ -12,9 +14,11 @@ import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.projectile.EntityFallingNuke;
 import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.interfaces.IBomb;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.bomb.TileEntityNukeCustom;
+import com.hbm.config.GeneralConfig;
 
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraft.block.Block;
@@ -111,7 +115,7 @@ public class NukeCustom extends BlockContainer implements IBomb {
 			TileEntityNukeCustom entity = (TileEntityNukeCustom) world.getTileEntity(x, y, z);
 			
 			if (entity != null) {
-				FMLNetworkHandler.openGui(player, MainRegistry.instance, ModBlocks.guiID_nuke_custom, world, x, y, z);
+				FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, x, y, z);
 			}
 			return true;
 			
@@ -162,14 +166,20 @@ public class NukeCustom extends BlockContainer implements IBomb {
     	/// ANTIMATTER ///
 		} else if(amat > 0) {
 
-			amat += hydro / 2 + nuke / 4 + tnt / 8;
+			//amat += hydro / 2 + nuke / 4 + tnt / 8;
 			amat = Math.min(amat, maxAmat);
-
-			EntityBalefire bf = new EntityBalefire(worldObj);
-    		bf.setPosition(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
-			bf.destructionRange = (int) amat;
-			worldObj.spawnEntityInWorld(bf);
-			worldObj.spawnEntityInWorld(EntityNukeCloudSmall.statFacBale(worldObj, xCoord + 0.5, yCoord + 5, zCoord + 0.5, amat * 1.5F, 1000));
+			if(amat >= 25)
+			{
+				EntityBalefire bf = new EntityBalefire(worldObj);
+	    		bf.setPosition(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
+				bf.destructionRange = (int) amat;
+				worldObj.spawnEntityInWorld(bf);
+				worldObj.spawnEntityInWorld(EntityNukeCloudSmall.statFacBale(worldObj, xCoord + 0.5, yCoord + 5, zCoord + 0.5, amat * 1.5F, 1000));	
+			}
+			else
+			{
+				new ExplosionVNT(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, amat).makeAmat().explode();
+			}
 			
 		/// HYDROGEN ///
 		} else if(hydro > 0) {
@@ -234,7 +244,12 @@ public class NukeCustom extends BlockContainer implements IBomb {
 		if (i == 3) {
 			world.setBlockMetadataWithNotify(x, y, z, 2, 2);
 		}
+		if(!world.isRemote) {
+			if(GeneralConfig.enableExtendedLogging) {
+				MainRegistry.logger.log(Level.INFO, "[BOMBPL]" + this.getLocalizedName() + " placed at " + x + " / " + y + " / " + z + "! " + "by "+ player.getCommandSenderName());
+		}	
 	}
+}
 
 	@Override
 	public BombReturnCode explode(World world, int x, int y, int z) {

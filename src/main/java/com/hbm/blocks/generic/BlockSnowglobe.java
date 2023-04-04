@@ -3,7 +3,6 @@ package com.hbm.blocks.generic;
 import java.util.List;
 import java.util.Random;
 
-import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.wiaj.WorldInAJar;
 
@@ -88,7 +87,7 @@ public class BlockSnowglobe extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		
 		if(world.isRemote) {
-			FMLNetworkHandler.openGui(player, MainRegistry.instance, ModItems.guiID_item_snowglobe, world, x, y, z);
+			FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, x, y, z);
 			return true;
 			
 		} else {

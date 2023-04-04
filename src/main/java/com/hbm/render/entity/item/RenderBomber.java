@@ -55,6 +55,9 @@ public class RenderBomber extends Render {
 		case 8:
 			bindTexture(ResourceManager.b29_3_tex);
 			break;
+		case 9:
+			bindTexture(ResourceManager.airliner_tex);
+			break;
 		default:
 			bindTexture(ResourceManager.dornier_1_tex);
 			break;
@@ -79,6 +82,11 @@ public class RenderBomber extends Render {
 			GL11.glScalef(30F / 3.1F, 30F / 3.1F, 30F / 3.1F);
 			GL11.glRotatef(180, 0F, 1F, 0F);
 			ResourceManager.b29.renderAll();
+			break; //TODO: passenger plane model
+		case 9:
+			GL11.glScalef(30F / 3.1F, 30F / 3.1F, 30F / 3.1F);
+			GL11.glRotatef(180, 0F, 1F, 0F);
+			ResourceManager.Airliner.renderAll();
 			break;
 		default:
 			ResourceManager.dornier.renderAll();

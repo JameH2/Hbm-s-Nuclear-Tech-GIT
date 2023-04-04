@@ -9,6 +9,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.config.WorldConfig;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.explosion.ExplosionNukeSmall;
+import com.hbm.interfaces.Spaghetti;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
 
@@ -19,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
+@Spaghetti("why")
 public class Meteorite {
 	
 	public static boolean safeMode = false;
@@ -120,7 +122,7 @@ public class Meteorite {
 			case 11:
 				// Atomic meteorite
 				
-				ExplosionNukeSmall.explode(world, x + 0.5, y + 0.5, z + 0.5, safe ? ExplosionNukeSmall.safe : ExplosionNukeSmall.medium);
+				ExplosionNukeSmall.explode(world, x + 0.5, y + 0.5, z + 0.5, safe ? ExplosionNukeSmall.PARAMS_SAFE : ExplosionNukeSmall.PARAMS_MEDIUM);
 				return;
 			case 12:
 				// Star Blaster
@@ -712,6 +714,8 @@ public class Meteorite {
 			ores.add(new ItemStack(ModBlocks.ore_meteor_lithium));
 		for(int i = 0; i < 1; i++)
 			ores.add(new ItemStack(ModBlocks.ore_meteor_starmetal));
+		for(int i = 0; i < 9; i++)
+			ores.add(new ItemStack(ModBlocks.ore_meteor_iron));
 
 		return ores;
 	}
@@ -746,5 +750,7 @@ public class Meteorite {
 		replacables.add(ModBlocks.ore_meteor_lead);
 		replacables.add(ModBlocks.ore_meteor_lithium);
 		replacables.add(ModBlocks.ore_meteor_starmetal);
+		replacables.add(ModBlocks.ore_meteor_iron);
+
 	}
 }

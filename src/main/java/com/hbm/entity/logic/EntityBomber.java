@@ -9,6 +9,7 @@ import com.hbm.entity.projectile.EntityBoxcar;
 import com.hbm.entity.projectile.EntityRocketHoming;
 import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.LoopedEntitySoundPacket;
@@ -19,6 +20,8 @@ import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -32,6 +35,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 public class EntityBomber extends Entity implements IChunkLoader {
 	
 	int timer = 200;
+	int civtimer = 600;
 	int bombStart = 75;
 	int bombStop = 125;
 	int bombRate = 3;
@@ -69,6 +73,12 @@ public class EntityBomber extends Entity implements IChunkLoader {
                 {
                     this.killBomber();
                 }
+                /*
+                if (this.health <= 0 && type == 9)
+                {
+                    this.killBomber(); //not really needed wtf
+                }
+                */
             }
 
             return true;
@@ -77,7 +87,17 @@ public class EntityBomber extends Entity implements IChunkLoader {
     
     private void killBomber() {
         ExplosionLarge.explode(worldObj, posX, posY, posZ, 5, true, false, true);
+    	if(type == 8) {
+    		worldObj.playSoundEffect((double)(posX + 0.5F), (double)(posY + 0.5F), (double)(posZ + 0.5F), "hbm:entity.warCrimeShotDown", 25.0F, 1.0F);
+			List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.boundingBox.expand(200, 200, 200));
+
+			for(EntityPlayer player : players) {
+				player.inventory.addItemStackToInventory(new ItemStack(ModItems.coin_airliner));
+			}
+			}else {
     	worldObj.playSoundEffect((double)(posX + 0.5F), (double)(posY + 0.5F), (double)(posZ + 0.5F), "hbm:entity.planeShotDown", 25.0F, 1.0F);
+    	
+    	}
     }
 	
 	@Override
@@ -131,6 +151,9 @@ public class EntityBomber extends Entity implements IChunkLoader {
 		
 		if(this.ticksExisted > timer)
 			this.setDead();
+		else if(type == 8 && ticksExisted > civtimer){
+			this.setDead();
+		}
 		
 		if(!worldObj.isRemote && this.health > 0 && this.ticksExisted > bombStart && this.ticksExisted < bombStop && this.ticksExisted % bombRate == 0) {
 			
@@ -400,6 +423,25 @@ public class EntityBomber extends Entity implements IChunkLoader {
     	
     	return bomber;
     }
+    public static EntityBomber statFacCV(World world, double x, double y, double z) {
+    	
+    	EntityBomber bomber = new EntityBomber(world);
+    	
+    	bomber.timer = 200;
+    	bomber.bombStart = 75;
+    	bomber.bombStop = 125;
+    	bomber.bombRate = 90000;
+
+    	bomber.fac(world, x, y+16, z); //adding the y value breaks things, sorry bluehat
+    	
+    	bomber.getDataWatcher().updateObject(16, (byte)9);
+    	
+    	bomber.type = 8;
+    	
+    	
+    	return bomber;
+    }
+
 
     @Override
 	public void entityInit() {

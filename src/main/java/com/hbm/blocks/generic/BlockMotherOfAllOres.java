@@ -35,6 +35,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
@@ -281,7 +282,8 @@ public class BlockMotherOfAllOres extends BlockContainer implements IBlockMultiP
 			if(name.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
 				name.setItemDamage(0);
 			}
-			return I18nUtil.resolveKey(this.getUnlocalizedName() + ".name", name.getItem().getItemStackDisplayName(name));
+			//return I18nUtil.resolveKey(this.getUnlocalizedName() + ".name", name.getItem().getItemStackDisplayName(name));
+			return StatCollector.translateToLocalFormatted(this.getUnlocalizedName() + ".name", name.getItem().getItemStackDisplayName(name));
 		}
 	}
 	

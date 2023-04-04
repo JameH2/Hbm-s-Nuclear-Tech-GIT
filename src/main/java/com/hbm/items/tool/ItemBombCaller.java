@@ -43,6 +43,8 @@ public class ItemBombCaller extends Item {
     		list.add("Type: PIP OH GOD");
         if(itemstack.getItemDamage() == 7)
     		list.add("Type: Cloud the cloud oh god the cloud");
+        if(itemstack.getItemDamage() == 8)
+    		list.add("Civilian Airliner.");
 	}
 	
 	@Override
@@ -54,6 +56,7 @@ public class ItemBombCaller extends Item {
 		int z = pos.blockZ;
 		
 		boolean b = false;
+		boolean b2 = false;
 		
 	    if(!world.isRemote)
 		{
@@ -82,9 +85,14 @@ public class ItemBombCaller extends Item {
 	        if(stack.getItemDamage() == 7)
 	        	if(world.spawnEntityInWorld(EntityBomber.statFacPC(world, x, y, z)))
 	        		b = true;
-	        
+	        if(stack.getItemDamage() == 8)
+	        	if(world.spawnEntityInWorld(EntityBomber.statFacCV(world, x, y, z)))
+	        		b2 = true;
 	        if(b) {
 		    	player.addChatMessage(new ChatComponentText("Called in airstrike!"));
+		        world.playSoundAtEntity(player, "hbm:item.techBleep", 1.0F, 1.0F);
+	        }else if(b2){
+		    	player.addChatMessage(new ChatComponentText("Rerouted Civilian Traffic!"));
 		        world.playSoundAtEntity(player, "hbm:item.techBleep", 1.0F, 1.0F);
 	        } else {
 		        world.playSoundAtEntity(player, "hbm:item.techBoop", 1.0F, 1.0F);
@@ -105,6 +113,7 @@ public class ItemBombCaller extends Item {
         p_150895_3_.add(new ItemStack(p_150895_1_, 1, 2));
         p_150895_3_.add(new ItemStack(p_150895_1_, 1, 3));
         p_150895_3_.add(new ItemStack(p_150895_1_, 1, 4));
+        p_150895_3_.add(new ItemStack(p_150895_1_, 1, 8));
     }
 
     @Override

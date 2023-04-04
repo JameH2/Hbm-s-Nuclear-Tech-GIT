@@ -300,7 +300,7 @@ public class CentrifugeRecipes extends SerializableRecipe {
 		recipes.put(new ComparableStack(ModBlocks.block_slag), new ItemStack[] {
 				new ItemStack(Blocks.gravel, 1),
 				new ItemStack(ModItems.powder_fire, 1),
-				new ItemStack(Items.dye, 1, 15), //temp
+				new ItemStack(ModItems.powder_calcium), //temp
 				new ItemStack(ModItems.dust) });
 		
 		recipes.put(new ComparableStack(ModItems.mineral_fragment, 1, 5), new ItemStack[] {
@@ -345,6 +345,14 @@ public class CentrifugeRecipes extends SerializableRecipe {
 					new ItemStack(ModItems.ore_enriched, 1, i),
 					ItemStackUtil.carefulCopy(by2),
 					ItemStackUtil.carefulCopy(by2) });
+			
+			EnumByproduct tier3 = ore.byproducts[2];
+			ItemStack by3 = tier3 == null ? new ItemStack(ModItems.dust) : DictFrame.fromOne(ModItems.ore_byproduct, tier3, 1);
+			recipes.put(new ComparableStack(ModItems.ore_seared, 1, i), new ItemStack[] {
+					new ItemStack(ModItems.ore_enriched, 1, i),
+					new ItemStack(ModItems.ore_enriched, 1, i),
+					ItemStackUtil.carefulCopy(by3),
+					ItemStackUtil.carefulCopy(by3) });
 		}
 		
 		

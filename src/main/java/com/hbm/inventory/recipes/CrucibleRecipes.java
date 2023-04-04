@@ -81,7 +81,7 @@ public class CrucibleRecipes extends SerializableRecipe {
 				.outputs(new MaterialStack(Mats.MAT_ALLOY, n * 2)));
 		
 		recipes.add(new CrucibleRecipe(3, "crucible.hss", 9, new ItemStack(ModItems.ingot_dura_steel))
-				.inputs(new MaterialStack(Mats.MAT_STEEL, n * 5), new MaterialStack(Mats.MAT_TUNGSTEN, n * 3), new MaterialStack(Mats.MAT_COBALT, n * 1))
+				.inputs(new MaterialStack(Mats.MAT_STAINLESS, n * 5), new MaterialStack(Mats.MAT_TUNGSTEN, n * 3), new MaterialStack(Mats.MAT_COBALT, n * 1))
 				.outputs(new MaterialStack(Mats.MAT_DURA, n * 9)));
 		
 		recipes.add(new CrucibleRecipe(4, "crucible.ferro", 3, new ItemStack(ModItems.ingot_ferrouranium))
@@ -91,6 +91,10 @@ public class CrucibleRecipes extends SerializableRecipe {
 		recipes.add(new CrucibleRecipe(5, "crucible.tcalloy", 9, new ItemStack(ModItems.ingot_tcalloy))
 				.inputs(new MaterialStack(Mats.MAT_STEEL, n * 8), new MaterialStack(Mats.MAT_TECHNIETIUM, n))
 				.outputs(new MaterialStack(Mats.MAT_TCALLOY, i)));
+		
+		recipes.add(new CrucibleRecipe(12, "crucible.cdalloy", 9, new ItemStack(ModItems.ingot_cdalloy))
+				.inputs(new MaterialStack(Mats.MAT_STEEL, n * 8), new MaterialStack(Mats.MAT_CADMIUM, n))
+				.outputs(new MaterialStack(Mats.MAT_CDALLOY, i)));
 		
 		registerMoldsForNEI();
 	}
@@ -221,6 +225,7 @@ public class CrucibleRecipes extends SerializableRecipe {
 	public void deleteRecipes() {
 		this.indexMapping.clear();
 		this.recipes.clear();
+		this.moldRecipes.clear();
 	}
 	
 	/** Returns a map containing all recipes where an item becomes a liquid material in the crucible. */
@@ -264,9 +269,17 @@ public class CrucibleRecipes extends SerializableRecipe {
 		return map;
 	}
 	
-	public static List<ItemStack[]> moldRecipes = new ArrayList();
+	private static List<ItemStack[]> moldRecipes = new ArrayList();
 	
-	public static void registerMoldsForNEI() {
+	public static List<ItemStack[]> getMoldRecipes() {
+		if(moldRecipes.isEmpty()) {
+			registerMoldsForNEI();
+		}
+		
+		return moldRecipes;
+	}
+	
+	private static void registerMoldsForNEI() {
 		
 		for(NTMMaterial material : Mats.orderedList) {
 			

@@ -1,36 +1,34 @@
 package com.hbm.tileentity.machine.rbmk;
 
-import java.util.List;
-
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.rbmk.RBMKBase;
 import com.hbm.blocks.machine.rbmk.RBMKRod;
-import com.hbm.config.RadiationConfig;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
 import com.hbm.handler.radiation.ChunkRadiationManager;
+import com.hbm.inventory.container.ContainerRBMKRod;
+import com.hbm.inventory.gui.GUIRBMKRod;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemRBMKRod;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
 import com.hbm.util.Compat;
-import com.hbm.util.ContaminationUtil;
-import com.hbm.util.ContaminationUtil.ContaminationType;
-import com.hbm.util.ContaminationUtil.HazardType;
-
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
 public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBMKFluxReceiver, IRBMKLoadable, SimpleComponent {
@@ -240,48 +238,6 @@ public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBM
 			
 			if(!worldObj.getBlock(x, y + h, z).isOpaqueCube())
 				hits++;
-			
-			List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(x + 0.5, y + 0.5, z + 0.5, x + 0.5, y + 0.5, z + 0.5));
-			
-			if(entities != null)
-				for(EntityLivingBase e : entities) {
-					ContaminationUtil.contaminate(e, HazardType.NEUTRON, ContaminationType.CREATIVE, (float)flux);
-					ContaminationUtil.contaminate(e, HazardType.RADIATION, ContaminationType.CREATIVE, (float)flux / 2);
-					if(e instanceof EntityPlayer && RadiationConfig.disableNeutron) {
-						//Random rand = target.getRNG();
-						EntityPlayer player = (EntityPlayer) e;
-						for(int i2 = 0; i2 < player.inventory.mainInventory.length; i2++)
-						{
-							ItemStack stack2 = player.inventory.getStackInSlot(i2);
-							
-							//if(rand.nextInt(100) == 0) {
-								//stack2 = player.inventory.armorItemInSlot(rand.nextInt(4));
-							//}
-							
-							//only affect unstackables (e.g. tools and armor) so that the NBT tag's stack restrictions isn't noticeable
-							if(stack2 != null) {
-									if(!stack2.hasTagCompound())
-										stack2.stackTagCompound = new NBTTagCompound();
-									float activation = stack2.stackTagCompound.getFloat("ntmNeutron");
-									stack2.stackTagCompound.setFloat("ntmNeutron", activation+(float)(flux/stack2.stackSize));
-									
-								//}
-							}
-						}
-						for(int i2 = 0; i2 < player.inventory.armorInventory.length; i2++)
-						{
-							ItemStack stack2 = player.inventory.armorItemInSlot(i2);
-							
-							//only affect unstackables (e.g. tools and armor) so that the NBT tag's stack restrictions isn't noticeable
-							if(stack2 != null) {					
-									if(!stack2.hasTagCompound())
-										stack2.stackTagCompound = new NBTTagCompound();
-									float activation = stack2.stackTagCompound.getFloat("ntmNeutron");
-									stack2.stackTagCompound.setFloat("ntmNeutron", activation+(float)(flux/stack2.stackSize));
-							}
-						}	
-					}
-				}
 		}
 		
 		if(hits > 0)
@@ -463,5 +419,49 @@ public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBM
 			return new Object[] {ItemRBMKRod.getPoison(slots[0])};
 		}
 		return new Object[] {"N/A"};
+	}
+
+	@Callback
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getCoreHeat(Context context, Arguments args) {
+		if(slots[0] != null && slots[0].getItem() instanceof ItemRBMKRod) {
+			return new Object[] {ItemRBMKRod.getCoreHeat(slots[0])};
+		}
+		return new Object[] {"N/A"};
+	}
+
+	@Callback
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getSkinHeat(Context context, Arguments args) {
+		if(slots[0] != null && slots[0].getItem() instanceof ItemRBMKRod) {
+			return new Object[] {ItemRBMKRod.getHullHeat(slots[0])};
+		}
+		return new Object[] {"N/A"};
+	}
+
+	@Callback
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getInfo(Context context, Arguments args) {
+		Object OC_enrich_buf;
+		Object OC_poison_buf;
+		if(slots[0] != null && slots[0].getItem() instanceof ItemRBMKRod) {
+			OC_enrich_buf = ItemRBMKRod.getEnrichment(slots[0]);
+			OC_poison_buf = ItemRBMKRod.getPoison(slots[0]);
+		} else {
+			OC_enrich_buf = "N/A";
+			OC_poison_buf = "N/A";
+		}
+		return new Object[] {heat, fluxSlow, fluxFast, OC_enrich_buf, OC_poison_buf};
+	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerRBMKRod(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIRBMKRod(player.inventory, this);
 	}
 }
