@@ -790,9 +790,11 @@ public class ModBlocks {
 	public static Block conveyor_lift;
 	public static Block crane_extractor;
 	public static Block crane_inserter;
+	public static Block crane_grabber;
 	public static Block crane_router;
 	public static Block crane_boxer;
 	public static Block crane_unboxer;
+	public static Block crane_splitter;
 	
 	public static Block fan;
 
@@ -862,8 +864,9 @@ public class ModBlocks {
 
 	public static Block iter;
 	public static Block plasma_heater;
-	
+
 	public static Block watz;
+	public static Block watz_pump;
 
 	public static Block watz_element;
 	public static Block watz_control;
@@ -939,6 +942,8 @@ public class ModBlocks {
 	public static Block machine_catalytic_cracker;
 	public static Block machine_catalytic_reformer;
 
+	public static Block machine_cryo_distill;
+	
 	public static Block machine_boiler_off;
 	public static Block machine_boiler_on;
 	
@@ -1939,9 +1944,11 @@ public class ModBlocks {
 		conveyor_lift = new BlockConveyorLift().setBlockName("conveyor_lift").setHardness(2.0F).setResistance(2.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":conveyor");
 		crane_extractor = new CraneExtractor().setBlockName("crane_extractor").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 		crane_inserter = new CraneInserter().setBlockName("crane_inserter").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+		crane_grabber = new CraneGrabber().setBlockName("crane_grabber").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 		crane_router = new CraneRouter().setBlockName("crane_router").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 		crane_boxer = new CraneBoxer().setBlockName("crane_boxer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 		crane_unboxer = new CraneUnboxer().setBlockName("crane_unboxer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+		crane_splitter = new CraneSplitter().setBlockName("crane_splitter").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":crane_side");
 		fan = new MachineFan().setBlockName("fan").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		
 		chain = new BlockChain(Material.iron).setBlockName("dungeon_chain").setHardness(0.25F).setResistance(2.0F).setCreativeTab(MainRegistry.blockTab).setBlockTextureName(RefStrings.MODID + ":chain");
@@ -2017,6 +2024,7 @@ public class ModBlocks {
 		watz_conductor = new BlockCableConnect(Material.iron).setBlockName("watz_conductor").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":watz_conductor_top");
 		watz_core = new WatzCore(Material.iron).setBlockName("watz_core").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":watz_computer");
 		watz = new Watz().setBlockName("watz").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
+		watz_pump = new WatzPump().setBlockName("watz_pump").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 
 		fwatz_conductor = new BlockPillar(Material.iron, RefStrings.MODID + ":block_combine_steel").setBlockName("fwatz_conductor").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":fwatz_conductor_side");
 		fwatz_cooler = new BlockPillar(Material.iron, RefStrings.MODID + ":fwatz_cooler_top").setBlockName("fwatz_cooler").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":fwatz_cooler");
@@ -2195,6 +2203,8 @@ public class ModBlocks {
 		zirnox_destroyed = new ZirnoxDestroyed(Material.iron).setBlockName("zirnox_destroyed").setHardness(100.0F).setResistance(800.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		machine_controller = new MachineReactorControl(Material.iron).setBlockName("machine_controller").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
+		machine_cryo_distill = new MachineCryoDistill(Material.iron).setBlockName("machine_cryo_distill").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
+		
 		machine_boiler_off = new MachineBoiler(false).setBlockName("machine_boiler_off").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":machine_boiler_off");
 		machine_boiler_on = new MachineBoiler(true).setBlockName("machine_boiler_on").setHardness(5.0F).setResistance(10.0F).setLightLevel(1.0F).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":machine_boiler_on");
 		machine_boiler_electric_off = new MachineBoiler(false).setBlockName("machine_boiler_electric_off").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":machine_boiler_electric_off");
@@ -3160,6 +3170,7 @@ public class ModBlocks {
 
 		GameRegistry.registerBlock(crane_extractor, crane_extractor.getUnlocalizedName());
 		GameRegistry.registerBlock(crane_inserter, crane_inserter.getUnlocalizedName());
+		GameRegistry.registerBlock(crane_grabber, crane_grabber.getUnlocalizedName());
 		GameRegistry.registerBlock(crane_router, crane_router.getUnlocalizedName());
 		GameRegistry.registerBlock(crane_boxer, crane_boxer.getUnlocalizedName());
 		GameRegistry.registerBlock(crane_unboxer, crane_unboxer.getUnlocalizedName());
@@ -3168,6 +3179,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(conveyor_triple, conveyor_triple.getUnlocalizedName());
 		GameRegistry.registerBlock(conveyor_chute, conveyor_chute.getUnlocalizedName());
 		GameRegistry.registerBlock(conveyor_lift, conveyor_lift.getUnlocalizedName());
+		GameRegistry.registerBlock(crane_splitter, crane_splitter.getUnlocalizedName());
 		GameRegistry.registerBlock(fan, fan.getUnlocalizedName());
 		
 		GameRegistry.registerBlock(chain, chain.getUnlocalizedName());
@@ -3247,6 +3259,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(fraction_spacer, fraction_spacer.getUnlocalizedName());
 		GameRegistry.registerBlock(machine_catalytic_cracker, machine_catalytic_cracker.getUnlocalizedName());
 		register(machine_catalytic_reformer);
+		register(machine_cryo_distill);
 		GameRegistry.registerBlock(machine_drill, machine_drill.getUnlocalizedName());
 		GameRegistry.registerBlock(machine_autosaw, machine_autosaw.getUnlocalizedName());
 		register(machine_excavator);
@@ -3334,6 +3347,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(watz_conductor, watz_conductor.getUnlocalizedName());
 		GameRegistry.registerBlock(watz_core, watz_core.getUnlocalizedName());
 		GameRegistry.registerBlock(watz, watz.getUnlocalizedName());
+		GameRegistry.registerBlock(watz_pump, watz_pump.getUnlocalizedName());
 
 		GameRegistry.registerBlock(fwatz_conductor, fwatz_conductor.getUnlocalizedName());
 		GameRegistry.registerBlock(fwatz_scaffold, fwatz_scaffold.getUnlocalizedName());
