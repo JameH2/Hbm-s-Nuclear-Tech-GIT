@@ -124,6 +124,10 @@ public class RodRecipes {
 		addRBMKRod(ModItems.billet_zfb_pu241, ModItems.rbmk_fuel_zfb_pu241);
 		addRBMKRod(ModItems.billet_zfb_am_mix, ModItems.rbmk_fuel_zfb_am_mix);
 		CraftingManager.addShapelessAuto(new ItemStack(ModItems.rbmk_fuel_drx, 1), new Object[] { ModItems.rbmk_fuel_balefire, ModItems.particle_digamma });
+		addRBMKRod(ModItems.billet_cm_fuel, ModItems.rbmk_fuel_lec);
+		addRBMKRod(CMRG, ModItems.rbmk_fuel_mec);
+		addRBMKRod(CM245, ModItems.rbmk_fuel_hec);
+
 	}
 	
 	//Fill rods with one billet. For fuels only, therefore no unloading or ore dict
