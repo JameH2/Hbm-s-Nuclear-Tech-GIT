@@ -73,9 +73,9 @@ public class GUINukeAntimatter extends GuiInfoContainer {
 
 		if(bomb.hasBattery()) {
 			String timer = bomb.getMinutes() + ":" + bomb.getSeconds();
-			double scale = 0.75;
+			double scale = 0.65;
 			GL11.glScaled(scale, scale, scale);
-			this.fontRendererObj.drawString(timer, (int) ((69 - this.fontRendererObj.getStringWidth(timer) / 2) * (1 / scale)), (int) (95.5 * (1 / scale)), 0xff0000);
+			this.fontRendererObj.drawString(timer, (int) ((94 - this.fontRendererObj.getStringWidth(timer) / 2) * (1 / scale)), (int) (63 * (1 / scale)), 0xff0000);
 
 			GL11.glScaled(1 / scale, 1 / scale, 1 / scale);
 		}
