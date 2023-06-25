@@ -20,6 +20,7 @@ import com.hbm.items.machine.ItemPistons.EnumPistonType;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
 import com.hbm.main.MainRegistry;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModClassLoader;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -425,7 +426,7 @@ public class AssemblerRecipes {
 		makeRecipe(new ComparableStack(ModItems.mp_warhead_10_incendiary, 1), new AStack[] {new ComparableStack(ModItems.seg_10, 1), new OreDictStack(TI.plate(), 4), new OreDictStack(P_RED.dust(), 3), new OreDictStack(ANY_HIGHEXPLOSIVE.ingot(), 2), new ComparableStack(ModItems.circuit_targeting_tier2, 1), },100);
 		makeRecipe(new ComparableStack(ModItems.mp_warhead_10_buster, 1), new AStack[] {new ComparableStack(ModItems.seg_10, 1), new OreDictStack(TI.plate(), 4), new ComparableStack(ModBlocks.det_charge, 1), new ComparableStack(ModBlocks.det_cord, 4), new ComparableStack(ModItems.board_copper, 4), new ComparableStack(ModItems.circuit_targeting_tier3, 1), },100);
 		makeRecipe(new ComparableStack(ModItems.mp_warhead_10_nuclear, 1), new AStack[] {new ComparableStack(ModItems.seg_10, 1), new OreDictStack(STEEL.plate(), 6), new OreDictStack(PU239.ingot(), 1), new OreDictStack(OreDictManager.getReflector(), 2), new OreDictStack(ANY_HIGHEXPLOSIVE.ingot(), 4), new ComparableStack(ModItems.circuit_targeting_tier3, 1), },200);
-		makeRecipe(new ComparableStack(ModItems.mp_warhead_10_nuclear_large, 1), new AStack[] {new ComparableStack(ModItems.seg_10, 1), new OreDictStack(STEEL.plate(), 8), new OreDictStack(AL.plate(), 4), new OreDictStack(PU239.ingot(), 2), new ComparableStack(ModBlocks.det_charge, 4), new ComparableStack(ModItems.circuit_targeting_tier4, 1), },300);
+		makeRecipe(new ComparableStack(ModItems.mp_warhead_10_nuclear_large, 1), new AStack[] {new ComparableStack(ModItems.seg_10, 1), new OreDictStack(STEEL.plate(), 8), new OreDictStack(AL.plate(), 4), new ComparableStack(ModItems.warhead_mirvlet, 1), new ComparableStack(ModItems.circuit_targeting_tier4, 1), },300);
 		makeRecipe(new ComparableStack(ModItems.mp_warhead_10_taint, 1), new AStack[] {new ComparableStack(ModItems.seg_10, 1), new OreDictStack(STEEL.plate(), 12), new ComparableStack(ModBlocks.det_cord, 2), new ComparableStack(ModItems.powder_magic, 12), new ComparableStack(ModItems.bucket_mud, 1), },100);
 		makeRecipe(new ComparableStack(ModItems.mp_warhead_10_cloud, 1), new AStack[] {new ComparableStack(ModItems.seg_10, 1), new OreDictStack(STEEL.plate(), 12), new ComparableStack(ModBlocks.det_cord, 2), new ComparableStack(ModItems.grenade_pink_cloud, 2), },100);
 		makeRecipe(new ComparableStack(ModItems.mp_warhead_15_he, 1), new AStack[] {new ComparableStack(ModItems.seg_15, 1), new OreDictStack(STEEL.plate(), 16), new ComparableStack(ModBlocks.det_charge, 4), new ComparableStack(ModItems.circuit_targeting_tier3, 1), },200);
@@ -433,20 +434,25 @@ public class AssemblerRecipes {
 		makeRecipe(new ComparableStack(ModItems.mp_warhead_15_nuclear, 1), new AStack[] {new ComparableStack(ModItems.seg_15, 1), new OreDictStack(STEEL.plate(), 24), new OreDictStack(TI.plate(), 12), new OreDictStack(PU239.ingot(), 3), new ComparableStack(ModBlocks.det_charge, 6), new ComparableStack(ModItems.circuit_targeting_tier4, 1), },500);
 		makeRecipe(new ComparableStack(ModItems.mp_warhead_15_n2, 1), new AStack[] {new ComparableStack(ModItems.seg_15, 1), new OreDictStack(STEEL.plate(), 8), new OreDictStack(TI.plate(), 20), new ComparableStack(ModBlocks.det_charge, 24), new ComparableStack(Blocks.redstone_block, 12), new OreDictStack(MAGTUNG.dust(), 6), new ComparableStack(ModItems.circuit_targeting_tier4, 1), },400);
 		makeRecipe(new ComparableStack(ModItems.mp_warhead_15_balefire, 1), new AStack[] {new ComparableStack(ModItems.seg_15, 1), new OreDictStack(OreDictManager.getReflector(), 16), new ComparableStack(ModItems.powder_magic, 6), new ComparableStack(ModItems.egg_balefire_shard, 4), new OreDictStack(ANY_HIGHEXPLOSIVE.ingot(), 8), new ComparableStack(ModItems.circuit_targeting_tier4, 1), }, 60);
+
        makeRecipe(new ComparableStack(ModItems.mp_warhead_15_mirv, 1), new AStack[] {
-    	   new ComparableStack(ModItems.seg_15, 1), 
-    	   new OreDictStack(TI.plate(), 16), 
-    	   new OreDictStack(STEEL.plate(), 12), 
-    	   new OreDictStack(PU239.billet(), 7), 
-    	   new OreDictStack(ANY_HIGHEXPLOSIVE.ingot(), 12), 
-    	   new OreDictStack(BE.ingot(), 7), 
-    	   new OreDictStack(LI.ingot(), 7), 
-    	   new OreDictStack(U235.nugget(), 10), 
-    	   new ComparableStack(ModItems.cell_deuterium, 10),
-    	   new ComparableStack(ModItems.cell_tritium, 10),
-    	   new ComparableStack(ModItems.hull_small_steel, 7),
-    	   new ComparableStack(ModItems.circuit_targeting_tier4,  3), },500);
- 
+		   new ComparableStack(ModItems.seg_15, 1),
+		   new OreDictStack(TI.plate(), 16),
+		   new OreDictStack(STEEL.plate(), 12),
+		   new ComparableStack(ModItems.warhead_mirvlet, 7),
+		   new ComparableStack(ModItems.circuit_targeting_tier4,  3), },500);
+
+		makeRecipe(new ComparableStack(ModItems.warhead_mirvlet, 1), new AStack[] {
+			new OreDictStack(TI.plate(), 4),
+			new OreDictStack(PU239.billet(), 1),
+			new ComparableStack(ModItems.ball_tatb, 2),
+			new OreDictStack(BE.ingot(), 4),
+			new OreDictStack(LI.ingot(), 4),
+			new OreDictStack(U235.billet(), 1),
+			new ComparableStack(ModItems.cell_deuterium, 2),
+			new ComparableStack(ModItems.cell_tritium, 2),
+			new ComparableStack(ModItems.hull_small_steel, 1), },500);
+
 		makeRecipe(new ComparableStack(ModItems.missile_soyuz, 1), new AStack[] {new ComparableStack(ModItems.rocket_fuel, 40), new ComparableStack(ModBlocks.det_cord, 20), new ComparableStack(ModItems.thruster_medium, 12), new ComparableStack(ModItems.thruster_small, 12), new ComparableStack(ModItems.tank_steel, 10), new ComparableStack(ModItems.circuit_targeting_tier4, 2), new ComparableStack(ModItems.circuit_targeting_tier3, 8), new OreDictStack(RUBBER.ingot(), 64), new ComparableStack(ModItems.fins_small_steel, 4), new ComparableStack(ModItems.hull_big_titanium, 32), new ComparableStack(ModItems.hull_big_steel, 18), new OreDictStack(FIBER.ingot(), 64), },600);
 		makeRecipe(new ComparableStack(ModItems.missile_soyuz_lander, 1), new AStack[] {new ComparableStack(ModItems.rocket_fuel, 10), new ComparableStack(ModItems.thruster_small, 3), new ComparableStack(ModItems.tank_steel, 2), new ComparableStack(ModItems.circuit_targeting_tier3, 4), new ComparableStack(ModItems.plate_polymer, 32), new ComparableStack(ModItems.hull_big_aluminium, 2), new ComparableStack(ModItems.sphere_steel, 1), new OreDictStack(FIBER.ingot(), 12), },600);
 		makeRecipe(new ComparableStack(ModItems.fusion_shield_tungsten, 1), new AStack[] {new OreDictStack(W.block(), 32), new OreDictStack(OreDictManager.getReflector(), 96)}, 600);

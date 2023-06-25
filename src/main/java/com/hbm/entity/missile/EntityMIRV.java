@@ -93,7 +93,7 @@ public class EntityMIRV extends EntityThrowableNT implements IChunkLoader, IRada
 			this.setDead();
 		}
 
-		this.worldObj.spawnEntityInWorld(new EntitySmokeFX(this.worldObj, this.posX, this.posY, this.posZ, 0.0, 0.0, 0.0));
+		//this.worldObj.spawnEntityInWorld(new EntitySmokeFX(this.worldObj, this.posX, this.posY, this.posZ, 0.0, 0.0, 0.0));
 		loadNeighboringChunks((int)(posX / 16), (int)(posZ / 16));
 	}
 

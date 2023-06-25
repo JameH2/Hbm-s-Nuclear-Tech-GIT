@@ -219,6 +219,10 @@ public class TileEntityNukeCustom extends TileEntity implements ISidedInventory,
 		entries.put(new ComparableStack(ModItems.pellet_antimatter), new CustomNukeEntry(EnumBombType.AMAT, 45F));
 
 		entries.put(new ComparableStack(ModItems.ingot_tungsten), new CustomNukeEntry(EnumBombType.DIRTY, 1F));
+		entries.put(new ComparableStack(ModItems.powder_i131), new CustomNukeEntry(EnumBombType.DIRTY, 45F));
+		entries.put(new ComparableStack(ModItems.powder_co60), new CustomNukeEntry(EnumBombType.DIRTY, 35F));
+		entries.put(new ComparableStack(ModItems.powder_cs137), new CustomNukeEntry(EnumBombType.DIRTY, 15F));
+		entries.put(new ComparableStack(ModItems.powder_xe135), new CustomNukeEntry(EnumBombType.DIRTY, 55F));
 		entries.put(new ComparableStack(ModItems.custom_dirty), new CustomNukeEntry(EnumBombType.DIRTY, 10F));
 
 		entries.put(new ComparableStack(ModItems.ingot_schrabidium), new CustomNukeEntry(EnumBombType.SCHRAB, 5F));
@@ -248,6 +252,7 @@ public class TileEntityNukeCustom extends TileEntity implements ISidedInventory,
 
 		entries.put(new ComparableStack(ModItems.ingot_pu240), new CustomNukeEntry(EnumBombType.DIRTY, 1.05F, EnumEntryType.MULT));
 		entries.put(new ComparableStack(ModItems.nuclear_waste), new CustomNukeEntry(EnumBombType.DIRTY, 1.025F, EnumEntryType.MULT));
+		entries.put(new ComparableStack(ModItems.powder_at209), new CustomNukeEntry(EnumBombType.DIRTY, 1.55F, EnumEntryType.MULT));
 		entries.put(new ComparableStack(ModBlocks.block_waste), new CustomNukeEntry(EnumBombType.DIRTY, 1.25F, EnumEntryType.MULT));
 		entries.put(new ComparableStack(ModBlocks.yellow_barrel), new CustomNukeEntry(EnumBombType.DIRTY, 1.2F, EnumEntryType.MULT));
 	}

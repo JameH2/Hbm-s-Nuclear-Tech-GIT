@@ -35,6 +35,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
+import org.apache.logging.log4j.Level;
 
 public class EntityMissileCustom extends Entity implements IChunkLoader, IRadarDetectable {
 
@@ -302,8 +303,10 @@ public class EntityMissileCustom extends Entity implements IChunkLoader, IRadarD
 		
 		
 		if(type1 == WarheadType.MIRV){
-			
-    		if((motionY <= 0) && (posY <= 300)) {
+
+			int targetHeight = worldObj.getHeightValue((int)this.posX,(int)this.posZ) + 250;
+    		if((motionY <= 0) && this.posY<targetHeight) {
+				MainRegistry.logger.log(Level.INFO, targetHeight + "was the target height");
     			
     			if(worldObj.isRemote)
 					return;    

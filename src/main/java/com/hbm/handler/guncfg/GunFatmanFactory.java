@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityNukeCloudSmall;
-import com.hbm.entity.logic.EntityNukeExplosionMK4;
 import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.explosion.ExplosionNT;
