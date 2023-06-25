@@ -331,23 +331,27 @@ public class EntityMissileCustom extends Entity implements IChunkLoader, IRadarD
     			               
     				this.setDead();
     				           
-    				double mod;
-    				double mod2;
+    				double modX = 0;
+    				double modZ = 0;
     				for(int i = 0; i < 8; i++) {
-    					EntityMIRV nuke3 = new EntityMIRV(this.worldObj);
-    					nuke3.setPosition(posX,posY,posZ);      
-    					mod = (i == 1 || i == 2) ? 1 : -1; 
-    					mod2 = (i == 1 || i == 3) ? 1 : -1;
+    					EntityMIRV warhead = new EntityMIRV(this.worldObj);
+    					warhead.setPosition(posX,posY,posZ);
+    					// This fella sets the targets
+						switch(i){
+							case 1: modX = 1;  modZ = 1; break; //top left
+							case 2: modX = 1;  modZ = -1; break; //top right
+							case 3: modX = -1; modZ = 1; break; //bottom left
+							case 4: modX = -1; modZ = -1; break; //bottom right
+							case 5: modX = 0; modZ = 2; break; //middle left
+							case 6: modX = 0; modZ = -2; break; //middle right
+							// The seventh warhead is dead center, no modification needed
+						}
     					
-    					if(i==5){ mod2 = 0; mod = 2;}
-    					if(i==6){ mod2 = 0; mod = -2;}
-    					if(i==7){ mod2 = 0; mod = 0;}
-    					
-        				nuke3.setThrowableHeading(this.motionX, this.motionY, this.motionZ, 1F, 0.1F);
-    					nuke3.motionX = this.motionX+mod;
-    					nuke3.motionY = this.motionY;
-    					nuke3.motionZ = this.motionZ+mod2;
-    					this.worldObj.spawnEntityInWorld(nuke3);
+        				warhead.setThrowableHeading(this.motionX, this.motionY, this.motionZ, 1F, 0.1F);
+    					warhead.motionX = this.motionX+modX;
+    					warhead.motionY = this.motionY;
+    					warhead.motionZ = this.motionZ+modZ;
+    					this.worldObj.spawnEntityInWorld(warhead);
     					
     				}
 					
