@@ -1,7 +1,6 @@
 package com.hbm.main;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.hbm.blocks.BlockEnums.DecoCabinetEnum;
@@ -13,9 +12,8 @@ import com.hbm.blocks.generic.BlockNTMFlower.EnumFlowerType;
 import com.hbm.config.GeneralConfig;
 import com.hbm.crafting.*;
 import com.hbm.crafting.handlers.*;
-import com.hbm.handler.indexing.HbmMaterials.Mat;
 import com.hbm.inventory.OreDictManager;
-import com.hbm.inventory.RecipesCommon.ComparableStack;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.Mats;
 
@@ -32,7 +30,6 @@ import com.hbm.items.machine.ItemBattery;
 import com.hbm.items.special.ItemCircuitStarComponent.CircuitComponentType;
 import com.hbm.items.special.ItemHolotapeImage.EnumHoloImage;
 import com.hbm.items.special.ItemPlasticScrap.ScrapType;
-import com.hbm.items.tool.ItemFuelMcheliCompat;
 import com.hbm.items.tool.ItemGuideBook.BookType;
 import com.hbm.util.EnchantmentUtil;
 
@@ -43,7 +40,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -218,9 +214,9 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.pedestal_steel, 1), new Object[] { "P P", "P P", "III", 'P', STEEL.plate(), 'I', STEEL.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.lemon, 1), new Object[] { " D ", "DSD", " D ", 'D', KEY_YELLOW, 'S', "stone" });
 		addRecipeAuto(new ItemStack(ModItems.blade_titanium, 2), new Object[] { "TP", "TP", "TT", 'P', TI.plate(), 'T', TI.ingot() });
-		addRecipeAuto(new ItemStack(ModItems.blade_syngas, 2), new Object[] { "TP", "TP", "TT", 'P', STAINLESS.plate(), 'T', STAINLESS.ingot() });
+		addRecipeAuto(new ItemStack(ModItems.blade_stainless, 2), new Object[] { "TP", "TP", "TT", 'P', STAINLESS.plate(), 'T', STAINLESS.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.turbine_titanium, 1), new Object[] { "BBB", "BSB", "BBB", 'B', ModItems.blade_titanium, 'S', STEEL.ingot() });
-		addRecipeAuto(new ItemStack(ModItems.turbine_syngas, 1), new Object[] { "BBB", "BSB", "BBB", 'B', ModItems.blade_syngas, 'S', STAINLESS.ingot() });
+		addRecipeAuto(new ItemStack(ModItems.turbine_stainless, 1), new Object[] { "BBB", "BSB", "BBB", 'B', ModItems.blade_stainless, 'S', STAINLESS.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.rotor_steel, 3), new Object[] { "CCC", "SSS", "CCC", 'C', ModItems.coil_gold, 'S', STEEL.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.generator_steel, 1), new Object[] { "RRR", "CCC", "SSS", 'C', ModItems.coil_gold_torus, 'S', STEEL.ingot(), 'R', ModItems.rotor_steel });
 		addRecipeAuto(new ItemStack(ModItems.shimmer_head, 1), new Object[] { "SSS", "DTD", "SSS", 'S', STEEL.ingot(), 'D', DESH.block(), 'T', W.block() });
@@ -950,7 +946,7 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModItems.canister_full, 2, Fluids.LUBRICANT.getID()), new Object[] { Fluids.HEATINGOIL.getDict(1000), Fluids.UNSATURATEDS.getDict(1000), ModItems.canister_empty, ModItems.canister_empty, KEY_TOOL_CHEMISTRYSET });
 
 		addRecipeAuto(new ItemStack(ModBlocks.machine_condenser), new Object[] { "SIS", "ICI", "SIS", 'S', STEEL.ingot(), 'I', IRON.plate(), 'C', ModItems.board_copper });
-
+		
 		addShapelessAuto(new ItemStack(ModItems.book_guide, 1, BookType.TEST.ordinal()), new Object[] { Items.book, ModItems.canned_conserve.stackFromEnum(EnumFoodType.JIZZ) });
 		addShapelessAuto(new ItemStack(ModItems.book_guide, 1, BookType.RBMK.ordinal()), new Object[] { Items.book, Items.potato });
 		addShapelessAuto(new ItemStack(ModItems.book_guide, 1, BookType.HADRON.ordinal()), new Object[] { Items.book, ModItems.fuse });
@@ -971,7 +967,17 @@ public class CraftingManager {
 		addRecipeAuto(DictFrame.fromOne(ModItems.part_generic, EnumPartType.PISTON_PNEUMATIC, 4), new Object[] { " I ", "CPC", " I ", 'I', IRON.ingot(), 'C', CU.ingot(), 'P', IRON.plate() });
 		addRecipeAuto(DictFrame.fromOne(ModItems.part_generic, EnumPartType.PISTON_HYDRAULIC, 4), new Object[] { " I ", "CPC", " I ", 'I', STEEL.ingot(), 'C', TI.ingot(), 'P', Fluids.LUBRICANT.getDict(1000) });
 		addRecipeAuto(DictFrame.fromOne(ModItems.part_generic, EnumPartType.PISTON_ELECTRIC, 4), new Object[] { " I ", "CPC", " I ", 'I', ANY_RESISTANTALLOY.ingot(), 'C', ANY_PLASTIC.ingot(), 'P', ModItems.motor });
-		
+
+		if(Loader.isModLoaded("mcheli")) {
+			Item r44 = (Item) Item.itemRegistry.getObject("mcheli:robinson_r44");
+			Item r44f = (Item) Item.itemRegistry.getObject("mcheli:robinson_r44f");
+			Item bell47g = (Item) Item.itemRegistry.getObject("mcheli:bell47g");
+			Item bell47f = (Item) Item.itemRegistry.getObject("mcheli:bell47gf");
+			if (r44 != null)
+				addShapelessAuto(new ItemStack(r44f), r44, Blocks.wool,Blocks.wool,Blocks.wool);
+			if (bell47g != null)
+				addShapelessAuto(new ItemStack(bell47f), bell47g, Blocks.wool,Blocks.wool,Blocks.wool);
+		}
 		Object[] craneCasing = new Object[] {
 				Blocks.stonebrick, 1,
 				IRON.ingot(), 2,

@@ -20,7 +20,7 @@ import com.hbm.items.machine.ItemPistons.EnumPistonType;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
 import com.hbm.main.MainRegistry;
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModClassLoader;
+import cpw.mods.fml.common.Mod;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -1225,7 +1225,7 @@ public class AssemblerRecipes {
 				new ComparableStack(ModItems.hull_big_steel, 3),
 				new OreDictStack(STAINLESS.plate(), 16),
 				new OreDictStack(TI.plate(), 6),
-				new ComparableStack(ModItems.turbine_syngas, 2),
+				new ComparableStack(ModItems.turbine_stainless, 2),
 				new ComparableStack(ModItems.flywheel_beryllium, 1),
 				new ComparableStack(ModItems.generator_steel, 5),
 				new ComparableStack(ModItems.bolt_compound, 2),
@@ -1246,7 +1246,7 @@ public class AssemblerRecipes {
 			Block mb = (Block) Block.blockRegistry.getObject("Mekanism:MachineBlock");
 			
 			if(mb != null) {
-	
+
 				makeRecipe(new ComparableStack(mb, 1, 4), new AStack[] {
 						new OreDictStack(DURA.ingot(), 16),
 						new OreDictStack(DESH.ingot(), 8),
@@ -1264,355 +1264,402 @@ public class AssemblerRecipes {
 			}
 		}
 		if(Loader.isModLoaded("mcheli")) {
-			
-			Item mb = (Item) Item.itemRegistry.getObject("mcheli:mi-24ps");
-			Item ah = (Item) Item.itemRegistry.getObject("mcheli:ah-64");
-			Item bell = (Item) Item.itemRegistry.getObject("mcheli:bell207");
-			Item chnu = (Item) Item.itemRegistry.getObject("mcheli:ch47");
-			Item mb4 = (Item) Item.itemRegistry.getObject("mcheli:ah-6");
-			Item mb5 = (Item) Item.itemRegistry.getObject("mcheli:ah-6x");
+			//Civilian transport, dirt cheap
 
+			Item bell206 = (Item) Item.itemRegistry.getObject("mcheli:bell206l");//red!
+			Item bell47g = (Item) Item.itemRegistry.getObject("mcheli:bell47g");//scaffold
+			//Item bell47f = (Item) Item.itemRegistry.getObject("mcheli:bell47gf");//float, crafting table, wool + normal version
+			Item r44 = (Item) Item.itemRegistry.getObject("mcheli:robinson_r44");//aluminium
+			//Item r44f = (Item) Item.itemRegistry.getObject("mcheli:robinson_r44f");//float, crafting table, wool + normal version
 
-			if(mb != null) {
-	
-				makeRecipe(new ComparableStack(mb, 1), new AStack[] {
-						new OreDictStack(STEEL.plate(), 28),
-						new ComparableStack(ModItems.motor, 4),
-						new ComparableStack(ModItems.ingot_nickel, 2),
-						new ComparableStack(ModItems.tank_steel, 2)					
-					}, 500);
-			}
-			if(ah != null) {
-				
-				makeRecipe(new ComparableStack(ah, 1), new AStack[] {
-						new OreDictStack(STAINLESS.plate(), 32),
-						new OreDictStack(STEEL.plate(), 16),
-						new ComparableStack(ModItems.motor, 3),
-						new ComparableStack(ModItems.ingot_titanium, 2),
-						new ComparableStack(ModItems.circuit_red_copper, 2),
-						new ComparableStack(ModItems.tank_steel, 4),
-						new ComparableStack(ModItems.turbine_syngas),
-						new ComparableStack(ModItems.ingot_polymer, 2)
-					}, 500);
-			}
-			if(bell != null) {
-				
-				makeRecipe(new ComparableStack(bell, 1), new AStack[] {
-						new OreDictStack(STEEL.plate(), 12),
+			//Spotters, the same thing
+			Item mi24ps = (Item) Item.itemRegistry.getObject("mcheli:mi-24ps");
+			Item mh6 = (Item) Item.itemRegistry.getObject("mcheli:mh-6");
+			Item fl282 = (Item) Item.itemRegistry.getObject("mcheli:fl282");//oops all scaffold
+			if(mi24ps != null) {
+
+				makeRecipe(new ComparableStack(mi24ps, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_titanium, 2),
+						new ComparableStack(ModItems.hull_small_aluminium, 1),
 						new ComparableStack(ModItems.motor, 2),
-						new ComparableStack(ModItems.ingot_nickel, 5),
-						new ComparableStack(ModItems.tank_steel, 2),
-						new ComparableStack(ModItems.pipes_steel),
-						new ComparableStack(ModItems.turbine_syngas)
-						
-					}, 500);
+						new ComparableStack(ModBlocks.steel_beam, 2),
+						new OreDictStack(IRON.plate(), 4),
+						new OreDictStack(KEY_ANYGLASS, 4)
+				}, 10 * 20);
+			}
+
+			if(bell206 != null) {
+
+				makeRecipe(new ComparableStack(bell206, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_steel, 1),
+						new ComparableStack(ModItems.hull_small_steel, 2),
+						new ComparableStack(ModItems.motor, 2),
+						new ComparableStack(ModBlocks.steel_beam, 2),
+						new OreDictStack(STEEL.plate(), 4),
+						new OreDictStack(KEY_RED, 3),
+						new OreDictStack(KEY_ANYGLASS, 4)
+
+				}, 10 * 20);
+			}
+			if(bell47g != null) {
+
+				makeRecipe(new ComparableStack(bell47g, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_steel, 1),
+						new ComparableStack(ModBlocks.steel_scaffold, 4),
+						new ComparableStack(ModItems.motor, 2),
+						new ComparableStack(ModBlocks.steel_beam, 2),
+						new OreDictStack(TI.plate(), 4),
+						new OreDictStack(KEY_RED, 3),
+						new OreDictStack(KEY_ANYGLASS, 4)
+
+				}, 10 * 20);
+			}
+			if(r44 != null) {
+
+				makeRecipe(new ComparableStack(r44, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_aluminium, 1),
+						new ComparableStack(ModItems.hull_small_aluminium, 2),
+						new ComparableStack(ModItems.motor, 2),
+						new ComparableStack(ModBlocks.steel_beam, 2),
+						new OreDictStack(STEEL.plate(), 4),
+						new OreDictStack(KEY_ANYGLASS, 3)
+				}, 10 * 20);
+			}
+			if(mh6 != null) {
+
+				makeRecipe(new ComparableStack(mh6, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_steel, 1),
+						new ComparableStack(ModItems.hull_small_aluminium, 2),
+						new ComparableStack(ModItems.motor, 2),
+						new ComparableStack(ModBlocks.steel_beam, 2),
+						new OreDictStack(STEEL.plate(), 8),
+						new OreDictStack(KEY_ANYGLASS, 6)
+				}, 10 * 20);
+			}
+			if(fl282 != null) {
+				makeRecipe(new ComparableStack(fl282, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_steel, 1),
+						new ComparableStack(ModBlocks.steel_scaffold, 8),
+						new ComparableStack(ModItems.motor, 2),
+						new ComparableStack(ModBlocks.steel_beam, 2),
+						new OreDictStack(TI.plate(), 6),
+				}, 10 * 20);
+			}
+
+			//Transport
+			Item sh3 = (Item) Item.itemRegistry.getObject("mcheli:sh-3");
+			Item nh90 = (Item) Item.itemRegistry.getObject("mcheli:nh90");
+
+			if(sh3 != null) {
+				makeRecipe(new ComparableStack(sh3, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_titanium, 2),
+						new ComparableStack(ModItems.hull_small_aluminium, 1),
+						new ComparableStack(ModItems.motor, 3),
+						new ComparableStack(ModBlocks.steel_beam, 4),
+						new OreDictStack(STAINLESS.plate(), 4),
+						new OreDictStack(KEY_ANYGLASS, 2)
+				}, 10 * 20);
+			}
+			if(nh90 != null) {
+				makeRecipe(new ComparableStack(nh90, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_steel, 2),
+						new ComparableStack(ModItems.hull_small_steel, 1),
+						new ComparableStack(ModItems.motor, 3),
+						new ComparableStack(ModBlocks.steel_beam, 4),
+						new OreDictStack(STAINLESS.plate(), 4),
+						new OreDictStack(KEY_ANYGLASS, 2)
+				}, 10 * 20);
+			}
+			//Armed transport
+			Item mh_53 = (Item) Item.itemRegistry.getObject("mcheli:mh-53e");
+			Item chnu = (Item) Item.itemRegistry.getObject("mcheli:ch47");//better than those two, it has guns
+			Item mh_60g = (Item) Item.itemRegistry.getObject("mcheli:mh-60g");
+			if(mh_53 != null) {
+				makeRecipe(new ComparableStack(mh_53, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_titanium, 3),
+						new ComparableStack(ModItems.hull_small_steel, 2),
+						new ComparableStack(ModItems.piston_selenium, 2),
+						new ComparableStack(ModBlocks.steel_beam, 2),
+						new OreDictStack(STAINLESS.plate(), 4),
+						new OreDictStack(STEEL.plate(), 2),
+						new OreDictStack(KEY_ANYGLASS, 2)
+				}, 20 * 20);
+
 			}
 			if(chnu != null) {
-				
-				makeRecipe(new ComparableStack(chnu, 1), new AStack[] {
-						new OreDictStack(STEEL.plate(), 28),
-						new ComparableStack(ModItems.motor, 4),
-						new ComparableStack(ModItems.ingot_titanium, 5),
-						new ComparableStack(ModItems.tank_steel, 2),
-						new ComparableStack(ModItems.turbine_syngas)
-					}, 500);
-			}
-			if(mb4 != null) {
-				
-				makeRecipe(new ComparableStack(mb4, 1), new AStack[] { //bell
-						new OreDictStack(STEEL.plate(), 12),
-						new ComparableStack(ModItems.motor, 2),
-						new ComparableStack(ModItems.tank_steel, 1),
-						
-					}, 500);
-			}
-			if(mb5 != null) {
-				
-				makeRecipe(new ComparableStack(mb5, 1), new AStack[] { // some other thing // DRONE
-						new OreDictStack(STEEL.plate(), 12),
-						new ComparableStack(ModItems.motor, 2),
-						new ComparableStack(ModItems.ingot_aluminium, 2),
-						new ComparableStack(ModItems.tank_steel, 2),
-						new ComparableStack(ModItems.ingot_cadmium)
-						
-					}, 500);
-			}
-			Item mb6 = (Item) Item.itemRegistry.getObject("mcheli:bell206l");
-			Item mb7 = (Item) Item.itemRegistry.getObject("mcheli:bell207");
-			Item mb8 = (Item) Item.itemRegistry.getObject("mcheli:bell47g");
-			Item mb9 = (Item) Item.itemRegistry.getObject("mcheli:bell47gf");
-			if(mb6 != null) {
-				
-				makeRecipe(new ComparableStack(mb6, 1), new AStack[] {
-						new OreDictStack(STEEL.plate(), 8),
-						new ComparableStack(ModItems.motor, 2),
-						new ComparableStack(ModItems.ingot_aluminium, 2),
-						new ComparableStack(ModItems.tank_steel, 2),
-					}, 500);
-			}
-			if(mb7 != null) {
-				
-				makeRecipe(new ComparableStack(mb7, 1), new AStack[] {
-						new OreDictStack(STAINLESS.plate(), 12),
-						new ComparableStack(ModItems.motor, 2),
-						new ComparableStack(ModItems.ingot_aluminium, 4),
-						new ComparableStack(ModItems.tank_steel, 2),
-						new ComparableStack(ModItems.ingot_polymer, 4),
-					}, 500);
-			}
-			if(mb8 != null) {
-				
-				makeRecipe(new ComparableStack(mb8, 1), new AStack[] {
-						new OreDictStack(STEEL.plate(), 8),
-						new ComparableStack(ModItems.motor, 1),
-						new ComparableStack(ModItems.ingot_aluminium, 2),
-						new ComparableStack(ModItems.tank_steel, 2),
-						new ComparableStack(Blocks.glass, 4)
-					}, 500);
-			}
-			if(mb9 != null) {
-				
-				makeRecipe(new ComparableStack(mb9, 1), new AStack[] {
-						new OreDictStack(STAINLESS.plate(), 4),
-						new ComparableStack(mb8),
-						new ComparableStack(ModItems.ingot_aluminium, 1),
-						new ComparableStack(ModItems.tank_steel, 4),
-						new ComparableStack(Blocks.glass, 8)
-					}, 500);
-			}
-			Item mb10 = (Item) Item.itemRegistry.getObject("mcheli:ec665");
-			Item mb11 = (Item) Item.itemRegistry.getObject("mcheli:fl282");
-			Item mb12 = (Item) Item.itemRegistry.getObject("mcheli:ka-27");
-			Item mb13 = (Item) Item.itemRegistry.getObject("mcheli:ka-29");
-			if(mb10 != null) {
-				
-				makeRecipe(new ComparableStack(mb10, 1), new AStack[] {
-						new OreDictStack(STEEL.plate(), 8),
-						new ComparableStack(ModItems.motor, 2),
-						new ComparableStack(ModItems.ingot_aluminium, 2),
-						new ComparableStack(ModItems.tank_steel, 2),
-						new ComparableStack(Blocks.glass, 2)		
+				makeRecipe(new ComparableStack(chnu, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_steel, 4),
+						new ComparableStack(ModItems.piston_selenium, 4),
+						new ComparableStack(ModBlocks.steel_beam, 4),
+						new OreDictStack(STAINLESS.plate(), 6),
+						new OreDictStack(STEEL.plate(), 2),
+						new OreDictStack(KEY_ANYGLASS, 6)
+				}, 20 * 20);
 
-					}, 500);
 			}
-			if(mb11 != null) {
-				
-				makeRecipe(new ComparableStack(mb11, 1), new AStack[] {
-						new OreDictStack(STAINLESS.plate(), 12),
-						new ComparableStack(ModItems.motor, 2),
-						new ComparableStack(ModItems.ingot_nickel, 4),
-						new ComparableStack(ModItems.tank_steel, 2),
-						new ComparableStack(ModItems.ingot_polymer, 4),
-						new ComparableStack(Blocks.glass, 2)		
 
-					}, 500);
+			if(mh_60g != null) {
+				makeRecipe(new ComparableStack(mh_60g, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_titanium, 2),
+						new ComparableStack(ModItems.hull_small_aluminium, 1),
+						new ComparableStack(ModItems.piston_selenium, 3),
+						new ComparableStack(ModBlocks.steel_beam, 3),
+						new ComparableStack(ModItems.mechanism_rifle_1, 2),
+						new OreDictStack(STAINLESS.plate(), 6),
+						new OreDictStack(KEY_ANYGLASS, 6)
+				}, 20 * 20);
 			}
-			if(mb12 != null) {
-				
-				makeRecipe(new ComparableStack(mb12, 1), new AStack[] {
+
+			//Missile Craft
+			Item sh60 = (Item) Item.itemRegistry.getObject("mcheli:sh-60");
+			Item oh1 = (Item) Item.itemRegistry.getObject("mcheli:oh-1");
+			Item ka27 = (Item) Item.itemRegistry.getObject("mcheli:ka-27");
+			if(sh60 != null) {
+				makeRecipe(new ComparableStack(sh60, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_titanium, 2),
+						new ComparableStack(ModItems.hull_small_steel, 3),
+						new ComparableStack(ModItems.piston_selenium, 2),
+						new OreDictStack(CU.plate(), 6),
+						new ComparableStack(ModItems.rotor_steel, 1),
+						new ComparableStack(ModItems.blade_stainless, 4),
+						new ComparableStack(ModItems.circuit_targeting_tier2, 1),
+						new ComparableStack(ModItems.mechanism_launcher_1, 2),
+						new ComparableStack(ModBlocks.reinforced_glass, 4)
+				}, 20 * 20);
+			}
+			if(oh1 != null) {
+				makeRecipe(new ComparableStack(oh1, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_steel, 1),
+						new OreDictStack(NI.plate(), 6),
+						new ComparableStack(ModItems.piston_selenium, 4),
+						new ComparableStack(ModBlocks.steel_beam, 2),
+						new ComparableStack(ModItems.blade_titanium, 4),
+						new ComparableStack(ModItems.circuit_targeting_tier1, 2),
+						new ComparableStack(ModItems.mechanism_launcher_1),
+						new ComparableStack(ModBlocks.reinforced_glass, 2)
+				}, 20 * 20);
+			}
+			if(ka27 != null) {
+				makeRecipe(new ComparableStack(ka27, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_aluminium, 1),
+						new ComparableStack(ModItems.hull_small_aluminium, 1),
+						new ComparableStack(ModItems.piston_selenium, 5),
 						new OreDictStack(STEEL.plate(), 8),
-						new ComparableStack(ModItems.motor, 1),
-						new ComparableStack(ModItems.ingot_aluminium, 2),
-						new ComparableStack(ModItems.tank_steel, 2),
-						new ComparableStack(Blocks.glass, 4)
-					}, 500);
+						new ComparableStack(ModBlocks.steel_beam, 2),
+						new ComparableStack(ModItems.blade_titanium, 4),
+						new ComparableStack(ModItems.circuit_targeting_tier1, 2),
+						new ComparableStack(ModItems.mechanism_launcher_1),
+						new ComparableStack(ModBlocks.reinforced_glass, 3)
+				}, 20 * 20);
 			}
-			if(mb13 != null) {
-				
-				makeRecipe(new ComparableStack(mb13, 1), new AStack[] {
-						new OreDictStack(STAINLESS.plate(), 4),
-						new ComparableStack(mb8),
-						new ComparableStack(ModItems.ingot_aluminium, 1),
-						new ComparableStack(ModItems.tank_steel, 4),
-						new ComparableStack(Blocks.glass, 8)
-					}, 500);
+			//these sad things
+			Item egg = (Item) Item.itemRegistry.getObject("mcheli:ah-6");
+			Item uh1 = (Item) Item.itemRegistry.getObject("mcheli:uh-1c");
+			Item bell207 = (Item) Item.itemRegistry.getObject("mcheli:bell207");
+			if(uh1 != null) {
+				makeRecipe(new ComparableStack(uh1, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_steel, 2),
+						new ComparableStack(ModItems.hull_small_steel, 3),
+						new ComparableStack(ModItems.piston_selenium, 2),
+						new OreDictStack(TI.plate(), 6),
+						new ComparableStack(ModItems.blade_tungsten, 4),
+						new ComparableStack(ModItems.circuit_targeting_tier1, 1),
+						new ComparableStack(ModItems.mechanism_launcher_1, 1),
+						new ComparableStack(ModBlocks.reinforced_glass, 2)
+				}, 20 * 20);
 			}
-			Item mb14 = (Item) Item.itemRegistry.getObject("mcheli:ka50n");
-			Item mb15 = (Item) Item.itemRegistry.getObject("mcheli:ka52");
-			Item mb16 = (Item) Item.itemRegistry.getObject("mcheli:mh-53e");
-			Item mb17 = (Item) Item.itemRegistry.getObject("mcheli:mh-6");
-			Item mb18 = (Item) Item.itemRegistry.getObject("mcheli:mh-60g");
-			
-			Item mch20 = (Item) Item.itemRegistry.getObject("mcheli:mh-60l_dap");
-			Item mch22 = (Item) Item.itemRegistry.getObject("mcheli:mi-24");
-			Item mch24 = (Item) Item.itemRegistry.getObject("mcheli:mi28");
-			Item mch28 = (Item) Item.itemRegistry.getObject("mcheli:mq-8b");
-			Item mch30 = (Item) Item.itemRegistry.getObject("mcheli:nh90");
-			
-			Item mch31 = (Item) Item.itemRegistry.getObject("mcheli:penetrator");
-			Item mch32 = (Item) Item.itemRegistry.getObject("mcheli:rc-goblin-bomb");
-			Item mch33 = (Item) Item.itemRegistry.getObject("mcheli:rc-goblin");
-			Item mch34 = (Item) Item.itemRegistry.getObject("mcheli:robinson_r44");
-			Item mch35 = (Item) Item.itemRegistry.getObject("mcheli:robinson_r44f");
-			
-			if (mb14 != null) {
-			    makeRecipe(new ComparableStack(mb14, 1), new AStack[] {
-						new OreDictStack(STEEL.plate(), 16),
-						new OreDictStack(STAINLESS.plate(), 16),
+			if(bell207 != null) {
+				makeRecipe(new ComparableStack(bell207, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_aluminium, 1),
+						new ComparableStack(ModItems.hull_small_aluminium, 3),
+						new ComparableStack(ModItems.piston_selenium, 2),
+						new OreDictStack(TI.plate(), 6),
+						new ComparableStack(ModItems.blade_tungsten, 2),
+						new ComparableStack(ModItems.circuit_targeting_tier1, 1),
+						new ComparableStack(ModItems.mechanism_rifle_1, 1),
+						new ComparableStack(ModBlocks.reinforced_glass, 2)
+				}, 20 * 20);
+			}
+			if(egg != null) {
+				makeRecipe(new ComparableStack(egg, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_steel, 1),
+						new ComparableStack(ModBlocks.steel_scaffold, 6),
+						new ComparableStack(ModItems.piston_selenium, 1),
 						new OreDictStack(NI.plate(), 4),
-						new ComparableStack(ModItems.motor, 2),
-						new ComparableStack(Blocks.glass, 2)		
-						}, 500);
+						new ComparableStack(ModItems.blade_tungsten, 6),
+						new ComparableStack(Items.egg),
+						new ComparableStack(ModItems.mechanism_launcher_1, 1),
+						new ComparableStack(ModItems.mechanism_rifle_1, 1),
+						new ComparableStack(ModBlocks.reinforced_glass, 8)
+				}, 20 * 20);
 			}
-
-			if (mb15 != null) {
-			    makeRecipe(new ComparableStack(mb15, 1), new AStack[] {
-						new OreDictStack(STEEL.plate(), 8),
-						new OreDictStack(STAINLESS.plate(), 16),
-						new OreDictStack(AL.plate(), 8),
-						new ComparableStack(ModItems.motor, 2),
-						new ComparableStack(Blocks.glass, 2)		
-						}, 500);
+			//Mid tier fellas
+			Item toppy = (Item) Item.itemRegistry.getObject("mcheli:penetrator");
+			Item mh60L = (Item) Item.itemRegistry.getObject("mcheli:mh-60l_dap");
+			Item ec665 = (Item) Item.itemRegistry.getObject("mcheli:ec665");
+			if(toppy != null) {
+				makeRecipe(new ComparableStack(toppy, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_aluminium, 2),
+						new ComparableStack(ModItems.hull_big_steel, 3),
+						new ComparableStack(ModItems.hull_small_aluminium, 2),
+						new ComparableStack(ModItems.piston_selenium, 4),
+						new ComparableStack(ModItems.rotor_steel, 1),
+						new ComparableStack(ModItems.blade_stainless, 4),
+						new ComparableStack(ModItems.circuit_targeting_tier2, 2),
+						new ComparableStack(ModItems.mechanism_launcher_1, 1),
+						new ComparableStack(ModItems.mechanism_rifle_1, 1),
+						new ComparableStack(ModBlocks.reinforced_glass, 4)
+				}, 20 * 20);
 			}
-
-			if (mb16 != null) {
-			    makeRecipe(new ComparableStack(mb16, 1), new AStack[] {
-						new OreDictStack(STEEL.plate(), 16),
+			if(mh60L != null) {
+				makeRecipe(new ComparableStack(mh60L, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_titanium, 3),
+						new ComparableStack(ModItems.hull_big_steel, 3),
+						new ComparableStack(ModItems.hull_small_steel, 2),
+						new ComparableStack(ModItems.piston_selenium, 3),
+						new OreDictStack(TI.plate(), 4),
+						new ComparableStack(ModItems.rotor_steel, 1),
+						new ComparableStack(ModItems.blade_stainless, 4),
+						new ComparableStack(ModItems.circuit_targeting_tier1, 2),
+						new ComparableStack(ModItems.mechanism_rifle_2, 1),
+						new ComparableStack(ModBlocks.reinforced_glass, 3)
+				}, 20 * 20);
+			}
+			if(ec665 != null) {
+				makeRecipe(new ComparableStack(ec665, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_steel	, 2),
+						new OreDictStack(DURA.ingot(), 8),
+						new ComparableStack(ModItems.piston_selenium, 2),
 						new OreDictStack(NI.plate(), 4),
-						new OreDictStack(AL.plate(), 16),
-						new ComparableStack(ModItems.motor, 2),		
-						new ComparableStack(Blocks.glass, 2)		
-
-						}, 500);
+						new ComparableStack(ModItems.blade_tungsten, 4),
+						new ComparableStack(ModItems.circuit_targeting_tier1, 1),
+						new ComparableStack(ModItems.mechanism_rifle_2, 1),
+						new ComparableStack(ModItems.mechanism_revolver_2, 1),
+						new ComparableStack(ModBlocks.reinforced_glass, 2)
+				}, 20 * 20);
+			}
+			//Mid-high tier
+			Item ka29 = (Item) Item.itemRegistry.getObject("mcheli:ka-29");
+			Item w3 = (Item) Item.itemRegistry.getObject("mcheli:w3");
+			Item ka52 = (Item) Item.itemRegistry.getObject("mcheli:ka52");
+			if(ka29 != null) {
+				makeRecipe(new ComparableStack(ka29, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_aluminium, 4),
+						new ComparableStack(ModItems.hull_small_aluminium, 2),
+						new ComparableStack(ModItems.motor_desh, 1),
+						new ComparableStack(ModItems.rotor_steel, 1),
+						new ComparableStack(ModItems.blade_tungsten, 6),
+						new ComparableStack(ModItems.circuit_targeting_tier3, 2),
+						new ComparableStack(ModItems.mechanism_launcher_2, 1),
+						new ComparableStack(ModItems.mechanism_rifle_2, 1),
+						new ComparableStack(ModBlocks.reinforced_glass, 6)
+				}, 25 * 20);
+			}
+			if(w3 != null) {
+				makeRecipe(new ComparableStack(w3, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_steel, 3),
+						new ComparableStack(ModItems.bolt_dura_steel, 4),
+						new ComparableStack(ModBlocks.machine_diesel, 1),
+						new OreDictStack(ANY_PLASTIC.ingot(), 4),
+						new ComparableStack(ModItems.blade_titanium, 6),
+						new ComparableStack(ModItems.circuit_targeting_tier2, 3),
+						new ComparableStack(ModItems.mechanism_launcher_2, 1),
+						new ComparableStack(ModItems.mechanism_rifle_2, 2),
+						new ComparableStack(ModBlocks.reinforced_glass, 4)
+				}, 20 * 20);
+			}
+			if(ka52 != null) {
+				makeRecipe(new ComparableStack(ka52, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.plate_desh, 4),
+						new ComparableStack(ModItems.bolt_dura_steel, 4),
+						new ComparableStack(ModBlocks.machine_selenium, 1),
+						new ComparableStack(ModItems.piston_selenium,2),
+						new ComparableStack(ModItems.blade_stainless, 6),
+						new ComparableStack(ModItems.circuit_targeting_tier3, 2),
+						new ComparableStack(ModItems.mechanism_launcher_2, 1),
+						new ComparableStack(ModItems.mechanism_rifle_2, 2),
+						new ComparableStack(ModBlocks.reinforced_glass, 6)
+				}, 20 * 20);
 			}
 
-			if (mb17 != null) {
-			    makeRecipe(new ComparableStack(mb17, 1), new AStack[] {
-						new OreDictStack(NI.plate(), 8),
-						new OreDictStack(STEEL.plate(), 12),
-						new ComparableStack(ModItems.motor, 1),			    
-						}, 500);
+			//High-tier stuff
+			Item ka50 = (Item) Item.itemRegistry.getObject("mcheli:ka50n");
+			Item ah1 = (Item) Item.itemRegistry.getObject("mcheli:ah-1z");
+			Item mi24 = (Item) Item.itemRegistry.getObject("mcheli:mi-24");
+			Item mi28 = (Item) Item.itemRegistry.getObject("mcheli:mi28");
+			Item apache = (Item) Item.itemRegistry.getObject("mcheli:ah-64");
+			if(ka50 != null) {
+				makeRecipe(new ComparableStack(ka50, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.plate_desh, 4),
+						new ComparableStack(ModItems.hev_plate, 4),
+						new ComparableStack(ModBlocks.machine_selenium, 1),
+						new ComparableStack(ModItems.piston_selenium,4),
+						new ComparableStack(ModItems.bolt_compound, 2),
+						new ComparableStack(ModItems.blade_stainless, 6),
+						new ComparableStack(ModItems.circuit_targeting_tier4, 1),
+						new ComparableStack(ModItems.mechanism_launcher_2, 1),
+						new ComparableStack(ModItems.mechanism_rifle_2, 1),
+						new ComparableStack(ModBlocks.reinforced_glass, 6)
+				}, 30 * 20);
+			}
+			if(ah1 != null) {
+				makeRecipe(new ComparableStack(ah1, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hull_big_steel, 2),
+						new ComparableStack(ModItems.hull_small_steel, 2),
+						new ComparableStack(ModItems.piston_selenium,2),
+						new ComparableStack(ModItems.bolt_tungsten, 4),
+						new ComparableStack(ModItems.blade_stainless, 6),
+						new ComparableStack(ModItems.circuit_targeting_tier3, 1),
+						new ComparableStack(ModItems.mechanism_launcher_2, 1),
+						new ComparableStack(ModItems.mechanism_rifle_2, 1),
+						new ComparableStack(ModBlocks.reinforced_laminate, 2)
+				}, 30 * 20);
+			}
+			if(mi28 != null) {
+				makeRecipe(new ComparableStack(mi28, 1, 0), new AStack[] {
+						new ComparableStack(ModItems.hev_plate, 8),
+						new ComparableStack(ModItems.plate_desh, 8),
+						new ComparableStack(ModBlocks.machine_selenium, 2),
+						new ComparableStack(ModItems.piston_selenium,8),
+						new ComparableStack(ModItems.bolt_compound, 3),
+						new ComparableStack(ModItems.blade_stainless, 6),
+						new ComparableStack(ModItems.circuit_targeting_tier4, 2),
+						new ComparableStack(ModItems.mechanism_launcher_2, 3),
+						new ComparableStack(ModItems.mechanism_rifle_2, 1),
+						new ComparableStack(ModBlocks.reinforced_glass, 6)
+				}, 30 * 20);
 			}
 
-			if (mb18 != null) {
-			    makeRecipe(new ComparableStack(mb18, 1), new AStack[] {
-						new OreDictStack(STAINLESS.plate(), 20),
-						new ComparableStack(ModItems.motor, 1),		
-						new ComparableStack(ModItems.pipes_steel, 1),
-						new ComparableStack(Blocks.glass, 8),	
-						}, 500);
-			}
-
-			if (mch20 != null) {
-			    makeRecipe(new ComparableStack(mch20, 1), new AStack[] {
-						new OreDictStack(NI.plate(), 20),
-						new ComparableStack(ModItems.motor, 1),		
-						new ComparableStack(ModItems.pipes_steel, 1),
-						new ComparableStack(Blocks.glass, 8),			    
-						}, 500);
-			}
-
-			if (mch22 != null) {
-			    makeRecipe(new ComparableStack(mch22, 1), new AStack[] {
-						new OreDictStack(NI.plate(), 20),
-						new OreDictStack(STAINLESS.plate(), 20),
-						new ComparableStack(ModItems.motor, 1),		
-						new ComparableStack(ModItems.pipes_steel, 1),
-						new ComparableStack(Blocks.glass, 8),				    
-						}, 500);
-			}
-
-			if (mch24 != null) {
-			    makeRecipe(new ComparableStack(mch24, 1), new AStack[] {	
-						new OreDictStack(STEEL.plate(), 8),
-						new OreDictStack(NI.plate(), 5),
-						new ComparableStack(ModItems.motor, 1),	
-						new ComparableStack(ModItems.circuit_copper, 2),	
-						new ComparableStack(Blocks.glass, 2),	
-						}, 500);
-			}
-
-			if (mch28 != null) {
-			    makeRecipe(new ComparableStack(mch28, 1), new AStack[] {
-						new OreDictStack(CD.ingot(), 1),
-						new OreDictStack(STAINLESS.plate(), 1),
-						new ComparableStack(ModItems.motor, 2),		
-						new ComparableStack(ModItems.pipes_steel, 1),
-						}, 500);
-			}
-
-			if (mch30 != null) {
-			    makeRecipe(new ComparableStack(mch30, 1), new AStack[] {
-						new OreDictStack(STEEL.plate(), 8),
-						new OreDictStack(TI.plate(), 12),
-						new ComparableStack(ModItems.motor, 1),		
-						new ComparableStack(Blocks.glass, 2),			    
-						}, 500);
-			}
-
-			if (mch31 != null) {
-			    makeRecipe(new ComparableStack(mch31, 1), new AStack[] {
-						new OreDictStack(NI.plate(), 8),
-						new ComparableStack(ModItems.motor, 1),			    
-						}, 500);
-			}
-
-			if (mch32 != null) {
-			    makeRecipe(new ComparableStack(mch32, 1), new AStack[] {
-						new OreDictStack(NI.plate(), 8),
-						new ComparableStack(ModItems.motor, 1),			    
-						}, 500);
-			}
-
-			if (mch33 != null) {
-			    makeRecipe(new ComparableStack(mch33, 1), new AStack[] {
-						new OreDictStack(NI.plate(), 8),
-						new ComparableStack(ModItems.motor, 1),			    
-						}, 500);
-			}
-
-			if (mch34 != null) {
-			    makeRecipe(new ComparableStack(mch34, 1), new AStack[] {
-						new OreDictStack(NI.plate(), 8),
-						new ComparableStack(ModItems.motor, 1),			    
-						}, 500);
-			}
-
-			if (mch35 != null) {
-			    makeRecipe(new ComparableStack(mch35, 1), new AStack[] {
-						new OreDictStack(NI.plate(), 8),
-						new ComparableStack(ModItems.motor, 1),			    
-						}, 500);
-			}
-			Item mch41 = (Item) Item.itemRegistry.getObject("mcheli:sh-3");
-			Item mch42 = (Item) Item.itemRegistry.getObject("mcheli:sh-60");
-			Item mch43 = (Item) Item.itemRegistry.getObject("mcheli:uh-1c");
-			Item mch44 = (Item) Item.itemRegistry.getObject("mcheli:w3");
-			Item mch244 = (Item) Item.itemRegistry.getObject("mcheli:oh-1");
-			if (mch41 != null) {
-			    makeRecipe(new ComparableStack(mch41, 1), new AStack[] {
-						new OreDictStack(NI.plate(), 8),
-						new ComparableStack(ModItems.motor, 1),				    
-						}, 500);
-			}
-
-			if (mch42 != null) {
-			    makeRecipe(new ComparableStack(mch42, 1), new AStack[] {
-						new OreDictStack(NI.plate(), 8),
-						new ComparableStack(ModItems.motor, 1),				    
-						}, 500);
-			}
-
-			if (mch43 != null) {
-			    makeRecipe(new ComparableStack(mch43, 1), new AStack[] {
-						new OreDictStack(NI.plate(), 8),
-						new ComparableStack(ModItems.motor, 1),				    
-						}, 500);
-			}
-
-			if (mch44 != null) {
-			    makeRecipe(new ComparableStack(mch44, 1), new AStack[] {
-						new OreDictStack(NI.plate(), 8),
-						new ComparableStack(ModItems.motor, 1),				    
-						}, 500);
-			}
-			if (mch244 != null) {
-			    makeRecipe(new ComparableStack(mch244, 1), new AStack[] {
-						new OreDictStack(NI.plate(), 8),
-						new ComparableStack(ModItems.motor, 1),				    
-						}, 500);
+			if(mi24 != null) {
+			makeRecipe(new ComparableStack(mi24, 1, 0), new AStack[] {
+					new ComparableStack(ModItems.hev_plate, 8),
+					new ComparableStack(ModItems.plate_desh, 8),
+					new ComparableStack(ModBlocks.machine_selenium, 2),
+					new ComparableStack(ModItems.piston_selenium,6),
+					new ComparableStack(ModItems.bolt_compound, 3),
+					new ComparableStack(ModItems.blade_stainless, 6),
+					new ComparableStack(ModItems.circuit_targeting_tier4, 2),
+					new ComparableStack(ModItems.mechanism_launcher_2, 1),
+					new ComparableStack(ModItems.mechanism_rifle_2, 3),
+					new ComparableStack(ModBlocks.reinforced_glass, 6)
+			}, 30 * 20);
+			if(apache != null) {
+					makeRecipe(new ComparableStack(apache, 1, 0), new AStack[] {
+							new ComparableStack(ModItems.paa_plate, 12),
+							new ComparableStack(ModItems.plate_desh, 8),
+							new ComparableStack(ModBlocks.machine_selenium, 2),
+							new ComparableStack(ModItems.piston_selenium,8),
+							new ComparableStack(ModItems.bolt_compound, 6),
+							new ComparableStack(ModItems.blade_stainless, 10),
+							new ComparableStack(ModItems.circuit_targeting_tier5, 1),
+							new ComparableStack(ModItems.mechanism_launcher_2, 3),
+							new ComparableStack(ModItems.mechanism_rifle_2, 2),
+							new ComparableStack(ModBlocks.reinforced_glass, 8)
+					}, 30 * 20);
 			}
 		}
+
+	}
 		
 		/// HIDDEN ///
 		hidden.put(new ComparableStack(ModBlocks.machine_radgen, 1), new HashSet() {{ add(ModItems.journal_pip); }});
