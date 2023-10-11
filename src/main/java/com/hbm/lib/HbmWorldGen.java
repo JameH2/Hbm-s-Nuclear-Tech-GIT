@@ -64,6 +64,7 @@ import net.minecraft.world.biome.BiomeGenForest;
 import net.minecraft.world.biome.BiomeGenJungle;
 import net.minecraft.world.biome.BiomeGenRiver;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.gen.ChunkProviderFlat;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.IWorldGenerator;
@@ -233,8 +234,15 @@ public class HbmWorldGen implements IWorldGenerator {
 					(new WorldGenMinable(ModBlocks.ore_australium, 50)).generate(world, rand, randPosX, randPosY, randPosZ);
 			}
 		}
+		
+		boolean enableDungeons = true;
+		
+		if(world.getChunkProvider() instanceof ChunkProviderFlat) {
+			ChunkProviderFlat provider = (ChunkProviderFlat) world.getChunkProvider();
+			enableDungeons = provider.hasDungeons;
+		}
 
-		if(GeneralConfig.enableDungeons && world.provider.isSurfaceWorld()) {
+		if(GeneralConfig.enableDungeons && world.provider.isSurfaceWorld() && enableDungeons) {
 			
 			if(MobConfig.enableHives && rand.nextInt(MobConfig.hiveSpawn) == 0) {
 				int x = i + rand.nextInt(16) + 8;
@@ -405,7 +413,7 @@ public class HbmWorldGen implements IWorldGenerator {
 				}
 			}
 
-			if(rand.nextInt(1000) == 0) {
+			if(rand.nextInt(2000) == 0) {
 				int x = i + rand.nextInt(16);
 				int z = j + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);

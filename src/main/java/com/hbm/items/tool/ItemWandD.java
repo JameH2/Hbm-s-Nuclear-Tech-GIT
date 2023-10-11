@@ -39,6 +39,7 @@ import com.hbm.saveddata.TomSaveData;
 import com.hbm.util.ParticleUtil;
 import com.hbm.util.PlanetaryTraitUtil;
 import com.hbm.util.PlanetaryTraitUtil.Hospitality;
+import com.hbm.util.PlanetaryTraitWorldSavedData;
 import com.hbm.util.fauxpointtwelve.BlockPos;
 import com.hbm.world.feature.OilSpot;
 import com.hbm.world.generator.DungeonToolbox;
@@ -49,14 +50,9 @@ import com.hbm.extprop.HbmLivingProps;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
 import com.hbm.entity.effect.EntityNukeTorex;
-import com.hbm.handler.pollution.PollutionHandler;
-import com.hbm.handler.pollution.PollutionHandler.PollutionType;
 import com.hbm.lib.Library;
 import com.hbm.util.TrackerUtil;
 
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import net.minecraft.entity.EntityTracker;
-import net.minecraft.entity.EntityTrackerEntry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -69,10 +65,8 @@ import net.minecraft.util.IntHashMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IntHashMap;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 public class ItemWandD extends Item {
 
@@ -212,6 +206,15 @@ public class ItemWandD extends Item {
 				Set<Hospitality> newtraits = EnumSet.of(Hospitality.BREATHEABLE);
 				PlanetaryTraitUtil.removeTraitsFromDimension(world.provider.dimensionId, traits);
 				PlanetaryTraitUtil.addTraitsToDimension(world.provider.dimensionId, newtraits);
+				
+			    // Get the PlanetaryTraitWorldSavedData instance for the world
+			    PlanetaryTraitWorldSavedData traitsData = PlanetaryTraitWorldSavedData.get(world);
+
+			    // Set the updated traits in the saved data
+			    traitsData.setTraits(world.provider.dimensionId, newtraits);
+
+			    // Mark the saved data as dirty to ensure changes are saved
+			    traitsData.markDirty();
 				player.addChatMessage(new ChatComponentText("added!" + newtraits));
 			}
 			/*

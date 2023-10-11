@@ -28,8 +28,7 @@ public class PlanetaryTraitUtil {
 		OXYNEG,
 		BREATHEABLE,
 		HOT,
-		
-		
+
 	}
 
     public static Map<Integer, Set<Hospitality>> idToDimensionMap = new HashMap<>();
@@ -42,19 +41,44 @@ public class PlanetaryTraitUtil {
         idToDimensionMap.put(DimensionManager.getProviderType(SpaceConfig.mohoDimension), EnumSet.of(Hospitality.OXYNEG, Hospitality.HOT));
     }
 
+    @Deprecated
     public static boolean isDimensionWithTrait(World world, Hospitality trait) {
         int dimensionId = world.provider.dimensionId;
         Set<Hospitality> traits = idToDimensionMap.getOrDefault(dimensionId, Collections.emptySet());
         return traits.contains(trait);
+        
     }
-    
+
+    public static boolean isDimensionWithTraitNT(World world, Hospitality trait) {
+        int dimensionId = world.provider.dimensionId;
+        world = DimensionManager.getWorld(dimensionId);
+        Set<Hospitality> traits = idToDimensionMap.getOrDefault(dimensionId, Collections.emptySet());
+
+        PlanetaryTraitWorldSavedData traitsData = PlanetaryTraitWorldSavedData.get(world);
+        
+        // Check if saved data exists and has traits for the dimension
+        if (traitsData != null) {
+            Set<Hospitality> savedTraits = traitsData.getTraits(dimensionId);
+            
+            // If saved traits exist, use them instead
+            if (!savedTraits.isEmpty()) {
+                traits = savedTraits;
+            }
+        }
+        
+        return traits.contains(trait);
+    }
     public static void removeTraitsFromDimension(int dimensionId, Set<Hospitality> traits) {
         Set<Hospitality> existingTraits = idToDimensionMap.getOrDefault(dimensionId, new HashSet<>());
         existingTraits.removeAll(traits);
+        World world = DimensionManager.getWorld(dimensionId);
         if (existingTraits.isEmpty()) {
             idToDimensionMap.remove(dimensionId);
         } else {
+    	    PlanetaryTraitWorldSavedData traitsData = PlanetaryTraitWorldSavedData.get(world);
             idToDimensionMap.put(dimensionId, existingTraits);
+    	    traitsData.setTraits(world.provider.dimensionId, existingTraits);
+    	    traitsData.markDirty();
         }
         
     }
@@ -65,6 +89,9 @@ public class PlanetaryTraitUtil {
         existingTraits.addAll(traits);
         idToDimensionMap.put(dimensionId, existingTraits);
         World world = DimensionManager.getWorld(dimensionId); // Fetch the world based on the dimension ID
+	    PlanetaryTraitWorldSavedData traitsData = PlanetaryTraitWorldSavedData.get(world);
+	    traitsData.setTraits(world.provider.dimensionId, existingTraits);
+	    traitsData.markDirty();
     }
 }
 
