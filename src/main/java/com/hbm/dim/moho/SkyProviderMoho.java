@@ -94,7 +94,7 @@ public class SkyProviderMoho extends IRenderHandler {
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
 		//float atmosphericDust = ImpactWorldHandler.getDustForClient(world);
         float solar = (AstronomyUtil.KerbolRadius*4/(AstronomyUtil.DunaAU*AstronomyUtil.AUToKm))*360;
-        double MohoEve = AstronomyUtil.getInterplanetaryDistance(world, AstronomyUtil.MohoAU, AstronomyUtil.MohoP, AstronomyUtil.EveAU, AstronomyUtil.EveP);
+        //double MohoEve = AstronomyUtil.getInterplanetaryDistance(world, AstronomyUtil.MohoAU, AstronomyUtil.MohoP, AstronomyUtil.EveAU, AstronomyUtil.EveP);
         double MohoKerbin = AstronomyUtil.getInterplanetaryDistance(world, AstronomyUtil.MohoAU, AstronomyUtil.EveP, AstronomyUtil.KerbinAU, AstronomyUtil.KerbinP);
         double MohoDuna = AstronomyUtil.getInterplanetaryDistance(world, AstronomyUtil.MohoAU, AstronomyUtil.MohoP, AstronomyUtil.DunaAU, AstronomyUtil.DunaP);
         double MohoJool = AstronomyUtil.getInterplanetaryDistance(world, AstronomyUtil.MohoAU, AstronomyUtil.MohoP, AstronomyUtil.JoolAU, AstronomyUtil.JoolP);
@@ -200,7 +200,7 @@ public class SkyProviderMoho extends IRenderHandler {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glColor4f(0.0F, 0.0F, 0.0F, 1.0F);
 		// Some blanking to conceal the stars
-		f10 = (AstronomyUtil.KerbolRadius/(AstronomyUtil.MohoAU*AstronomyUtil.AUToKm))*720;
+		f10 = (float) (2*Math.atan((AstronomyUtil.KerbolRadius*4)/(2*AstronomyUtil.MohoAU*AstronomyUtil.AUToKm))*57.2958);
 		float f11 = f10*2;
 		tessellator.startDrawingQuads();
 		tessellator.addVertex(-f10, 99.9D, -f10);
@@ -234,7 +234,7 @@ public class SkyProviderMoho extends IRenderHandler {
 		{
     		GL11.glPushMatrix();
     		//GL11.glDisable(GL11.GL_BLEND);
-    		f10 = (float) (0.15F/MohoJool);
+    		f10 = 0.75f;
     		GL11.glColor4d(0.4588f, 0.6784f, 0.3059f, 1/MohoJool);
     		GL11.glRotatef(AstronomyUtil.calculatePlanetAngle(world.getWorldTime(), partialTicks, AstronomyUtil.MohoP, AstronomyUtil.JoolP) * -360.0F, 1.0F, 0.0F, 0.0F);        		
     		GL11.glRotatef(280F, 1.0F, 0.0F, 0.0F);
@@ -265,7 +265,7 @@ public class SkyProviderMoho extends IRenderHandler {
     		//GL11.glEnable(GL11.GL_BLEND);
     		GL11.glPopMatrix();
     	}
-		{
+		/*{
     		GL11.glPushMatrix();
     		//GL11.glDisable(GL11.GL_BLEND);
     		f10 = (float) (0.15F/MohoKerbin);
@@ -282,7 +282,7 @@ public class SkyProviderMoho extends IRenderHandler {
     		//GL11.glEnable(GL11.GL_BLEND);
     		GL11.glPopMatrix();
     	}
-		{
+		/*{
     		GL11.glPushMatrix();
     		//GL11.glDisable(GL11.GL_BLEND);
     		f10 = (float) (0.15F/MohoEve);
@@ -298,7 +298,7 @@ public class SkyProviderMoho extends IRenderHandler {
     		tessellator.draw();
     		//GL11.glEnable(GL11.GL_BLEND);
     		GL11.glPopMatrix();
-    	}
+    	}*/
 		{
 			OpenGlHelper.glBlendFunc(770, 1, 1, 0);
 
