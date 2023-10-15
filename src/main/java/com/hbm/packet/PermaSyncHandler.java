@@ -38,6 +38,8 @@ public class PermaSyncHandler {
 		buf.writeFloat(data.dust);
 		buf.writeBoolean(data.impact);
 		buf.writeLong(data.time);
+		buf.writeInt(data.x);
+		buf.writeInt(data.z);
 		/// TOM IMPACT DATA ///
 
 		
@@ -83,6 +85,8 @@ public class PermaSyncHandler {
 		ImpactWorldHandler.dust = buf.readFloat();
 		ImpactWorldHandler.impact = buf.readBoolean();
 		ImpactWorldHandler.time = buf.readLong();
+		ImpactWorldHandler.x = buf.readInt();
+		ImpactWorldHandler.z = buf.readInt();
 		/// TOM IMPACT DATA ///
 
         int dimensionId = buf.readInt();

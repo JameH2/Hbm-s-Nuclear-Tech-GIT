@@ -1,6 +1,7 @@
 package com.hbm.main;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -14,7 +15,6 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockAshes;
 import com.hbm.config.GeneralConfig;
 import com.hbm.dim.eve.WorldProviderEve;
-import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.mob.EntityHunterChopper;
 import com.hbm.entity.projectile.EntityChopperMine;
 import com.hbm.entity.train.EntityRailCarRidable;
@@ -52,10 +52,12 @@ import com.hbm.potion.HbmPotion;
 import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.Animation;
 import com.hbm.render.block.ct.CTStitchReceiver;
+import com.hbm.render.model.ModelRubble;
 import com.hbm.render.util.RenderAccessoryUtility;
 import com.hbm.render.util.RenderOverhead;
 import com.hbm.render.util.RenderScreenOverlay;
 import com.hbm.render.util.SoyuzPronter;
+import com.hbm.render.util.TomPronter;
 import com.hbm.render.world.RenderNTMSkyboxChainloader;
 import com.hbm.render.world.RenderNTMSkyboxImpact;
 import com.hbm.sound.MovingSoundChopper;
@@ -108,6 +110,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -150,6 +153,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 public class ModEventHandlerClient {
 	
 	public static final int flashDuration = 5_000;
+	public static int asteroidflashDuration = 0;
 	public static long flashTimestamp;
 	
 	@SubscribeEvent
@@ -158,7 +162,7 @@ public class ModEventHandlerClient {
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		
 		/// NUKE FLASH ///
-		if(event.type == ElementType.CROSSHAIRS && (flashTimestamp + flashDuration - System.currentTimeMillis()) > 0) {
+		if(event.type == ElementType.CROSSHAIRS && (flashTimestamp + (flashDuration+asteroidflashDuration) - System.currentTimeMillis()) > 0) {
 			int width = event.resolution.getScaledWidth();
 			int height = event.resolution.getScaledHeight();
 			Tessellator tess = Tessellator.instance;
@@ -168,7 +172,7 @@ public class ModEventHandlerClient {
 			GL11.glAlphaFunc(GL11.GL_GEQUAL, 0.0F);
 			GL11.glDepthMask(false);
 			tess.startDrawingQuads();
-			float brightness = (flashTimestamp + flashDuration - System.currentTimeMillis()) / (float) flashDuration;
+			float brightness = (flashTimestamp + (flashDuration+asteroidflashDuration) - System.currentTimeMillis()) / (float) (flashDuration+asteroidflashDuration);
 			tess.setColorRGBA_F(1F, 1F, 1F, brightness * 0.8F);
 			tess.addVertex(width, 0, 0);
 			tess.addVertex(0, 0, 0);
@@ -1125,10 +1129,69 @@ public class ModEventHandlerClient {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onRenderWorldLastEvent(RenderWorldLastEvent event) {
-
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		long t = ImpactWorldHandler.getTimeForClient(player.worldObj);
+		if(t>0)
+		{
 		GL11.glPushMatrix();
 
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		double dx = player.prevPosX + (player.posX - player.prevPosX) * event.partialTicks;
+		double dy = player.prevPosY + (player.posY - player.prevPosY) * event.partialTicks;
+		double dz = player.prevPosZ + (player.posZ - player.prevPosZ) * event.partialTicks;
+
+		//int dist = 6;
+		double R = t*37.5;
+		float x = (float) (ImpactWorldHandler.x+0.5+R);
+		float y = (float) R;
+		float z = (float)(ImpactWorldHandler.z+0.5);
+		if(t<=4 && t>0 && System.currentTimeMillis() - ModEventHandlerClient.flashTimestamp > 1_000)
+		{
+			this.flashTimestamp = System.currentTimeMillis();
+			this.asteroidflashDuration = 15_000;
+		}
+		Vec3 vec = Vec3.createVectorHelper(x - dx, y - dy, z - dz);
+		Vec3 vec2 = Vec3.createVectorHelper(x - dx, y - dy, z - dz);
+		double l = Math.min(Minecraft.getMinecraft().gameSettings.renderDistanceChunks*22, vec.lengthVector());
+		vec = vec.normalize();
+		Vec3 vec3 = Vec3.createVectorHelper(vec.xCoord*l, vec.yCoord*l, vec.zCoord*l);
+		
+		double sf = 312.5/(vec2.lengthVector()/l);//(2*Math.atan(1/(2*vec2.lengthVector())));//*17.2958);
+		
+		if(player.worldObj.provider.dimensionId == 0) {
+			
+			GL11.glTranslated(vec3.xCoord, vec3.yCoord, vec3.zCoord);
+			GL11.glPushMatrix();
+			RenderHelper.enableStandardItemLighting();
+
+			GL11.glRotated(80, 0, 0, 1);
+			GL11.glRotated(30, 0, 1, 0);
+
+			double sine = Math.sin(System.currentTimeMillis() * 0.0005) * 5;
+			double sin3 = Math.sin(System.currentTimeMillis() * 0.0005 + Math.PI * 0.5) * 5;
+			GL11.glRotated(sine, 0, 0, 1);
+			GL11.glRotated(sin3, 1, 0, 0);
+
+			GL11.glTranslated(0, -3, 0);
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 6500F, 30F);
+			GL11.glPopMatrix();
+		
+		}
+			GL11.glDisable(GL11.GL_CULL_FACE);
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glScaled(sf, sf, sf);
+			GL11.glRotatef(-45, 0.0F, 0.0F, 1.0F);
+			renderBlock(new ResourceLocation(RefStrings.MODID + ":textures/blocks/block_meteor_broken.png"), 0, 0, 0);
+			GL11.glPushMatrix();
+			GL11.glTranslated(0, -1/*(sf*0.768)*/, 0);
+			GL11.glScaled(1, 1, 1);
+			TomPronter.prontTom2(2, y);
+			GL11.glPopMatrix();
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_CULL_FACE);
+		
+		GL11.glPopMatrix();
+		}
+		GL11.glPushMatrix();
 
 		double dx = player.prevPosX + (player.posX - player.prevPosX) * event.partialTicks;
 		double dy = player.prevPosY + (player.posY - player.prevPosY) * event.partialTicks;
@@ -1215,6 +1278,73 @@ public class ModEventHandlerClient {
 					RenderOverhead.renderThermalSight(event.partialTicks);
 			}
 		}
+	}
+	
+	public void renderBlock(ResourceLocation loc1, double x, double y, double z) {
+		GL11.glPushMatrix();
+		GL11.glTranslated(x, y, z);
+		GL11.glRotatef(128, 0F, 0F, 1F);
+		GL11.glRotatef(144, 0F, 1F, 0F);
+		if(mine==null)
+		{
+			mine = new ModelRubble();
+		}
+		TextureManager tex = Minecraft.getMinecraft().getTextureManager();
+		tex.bindTexture(loc1);
+		mine.renderAll(0.0625F);
+		/*GL11.glTranslated(x, y, z);
+		GL11.glRotatef(180, 0F, 0F, 1F);
+		Tessellator tesseract = Tessellator.instance;
+		TextureManager tex = Minecraft.getMinecraft().getTextureManager();
+		tesseract.startDrawingQuads();
+			tesseract.addVertexWithUV(-0.5, -0.5, -0.5, 1, 0);
+			tesseract.addVertexWithUV(+0.5, -0.5, -0.5, 0, 0);
+			tesseract.addVertexWithUV(+0.5, +0.5, -0.5, 0, 1);
+			tesseract.addVertexWithUV(-0.5, +0.5, -0.5, 1, 1);
+			tex.bindTexture(loc1);
+			tesseract.draw();
+
+			tesseract.startDrawingQuads();
+			tesseract.addVertexWithUV(-0.5, -0.5, +0.5, 1, 0);
+			tesseract.addVertexWithUV(-0.5, -0.5, -0.5, 0, 0);
+			tesseract.addVertexWithUV(-0.5, +0.5, -0.5, 0, 1);
+			tesseract.addVertexWithUV(-0.5, +0.5, +0.5, 1, 1);
+			tex.bindTexture(loc1);
+			tesseract.draw();
+
+			tesseract.startDrawingQuads();
+			tesseract.addVertexWithUV(+0.5, -0.5, +0.5, 1, 0);
+			tesseract.addVertexWithUV(-0.5, -0.5, +0.5, 0, 0);
+			tesseract.addVertexWithUV(-0.5, +0.5, +0.5, 0, 1);
+			tesseract.addVertexWithUV(+0.5, +0.5, +0.5, 1, 1);
+			tex.bindTexture(loc1);
+			tesseract.draw();
+
+			tesseract.startDrawingQuads();
+			tesseract.addVertexWithUV(+0.5, -0.5, -0.5, 1, 0);
+			tesseract.addVertexWithUV(+0.5, -0.5, +0.5, 0, 0);
+			tesseract.addVertexWithUV(+0.5, +0.5, +0.5, 0, 1);
+			tesseract.addVertexWithUV(+0.5, +0.5, -0.5, 1, 1);
+			tex.bindTexture(loc1);
+			tesseract.draw();
+
+			tesseract.startDrawingQuads();
+			tesseract.addVertexWithUV(-0.5, -0.5, +0.5, 1, 0);
+			tesseract.addVertexWithUV(+0.5, -0.5, +0.5, 0, 0);
+			tesseract.addVertexWithUV(+0.5, -0.5, -0.5, 0, 1);
+			tesseract.addVertexWithUV(-0.5, -0.5, -0.5, 1, 1);
+			tex.bindTexture(loc1);
+			tesseract.draw();
+
+			tesseract.startDrawingQuads();
+			tesseract.addVertexWithUV(+0.5, +0.5, +0.5, 1, 0);
+			tesseract.addVertexWithUV(-0.5, +0.5, +0.5, 0, 0);
+			tesseract.addVertexWithUV(-0.5, +0.5, -0.5, 0, 1);
+			tesseract.addVertexWithUV(+0.5, +0.5, -0.5, 1, 1);
+			tex.bindTexture(loc1);
+			tesseract.draw();*/
+		GL11.glPopMatrix();
+		
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)

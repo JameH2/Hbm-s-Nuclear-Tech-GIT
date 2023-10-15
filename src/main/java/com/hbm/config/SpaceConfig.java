@@ -33,7 +33,7 @@ public class SpaceConfig {
 	public static int dresDimension = 19;
 	
 	public static int mohoBiome = 122;
-	
+	public static int impactCrater = 123;
 	public static int minmusBiome = 146;
 	public static int minmusBasins = 147;
 	

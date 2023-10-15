@@ -3,6 +3,7 @@ package com.hbm.world.feature;
 import java.util.Random;
 
 import com.hbm.blocks.BlockEnums.EnumBiomeType;
+import com.hbm.dim.BiomeGenBaseQuackosian;
 import com.hbm.world.generator.DungeonToolbox;
 import com.hbm.blocks.ModBlocks;
 
@@ -117,8 +118,8 @@ public class BiomeCave {
 	
 	private static EnumBiomeType getTypeFromBiome(BiomeGenBase biome) {
 
-		if(biome.temperature >= 1 && biome.rainfall < 0.25) return EnumBiomeType.DESERT;
-		if(biome.temperature >= 0.5 && biome.rainfall > 0.25 && biome.getTempCategory() != TempCategory.OCEAN) return EnumBiomeType.WOODLAND;
+		if(biome != BiomeGenBaseQuackosian.crater && biome.temperature >= 1 && biome.rainfall < 0.25) return EnumBiomeType.DESERT;
+		if(biome != BiomeGenBaseQuackosian.crater && biome.temperature >= 0.5 && biome.rainfall > 0.25 && biome.getTempCategory() != TempCategory.OCEAN) return EnumBiomeType.WOODLAND;
 		
 		return null;
 	}

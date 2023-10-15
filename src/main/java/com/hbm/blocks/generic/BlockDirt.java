@@ -62,13 +62,26 @@ public class BlockDirt extends Block {
 		
 		if(!world.isRemote) {
 			TomSaveData data = TomSaveData.forWorld(world);
-			
 			int light = Math.max(world.getSavedLightValue(EnumSkyBlock.Block, x, y + 1, z), (int) (world.getBlockLightValue(x, y + 1, z) * (1 - data.dust)));
-			if(light >= 9 && data.fire == 0) {
+			//System.out.println("Light: "+light+" Sky: "+world.getSavedLightValue(EnumSkyBlock.Block, x, y + 1, z)+" Block: "+(int) (world.getBlockLightValue(x, y + 1, z) * (1 - data.dust)));
+			if(light >= 9 && data.fire == 0  && data.dust <= 0.9f) {
 				world.setBlock(x, y, z, Blocks.grass);
 				if(world.getBlock(x, y-1, z)==Blocks.dirt)
 				{
 					world.setBlock(x, y-1, z, ModBlocks.qq_dirt);
+				}
+			}
+			if(light < 4) {
+				for(int X =-1;X<2;X++)
+				{
+					for(int Y =-1;Y<2;Y++)
+					{
+						for(int Z =-1;Z<2;Z++)
+						{
+							if(world.getBlock(x+X, y+Y, z+Z)==Blocks.grass)
+								world.setBlock(x+X, y+Y, z+Z, ModBlocks.impact_dirt);
+						}
+					}
 				}
 			}
 		}

@@ -52,6 +52,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntitySkull;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
@@ -236,11 +237,13 @@ public class HbmWorldGen implements IWorldGenerator {
 		}
 		
 		boolean enableDungeons = true;
-		
-		if(world.getChunkProvider() instanceof ChunkProviderFlat) {
+		TomSaveData data = TomSaveData.forWorld(world);
+		int impactX = data.x;
+		int impactZ = data.z;
+		/*if(world.getChunkProvider() instanceof ChunkProviderFlat) {
 			ChunkProviderFlat provider = (ChunkProviderFlat) world.getChunkProvider();
 			enableDungeons = provider.hasDungeons;
-		}
+		}*/
 
 		if(GeneralConfig.enableDungeons && world.provider.isSurfaceWorld() && enableDungeons) {
 			
@@ -248,7 +251,10 @@ public class HbmWorldGen implements IWorldGenerator {
 				int x = i + rand.nextInt(16) + 8;
 				int z = j + rand.nextInt(16) + 8;
 				int y = world.getHeightValue(x, z);
-				if(world.getBlock(x, y - 1, z).isNormalCube()) GlyphidHive.generate(world, x, y, z, rand);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(world.getBlock(x, y - 1, z).isNormalCube() && (distance >=3000 || !data.impact)) GlyphidHive.generate(world, x, y, z, rand);
 			}
 
 			if(biome == BiomeGenBase.plains || biome == BiomeGenBase.desert) {
@@ -257,8 +263,10 @@ public class HbmWorldGen implements IWorldGenerator {
 						int x = i + rand.nextInt(16);
 						int z = j + rand.nextInt(16);
 						int y = world.getHeightValue(x, z);
-
-						new Radio01().generate(world, rand, x, y, z);
+						double dX = Math.pow((impactX - x), 2);
+						double dZ = Math.pow((impactZ - z), 2);
+						double distance = MathHelper.sqrt_double(dX + dZ);
+						if((distance >=3000 || !data.impact)) new Radio01().generate(world, rand, x, y, z);
 					}
 				}
 			}
@@ -270,7 +278,10 @@ public class HbmWorldGen implements IWorldGenerator {
 						int z = j + rand.nextInt(16);
 						int y = world.getHeightValue(x, z);
 
-						new Antenna().generate(world, rand, x, y, z);
+						double dX = Math.pow((impactX - x), 2);
+						double dZ = Math.pow((impactZ - z), 2);
+						double distance = MathHelper.sqrt_double(dX + dZ);
+						if(distance >=3000 || !data.impact) new Antenna().generate(world, rand, x, y, z);
 					}
 				}
 			}
@@ -282,7 +293,10 @@ public class HbmWorldGen implements IWorldGenerator {
 						int z = j + rand.nextInt(16);
 						int y = world.getHeightValue(x, z);
 
-						new DesertAtom001().generate(world, rand, x, y, z);
+						double dX = Math.pow((impactX - x), 2);
+						double dZ = Math.pow((impactZ - z), 2);
+						double distance = MathHelper.sqrt_double(dX + dZ);
+						if(distance >=3000 || !data.impact) new DesertAtom001().generate(world, rand, x, y, z);
 					}
 				}
 			}
@@ -293,13 +307,17 @@ public class HbmWorldGen implements IWorldGenerator {
 						int x = i + rand.nextInt(16);
 						int z = j + rand.nextInt(16);
 						int y = world.getHeightValue(x, z);
-
-						if(rand.nextInt(2) == 0) {
-							new Vertibird().generate(world, rand, x, y, z);
-						} else {
-							new CrashedVertibird().generate(world, rand, x, y, z);
+						double dX = Math.pow((impactX - x), 2);
+						double dZ = Math.pow((impactZ - z), 2);
+						double distance = MathHelper.sqrt_double(dX + dZ);
+						if(distance >=3000 || !data.impact) 
+						{
+							if(rand.nextInt(2) == 0) {
+								new Vertibird().generate(world, rand, x, y, z);
+							} else {
+								new CrashedVertibird().generate(world, rand, x, y, z);
+							}
 						}
-
 					}
 				}
 			}
@@ -308,7 +326,10 @@ public class HbmWorldGen implements IWorldGenerator {
 				int x = i + rand.nextInt(16);
 				int y = rand.nextInt(256);
 				int z = j + rand.nextInt(16);
-				new LibraryDungeon().generate(world, rand, x, y, z);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) new LibraryDungeon().generate(world, rand, x, y, z);
 			}
 
 			if(biome.temperature == 0.5F || biome.temperature == 2.0F) {
@@ -318,7 +339,10 @@ public class HbmWorldGen implements IWorldGenerator {
 						int z = j + rand.nextInt(16);
 						int y = world.getHeightValue(x, z);
 
-						new Relay().generate(world, rand, x, y, z);
+						double dX = Math.pow((impactX - x), 2);
+						double dZ = Math.pow((impactZ - z), 2);
+						double distance = MathHelper.sqrt_double(dX + dZ);
+						if(distance >=3000 || !data.impact) new Relay().generate(world, rand, x, y, z);
 					}
 				}
 			}
@@ -330,7 +354,10 @@ public class HbmWorldGen implements IWorldGenerator {
 						int z = j + rand.nextInt(16);
 						int y = world.getHeightValue(x, z);
 
-						new Satellite().generate(world, rand, x, y, z);
+						double dX = Math.pow((impactX - x), 2);
+						double dZ = Math.pow((impactZ - z), 2);
+						double distance = MathHelper.sqrt_double(dX + dZ);
+						if(distance >=3000 || !data.impact) new Satellite().generate(world, rand, x, y, z);
 					}
 				}
 			}
@@ -352,7 +379,10 @@ public class HbmWorldGen implements IWorldGenerator {
 				int z = j + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);
 
-				new Silo().generate(world, rand, x, y, z);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) new Silo().generate(world, rand, x, y, z);
 			}
 
 			if(WorldConfig.factoryStructure > 0 && rand.nextInt(WorldConfig.factoryStructure) == 0) {
@@ -360,7 +390,10 @@ public class HbmWorldGen implements IWorldGenerator {
 				int z = j + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);
 
-				new Factory().generate(world, rand, x, y, z);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) new Factory().generate(world, rand, x, y, z);
 			}
 
 			if(WorldConfig.dudStructure > 0 && rand.nextInt(WorldConfig.dudStructure) == 0) {
@@ -368,7 +401,10 @@ public class HbmWorldGen implements IWorldGenerator {
 				int z = j + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);
 
-				new Dud().generate(world, rand, x, y, z);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) new Dud().generate(world, rand, x, y, z);
 			}
 
 			if(WorldConfig.spaceshipStructure > 0 && rand.nextInt(WorldConfig.spaceshipStructure) == 0) {
@@ -376,7 +412,10 @@ public class HbmWorldGen implements IWorldGenerator {
 				int z = j + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);
 
-				new Spaceship().generate(world, rand, x, y, z);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) new Spaceship().generate(world, rand, x, y, z);
 			}
 
 			if(WorldConfig.barrelStructure > 0 && biome.temperature >= 1.5F && !biome.canSpawnLightningBolt() && rand.nextInt(WorldConfig.barrelStructure) == 0) {
@@ -384,7 +423,10 @@ public class HbmWorldGen implements IWorldGenerator {
 				int z = j + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);
 
-				new Barrel().generate(world, rand, x, y, z);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) new Barrel().generate(world, rand, x, y, z);
 			}
 
 			if(WorldConfig.broadcaster > 0 && rand.nextInt(WorldConfig.broadcaster) == 0) {
@@ -392,12 +434,19 @@ public class HbmWorldGen implements IWorldGenerator {
 				int z = j + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);
 
-				if(world.getBlock(x, y - 1, z).canPlaceTorchOnTop(world, x, y - 1, z)) {
-					world.setBlock(x, y, z, ModBlocks.broadcaster_pc, rand.nextInt(4) + 2, 2);
-					
-					if(GeneralConfig.enableDebugMode)
-						MainRegistry.logger.info("[Debug] Successfully spawned corrupted broadcaster at " + x + " " + (y) +" " + z);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) 
+				{
+					if(world.getBlock(x, y - 1, z).canPlaceTorchOnTop(world, x, y - 1, z)) {
+						world.setBlock(x, y, z, ModBlocks.broadcaster_pc, rand.nextInt(4) + 2, 2);
+						
+						if(GeneralConfig.enableDebugMode)
+							MainRegistry.logger.info("[Debug] Successfully spawned corrupted broadcaster at " + x + " " + (y) +" " + z);
+					}
 				}
+				
 			}
 
 			if(WorldConfig.minefreq > 0 && GeneralConfig.enableMines && rand.nextInt(WorldConfig.minefreq) == 0) {
@@ -405,11 +454,17 @@ public class HbmWorldGen implements IWorldGenerator {
 				int z = j + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);
 
-				if(world.getBlock(x, y - 1, z).canPlaceTorchOnTop(world, x, y - 1, z)) {
-					world.setBlock(x, y, z, ModBlocks.mine_ap);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) 
+				{
+					if(world.getBlock(x, y - 1, z).canPlaceTorchOnTop(world, x, y - 1, z)) {
+						world.setBlock(x, y, z, ModBlocks.mine_ap);
 
-					if(GeneralConfig.enableDebugMode)
-						MainRegistry.logger.info("[Debug] Successfully spawned landmine at " + x + " " + (y) + " " + z);
+						if(GeneralConfig.enableDebugMode)
+							MainRegistry.logger.info("[Debug] Successfully spawned landmine at " + x + " " + (y) + " " + z);
+					}
 				}
 			}
 
@@ -418,21 +473,27 @@ public class HbmWorldGen implements IWorldGenerator {
 				int z = j + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);
 
-				if(world.getBlock(x, y - 1, z).canPlaceTorchOnTop(world, x, y - 1, z) && world.getBlock(x, y, z).isReplaceable(world, x, y, z)) {
-					
-					world.setBlock(x, y, z, ModBlocks.lantern_behemoth, 12, 3);
-					MultiblockHandlerXR.fillSpace(world, x, y, z, new int[] {4, 0, 0, 0, 0, 0}, ModBlocks.lantern_behemoth, ForgeDirection.NORTH);
-					
-					TileEntityLanternBehemoth lantern = (TileEntityLanternBehemoth) world.getTileEntity(x, y, z);
-					lantern.isBroken = true;
-					
-					if(rand.nextInt(2) == 0) {
-						LootGenerator.setBlock(world, x, y, z - 2);
-						LootGenerator.lootBooklet(world, x, y, z - 2);
-					}
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) 
+				{
+					if(world.getBlock(x, y - 1, z).canPlaceTorchOnTop(world, x, y - 1, z) && world.getBlock(x, y, z).isReplaceable(world, x, y, z)) {
+						
+						world.setBlock(x, y, z, ModBlocks.lantern_behemoth, 12, 3);
+						MultiblockHandlerXR.fillSpace(world, x, y, z, new int[] {4, 0, 0, 0, 0, 0}, ModBlocks.lantern_behemoth, ForgeDirection.NORTH);
+						
+						TileEntityLanternBehemoth lantern = (TileEntityLanternBehemoth) world.getTileEntity(x, y, z);
+						lantern.isBroken = true;
+						
+						if(rand.nextInt(2) == 0) {
+							LootGenerator.setBlock(world, x, y, z - 2);
+							LootGenerator.lootBooklet(world, x, y, z - 2);
+						}
 
-					if(GeneralConfig.enableDebugMode)
-						MainRegistry.logger.info("[Debug] Successfully spawned lantern at " + x + " " + (y) + " " + z);
+						if(GeneralConfig.enableDebugMode)
+							MainRegistry.logger.info("[Debug] Successfully spawned lantern at " + x + " " + (y) + " " + z);
+					}
 				}
 			}
 
@@ -440,8 +501,14 @@ public class HbmWorldGen implements IWorldGenerator {
 				int x = i + rand.nextInt(16);
 				int z = j + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);
-				if(world.getBlock(x, y - 1, z).canPlaceTorchOnTop(world, x, y - 1, z)) {
-					world.setBlock(x, y, z, ModBlocks.mine_he);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) 
+				{
+					if(world.getBlock(x, y - 1, z).canPlaceTorchOnTop(world, x, y - 1, z)) {
+						world.setBlock(x, y, z, ModBlocks.mine_he);
+					}
 				}
 			}
 
@@ -456,10 +523,16 @@ public class HbmWorldGen implements IWorldGenerator {
 					if(rand.nextInt(50) == 0)
 						r = 50;
 
-					new Sellafield().generate(world, x, z, r, r * 0.35D);
-
-					if(GeneralConfig.enableDebugMode)
-						MainRegistry.logger.info("[Debug] Successfully spawned raditation hotspot at " + x + " " + z);
+					double dX = Math.pow((impactX - x), 2);
+					double dZ = Math.pow((impactZ - z), 2);
+					double distance = MathHelper.sqrt_double(dX + dZ);
+					if(distance >=3000 || !data.impact) 
+					{
+						new Sellafield().generate(world, x, z, r, r * 0.35D);
+						
+						if(GeneralConfig.enableDebugMode)
+							MainRegistry.logger.info("[Debug] Successfully spawned raditation hotspot at " + x + " " + z);
+					}
 				}
 			}
 
@@ -486,18 +559,24 @@ public class HbmWorldGen implements IWorldGenerator {
 				int z = j + rand.nextInt(16);
 				int y = world.getHeightValue(x, z) - 4;
 				
-				if(world.getBlock(x, y + 1, z).canPlaceTorchOnTop(world, x, y + 1, z)) {
-					
-					world.setBlock(x, y, z, ModBlocks.soyuz_capsule, 3, 2);
-					
-					TileEntitySoyuzCapsule cap = (TileEntitySoyuzCapsule)world.getTileEntity(x, y, z);
-					
-					if(cap != null) {
-						cap.setInventorySlotContents(rand.nextInt(cap.getSizeInventory()), new ItemStack(ModItems.record_glass));
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) 
+				{
+					if(world.getBlock(x, y + 1, z).canPlaceTorchOnTop(world, x, y + 1, z)) {
+						
+						world.setBlock(x, y, z, ModBlocks.soyuz_capsule, 3, 2);
+						
+						TileEntitySoyuzCapsule cap = (TileEntitySoyuzCapsule)world.getTileEntity(x, y, z);
+						
+						if(cap != null) {
+							cap.setInventorySlotContents(rand.nextInt(cap.getSizeInventory()), new ItemStack(ModItems.record_glass));
+						}
+		
+						if(GeneralConfig.enableDebugMode)
+							MainRegistry.logger.info("[Debug] Successfully spawned capsule at " + x + " " + z);
 					}
-	
-					if(GeneralConfig.enableDebugMode)
-						MainRegistry.logger.info("[Debug] Successfully spawned capsule at " + x + " " + z);
 				}
 			}
 
@@ -534,75 +613,86 @@ public class HbmWorldGen implements IWorldGenerator {
 				int z = j + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);
 
-				if(world.getBlock(x, y - 1, z).canPlaceTorchOnTop(world, x, y - 1, z)) {
-					world.setBlock(x, y, z, ModBlocks.safe, rand.nextInt(4) + 2, 2);
-					
-					switch(rand.nextInt(10)) {
-					case 0:
-					case 1:
-					case 2:
-					case 3:
-						((TileEntitySafe)world.getTileEntity(x, y, z)).setPins(rand.nextInt(999) + 1);
-						((TileEntitySafe)world.getTileEntity(x, y, z)).setMod(1);
-						((TileEntitySafe)world.getTileEntity(x, y, z)).lock();
-						WeightedRandomChestContent.generateChestContents(rand, HbmChestContents.vault1, (TileEntitySafe)world.getTileEntity(x, y, z), rand.nextInt(4) + 3);
-						break;
-					case 4:
-					case 5:
-					case 6:
-						((TileEntitySafe)world.getTileEntity(x, y, z)).setPins(rand.nextInt(999) + 1);
-						((TileEntitySafe)world.getTileEntity(x, y, z)).setMod(0.1);
-						((TileEntitySafe)world.getTileEntity(x, y, z)).lock();
-						WeightedRandomChestContent.generateChestContents(rand, HbmChestContents.vault2, (TileEntitySafe)world.getTileEntity(x, y, z), rand.nextInt(3) + 2);
-						break;
-					case 7:
-					case 8:
-						((TileEntitySafe)world.getTileEntity(x, y, z)).setPins(rand.nextInt(999) + 1);
-						((TileEntitySafe)world.getTileEntity(x, y, z)).setMod(0.02);
-						((TileEntitySafe)world.getTileEntity(x, y, z)).lock();
-						WeightedRandomChestContent.generateChestContents(rand, HbmChestContents.vault3, (TileEntitySafe)world.getTileEntity(x, y, z), rand.nextInt(3) + 1);
-						break;
-					case 9:
-						((TileEntitySafe)world.getTileEntity(x, y, z)).setPins(rand.nextInt(999) + 1);
-						((TileEntitySafe)world.getTileEntity(x, y, z)).setMod(0.0);
-						((TileEntitySafe)world.getTileEntity(x, y, z)).lock();
-						WeightedRandomChestContent.generateChestContents(rand, HbmChestContents.vault4, (TileEntitySafe)world.getTileEntity(x, y, z), rand.nextInt(2) + 1);
-						break;
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) 
+				{
+					if(world.getBlock(x, y - 1, z).canPlaceTorchOnTop(world, x, y - 1, z)) {
+						world.setBlock(x, y, z, ModBlocks.safe, rand.nextInt(4) + 2, 2);
+						
+						switch(rand.nextInt(10)) {
+						case 0:
+						case 1:
+						case 2:
+						case 3:
+							((TileEntitySafe)world.getTileEntity(x, y, z)).setPins(rand.nextInt(999) + 1);
+							((TileEntitySafe)world.getTileEntity(x, y, z)).setMod(1);
+							((TileEntitySafe)world.getTileEntity(x, y, z)).lock();
+							WeightedRandomChestContent.generateChestContents(rand, HbmChestContents.vault1, (TileEntitySafe)world.getTileEntity(x, y, z), rand.nextInt(4) + 3);
+							break;
+						case 4:
+						case 5:
+						case 6:
+							((TileEntitySafe)world.getTileEntity(x, y, z)).setPins(rand.nextInt(999) + 1);
+							((TileEntitySafe)world.getTileEntity(x, y, z)).setMod(0.1);
+							((TileEntitySafe)world.getTileEntity(x, y, z)).lock();
+							WeightedRandomChestContent.generateChestContents(rand, HbmChestContents.vault2, (TileEntitySafe)world.getTileEntity(x, y, z), rand.nextInt(3) + 2);
+							break;
+						case 7:
+						case 8:
+							((TileEntitySafe)world.getTileEntity(x, y, z)).setPins(rand.nextInt(999) + 1);
+							((TileEntitySafe)world.getTileEntity(x, y, z)).setMod(0.02);
+							((TileEntitySafe)world.getTileEntity(x, y, z)).lock();
+							WeightedRandomChestContent.generateChestContents(rand, HbmChestContents.vault3, (TileEntitySafe)world.getTileEntity(x, y, z), rand.nextInt(3) + 1);
+							break;
+						case 9:
+							((TileEntitySafe)world.getTileEntity(x, y, z)).setPins(rand.nextInt(999) + 1);
+							((TileEntitySafe)world.getTileEntity(x, y, z)).setMod(0.0);
+							((TileEntitySafe)world.getTileEntity(x, y, z)).lock();
+							WeightedRandomChestContent.generateChestContents(rand, HbmChestContents.vault4, (TileEntitySafe)world.getTileEntity(x, y, z), rand.nextInt(2) + 1);
+							break;
+						}
+						
+						if(GeneralConfig.enableDebugMode)
+							MainRegistry.logger.info("[Debug] Successfully spawned safe at " + x + " " + (y + 1) +" " + z);
 					}
-					
-					if(GeneralConfig.enableDebugMode)
-						MainRegistry.logger.info("[Debug] Successfully spawned safe at " + x + " " + (y + 1) +" " + z);
-				}
-				
+				}				
 			}
 
 			if (WorldConfig.meteorStructure > 0 && rand.nextInt(WorldConfig.meteorStructure) == 0 && biome != BiomeGenBase.ocean && biome != BiomeGenBase.deepOcean) {
 				int x = i + rand.nextInt(16) + 8;
 				int z = j + rand.nextInt(16) + 8;
 				
-				CellularDungeonFactory.meteor.generate(world, x, 10, z, rand);
-				
-				if(GeneralConfig.enableDebugMode)
-					MainRegistry.logger.info("[Debug] Successfully spawned meteor dungeon at " + x + " 10 " + z);
-				
-				int y = world.getHeightValue(x, z);
-				
-				for(int f = 0; f < 3; f++)
-					world.setBlock(x, y + f, z, ModBlocks.meteor_pillar);
-				world.setBlock(x, y + 3, z, ModBlocks.meteor_brick_chiseled);
-				
-				for(int f = 0; f < 10; f++) {
-
-					x = i + rand.nextInt(65) - 32;
-					z = j + rand.nextInt(65) - 32;
-					y = world.getHeightValue(x, z);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) 
+				{
+					CellularDungeonFactory.meteor.generate(world, x, 10, z, rand);
 					
-					if(world.getBlock(x, y - 1, z).canPlaceTorchOnTop(world, x, y - 1, z)) {
-						world.setBlock(x, y, z, Blocks.skull, 1, 2);
-						TileEntitySkull skull = (TileEntitySkull)world.getTileEntity(x, y, z);
+					if(GeneralConfig.enableDebugMode)
+						MainRegistry.logger.info("[Debug] Successfully spawned meteor dungeon at " + x + " 10 " + z);
+					
+					int y = world.getHeightValue(x, z);
+					
+					for(int f = 0; f < 3; f++)
+						world.setBlock(x, y + f, z, ModBlocks.meteor_pillar);
+					world.setBlock(x, y + 3, z, ModBlocks.meteor_brick_chiseled);
+					
+					for(int f = 0; f < 10; f++) {
+
+						x = i + rand.nextInt(65) - 32;
+						z = j + rand.nextInt(65) - 32;
+						y = world.getHeightValue(x, z);
 						
-						if(skull != null)
-							skull.func_145903_a(rand.nextInt(16));
+						if(world.getBlock(x, y - 1, z).canPlaceTorchOnTop(world, x, y - 1, z)) {
+							world.setBlock(x, y, z, Blocks.skull, 1, 2);
+							TileEntitySkull skull = (TileEntitySkull)world.getTileEntity(x, y, z);
+							
+							if(skull != null)
+								skull.func_145903_a(rand.nextInt(16));
+						}
 					}
 				}
 			}
@@ -611,26 +701,34 @@ public class HbmWorldGen implements IWorldGenerator {
 					WorldConfig.jungleStructure > 0 && rand.nextInt(WorldConfig.jungleStructure) == 0) {
 				int x = i + rand.nextInt(16);
 				int z = j + rand.nextInt(16);
-				
-				CellularDungeonFactory.jungle.generate(world, x, 20, z, world.rand);
-				CellularDungeonFactory.jungle.generate(world, x, 24, z, world.rand);
-				CellularDungeonFactory.jungle.generate(world, x, 28, z, world.rand);
-				
-				if(GeneralConfig.enableDebugMode)
-					MainRegistry.logger.info("[Debug] Successfully spawned jungle dungeon at " + x + " 10 " + z);
-				
-				int y = world.getHeightValue(x, z);
-				
-				for(int f = 0; f < 3; f++)
-					world.setBlock(x, y + f, z, ModBlocks.deco_titanium);
-				world.setBlock(x, y + 3, z, Blocks.redstone_block);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) 
+				{
+					CellularDungeonFactory.jungle.generate(world, x, 20, z, world.rand);
+					CellularDungeonFactory.jungle.generate(world, x, 24, z, world.rand);
+					CellularDungeonFactory.jungle.generate(world, x, 28, z, world.rand);
+					
+					if(GeneralConfig.enableDebugMode)
+						MainRegistry.logger.info("[Debug] Successfully spawned jungle dungeon at " + x + " 10 " + z);
+					
+					int y = world.getHeightValue(x, z);
+					
+					for(int f = 0; f < 3; f++)
+						world.setBlock(x, y + f, z, ModBlocks.deco_titanium);
+					world.setBlock(x, y + 3, z, Blocks.redstone_block);
+				}
 			}
 
 			if (WorldConfig.arcticStructure > 0 && rand.nextInt(WorldConfig.arcticStructure) == 0) {
 				int x = i + rand.nextInt(16);
 				int z = j + rand.nextInt(16);
 				int y = 16 + rand.nextInt(32);
-				new ArcticVault().trySpawn(world, x, y, z);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) new ArcticVault().trySpawn(world, x, y, z);
 			}
 			
 			if (WorldConfig.pyramidStructure > 0 && biome.temperature >= 2.0F && !biome.canSpawnLightningBolt() && rand.nextInt(WorldConfig.pyramidStructure) == 0) {
@@ -638,7 +736,10 @@ public class HbmWorldGen implements IWorldGenerator {
 				int z = j + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);
 				
-				new AncientTomb().build(world, rand, x, y, z);
+				double dX = Math.pow((impactX - x), 2);
+				double dZ = Math.pow((impactZ - z), 2);
+				double distance = MathHelper.sqrt_double(dX + dZ);
+				if(distance >=3000 || !data.impact) new AncientTomb().build(world, rand, x, y, z);
 			}
 		}
 
@@ -676,7 +777,10 @@ public class HbmWorldGen implements IWorldGenerator {
 			int x = i + rand.nextInt(16);
 			int z = j + rand.nextInt(16);
 			int y = world.getHeightValue(x, z) - rand.nextInt(10);
-			(new Meteorite()).generate(world, rand, x, y, z, false, false, false, false);
+			double dX = Math.pow((impactX - x), 2);
+			double dZ = Math.pow((impactZ - z), 2);
+			double distance = MathHelper.sqrt_double(dX + dZ);
+			if(distance >=3000 || !data.impact)(new Meteorite()).generate(world, rand, x, y, z, false, false, false, false);
 		}
 
 		if (GeneralConfig.enableNITAN) {

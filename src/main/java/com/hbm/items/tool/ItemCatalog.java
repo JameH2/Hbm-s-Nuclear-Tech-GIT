@@ -3,6 +3,7 @@ package com.hbm.items.tool;
 import java.util.List;
 
 import com.hbm.handler.BobmazonOfferFactory;
+import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.inventory.gui.GUIScreenBobmazon;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
 public class ItemCatalog extends Item implements IGUIProvider {
@@ -22,9 +24,10 @@ public class ItemCatalog extends Item implements IGUIProvider {
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 		
-		if(world.isRemote)
+		if(world.isRemote && !ImpactWorldHandler.getImpactForClient(world))
 			player.openGui(MainRegistry.instance, 0, world, 0, 0, 0);
-		
+		if(world.isRemote && ImpactWorldHandler.getImpactForClient(world))
+			player.addChatMessage(new ChatComponentText("The Bobmazon station has been destroyed."));
 		return stack;
 	}
 

@@ -390,7 +390,7 @@ public class ModEventHandler {
 }
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onEntityDeathLast(LivingDeathEvent event) {
+	public void onEntityDeathLast(LivingDeathEvent event) {//asteroid
 		
 		EntityLivingBase entity = event.entityLiving;
 		
@@ -443,6 +443,14 @@ public class ModEventHandler {
 			
 		} else {
 			SiegeOrchestrator.mobDeathHook(entity, event.source);
+		}
+	}
+	
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onEntityDeathImpact(LivingDeathEvent event) {//
+		if(event.source==ModDamageSource.asteroid && event.isCanceled())
+		{
+			event.setCanceled(false);//We want to *really* make sure that direct Tom hits are not survivable.
 		}
 	}
 	
