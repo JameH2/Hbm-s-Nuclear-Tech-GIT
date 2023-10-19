@@ -625,7 +625,7 @@ public class RenderNTMSkyboxImpact extends IRenderHandler {
 				GL11.glScaled(scalar, scalar, scalar);
 				GL11.glRotatef(-40-player.worldObj.getCelestialAngle(partialTicks) * 360.0F, 0.0F, 0.0F, 1.0F);
 				GL11.glTranslated(0, -1/4f/*(sf*0.768)*/, 0);
-				renderGlow(new ResourceLocation(RefStrings.MODID + ":textures/particle/flare.png"), 0, y, R);
+				renderGlow(new ResourceLocation(RefStrings.MODID + ":textures/particle/flare.png"), 0, y, R, partialTicks);
 				GL11.glPopMatrix();
 				GL11.glTranslated(0, -1/*(sf*0.768)*/, 0);
 				GL11.glScaled(1, 1, 1);
@@ -654,7 +654,7 @@ public class RenderNTMSkyboxImpact extends IRenderHandler {
 	    tessellator.draw();
 	  }
 	  	//ASTEROID ENTRY GLOW
-		public void renderGlow(ResourceLocation loc1, double x, double y, double z) {
+		public void renderGlow(ResourceLocation loc1, double x, double y, double z, float partialTicks) {
 			GL11.glPushMatrix();
 			GL11.glEnable(GL11.GL_BLEND);
 			float f4 = 1.0F;
@@ -664,7 +664,7 @@ public class RenderNTMSkyboxImpact extends IRenderHandler {
 	        GL11.glRotatef(-RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
 	        double distant = 1-(Math.min(3150000, Math.max(0, y-40000))/3150000f);
 	        double near = distant*(Math.min(40000, Math.max(0, y-35000))/40000f);
-	        double entry = (near*(1-Minecraft.getMinecraft().thePlayer.worldObj.rainingStrength))+(1-(Math.min(200, Math.max(0, y-2017))/200f));
+	        double entry = (near*(1-Minecraft.getMinecraft().thePlayer.worldObj.getRainStrength(partialTicks))*Minecraft.getMinecraft().thePlayer.worldObj.getStarBrightness(partialTicks))+(1-(Math.min(200, Math.max(0, y-2017))/200f));
 			GL11.glColor4d(entry, entry, entry, entry);
 			Tessellator tess = Tessellator.instance;
 			TextureManager tex = Minecraft.getMinecraft().getTextureManager();
