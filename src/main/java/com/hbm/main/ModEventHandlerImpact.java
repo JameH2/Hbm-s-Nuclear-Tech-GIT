@@ -126,7 +126,7 @@ public class ModEventHandlerImpact {
 						}
 					}
 				}
-				/*if(data.time<=2400)
+				if(data.time<=2400)
 				{
 					List<EntityPlayer> entities = event.world.playerEntities;
 					for(Iterator<EntityPlayer> en = new ArrayList<>(entities).iterator() ; en.hasNext();) {
@@ -137,7 +137,7 @@ public class ModEventHandlerImpact {
 							BossSpawnHandler.spawnMeteorAtPlayer(e, false, true);
 						}	
 					}
-				}*/
+				}
 				/*if(data.time==data.dtime)
 				{
 					EntityTom tom = new EntityTom(event.world);
