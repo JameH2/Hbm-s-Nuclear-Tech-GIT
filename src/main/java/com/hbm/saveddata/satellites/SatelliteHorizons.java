@@ -47,7 +47,7 @@ public class SatelliteHorizons extends Satellite {
 		long w = world.getWorldTime()%24000;
 		long delay = (30*24000)+3460;
 		TomSaveData data = TomSaveData.forWorld(world);
-		data.dtime = finalDecent * 2;
+		data.dtime = world.getWorldTime();
 		data.time = (world.getWorldTime()-w)+delay;//24000;//One MC day before impact
 		data.x = x;
 		data.z = z;

@@ -36,6 +36,7 @@ import com.hbm.lib.Library;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.PlayerInformPacket;
 import com.hbm.saveddata.TomSaveData;
+import com.hbm.util.AstronomyUtil;
 import com.hbm.util.ParticleUtil;
 import com.hbm.util.PlanetaryTraitUtil;
 import com.hbm.util.PlanetaryTraitUtil.Hospitality;
@@ -47,18 +48,22 @@ import com.hbm.world.machine.FWatz;
 import com.hbm.world.machine.NuclearReactor;
 import com.hbm.world.machine.Watz;
 import com.hbm.extprop.HbmLivingProps;
+import com.hbm.handler.ImpactWorldHandler;
+import com.hbm.handler.crater.ChunkCraterManager;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.lib.Library;
 import com.hbm.util.TrackerUtil;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IntHashMap;
@@ -66,7 +71,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.gen.ChunkProviderServer;
 
 public class ItemWandD extends Item {
 
@@ -134,15 +144,18 @@ public class ItemWandD extends Item {
 					break;
 				case 7:
 					DebugTeleporter.teleport(player, SpaceConfig.minmusDimension, player.posX, 300, player.posZ);
+					break;
 				case 8:
 					TomSaveData data = TomSaveData.forWorld(world);
 					data.impact = false;
-					data.fire = 0F;
-					data.dust = 0F;
-					data.dtime=(600-pos.blockY)*2;
-					data.time=3600;
+					//data.fire = 0F;
+					//data.dust = 0.5F;
+					long w = (long) (world.getWorldTime()%AstronomyUtil.day);
+					long delay = (long) ((8*AstronomyUtil.day)-500);
+					data.dtime=(world.getWorldTime()-w)+delay;
+					data.time=data.dtime-world.getWorldTime();
 					data.x=pos.blockX;
-					data.z=pos.blockZ;
+					data.z=pos.blockZ-1000;
 					data.markDirty();
 					break;
 				}

@@ -85,7 +85,7 @@ public class TomPronter {
 
         float rot = -System.currentTimeMillis() / 10 % 360;
 		//GL11.glScalef(1.2F, 2F, 1.2F);
-        double scale = 1-((Math.max(1000, y)-1500f)/1500);
+        double scale = 1-(Math.min(200, Math.max(0, y-2017))/200f);
 		GL11.glScalef(0.8F, 5F, 0.8F);
 		GL11.glColor4d(1, 1, 1, scale);
 		Random rand = new Random(0);

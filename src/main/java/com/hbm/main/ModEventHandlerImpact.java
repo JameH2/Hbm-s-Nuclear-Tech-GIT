@@ -87,8 +87,18 @@ public class ModEventHandlerImpact {
 				data.markDirty();
 			}
 			
+			long r = (event.world.getWorldTime())+data.time;
+			long t = (data.dtime);
+			
 			if(data.time > 0) {
 				data.time--;
+				if(r != t)
+				{
+					
+					//System.out.println("R: "+(r)/20+" T: "+(t)/20+" Difference: "+(r-t)/20+" time: "+(data.time)/20+" dtime: "+(data.dtime)/20);
+					data.time-=(r-t);
+					//r = (event.world.getWorldTime()-w)+delay;
+				}
 				if(data.time<=2)
 				{
 					data.impact=true;
@@ -109,14 +119,14 @@ public class ModEventHandlerImpact {
 			
 									entity.setFire(5);
 									entity.attackEntityFrom(ModDamageSource.asteroid, 66043000);
-									entity.setHealth(0);
 									entity.onDeath(ModDamageSource.asteroid);
+									//entity.setHealth(0);
 								}
 							}
 						}
 					}
 				}
-				if(data.time<=2400)
+				/*if(data.time<=2400)
 				{
 					List<EntityPlayer> entities = event.world.playerEntities;
 					for(Iterator<EntityPlayer> en = new ArrayList<>(entities).iterator() ; en.hasNext();) {
@@ -127,7 +137,7 @@ public class ModEventHandlerImpact {
 							BossSpawnHandler.spawnMeteorAtPlayer(e, false, true);
 						}	
 					}
-				}
+				}*/
 				/*if(data.time==data.dtime)
 				{
 					EntityTom tom = new EntityTom(event.world);
