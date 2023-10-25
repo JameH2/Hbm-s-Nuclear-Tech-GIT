@@ -155,7 +155,7 @@ public class ItemWandD extends Item {
 					data.dtime=(world.getWorldTime()-w)+delay;
 					data.time=data.dtime-world.getWorldTime();
 					data.x=pos.blockX;
-					data.z=pos.blockZ-1000;
+					data.z=pos.blockZ;
 					data.markDirty();
 					break;
 				}

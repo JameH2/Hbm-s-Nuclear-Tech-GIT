@@ -31,6 +31,7 @@ import net.minecraft.block.BlockGrass;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.particle.EntityRainFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityWaterMob;
@@ -115,11 +116,14 @@ public class ModEventHandlerImpact {
 								double dZ = Math.pow((data.z - entity.posZ), 2);
 								double distance = MathHelper.sqrt_double(dX + dZ);
 								
-								if(entity.worldObj.provider.dimensionId == 0 && distance <=2300) {
+								if(entity.worldObj.provider.dimensionId == 0 && distance <=1730) {
 			
 									entity.setFire(5);
 									entity.attackEntityFrom(ModDamageSource.asteroid, 66043000);
-									entity.onDeath(ModDamageSource.asteroid);
+									if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode && ((EntityPlayer)entity).getHealth()>0)
+									{
+										entity.onDeath(ModDamageSource.asteroid);
+									}
 									//entity.setHealth(0);
 								}
 							}
@@ -187,6 +191,11 @@ public class ModEventHandlerImpact {
 	public void extinction(EntityJoinWorldEvent event) {
 		
 		TomSaveData data = TomSaveData.forWorld(event.world);
+		
+		if(event.entity instanceof EntityRainFX)
+		{
+			event.setCanceled(true);
+		}
 		
 		if(data.impact) {
 			if(!(event.entity instanceof EntityPlayer) && event.entity instanceof EntityLivingBase) {
@@ -409,7 +418,7 @@ public class ModEventHandlerImpact {
 					double dX = Math.pow((X - blockX), 2);
 					double dZ = Math.pow((Z - blockZ), 2);
 					double distance = MathHelper.sqrt_double(dX + dZ);
-					if(distance<=2300)
+					if(distance<=1730)
 					{
 						event.setResult(Result.DENY);
 					}
@@ -462,12 +471,14 @@ public class ModEventHandlerImpact {
 	@SubscribeEvent
 	public void chunkLoad(ChunkEvent.Load event) {
 
-		TomSaveData data = TomSaveData.forWorld(event.world);
+		craterize(event.getChunk(), event.world);
+	}
+	
+	public static void craterize(Chunk chunk, World world) {
+		TomSaveData data = TomSaveData.forWorld(world);
 		
 		int X = data.x;
 		int Z = data.z;
-		
-		World world = event.world;
 		
 		if(world.provider == null || world.provider.dimensionId != 0 || world.provider.terrainType == WorldType.FLAT)
 			return;
@@ -481,29 +492,28 @@ public class ModEventHandlerImpact {
 		//int terrain = 63;
 		//int height = terrain - 14;
 		//int offset = 20;
-		if(data.impact && !ChunkCraterManager.proxy.getCraterGen(event.world, event.getChunk().xPosition*16, event.getChunk().zPosition*16))
+		if(data.impact && !ChunkCraterManager.proxy.getCraterGen(world, chunk.xPosition*16, chunk.zPosition*16))
 		{
-			Chunk chunk = event.getChunk();
 			ExtendedBlockStorage[] storageArray = chunk.getBlockStorageArray();
 			for (int y = 0; y < 256; ++y) 
 			{
 				
 				for(int x = 0; x < 16; x++) {
 					for(int z = 0; z < 16; z++) {					
-							int blockX = event.getChunk().xPosition*16+x;
-							int blockZ = event.getChunk().zPosition*16+z;
+							int blockX = chunk.xPosition*16+x;
+							int blockZ = chunk.zPosition*16+z;
 							double dX = Math.pow((X - blockX), 2);
 							double dZ = Math.pow((Z - blockZ), 2);
 							double distance = MathHelper.sqrt_double(dX + dZ);
 							int breccia = (int) (-10+Math.pow(Math.E, (distance/518d)));
 							int lens = (int) (32+Math.pow(Math.E, (distance/670d)));
-							int outerRim = (int) (lens+(Math.pow(Math.E, -Math.pow(distance - 2000, 2)/24000)*50));
-							int chicxulub = (int) (outerRim+(Math.pow(Math.E, -Math.pow(distance - 1000, 2)/24000)*50))+ event.world.rand.nextInt(2);
+							int outerRim = (int) (lens+(Math.pow(Math.E, -Math.pow(distance - 1500, 2)/18000)*50));
+							int chicxulub = (int) (outerRim+(Math.pow(Math.E, -Math.pow(distance - 750, 2)/18000)*50))+ world.rand.nextInt(2);
 							//for(int y2 = 0; y2 < 16; y2++) {
-							if(distance<=3500)
+							if(distance<=2600)
 							{
 									ExtendedBlockStorage storage = storageArray[y>>4];	
-									if(distance<=2250)
+									if(distance<=1730)
 									{						
 										chunk.getBiomeArray()[(blockZ & 15) << 4 | (blockX & 15)] = (byte)BiomeGenBaseQuackosian.crater.biomeID;
 										//ChunkCraterManager.proxy.setCraterGen(event.world, (event.chunkX*16)+8, (event.chunkZ*16)+8, true);
@@ -512,7 +522,7 @@ public class ModEventHandlerImpact {
 									{
 										//int Y2 = Math.max(0,(int)Math.floor(y/16));
 										if(storage == null) {
-											storage = storageArray[y>>4] = new ExtendedBlockStorage(y >> 4 << 4, !event.world.provider.hasNoSky);
+											storage = storageArray[y>>4] = new ExtendedBlockStorage(y >> 4 << 4, !world.provider.hasNoSky);
 										}
 										if (storage != null) {
 											int Y3 = (int)Math.floor(y%16);
@@ -533,7 +543,7 @@ public class ModEventHandlerImpact {
 									if(y<=chicxulub && y>breccia)
 									{
 										if(storage == null) {
-											storage = storageArray[y>>4] = new ExtendedBlockStorage(y >> 4 << 4, !event.world.provider.hasNoSky);
+											storage = storageArray[y>>4] = new ExtendedBlockStorage(y >> 4 << 4, !world.provider.hasNoSky);
 										}
 										if (storage != null) {
 											int Y3 = (int)Math.floor(y%16);
@@ -549,7 +559,7 @@ public class ModEventHandlerImpact {
 											}
 										}
 									}
-									ChunkCraterManager.proxy.setCraterGen(event.world, (event.getChunk().xPosition*16)+8, (event.getChunk().zPosition*16)+8, true);
+									ChunkCraterManager.proxy.setCraterGen(world, (chunk.xPosition*16)+8, (chunk.zPosition*16)+8, true);
 								}						
 							}
 						}
@@ -557,61 +567,5 @@ public class ModEventHandlerImpact {
 				//}	
 			}
 		}
-		
-
-		
-		/*if(data.impact && !event.world.isRemote) {
-			for(int x = 15; x >= 0; x--) {
-				for(int z = 15; z >= 0; z--) {
-					int blockX = event.getChunk().xPosition*16+x;
-					int blockZ = event.getChunk().zPosition*16+z;
-					double dX = Math.pow((X - blockX), 2);
-					double dZ = Math.pow((Z - blockZ), 2);
-					double distance = MathHelper.sqrt_double(dX + dZ);
-					if(distance<=2500)
-					{
-						if(!ChunkCraterManager.proxy.getCraterGen(event.world, blockX, blockZ))
-						{
-							ImpactWorldHandler.regenerateChunk(event.world, event.getChunk());
-					        ChunkCraterManager.proxy.setCraterGen(event.world, (event.getChunk().xPosition*16)+8, (event.getChunk().zPosition*16)+8, true);
-					        return;
-						}
-					}
-				}
-			}
-		}*/
-		/*if(!event.world.isRemote) {
-			World world = event.world;
-			Chunk chunk = event.getChunk();
-			NBTTagCompound nbt = event.getData();
-			if(!nbt.hasKey("impact")) {
-				nbt.setTag("impact", new NBTTagCompound());
-			}
-			nbt = event.getData().getCompoundTag("impact");
-			if(!nbt.getBoolean("crater"))
-			{
-				TomSaveData data = TomSaveData.forWorld(event.world);
-				
-				int X = data.x;
-				int Z = data.z;
-				if(data.impact) {
-					for(int x = 15; x >= 0; x--) {
-						for(int z = 15; z >= 0; z--) {
-							int blockX = event.getChunk().xPosition*16+x;
-							int blockZ = event.getChunk().zPosition*16+z;
-							double dX = Math.pow((X - blockX), 2);
-							double dZ = Math.pow((Z - blockZ), 2);
-							double distance = MathHelper.sqrt_double(dX + dZ);
-							if(distance<=2300)
-							{
-								ImpactWorldHandler.regenerateChunk(world, event.getChunk().xPosition, event.getChunk().zPosition);
-								return;
-							}
-						}
-					}
-				}
-			}
-					
-		}*/
 	}
 }

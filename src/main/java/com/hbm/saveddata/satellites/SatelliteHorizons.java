@@ -4,6 +4,7 @@ import com.hbm.entity.projectile.EntityTom;
 import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.SatelliteSavedData;
 import com.hbm.saveddata.TomSaveData;
+import com.hbm.util.AstronomyUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -44,11 +45,11 @@ public class SatelliteHorizons extends Satellite {
 		SatelliteSavedData.getData(world).markDirty();
 		
 		long finalDecent = (600-world.getHeightValue(x, z));
-		long w = world.getWorldTime()%24000;
-		long delay = (30*24000)+3460;
+		long w = (long) (world.getWorldTime()%AstronomyUtil.day);
+		long delay = (long) ((8*AstronomyUtil.day)-500);
 		TomSaveData data = TomSaveData.forWorld(world);
-		data.dtime = world.getWorldTime();
-		data.time = (world.getWorldTime()-w)+delay;//24000;//One MC day before impact
+		data.dtime = (world.getWorldTime()-w)+delay;
+		data.time = data.dtime-world.getWorldTime();//24000;//One MC day before impact
 		data.x = x;
 		data.z = z;
 
