@@ -33,6 +33,7 @@ import com.hbm.explosion.vanillant.standard.EntityProcessorStandard;
 import com.hbm.explosion.vanillant.standard.ExplosionEffectStandard;
 import com.hbm.explosion.vanillant.standard.PlayerProcessorStandard;
 import com.hbm.lib.Library;
+import com.hbm.main.ModEventHandlerImpact;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.PlayerInformPacket;
 import com.hbm.saveddata.TomSaveData;
@@ -146,17 +147,21 @@ public class ItemWandD extends Item {
 					DebugTeleporter.teleport(player, SpaceConfig.minmusDimension, player.posX, 300, player.posZ);
 					break;
 				case 8:
-					TomSaveData data = TomSaveData.forWorld(world);
-					data.impact = false;
+					//TomSaveData data = TomSaveData.forWorld(world);
+					//data.impact = true;
 					//data.fire = 0F;
 					//data.dust = 0.5F;
 					long w = (long) (world.getWorldTime()%AstronomyUtil.day);
 					long delay = (long) ((8*AstronomyUtil.day)-500);
-					data.dtime=(world.getWorldTime()-w)+delay;
-					data.time=data.dtime-world.getWorldTime();
-					data.x=pos.blockX;
-					data.z=pos.blockZ;
-					data.markDirty();
+					//data.dtime=(world.getWorldTime()-w)+delay;
+					//data.time=data.dtime-world.getWorldTime();
+					//data.x=pos.blockX;
+					//data.z=pos.blockZ;
+					//data.markDirty();
+					Chunk c = world.getChunkFromBlockCoords(pos.blockX, pos.blockZ);
+					//ChunkCraterManager.proxy.getCraterGen(world, pos.blockX, pos.blockZ);
+					ChunkCraterManager.proxy.setCraterGen(world, pos.blockX, pos.blockZ, false);
+					ModEventHandlerImpact.craterize(c, world, true);
 					break;
 				}
 				
