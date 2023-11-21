@@ -236,9 +236,6 @@ public class CentrifugeRecipes extends SerializableRecipe {
 				new ItemStack(ModItems.nugget_cf252, 3),
 				new ItemStack(ModItems.nuclear_waste, 24) });
 
-		if(OreDictionary.doesOreNameExist("nuggetNaquadria")) {
-			ItemStack nuggetNQR = OreDictionary.getOres("nuggetNaquadria").get(0);
-
 		recipes.put(new ComparableStack(DictFrame.fromOne(ModItems.pwr_fuel_depleted, EnumPWRFuel.MEU)), new ItemStack[] {
 				new ItemStack(ModItems.nugget_u238, 3),
 				new ItemStack(ModItems.nugget_plutonium, 4),
@@ -314,24 +311,26 @@ public class CentrifugeRecipes extends SerializableRecipe {
 				new ItemStack(ModItems.nugget_pu_mix, 1),
 				new ItemStack(ModItems.nugget_bismuth, 6),
 				new ItemStack(ModItems.nuclear_waste_tiny, 1) });
+		
+		if(OreDictionary.doesOreNameExist("nuggetNaquadria")) {
+			ArrayList<ItemStack> naquadriaNuggets = OreDictionary.getOres("nuggetNaquadria");
+			if(naquadriaNuggets.size() != 0) {
+				ItemStack nuggetNQR = naquadriaNuggets.get(0);
+				ItemStack copy = nuggetNQR.copy();
+				copy.stackSize = 12;
+				recipes.put(new ComparableStack(DictFrame.fromOne(ModItems.watz_pellet_depleted, EnumWatzType.NQD)), new ItemStack[] {
+						new ItemStack(ModItems.ingot_mud, 1),
+						copy,
+						new ItemStack(ModItems.nugget_euphemium, 6),
+						new ItemStack(ModItems.nuclear_waste, 2) });
+				recipes.put(new ComparableStack(DictFrame.fromOne(ModItems.watz_pellet_depleted, EnumWatzType.NQR)), new ItemStack[] {
+						new ItemStack(ModItems.ingot_mud, 1),
+						new ItemStack(ModItems.nugget_co60, 12),
+						new ItemStack(ModItems.nugget_euphemium, 6),
+						new ItemStack(ModItems.nuclear_waste, 2) });
+			}
 		}
 		
-		ArrayList<ItemStack> naquadriaNuggets = OreDictionary.getOres("nuggetNaquadria");
-		if(naquadriaNuggets.size() != 0) {
-			ItemStack nuggetNQR = naquadriaNuggets.get(0);
-			ItemStack copy = nuggetNQR.copy();
-			copy.stackSize = 12;
-			recipes.put(new ComparableStack(DictFrame.fromOne(ModItems.watz_pellet_depleted, EnumWatzType.NQD)), new ItemStack[] {
-					new ItemStack(ModItems.ingot_mud, 1),
-					copy,
-					new ItemStack(ModItems.nugget_euphemium, 6),
-					new ItemStack(ModItems.nuclear_waste, 2) });
-			recipes.put(new ComparableStack(DictFrame.fromOne(ModItems.watz_pellet_depleted, EnumWatzType.NQR)), new ItemStack[] {
-					new ItemStack(ModItems.ingot_mud, 1),
-					new ItemStack(ModItems.nugget_co60, 12),
-					new ItemStack(ModItems.nugget_euphemium, 6),
-					new ItemStack(ModItems.nuclear_waste, 2) });
-		}
 		
 		recipes.put(new ComparableStack(ModItems.powder_cloud), new ItemStack[] {
 				new ItemStack(ModItems.powder_copper, 1),
