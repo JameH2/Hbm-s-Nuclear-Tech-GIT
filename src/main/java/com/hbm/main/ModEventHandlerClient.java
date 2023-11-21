@@ -690,14 +690,24 @@ public class ModEventHandlerClient {
 		Minecraft mc = Minecraft.getMinecraft();
 		
 		if(player != null && mc.theWorld != null) {
-			int i = MathHelper.floor_double(player.posX);
-			int j = MathHelper.floor_double(player.posY);
-			int k = MathHelper.floor_double(player.posZ);
-			Block block = mc.theWorld.getBlock(i, j, k);
 			
-			if(block == ModBlocks.vacuum) {
-				e.result = null;
-				return;
+			Vec3 vec = Vec3.createVectorHelper(player.posX - e.result.getXPosF(), (player.posY + player.getEyeHeight()) - e.result.getYPosF(), player.posZ - e.result.getZPosF());
+			double len = vec.lengthVector();
+			vec = vec.normalize();
+			
+			float res = 0;
+			
+			for(int L = 1; L < len; L++) {
+
+				int ix = (int)Math.floor(e.result.getXPosF() + vec.xCoord * L);
+				int iy = (int)Math.floor(e.result.getYPosF() + vec.yCoord * L);
+				int iz = (int)Math.floor(e.result.getZPosF() + vec.zCoord * L);
+				
+				boolean vac = mc.theWorld.getBlock(ix, iy, iz)==ModBlocks.vacuum;
+				if(vac) {
+					e.result = null;
+					return;
+				}
 			}
 		}
 		
@@ -1271,19 +1281,19 @@ public class ModEventHandlerClient {
 	
 	@SubscribeEvent
 	public void setupFog(RenderFogEvent event) {
-		if(event.entity.worldObj.provider instanceof WorldProviderEve)
+		/*if(event.entity.worldObj.provider instanceof WorldProviderEve)
 		{
 			event.setResult(Result.DENY);
-		}
+		}*/
 	}
 	
 	@SubscribeEvent
 	public void thickenFog(FogDensity event) {
-		if(event.entity.worldObj.provider instanceof WorldProviderEve)
+		/*if(event.entity.worldObj.provider instanceof WorldProviderEve)
 		{
 			event.density = 0.045F;
 			event.setCanceled(true);
-		}
+		}*/
 	}
 	
 	/*@SubscribeEvent

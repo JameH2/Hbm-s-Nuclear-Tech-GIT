@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GLContext;
 
 import com.hbm.blocks.ICustomBlockHighlight;
 import com.hbm.config.RadiationConfig;
+import com.hbm.dim.eve.WorldProviderEve;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
 import com.hbm.items.armor.IArmorDisableModel;
 import com.hbm.items.armor.IArmorDisableModel.EnumPlayerPart;
@@ -363,6 +364,18 @@ public class ModEventHandlerRenderer {
 			}
 			//GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
 			//GL11.glFogf(GL11.GL_FOG_DENSITY, 2F);
+			event.setCanceled(true);
+		}
+		if(event.entity.worldObj.provider instanceof WorldProviderEve)
+		{
+			float farPlaneDistance = (float) (Minecraft.getMinecraft().gameSettings.renderDistanceChunks * 16);
+			float fogDist = farPlaneDistance / 4;
+			GL11.glFogf(GL11.GL_FOG_START, 0);
+			GL11.glFogf(GL11.GL_FOG_END, fogDist);
+
+			//f(GLContext.getCapabilities().GL_NV_fog_distance) {
+				//GL11.glFogi(34138, 34139);
+			//}*/
 			event.setCanceled(true);
 		}
 	}

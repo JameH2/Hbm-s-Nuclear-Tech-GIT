@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 public class AstronomyUtil
 {
 	public static final float AUToKm = 149598000F;
-	public static final long offset = 0;
+	public static final long offset = 1000000;
 	public static final float day = 24000;
 	//public static final long offset = 0;
 	//https://www.desmos.com/calculator/h2v3nfaopa
