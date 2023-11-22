@@ -369,7 +369,7 @@ public class ModEventHandlerRenderer {
 		if(event.entity.worldObj.provider instanceof WorldProviderEve)
 		{
 			float farPlaneDistance = (float) (Minecraft.getMinecraft().gameSettings.renderDistanceChunks * 16);
-			float fogDist = farPlaneDistance / 4;
+			float fogDist = farPlaneDistance / 6;
 			GL11.glFogf(GL11.GL_FOG_START, 0);
 			GL11.glFogf(GL11.GL_FOG_END, fogDist);
 

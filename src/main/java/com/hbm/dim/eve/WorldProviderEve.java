@@ -40,13 +40,70 @@ public class WorldProviderEve extends WorldProvider {
     
     @SideOnly(Side.CLIENT)
     public Vec3 getFogColor(float x, float y) {
-        float f = 1.0F - this.getStarBrightness(1.0F);
-      return Vec3.createVectorHelper(53F / 255F * f, 32F / 255F * f, 74F / 255F * f);
+		float f2 = MathHelper.cos(x * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
+
+		if (f2 < 0.0F)
+		{
+			f2 = 0.0F;
+		}
+
+		if (f2 > 1.0F)
+		{
+			f2 = 1.0F;
+		}
+
+		//float f3 = 0.7529412F;
+		float f3 = 75F / 255F;
+		float f4 = 44F / 255F;
+		//float f5 = 1.0F;
+		float f5 = 107F / 255F;
+
+		f3 *= f2 * 0.94F + 0.06F;
+		f4 *= f2 * 0.94F + 0.06F;
+		f5 *= f2 * 0.91F + 0.09F;
+		return Vec3.createVectorHelper((double)f3, (double)f4, (double)f5);
+
+        //float f = 1.0F - this.getStarBrightness(1.0F);
+      //return Vec3.createVectorHelper((double)f3, (double)f4, (double)f5);
     }
     
     public Vec3 getSkyColor(Entity camera, float partialTicks) {
-        float f = 1.0F - this.getStarBrightness(1.0F);
-      return Vec3.createVectorHelper(92 / 255.0F * f, 54 / 255.0F * f, 131 / 255.0F * f);
+        float f1 = worldObj.getCelestialAngle(partialTicks);
+        float f2 = MathHelper.cos(f1 * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
+
+        if (f2 < 0.0F)
+        {
+            f2 = 0.0F;
+        }
+
+        if (f2 > 1.0F)
+        {
+            f2 = 1.0F;
+        }
+        float f4 = (float)(75) / 255.0F;
+        float f5 = (float)(44) / 255.0F;
+        float f6 = (float)(107) / 255.0F;
+        f4 *= f2;
+        f5 *= f2;
+        f6 *= f2;
+        float f9;
+
+       
+        if (worldObj.lastLightningBolt > 0)
+        {
+            f9 = (float)worldObj.lastLightningBolt - partialTicks;
+
+            if (f9 > 1.0F)
+            {
+                f9 = 1.0F;
+            }
+
+            f9 *= 0.45F;
+            f4 = f4 * (1.0F - f9) + 0.8F * f9;
+            f5 = f5 * (1.0F - f9) + 0.8F * f9;
+            f6 = f6 * (1.0F - f9) + 1.0F * f9;
+        }        
+        return Vec3.createVectorHelper((double)f4, (double)f5, (double)f6);
     }
     
     @SideOnly(Side.CLIENT)
@@ -56,12 +113,12 @@ public class WorldProviderEve extends WorldProvider {
 
     public boolean canDoLightning(Chunk chunk)
     {
-        return false;
+        return true;
     }
 
     public boolean canDoRainSnowIce(Chunk chunk)
     {
-        return false;
+        return true;
     }
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -111,6 +168,17 @@ public class WorldProviderEve extends WorldProvider {
         return f2 + (f1 - f2) / 3.0F;
     }
 
+	@Override
+	public void updateWeather()
+	{
+		//this.worldObj.getWorldInfo().setRainTime(0);
+		this.worldObj.getWorldInfo().setRaining(true);
+		//this.worldObj.getWorldInfo().setThunderTime(0);
+		this.worldObj.getWorldInfo().setThundering(true);
+		this.worldObj.rainingStrength = 1F;
+		this.worldObj.thunderingStrength = 1.0F;
+	}
+    
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getSunBrightness(float par1) {
