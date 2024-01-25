@@ -59,7 +59,7 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase impleme
 			int lastHeat = this.heat;
 			
 			int light = this.worldObj.getSavedLightValue(EnumSkyBlock.Sky, this.xCoord, this.yCoord, this.zCoord);
-			if(light > 7 && TomSaveData.forWorld(worldObj).fire > 1e-5) {
+			if(light > 7 && TomSaveData.forWorld(worldObj).fire > 1e-5 && TomSaveData.forWorld(worldObj).dust < 0.75f) {
 				this.heat += ((maxHeat - heat) * 0.000005D); //constantly heat up 0.0005% of the remaining heat buffer for rampant but diminishing heating
 			}
 			

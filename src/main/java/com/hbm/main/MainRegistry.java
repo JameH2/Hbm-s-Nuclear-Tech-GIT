@@ -14,6 +14,7 @@ import com.hbm.entity.grenade.*;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.mob.siege.SiegeTier;
 import com.hbm.handler.*;
+import com.hbm.handler.crater.ChunkCraterManager;
 import com.hbm.handler.imc.IMCBlastFurnace;
 import com.hbm.handler.imc.IMCCentrifuge;
 import com.hbm.handler.imc.IMCCrystallizer;
@@ -998,6 +999,10 @@ public class MainRegistry {
 		
 		PacketDispatcher.registerPackets();
 
+		ChunkCraterManager craterSystem = new ChunkCraterManager();
+		MinecraftForge.EVENT_BUS.register(craterSystem);
+		FMLCommonHandler.instance().bus().register(craterSystem);
+		
 		ChunkRadiationManager radiationSystem = new ChunkRadiationManager();
 		MinecraftForge.EVENT_BUS.register(radiationSystem);
 		FMLCommonHandler.instance().bus().register(radiationSystem);

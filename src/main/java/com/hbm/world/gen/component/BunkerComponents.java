@@ -5,12 +5,14 @@ import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.HbmChestContents;
+import com.hbm.saveddata.TomSaveData;
 import com.hbm.world.gen.ProceduralStructureStart;
 import com.hbm.world.gen.ProceduralStructureStart.ProceduralComponent;
 import com.hbm.world.gen.component.Component.ConcreteBricks;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
@@ -30,6 +32,18 @@ public class BunkerComponents {
 			
 			final int x = chunkX * 16 + 8;
 			final int z = chunkZ * 16 + 8;
+			
+			TomSaveData data = TomSaveData.forWorld(world);
+			int impactX = data.x;
+			int impactZ = data.z;
+			double dX = Math.pow((impactX - x), 2);
+			double dZ = Math.pow((impactZ - z), 2);
+			double distance = MathHelper.sqrt_double(dX + dZ);
+
+			if(distance<=3000 && data.impact)
+			{
+				return;
+			}
 			
 			Weight[] weights = new Weight[] {
 				new Weight(6, 3, Corridor::findValidPlacement),

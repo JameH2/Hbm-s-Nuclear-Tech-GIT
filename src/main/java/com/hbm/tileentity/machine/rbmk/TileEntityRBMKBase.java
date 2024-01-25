@@ -222,7 +222,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 	
 	protected void coolPassively() {
 
-		if(TomSaveData.forWorld(worldObj).fire > 1e-5) {
+		if(TomSaveData.forWorld(worldObj).fire > 1e-5 && TomSaveData.forWorld(worldObj).dust < 0.75f) {
 			double light = this.worldObj.getSavedLightValue(EnumSkyBlock.Sky, this.xCoord, this.yCoord, this.zCoord) / 15D;
 			if(heat < 20 + (480 * light)) {
 				this.heat += this.passiveCooling() * 2;

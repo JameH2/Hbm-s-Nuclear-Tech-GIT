@@ -94,7 +94,19 @@ public class WorldProviderNTM extends WorldProviderSurface {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public Vec3 getFogColor(float p_76562_1_, float p_76562_2_) {
+        float f2 = MathHelper.cos(p_76562_1_ * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
+
+        if (f2 < 0.0F)
+        {
+            f2 = 0.0F;
+        }
+
+        if (f2 > 1.0F)
+        {
+            f2 = 1.0F;
+        }
 		Vec3 fog = super.getFogColor(p_76562_1_, p_76562_2_);
+		Vec3 quack = Vec3.createVectorHelper(1.0F*(f2 * 0.94F + 0.06F),0.80392157F*(f2 * 0.94F + 0.06F),0.80392157F*(f2 * 0.91F + 0.09F));
 		float dust = MainRegistry.proxy.getImpactDust(worldObj);
 		float fire = MainRegistry.proxy.getImpactFire(worldObj);
 		boolean impact = MainRegistry.proxy.getImpact(worldObj);
@@ -103,33 +115,55 @@ public class WorldProviderNTM extends WorldProviderSurface {
 		float f5;
 		if(impact && fire == 0)
 		{
-	        float f2 = MathHelper.cos(p_76562_1_ * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
-
-	        if (f2 < 0.0F)
-	        {
-	            f2 = 0.0F;
-	        }
-
-	        if (f2 > 1.0F)
-	        {
-	            f2 = 1.0F;
-	        }
-
-	        f3 = 1.0F;
-	        f4 = 0.80392157F* (1 - (dust * 0.5F));;
-	        f5 = 0.80392157F * (1 - dust);
-	        f3 *= f2 * 0.94F + 0.06F;
-	        f4 *= f2 * 0.94F + 0.06F;
-	        f5 *= f2 * 0.91F + 0.09F;
-			return Vec3.createVectorHelper((double) f3 * (1 - dust), (double) f4 * (1 - dust), (double) f5 * (1 - dust));
+			f3=(float) quack.xCoord;
+			f4=(float) quack.yCoord;
+			f5=(float) quack.zCoord;
+			if(dust>=0.75)
+			{
+				f3 = (float) ((105f/255f)*(1f-((dust-0.75f)*4))+((0)*((dust-0.75f)*4)));//(float) ((sky.xCoord + (0 - sky.xCoord) * 1) * dust);
+				f4 = (float) ((27f/255f)*(1f-((dust-0.75f)*4))+((0)*((dust-0.75f)*4)));
+				f5 = (float) ((4f/255f)*(1f-((dust-0.75f)*4))+((0)*((dust-0.75f)*4)));
+			}
+			if(dust<0.75 && dust>=0.25)
+			{
+				f3 = (float) ((202f/255f)*(1f-((dust-0.25f)*2))+((105f/255f)*((dust-0.25f)*2)));//(float) ((sky.xCoord + (0 - sky.xCoord) * 1) * dust);
+				f4 = (float) ((167f/255f)*(1f-((dust-0.25f)*2))+((27f/255f)*((dust-0.25f)*2)));
+				f5 = (float) ((123f/255f)*(1f-((dust-0.25f)*2))+((4f/255f)*((dust-0.25f)*2)));
+			}
+			if(dust<0.25)
+			{
+				f3 = (float) (quack.xCoord*(1f-(dust*4))+((202f/255f)*(dust*4)));//(float) ((sky.xCoord + (0 - sky.xCoord) * 1) * dust);
+				f4 = (float) (quack.yCoord*(1f-(dust*4))+((167f/255f)*(dust*4)));
+				f5 = (float) (quack.zCoord*(1f-(dust*4))+((123f/255f)*(dust*4)));
+			}
+			return Vec3.createVectorHelper((double) f3, (double) f4, (double) f5);
 		}
 		f3 = (float) fog.xCoord;
-		f4 = (float) fog.yCoord * (1 - (dust * 0.5F));
-		f5 = (float) fog.zCoord * (1 - dust);
-		if(fire > 0) {
-			return Vec3.createVectorHelper((double) f3 * (Math.max((1 - (dust * 2)), 0)), (double) f4 * (Math.max((1 - (dust * 2)), 0)), (double) f5 * (Math.max((1 - (dust * 2)), 0)));
+		f4 = (float) fog.yCoord;
+		f5 = (float) fog.zCoord;
+		if(dust>=0.75)
+		{
+			f3 = (float) ((105f/255f)*(1f-((dust-0.75f)*4))+((0)*((dust-0.75f)*4)));//(float) ((sky.xCoord + (0 - sky.xCoord) * 1) * dust);
+			f4 = (float) ((27f/255f)*(1f-((dust-0.75f)*4))+((0)*((dust-0.75f)*4)));
+			f5 = (float) ((4f/255f)*(1f-((dust-0.75f)*4))+((0)*((dust-0.75f)*4)));
 		}
-		return Vec3.createVectorHelper((double) f3 * (1 - dust), (double) f4 * (1 - dust), (double) f5 * (1 - dust));
+		if(dust<0.75 && dust>=0.25)
+		{
+			f3 = (float) ((202f/255f)*(1f-((dust-0.25f)*2))+((105f/255f)*((dust-0.25f)*2)));//(float) ((sky.xCoord + (0 - sky.xCoord) * 1) * dust);
+			f4 = (float) ((167f/255f)*(1f-((dust-0.25f)*2))+((27f/255f)*((dust-0.25f)*2)));
+			f5 = (float) ((123f/255f)*(1f-((dust-0.25f)*2))+((4f/255f)*((dust-0.25f)*2)));
+		}
+		if(dust<0.25)
+		{
+			f3 = (float) (fog.xCoord*(1f-(dust*4))+((202f/255f)*(dust*4)));//(float) ((sky.xCoord + (0 - sky.xCoord) * 1) * dust);
+			f4 = (float) (fog.yCoord*(1f-(dust*4))+((167f/255f)*(dust*4)));
+			f5 = (float) (fog.zCoord*(1f-(dust*4))+((123f/255f)*(dust*4)));
+		}
+		//if(fire > 0) {
+		//	return Vec3.createVectorHelper((double) f3 * (Math.max((1 - (dust * 2)), 0)), (double) f4 * (Math.max((1 - (dust * 2)), 0)), (double) f5 * (Math.max((1 - (dust * 2)), 0)));
+		//}
+		return Vec3.createVectorHelper((double) f3, (double) f4, (double) f5);
+		//return Vec3.createVectorHelper((double) f3 * (1 - dust), (double) f4 * (1 - dust), (double) f5 * (1 - dust));
 	}
 
 	@Override
@@ -142,19 +176,43 @@ public class WorldProviderNTM extends WorldProviderSurface {
 		float f4;
 		float f5;
 		float f6;
-
-		if(fire > 0) {
-			f4 = (float) (sky.xCoord * 1.3f);
-			f5 = (float) sky.yCoord * ((Math.max((1 - (dust * 1.4f)), 0)));
-			f6 = (float) sky.zCoord * ((Math.max((1 - (dust * 4)), 0)));
-		} else {
-			f4 = (float) sky.xCoord;
-			f5 = (float) sky.yCoord * (1 - (dust * 0.5F));
-			f6 = (float) sky.zCoord * (1 - dust);
+		Vec3 color;
+		Vec3 prevColor;
+		//System.out.println("sky.zCoord"+sky.zCoord);
+		f4 = (float) (sky.xCoord);//(float) ((sky.xCoord + (0 - sky.xCoord) * 1) * dust);
+		f5 = (float) (sky.yCoord);
+		f6 = (float) (sky.zCoord);
+		if(dust>=0.75)
+		{
+			f4 = (float) ((105f/255f)*(1f-((dust-0.75f)*4))+((0)*((dust-0.75f)*4)));//(float) ((sky.xCoord + (0 - sky.xCoord) * 1) * dust);
+			f5 = (float) ((27f/255f)*(1f-((dust-0.75f)*4))+((0)*((dust-0.75f)*4)));
+			f6 = (float) ((4f/255f)*(1f-((dust-0.75f)*4))+((0)*((dust-0.75f)*4)));
 		}
-
-		return Vec3.createVectorHelper((double) f4 * (fire + (1 - dust)), (double) f5 * (fire + (1 - dust)), (double) f6 * (fire + (1 - dust)));
+		if(dust<0.75 && dust>=0.25)
+		{
+			f4 = (float) ((202f/255f)*(1f-((dust-0.25f)*2))+((105f/255f)*((dust-0.25f)*2)));//(float) ((sky.xCoord + (0 - sky.xCoord) * 1) * dust);
+			f5 = (float) ((167f/255f)*(1f-((dust-0.25f)*2))+((27f/255f)*((dust-0.25f)*2)));
+			f6 = (float) ((123f/255f)*(1f-((dust-0.25f)*2))+((4f/255f)*((dust-0.25f)*2)));
+		}
+		if(dust<0.25)
+		{
+			if(fire==0)
+			{
+				f4 = (float) (sky.xCoord*(1f-(dust*4))+((202f/255f)*(dust*4)));//(float) ((sky.xCoord + (0 - sky.xCoord) * 1) * dust);
+				f5 = (float) (sky.yCoord*(1f-(dust*4))+((167f/255f)*(dust*4)));
+				f6 = (float) (sky.zCoord*(1f-(dust*4))+((123f/255f)*(dust*4)));
+			}
+			if(fire>0)
+			{
+				f4 = (float) (1*(1f-(dust*4))+((202f/255f)*(dust*4)));//(float) ((sky.xCoord + (0 - sky.xCoord) * 1) * dust);
+				f5 = (float) (1*(1f-(dust*4))+((167f/255f)*(dust*4)));
+				f6 = (float) (1*(1f-(dust*4))+((123f/255f)*(dust*4)));
+			}
+		}
+		return Vec3.createVectorHelper((double) f4, (double) f5, (double) f6);
+		//return Vec3.createVectorHelper((double) f4 * (fire + (1 - dust)), (double) f5 * (fire + (1 - dust)), (double) f6 * (fire + (1 - dust)));
 	}
+
 
 	@SideOnly(Side.CLIENT)
 	public Vec3 drawClouds(float partialTicks) {

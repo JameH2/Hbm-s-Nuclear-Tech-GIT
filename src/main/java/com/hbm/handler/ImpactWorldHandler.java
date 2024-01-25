@@ -71,11 +71,11 @@ public class ImpactWorldHandler {
 		
 		if(light < 4) {
 			if(world.getBlock(x, y, z) == Blocks.grass) {
-				world.setBlock(x, y, z, Blocks.dirt);
+				world.setBlock(x, y, z, ModBlocks.waste_earth);
 			} else if(world.getBlock(x, y, z) instanceof BlockBush) {
 				world.setBlock(x, y, z, Blocks.air);
 			} else if(world.getBlock(x, y, z) instanceof BlockLeaves) {
-				world.setBlock(x, y, z, Blocks.air);
+				world.setBlock(x, y, z, ModBlocks.waste_leaves);
 			} else if(world.getBlock(x, y, z) instanceof BlockVine) {
 				world.setBlock(x, y, z, Blocks.air);
 			}
@@ -105,7 +105,10 @@ public class ImpactWorldHandler {
 	public static float fire = 0F;
 	public static float dust = 0F;
 	public static long time = 0;
+	public static int x = 0;
+	public static int z = 0;
 	public static boolean impact = false;
+	public static boolean shouldImpact = false;
 
 	@SideOnly(Side.CLIENT)
 	public static float getFireForClient(World world) {
@@ -129,5 +132,17 @@ public class ImpactWorldHandler {
 	public static long getTimeForClient(World world) {
 		if(world != lastSyncWorld) return 0;
 		return time;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static int getXForClient(World world) {
+		if(world != lastSyncWorld) return 0;
+		return x;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static int getZForClient(World world) {
+		if(world != lastSyncWorld) return 0;
+		return z;
 	}
 }

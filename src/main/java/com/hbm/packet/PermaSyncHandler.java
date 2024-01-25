@@ -39,8 +39,11 @@ public class PermaSyncHandler {
 		TomSaveData data = TomSaveData.forWorld(world);
 		buf.writeFloat(data.fire);
 		buf.writeFloat(data.dust);
+		buf.writeBoolean(data.shouldImpact);
 		buf.writeBoolean(data.impact);
 		buf.writeLong(data.time);
+		buf.writeInt(data.x);
+		buf.writeInt(data.z);
 		/// TOM IMPACT DATA ///
 
 		
@@ -86,8 +89,11 @@ public class PermaSyncHandler {
 		ImpactWorldHandler.lastSyncWorld = player.worldObj;
 		ImpactWorldHandler.fire = buf.readFloat();
 		ImpactWorldHandler.dust = buf.readFloat();
+		ImpactWorldHandler.shouldImpact = buf.readBoolean();
 		ImpactWorldHandler.impact = buf.readBoolean();
 		ImpactWorldHandler.time = buf.readLong();
+		ImpactWorldHandler.x = buf.readInt();
+		ImpactWorldHandler.z = buf.readInt();
 		/// TOM IMPACT DATA ///
 
         PlanetaryTraitUtil.lastSyncWorld = player.worldObj;

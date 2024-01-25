@@ -12,6 +12,8 @@ import com.hbm.entity.mob.EntityDuck;
 import com.hbm.entity.projectile.EntityTom;
 import com.hbm.handler.BossSpawnHandler;
 import com.hbm.handler.ImpactWorldHandler;
+import com.hbm.handler.crater.ChunkCraterManager;
+import com.hbm.lib.ModDamageSource;
 import com.hbm.saveddata.TomSaveData;
 import com.hbm.world.WorldProviderNTM;
 
@@ -35,14 +37,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
 import net.minecraftforge.event.terraingen.BiomeEvent;
@@ -51,6 +58,7 @@ import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType;
+import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 public class ModEventHandlerImpact {
@@ -82,6 +90,42 @@ public class ModEventHandlerImpact {
 			
 			if(data.time > 0) {
 				data.time--;
+				if(data.time==0 && data.shouldImpact)
+				{
+					data.impact=true;
+					data.fire=1;
+					if(!event.world.loadedEntityList.isEmpty()) {
+
+						List<Object> oList = new ArrayList<Object>();
+						oList.addAll(event.world.loadedEntityList);
+
+						for(Object e : oList) {
+							if(e instanceof EntityLivingBase) {
+								EntityLivingBase entity = (EntityLivingBase) e;
+								double dX = Math.pow((data.x - entity.posX), 2);
+								double dZ = Math.pow((data.z - entity.posZ), 2);
+								double distance = MathHelper.sqrt_double(dX + dZ);
+
+								if(entity.worldObj.provider.dimensionId == 0 && distance <=1730) {
+
+									if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode && ((EntityPlayer)entity).getHealth()>0)
+									{
+										entity.onDeath(ModDamageSource.asteroid);
+										entity.setDead();
+									}
+									else if(!(entity instanceof EntityPlayer))
+									{
+										entity.onDeath(ModDamageSource.asteroid);
+										entity.setDead();
+									}
+									//entity.setFire(5);
+									//entity.attackEntityFrom(ModDamageSource.asteroid, 66043000);
+									//entity.setHealth(0);
+								}
+							}
+						}
+					}
+				}
 				if(data.time<=2400)
 				{
 					List<EntityPlayer> entities = event.world.playerEntities;
@@ -94,15 +138,43 @@ public class ModEventHandlerImpact {
 						}	
 					}
 				}
-				if(data.time==data.dtime)
+				/*if(data.time==data.dtime)
 				{
 					EntityTom tom = new EntityTom(event.world);
 					tom.setPosition(data.x + 0.5, 600, data.z + 0.5);
 					event.world.spawnEntityInWorld(tom);
 					IChunkProvider provider = event.world.getChunkProvider();
 					provider.loadChunk(data.x >> 4, data.z >> 4);
-				}
+				}*/
 				data.markDirty();
+			}
+			
+			if(data.impact)
+			{
+				int X = data.x;
+				int Z = data.z;
+				WorldServer serv = (WorldServer) event.world;
+
+				List<Chunk> list = serv.theChunkProviderServer.loadedChunks;
+				//List<Chunk> list2 = new ArrayList<Chunk>();
+				int listSize = list.size();
+
+				if(listSize > 0) {
+					for(int i = 0; i < 4; i++) {						
+						Chunk chunk = list.get(serv.rand.nextInt(listSize));
+						int blockX = chunk.xPosition*16+8;
+						int blockZ = chunk.zPosition*16+8;
+						double dX = Math.pow((X - blockX), 2);
+						double dZ = Math.pow((Z - blockZ), 2);
+						double distance = MathHelper.sqrt_double(dX + dZ);
+						boolean crater = ChunkCraterManager.proxy.getCraterGen(event.world, chunk.xPosition*16, chunk.zPosition*16);
+						if(!crater && distance<2600)
+						{
+							craterize(chunk, serv, true);
+							//list2.add(chunk);
+						}
+					}
+				}
 			}
 			
 			if(!event.world.loadedEntityList.isEmpty()) {
@@ -163,6 +235,29 @@ public class ModEventHandlerImpact {
 		}		
 	}
 
+	@SubscribeEvent
+	public void populateChunkPost(PopulateChunkEvent.Populate event) {
+		TomSaveData data = TomSaveData.forWorld(event.world);
+
+		int X = data.x;
+		int Z = data.z;
+		if(data.impact) {
+			for(int x = 15; x >= 0; x--) {
+				for(int z = 15; z >= 0; z--) {
+					int blockX = event.chunkX*16+x;
+					int blockZ = event.chunkZ*16+z;
+					double dX = Math.pow((X - blockX), 2);
+					double dZ = Math.pow((Z - blockZ), 2);
+					double distance = MathHelper.sqrt_double(dX + dZ);
+					if(distance<=2000)
+					{
+						event.setResult(Result.DENY);
+					}
+				}
+			}
+		}
+	}
+	
 	@SubscribeEvent
 	public void onPopulate(Populate event) {
 		
@@ -291,7 +386,10 @@ public class ModEventHandlerImpact {
 					for(int x = 0; x < 16; ++x) {
 						for(int y = 0; y < 16; ++y) {
 							for(int z = 0; z < 16; ++z) {
-								
+								/*if(storage.getBlockByExtId(x, y, z)== Blocks.lava)
+								{
+									storage.setExtBlocklightValue(x, y, z, 15);
+								}*/
 								if(data.dust > 0.25 || data.fire > 0) {
 									if(storage.getBlockByExtId(x, y, z) == Blocks.grass) {
 										storage.func_150818_a(x, y, z, ModBlocks.impact_dirt);
@@ -311,6 +409,219 @@ public class ModEventHandlerImpact {
 						}
 					}
 				}
+			}
+		}
+	}
+	
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onEntityDeathImpact(LivingDeathEvent event) {//
+		if(event.source==ModDamageSource.asteroid && event.isCanceled())
+		{
+			event.setCanceled(false);//We want to *really* make sure that direct Tom hits are not survivable.
+		}
+	}
+	
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onUnload(WorldEvent.Unload event) {
+
+		TomSaveData.resetLastCached();
+	}
+
+	@SubscribeEvent
+	public void chunkLoad(ChunkEvent.Load event) {
+
+		TomSaveData data = TomSaveData.forWorld(event.world);
+		if(data.impact)
+		{
+			craterize(event.getChunk(), event.world, false);
+		}
+	}
+
+	/**
+	*	Generates the actual crater. You should ONLY set clientUpdate to true if updating loaded chunks.
+	*/
+	public static void craterize(Chunk chunk, World world, boolean clientUpdate) {
+		TomSaveData data = TomSaveData.forWorld(world);
+
+		int X = data.x;
+		int Z = data.z;
+
+		if(world.provider == null || world.provider.dimensionId != 0 || world.provider.terrainType == WorldType.FLAT)
+			return;
+
+		if(!ChunkCraterManager.proxy.getCraterGen(world, chunk.xPosition*16, chunk.zPosition*16))
+		{
+			//Chunk chunk = event.getChunk();
+			ExtendedBlockStorage[] storageArray = chunk.getBlockStorageArray();
+			for(int x = 0; x < 16; x++) {
+				for(int z = 0; z < 16; z++) {
+					int blockX = chunk.xPosition*16+x;
+					int blockZ = chunk.zPosition*16+z;
+					double dX = Math.pow((X - blockX), 2);
+					double dZ = Math.pow((Z - blockZ), 2);
+					double distance = MathHelper.sqrt_double(dX + dZ);
+					int fill = (int) (Math.min(63, 420-(distance/5)))+ world.rand.nextInt(2);
+					int breccia = (int) (-10+Math.pow(Math.E, (distance/414d)));
+					int lens = (int) (32+Math.pow(Math.E, (distance/523d)));
+					int outerRim = (int) (lens+(Math.pow(Math.E, -Math.pow(distance - 1500, 2)/18000)*50));
+					int chicxulub = (int) (outerRim+(Math.pow(Math.E, -Math.pow(distance - 750, 2)/18000)*50))+ world.rand.nextInt(2);
+					/*if(distance<=1730)
+					{						
+						WorldUtil.setBiome(world, blockX, blockZ, BiomeGenBaseQuackosian.crater);
+						//ChunkCraterManager.proxy.setCraterGen(event.world, (event.chunkX*16)+8, (event.chunkZ*16)+8, true);
+					}*/
+					for (int y = 0; y < Math.max(chunk.getHeightValue(x, z), 127); ++y) 
+					{
+							if(distance<=3000)
+							{
+									ExtendedBlockStorage storage = storageArray[y>>4];	
+									if((y)>chicxulub-3)
+									{
+										//int Y2 = Math.max(0,(int)Math.floor(y/16));
+										if(storage == null && y<=64) {
+											storage = storageArray[y>>4] = new ExtendedBlockStorage(y >> 4 << 4, !world.provider.hasNoSky);
+										}
+										if (storage != null) {
+											int Y3 = (int)Math.floor(y%16);
+											int Y4 = (int)Math.floor((y+1)%16);
+											//Block block = storage.getBlockByExtId(x, (Y3), z);
+											//if (block==Blocks.air)
+											//{
+											Block block = storage.getBlockByExtId(x, (Y3), z);
+											Material m = block.getMaterial();
+											if((m == Material.rock || m == Material.sand || m == Material.ground || m == Material.grass) && block!=ModBlocks.tektite && block!=ModBlocks.ore_tektite_osmiridium) {
+											//	storage.func_150818_a(x, Y3, z, ModBlocks.ore_tektite_osmiridium);
+											//} else {
+												storage.func_150818_a(x, Y3, z, ModBlocks.sellafield_slaked);
+												if(distance<=2000)
+												{
+													storage.setExtBlockMetadata(x, Y3, z, 10);
+												}
+												if(distance>2000 && distance<=3000)
+												{
+													int meta = (int) Math.floor(10-((distance-2000)/100));
+													storage.setExtBlockMetadata(x, Y3, z, meta);
+												}
+											}
+											if(y>chicxulub)
+											{
+												storage.func_150818_a(x, (Y3), z, Blocks.air);
+												storage.setExtSkylightValue(x, (Y3), z, 15);
+												if(y<56 && distance<=1500)
+												{
+													storage.func_150818_a(x, (Y3), z, Blocks.lava);	
+													storage.setExtBlocklightValue(x, (Y3), z, 15);
+												}
+											}
+
+												/*if(y>=chicxulub-3)
+												{
+													Block block = storage.getBlockByExtId(x, (Y3), z);
+													Material m = block.getMaterial();
+													if((m == Material.rock || m == Material.sand || m == Material.ground || m == Material.grass) && block!=ModBlocks.tektite && block!=ModBlocks.ore_tektite_osmiridium) {
+													//	storage.func_150818_a(x, Y3, z, ModBlocks.ore_tektite_osmiridium);
+													//} else {
+														storage.func_150818_a(x, Y3, z, ModBlocks.sellafield_slaked);
+													}
+												}*/
+												if(clientUpdate)
+													world.markBlockForUpdate(blockX, y, blockZ);
+											//}
+										}
+									}
+									if(y<=chicxulub && y>breccia)
+									{
+										if(storage == null) {
+											storage = storageArray[y>>4] = new ExtendedBlockStorage(y >> 4 << 4, !world.provider.hasNoSky);
+										}
+										if (storage != null) {
+											int Y3 = (int)Math.floor(y%16);
+											Block block = storage.getBlockByExtId(x, (Y3), z);
+											if(world.rand.nextInt(499) < 1) {
+												storage.func_150818_a(x, Y3, z, ModBlocks.ore_tektite_osmiridium);
+											} else {
+												storage.func_150818_a(x, Y3, z, ModBlocks.tektite);
+											}
+											if (block==Blocks.bedrock)
+											{
+												storage.func_150818_a(x, Y3, z, ModBlocks.ore_volcano);
+											}
+											if(clientUpdate)
+												world.markBlockForUpdate(blockX, y, blockZ);
+										}
+									}
+									int surface = world.getTopSolidOrLiquidBlock(blockX, blockZ);
+									if((y>= surface && y<=fill) && distance>=1500)
+									{
+										if(storage == null) {
+											storage = storageArray[y>>4] = new ExtendedBlockStorage(y >> 4 << 4, !world.provider.hasNoSky);
+										}
+										if (storage != null) {
+											int Y3 = (int)Math.floor(y%16);
+											Block block = storage.getBlockByExtId(x, (Y3), z);
+											if(world.rand.nextInt(499) < 1) {
+												storage.func_150818_a(x, Y3, z, ModBlocks.ore_tektite_osmiridium);
+											} else {
+												storage.func_150818_a(x, Y3, z, ModBlocks.tektite);
+											}
+											if (block==Blocks.bedrock)
+											{
+												storage.func_150818_a(x, Y3, z, ModBlocks.ore_volcano);
+											}
+											if(clientUpdate)
+												world.markBlockForUpdate(blockX, y, blockZ);
+										}
+									}
+									if((y<= world.getHeightValue(blockX, blockZ) && y>=surface-16) && distance>=1600 && distance<=3000)
+									{
+										if(storage == null) {
+											storage = storageArray[y>>4] = new ExtendedBlockStorage(y >> 4 << 4, !world.provider.hasNoSky);
+										}
+										if (storage != null) {
+											int Y3 = (int)Math.floor(y%16);
+											Block block = storage.getBlockByExtId(x, (Y3), z);
+											Material m = block.getMaterial();
+											if(block instanceof BlockLeaves || block instanceof BlockBush || block instanceof BlockLog) {
+												storage.func_150818_a(x, Y3, z, Blocks.air);
+												storage.setExtSkylightValue(x, (Y3), z, 15);
+											}
+											if(clientUpdate)
+												world.markBlockForUpdate(blockX, y, blockZ);
+										}
+									}
+									if((y<= world.getHeightValue(blockX, blockZ) && y>=surface-3) && distance>=1600 && distance<=3000)
+									{
+										if(storage == null) {
+											storage = storageArray[y>>4] = new ExtendedBlockStorage(y >> 4 << 4, !world.provider.hasNoSky);
+										}
+										if (storage != null) {
+											int Y3 = (int)Math.floor(y%16);
+											Block block = storage.getBlockByExtId(x, (Y3), z);
+											Material m = block.getMaterial();
+											if((m == Material.rock || m == Material.sand || m == Material.ground || m == Material.grass) && block!=ModBlocks.tektite && block!=ModBlocks.ore_tektite_osmiridium) {
+											//	storage.func_150818_a(x, Y3, z, ModBlocks.ore_tektite_osmiridium);
+											//} else {
+												storage.func_150818_a(x, Y3, z, ModBlocks.sellafield_slaked);
+												if(distance<=2000)
+												{
+													storage.setExtBlockMetadata(x, Y3, z, 10);
+												}
+												if(distance>2000 && distance<=3000)
+												{
+													int meta = (int) Math.floor(10-((distance-2000)/100));
+													storage.setExtBlockMetadata(x, Y3, z, meta);
+												}
+											}
+											if(clientUpdate)
+												world.markBlockForUpdate(blockX, y, blockZ);
+										}
+									}
+									ChunkCraterManager.proxy.setCraterGen(world, (chunk.xPosition*16)+8, (chunk.zPosition*16)+8, true);
+								}						
+							}
+						}
+					//}
+				//}	
 			}
 		}
 	}

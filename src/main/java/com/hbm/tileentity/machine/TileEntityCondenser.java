@@ -57,7 +57,7 @@ public class TileEntityCondenser extends TileEntityLoadedBase implements IFluidA
 				
 				int light = this.worldObj.getSavedLightValue(EnumSkyBlock.Sky, this.xCoord, this.yCoord, this.zCoord);
 				
-				if(TomSaveData.forWorld(worldObj).fire > 1e-5 && light > 7) { // Make both steam and water evaporate during firestorms...
+				if(TomSaveData.forWorld(worldObj).fire > 1e-5 && light > 7 && TomSaveData.forWorld(worldObj).dust < 0.75f) { // Make both steam and water evaporate during firestorms...
 					tanks[1].setFill(tanks[1].getFill() - convert);
 				} else {
 					tanks[1].setFill(tanks[1].getFill() + convert);

@@ -9,6 +9,7 @@ public class TomSaveData extends WorldSavedData {
 	public final static String key = "impactData";
 	public float dust;
 	public float fire;
+	public boolean shouldImpact;
 	public boolean impact;
 	public long time;
 	public long dtime;
@@ -49,6 +50,7 @@ public class TomSaveData extends WorldSavedData {
 	public void readFromNBT(NBTTagCompound compound) {
 		this.dust = compound.getFloat("dust");
 		this.fire = compound.getFloat("fire");
+		this.shouldImpact = compound.getBoolean("shouldImpact");
 		this.impact = compound.getBoolean("impact");
 		this.time = compound.getLong("time");
 		this.dtime = compound.getLong("dtime");
@@ -61,6 +63,7 @@ public class TomSaveData extends WorldSavedData {
 		nbt.setFloat("dust", dust);
 		nbt.setFloat("fire", fire);
 		nbt.setBoolean("impact", impact);
+		nbt.setBoolean("impact", shouldImpact);
 		nbt.setLong("time", time);
 		nbt.setLong("dtime", dtime);
 		nbt.setInteger("x", x);

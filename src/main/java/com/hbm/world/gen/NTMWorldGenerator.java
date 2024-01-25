@@ -3,10 +3,12 @@ package com.hbm.world.gen;
 import java.util.Random;
 
 import com.hbm.config.StructureConfig;
+import com.hbm.saveddata.TomSaveData;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -64,6 +66,20 @@ public class NTMWorldGenerator implements IWorldGenerator {
 	
 	protected void generateOverworldStructures(World world, IChunkProvider chunkProvider, int chunkX, int chunkZ) {
 		Block[] ablock = new Block[65536]; //ablock isn't actually used for anything in MapGenStructure
+		
+		final int x = chunkX * 16 + 8;
+		final int z = chunkZ * 16 + 8;
+		TomSaveData data = TomSaveData.forWorld(world);
+		int impactX = data.x;
+		int impactZ = data.z;
+		double dX = Math.pow((impactX - x), 2);
+		double dZ = Math.pow((impactZ - z), 2);
+		double distance = MathHelper.sqrt_double(dX + dZ);
+
+		if(distance<=3000 && data.impact)
+		{
+			return;
+		}
 		
 		this.scatteredFeatureGenerator.func_151539_a(chunkProvider, world, chunkX, chunkZ, ablock);
 		this.scatteredFeatureGenerator.generateStructuresInChunk(world, rand, chunkX, chunkZ);

@@ -1929,8 +1929,8 @@ public class ModBlocks {
 		leaves_layer = new BlockLayering(Material.leaves).setBlockName("leaves_layer").setStepSound(Block.soundTypeGrass).setCreativeTab(MainRegistry.blockTab).setHardness(0.1F).setLightOpacity(0).setBlockTextureName(RefStrings.MODID + ":waste_leaves");
 		
 		burning_earth = new WasteEarth(Material.ground, true).setBlockName("burning_earth").setStepSound(Block.soundTypeGrass).setCreativeTab(MainRegistry.blockTab).setHardness(0.6F).setBlockTextureName(RefStrings.MODID + ":burning_earth");
-		tektite = new BlockGeneric(Material.sand).setBlockName("tektite").setStepSound(Block.soundTypeSand).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":tektite");
-		ore_tektite_osmiridium = new BlockGeneric(Material.sand).setBlockName("ore_tektite_osmiridium").setStepSound(Block.soundTypeSand).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":ore_tektite_osmiridium");
+		tektite = new BlockTektite(Material.rock).setBlockName("tektite").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":tektite");
+		ore_tektite_osmiridium = new BlockTektiteOre(Material.rock).setBlockName("ore_tektite_osmiridium").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":ore_overlay_osmiridium");
 		impact_dirt = new BlockDirt(Material.ground, true).setBlockName("impact_dirt").setStepSound(Block.soundTypeGravel).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":waste_earth_bottom");
 		qq_dirt = new BlockGeneric(Material.ground).setBlockName("qq_dirt").setStepSound(Block.soundTypeGravel).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":qqboundary");
 		dirt_dead = new BlockFalling(Material.ground).setBlockName("dirt_dead").setStepSound(Block.soundTypeGravel).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":dirt_dead");
