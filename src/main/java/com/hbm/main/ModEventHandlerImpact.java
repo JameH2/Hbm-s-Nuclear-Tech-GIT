@@ -14,6 +14,7 @@ import com.hbm.handler.BossSpawnHandler;
 import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.handler.crater.ChunkCraterManager;
 import com.hbm.lib.ModDamageSource;
+import com.hbm.saveddata.SatelliteSavedData;
 import com.hbm.saveddata.TomSaveData;
 import com.hbm.world.WorldProviderNTM;
 
@@ -94,6 +95,8 @@ public class ModEventHandlerImpact {
 				{
 					data.impact=true;
 					data.fire=1;
+					SatelliteSavedData sats = SatelliteSavedData.getData(event.world);
+					sats.sats.clear();
 					if(!event.world.loadedEntityList.isEmpty()) {
 
 						List<Object> oList = new ArrayList<Object>();

@@ -8,6 +8,7 @@ import com.hbm.handler.BobmazonOfferFactory;
 import com.hbm.inventory.gui.GUIScreenBobmazon.Offer;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
+import com.hbm.saveddata.TomSaveData;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -63,6 +64,12 @@ public class ItemBobmazonPacket implements IMessage {
 			if(world.provider.dimensionId != 0)
 			{
 				p.addChatMessage(new ChatComponentText("[BOBMAZON] Out Of Range!"));
+				return null;
+			}
+			TomSaveData data = TomSaveData.forWorld(world);
+			if(data.impact)
+			{
+				p.addChatMessage(new ChatComponentText("The Bobmazon station has been destroyed."));
 				return null;
 			}
 			Offer offer = null;
