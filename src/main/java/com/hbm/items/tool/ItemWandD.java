@@ -8,6 +8,7 @@ import java.util.Set;
 import com.hbm.config.SpaceConfig;
 import com.hbm.dim.DebugTeleporter;
 import com.hbm.lib.Library;
+import com.hbm.main.ModEventHandlerImpact;
 import com.hbm.saveddata.TomSaveData;
 import com.hbm.util.PlanetaryTraitUtil;
 import com.hbm.util.PlanetaryTraitUtil.Hospitality;
@@ -95,10 +96,27 @@ public class ItemWandD extends Item {
 					break;
 				case 8:
 					DebugTeleporter.teleport(player, SpaceConfig.laytheDimension, player.posX, 300, player.posZ);
-				}
-				
-				
-				
+					break;
+				case 9:
+					//world.playSoundEffect(pos.blockX + 0.5, pos.blockY + 750, pos.blockZ + 0.5, "hbm:block.rbmk_explosion", 2000.0F, 1.0F);
+					//world.playSoundEffect(pos.blockX + 0.5, pos.blockY + 750, pos.blockZ + 0.5, "hbm:block.rbmk_explosion", 2000.0F, 0.2F);
+					//world.playSoundEffect(pos.blockX + 0.5, pos.blockY + 750, pos.blockZ + 0.5, "hbm:weapon.mukeExplosion", 2000.0F, 4.0F);
+					//world.playSoundEffect(pos.blockX + 0.5, pos.blockY + 750, pos.blockZ + 0.5, "ambient.weather.thunder", 2000.0F, 1.0F);
+					TomSaveData data = TomSaveData.forWorld(world);
+					data.impact = false;
+					data.shouldImpact = true;
+					data.fire = 0F;
+					data.dust = 0F;
+					//data.dtime=(600-pos.blockY);
+					data.time=120;
+					data.x=pos.blockX;
+					data.z=-1800;
+					data.markDirty();
+					break;
+				case 10:
+					ModEventHandlerImpact.craterize(world.getChunkFromBlockCoords(pos.blockX, pos.blockZ), world, true);
+					break;
+				}		
 			}
 			if(player.isSneaking())
 			{
@@ -110,7 +128,7 @@ public class ItemWandD extends Item {
 					int i = stack.stackTagCompound.getInteger("dim");
 					i++;
 					stack.stackTagCompound.setInteger("dim", i);
-					if(i >= 9) {
+					if(i >= 11) {
 						stack.stackTagCompound.setInteger("dim", 0);
 					}
 					
@@ -142,6 +160,12 @@ public class ItemWandD extends Item {
 							break;
 						case 8:
 							player.addChatMessage(new ChatComponentText("Dim: Laythe"));
+							break;
+						case 9:
+							player.addChatMessage(new ChatComponentText("Asteroid"));
+							break;
+						case 10:
+							player.addChatMessage(new ChatComponentText("Crater"));
 							break;
 						default:
 							player.addChatMessage(new ChatComponentText("Dim: Moon"));
@@ -366,6 +390,15 @@ public class ItemWandD extends Item {
 				break;
 			case 7:
 				list.add("Dim: Minmus");
+				break;
+			case 8:
+				list.add("Dim: Laythe");
+				break;
+			case 9:
+				list.add("Asteroid");
+				break;
+			case 10:
+				list.add("Crater");
 				break;
 	}
 }
