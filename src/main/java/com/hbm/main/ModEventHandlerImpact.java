@@ -95,6 +95,10 @@ public class ModEventHandlerImpact {
 				{
 					data.impact=true;
 					data.fire=1;
+					event.world.playSoundEffect(data.x + 0.5, 128, data.z + 0.5, "hbm:block.rbmk_explosion", 2000.0F, 1.0F);
+					event.world.playSoundEffect(data.x + 0.5, 128, data.z + 0.5, "hbm:block.rbmk_explosion", 2000.0F, 0.1F);
+					event.world.playSoundEffect(data.x + 0.5, 128, data.z + 0.5, "hbm:weapon.mukeExplosion", 2000.0F, 4.0F);
+					event.world.playSoundEffect(data.x + 0.5, 128, data.z + 0.5, "ambient.weather.thunder", 2000.0F, 0.1F);
 					SatelliteSavedData sats = SatelliteSavedData.getData(event.world);
 					sats.sats.clear();
 					if(!event.world.loadedEntityList.isEmpty()) {

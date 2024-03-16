@@ -6,8 +6,13 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.RadiationConfig;
 import com.hbm.lib.RefStrings;
+import com.hbm.main.MainRegistry;
+import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.PacketDispatcher;
 import com.hbm.potion.HbmPotion;
+import com.hbm.saveddata.TomSaveData;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -22,9 +27,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
@@ -104,10 +111,6 @@ public class WasteEarth extends Block {
 		if(this == ModBlocks.waste_mycelium) {
 			world.spawnParticle("townaura", x + rand.nextFloat(), y + 1.1F, z + rand.nextFloat(), 0.0D, 0.0D, 0.0D);
 		}
-		if(this == ModBlocks.burning_earth) {
-			world.spawnParticle("flame", x + rand.nextFloat(), y + 1.1F, z + rand.nextFloat(), 0.0D, 0.0D, 0.0D);
-			world.spawnParticle("smoke", x + rand.nextFloat(), y + 1.1F, z + rand.nextFloat(), 0.0D, 0.0D, 0.0D);
-		}
 	}
 
 	@Override
@@ -128,7 +131,33 @@ public class WasteEarth extends Block {
 		}
 		
 		if(this == ModBlocks.burning_earth) {
-			
+
+			if(!world.isRemote) {
+				NBTTagCompound data = new NBTTagCompound();
+				data.setString("type", "rbmkflame");
+				//data.setString("mode", "meteor");
+				data.setInteger("maxAge", 90);
+				
+				NBTTagCompound fx = new NBTTagCompound();
+				fx.setString("type", "tower");
+				fx.setFloat("lift", 0.25F);
+				fx.setFloat("base", 0.75F);
+				fx.setFloat("max", 6F);
+				fx.setInteger("life", 150 + world.rand.nextInt(10));
+				fx.setInteger("color",0x444444);
+				fx.setDouble("posX", x);
+				fx.setDouble("posY", y);
+				fx.setDouble("posZ", z);
+				
+				PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, x, y+1.5, z), new TargetPoint(world.provider.dimensionId, x, y+ 1.75, z, 85));
+				PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(fx, x, y+1.5, z), new TargetPoint(world.provider.dimensionId, x, y+ 1.75, z, 85));
+				//MainRegistry.proxy.effectNT(data);
+				world.playSoundEffect(x + 0.5F, y + 0.5, z + 0.5, "fire.fire", 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F);
+			}
+			TomSaveData data = TomSaveData.forWorld(world);
+			double dX = Math.pow((data.x - x), 2);
+			double dZ = Math.pow((data.z - z), 2);
+			double distance = MathHelper.sqrt_double(dX + dZ);
 			for(int i = -1; i < 2; i++) {
 				for(int j = -1; j < 2; j++) {
 					for(int k = -1; k < 2; k++) {
@@ -156,7 +185,10 @@ public class WasteEarth extends Block {
 					}
 				}
 			}
-			world.setBlock(x, y, z, ModBlocks.impact_dirt);
+			if(data.fire==0)
+			{
+				world.setBlock(x, y, z, ModBlocks.impact_dirt);
+			}
 		}
 
 		if(this == ModBlocks.waste_earth || this == ModBlocks.waste_mycelium) {

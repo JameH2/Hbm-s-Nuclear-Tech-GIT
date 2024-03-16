@@ -64,7 +64,7 @@ public class BlockDirt extends Block {
 			TomSaveData data = TomSaveData.forWorld(world);
 			
 			int light = Math.max(world.getSavedLightValue(EnumSkyBlock.Block, x, y + 1, z), (int) (world.getBlockLightValue(x, y + 1, z) * (1 - data.dust)));
-			if(light >= 9 && data.fire == 0) {
+			if(light >= 9 && data.fire == 0 && data.dust <= 0.99) {
 				world.setBlock(x, y, z, Blocks.grass);
 				if(world.getBlock(x, y-1, z)==Blocks.dirt)
 				{
