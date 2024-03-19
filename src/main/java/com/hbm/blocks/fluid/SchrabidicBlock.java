@@ -1,15 +1,19 @@
 package com.hbm.blocks.fluid;
 
+import java.util.List;
 import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
+import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.PacketDispatcher;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -17,7 +21,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IIcon;
@@ -78,13 +85,54 @@ public class SchrabidicBlock extends BlockFluidClassic {
 
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
-		
+		if(entity instanceof EntityItem) {
+
+			entity.motionX = 0;
+			entity.motionY = 0;
+			entity.motionZ = 0;
+			
+			if(entity.ticksExisted % 20 == 0 && !world.isRemote) {
+				entity.attackEntityFrom(damageSource, 2);
+				
+			}
+			if(entity.ticksExisted % 5 == 0) {
+				world.spawnParticle("cloud", entity.posX, entity.posY, entity.posZ, 0.0, 0.0, 0.0);
+			}
+		}
 		if(entity instanceof EntityLivingBase)
 		{
 			if(entity.motionY < -0.2)
 				entity.motionY *= 0.5;
 			entity.attackEntityFrom(ModDamageSource.acid, 10F);
-			ContaminationUtil.contaminate((EntityLivingBase)entity, HazardType.RADIATION, ContaminationType.CREATIVE, 1.0F);	
+			ContaminationUtil.contaminate((EntityLivingBase)entity, HazardType.RADIATION, ContaminationType.CREATIVE, 1.0F);
+			//if(world.getBlock(x, y+1, z)==Blocks.air && rand.nextInt(8)==0)
+			{
+				NBTTagCompound fx = new NBTTagCompound();
+				fx.setString("type", "tower");
+				fx.setFloat("lift", 1.25F);
+				fx.setFloat("base", 0.05F);
+				fx.setFloat("max", 2F);
+				fx.setInteger("life", 65 + world.rand.nextInt(10));
+				fx.setInteger("color",0xffffff);
+				fx.setDouble("posX", x);
+				fx.setDouble("posY", y+1);
+				fx.setDouble("posZ", z);
+				MainRegistry.proxy.effectNT(fx);
+			}
+			NBTTagCompound vdat = new NBTTagCompound();
+			NBTTagCompound data = new NBTTagCompound();//((EntityLivingBase)entity)
+			vdat.setString("type", "giblets");
+			vdat.setInteger("ent", entity.getEntityId());
+			vdat.setInteger("cDiv", 60);
+			data.setString("type", "rbmkflame");
+			//data.setString("mode", "meteor");
+			data.setInteger("maxAge", 40);
+			PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(vdat, ((EntityLivingBase)entity).posX, ((EntityLivingBase)entity).posY + ((EntityLivingBase)entity).height * 0.5, ((EntityLivingBase)entity).posZ), new TargetPoint(entity.dimension, ((EntityLivingBase)entity).posX, ((EntityLivingBase)entity).posY + ((EntityLivingBase)entity).height * 0.5, ((EntityLivingBase)entity).posZ, 25));
+			PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, ((EntityLivingBase)entity).posX, ((EntityLivingBase)entity).posY + ((EntityLivingBase)entity).height * 0.5, ((EntityLivingBase)entity).posZ), new TargetPoint(entity.dimension, ((EntityLivingBase)entity).posX, ((EntityLivingBase)entity).posY + ((EntityLivingBase)entity).height * 0.5, ((EntityLivingBase)entity).posZ, 25));
+			world.playSoundEffect(entity.posX, entity.posY, entity.posZ, "random.fizz", 2.0F, 0.95F + world.rand.nextFloat() * 0.2F);
+		}
+		if(entity.ticksExisted % 5 == 0) {
+			world.playSoundAtEntity(entity, "random.fizz", 0.2F, 1F);
 		}
 	}
 
@@ -178,5 +226,20 @@ public class SchrabidicBlock extends BlockFluidClassic {
 		data.setDouble("posY", iy);
 		data.setDouble("posZ", iz);
 		MainRegistry.proxy.effectNT(data);
+		
+		if(world.getBlock(x, y+1, z)==Blocks.air && rand.nextInt(8)==0)
+		{
+			NBTTagCompound fx = new NBTTagCompound();
+			fx.setString("type", "tower");
+			fx.setFloat("lift", 0.25F);
+			fx.setFloat("base", 0.75F);
+			fx.setFloat("max", 1F);
+			fx.setInteger("life", 65 + world.rand.nextInt(10));
+			fx.setInteger("color",0x006B6B);
+			fx.setDouble("posX", x);
+			fx.setDouble("posY", y+1);
+			fx.setDouble("posZ", z);
+			MainRegistry.proxy.effectNT(fx);
+		}
 	}
 }
