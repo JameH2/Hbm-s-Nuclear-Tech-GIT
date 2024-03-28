@@ -175,6 +175,9 @@ public class ModEventHandlerClient {
 	public static final int flashDuration = 5_000;
 	public static long flashTimestamp;
 	public static int asteroidflashDuration = 0;
+	public static ArrayList<Meteor> meteors = new ArrayList();
+	public static ArrayList<Meteor> fragments = new ArrayList();
+	public static ArrayList<Meteor> smoke = new ArrayList();
 	ModelRubble asteroid;
 	@SubscribeEvent
 	public void onOverlayRender(RenderGameOverlayEvent.Pre event) {
@@ -1053,6 +1056,64 @@ public class ModEventHandlerClient {
 			}
 		}
 		
+		 if (event.phase == Phase.START && !Minecraft.getMinecraft().isGamePaused()) {
+	            // Check if the player is in the specified dimension
+	            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+	            WorldClient world = Minecraft.getMinecraft().theWorld;
+                	            
+            	Random rand = new Random();
+            	long time = ImpactWorldHandler.getTimeForClient(world);
+            	if(time>0 && world.provider.dimensionId == 0)
+            	{
+            		if(time>18000 && time <=24000)
+                	{
+            			if(rand.nextInt(256)==0)
+                    	{
+                            	Meteor meteor = new Meteor((player.posX+rand.nextInt(16000))-8000, 2017, (player.posZ+rand.nextInt(16000))-8000);
+                            	meteors.add(meteor);
+                    	}
+                	}
+            		if(time>12000 && time <=18000)
+                	{
+            			if(rand.nextInt(64)==0)
+                    	{
+                            	Meteor meteor = new Meteor((player.posX+rand.nextInt(16000))-8000, 2017, (player.posZ+rand.nextInt(16000))-8000);
+                            	meteors.add(meteor);
+                    	}
+                	}
+            		if(time>6000 && time <=12000)
+                	{
+            			if(rand.nextInt(16)==0)
+                    	{
+                            	Meteor meteor = new Meteor((player.posX+rand.nextInt(16000))-8000, 2017, (player.posZ+rand.nextInt(16000))-8000);
+                            	meteors.add(meteor);
+                    	}
+                	}
+            		if(time <=6000)
+                	{
+            			if(rand.nextInt(4)==0)
+                    	{
+                            	Meteor meteor = new Meteor((player.posX+rand.nextInt(16000))-8000, 2017, (player.posZ+rand.nextInt(16000))-8000);
+                            	meteors.add(meteor);
+                    	}
+                	}
+            	}
+	        }
+			for(Meteor meteor : meteors) {
+				if(!Minecraft.getMinecraft().isGamePaused())
+				meteor.update();
+			}
+			for(Meteor fragment : fragments) {
+				if(!Minecraft.getMinecraft().isGamePaused())
+				fragment.update();
+			}
+			for(Meteor smoke : smoke) {
+				if(!Minecraft.getMinecraft().isGamePaused())
+				smoke.update();
+			}
+			meteors.removeIf(x -> x.isDead);
+			fragments.removeIf(xx -> xx.isDead);
+			smoke.removeIf(xxx -> xxx.isDead);
 		if(event.phase == Phase.START) {
 			EntityPlayer player = mc.thePlayer;
 			
@@ -1592,5 +1653,76 @@ public class ModEventHandlerClient {
 			
 			if(Math.random() < 0.1) main.splashText = "Redditors aren't people!";
 		}
+	}
+	
+	public class Meteor {
+		
+		public double posX;
+		public double posY;
+		public double posZ;
+		public double prevPosX;
+		public double prevPosY;
+		public double prevPosZ;
+		public double motionX;
+		public double motionY;
+		public double motionZ;
+		public boolean isDead = false;
+		public long age;
+		public MeteorType type;
+		
+		public Meteor(double posX, double posY, double posZ)
+		{
+			this(posX, posY, posZ, MeteorType.STANDARD, -31.2, -20.8, 0);
+		}
+		
+		public Meteor(double posX, double posY, double posZ, MeteorType type, double motionX, double motionY, double motionZ) {
+			this.posX = posX;
+			this.posY = posY;
+			this.posZ = posZ;
+			this.type = type;
+			this.motionX = motionX;
+			this.motionY = motionY;
+			this.motionZ = motionZ;
+			//System.out.println("Added"+this.posX+" "+this.posY+" "+this.posZ);
+		}
+		
+		private void update() {
+			Random rand = new Random();
+			if(this.type != MeteorType.SMOKE && this.type != MeteorType.FRAGMENT)
+			{
+				Meteor meteor = new Meteor((this.posX+rand.nextInt(16))-8, (this.posY+rand.nextInt(16)), (this.posZ+rand.nextInt(16))-8, MeteorType.SMOKE,0,0,0);
+	        	smoke.add(meteor);
+            	if(rand.nextInt(4)==0)
+            	{
+            		//double spreadY = rand.nextDouble()*(Math.abs(this.motionY*0.05d))-0.5;
+            		//double spreadZ = rand.nextDouble()*(Math.abs(this.motionZ*0.05d))-0.5;
+    				Meteor frag = new Meteor((this.posX+rand.nextInt(16))-8, (this.posY+rand.nextInt(16)), (this.posZ+rand.nextInt(16))-8, MeteorType.FRAGMENT,this.motionX*0.5,(this.motionY*0.5),(this.motionZ*0.5));
+    				fragments.add(frag);
+            	}
+			}
+			if(this.posY <=500 && this.type != MeteorType.SMOKE)
+			{
+				this.isDead=true;
+			}
+			if(this.type == MeteorType.SMOKE)
+			{
+				this.age++;
+				if(this.age >=60)
+				this.isDead=true;
+			}
+			
+			this.prevPosX = this.posX;
+			this.prevPosY = this.posY;
+			this.prevPosZ = this.posZ;
+			this.posX += this.motionX;
+			this.posY += this.motionY;
+			this.posZ += this.motionZ;
+		}
+	}
+	
+	public static enum MeteorType {
+		STANDARD,
+		FRAGMENT,
+		SMOKE
 	}
 }
