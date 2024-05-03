@@ -109,6 +109,7 @@ public class ImpactWorldHandler {
 	public static int z = 0;
 	public static boolean impact = false;
 	public static boolean shouldImpact = false;
+	public static float winter = 0F;
 
 	@SideOnly(Side.CLIENT)
 	public static float getFireForClient(World world) {
@@ -120,6 +121,11 @@ public class ImpactWorldHandler {
 	public static float getDustForClient(World world) {
 		if(world != lastSyncWorld) return 0F;
 		return dust;
+	}
+	@SideOnly(Side.CLIENT)
+	public static float getWinterForClient(World world) {
+		if(world != lastSyncWorld) return 0F;
+		return winter;
 	}
 
 	@SideOnly(Side.CLIENT)

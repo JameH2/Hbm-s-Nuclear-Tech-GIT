@@ -31,6 +31,7 @@ import net.minecraft.block.BlockGrass;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityWaterMob;
@@ -40,6 +41,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.ColorizerFoliage;
+import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -74,12 +77,14 @@ public class ModEventHandlerImpact {
 		if(event.world != null && !event.world.isRemote && event.phase == Phase.START) {
 			float settle = 1F / 14400000F; 	// 600 days to completely clear all dust.
 			float cool = 1F / 24000F;		// One MC day between initial impact and total darkness.
+			float freeze = 1F / 720000F;		// 30 days for the impact winter to fully start.
 			
 			ImpactWorldHandler.impactEffects(event.world);
 			TomSaveData data = TomSaveData.forWorld(event.world);
 			
 			if(data.dust > 0 && data.fire == 0) {
 				data.dust = Math.max(0, data.dust - settle);
+				data.winter = Math.min(1, data.winter + freeze);
 				data.markDirty();
 			}
 			
@@ -343,6 +348,28 @@ public class ModEventHandlerImpact {
 		}
 	}
 
+	@SubscribeEvent
+	public void postImpactWater(BiomeEvent.GetWaterColor event) {
+
+		float winter = ImpactWorldHandler.getWinterForClient(Minecraft.getMinecraft().theWorld);
+		
+		event.newColor = (int) ((event.biome.waterColorMultiplier*(1-winter)) + 0x666666*winter);
+	}
+	
+	@SubscribeEvent
+	public void postImpactGrass(BiomeEvent.GetGrassColor event) {
+        double d0 = (double)MathHelper.clamp_float(event.biome.temperature-(ImpactWorldHandler.getWinterForClient(Minecraft.getMinecraft().theWorld)*0.75f), 0.0F, 1.0F);
+        double d1 = (double)MathHelper.clamp_float(event.biome.getFloatRainfall(), 0.0F, 1.0F);
+		event.newColor = ColorizerGrass.getGrassColor(d0, d1);
+	}
+	
+	@SubscribeEvent
+	public void postImpactFoliage(BiomeEvent.GetFoliageColor event) {
+        double d0 = (double)MathHelper.clamp_float(event.biome.temperature-(ImpactWorldHandler.getWinterForClient(Minecraft.getMinecraft().theWorld)*0.75f), 0.0F, 1.0F);
+        double d1 = (double)MathHelper.clamp_float(event.biome.getFloatRainfall(), 0.0F, 1.0F);
+		event.newColor = ColorizerFoliage.getFoliageColor(d0, d1);
+	}
+	
 	@SubscribeEvent
 	public void postImpactDecoration(DecorateBiomeEvent.Decorate event) {
 		

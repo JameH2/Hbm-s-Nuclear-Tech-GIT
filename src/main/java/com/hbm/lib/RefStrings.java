@@ -9,6 +9,8 @@ public class RefStrings {
 	//V -> next release version
 	//T -> build type
 	//X -> days since 10/10/10
+	public static final String MOD_DEPENDENCIES = "required-after:ntm_coremod";
+
 	public static final String CLIENTSIDE = "com.hbm.main.ClientProxy";
 	public static final String SERVERSIDE = "com.hbm.main.ServerProxy";
 }

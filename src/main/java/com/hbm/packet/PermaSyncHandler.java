@@ -44,6 +44,7 @@ public class PermaSyncHandler {
 		buf.writeLong(data.time);
 		buf.writeInt(data.x);
 		buf.writeInt(data.z);
+		buf.writeFloat(data.winter);
 		/// TOM IMPACT DATA ///
 
 		
@@ -94,6 +95,7 @@ public class PermaSyncHandler {
 		ImpactWorldHandler.time = buf.readLong();
 		ImpactWorldHandler.x = buf.readInt();
 		ImpactWorldHandler.z = buf.readInt();
+		ImpactWorldHandler.winter = buf.readFloat();
 		/// TOM IMPACT DATA ///
 
         PlanetaryTraitUtil.lastSyncWorld = player.worldObj;

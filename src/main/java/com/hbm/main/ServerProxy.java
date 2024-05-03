@@ -91,5 +91,9 @@ public class ServerProxy {
 		return TomSaveData.forWorld(world).impact;
 	}
 	
+	public float getWinter(World world) {
+		return TomSaveData.forWorld(world).winter;
+	}
+	
 	public void playSoundClient(double x, double y, double z, String sound, float volume, float pitch) { }
 }
