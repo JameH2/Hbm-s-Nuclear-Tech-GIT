@@ -14,15 +14,11 @@ import org.lwjgl.opengl.GLContext;
 
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.gas.BlockGasAir;
 import com.hbm.blocks.generic.BlockAshes;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.SpaceConfig;
-import com.hbm.dim.dres.biome.BiomeGenBaseDres;
 import com.hbm.dim.duna.WorldProviderDuna;
-import com.hbm.dim.duna.biome.BiomeGenBaseDuna;
 import com.hbm.dim.eve.WorldProviderEve;
-import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.mob.EntityHunterChopper;
 import com.hbm.entity.projectile.EntityChopperMine;
 import com.hbm.entity.train.EntityRailCarRidable;
@@ -35,7 +31,6 @@ import com.hbm.handler.HazmatRegistry;
 import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.hazard.HazardRegistry;
 import com.hbm.hazard.HazardSystem;
-import com.hbm.hazard.modifier.HazardModifier;
 import com.hbm.interfaces.IHoldableWeapon;
 import com.hbm.interfaces.IItemHUD;
 import com.hbm.interfaces.Spaghetti;
@@ -83,15 +78,11 @@ import com.hbm.tileentity.machine.TileEntityNukeFurnace;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.ItemStackUtil;
 import com.hbm.util.LoggingUtil;
-import com.hbm.util.PlanetaryTraitUtil;
-import com.hbm.util.PlanetaryTraitUtil.Hospitality;
-import com.hbm.util.fauxpointtwelve.BlockPos;
 import com.hbm.wiaj.GuiWorldInAJar;
 import com.hbm.wiaj.cannery.CanneryBase;
 import com.hbm.wiaj.cannery.Jars;
 import com.hbm.util.ArmorRegistry;
 import com.hbm.util.ArmorUtil;
-import com.hbm.util.FogMessage;
 import com.hbm.util.ArmorRegistry.HazardClass;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
@@ -108,7 +99,6 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
@@ -116,7 +106,6 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockAir;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -131,15 +120,12 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0CPacketInput;
 import net.minecraft.potion.Potion;
@@ -152,7 +138,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProviderSurface;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
@@ -436,14 +421,14 @@ public class ModEventHandlerClient {
 				RenderScreenOverlay.renderTaintBar(event.resolution, Minecraft.getMinecraft().ingameGUI);
 			}
 		}
-        if (!event.isCanceled() && event.type == event.type.ALL)
-        {
-        	long time = ImpactWorldHandler.getTimeForClient(player.worldObj);
-        	if(time>0)
-        	{
-        		RenderScreenOverlay.renderCountdown(event.resolution, Minecraft.getMinecraft().ingameGUI, Minecraft.getMinecraft().theWorld);	
-        	}        	
-        }
+		if (!event.isCanceled() && event.type == event.type.ALL)
+		{
+			long time = ImpactWorldHandler.getTimeForClient(player.worldObj);
+			if(time>0)
+			{
+				RenderScreenOverlay.renderCountdown(event.resolution, Minecraft.getMinecraft().ingameGUI, Minecraft.getMinecraft().theWorld);	
+			}        	
+		}
 		if(event.type == event.type.ARMOR) {
 			
 			if(ForgeHooks.getTotalArmorValue(player) == 0) {
@@ -1188,23 +1173,16 @@ public class ModEventHandlerClient {
 			IRenderHandler sky = world.provider.getSkyRenderer();
 			
 			if(world.provider instanceof WorldProviderSurface) {
-				
-				/*if(ImpactWorldHandler.getDustForClient(world) > 0 || ImpactWorldHandler.getFireForClient(world) > 0) {
+				world.provider.setSkyRenderer(new RenderNTMSkyboxImpact());
+				return;
+			}
 
-					//using a chainloader isn't necessary since none of the sky effects should render anyway
-					if(!(sky instanceof RenderNTMSkyboxImpact)) {*/
-						world.provider.setSkyRenderer(new RenderNTMSkyboxImpact());
-						return;
-					}
 			if(world.provider.dimensionId == 0) {
-				
 				if(!(sky instanceof RenderNTMSkyboxChainloader)) {
 					world.provider.setSkyRenderer(new RenderNTMSkyboxChainloader(sky));
 				}
 			}
 		}
-		
-		
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -1388,56 +1366,56 @@ public class ModEventHandlerClient {
 	
 	@SubscribeEvent
 	public void setupFog(RenderFogEvent event) {
-	    if (event.entity.worldObj.provider instanceof WorldProviderEve) {
-	        event.setResult(Result.DENY);
-	    }
-	    if (event.entity.worldObj.provider instanceof WorldProviderDuna) {
-	        event.setResult(Result.DENY);
-	    }
+		if (event.entity.worldObj.provider instanceof WorldProviderEve) {
+			event.setResult(Result.DENY);
+		}
+		if (event.entity.worldObj.provider instanceof WorldProviderDuna) {
+			event.setResult(Result.DENY);
+		}
 	}
 
 	@SubscribeEvent
 	public void thickenFog(FogDensity event) {
-	    if (event.entity.worldObj.provider instanceof WorldProviderEve) {
+		if (event.entity.worldObj.provider instanceof WorldProviderEve) {
 				if(GLContext.getCapabilities().GL_NV_fog_distance) {
 					GL11.glFogi(34138, 34139);
 				}
 				GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
 
-	            event.density = 0.045F;
-	            event.setCanceled(true);
-	        
-	    }
+				event.density = 0.045F;
+				event.setCanceled(true);
+			
+		}
 
 	}
 	
-    @SubscribeEvent
-    public void tintFog(FogColors event) {
-        if (event.entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) event.entity;
+	@SubscribeEvent
+	public void tintFog(FogColors event) {
+		if (event.entity instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) event.entity;
 
-            // Get the biome at the player's current location
-            int biomeID = player.worldObj.getBiomeGenForCoords((int) player.posX, (int) player.posZ).biomeID;
+			// Get the biome at the player's current location
+			int biomeID = player.worldObj.getBiomeGenForCoords((int) player.posX, (int) player.posZ).biomeID;
 
-            // Check if the current biome matches the one you're interested in
-            if (biomeID == SpaceConfig.dunaPolarBiome || biomeID == SpaceConfig.dunaPolarHillsBiome ) {
-                long time = player.worldObj.getWorldTime();
+			// Check if the current biome matches the one you're interested in
+			if (biomeID == SpaceConfig.dunaPolarBiome || biomeID == SpaceConfig.dunaPolarHillsBiome ) {
+				long time = player.worldObj.getWorldTime();
 
-                // Adjust fog color based on day/night cycle
-                if (time >= 12000 && time < 24000) {
-                    // Nighttime
-                    event.red = 0.1F;
-                    event.green = 0.1F;
-                    event.blue = 0.2F;
-                } else {
-                    // Daytime
-                    event.red = 0.2F;
-                    event.green = 0.18F;
-                    event.blue = 0.22F;
-                }
-            }
-        }
-    }
+				// Adjust fog color based on day/night cycle
+				if (time >= 12000 && time < 24000) {
+					// Nighttime
+					event.red = 0.1F;
+					event.green = 0.1F;
+					event.blue = 0.2F;
+				} else {
+					// Daytime
+					event.red = 0.2F;
+					event.green = 0.18F;
+					event.blue = 0.22F;
+				}
+			}
+		}
+	}
 
 
 	public static IIcon particleBase;

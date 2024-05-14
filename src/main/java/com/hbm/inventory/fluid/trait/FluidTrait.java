@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 public abstract class FluidTrait {
 	
-	public static List<Class<? extends FluidTrait>> traitList = new ArrayList();
+	public static List<Class<? extends FluidTrait>> traitList = new ArrayList<Class<? extends FluidTrait>>();
 	public static HashBiMap<String, Class<? extends FluidTrait>> traitNameMap = HashBiMap.create();
 	
 	static {
@@ -30,6 +30,8 @@ public abstract class FluidTrait {
 		registerTrait("toxin", FT_Toxin.class);
 		registerTrait("ventradiation", FT_VentRadiation.class);
 		registerTrait("pheromone", FT_Pheromone.class);
+		registerTrait("rocket", FT_Rocket.class);
+
 		//simple traits, "tags"
 		registerTrait("gaseous", FT_Gaseous.class);
 		registerTrait("gaseous_art", FT_Gaseous_ART.class);
@@ -42,8 +44,8 @@ public abstract class FluidTrait {
 		registerTrait("noid", FT_NoID.class);
 		registerTrait("nocontainer", FT_NoContainer.class);
 		registerTrait("unsiphonable", FT_Unsiphonable.class);
-		traitNameMap.put("uk", FT_ULTRAKILL.class);	// x
-		traitNameMap.put("explosive", FT_EXPLOSIVE.class);	// x
+		registerTrait("uk", FT_ULTRAKILL.class);	// x
+		registerTrait("explosive", FT_EXPLOSIVE.class);	// x
 
 
 	}

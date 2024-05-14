@@ -2,10 +2,9 @@ package com.hbm.tileentity.bomb;
 
 import java.util.List;
 
-import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.bomb.LaunchPad;
-import com.hbm.config.SpaceConfig;
-import com.hbm.dim.DebugTeleporter;
+import com.hbm.dim.CelestialBody;
+import com.hbm.dim.SolarSystem;
+import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.entity.missile.EntityMissileCustom;
 import com.hbm.handler.MissileStruct;
 import com.hbm.interfaces.IFluidAcceptor;
@@ -14,8 +13,7 @@ import com.hbm.inventory.container.ContainerLaunchTable;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
-import com.hbm.inventory.fluid.trait.FT_Combustible;
-import com.hbm.inventory.fluid.trait.FT_Flammable;
+import com.hbm.inventory.fluid.trait.FT_Rocket;
 import com.hbm.inventory.gui.GUIMachineLaunchTable;
 import com.hbm.items.ItemVOTVdrive;
 import com.hbm.items.ItemVOTVdrive.DestinationType;
@@ -34,12 +32,11 @@ import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.INBTPacketReceiver;
 import com.hbm.tileentity.IRadarCommandReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
-import com.hbm.util.AstronomyUtil;
-import com.hbm.util.PlanetaryTraitUtil;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidStandardReceiver;
 import api.hbm.item.IDesignatorItem;
+import codechicken.lib.math.MathHelper;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
@@ -459,7 +456,7 @@ public class TileEntityLaunchTable extends TileEntityLoadedBase implements ISide
 		
 		ItemCustomMissilePart fuselage = (ItemCustomMissilePart)multipart.fuselage;
 		
-		if( fuselage.top == padSize.SIZE_20) {
+		if(fuselage.top == ItemCustomMissilePart.PartSize.SIZE_20) {
 			return true;
 		}
 		
@@ -469,19 +466,16 @@ public class TileEntityLaunchTable extends TileEntityLoadedBase implements ISide
 		if (slots[1] != null && slots[1].getItem() instanceof ItemVOTVdrive && slots[1].getItemDamage() != DestinationType.BLANK.ordinal() && slots[1].stackTagCompound.getBoolean("Processed") == true) {
 			switch (DestinationType.values()[slots[1].getItemDamage()]) {
 			case MOHO:
-				float theWorldLooksRed = calfuelV2(AstronomyUtil.MohoAU, AstronomyUtil.MohoP);
+				float theWorldLooksRed = calfuelV2(CelestialBody.getBody("moho"));
 				tanks[0].changeTankSize((int) theWorldLooksRed);
-			    FT_Combustible trait = tanks[0].getTankType().getTrait(FT_Combustible.class);
-			    long fuelPower = trait.getCombustionEnergy();
-			   // System.out.println(theWorldLooksRed);
 				break;
 			case LAYTHE:
 				tanks[0].changeTankSize(230000);
 				tanks[1].changeTankSize(230000);
 				break;
 			case DUNA:
-				tanks[0].changeTankSize(230000);
-				tanks[1].changeTankSize(150300);
+				float whatthefuck = calfuelV2(CelestialBody.getBody("duna"));
+				tanks[0].changeTankSize((int) whatthefuck);
 				break;
 			case DRES:
 				tanks[0].changeTankSize(290000);
@@ -596,35 +590,45 @@ public class TileEntityLaunchTable extends TileEntityLoadedBase implements ISide
 		}
 	}
 
-	public float calfuelV2(double au, float p) {
-	   		float grav = PlanetaryTraitUtil.getGravityForDimension(worldObj.provider.dimensionId);
-	    	FT_Combustible trait = tanks[0].getTankType().getTrait(FT_Combustible.class);
-	    	long fuelPower = trait.getCombustionEnergy();	       
-	    	double aue = au * 100000; 
-	    	float autwo = PlanetaryTraitUtil.getDistanceForDimension(worldObj.provider.dimensionId) * 100000;
-	    	
-	    	double finalvar = Math.abs(autwo - aue);
-	    	
-	    	finalvar = Math.floor(finalvar);
-	        //0.45972245832
-	        //0.035181876 
-	        double adjustedFuelRatio = calculateAdjustedFuelRatio(fuelPower, finalvar);
+	public float calfuelV2(CelestialBody targetBody) {
+		MissileStruct multipart = getStruct(slots[0]);
+		
+		if(multipart == null || multipart.thruster == null)
+			return -1;
+		
+		CelestialBody localBody = CelestialBody.getBody(worldObj);
+		
+		ItemCustomMissilePart thruster = (ItemCustomMissilePart)multipart.thruster;
+		int rocketMass = (Integer)thruster.attributes[3];
+		FT_Rocket trait = tanks[0].getTankType().getTrait(FT_Rocket.class);
+		long isp = trait.getISP();
+		long thrust = trait.getThrust();
 
-	        float totalDistance = (float) (100000 / adjustedFuelRatio);
+		double launchDV = SolarSystem.getLiftoffDeltaV(localBody, rocketMass, thrust);
+		double travelDV = SolarSystem.getDeltaVBetween(localBody, targetBody);
+		double landerDV = SolarSystem.getLandingDeltaV(targetBody, rocketMass, thrust, targetBody.hasTrait(CBT_Atmosphere.class));
 
-	        int roundedDistance = (int) (Math.round(totalDistance / 100.0) * 100);
+		double totalDV = launchDV + travelDV + landerDV;
 
-	        return (float) (roundedDistance);
-	    }
+		double g0 = 9.81;
+		double exhaustVelocity = isp * g0;
+		double propellantMass = rocketMass * (1 - Math.exp(-(totalDV / exhaustVelocity)));
 
-	    private static double calculateAdjustedFuelRatio(long fuelPower, double aue) {
-	        double nnass = fuelPower / (aue * getScalingFactor(fuelPower)); // Divide by aue and apply scaling factor
-	        return Math.log(nnass + 1);
-	    }
+		// You can do some fuckery here to get the propellant mass into some reasonable number of buckets
+		
 
-	    private static double getScalingFactor(long fuelPower) {
-	        return Math.sqrt(fuelPower) / 24;
-	    }
+		return MathHelper.floor_double(propellantMass);
+	}
+
+	private static double calculateAdjustedFuelRatio(long fuelPower, double aue) {
+		double nnass = fuelPower / (aue * getScalingFactor(fuelPower)); // Divide by aue and apply scaling factor
+		return Math.log(nnass + 1);
+	}
+
+	private static double getScalingFactor(long fuelPower) {
+		return Math.sqrt(fuelPower) / 24;
+	}
+
 	@Override
 	public void networkUnpack(NBTTagCompound nbt) {
 
