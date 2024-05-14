@@ -95,6 +95,10 @@ public class ItemWandD extends Item {
 					break;
 				case 8:
 					DebugTeleporter.teleport(player, SpaceConfig.laytheDimension, player.posX, 300, player.posZ);
+					break;
+				case 9:
+					DebugTeleporter.teleport(player, SpaceConfig.plockDimension, player.posX, 300, player.posZ);
+					break;
 				}
 				
 				
@@ -110,7 +114,7 @@ public class ItemWandD extends Item {
 					int i = stack.stackTagCompound.getInteger("dim");
 					i++;
 					stack.stackTagCompound.setInteger("dim", i);
-					if(i >= 9) {
+					if(i >= 10) {
 						stack.stackTagCompound.setInteger("dim", 0);
 					}
 					
@@ -142,6 +146,9 @@ public class ItemWandD extends Item {
 							break;
 						case 8:
 							player.addChatMessage(new ChatComponentText("Dim: Laythe"));
+							break;
+						case 9:
+							player.addChatMessage(new ChatComponentText("Dim: Plock"));
 							break;
 						default:
 							player.addChatMessage(new ChatComponentText("Dim: Moon"));

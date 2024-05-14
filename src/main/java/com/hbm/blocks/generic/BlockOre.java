@@ -6,6 +6,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.items.ItemEnums.EnumChunkType;
+import com.hbm.lib.ModDamageSource;
 import com.hbm.items.ModItems;
 import com.hbm.potion.HbmPotion;
 import cpw.mods.fml.relauncher.Side;
@@ -19,6 +20,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 public class BlockOre extends Block {
@@ -174,6 +176,13 @@ public class BlockOre extends Block {
 		if(entity instanceof EntityLivingBase && this == ModBlocks.frozen_dirt) {
 			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 2 * 60 * 20, 2));
 		}
+		if(entity instanceof EntityLivingBase && this == ModBlocks.dry_ice) {
+			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 2 * 60 * 20, 2));
+		}
+		if(entity instanceof EntityLivingBase && this == ModBlocks.plock_ice || this == ModBlocks.plock_tholinated_ice || this == ModBlocks.nitrogen_ice) {
+			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 2 * 60 * 20, 2));
+			((EntityLivingBase) entity).attackEntityFrom(new DamageSource(ModDamageSource.s_cryolator), 1);
+		}
 		if(entity instanceof EntityLivingBase && this == ModBlocks.block_trinitite) {
 			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(HbmPotion.radiation.id, 30 * 20, 2));
 		}
@@ -248,6 +257,9 @@ public class BlockOre extends Block {
 
 		if(this == ModBlocks.block_meteor_molten) {
 			if(!world.isRemote) world.setBlock(x, y, z, Blocks.lava);
+		}
+		if(this == ModBlocks.nitrogen_ice) {
+			if(!world.isRemote) world.setBlock(x, y, z, ModBlocks.ln2_block);
 		}
 	}
 }

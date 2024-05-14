@@ -39,10 +39,11 @@ public class AstronomyUtil
     public static final float DresRadius=138;
     public static final float JoolRadius=6000;
     public static final float SarnusRadius=5300;
-    public static final float UrlumRadius=25559;
-    public static final float NeidonRadius=24766;
-    public static final float PlockRadius=1184;
+    public static final float UrlumRadius=2177;
+    public static final float NeidonRadius=2145;
+    public static final float PlockRadius=189;
     public static final float TyloRadius=580F;
+    public static final float KarenRadius=85;
 	
 	public static final float MohoAU= 4263138.304F/AUToKm;
     public static final float EveAU=9832684.544F/AUToKm;
@@ -51,9 +52,9 @@ public class AstronomyUtil
     public static final float DresAU=40839348.203F/AUToKm;
     public static final float JoolAU=68773560.320F/AUToKm;
     public static final float SarnusAU=125798522.368F/AUToKm;
-    public static final float UrlumAU=19.19F;
-    public static final float NeidonAU=30.1F;
-    public static final float PlockAU=39.5F;
+    public static final float UrlumAU=254317012.787F/AUToKm;
+    public static final float NeidonAU=409355191.706F/AUToKm;
+    public static final float PlockAU=535833706.086F/AUToKm;
     
     public static final float MohoP=102.58F;
     public static final float EveP=261.94F;
@@ -62,9 +63,9 @@ public class AstronomyUtil
     public static final float DresP=2217.27F;
     public static final float JoolP=4845.4367F;
     public static final float SarnusP=11987.096F;
-    public static final float UrlumP=30687;
-    public static final float NeidonP=60190;
-    public static final float PlockP=90553;
+    public static final float UrlumP=34455.914F;
+    public static final float NeidonP=70364.096F;
+    public static final float PlockP=105376.969F;
     
     public static final float MunP=6.43F;
     public static final float MinmusP=49.88F;
@@ -72,6 +73,7 @@ public class AstronomyUtil
     public static final float VallP=4.91F;
 	public static final float TyloP = 9.81F;
     public static final float BopP=25.21F;
+    public static final float KarenP=4.923F;
     
     public static final float MunKerbinKm=12000;
     public static final float MinmusKerbinKm=47000;
@@ -82,16 +84,8 @@ public class AstronomyUtil
     public static final float VallJoolKm = 43152F; 
     public static final float TyloJoolKm = 58500F;
     public static final float BopJoolKm = 128500F;
-
-    public static ResourceLocation mohoTexture = new ResourceLocation("hbm:textures/misc/moho.png");
-    public static ResourceLocation eveTexture = new ResourceLocation("hbm:textures/misc/eve.png");
-    public static ResourceLocation kerbinTexture = new ResourceLocation("hbm:textures/misc/kerbin.png");
-    public static ResourceLocation dunaTexture = new ResourceLocation("hbm:textures/misc/duna.png");
-    public static ResourceLocation joolTexture = new ResourceLocation("hbm:textures/misc/jool.png");
-    public static ResourceLocation sarnusTexture = new ResourceLocation("hbm:textures/misc/sarnus.png");
-    public static ResourceLocation urlumTexture = new ResourceLocation("hbm:textures/misc/urlum.png");
-    public static ResourceLocation neidonTexture = new ResourceLocation("hbm:textures/misc/neidon.png");
-    public static ResourceLocation plockTexture = new ResourceLocation("hbm:textures/misc/plock.png");
+    
+    public static final float KarenPlockKm=12000;
     
     /**
      * Calculates the maximum angular distance from the Sun that the planet can appear in the sky. The first planet is the one that you are running the calculation for, and the second planet is the one you're standing on.

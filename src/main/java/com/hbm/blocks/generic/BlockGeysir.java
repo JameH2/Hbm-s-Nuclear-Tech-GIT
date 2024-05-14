@@ -3,7 +3,9 @@ package com.hbm.blocks.generic;
 import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.RefStrings;
+import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.deco.TileEntityGeysir;
 
 import cpw.mods.fml.relauncher.Side;
@@ -13,6 +15,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -29,6 +32,12 @@ public class BlockGeysir extends BlockContainer {
 		if(this == ModBlocks.geysir_nether) {
 			this.iconTop = iconRegister.registerIcon(RefStrings.MODID + ":geysir_nether");
 			this.blockIcon = Blocks.netherrack.getIcon(0, 0);
+			
+		}
+		if(this == ModBlocks.geysir_plock) {
+			this.iconTop = iconRegister.registerIcon(RefStrings.MODID + ":geysir_plock");
+			this.blockIcon = ModBlocks.plock_tholinated_ice.getIcon(0, 0);
+			
 		} else {
 			this.iconTop = iconRegister.registerIcon(RefStrings.MODID + ":geysir_stone");
 			this.blockIcon = Blocks.stone.getIcon(0, 0);
@@ -68,6 +77,29 @@ public class BlockGeysir extends BlockContainer {
 			float f2 = z + 0.5F;
 	
 			p_149734_1_.spawnParticle("cloud", f, f1, f2, 0.0D, 0.1D, 0.0D);
+		}
+		
+		if(this == ModBlocks.geysir_plock && l == 1) {
+			float f = x + 0.5F;
+			float f1 = y + 1.0F;
+			float f2 = z + 0.5F;
+	
+			if(p_149734_1_.getBlock(x, y+1, z)==Blocks.air)
+			{
+				NBTTagCompound fx = new NBTTagCompound();
+				fx.setString("type", "tower");
+				fx.setFloat("lift", 0.25F);
+				fx.setFloat("base", 0.75F);
+				fx.setFloat("max", 1F);
+				fx.setFloat("strafe", 0F);
+				fx.setBoolean("noWind", false);
+				fx.setInteger("life", 65 + p_149734_1_.rand.nextInt(10));
+				fx.setInteger("color",Fluids.NITROGEN.getColor());
+				fx.setDouble("posX", f);
+				fx.setDouble("posY", f1);
+				fx.setDouble("posZ", f2);
+				MainRegistry.proxy.effectNT(fx);
+			}
 		}
 		
 		if(this == ModBlocks.geysir_nether) {

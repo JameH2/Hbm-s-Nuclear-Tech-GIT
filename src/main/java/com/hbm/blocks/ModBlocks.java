@@ -435,6 +435,10 @@ public class ModBlocks {
 	public static Block eve_silt;
 	public static Block eve_rock;
 	
+	public static Block plock_ice;
+	public static Block plock_tholinated_ice;
+	public static Block nitrogen_ice;
+	
 	public static Block moho_regolith;
 	public static Block moho_stone;
 	public static Block moho_cobalt;
@@ -555,6 +559,9 @@ public class ModBlocks {
 	public static Block frozen_grass;
 	public static Block frozen_log;
 	public static Block frozen_planks;
+	public static Block frozen_gravel;
+	public static Block frozen_farmland;
+	public static Block frozen_leaves;
 	public static Block dirt_dead;
 	public static Block dirt_oily;
 	public static Block sand_dirty;
@@ -585,6 +592,7 @@ public class ModBlocks {
 	public static Block geysir_chlorine;
 	public static Block geysir_vapor;
 	public static Block geysir_nether;
+	public static Block geysir_plock;
 
 	public static Block flame_war;
 	public static Block float_bomb;
@@ -1302,6 +1310,9 @@ public class ModBlocks {
 	
 	public static Block mercury_block;
 	public static Fluid mercury_fluid;
+	
+	public static Block ln2_block;
+	public static Fluid ln2_fluid;
 
 	public static Block concrete_liquid;
 	
@@ -1712,13 +1723,16 @@ public class ModBlocks {
 		duna_oil = new BlockGeneric(Material.rock).setBlockName("duna_oil").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setBlockTextureName(RefStrings.MODID + ":duna_oil");
 		duna_oil_empty = new BlockGeneric(Material.rock).setBlockName("duna_oil_empty").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setBlockTextureName(RefStrings.MODID + ":duna_oil_empty");
 		duna_iron = new BlockGeneric(Material.rock).setBlockName("duna_iron").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":duna_iron");
-		dry_ice = new BlockGeneric(Material.ice).setBlockName("dry_ice").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setBlockTextureName(RefStrings.MODID + ":ice_dry");
+		dry_ice = new BlockOre(Material.ice).setBlockName("dry_ice").setStepSound(Block.soundTypeGlass).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setBlockTextureName(RefStrings.MODID + ":ice_dry");
 		
 		eve_silt = new BlockFalling(Material.sand).setBlockName("eve_silt").setStepSound(Block.soundTypeSand).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":eve_silt");
 		eve_rock = new BlockGeneric(Material.rock).setBlockName("eve_rock").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setBlockTextureName(RefStrings.MODID + ":eve_stone_2");
 		
 		laythe_silt = new BlockFalling(Material.sand).setBlockName("laythe_silt").setStepSound(Block.soundTypeSand).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":laythe_silt");
 
+		plock_tholinated_ice = new BlockOre(Material.ice).setBlockName("plock_tholinated_ice").setStepSound(Block.soundTypeGlass).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setBlockTextureName(RefStrings.MODID + ":plock_ice");
+		plock_ice = new BlockOre(Material.ice).setBlockName("plock_ice").setStepSound(Block.soundTypeGlass).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setBlockTextureName(RefStrings.MODID + ":plock_subsurface_ice");
+		nitrogen_ice = new BlockOre(Material.ice).setBlockName("nitrogen_ice").setStepSound(Block.soundTypeGlass).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setBlockTextureName(RefStrings.MODID + ":ice_nitrogen");
 		
 		ike_regolith = new BlockIke(Material.rock).setBlockName("ike_regolith").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ike_regolith");
 		ike_stone = new BlockGeneric(Material.rock).setBlockName("ike_stone").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ike_stone");
@@ -1851,6 +1865,9 @@ public class ModBlocks {
 		frozen_grass = new WasteEarth(Material.ground, false).setBlockName("frozen_grass").setStepSound(Block.soundTypeGlass).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setResistance(2.5F);
 		frozen_log = new WasteLog(Material.wood).setBlockName("frozen_log").setStepSound(Block.soundTypeGlass).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setResistance(2.5F);
 		frozen_planks = new BlockOre(Material.wood).setBlockName("frozen_planks").setStepSound(Block.soundTypeGlass).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setResistance(2.5F).setBlockTextureName(RefStrings.MODID + ":frozen_planks");
+		frozen_farmland = new FrozenFarmland(Material.ground, true).setBlockName("frozen_farmland").setStepSound(Block.soundTypeGlass).setCreativeTab(CreativeTabs.tabBlock).setHardness(0.5F).setResistance(2.5F);
+		frozen_gravel = new BlockFallingFrozen(Material.ground).setBlockName("frozen_gravel").setStepSound(Block.soundTypeGlass).setCreativeTab(CreativeTabs.tabBlock).setHardness(0.5F).setResistance(2.5F).setBlockTextureName(RefStrings.MODID + ":frozen_gravel");
+		frozen_leaves = new WasteLeaves(Material.leaves).setBlockName("frozen_leaves").setStepSound(Block.soundTypeGlass).setCreativeTab(MainRegistry.blockTab).setHardness(0.1F).setBlockTextureName(RefStrings.MODID + ":frozen_leaves");
 		fallout = new BlockFallout(Material.sand).setBlockName("fallout").setStepSound(Block.soundTypeGravel).setCreativeTab(MainRegistry.blockTab).setHardness(0.1F).setLightOpacity(0).setBlockTextureName(RefStrings.MODID + ":ash");
 		salted_fallout = new BlockFallout(Material.snow).setBlockName("salted_fallout").setStepSound(Block.soundTypeGravel).setCreativeTab(MainRegistry.blockTab).setHardness(0.1F).setLightOpacity(0).setBlockTextureName(RefStrings.MODID + ":ash");
 		foam_layer = new BlockLayering(Material.snow).setBlockName("foam_layer").setStepSound(Block.soundTypeSnow).setCreativeTab(MainRegistry.blockTab).setHardness(0.1F).setLightOpacity(0).setBlockTextureName(RefStrings.MODID + ":foam");
@@ -1881,6 +1898,7 @@ public class ModBlocks {
 		geysir_chlorine = new BlockGeysir(Material.rock).setBlockName("geysir_chlorine").setStepSound(Block.soundTypeStone).setHardness(5.0F);
 		geysir_vapor = new BlockGeysir(Material.rock).setBlockName("geysir_vapor").setStepSound(Block.soundTypeStone).setHardness(5.0F);
 		geysir_nether = new BlockGeysir(Material.rock).setBlockName("geysir_nether").setLightLevel(1.0F).setStepSound(Block.soundTypeStone).setHardness(2.0F);
+		geysir_plock = new BlockGeysir(Material.ice).setBlockName("geysir_plock").setStepSound(Block.soundTypeGlass).setHardness(0.5F);
 		
 		nuke_gadget = new NukeGadget(Material.iron).setBlockName("nuke_gadget").setCreativeTab(MainRegistry.nukeTab).setHardness(5.0F).setResistance(200.0F).setBlockTextureName(RefStrings.MODID + ":theGadget");
 		nuke_boy = new NukeBoy(Material.iron).setBlockName("nuke_boy").setCreativeTab(MainRegistry.nukeTab).setHardness(5.0F).setResistance(200.0F).setBlockTextureName(RefStrings.MODID + ":lilBoy");
@@ -2551,6 +2569,10 @@ public class ModBlocks {
 		FluidRegistry.registerFluid(sulfuric_acid_fluid);
 		sulfuric_acid_block = new GenericFluidBlock(sulfuric_acid_fluid, Material.water, "sulfuric_acid_still", "sulfuric_acid_flowing").setDamage(ModDamageSource.acid, 5F).setBlockName("sulfuric_acid_block").setResistance(500F);
 		
+		ln2_fluid = new GenericFluid("liquid_nitrogen").setDensity(807).setViscosity(1000).setTemperature(77);
+		FluidRegistry.registerFluid(ln2_fluid);
+		ln2_block = new CryogenicBlock(ln2_fluid, Material.water, "ln2_still", "ln2_flowing").setDamage(ModDamageSource.s_cryolator, 5F).setBlockName("liquid_nitrogen_block").setResistance(500F);
+		
 		mercury_fluid = new GenericFluid("mercury_fluid").setDensity(1840).setViscosity(1000).setTemperature(273);
 		FluidRegistry.registerFluid(mercury_fluid);
 		mercury_block = new GenericFluidBlock(mercury_fluid, Material.water, "mercury_still", "mercury_flowing").setDamage(ModDamageSource.lead, 1F).setBlockName("mercury_block").setResistance(500F);
@@ -3062,6 +3084,10 @@ public class ModBlocks {
 		
 		GameRegistry.registerBlock(laythe_silt, laythe_silt.getUnlocalizedName());
 		
+		GameRegistry.registerBlock(plock_tholinated_ice, plock_tholinated_ice.getUnlocalizedName());
+		GameRegistry.registerBlock(plock_ice, plock_ice.getUnlocalizedName());
+		GameRegistry.registerBlock(nitrogen_ice, nitrogen_ice.getUnlocalizedName());
+		
 		GameRegistry.registerBlock(ike_regolith, ike_regolith.getUnlocalizedName());
 		GameRegistry.registerBlock(ike_stone, ike_stone.getUnlocalizedName());
 		GameRegistry.registerBlock(ike_asbestos, ike_asbestos.getUnlocalizedName());
@@ -3100,6 +3126,9 @@ public class ModBlocks {
 		GameRegistry.registerBlock(frozen_dirt, frozen_dirt.getUnlocalizedName());
 		GameRegistry.registerBlock(frozen_log, frozen_log.getUnlocalizedName());
 		GameRegistry.registerBlock(frozen_planks, frozen_planks.getUnlocalizedName());
+		GameRegistry.registerBlock(frozen_farmland, frozen_farmland.getUnlocalizedName());
+		GameRegistry.registerBlock(frozen_gravel, frozen_gravel.getUnlocalizedName());
+		GameRegistry.registerBlock(frozen_leaves, frozen_leaves.getUnlocalizedName());
 		GameRegistry.registerBlock(dirt_dead, dirt_dead.getUnlocalizedName());
 		GameRegistry.registerBlock(dirt_oily, dirt_oily.getUnlocalizedName());
 		GameRegistry.registerBlock(sand_dirty, sand_dirty.getUnlocalizedName());
@@ -3142,6 +3171,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(geysir_chlorine, geysir_chlorine.getUnlocalizedName());
 		GameRegistry.registerBlock(geysir_vapor, geysir_vapor.getUnlocalizedName());
 		GameRegistry.registerBlock(geysir_nether, geysir_nether.getUnlocalizedName());
+		GameRegistry.registerBlock(geysir_plock, geysir_plock.getUnlocalizedName());
 
 		//Nukes
 		GameRegistry.registerBlock(nuke_gadget, nuke_gadget.getUnlocalizedName());
@@ -3758,6 +3788,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(rad_lava_block, rad_lava_block.getUnlocalizedName());
 		GameRegistry.registerBlock(sulfuric_acid_block, sulfuric_acid_block.getUnlocalizedName());
 		GameRegistry.registerBlock(mercury_block, mercury_block.getUnlocalizedName());
+		GameRegistry.registerBlock(ln2_block, ln2_block.getUnlocalizedName());
 		GameRegistry.registerBlock(flesh_block, flesh_block.getUnlocalizedName());
 		GameRegistry.registerBlock(charred_flesh_block, charred_flesh_block.getUnlocalizedName());
 		GameRegistry.registerBlock(carbonized_flesh_block, carbonized_flesh_block.getUnlocalizedName());

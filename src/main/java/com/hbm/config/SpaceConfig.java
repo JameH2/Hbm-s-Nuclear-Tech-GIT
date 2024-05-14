@@ -15,6 +15,7 @@ public class SpaceConfig {
 	public static int mohoDimension = 20;
 	public static int minmusDimension = 21;
 	public static int laytheDimension = 22;
+	public static int plockDimension = 23;
 
 	public static int moonBiome = 111;
 	public static int dunaBiome = 112;
@@ -32,7 +33,8 @@ public class SpaceConfig {
 	public static int ikecfreq = 90;
 	public static int drescfreq = 90;
 
-	
+	public static int PlockBiome = 126;
+	public static int PlockBasins = 127;
 	public static int DresBiome = 120;
 	public static int dreBasins = 121;
 	public static int dresDimension = 19;

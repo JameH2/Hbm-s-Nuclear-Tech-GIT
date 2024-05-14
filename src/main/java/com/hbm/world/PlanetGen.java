@@ -17,6 +17,7 @@ import com.hbm.dim.minmus.WorldGeneratorMinmus;
 import com.hbm.dim.minmus.WorldProviderMinmus;
 import com.hbm.dim.moho.WorldGeneratorMoho;
 import com.hbm.dim.moho.WorldProviderMoho;
+import com.hbm.dim.plock.WorldProviderPlock;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraftforge.common.BiomeDictionary;
@@ -66,6 +67,9 @@ public class PlanetGen {
 		
 		DimensionManager.registerProviderType(SpaceConfig.laytheDimension, WorldProviderLaythe.class, false);
 	    DimensionManager.registerDimension(SpaceConfig.laytheDimension, SpaceConfig.laytheDimension);
+	    
+		DimensionManager.registerProviderType(SpaceConfig.plockDimension, WorldProviderPlock.class, false);
+	    DimensionManager.registerDimension(SpaceConfig.plockDimension, SpaceConfig.plockDimension);
 	    
 
     }
