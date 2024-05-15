@@ -26,7 +26,7 @@ public class WasteLeaves extends Block {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister) {
-		this.blockIcon = iconRegister.registerIcon(RefStrings.MODID + ":waste_leaves");
+		this.blockIcon = iconRegister.registerIcon(RefStrings.MODID + (this == ModBlocks.waste_leaves ? ":waste_leaves" : ":frozen_leaves"));
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class WasteLeaves extends Block {
 		if(rand.nextInt(30) == 0) {
 			world.setBlockToAir(x, y, z);
 			
-			if(world.getBlock(x, y - 1, z).getMaterial() == Material.air) {
+			if(world.getBlock(x, y - 1, z).getMaterial() == Material.air && this==ModBlocks.waste_leaves) {
 				EntityFallingBlock leaves = new EntityFallingBlock(world, x + 0.5, y + 0.5, z + 0.5, ModBlocks.leaves_layer);
 				leaves.field_145812_b = 2;
 				leaves.field_145813_c = false;
@@ -56,7 +56,7 @@ public class WasteLeaves extends Block {
 	public void randomDisplayTick(World world, int x, int y, int z, Random rand) {
 		super.randomDisplayTick(world, x, y, z, rand);
 		
-		if(rand.nextInt(7) == 0 && world.getBlock(x, y - 1, z).getMaterial() == Material.air) {
+		if(rand.nextInt(7) == 0 && world.getBlock(x, y - 1, z).getMaterial() == Material.air && this==ModBlocks.waste_leaves) {
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("type", "deadleaf");
 			data.setDouble("posX", x + rand.nextDouble());
