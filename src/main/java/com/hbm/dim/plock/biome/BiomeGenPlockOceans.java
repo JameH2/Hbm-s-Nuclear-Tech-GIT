@@ -9,14 +9,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
-public class BiomeGenPlockHills extends BiomeGenBase {
+public class BiomeGenPlockOceans extends BiomeGenBase {
 	
-    public static final BiomeGenBase.Height height = new BiomeGenBase.Height(0.525F, 0.4F);
+    public static final BiomeGenBase.Height height = new BiomeGenBase.Height(-0.6F, 0.01F);
 
     //TODO: avoid doing an extra planets and make each planet unique and cool.
-	public BiomeGenPlockHills(int id) {
+	public BiomeGenPlockOceans(int id) {
 		super(id);
-		this.setBiomeName("Weathered Dunaian Hills");
+		this.setBiomeName("Plock Nitrogen Ocean");
 		this.setDisableRain();
 		
         this.spawnableCreatureList.clear();
@@ -28,10 +28,11 @@ public class BiomeGenPlockHills extends BiomeGenBase {
         
         this.setHeight(height);
         
-        this.topBlock = ModBlocks.duna_sands;
-        this.fillerBlock = ModBlocks.duna_rock;
+        this.topBlock = ModBlocks.plock_tholinated_ice;
+        this.fillerBlock = ModBlocks.plock_tholinated_ice;
 	}
 
+	@Override
     public void genTerrainBlocks(World world, Random rand, Block[] blocks, byte[] meta, int x, int z, double noise)
     {
         boolean flag = true;
@@ -58,7 +59,7 @@ public class BiomeGenPlockHills extends BiomeGenBase {
 
                 if (block2 != null && block2.getMaterial() != Material.air)
                 {
-                    if (block2 == ModBlocks.duna_rock)
+                    if (block2 == ModBlocks.plock_ice)
                     {
                         if (k == -1)
                         {
@@ -66,7 +67,7 @@ public class BiomeGenPlockHills extends BiomeGenBase {
                             {
                                 block = null;
                                 b0 = 0;
-                                block1 = ModBlocks.duna_rock;
+                                block1 = ModBlocks.plock_ice;
                             }
                             else if (l1 >= 59 && l1 <= 64)
                             {
@@ -99,14 +100,8 @@ public class BiomeGenPlockHills extends BiomeGenBase {
                             else if (l1 < 62)
                             {
                                 block = null;
-                                block1 = ModBlocks.duna_rock;
-                                if (Math.random() > 0.4) {
-                                	blocks[i2] = ModBlocks.duna_rock;
-                                }
-                                else
-                                {
-                                    blocks[i2] = ModBlocks.duna_sands;   	
-                                }
+                                block1 = ModBlocks.plock_ice;
+                                blocks[i2] = ModBlocks.plock_ice;
                             }
                             else
                             {

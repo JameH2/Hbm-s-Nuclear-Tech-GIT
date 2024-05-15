@@ -6,6 +6,7 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import com.hbm.config.SpaceConfig;
 import com.hbm.dim.trait.CBT_Atmosphere;
+import com.hbm.dim.trait.CBT_Temperature;
 import com.hbm.dim.trait.CelestialBodyTrait;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.main.MainRegistry;
@@ -220,7 +221,7 @@ public class SolarSystem {
 					.withMassRadius(7.768e20F, 189)
 					.withSemiMajorAxis(535_833_706)
 					.withRotationalPeriod(106_309)
-					.withTraits(new CBT_Atmosphere(Fluids.NITROGEN, 0.001F))
+					.withTraits(new CBT_Atmosphere(Fluids.NITROGEN, 0.001F), new CBT_Temperature(-200), CelestialBodyTrait.COLD)
 					.withSatellites(
 
 					new CelestialBody("karen")

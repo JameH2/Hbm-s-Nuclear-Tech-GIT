@@ -17,6 +17,7 @@ import com.hbm.dim.minmus.WorldGeneratorMinmus;
 import com.hbm.dim.minmus.WorldProviderMinmus;
 import com.hbm.dim.moho.WorldGeneratorMoho;
 import com.hbm.dim.moho.WorldProviderMoho;
+import com.hbm.dim.plock.WorldGeneratorPlock;
 import com.hbm.dim.plock.WorldProviderPlock;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -33,6 +34,7 @@ public class PlanetGen {
 	public static WorldGeneratorEve WorldGenEve = new WorldGeneratorEve(); 
 
 	public static WorldGeneratorMoho worldGenMoho = new WorldGeneratorMoho(); 
+	public static WorldGeneratorPlock worldGenPlock = new WorldGeneratorPlock(); 
     public static void init()
     {
 		GameRegistry.registerWorldGenerator(worldGenMoon, 0);
@@ -68,6 +70,7 @@ public class PlanetGen {
 		DimensionManager.registerProviderType(SpaceConfig.laytheDimension, WorldProviderLaythe.class, false);
 	    DimensionManager.registerDimension(SpaceConfig.laytheDimension, SpaceConfig.laytheDimension);
 	    
+	    GameRegistry.registerWorldGenerator(worldGenPlock, 0);
 		DimensionManager.registerProviderType(SpaceConfig.plockDimension, WorldProviderPlock.class, false);
 	    DimensionManager.registerDimension(SpaceConfig.plockDimension, SpaceConfig.plockDimension);
 	    
