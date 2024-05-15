@@ -135,8 +135,102 @@ public class SolarSystem {
 							.withSemiMajorAxis(179_890)
 							.withRotationalPeriod(901_902)
 
-					)
+					),
+					new CelestialBody("sarnus")
+						.withMassRadius(1.223e24F, 5_300)
+						.withSemiMajorAxis(125_798_522)
+						.withRotationalPeriod(28_500)
+						.withColor(1f, 0.6862f, 0.5882f)
+						.withSatellites(
 
+						new CelestialBody("hale")
+							.withMassRadius(1.2166e16F, 6)
+							.withSemiMajorAxis(10_488)
+							.withRotationalPeriod(23_555),
+
+						new CelestialBody("ovok")
+							.withMassRadius(4.233e17F, 26)
+							.withSemiMajorAxis(12_169)
+							.withRotationalPeriod(29_440),
+
+						new CelestialBody("eeloo")
+							.withMassRadius(1.115e21F, 210)
+							.withSemiMajorAxis(19_106)
+							.withRotationalPeriod(57_915),
+
+						new CelestialBody("slate")
+							.withMassRadius(2.965e22F, 540)
+							.withSemiMajorAxis(42_593)
+							.withRotationalPeriod(192_771),
+							
+						new CelestialBody("tekto")
+							.withMassRadius(2.883e21F, 280)
+							.withSemiMajorAxis(97_355)
+							.withRotationalPeriod(666_154)
+							.withTraits(new CBT_Atmosphere(Fluids.TEKTOAIR, 1.2463F))
+
+					),
+				new CelestialBody("urlum")
+					.withMassRadius(1.790e23F, 2_177)
+					.withSemiMajorAxis(254_317_013)
+					.withRotationalPeriod(41_000)
+					.withColor(1f, 0.6862f, 0.5882f)
+					.withSatellites(
+
+					new CelestialBody("polta")
+						.withMassRadius(1.35e21F, 220)
+						.withSemiMajorAxis(11_728)
+						.withRotationalPeriod(73_017),
+
+					new CelestialBody("priax")
+						.withMassRadius(5.069e19F, 74)
+						.withSemiMajorAxis(11_728)
+						.withRotationalPeriod(73_017),
+
+					new CelestialBody("wal")
+						.withMassRadius(7.443e21F, 370)
+						.withSemiMajorAxis(67_554)
+						.withRotationalPeriod(1_009_411)
+						.withSatellites(
+
+						new CelestialBody("tal")
+							.withMassRadius(3.200e18F, 22)
+							.withSemiMajorAxis(3_109)
+							.withRotationalPeriod(48_875)
+						)
+
+					),
+					
+				new CelestialBody("neidon")
+					.withMassRadius(2.1228e23F, 2_145)
+					.withSemiMajorAxis(409_355_192)
+					.withRotationalPeriod(40_250)
+					.withColor(1f, 0.6862f, 0.5882f)
+					.withSatellites(
+
+					new CelestialBody("thatmo")
+						.withMassRadius(2.788e21F, 286)
+						.withSemiMajorAxis(32_301)
+						.withRotationalPeriod(306_443),
+
+					new CelestialBody("nissee")
+						.withMassRadius(5.951e18F, 30)
+						.withSemiMajorAxis(487_744)
+						.withRotationalPeriod(27_924)
+					),
+					
+				new CelestialBody("plock", SpaceConfig.plockDimension)
+					.withMassRadius(7.768e20F, 189)
+					.withSemiMajorAxis(535_833_706)
+					.withRotationalPeriod(106_309)
+					.withTraits(new CBT_Atmosphere(Fluids.NITROGEN, 0.001F))
+					.withSatellites(
+
+					new CelestialBody("karen")
+						.withMassRadius(7.015e19F, 85)
+						.withSemiMajorAxis(2_457)
+						.withRotationalPeriod(106_328)
+					)
 			);
 
 		runTests();

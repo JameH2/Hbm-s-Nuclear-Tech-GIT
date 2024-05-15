@@ -1,9 +1,9 @@
 package com.hbm.world;
 
 import com.hbm.config.SpaceConfig;
-import com.hbm.dim.WorldGeneratorMoon;
+import com.hbm.dim.moon.WorldGeneratorMoon;
 import com.hbm.dim.dres.WorldGeneratorDres;
-import com.hbm.dim.WorldProviderMoon;
+import com.hbm.dim.moon.WorldProviderMoon;
 import com.hbm.dim.Ike.WorldGeneratorIke;
 import com.hbm.dim.Ike.WorldProviderIke;
 import com.hbm.dim.dres.WorldProviderDres;
