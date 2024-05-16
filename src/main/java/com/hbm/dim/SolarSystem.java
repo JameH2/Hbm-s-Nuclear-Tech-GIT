@@ -172,14 +172,14 @@ public class SolarSystem {
 							.withMassRadius(2.883e21F, 280)
 							.withSemiMajorAxis(97_355)
 							.withRotationalPeriod(666_154)
-							.withTraits(new CBT_Atmosphere(Fluids.TEKTOAIR, 1.2463F))
+							.withTraits(new CBT_Atmosphere(1, Fluids.TEKTOAIR, 1.2463F))
 
 					),
 				new CelestialBody("urlum")
 					.withMassRadius(1.790e23F, 2_177)
 					.withSemiMajorAxis(254_317_013)
 					.withRotationalPeriod(41_000)
-					.withColor(1f, 0.6862f, 0.5882f)
+					.withColor(0.8784f, 0.97255f, 1f)
 					.withAxialTilt(85)
 					.withSatellites(
 
@@ -211,7 +211,7 @@ public class SolarSystem {
 					.withMassRadius(2.1228e23F, 2_145)
 					.withSemiMajorAxis(409_355_192)
 					.withRotationalPeriod(40_250)
-					.withColor(1f, 0.6862f, 0.5882f)
+					.withColor(0.61569f, 0.43922f, 1f)
 					.withSatellites(
 
 					new CelestialBody("thatmo")
@@ -229,6 +229,8 @@ public class SolarSystem {
 					.withMassRadius(7.768e20F, 189)
 					.withSemiMajorAxis(535_833_706)
 					.withRotationalPeriod(106_309)
+					.withTidalLockingTo("karen")
+					.withColor(0.7098f, 0.57255f, 0.41961f)
 					.withAxialTilt(128)
 					.withTraits(/*new CBT_Atmosphere(Fluids.NITROGEN, 0.001F),*/ new CBT_Temperature(-200), CelestialBodyTrait.COLD)/**TODO: Re-add atmosphere when very thin atmospheres are properly accounted for. */
 					.withSatellites(
@@ -236,7 +238,10 @@ public class SolarSystem {
 					new CelestialBody("karen")
 						.withMassRadius(7.015e19F, 85)
 						.withSemiMajorAxis(2_457)
+						.withAxialTilt(128)
 						.withRotationalPeriod(106_328)
+						.withTidalLockingTo("plock")
+						.withColor(0.51765f, 0.45882f, 0.41961f)
 					)
 			);
 
