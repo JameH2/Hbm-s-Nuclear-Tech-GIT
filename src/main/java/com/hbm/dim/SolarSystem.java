@@ -173,6 +173,7 @@ public class SolarSystem {
 					.withSemiMajorAxis(254_317_013)
 					.withRotationalPeriod(41_000)
 					.withColor(1f, 0.6862f, 0.5882f)
+					.withAxialTilt(85)
 					.withSatellites(
 
 					new CelestialBody("polta")
@@ -221,7 +222,8 @@ public class SolarSystem {
 					.withMassRadius(7.768e20F, 189)
 					.withSemiMajorAxis(535_833_706)
 					.withRotationalPeriod(106_309)
-					.withTraits(new CBT_Atmosphere(Fluids.NITROGEN, 0.001F), new CBT_Temperature(-200), CelestialBodyTrait.COLD)
+					.withAxialTilt(128)
+					.withTraits(/*new CBT_Atmosphere(Fluids.NITROGEN, 0.001F),*/ new CBT_Temperature(-200), CelestialBodyTrait.COLD)/**TODO: Re-add atmosphere when very thin atmospheres are properly accounted for. */
 					.withSatellites(
 
 					new CelestialBody("karen")
