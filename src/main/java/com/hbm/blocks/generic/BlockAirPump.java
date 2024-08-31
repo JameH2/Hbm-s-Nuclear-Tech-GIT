@@ -36,8 +36,8 @@ public class BlockAirPump extends BlockContainer implements ILookOverlay, IBlock
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister) {
 		
-		this.iconTop = iconRegister.registerIcon(RefStrings.MODID + ":vent_chlorine_seal_top");
-		this.blockIcon = iconRegister.registerIcon(RefStrings.MODID + ":vent_chlorine_seal_side");
+		this.iconTop = iconRegister.registerIcon(RefStrings.MODID + ":vent_air_top");
+		this.blockIcon = iconRegister.registerIcon(RefStrings.MODID + ":vent_air_side");
 	}
 
 	@Override
