@@ -1,0 +1,17 @@
+// Add any additional repositiroes for your dependencies here
+
+repositories {
+    mavenCentral()
+
+    maven { url = "https://cursemaven.com" }
+
+    maven {
+		name = 'ModMaven'
+		url = 'https://modmaven.dev'
+	}
+
+	maven {
+		name = "gt"
+		url = "https://gregtech.mechaenetia.com/"
+	}
+}

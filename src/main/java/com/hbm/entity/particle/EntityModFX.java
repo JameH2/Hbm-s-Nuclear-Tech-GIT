@@ -31,7 +31,6 @@ public class EntityModFX extends Entity
     public static double interpPosX;
     public static double interpPosY;
     public static double interpPosZ;
-    public static final String __OBFID = "CL_00000914";
     float smokeParticleScale;
     public int particleAge;
     public int maxAge;
