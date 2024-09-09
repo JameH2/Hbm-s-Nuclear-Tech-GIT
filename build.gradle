@@ -13,3 +13,14 @@ if(!mod_build_number.isEmpty()) {
 }
 
 archivesBaseName = "HBM-NTM"
+
+processResources {
+    // replace version and mcversion
+    filesMatching('mcmod.info') {
+        // replace version, mcversion and credits
+        expand([
+                version: version_name,
+                credits: project.credits
+        ])
+    }
+}
