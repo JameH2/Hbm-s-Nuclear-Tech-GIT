@@ -3,10 +3,11 @@
   "modid": "hbm",
   "name": "Hbm's Nuclear Tech",
   "description": "A mod that adds weapons, nuclear themed stuff and machines",
-  "version":"1.0.27_X4580-H261",
+  "version": "${modVersion}",
   "mcversion": "1.7.10",
   "url": "",
   "updateUrl": "",
+  "credits": "HbMinecraft, JamesH2, MellowArpeggiation, LegendaryDoge30 (textures, models), DUODEC (music), OsmoKitty (textures, models), rodolphito (explosion algorithms), grangerave (explosion algorithms), Hoboy (textures, models), Drillgon200 (effects, models, porting), MartinTheDragon (calculator, chunk-based fallout, bendable cranes, pipe improvements, PWR sounds), Alcater (GUI textures, porting), Pheo (textures, various machines, models, weapons), V�r (gas centrifuges, better worldgen, ZIRNOX, CP-1 parts, starter guide), LePeep (coilgun model, BDCL QC), Adam29 (liquid petroleum, ethanol, electric furnace), Pvndols (thorium fuel recipe, gas turbine), Doctor17 (russian localization)), Pashtet (russian localization), Bismarck (chinese localization), Maksymisio (polish localization), el3ctro4ndre (italian localization), Pu-238 (Tom impact effects), UFFR (RTGs, guns, casings, euphemium capacitor), Frooz (models), VT-6/24 (models, textures), Nos (models), Minecreep (models), 70k (textures, glyphid AI, strand caster, opinions), haru315 (spiral point algorithm), Sten89 (models), Pixelguru26 (textures), TheBlueHat (textures), Burningwater202 (laminate glass), TehTemmie (reacher radiation function), Silly541 (config for safe ME drives), Voxelstice (OpenComputers integration, turbine spinup), BallOfEnergy1 (OpenComputers integration), martemen (project settings), sdddddf80 (recipe configs, chinese localization, custom machine holograms), SuperCraftAlex (tooltips), Ice-Arrow (research reactor tweaks), 245tt (anvil GUI improvements), KoblizekXD (doors), FOlkvangrField (custom machine parts), Toshayo (satellite loot system, project settings, gradle curse task), OvermindDL1 (project settings), impbk2002 (project settings),",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []

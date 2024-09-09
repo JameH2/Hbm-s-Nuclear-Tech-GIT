@@ -5,3 +5,11 @@ plugins {
 }
 
 java.toolchain.setVendor(null) // avoid multi-JDK redundancy
+
+def version_name = version = mod_version
+if(!mod_build_number.isEmpty()) {
+	version_name = mod_version + "_X" + mod_build_number
+	version = "[${version_name}]"
+}
+
+archivesBaseName = "HBM-NTM"
