@@ -15,6 +15,63 @@ Hi, i am memeing things into existence, dont mind me! im just the bent fork at t
 
 For 1.18, try Martin's remake: https://codeberg.org/MartinTheDragon/Nuclear-Tech-Mod-Remake/releases
 
+## ntm spacefork todo list of things doo doo
+- [ ] cuda core blast processing
+- [ ] add maxwell
+- [ ] tighten the screw (it always comes loose. superglue?)
+- [ ] bit offset at 0x0f433c1 must match 0x11ea64d
+- [ ] remove maxwell
+- [ ] tetrahedron planet
+- [ ] pewdiepie reference
+- [ ] add maxwell
+- [ ] 45° rotated fast stair
+- [ ] diaper chief
+- [ ] presidential armchair w/ big red button
+- [ ] jet powered tricycle
+- [ ] ⚠️ urgent ⚠️ it escaped
+- [ ] floppy lasers
+- [ ] add evil maxwell
+- [ ] french cuisine (urine soup)
+- [ ] why are we at the center of our observable universe? 🤔
+- [ ] lucky underwear
+- [ ] text to speech assistant module
+- [ ] petrojelly slime
+- [ ] 16 macerator tiers
+- [ ] ham block
+- [ ] drag spacesuit with glitter
+- [ ] 1:75 replica of eagle 5 from spaceballs
+- [ ] add a straw for inhaling gas giants
+- [ ] streamlined cucumber pickling
+- [ ] cosmic radiation particle ingot
+- [ ] swedish nut lathe
+- [ ] add maxwell
+- [ ] little maid mob compatibility
+- [ ] jack black cameo
+- [ ] playable sega mega drive
+- [ ] hire testificates as janitors (unpaid)
+- [ ] canned lava with turkey and mushy peas
+- [ ] cardboard cutout of a green alien
+- [ ] I saw the moon blink
+- [ ] optimize milk extraction
+- [ ] cherry tree rocket
+- [ ] antimatter gum
+- [ ] remove extraneous content
+- [ ] targeted advertisements in every machine ui
+- [ ] ability to shovel soil into walkable paths
+- [ ] cargo jorts
+- [ ] cluster creepers
+- [ ] hair loss mechanic (why are you so bald)
+- [ ] multi track drifting
+- [ ] haunted spaceships
+- [ ] emergency plunger
+- [ ] keybind to locate the nearest starbucks
+- [ ] fossils and archaeology crossover
+- [ ] baby making (requires stork delivery module)
+- [ ] wine stained bappers
+- [ ] australia biome
+- [ ] add maxwell
+- [ ] remove space (it's empty. theres nothing there)
+
 ## Downloading pre-compiled versions from GitHub
 
 Simply navigate to "Releases" on the right side of the page, download links for the compiled JAR as well as the corresponding source code are under the "Assets" category below the changelog. Make sure to review all changelogs when updating!
