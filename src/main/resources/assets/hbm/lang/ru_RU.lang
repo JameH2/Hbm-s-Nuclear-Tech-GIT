@@ -7227,4 +7227,6 @@ station.insertDrive=Вставьте жёсткий диск, чтобы нач�
 potion.hbm_run=БОГ НАБЛЮДАЕТ ЗА ВАМИ
 potion.hbm_slippery=Скольжение
 
+generator.martian=Марсианин
+
 death.attack.eve=%1$ превратился в лужицу кипящей плоти.
