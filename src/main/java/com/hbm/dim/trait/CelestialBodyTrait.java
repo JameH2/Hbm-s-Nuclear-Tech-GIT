@@ -15,7 +15,7 @@ public abstract class CelestialBodyTrait {
 
 	public static class CBT_War extends CelestialBodyTrait { }
 	public static CBT_War WAR = new CBT_War();
-	
+
 	public static class CBT_Destroyed extends CelestialBodyTrait { }
 	public static CBT_Destroyed SPLODE = new CBT_Destroyed();
 
@@ -31,13 +31,14 @@ public abstract class CelestialBodyTrait {
 		registerTrait("destroyed", CBT_Destroyed.class);
 		registerTrait("water", CBT_Water.class);
 		registerTrait("dyson", CBT_Dyson.class);
+		registerTrait("impact", CBT_Impact.class);
 	};
 
 	private static void registerTrait(String name, Class<? extends CelestialBodyTrait> clazz) {
 		traitList.add(clazz);
 		traitMap.put(name, clazz);
 	}
-	
+
 	// Serialization
 	public void readFromNBT(NBTTagCompound nbt) { }
 	public void writeToNBT(NBTTagCompound nbt) { }

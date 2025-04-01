@@ -1,6 +1,11 @@
 package com.hbm.tileentity.machine.storage;
 
-import api.hbm.fluid.*;
+import api.hbm.energymk2.IEnergyReceiverMK2.ConnectionPriority;
+import api.hbm.fluidmk2.FluidNode;
+import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
+
+import java.util.HashSet;
+
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.effect.EntityCloudFleija;
 import com.hbm.entity.effect.EntityNukeTorex;
@@ -24,6 +29,8 @@ import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IOverpressurable;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.uninos.UniNodespace;
+import com.hbm.util.fauxpointtwelve.BlockPos;
 import com.hbm.util.fauxpointtwelve.DirPos;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
@@ -38,28 +45,22 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import net.minecraftforge.common.util.ForgeDirection;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
-public class TileEntityBarrel extends TileEntityMachineBase implements SimpleComponent, IFluidStandardTransceiver, IPersistentNBT, IGUIProvider, CompatHandler.OCComponent, IFluidCopiable, IOverpressurable {
+public class TileEntityBarrel extends TileEntityMachineBase implements SimpleComponent, IFluidStandardTransceiverMK2, IPersistentNBT, IGUIProvider, CompatHandler.OCComponent, IFluidCopiable, IOverpressurable {
+
+	protected FluidNode node;
+	protected FluidType lastType;
 
 	public boolean hasExploded = false;
 	public FluidTank tank;
 	public short mode = 0;
 	public static final short modes = 4;
 	public int age = 0;
-	protected boolean sendingBrake = false;
-	
-	public Explosion lastExplosion = null;
 	public byte lastRedstone = 0;
 
 	public TileEntityBarrel() {
@@ -85,28 +86,15 @@ public class TileEntityBarrel extends TileEntityMachineBase implements SimpleCom
 
 	@Override
 	public long getDemand(FluidType type, int pressure) {
-
-		if(this.mode == 2 || this.mode == 3 || this.sendingBrake)
-			return 0;
-
+		if(this.mode == 2 || this.mode == 3) return 0;
 		if(tank.getPressure() != pressure) return 0;
-
 		return type == tank.getTankType() ? tank.getMaxFill() - tank.getFill() : 0;
-	}
-
-	@Override
-	public long transferFluid(FluidType type, int pressure, long fluid) {
-		long toTransfer = Math.min(getDemand(type, pressure), fluid);
-		tank.setFill(tank.getFill() + (int) toTransfer);
-		this.markChanged();
-		return fluid - toTransfer;
 	}
 
 	@Override
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
-			if(!this.hasExploded) {
 
 			byte comp = this.getComparatorPower(); //do comparator shenanigans
 			if(comp != this.lastRedstone) {
@@ -115,20 +103,85 @@ public class TileEntityBarrel extends TileEntityMachineBase implements SimpleCom
 			}
 			this.lastRedstone = comp;
 
-			tank.setType(0, 1, slots);
-			tank.loadTank(2, 3, slots);
-			tank.unloadTank(4, 5, slots);
+			if(!this.hasExploded) {
+				tank.setType(0, 1, slots);
+				tank.loadTank(2, 3, slots);
+				tank.unloadTank(4, 5, slots);
 
-			this.sendingBrake = true;
-			tank.setFill(transmitFluidFairly(worldObj, tank, this, tank.getFill(), this.mode == 0 || this.mode == 1, this.mode == 1 || this.mode == 2, getConPos()));
-			this.sendingBrake = false;
+				// In buffer mode, acts like a pipe block, providing fluid to its own node
+				// otherwise, it is a regular providing/receiving machine, blocking further propagation
+				if(mode == 1) {
+					if(this.node == null || this.node.expired || tank.getTankType() != lastType) {
 
-			if(tank.getFill() > 0) {
-				checkFluidInteraction();
+						this.node = (FluidNode) UniNodespace.getNode(worldObj, xCoord, yCoord, zCoord, tank.getTankType().getNetworkProvider());
+
+						if(this.node == null || this.node.expired || tank.getTankType() != lastType) {
+							this.node = this.createNode(tank.getTankType());
+							UniNodespace.createNode(worldObj, this.node);
+							lastType = tank.getTankType();
+						}
+					}
+
+					if(node != null && node.hasValidNet()) {
+						node.net.addProvider(this);
+						node.net.addReceiver(this);
+					}
+				} else {
+					if(this.node != null) {
+						UniNodespace.destroyNode(worldObj, xCoord, yCoord, zCoord, tank.getTankType().getNetworkProvider());
+						this.node = null;
+					}
+
+					for(DirPos pos : getConPos()) {
+						FluidNode dirNode = (FluidNode) UniNodespace.getNode(worldObj, pos.getX(), pos.getY(), pos.getZ(), tank.getTankType().getNetworkProvider());
+
+						if(mode == 2) {
+							tryProvide(tank, worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
+						} else {
+							if(dirNode != null && dirNode.hasValidNet()) dirNode.net.removeProvider(this);
+						}
+
+						if(mode == 0) {
+							if(dirNode != null && dirNode.hasValidNet()) dirNode.net.addReceiver(this);
+						} else {
+							if(dirNode != null && dirNode.hasValidNet()) dirNode.net.removeReceiver(this);
+						}
+					}
+				}
+
+				if(tank.getFill() > 0) {
+					checkFluidInteraction();
+				}
+			} else if(this.node != null) {
+				UniNodespace.destroyNode(worldObj, xCoord, yCoord, zCoord, tank.getTankType().getNetworkProvider());
+				this.node = null;
 			}
 
 			this.networkPackNT(50);
 		}
+	}
+
+	protected FluidNode createNode(FluidType type) {
+		DirPos[] conPos = getConPos();
+
+		HashSet<BlockPos> posSet = new HashSet<>();
+		posSet.add(new BlockPos(this));
+		for(DirPos pos : conPos) {
+			ForgeDirection dir = pos.getDir();
+			posSet.add(new BlockPos(pos.getX() - dir.offsetX, pos.getY() - dir.offsetY, pos.getZ() - dir.offsetZ));
+		}
+
+		return new FluidNode(type.getNetworkProvider(), posSet.toArray(new BlockPos[posSet.size()])).setConnections(conPos);
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+
+		if(!worldObj.isRemote) {
+			if(this.node != null) {
+				UniNodespace.destroyNode(worldObj, xCoord, yCoord, zCoord, tank.getTankType().getNetworkProvider());
+			}
 		}
 	}
 
@@ -155,59 +208,6 @@ public class TileEntityBarrel extends TileEntityMachineBase implements SimpleCom
 				new DirPos(xCoord, yCoord, zCoord + 1, Library.POS_Z),
 				new DirPos(xCoord, yCoord, zCoord - 1, Library.NEG_Z)
 		};
-	}
-
-	protected static int transmitFluidFairly(World world, FluidTank tank, IFluidConnector that, int fill, boolean connect, boolean send, DirPos[] connections) {
-
-		Set<IPipeNet> nets = new HashSet<>();
-		Set<IFluidConnector> consumers = new HashSet<>();
-		FluidType type = tank.getTankType();
-		int pressure = tank.getPressure();
-
-		for(DirPos pos : connections) {
-
-			TileEntity te = world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
-
-			if(te instanceof IFluidConductor) {
-				IFluidConductor con = (IFluidConductor) te;
-				if(con.getPipeNet(type) != null) {
-					nets.add(con.getPipeNet(type));
-					con.getPipeNet(type).unsubscribe(that);
-					consumers.addAll(con.getPipeNet(type).getSubscribers());
-				}
-
-			//if it's just a consumer, buffer it as a subscriber
-			} else if(te instanceof IFluidConnector) {
-				consumers.add((IFluidConnector) te);
-			}
-		}
-
-		consumers.remove(that);
-
-		if(fill > 0 && send) {
-			List<IFluidConnector> con = new ArrayList<>();
-			con.addAll(consumers);
-
-			con.removeIf(x -> x == null || !(x instanceof TileEntity) || ((TileEntity)x).isInvalid());
-
-			if(PipeNet.trackingInstances == null) {
-				PipeNet.trackingInstances = new ArrayList<>();
-			}
-
-			PipeNet.trackingInstances.clear();
-			nets.forEach(x -> {
-				if(x instanceof PipeNet) PipeNet.trackingInstances.add((PipeNet) x);
-			});
-
-			fill = (int) PipeNet.fairTransfer(con, type, pressure, fill);
-		}
-
-		//resubscribe to buffered nets, if necessary
-		if(connect) {
-			nets.forEach(x -> x.subscribe(that));
-		}
-
-		return fill;
 	}
 
 	@Override
@@ -302,6 +302,8 @@ public class TileEntityBarrel extends TileEntityMachineBase implements SimpleCom
 		tank.writeToNBT(nbt, "tank");
 	}
 
+	@Override public boolean canConnect(FluidType fluid, ForgeDirection dir) { return true; }
+
 	@Override
 	public FluidTank[] getSendingTanks() {
 		return (mode == 1 || mode == 2) ? new FluidTank[] {tank} : new FluidTank[0];
@@ -309,12 +311,17 @@ public class TileEntityBarrel extends TileEntityMachineBase implements SimpleCom
 
 	@Override
 	public FluidTank[] getReceivingTanks() {
-		return (mode == 0 || mode == 1) && !sendingBrake ? new FluidTank[] {tank} : new FluidTank[0];
+		return (mode == 0 || mode == 1) ? new FluidTank[] {tank} : new FluidTank[0];
 	}
 
 	@Override
 	public FluidTank[] getAllTanks() {
 		return new FluidTank[] { tank };
+	}
+
+	@Override
+	public ConnectionPriority getFluidPriority() {
+		return mode == 1 ? ConnectionPriority.LOW : ConnectionPriority.NORMAL;
 	}
 
 	@Override
@@ -407,16 +414,16 @@ public class TileEntityBarrel extends TileEntityMachineBase implements SimpleCom
 					EntityNukeExplosionMK3 ex = EntityNukeExplosionMK3.statFacFleija(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, (int) aschrab);
 					if(!ex.isDead) {
 						worldObj.spawnEntityInWorld(ex);
-			
+
 						EntityCloudFleija cloud = new EntityCloudFleija(worldObj, (int) aschrab);
 						cloud.setPosition(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
 						worldObj.spawnEntityInWorld(cloud);
 					}
-					return;			
-				}	
+					return;
+				}
 			}
 		}
-		
+
 		this.markChanged();
 	}
 

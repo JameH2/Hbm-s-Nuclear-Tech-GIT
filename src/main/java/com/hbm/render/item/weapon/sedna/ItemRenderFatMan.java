@@ -111,9 +111,18 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 	}
 
 	@Override
+	public void setupModTable(ItemStack stack) {
+		double scale = -8.75D;
+		GL11.glScaled(scale, scale, scale);
+		GL11.glRotated(90, 0, 1, 0);
+	}
+
+	@Override
 	public void renderOther(ItemStack stack, ItemRenderType type) {
 		GL11.glEnable(GL11.GL_LIGHTING);
 
+		ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
+		boolean isLoaded = gun.getConfig(stack, 0).getReceivers(stack)[0].getMagazine(stack).getAmount(stack, null) > 0;
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.fatman_tex);
 		
 		GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -121,10 +130,10 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 		ResourceManager.fatman.renderPart("Handle");
 		ResourceManager.fatman.renderPart("Gauge");
 		ResourceManager.fatman.renderPart("Lid");
+		if(!isLoaded) GL11.glTranslated(0, 0, 3);
 		ResourceManager.fatman.renderPart("Piston");
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.fatman_mininuke_tex);
-		ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
-		if(gun.getConfig(stack, 0).getReceivers(stack)[0].getMagazine(stack).getAmount(stack, null) > 0) ResourceManager.fatman.renderPart("MiniNuke");
+		if(isLoaded) ResourceManager.fatman.renderPart("MiniNuke");
 		GL11.glShadeModel(GL11.GL_FLAT);
 	}
 }

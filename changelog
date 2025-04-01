@@ -1,11 +1,3 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5257 - in the hudson bay, you know how we do it](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5257)
+Includes all changes and bugfixes from the latest upstream NTMain update - [X5279 - the escape plan](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5279)
 
-## Fixed
-* Mun cows being irradiated by the sun, turning to mooshrooms, and immediately suffocating
-* Dyson swarm counts going negative with multiple competing swarms
-* Water being placed by dispensers and melting ice in vacuums instead of evaporating immediately
-* Fixed crash on servers caused by atmosphere scanners
-* Fixed vertibirds spawning unburied in deserts
-* Fixed skybox not showing on first time joining a server
-* Fixed shift-clicking into VAB deleting drives
-* Fix corrosion check crashing for non FSB (Full Set Bonus) armor
+**Big fluidnet bugfix update upstream!**, also includes missing weapon mod recipes and fixes a bunch of dupes

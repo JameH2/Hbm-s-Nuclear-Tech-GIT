@@ -11,22 +11,26 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.fluid.trait.FT_Coolable;
+import com.hbm.tileentity.IPersistentNBT;
+import com.hbm.tileentity.IRepairable;
 import com.hbm.tileentity.TileEntityProxyCombo;
-import com.hbm.tileentity.machine.TileEntityAtmoTower;
 import com.hbm.tileentity.machine.TileEntityChungus;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
 
+import api.hbm.block.IToolable;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class MachineChungus extends BlockDummyable implements ITooltipProvider, ILookOverlay {
+public class MachineChungus extends BlockDummyable implements ITooltipProvider, ILookOverlay, IToolable {
 
 	public MachineChungus(Material mat) {
 		super(mat);
@@ -34,44 +38,44 @@ public class MachineChungus extends BlockDummyable implements ITooltipProvider, 
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		
+
 		if(meta >= 12)
 			return new TileEntityChungus();
-		
+
 		if(meta >= 6)
 			return new TileEntityProxyCombo(false, true, true);
-		
+
 		return null;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(!player.isSneaking()) {
-			
+
 			int[] pos = this.findCore(world, x, y, z);
 
 			if(pos == null)
 				return true;
 
 			TileEntityChungus entity = (TileEntityChungus) world.getTileEntity(pos[0], pos[1], pos[2]);
-			if(entity != null) {
-				
-				ForgeDirection dir = ForgeDirection.getOrientation(entity.getBlockMetadata() - this.offset);
+			if(entity != null && !entity.damaged) {
+
+				ForgeDirection dir = ForgeDirection.getOrientation(entity.getBlockMetadata() - offset);
 				ForgeDirection turn = dir.getRotation(ForgeDirection.DOWN);
 
 				int iX = entity.xCoord + dir.offsetX + turn.offsetX * 2;
 				int iX2 = entity.xCoord + dir.offsetX * 2 + turn.offsetX * 2;
 				int iZ = entity.zCoord + dir.offsetZ + turn.offsetZ * 2;
 				int iZ2 = entity.zCoord + dir.offsetZ * 2 + turn.offsetZ * 2;
-				
+
 				if((x == iX || x == iX2) && (z == iZ || z == iZ2) && y < entity.yCoord + 2) {
 					world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "hbm:block.chungusLever", 1.5F, 1.0F);
-					
+
 					if(!world.isRemote) {
 						FluidType type = entity.tanks[0].getTankType();
 						entity.onLeverPull(type);
-						
+
 						if(type == Fluids.STEAM) {
 							entity.tanks[0].setTankType(Fluids.HOTSTEAM);
 							entity.tanks[1].setTankType(Fluids.STEAM);
@@ -95,12 +99,12 @@ public class MachineChungus extends BlockDummyable implements ITooltipProvider, 
 						}
 						entity.markDirty();
 					}
-					
+
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -136,41 +140,84 @@ public class MachineChungus extends BlockDummyable implements ITooltipProvider, 
 		if(!MultiblockHandlerXR.checkSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {3, 0, 6, -1, 1, 1}, x, y, z, dir)) return false;
 		if(!MultiblockHandlerXR.checkSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {2, 0, 10, -7, 1, 1}, x, y, z, dir)) return false;
 		if(!world.getBlock(x + dir.offsetX, y + 2, z + dir.offsetZ).canPlaceBlockAt(world, x + dir.offsetX, y + 2, z + dir.offsetZ)) return false;
-		
+
 		return true;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 		this.addStandardInfo(stack, player, list, ext);
 	}
-	
+
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
 		int[] pos = this.findCore(world, x, y, z);
 		if(pos == null) return;
-		
+
 		TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
 		if(!(te instanceof TileEntityChungus)) return;
-		
+
 		TileEntityChungus chungus = (TileEntityChungus) te;
-		List<String> text = new ArrayList();
+		if(chungus.damaged) {
+			IRepairable.addGenericOverlay(event, world, x, y, z, this);
+			return;
+		}
+
+		List<String> text = new ArrayList<>();
 
 		FluidTank tankInput = chungus.tanks[0];
 		FluidTank tankOutput = chungus.tanks[1];
-		
+
 		FluidType inputType = tankInput.getTankType();
 		FluidType outputType = Fluids.NONE;
-		
+
 		if(inputType.hasTrait(FT_Coolable.class)) {
 			outputType = inputType.getTrait(FT_Coolable.class).coolsTo;
 		}
-		
+
 		text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + inputType.getLocalizedName() + ": " + tankInput.getFill() + "/" + tankInput.getMaxFill() + "mB");
 		text.add(EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + outputType.getLocalizedName() + ": " + tankOutput.getFill() + "/" + tankOutput.getMaxFill() + "mB");
 		text.add(EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(chungus.power) + "/" + BobMathUtil.getShortNumber(chungus.getMaxPower()) + "HE");
-		
-		
+
+
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
+
+	@Override
+	public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, int side, float fX, float fY, float fZ, ToolType tool) {
+		if(tool != ToolType.TORCH) return false;
+		return IRepairable.tryRepairMultiblock(world, x, y, z, this, player);
+	}
+
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+		return IPersistentNBT.getDrops(world, x, y, z, this);
+	}
+
+	@Override
+	public boolean canDropFromExplosion(Explosion explosion) {
+		return false;
+	}
+
+	@Override
+	public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
+
+		int[] pos = this.findCore(world, x, y, z);
+		if(pos == null) return;
+		TileEntity core = world.getTileEntity(pos[0], pos[1], pos[2]);
+		if(!(core instanceof TileEntityChungus)) return;
+
+		TileEntityChungus tank = (TileEntityChungus) core;
+		if(tank.lastExplosion == explosion) return;
+		tank.lastExplosion = explosion;
+
+		if(!tank.damaged) {
+			tank.damaged = true;
+			tank.markDirty();
+		} else {
+			world.setBlock(pos[0], pos[1], pos[2], Blocks.air);
+		}
+	}
+
 }

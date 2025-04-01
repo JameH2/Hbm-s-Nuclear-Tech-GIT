@@ -25,7 +25,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implements IGUIProvider, IFluidStandardTransceiver, IHeatSource, IControlReceiver, IFluidCopiable {
-	
+
 	public boolean isOn = false;
 	public FluidTank tank;
 	public int setting = 1;
@@ -42,7 +42,7 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
 	public String getName() {
 		return "container.heaterOilburner";
 	}
-	
+
 	public DirPos[] getConPos() {
 		return new DirPos[] {
 				new DirPos(xCoord + 2, yCoord, zCoord, Library.POS_X),
@@ -54,9 +54,9 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
 
 	@Override
 	public void updateEntity() {
-		
+
 		if(!worldObj.isRemote) {
-			
+
 			tank.loadTank(0, 1, slots);
 			tank.setType(2, slots);
 
@@ -64,62 +64,62 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
 				this.trySubscribe(tank.getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
 				this.sendSmoke(pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
 			}
-			
+
 			boolean shouldCool = true;
-			
+
 			if(this.isOn && this.heatEnergy < maxHeatEnergy) {
-				if(breatheAir(setting)) {
-					if(tank.getTankType().hasTrait(FT_Flammable.class)) {
-						FT_Flammable type = tank.getTankType().getTrait(FT_Flammable.class);
-						
-						int burnRate = setting;
-						int toBurn = Math.min(burnRate, tank.getFill());
-						
+				if(tank.getTankType().hasTrait(FT_Flammable.class)) {
+					FT_Flammable type = tank.getTankType().getTrait(FT_Flammable.class);
+
+					int burnRate = setting;
+					int toBurn = Math.min(burnRate, tank.getFill());
+
+					if(toBurn > 0 && breatheAir(toBurn)) {
 						tank.setFill(tank.getFill() - toBurn);
-						
+
 						int heat = (int)(type.getHeatEnergy() / 1000);
-						
+
 						this.heatEnergy += heat * toBurn;
-	
+
 						if(worldObj.getTotalWorldTime() % 5 == 0 && toBurn > 0) {
 							super.pollute(tank.getTankType(), FluidReleaseType.BURN, toBurn * 5);
 						}
-						
+
 						shouldCool = false;
 					}
 				}
 			}
-			
+
 			if(this.heatEnergy >= maxHeatEnergy)
 				shouldCool = false;
-			
+
 			if(shouldCool)
 				this.heatEnergy = Math.max(this.heatEnergy - Math.max(this.heatEnergy / 1000, 1), 0);
-			
+
 			this.networkPackNT(25);
 		}
 	}
-	
+
 	@Override
 	public void serialize(ByteBuf buf) {
 		super.serialize(buf);
 		tank.serialize(buf);
-		
+
 		buf.writeBoolean(isOn);
 		buf.writeInt(heatEnergy);
 		buf.writeByte((byte) this.setting);
 	}
-	
+
 	@Override
 	public void deserialize(ByteBuf buf) {
 		super.deserialize(buf);
 		tank.deserialize(buf);
-		
+
 		isOn = buf.readBoolean();
 		heatEnergy = buf.readInt();
 		setting = buf.readByte();
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -128,7 +128,7 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
 		heatEnergy = nbt.getInteger("heatEnergy");
 		setting = nbt.getByte("setting");
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
@@ -137,10 +137,10 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
 		nbt.setInteger("heatEnergy", heatEnergy);
 		nbt.setByte("setting", (byte) this.setting);
 	}
-	
+
 	public void toggleSetting() {
 		setting++;
-		
+
 		if(setting > 10)
 			setting = 1;
 	}
@@ -183,12 +183,12 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
 		}
 		this.markChanged();
 	}
-	
+
 	AxisAlignedBB bb = null;
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		
+
 		if(bb == null) {
 			bb = AxisAlignedBB.getBoundingBox(
 					xCoord - 1,
@@ -199,10 +199,10 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
 					zCoord + 2
 					);
 		}
-		
+
 		return bb;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared() {

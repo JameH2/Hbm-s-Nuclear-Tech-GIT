@@ -1,5 +1,6 @@
 package com.hbm.dim.moho;
 
+import java.util.HashMap;
 import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
@@ -7,7 +8,11 @@ import com.hbm.blocks.bomb.BlockVolcano;
 import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
+import com.hbm.main.StructureManager;
 import com.hbm.world.gen.NBTStructure;
+import com.hbm.world.gen.NBTStructure.JigsawPiece;
+import com.hbm.world.gen.NBTStructure.JigsawPool;
+import com.hbm.world.gen.NBTStructure.SpawnCondition;
 import com.hbm.world.generator.DungeonToolbox;
 
 import cpw.mods.fml.common.IWorldGenerator;
@@ -19,7 +24,40 @@ import net.minecraft.world.chunk.IChunkProvider;
 public class WorldGeneratorMoho implements IWorldGenerator {
 
 	public WorldGeneratorMoho() {
-		NBTStructure.registerNullWeight(SpaceConfig.mohoDimension, 24);
+		NBTStructure.registerStructure(SpaceConfig.mohoDimension, new SpawnCondition() {{
+			spawnWeight = 4;
+			minHeight = 63 - 11;
+			maxHeight = 63;
+			sizeLimit = 64;
+			rangeLimit = 64;
+			startPool = "start";
+			pools = new HashMap<String, JigsawPool>() {{
+				put("start", new JigsawPool() {{
+					add(new JigsawPiece("moho_core", StructureManager.moho_core) {{ heightOffset = -11; }}, 1);
+				}});
+				put("default", new JigsawPool() {{
+					add(new JigsawPiece("moho_corner_lab", StructureManager.moho_corner_lab) {{ heightOffset = -14; }}, 2);
+					add(new JigsawPiece("moho_corner_heffer", StructureManager.moho_corner_heffer) {{ heightOffset = -17; }}, 2);
+					add(new JigsawPiece("moho_corner_extension", StructureManager.moho_corner_extension) {{ heightOffset = -11; }}, 1);
+					add(new JigsawPiece("moho_corner_empty", StructureManager.moho_corner_empty) {{ heightOffset = -11; }}, 1);
+					fallback = "fallback";
+				}});
+				put("room", new JigsawPool() {{
+					add(new JigsawPiece("moho_room_tape", StructureManager.moho_room_tape) {{ heightOffset = -11; }}, 1);
+					add(new JigsawPiece("moho_room_reception", StructureManager.moho_room_reception) {{ heightOffset = -11; }}, 1);
+					add(new JigsawPiece("moho_room_kitchen", StructureManager.moho_room_kitchen) {{ heightOffset = -11; }}, 1);
+					fallback = "room";
+				}});
+				put("fallback", new JigsawPool() {{
+					add(new JigsawPiece("moho_fall", StructureManager.moho_corner_cap) {{ heightOffset = -11; }}, 1);
+				}});
+				put("snorkel", new JigsawPool() {{
+					add(new JigsawPiece("moho_snorkel", StructureManager.moho_snorkel) {{ heightOffset = -11; }}, 1);
+				}});
+			}};
+		}});
+
+		NBTStructure.registerNullWeight(SpaceConfig.mohoDimension, 20);
 	}
 
 	@Override

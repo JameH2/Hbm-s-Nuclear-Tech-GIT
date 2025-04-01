@@ -10,7 +10,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
 
-import api.hbm.fluid.IFillableItem;
+import api.hbm.fluidmk2.IFillableItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,7 +36,7 @@ public class ItemModOxy extends ItemArmorMod implements IFillableItem {
         this.consumption = consumption;
         fuel = Fluids.OXYGEN;
     }
-	
+
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		list.add(EnumChatFormatting.LIGHT_PURPLE + fuel.getLocalizedName() + ": " + getFuel(itemstack) + "mB / " + this.maxFuel + "mB");
@@ -44,12 +44,12 @@ public class ItemModOxy extends ItemArmorMod implements IFillableItem {
 		super.addInformation(itemstack, player, list, bool);
 		list.add(EnumChatFormatting.GOLD + I18n.format("armor.mustSeal"));
 	}
-	
+
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
 		list.add(EnumChatFormatting.RED + "  " + stack.getDisplayName() + " (" + fuel.getLocalizedName() + ": " + getFuel(stack) + "mB / " + this.maxFuel + "mB");
 	}
-	
+
     @Override
 	public void modUpdate(EntityLivingBase entity, ItemStack armor) {
         if(entity.worldObj.isRemote) {
@@ -121,42 +121,42 @@ public class ItemModOxy extends ItemArmorMod implements IFillableItem {
     public FluidType getFirstFluidType(ItemStack stack) {
         return null;
     }
-	
+
     public static boolean getInUse(ItemStack stack) {
 		if(stack.stackTagCompound == null) {
 			stack.stackTagCompound = new NBTTagCompound();
 			return false;
 		}
-		
+
 		return stack.stackTagCompound.getInteger("ticks") > 20;
 	}
-	
+
 	public static void setInUse(ItemStack stack, boolean inUse) {
 		if(stack.stackTagCompound == null) {
 			stack.stackTagCompound = new NBTTagCompound();
 		}
-		
+
         if(inUse) {
             stack.stackTagCompound.setInteger("ticks", stack.stackTagCompound.getInteger("ticks") + 1);
         } else {
             stack.stackTagCompound.setInteger("ticks", 0);
         }
 	}
-	
+
     public static int getFuel(ItemStack stack) {
 		if(stack.stackTagCompound == null) {
 			stack.stackTagCompound = new NBTTagCompound();
 			return 0;
 		}
-		
+
 		return stack.stackTagCompound.getInteger("fuel");
 	}
-	
+
 	public static void setFuel(ItemStack stack, int i) {
 		if(stack.stackTagCompound == null) {
 			stack.stackTagCompound = new NBTTagCompound();
 		}
-		
+
 		stack.stackTagCompound.setInteger("fuel", i);
 	}
 
@@ -168,5 +168,5 @@ public class ItemModOxy extends ItemArmorMod implements IFillableItem {
     public int getFill(ItemStack stack) {
         return 0;
     }
-    
+
 }

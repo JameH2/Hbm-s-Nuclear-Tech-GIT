@@ -46,7 +46,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class CentrifugeRecipes extends SerializableRecipe {
 
-	private static HashMap<AStack, ItemStack[]> recipes = new HashMap();
+	public static HashMap<AStack, ItemStack[]> recipes = new HashMap();
 
 	@Override
 	public void registerDefaults() {

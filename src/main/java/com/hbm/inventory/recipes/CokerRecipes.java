@@ -25,7 +25,7 @@ import net.minecraft.item.ItemStack;
 
 public class CokerRecipes extends SerializableRecipe {
 
-	private static HashMap<FluidType, Triplet<Integer, ItemStack, FluidStack>> recipes = new HashMap();
+	public static HashMap<FluidType, Triplet<Integer, ItemStack, FluidStack>> recipes = new HashMap();
 
 	@Override
 	public void registerDefaults() {
@@ -70,7 +70,7 @@ public class CokerRecipes extends SerializableRecipe {
 		registerRecipe(SCUTTERBLOOD, 32_000, DictFrame.fromOne(ModItems.coke, EnumCokeType.PETROLEUM), new FluidStack(GAS_COKER, 3_200));
 	}
 
-	private static void registerAuto(FluidType fluid, FluidType type) {
+	public static void registerAuto(FluidType fluid, FluidType type) {
 		registerSFAuto(fluid, 820_000L, DictFrame.fromOne(ModItems.coke, EnumCokeType.PETROLEUM), type); //3200 burntime * 1.25 burntime bonus * 200 TU/t + 20000TU per operation
 	}
 	private static void registerSFAuto(FluidType fluid, long tuPerSF, ItemStack fuel, FluidType type) {

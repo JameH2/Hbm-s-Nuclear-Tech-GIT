@@ -39,7 +39,7 @@ public class ChemplantRecipes extends SerializableRecipe {
 	@Override
 	public void registerDefaults() {
 
-		//6-30, formerly oil cracking, coal liquefaction and solidifciation
+		//6-30, formerly oil cracking, coal liquefaction and solidification
 		registerOtherOil();
 
 		 recipes.add(new ChemRecipe(1004, "URANIUM_BROMIDE", 50)
@@ -462,21 +462,21 @@ public class ChemplantRecipes extends SerializableRecipe {
 				.outputItems(
 						new ItemStack(ModItems.nugget_u233, 1),
 						new ItemStack(ModItems.nuclear_waste_tiny, 1)));
-		
+
 		recipes.add(new ChemRecipe(120, "MASS_CAKE", 30)
 				.inputFluids(new FluidStack(Fluids.CMILK, 4000), new FluidStack(Fluids.CREAM, 1000)) // why not regular milk? well its because the refined products allow for higher mass cakes while still needing less milk
 				.inputItems(
 						new ComparableStack(Items.sugar, 8),				// if there is a hole in my logic i will shoot myself
-						new ComparableStack(Items.egg, 4))				//ex: since a cake needs 3 buckets of milk, c-milk is more dense, leading to it being only 4 buckets of condensed milk, thats 1 bucket per cake. 
+						new ComparableStack(Items.egg, 4))				//ex: since a cake needs 3 buckets of milk, c-milk is more dense, leading to it being only 4 buckets of condensed milk, thats 1 bucket per cake.
 				.outputItems(
 						new ItemStack(Items.cake, 4)));
-		
+
 		recipes.add(new ChemRecipe(121, "BUTTER", 50)
-				.inputFluids(new FluidStack(Fluids.EMILK, 1000)) 
+				.inputFluids(new FluidStack(Fluids.EMILK, 1000))
 				.outputItems(
 						new ItemStack(ModItems.butter)));
 		recipes.add(new ChemRecipe(122, "STRAWICE", 50)
-				.inputFluids(new FluidStack(Fluids.CREAM, 1000)) 
+				.inputFluids(new FluidStack(Fluids.CREAM, 1000))
 				.inputItems(
 						new ComparableStack(ModItems.butter, 2),
 						new ComparableStack(Blocks.packed_ice, 1),
@@ -494,6 +494,12 @@ public class ChemplantRecipes extends SerializableRecipe {
 		recipes.add(new ChemRecipe(1002, "CHLOROMETHANE", 50)
 				.inputFluids(new FluidStack(Fluids.GAS, 750), new FluidStack(Fluids.CHLORINE, 250))
 				.outputFluids(new FluidStack(Fluids.CHLOROMETHANE, 1000)));
+
+		// WARNING: NILERED CHEMISTRY ZONE //
+		recipes.add(new ChemRecipe(1003, "HYDRAPISS", 300)
+				.inputFluids(new FluidStack(Fluids.NITRIC_ACID, 2000))
+				.inputItems(new ComparableStack(ModItems.rag_piss)) // urea...
+				.outputFluids(new FluidStack(Fluids.HYDRAZINE, 800)));
 	}
 
 	public static void registerOtherOil() {

@@ -3,9 +3,8 @@ package com.hbm.tileentity.machine;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import com.hbm.interfaces.IControlReceiver;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.items.tool.ItemTransporterLinker.TransporterInfo;
@@ -13,19 +12,29 @@ import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.uninos.GenNode;
+import com.hbm.uninos.UniNodespace;
 import com.hbm.util.BufferUtil;
+import com.hbm.util.Compat;
 import com.hbm.util.InventoryUtil;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.fluid.IFluidStandardTransceiver;
+import api.hbm.fluidmk2.IFluidConnectorMK2;
+import api.hbm.fluidmk2.IFluidReceiverMK2;
+import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
+import api.hbm.fluidmk2.IFluidUserMK2;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class TileEntityTransporterBase extends TileEntityMachineBase implements IGUIProvider, IControlReceiver, IFluidStandardTransceiver {
 
@@ -36,7 +45,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 	public TileEntityTransporterBase(int slotCount, int tankCount, int tankSize) {
 		this(slotCount, tankCount, tankSize, 0, 0, 0);
 	}
-	
+
 	public TileEntityTransporterBase(int slotCount, int tankCount, int tankSize, int extraSlots, int extraTanks, int extraTankSize) {
 		super(slotCount + tankCount / 2 + extraSlots + extraTanks);
 
@@ -79,11 +88,6 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 			tanks[i].setType(outputSlotMax + i, slots);
 
 			// Evenly distribute fluids between all matching tanks
-			// this is so that if you are sending oxygen and are fueled by oxygen
-			// it doesn't only fill one tank
-			for(int o = outputTankMax; o < tanks.length; o++) {
-				splitFill(tanks[i], tanks[o]);
-			}
 			for(int o = i + 1; o < inputTankMax; o++) {
 				splitFill(tanks[i], tanks[o]);
 			}
@@ -96,10 +100,8 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 		for(int i = outputTankMax; i < tanks.length; i++) {
 			tanks[i].setType(outputSlotMax + inputTankMax + i - outputTankMax, slots);
 		}
-			
-		if(worldObj.getTotalWorldTime() % 10 == 0) {
-			updateConnections();
-		}
+
+		updateConnections();
 
 		fetchLinkedTransporter();
 
@@ -119,7 +121,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 					isDirty = true;
 				}
 			}
-			
+
 			// Move all fluids into the target
 			for(int i = 0; i < inputTankMax; i++) {
 				int o = i+inputTankMax;
@@ -154,15 +156,144 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 	}
 
 	private void updateConnections() {
+		// Sending/Receiving tanks
 		for(DirPos pos : getConPos()) {
-			for(int i = 0; i < tanks.length; i++) {
+			for(int i = 0; i < outputTankMax; i++) {
 				if(tanks[i].getTankType() != Fluids.NONE) {
 					trySubscribe(tanks[i].getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
 					this.sendFluid(tanks[i], worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-
 				}
 			}
 		}
+
+		// Fuel tanks
+		for(DirPos pos : getTankPos()) {
+			for(int i = outputTankMax; i < tanks.length; i++) {
+				if(tanks[i].getTankType() != Fluids.NONE) {
+					trySubscribeFuel(tanks[i].getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
+				}
+			}
+		}
+
+		// Inserter
+		for(DirPos pos : getInsertPos()) {
+			tryLoad(pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
+		}
+
+		// Extractor
+		for(DirPos pos : getExtractPos()) {
+			tryUnload(pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
+		}
+	}
+
+	private void tryLoad(int x, int y, int z, ForgeDirection dir) {
+		TileEntity te = worldObj.getTileEntity(x, y, z);
+		if(!(te instanceof IInventory)) return;
+
+		IInventory inv = (IInventory) te;
+		ISidedInventory sided = inv instanceof ISidedInventory ? (ISidedInventory) inv : null;
+		int[] access = sided != null ? sided.getAccessibleSlotsFromSide(dir.ordinal()) : null;
+
+		for(int i = 0; i < (access != null ? access.length : inv.getSizeInventory()); i++) {
+			int slot = access != null ? access[i] : i;
+			ItemStack stack = inv.getStackInSlot(slot);
+			if(stack != null && (sided == null || sided.canExtractItem(slot, stack, dir.ordinal()))) {
+				for(int j = 0; j < inputSlotMax; j++) {
+					if(slots[j] != null && slots[j].stackSize < slots[j].getMaxStackSize() & InventoryUtil.doesStackDataMatch(slots[j], stack)) {
+						inv.decrStackSize(slot, 1);
+						slots[j].stackSize++;
+						return;
+					}
+				}
+
+				for(int j = 0; j < inputSlotMax; j++) {
+					if(slots[j] == null) {
+						slots[j] = stack.copy();
+						slots[j].stackSize = 1;
+						inv.decrStackSize(slot, 1);
+						return;
+					}
+				}
+			}
+		}
+	}
+
+	private void tryUnload(int x, int y, int z, ForgeDirection dir) {
+		TileEntity te = worldObj.getTileEntity(x, y, z);
+		if(!(te instanceof IInventory)) return;
+
+		IInventory inv = (IInventory) te;
+		ISidedInventory sided = inv instanceof ISidedInventory ? (ISidedInventory) inv : null;
+		int[] access = sided != null ? sided.getAccessibleSlotsFromSide(dir.ordinal()) : null;
+
+		for(int i = inputSlotMax; i < outputSlotMax; i++) {
+			ItemStack out = slots[i];
+
+			if(out != null) {
+				for(int j = 0; j < (access != null ? access.length : inv.getSizeInventory()); j++) {
+					int slot = access != null ? access[j] : j;
+
+					if(!inv.isItemValidForSlot(slot, out))
+						continue;
+
+					ItemStack target = inv.getStackInSlot(slot);
+
+					if(InventoryUtil.doesStackDataMatch(out, target) && target.stackSize < Math.min(target.getMaxStackSize(), inv.getInventoryStackLimit())) {
+						this.decrStackSize(i, 1);
+						target.stackSize++;
+						return;
+					}
+				}
+
+				for(int j = 0; j < (access != null ? access.length : inv.getSizeInventory()); j++) {
+					int slot = access != null ? access[j] : j;
+
+					if(!inv.isItemValidForSlot(slot, out))
+						continue;
+
+					if(inv.getStackInSlot(slot) == null && (sided != null ? sided.canInsertItem(slot, out, dir.ordinal()) : inv.isItemValidForSlot(slot, out))) {
+						ItemStack copy = out.copy();
+						copy.stackSize = 1;
+						inv.setInventorySlotContents(slot, copy);
+						this.decrStackSize(i, 1);
+						return;
+					}
+				}
+			}
+		}
+	}
+
+	public void trySubscribeFuel(FluidType type, World world, int x, int y, int z, ForgeDirection dir) {
+		fuelReceiver.trySubscribe(type, world, x, y, z, dir);
+	}
+
+	FuelReceiver fuelReceiver = new FuelReceiver();
+
+	private class FuelReceiver implements IFluidStandardReceiverMK2 {
+
+		boolean valid = true;
+
+		@Override
+		public boolean isLoaded() {
+			return valid && TileEntityTransporterBase.this.isLoaded();
+		}
+
+		@Override
+		public FluidTank[] getAllTanks() {
+			return TileEntityTransporterBase.this.getAllTanks();
+		}
+
+		@Override
+		public FluidTank[] getReceivingTanks() {
+			return (FluidTank[]) Arrays.copyOfRange(tanks, outputTankMax, tanks.length);
+		}
+
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		fuelReceiver.valid = false;
 	}
 
 	// splitting is commutative, order don't matter
@@ -191,9 +322,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 
 	@Override
 	public FluidTank[] getReceivingTanks() {
-		FluidTank[] inputTanks = (FluidTank[]) Arrays.copyOfRange(tanks, 0, inputTankMax);
-		FluidTank[] extraTanks = (FluidTank[]) Arrays.copyOfRange(tanks, outputTankMax, tanks.length);
-		return ArrayUtils.addAll(inputTanks, extraTanks);
+		return (FluidTank[]) Arrays.copyOfRange(tanks, 0, inputTankMax);
 	}
 
 	@Override
@@ -241,6 +370,9 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 	}
 
 	protected abstract DirPos[] getConPos();
+	protected abstract DirPos[] getTankPos();
+	protected abstract DirPos[] getInsertPos();
+	protected abstract DirPos[] getExtractPos();
 
 	// Designated overrides for delaying sending or requiring fuel
 	protected abstract boolean canSend(TileEntityTransporterBase linkedTransporter);
@@ -262,7 +394,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 	public String getTransporterName() {
 		return name;
 	}
-	
+
 	public void setTransporterName(String name) {
 		this.name = name;
 		NBTTagCompound data = new NBTTagCompound();
@@ -313,7 +445,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 		}
 		for(int i = 0; i < tanks.length; i++) tanks[i].readFromNBT(nbt, "t" + i);
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
@@ -350,7 +482,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 			}
 
 			linkedTransporter = null;
-			
+
 			int[] coords = nbt.getIntArray("linkedTo");
 			int dimensionId = nbt.getInteger("dimensionId");
 			linkedTransporterInfo = new TransporterInfo("Linked Transporter", dimensionId, coords[0], coords[1], coords[2]);
@@ -364,7 +496,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 				hasConnected(linkedTransporter);
 			}
 		}
-		
+
 		this.markDirty();
 	}
 

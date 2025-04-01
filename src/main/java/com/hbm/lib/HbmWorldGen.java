@@ -542,6 +542,9 @@ public class HbmWorldGen implements IWorldGenerator {
 					safe.setPins(rand.nextInt(999) + 1);
 					safe.lock();
 
+					if(rand.nextInt(10) < 3) // 30% chance; those safes have been sitting there for ages, they gotta have some spiders in them
+						safe.fillWithSpiders();
+
 					if(GeneralConfig.enableDebugMode)
 						MainRegistry.logger.info("[Debug] Successfully spawned safe at " + x + " " + (y + 1) +" " + z);
 				}
@@ -724,8 +727,8 @@ public class HbmWorldGen implements IWorldGenerator {
 			int d = 16 + rand.nextInt(96);
 
 			for(int y = d - 5; y <= d; y++)
-			if(world.getBlock(x, y + 1, z) == Blocks.air && world.getBlock(x, y, z) == Blocks.netherrack)
-				world.setBlock(x, y, z, ModBlocks.ore_nether_smoldering);
+				if(world.getBlock(x, y + 1, z) == Blocks.air && world.getBlock(x, y, z) == Blocks.netherrack)
+					world.setBlock(x, y, z, ModBlocks.ore_nether_smoldering);
 		}
 
 		for(int k = 0; k < 1; k++){
@@ -734,8 +737,8 @@ public class HbmWorldGen implements IWorldGenerator {
 			int d = 16 + rand.nextInt(96);
 
 			for(int y = d - 5; y <= d; y++)
-			if(world.getBlock(x, y + 1, z) == Blocks.air && world.getBlock(x, y, z) == Blocks.netherrack)
-				world.setBlock(x, y, z, ModBlocks.geysir_nether);
+				if(world.getBlock(x, y + 1, z) == Blocks.air && world.getBlock(x, y, z) == Blocks.netherrack)
+					world.setBlock(x, y, z, ModBlocks.geysir_nether);
 		}
 	}
 

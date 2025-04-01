@@ -1,5 +1,7 @@
 package com.hbm.tileentity.machine;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.io.IOException;
 
@@ -7,20 +9,27 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.handler.CompatHandler;
+import com.hbm.inventory.OreDictManager;
+import com.hbm.inventory.RecipesCommon.AStack;
+import com.hbm.inventory.RecipesCommon.ComparableStack;
+import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.fluid.trait.FT_Coolable;
 import com.hbm.inventory.fluid.trait.FT_Coolable.CoolingType;
+import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
-import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.IFluidCopiable;
+import com.hbm.tileentity.IPersistentNBT;
+import com.hbm.tileentity.IRepairable;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.CompatEnergyControl;
 import com.hbm.util.fauxpointtwelve.BlockPos;
 import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.world.gen.INBTTileEntityTransformable;
 
 import api.hbm.energymk2.IEnergyProviderMK2;
 import api.hbm.fluid.IFluidStandardTransceiver;
@@ -36,10 +45,12 @@ import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
-public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyProviderMK2, IFluidStandardTransceiver, SimpleComponent, IInfoProviderEC, CompatHandler.OCComponent, IConfigurableMachine, IBufPacketReceiver, IFluidCopiable{
+public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyProviderMK2, IFluidStandardTransceiver, SimpleComponent, IInfoProviderEC, CompatHandler.OCComponent, IConfigurableMachine, IFluidCopiable, IRepairable, INBTTileEntityTransformable, IPersistentNBT {
 
 	public long power;
 	private int turnTimer;
@@ -58,6 +69,9 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 	public static int inputTankSize = 1_000_000_000;
 	public static int outputTankSize = 1_000_000_000;
 	public static double efficiency = 0.85D;
+
+	public boolean damaged;
+	public Explosion lastExplosion;
 
 	public TileEntityChungus() {
 		tanks = new FluidTank[2];
@@ -99,6 +113,11 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 
 			this.info = new double[3];
 
+			if(damaged) {
+				networkPackNT(150);
+				return;
+			}
+
 			boolean operational = false;
 			FluidType in = tanks[0].getTankType();
 			boolean valid = false;
@@ -139,7 +158,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 
 			if(operational) turnTimer = 25;
 			networkPackNT(150);
-      
+
 		} else {
 
 			this.lastRotor = this.rotor;
@@ -212,16 +231,22 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 	public void serialize(ByteBuf buf) {
 		buf.writeLong(this.power);
 		buf.writeInt(this.turnTimer);
+
 		this.tanks[0].serialize(buf);
 		this.tanks[1].serialize(buf);
+
+		buf.writeBoolean(this.damaged);
 	}
 
 	@Override
 	public void deserialize(ByteBuf buf) {
 		this.power = buf.readLong();
 		this.turnTimer = buf.readInt();
+
 		this.tanks[0].deserialize(buf);
 		this.tanks[1].deserialize(buf);
+
+		this.damaged = buf.readBoolean();
 	}
 
 	@Override
@@ -230,6 +255,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 		tanks[0].readFromNBT(nbt, "water");
 		tanks[1].readFromNBT(nbt, "steam");
 		power = nbt.getLong("power");
+		damaged = nbt.getBoolean("damaged");
 	}
 
 	@Override
@@ -238,6 +264,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 		tanks[0].writeToNBT(nbt, "water");
 		tanks[1].writeToNBT(nbt, "steam");
 		nbt.setLong("power", power);
+		nbt.setBoolean("damaged", damaged);
 	}
 
 	@Override
@@ -376,4 +403,46 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 	public FluidTank getTankToPaste() {
 		return null;
 	}
+
+	@Override
+	public boolean isDamaged() { return damaged; }
+
+	List<AStack> repair = new ArrayList<>();
+
+	@Override
+	public List<AStack> getRepairMaterials() {
+		if(!repair.isEmpty()) return repair;
+
+		repair.add(new OreDictStack(OreDictManager.STEEL.plateWelded(), 6));
+		repair.add(new OreDictStack(OreDictManager.STEEL.pipe(), 8));
+		repair.add(new OreDictStack(OreDictManager.ANY_RESISTANTALLOY.ingot(), 8));
+		repair.add(new OreDictStack(OreDictManager.GOLD.wireDense(), 24));
+		repair.add(new ComparableStack(ModItems.flywheel_beryllium));
+		return repair;
+	}
+
+	@Override
+	public void repair() {
+		damaged = false;
+		markDirty();
+	}
+
+	@Override
+	public void tryExtinguish(World world, int x, int y, int z, EnumExtinguishType type) {}
+
+	@Override
+	public void transformTE(World world, int coordBaseMode) {
+		damaged = true;
+	}
+
+	@Override
+	public void writeNBT(NBTTagCompound nbt) {
+		if(damaged) nbt.setBoolean("damaged", true);
+	}
+
+	@Override
+	public void readNBT(NBTTagCompound nbt) {
+		damaged = nbt.getBoolean("damaged");
+	}
+
 }

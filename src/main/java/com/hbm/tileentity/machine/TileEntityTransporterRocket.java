@@ -1,8 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.hbm.blocks.BlockDummyable;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
 import com.hbm.explosion.ExplosionLarge;
@@ -11,7 +9,6 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.FT_Rocket;
 import com.hbm.inventory.gui.GUITransporterRocket;
 import com.hbm.items.ItemVOTVdrive.Target;
-import com.hbm.lib.Library;
 import com.hbm.util.ParticleUtil;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
@@ -24,6 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityTransporterRocket extends TileEntityTransporterBase {
 
@@ -39,7 +37,6 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
 		tanks[9].setTankType(Fluids.OXYGEN);
     }
 
-	
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
@@ -126,9 +123,9 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
 	public Object provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GUITransporterRocket(player.inventory, this);
 	}
-	
+
 	AxisAlignedBB bb = null;
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
@@ -154,7 +151,7 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
 		hasRocket = nbt.getBoolean("rocket");
 		threshold = nbt.getInteger("threshold");
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
@@ -162,35 +159,53 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
 		nbt.setInteger("threshold", threshold);
 	}
 
-	private DirPos[] conPos;
-
 	@Override
 	protected DirPos[] getConPos() {
-		if(conPos == null) {
-			List<DirPos> list = new ArrayList<>();
+		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 
-			// Below
-			for(int x = -1; x <= 1; x++) {
-				for(int z = -1; z <= 1; z++) {
-					list.add(new DirPos(xCoord + x, yCoord - 1, zCoord + z, Library.NEG_Y));
-				}
-			}
+		return new DirPos[] {
+			new DirPos(xCoord + dir.offsetX * 2 - rot.offsetX, yCoord, zCoord + dir.offsetZ * 2 - rot.offsetZ, dir.getOpposite()),
+			new DirPos(xCoord + dir.offsetX * 2 + rot.offsetX, yCoord, zCoord + dir.offsetZ * 2 + rot.offsetZ, dir.getOpposite()),
+			new DirPos(xCoord - dir.offsetX * 2 - rot.offsetX, yCoord, zCoord - dir.offsetZ * 2 - rot.offsetZ, dir),
+			new DirPos(xCoord - dir.offsetX * 2 + rot.offsetX, yCoord, zCoord - dir.offsetZ * 2 + rot.offsetZ, dir),
 
-			// Sides
-			for(int i = -1; i <= 1; i++) {
-				list.add(new DirPos(xCoord + i, yCoord, zCoord + 2, Library.POS_Z));
-				list.add(new DirPos(xCoord + i, yCoord, zCoord - 2, Library.NEG_Z));
-				list.add(new DirPos(xCoord + 2, yCoord, zCoord + i, Library.POS_X));
-				list.add(new DirPos(xCoord - 2, yCoord, zCoord + i, Library.NEG_X));
-			}
-
-			conPos = list.toArray(new DirPos[0]);
-		}
-		
-		return conPos;
+			new DirPos(xCoord + dir.offsetX - rot.offsetX, yCoord + 1, zCoord + dir.offsetZ - rot.offsetZ, ForgeDirection.UP),
+			new DirPos(xCoord + dir.offsetX + rot.offsetX, yCoord + 1, zCoord + dir.offsetZ + rot.offsetZ, ForgeDirection.UP),
+			new DirPos(xCoord - dir.offsetX - rot.offsetX, yCoord + 1, zCoord - dir.offsetZ - rot.offsetZ, ForgeDirection.UP),
+			new DirPos(xCoord - dir.offsetX + rot.offsetX, yCoord + 1, zCoord - dir.offsetZ + rot.offsetZ, ForgeDirection.UP),
+		};
 	}
 
-	
+	@Override
+	protected DirPos[] getTankPos() {
+		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+
+		return new DirPos[] {
+			new DirPos(xCoord + dir.offsetX - rot.offsetX * 3, yCoord, zCoord + dir.offsetZ - rot.offsetZ * 3, rot),
+			new DirPos(xCoord - dir.offsetX - rot.offsetX * 3, yCoord, zCoord - dir.offsetZ - rot.offsetZ * 3, rot),
+		};
+	}
+
+	@Override
+	protected DirPos[] getInsertPos() {
+		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+
+		return new DirPos[] {
+			new DirPos(xCoord - dir.offsetX * 2, yCoord, zCoord - dir.offsetZ * 2, dir),
+		};
+	}
+
+	@Override
+	protected DirPos[] getExtractPos() {
+		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+
+		return new DirPos[] {
+			new DirPos(xCoord + dir.offsetX * 2, yCoord, zCoord + dir.offsetZ * 2, dir.getOpposite()),
+		};
+	}
+
 	@Override
 	public void receiveControl(NBTTagCompound nbt) {
 		super.receiveControl(nbt);
@@ -203,5 +218,5 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
 	public double getMaxRenderDistanceSquared() {
 		return 65536.0D;
 	}
-    
+
 }

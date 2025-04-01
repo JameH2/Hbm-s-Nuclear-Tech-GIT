@@ -1,12 +1,13 @@
 package com.hbm.entity.mob;
 
+import api.hbm.entity.ISuffocationImmune;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.world.World;
 
-public class EntityParasiteMaggot extends EntityMob {
+public class EntityParasiteMaggot extends EntityMob implements ISuffocationImmune {
 
 	public EntityParasiteMaggot(World world) {
 		super(world);

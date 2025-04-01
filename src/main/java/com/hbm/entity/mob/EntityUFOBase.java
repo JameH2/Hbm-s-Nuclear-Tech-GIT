@@ -2,6 +2,7 @@ package com.hbm.entity.mob;
 
 import java.util.List;
 
+import api.hbm.entity.ISuffocationImmune;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.monster.IMob;
@@ -12,7 +13,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
-public abstract class EntityUFOBase extends EntityFlying implements IMob {
+public abstract class EntityUFOBase extends EntityFlying implements IMob, ISuffocationImmune {
 
 	protected int scanCooldown;
 	protected int courseChangeCooldown;
@@ -33,60 +34,60 @@ public abstract class EntityUFOBase extends EntityFlying implements IMob {
 
 	@Override
 	protected void updateEntityActionState() {
-		
+
 		if(!this.worldObj.isRemote) {
-			
+
 			if(this.worldObj.difficultySetting == EnumDifficulty.PEACEFUL) {
 				this.setDead();
 				return;
 			}
 		}
-		
+
 		this.motionX = 0;
 		this.motionY = 0;
 		this.motionZ = 0;
-		
+
 		if(this.target != null && !this.target.isEntityAlive()) {
 			this.target = null;
 		}
-		
+
 		scanForTarget();
-		
+
 		if(this.courseChangeCooldown <= 0) {
 			this.setCourse();
 		}
-		
+
 		/*
 		 * Make sure to invoke super.updateEntityActionState(); in the beginning of the child's override
 		 * Motion is set to 0 and the targeting should optimally be handled before anything else
 		 */
 	}
-	
+
 	/**
 	 * Standard implementation for choosing single player targets
 	 * Keeps the check delay in mind and resets it too, simply call this every update
 	 */
 	protected void scanForTarget() {
-		
+
 		int range = getScanRange();
-		
+
 		if(this.scanCooldown <= 0) {
 			List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, this.boundingBox.expand(range, range / 2, range));
 			this.target = null;
-			
+
 			for(Entity entity : entities) {
-				
+
 				if(!entity.isEntityAlive() || !canAttackClass(entity.getClass()))
 					continue;
-				
+
 				if(entity instanceof EntityPlayer) {
-					
+
 					if(((EntityPlayer)entity).capabilities.isCreativeMode)
 						continue;
-					
+
 					if(((EntityPlayer)entity).isPotionActive(Potion.invisibility.id))
 						continue;
-					
+
 					if(this.target == null) {
 						this.target = entity;
 					} else {
@@ -96,21 +97,21 @@ public abstract class EntityUFOBase extends EntityFlying implements IMob {
 					}
 				}
 			}
-			
+
 			this.scanCooldown = getScanDelay();
 		}
 	}
-	
+
 	protected int getScanRange() {
 		return 50;
 	}
-	
+
 	protected int getScanDelay() {
 		return 100;
 	}
-	
+
 	protected boolean isCourseTraversable(double p_70790_1_, double p_70790_3_, double p_70790_5_, double p_70790_7_) {
-		
+
 		double d4 = (this.getX() - this.posX) / p_70790_7_;
 		double d5 = (this.getY() - this.posY) / p_70790_7_;
 		double d6 = (this.getZ() - this.posZ) / p_70790_7_;
@@ -126,15 +127,15 @@ public abstract class EntityUFOBase extends EntityFlying implements IMob {
 
 		return true;
 	}
-	
+
 	protected void approachPosition(double speed) {
-		
+
 		double deltaX = this.getX() - this.posX;
 		double deltaY = this.getY() - this.posY;
 		double deltaZ = this.getZ() - this.posZ;
 		Vec3 delta = Vec3.createVectorHelper(deltaX, deltaY, deltaZ);
 		double len = delta.lengthVector();
-		
+
 		if(len > 5) {
 			if(this.isCourseTraversable(this.getX(), this.getY(), this.getZ(), len)) {
 				this.motionX = delta.xCoord * speed / len;
@@ -145,9 +146,9 @@ public abstract class EntityUFOBase extends EntityFlying implements IMob {
 			}
 		}
 	}
-	
+
 	protected void setCourse() {
-		
+
 		if(this.target != null) {
 			this.setCourseForTaget();
 			this.courseChangeCooldown = 20 + rand.nextInt(20);
@@ -156,28 +157,28 @@ public abstract class EntityUFOBase extends EntityFlying implements IMob {
 			this.courseChangeCooldown = 60 + rand.nextInt(20);
 		}
 	}
-	
+
 	protected void setCourseForTaget() {
 		Vec3 vec = Vec3.createVectorHelper(this.posX - this.target.posX, 0, this.posZ - this.target.posZ);
 		vec.rotateAroundY((float)Math.PI * 2 * rand.nextFloat());
-		
+
 		double length = vec.lengthVector();
 		double overshoot = 10 + rand.nextDouble() * 10;
-		
+
 		int wX = (int)Math.floor(this.target.posX - vec.xCoord / length * overshoot);
 		int wZ = (int)Math.floor(this.target.posZ - vec.zCoord / length * overshoot);
-		
+
 		this.setWaypoint(wX, Math.max(this.worldObj.getHeightValue(wX, wZ), (int) this.target.posY) + targetHeightOffset(),  wZ);
 	}
-	
+
 	protected int targetHeightOffset() {
 		return 2 + rand.nextInt(2);
 	}
-	
+
 	protected int wanderHeightOffset() {
 		return 2 + rand.nextInt(3);
 	}
-	
+
 	protected void setCourseWithoutTaget() {
 		int x = (int) Math.floor(posX + rand.nextGaussian() * 5);
 		int z = (int) Math.floor(posZ + rand.nextGaussian() * 5);

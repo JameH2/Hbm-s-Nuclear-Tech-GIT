@@ -3,6 +3,7 @@ package com.hbm.entity.mob;
 import com.hbm.entity.item.EntityItemBuoyant;
 import com.hbm.items.ModItems;
 
+import api.hbm.entity.ISuffocationImmune;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityWaterMob;
@@ -14,10 +15,10 @@ import net.minecraft.world.World;
 /**
  * Copy-pasted shit from the squid class
  * Mojang-certified
- * 
+ *
  * @author hbm
  */
-public class EntityPlasticBag extends EntityWaterMob {
+public class EntityPlasticBag extends EntityWaterMob implements ISuffocationImmune {
 
 	public float rotation;
 	public float prevRotation;
@@ -35,15 +36,15 @@ public class EntityPlasticBag extends EntityWaterMob {
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
-		
+
 		if(!worldObj.isRemote) {
 			this.setDead();
 			this.dropItem(ModItems.plastic_bag, 1);
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public EntityItem entityDropItem(ItemStack stack, float offset) {
 		if(stack.stackSize != 0 && stack.getItem() != null) {

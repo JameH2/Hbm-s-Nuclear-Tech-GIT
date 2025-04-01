@@ -2,6 +2,7 @@ package com.hbm.items.weapon.sedna.factory;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import com.hbm.entity.projectile.EntityBoxcar;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
@@ -20,6 +21,7 @@ import com.hbm.items.weapon.sedna.factory.GunFactory.EnumAmmo;
 import com.hbm.items.weapon.sedna.factory.GunFactory.EnumAmmoSecret;
 import com.hbm.items.weapon.sedna.mags.MagazineFullReload;
 import com.hbm.items.weapon.sedna.mags.MagazineSingleReload;
+import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.lib.RefStrings;
 import com.hbm.particle.SpentCasing;
 import com.hbm.particle.SpentCasing.CasingType;
@@ -94,6 +96,16 @@ public class XFactory44 {
 				.setupStandardConfiguration()
 				.anim(LAMBDA_HENRY_ANIMS).orchestra(Orchestras.ORCHESTRA_HENRY)
 				).setUnlocalizedName("gun_henry");
+		ModItems.gun_henry_lincoln = new ItemGunBaseNT(WeaponQuality.B_SIDE, new GunConfig()
+				.dura(300).draw(15).inspect(23).reloadSequential(true).crosshair(Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
+				.rec(new Receiver(0)
+						.dmg(20F).spreadHipfire(0F).delay(20).reload(25, 11, 14, 8).jam(45).sound("hbm:weapon.fire.rifle", 1.0F, 1.25F)
+						.mag(new MagazineSingleReload(0, 14).addConfigs(m44_bp, m44_sp, m44_fmj, m44_jhp, m44_ap, m44_express))
+						.offset(0.75, -0.0625, -0.1875D)
+						.setupStandardFire().recoil(LAMBDA_RECOIL_HENRY))
+				.setupStandardConfiguration()
+				.anim(LAMBDA_HENRY_ANIMS).orchestra(Orchestras.ORCHESTRA_HENRY)
+				).setUnlocalizedName("gun_henry_lincoln");
 
 		ModItems.gun_heavy_revolver = new ItemGunBaseNT(WeaponQuality.A_SIDE, new GunConfig()
 				.dura(600).draw(10).inspect(23).crosshair(Crosshair.L_CLASSIC).smoke(Lego.LAMBDA_STANDARD_SMOKE)
@@ -104,7 +116,8 @@ public class XFactory44 {
 						.setupStandardFire().recoil(LAMBDA_RECOIL_NOPIP))
 				.setupStandardConfiguration()
 				.anim(LAMBDA_NOPIP_ANIMS).orchestra(Orchestras.ORCHESTRA_NOPIP)
-				).setUnlocalizedName("gun_heavy_revolver");
+				).setNameMutator(LAMBDA_NAME_NOPIP)
+				.setUnlocalizedName("gun_heavy_revolver");
 		ModItems.gun_heavy_revolver_lilmac = new ItemGunBaseNT(WeaponQuality.LEGENDARY, new GunConfig()
 				.dura(31_000).draw(10).inspect(23).crosshair(Crosshair.L_CLASSIC).scopeTexture(scope_lilmac).smoke(Lego.LAMBDA_STANDARD_SMOKE)
 				.rec(new Receiver(0)
@@ -138,8 +151,14 @@ public class XFactory44 {
 				).setUnlocalizedName("gun_hangman");
 	}
 	
+	public static Function<ItemStack, String> LAMBDA_NAME_NOPIP = (stack) -> {
+		if(WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SCOPE)) return stack.getUnlocalizedName() + "_scoped";
+		return null;
+	};
+	
 	public static BiConsumer<ItemStack, LambdaContext> SMACK_A_FUCKER = (stack, ctx) -> {
 		if(ItemGunBaseNT.getState(stack, ctx.configIndex) == GunState.IDLE || ItemGunBaseNT.getLastAnim(stack, ctx.configIndex) == AnimType.CYCLE) {
+			ItemGunBaseNT.setIsAiming(stack, false);
 			ItemGunBaseNT.setState(stack, ctx.configIndex, GunState.DRAWING);
 			ItemGunBaseNT.setTimer(stack, ctx.configIndex, ctx.config.getInspectDuration(stack));
 			ItemGunBaseNT.playAnimation(ctx.getPlayer(), stack, AnimType.INSPECT, ctx.configIndex);

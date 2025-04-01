@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.hbm.dim.CelestialBody;
 import com.hbm.extprop.HbmPlayerProps;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.fluid.FluidType;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.AstronomyUtil;
 
@@ -42,7 +42,7 @@ public class JetpackVectorized extends JetpackFueledBase {
 				data.setString("type", "jetpack");
 				data.setInteger("player", player.getEntityId());
 				data.setInteger("mode", 1);
-				PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, player.posX, player.posY, player.posZ), new TargetPoint(world.provider.dimensionId, player.posX, player.posY, player.posZ, 100));
+				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, player.posX, player.posY, player.posZ), new TargetPoint(world.provider.dimensionId, player.posX, player.posY, player.posZ, 100));
 			}
 		}
 

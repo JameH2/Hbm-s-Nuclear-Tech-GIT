@@ -8,6 +8,7 @@ import com.hbm.dim.SolarSystem.AstroMetric;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
 import com.hbm.dim.trait.CelestialBodyTrait.CBT_Destroyed;
+import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
 import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
@@ -278,6 +279,22 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 			}
 		}
 
+		float dust = ImpactWorldHandler.getDustForClient(worldObj);
+		float fire = ImpactWorldHandler.getFireForClient(worldObj);
+
+		color.yCoord *= 1 - (dust * 0.5F);
+		color.zCoord *= 1 - dust;
+
+		if(fire > 0) {
+			color.xCoord *= Math.max((1 - (dust * 2)), 0);
+			color.yCoord *= Math.max((1 - (dust * 2)), 0);
+			color.zCoord *= Math.max((1 - (dust * 2)), 0);
+		} else {
+			color.xCoord *= 1 - dust;
+			color.yCoord *= 1 - dust;
+			color.zCoord *= 1 - dust;
+		}
+
 		return color;
 	}
 
@@ -334,6 +351,24 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 			color.zCoord *= 1 - eclipseAmount * 0.5;
 		}
 
+		float dust = ImpactWorldHandler.getDustForClient(worldObj);
+		float fire = ImpactWorldHandler.getFireForClient(worldObj);
+
+		if(dust > 0) {
+			if(fire > 0) {
+				color.xCoord *= 1.3;
+				color.yCoord *= Math.max((1 - (dust * 1.4f)), 0);
+				color.zCoord *= Math.max((1 - (dust * 4)), 0);
+			} else {
+				color.yCoord *= 1 - (dust * 0.5F);
+				color.zCoord *= Math.max((1 - (dust * 4)), 0);
+			}
+
+			color.xCoord *= fire + (1 - dust);
+			color.yCoord *= fire + (1 - dust);
+			color.zCoord *= fire + (1 - dust);
+		}
+
 		return color;
 	}
 
@@ -375,6 +410,12 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 				colors[3] = f6;
 			}
 		}
+
+		float dustFactor = 1 - ImpactWorldHandler.getDustForClient(worldObj);
+		colors[0] *= dustFactor;
+		colors[1] *= dustFactor;
+		colors[2] *= dustFactor;
+		colors[3] *= dustFactor;
 
 		return colors;
 	}
@@ -422,7 +463,9 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 
 		float starBrightness = super.getStarBrightness(par1);
 
-		return MathHelper.clamp_float(starBrightness, distanceFactor, 1F);
+		float dust = ImpactWorldHandler.getDustForClient(worldObj);
+
+		return MathHelper.clamp_float(starBrightness, distanceFactor, 1F) * (1 - dust);
 	}
 
 	@Override
@@ -435,6 +478,9 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 		float sunBrightness = super.getSunBrightness(par1);
 
 		sunBrightness *= 1 - eclipseAmount * 0.6;
+
+		float dust = ImpactWorldHandler.getDustForClient(worldObj);
+		sunBrightness *= (1 - dust);
 
 		if(atmosphere == null) return sunBrightness;
 

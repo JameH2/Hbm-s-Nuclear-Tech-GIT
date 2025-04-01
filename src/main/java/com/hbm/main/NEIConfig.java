@@ -91,6 +91,13 @@ public class NEIConfig implements IConfigureNEI {
 		API.hideItem(new ItemStack(ModItems.rocket_custom));
 		API.hideItem(new ItemStack(ModBlocks.orbital_station));
 
+		API.hideItem(new ItemStack(ModBlocks.conveyor));
+		API.hideItem(new ItemStack(ModBlocks.conveyor_chute));
+		API.hideItem(new ItemStack(ModBlocks.conveyor_lift));
+		API.hideItem(new ItemStack(ModBlocks.conveyor_express));
+		API.hideItem(new ItemStack(ModBlocks.conveyor_double));
+		API.hideItem(new ItemStack(ModBlocks.conveyor_triple));
+
 		for(BedrockOreGrade grade : BedrockOreGrade.values()) {
 			if(grade == BedrockOreGrade.BASE) continue;
 			for(CelestialBedrockOreType type : CelestialBedrockOre.getAllTypes()) {

@@ -103,9 +103,6 @@ public class PyroOvenRecipes extends SerializableRecipe {
 		recipes.add(new PyroOvenRecipe(100)
 				.in(new FluidStack(Fluids.HYDROGEN, 500)).in(new OreDictStack(COAL.dust()))
 				.out(new FluidStack(Fluids.HEAVYOIL, 1_000)));
-		recipes.add(new PyroOvenRecipe(100)
-				.in(new FluidStack(Fluids.HYDROGEN, 250)).in(new OreDictStack(ANY_COKE.gem()))
-				.out(new FluidStack(Fluids.HEAVYOIL, 1_000)));
 		//coalgas from coal
 		recipes.add(new PyroOvenRecipe(50)
 				.in(new FluidStack(Fluids.HEAVYOIL, 500)).in(new OreDictStack(COAL.gem()))
@@ -126,7 +123,7 @@ public class PyroOvenRecipes extends SerializableRecipe {
 				.out(new FluidStack(Fluids.HYDROGEN, 8_000)).out(new ItemStack(ModItems.ingot_graphite, 1)));
 	}
 
-	private static void registerSFAuto(FluidType fluid) {
+	public static void registerSFAuto(FluidType fluid) {
 		registerSFAuto(fluid, 1_440_000L, ModItems.solid_fuel); //3200 burntime * 1.5 burntime bonus * 300 TU/t
 	}
 	private static void registerSFAuto(FluidType fluid, long tuPerSF, Item fuel) {

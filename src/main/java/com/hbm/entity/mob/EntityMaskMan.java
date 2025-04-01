@@ -9,6 +9,7 @@ import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ArmorUtil;
 
+import api.hbm.entity.ISuffocationImmune;
 import api.hbm.entity.IRadiationImmune;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -27,11 +28,11 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.world.World;
 
-public class EntityMaskMan extends EntityMob implements IBossDisplayData, IRadiationImmune {
+public class EntityMaskMan extends EntityMob implements IBossDisplayData, IRadiationImmune, ISuffocationImmune {
 
 	public EntityMaskMan(World world) {
 		super(world);
-		
+
 		this.tasks.addTask(1, new EntityAISwimming(this));
 		this.tasks.addTask(2, new EntityAIMaskmanCasualApproach(this, EntityPlayer.class, 1.0D, false));
 		this.tasks.addTask(2, new EntityAIMaskmanMinigun(this, true, true, 3));
@@ -59,7 +60,7 @@ public class EntityMaskMan extends EntityMob implements IBossDisplayData, IRadia
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
-		
+
 		if(source instanceof EntityDamageSourceIndirect && ((EntityDamageSourceIndirect) source).getSourceOfDamage() instanceof EntityEgg && rand.nextInt(10) == 0) {
 			this.experienceValue = 0;
 			this.setHealth(0);
@@ -120,10 +121,10 @@ public class EntityMaskMan extends EntityMob implements IBossDisplayData, IRadia
 	protected void dropFewItems(boolean bool, int i) {
 
 		if(!worldObj.isRemote) {
-			
+
 			ItemStack mask = new ItemStack(ModItems.gas_mask_m65);
 			ArmorUtil.installGasMaskFilter(mask, new ItemStack(ModItems.gas_mask_filter_combo));
-			
+
 			this.entityDropItem(mask, 0F);
 			this.dropItem(ModItems.coin_maskman, 1);
 			this.dropItem(ModItems.v1, 1);

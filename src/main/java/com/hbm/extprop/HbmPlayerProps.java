@@ -26,6 +26,7 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 
 	public boolean enableHUD = true;
 	public boolean enableBackpack = true;
+	public boolean enableMagnet = true;
 
 	private boolean[] keysPressed = new boolean[EnumKeybind.values().length];
 
@@ -77,6 +78,10 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 		return this.enableBackpack && getKeyPressed(EnumKeybind.JETPACK);
 	}
 
+	public boolean isMagnetActive(){
+		return this.enableMagnet;
+	}
+
 	public void setKeyPressed(EnumKeybind key, boolean pressed) {
 
 		if(!getKeyPressed(key) && pressed) {
@@ -90,6 +95,16 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 						MainRegistry.proxy.displayTooltip(EnumChatFormatting.GREEN + "Jetpack ON", MainRegistry.proxy.ID_JETPACK);
 					else
 						MainRegistry.proxy.displayTooltip(EnumChatFormatting.RED + "Jetpack OFF", MainRegistry.proxy.ID_JETPACK);
+				}
+			}
+			if (key == EnumKeybind.TOGGLE_MAGNET){
+				if (!player.worldObj.isRemote){
+					this.enableMagnet = !this.enableMagnet;
+
+					if(this.enableMagnet)
+						MainRegistry.proxy.displayTooltip(EnumChatFormatting.GREEN + "Magnet ON", MainRegistry.proxy.ID_MAGNET);
+					else
+						MainRegistry.proxy.displayTooltip(EnumChatFormatting.RED + "Magnet OFF", MainRegistry.proxy.ID_MAGNET);
 				}
 			}
 			if(key == EnumKeybind.TOGGLE_HEAD) {
@@ -180,6 +195,7 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 		buf.writeBoolean(this.enableHUD);
 		buf.writeInt(this.reputation);
 		buf.writeBoolean(this.isOnLadder);
+		buf.writeBoolean(this.enableMagnet);
 	}
 
 	public void deserialize(ByteBuf buf) {
@@ -191,6 +207,7 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 			this.enableHUD = buf.readBoolean();
 			this.reputation = buf.readInt();
 			this.isOnLadder = buf.readBoolean();
+			this.enableMagnet = buf.readBoolean();
 		}
 	}
 
@@ -205,6 +222,7 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 		props.setFloat("maxShield", maxShield);
 		props.setFloat("nitan", nitanCount);
 		props.setBoolean("enableBackpack", enableBackpack);
+		props.setBoolean("enableMagnet", enableMagnet);
 		props.setBoolean("enableHUD", enableHUD);
 		props.setInteger("reputation", reputation);
 		props.setBoolean("isOnLadder", isOnLadder);
@@ -226,6 +244,7 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 			this.nitanCount = props.getInteger("nitan");
 			this.maxShield = props.getFloat("maxShield");
 			this.enableBackpack = props.getBoolean("enableBackpack");
+			this.enableMagnet = props.getBoolean("enableMagnet");
 			this.enableHUD = props.getBoolean("enableHUD");
 			this.reputation = props.getInteger("reputation");
 			this.isOnLadder = props.getBoolean("isOnLadder");

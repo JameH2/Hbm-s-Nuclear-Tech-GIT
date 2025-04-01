@@ -5,6 +5,8 @@ import java.util.Random;
 
 import com.hbm.blocks.IBlockMulti;
 import com.hbm.blocks.ITooltipProvider;
+import com.hbm.world.gen.INBTTileEntityTransformable;
+import com.hbm.world.gen.INBTTransformable;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,7 +29,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-public class BlockPlushie extends BlockContainer implements IBlockMulti, ITooltipProvider {
+public class BlockPlushie extends BlockContainer implements IBlockMulti, ITooltipProvider, INBTTransformable {
 
 	public BlockPlushie() {
 		super(Material.cloth);
@@ -107,7 +109,12 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 		}
 	}
 
-	public static class TileEntityPlushie extends TileEntity {
+	@Override
+	public int transformMeta(int meta, int coordBaseMode) {
+		return (meta + coordBaseMode * 4) % 16;
+	}
+
+	public static class TileEntityPlushie extends TileEntity implements INBTTileEntityTransformable {
 
 		public PlushieType type = PlushieType.NONE;
 		public int squishTimer;
@@ -139,6 +146,11 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 		public void writeToNBT(NBTTagCompound nbt) {
 			super.writeToNBT(nbt);
 			nbt.setByte("type", (byte) type.ordinal());
+		}
+
+		@Override
+		public void transformTE(World world, int coordBaseMode) {
+			type = PlushieType.values()[world.rand.nextInt(PlushieType.values().length - 1) + 1];
 		}
 	}
 

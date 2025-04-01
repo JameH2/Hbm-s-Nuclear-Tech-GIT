@@ -3,6 +3,8 @@ package com.hbm.entity.logic;
 import org.apache.logging.log4j.Level;
 
 import com.hbm.config.GeneralConfig;
+import com.hbm.dim.CelestialBody;
+import com.hbm.dim.trait.CBT_Impact;
 import com.hbm.explosion.ExplosionNukeGeneric;
 import com.hbm.explosion.ExplosionTom;
 import com.hbm.main.MainRegistry;
@@ -77,6 +79,9 @@ public class EntityTomBlast extends EntityExplosionChunkloading {
 				data.impact = true;
 				data.fire = 1F;
 				data.markDirty();
+
+				CelestialBody body = CelestialBody.getBody(worldObj);
+				body.modifyTraits(new CBT_Impact(worldObj.getTotalWorldTime()));
 			}
 		}
 

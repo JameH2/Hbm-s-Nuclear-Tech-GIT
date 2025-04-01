@@ -9,6 +9,7 @@ import com.hbm.tileentity.machine.TileEntityCondenserPowered;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.IItemRenderer;
 
@@ -16,43 +17,50 @@ public class RenderCondenser extends TileEntitySpecialRenderer implements IItemR
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f) {
-		
+
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5D, y, z + 0.5D);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_CULL_FACE);
-		
+
 		switch(tileEntity.getBlockMetadata() - 10) {
 		case 2: GL11.glRotatef(90, 0F, 1F, 0F); break;
 		case 4: GL11.glRotatef(180, 0F, 1F, 0F); break;
 		case 3: GL11.glRotatef(270, 0F, 1F, 0F); break;
 		case 5: GL11.glRotatef(0, 0F, 1F, 0F); break;
 		}
-		
-		TileEntityCondenserPowered condenser = (TileEntityCondenserPowered) tileEntity;
-		
-		GL11.glShadeModel(GL11.GL_SMOOTH);
-		bindTexture(ResourceManager.condenser_tex);
-		ResourceManager.condenser.renderPart("Condenser");
 
-		float rot = condenser.lastSpin + (condenser.spin - condenser.lastSpin) * f;
-		
-		GL11.glPushMatrix();
-		GL11.glTranslated(0,1.5, 0);
-		GL11.glRotatef(rot, 1, 0, 0);
-		GL11.glTranslated(0, -1.5, 0);
-		ResourceManager.condenser.renderPart("Fan1");
-		GL11.glPopMatrix();
-		
-		GL11.glPushMatrix();
-		GL11.glTranslated(0,1.5, 0);
-		GL11.glRotatef(rot, -1, 0, 0);
-		GL11.glTranslated(0, -1.5, 0);
-		ResourceManager.condenser.renderPart("Fan2");
-		GL11.glPopMatrix();
-		
+		TileEntityCondenserPowered condenser = (TileEntityCondenserPowered) tileEntity;
+
+		GL11.glShadeModel(GL11.GL_SMOOTH);
+
+		if(condenser.damaged) {
+			GL11.glRotatef(180, 0, 1, 0);
+			bindTexture(ResourceManager.condenser_damaged_tex);
+			ResourceManager.condenser_damaged.renderAll();
+		} else {
+			bindTexture(ResourceManager.condenser_tex);
+			ResourceManager.condenser.renderPart("Condenser");
+
+			float rot = condenser.lastSpin + (condenser.spin - condenser.lastSpin) * f;
+
+			GL11.glPushMatrix();
+			GL11.glTranslated(0,1.5, 0);
+			GL11.glRotatef(rot, 1, 0, 0);
+			GL11.glTranslated(0, -1.5, 0);
+			ResourceManager.condenser.renderPart("Fan1");
+			GL11.glPopMatrix();
+
+			GL11.glPushMatrix();
+			GL11.glTranslated(0,1.5, 0);
+			GL11.glRotatef(rot, -1, 0, 0);
+			GL11.glTranslated(0, -1.5, 0);
+			ResourceManager.condenser.renderPart("Fan2");
+			GL11.glPopMatrix();
+		}
+
 		GL11.glShadeModel(GL11.GL_FLAT);
-		
+
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glPopMatrix();
 	}
@@ -69,11 +77,24 @@ public class RenderCondenser extends TileEntitySpecialRenderer implements IItemR
 				GL11.glTranslated(-1, -1, 0);
 				GL11.glScaled(2.75, 2.75, 2.75);
 			}
-			public void renderCommon() {
+			public void renderCommonWithStack(ItemStack stack) {
 				GL11.glScaled(0.75, 0.75, 0.75);
 				GL11.glTranslated(0.5, 0, 0);
+
+				boolean damaged = false;
+				if(stack.hasTagCompound()) {
+					damaged = stack.getTagCompound().getBoolean("damaged");
+				}
+
 				GL11.glShadeModel(GL11.GL_SMOOTH);
-				bindTexture(ResourceManager.condenser_tex); ResourceManager.condenser.renderAll();
+				if(damaged) {
+					GL11.glRotatef(180, 0, 1, 0);
+					bindTexture(ResourceManager.condenser_damaged_tex);
+					ResourceManager.condenser_damaged.renderAll();
+				} else {
+					bindTexture(ResourceManager.condenser_tex);
+					ResourceManager.condenser.renderAll();
+				}
 				GL11.glShadeModel(GL11.GL_FLAT);
 			}
 		};

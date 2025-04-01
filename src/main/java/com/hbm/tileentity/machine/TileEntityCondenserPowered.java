@@ -1,14 +1,22 @@
 package com.hbm.tileentity.machine;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.inventory.OreDictManager;
+import com.hbm.inventory.RecipesCommon.AStack;
+import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.tileentity.IConfigurableMachine;
+import com.hbm.tileentity.IPersistentNBT;
+import com.hbm.tileentity.IRepairable;
 import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.world.gen.INBTTileEntityTransformable;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import cpw.mods.fml.relauncher.Side;
@@ -17,19 +25,24 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityCondenserPowered extends TileEntityCondenser implements IEnergyReceiverMK2 {
-	
+public class TileEntityCondenserPowered extends TileEntityCondenser implements IEnergyReceiverMK2, IRepairable, INBTTileEntityTransformable, IPersistentNBT {
+
 	public long power;
 	public float spin;
 	public float lastSpin;
-	
+
 	//Configurable values
 	public static long maxPower = 10_000_000;
 	public static int inputTankSizeP = 1_000_000;
 	public static int outputTankSizeP = 1_000_000;
 	public static int powerConsumption = 10;
+
+	public boolean damaged;
+	public Explosion lastExplosion;
 
 	public TileEntityCondenserPowered() {
 		tanks = new FluidTank[2];
@@ -37,7 +50,7 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 		tanks[1] = new FluidTank(Fluids.WATER, outputTankSizeP);
 		vacuumOptimised = true;
 	}
-	
+
 	@Override
 	public String getConfigName() {
 		return "condenserPowered";
@@ -60,20 +73,25 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 
 	@Override
 	public void updateEntity() {
+		if(!worldObj.isRemote && damaged) {
+			networkPackNT(150);
+			return;
+		}
+
 		super.updateEntity();
-		
+
 		if(worldObj.isRemote) {
-			
+
 			this.lastSpin = this.spin;
-			
+
 			if(this.waterTimer > 0) {
 				this.spin += 30F;
-				
+
 				if(this.spin >= 360F) {
 					this.spin -= 360F;
 					this.lastSpin -= 360F;
 				}
-				
+
 				if(worldObj.getTotalWorldTime() % 4 == 0) {
 					ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
 					worldObj.spawnParticle("cloud", xCoord + 0.5 + dir.offsetX * 1.5, yCoord + 1.5, zCoord + 0.5 + dir.offsetZ * 1.5, dir.offsetX * 0.1, 0, dir.offsetZ * 0.1);
@@ -87,7 +105,7 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 	public void packExtra(NBTTagCompound data) {
 		data.setLong("power", power);
 	}
-	
+
 	@Override
 	public boolean extraCondition(int convert) {
 		return power >= convert * 10;
@@ -106,6 +124,7 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 		this.tanks[0].serialize(buf);
 		this.tanks[1].serialize(buf);
 		buf.writeByte(this.waterTimer);
+		buf.writeBoolean(this.damaged);
 	}
 
 	@Override
@@ -115,22 +134,25 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 		this.tanks[0].deserialize(buf);
 		this.tanks[1].deserialize(buf);
 		this.waterTimer = buf.readByte();
+		this.damaged = buf.readBoolean();
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		this.power = nbt.getLong("power");
 		tanks[0].readFromNBT(nbt, "water");
 		tanks[1].readFromNBT(nbt, "steam");
+		this.damaged = nbt.getBoolean("damaged");
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setLong("power", power);
 		tanks[0].writeToNBT(nbt, "water");
 		tanks[1].writeToNBT(nbt, "steam");
+		nbt.setBoolean("damaged", damaged);
 	}
 
 	@Override
@@ -147,12 +169,12 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 			this.sendFluid(this.tanks[1], worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
 		}
 	}
-	
+
 	public DirPos[] getConPos() {
-		
+
 		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
 		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		
+
 		return new DirPos[] {
 				new DirPos(xCoord + rot.offsetX * 4, yCoord + 1, zCoord + rot.offsetZ * 4, rot),
 				new DirPos(xCoord - rot.offsetX * 4, yCoord + 1, zCoord - rot.offsetZ * 4, rot.getOpposite()),
@@ -162,12 +184,12 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 				new DirPos(xCoord - dir.offsetX * 2 + rot.offsetX, yCoord + 1, zCoord - dir.offsetZ * 2 + rot.offsetZ, dir.getOpposite())
 		};
 	}
-	
+
 	AxisAlignedBB bb = null;
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		
+
 		if(bb == null) {
 			bb = AxisAlignedBB.getBoundingBox(
 					xCoord - 3,
@@ -178,10 +200,10 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 					zCoord + 4
 					);
 		}
-		
+
 		return bb;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared() {
@@ -202,4 +224,44 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 	public long getMaxPower() {
 		return maxPower;
 	}
+
+	@Override
+	public boolean isDamaged() { return damaged; }
+
+	List<AStack> repair = new ArrayList<>();
+
+	@Override
+	public List<AStack> getRepairMaterials() {
+		if(!repair.isEmpty()) return repair;
+
+		repair.add(new OreDictStack(OreDictManager.STEEL.plateWelded(), 4));
+		repair.add(new OreDictStack(OreDictManager.STEEL.pipe(), 12));
+		repair.add(new OreDictStack(OreDictManager.ANY_RESISTANTALLOY.plateWelded(), 2));
+		return repair;
+	}
+
+	@Override
+	public void repair() {
+		damaged = false;
+		markDirty();
+	}
+
+	@Override
+	public void tryExtinguish(World world, int x, int y, int z, EnumExtinguishType type) {}
+
+	@Override
+	public void transformTE(World world, int coordBaseMode) {
+		damaged = true;
+	}
+
+	@Override
+	public void writeNBT(NBTTagCompound nbt) {
+		if(damaged) nbt.setBoolean("damaged", true);
+	}
+
+	@Override
+	public void readNBT(NBTTagCompound nbt) {
+		damaged = nbt.getBoolean("damaged");
+	}
+
 }

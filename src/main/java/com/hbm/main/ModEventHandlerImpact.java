@@ -1,12 +1,10 @@
 package com.hbm.main;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.dim.WorldProviderEarth;
 import com.hbm.entity.projectile.EntityTom;
 import com.hbm.handler.BossSpawnHandler;
 import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.saveddata.TomSaveData;
-import com.hbm.world.PlanetGen;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -98,9 +96,7 @@ public class ModEventHandlerImpact {
 					if(e instanceof EntityLivingBase) {
 						EntityLivingBase entity = (EntityLivingBase) e;
 
-						if(entity.worldObj.provider.dimensionId == 0 && data.fire > 0 && data.dust < 0.75f &&
-								event.world.getSavedLightValue(EnumSkyBlock.Sky, (int) entity.posX, (int) entity.posY, (int) entity.posZ) > 7) {
-
+						if(data.fire > 0 && data.dust < 0.75f && event.world.getSavedLightValue(EnumSkyBlock.Sky, (int) entity.posX, (int) entity.posY, (int) entity.posZ) > 7) {
 							entity.setFire(5);
 							entity.attackEntityFrom(DamageSource.onFire, 2);
 						}
@@ -130,11 +126,9 @@ public class ModEventHandlerImpact {
 
 		if(data.impact) {
 			if(!(event.entityLiving instanceof EntityPlayer) && event.entityLiving instanceof EntityLivingBase) {
-				if(event.world.provider.dimensionId == 0) {
-					if(event.entityLiving.height >= 0.85F || event.entityLiving.width >= 0.85F && !(event.entity instanceof EntityWaterMob) && !event.entityLiving.isChild()) {
-						event.setResult(Result.DENY);
-						event.entityLiving.setDead();
-					}
+				if(event.entityLiving.height >= 0.85F || event.entityLiving.width >= 0.85F && !(event.entity instanceof EntityWaterMob) && !event.entityLiving.isChild()) {
+					event.setResult(Result.DENY);
+					event.entityLiving.setDead();
 				}
 				if(event.entityLiving instanceof EntityWaterMob) {
 					Random rand = new Random();
@@ -162,12 +156,7 @@ public class ModEventHandlerImpact {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onLoad(WorldEvent.Load event) {
-
 		TomSaveData.resetLastCached();
-
-		if(!(event.world.provider instanceof WorldProviderEarth)) {
-			PlanetGen.overrideOverworldProvider();
-		}
 	}
 
 	@SubscribeEvent

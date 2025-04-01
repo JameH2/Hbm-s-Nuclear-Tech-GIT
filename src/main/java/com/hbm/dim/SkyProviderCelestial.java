@@ -19,15 +19,18 @@ import org.lwjgl.opengl.GL11;
 import com.hbm.dim.SolarSystem.AstroMetric;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Dyson;
+import com.hbm.dim.trait.CBT_Impact;
 import com.hbm.dim.trait.CelestialBodyTrait.CBT_Destroyed;
 import com.hbm.extprop.HbmLivingProps;
 import com.hbm.lib.RefStrings;
+import com.hbm.main.ModEventHandlerClient;
 import com.hbm.main.ModEventHandlerRenderer;
 import com.hbm.render.shader.Shader;
 import com.hbm.saveddata.SatelliteSavedData;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.util.BobMathUtil;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class SkyProviderCelestial extends IRenderHandler {
@@ -36,6 +39,8 @@ public class SkyProviderCelestial extends IRenderHandler {
 	private static final ResourceLocation flareTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/sunspike.png");
 	private static final ResourceLocation nightTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/night.png");
 	private static final ResourceLocation digammaStar = new ResourceLocation(RefStrings.MODID, "textures/misc/space/star_digamma.png");
+	private static final ResourceLocation impactTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/impact.png");
+	private static final ResourceLocation lodeStar = new ResourceLocation(RefStrings.MODID, "textures/misc/star_lode.png");
 
 	private static final ResourceLocation noise = new ResourceLocation(RefStrings.MODID, "shaders/iChannel1.png");
 
@@ -665,6 +670,17 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 					planetShader.stop();
 
+					if(metric.body.hasTrait(CBT_Impact.class)) {
+						mc.renderEngine.bindTexture(impactTexture);
+
+						tessellator.startDrawingQuads();
+						tessellator.addVertexWithUV(-size, 100.0D, -size, 0.0D, 0.0D);
+						tessellator.addVertexWithUV(size, 100.0D, -size, 1.0D, 0.0D);
+						tessellator.addVertexWithUV(size, 100.0D, size, 1.0D, 1.0D);
+						tessellator.addVertexWithUV(-size, 100.0D, size, 0.0D, 1.0D);
+						tessellator.draw();
+					}
+
 
 					GL11.glDisable(GL11.GL_TEXTURE_2D);
 
@@ -693,6 +709,25 @@ public class SkyProviderCelestial extends IRenderHandler {
 		GL11.glPushMatrix();
 		{
 
+			float var12 = 1F + world.rand.nextFloat() * 0.5F;
+			double dist = 100D;
+
+			if(ModEventHandlerClient.renderLodeStar) {
+				GL11.glPushMatrix();
+				GL11.glRotatef(-75.0F, 1.0F, 0.0F, 0.0F);
+				GL11.glRotatef(10.0F, 0.0F, 1.0F, 0.0F);
+				FMLClientHandler.instance().getClient().renderEngine.bindTexture(lodeStar); // genu-ine bona-fide ass whooping
+
+				tessellator.startDrawingQuads();
+				tessellator.addVertexWithUV(-var12, dist, -var12, 0.0D, 0.0D);
+				tessellator.addVertexWithUV(var12, dist, -var12, 0.0D, 1.0D);
+				tessellator.addVertexWithUV(var12, dist, var12, 1.0D, 1.0D);
+				tessellator.addVertexWithUV(-var12, dist, var12, 1.0D, 0.0D);
+				tessellator.draw();
+
+				GL11.glPopMatrix();
+			}
+
 			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
 
 			float brightness = (float) Math.sin(celestialAngle * Math.PI);
@@ -706,8 +741,8 @@ public class SkyProviderCelestial extends IRenderHandler {
 			mc.renderEngine.bindTexture(digammaStar);
 
 			float digamma = HbmLivingProps.getDigamma(Minecraft.getMinecraft().thePlayer);
-			float var12 = 1F * (1 + digamma * 0.25F);
-			double dist = 100D - digamma * 2.5;
+			var12 = 1F * (1 + digamma * 0.25F);
+			dist = 100D - digamma * 2.5;
 
 			tessellator.startDrawingQuads();
 			tessellator.addVertexWithUV(-var12, dist, -var12, 0.0D, 0.0D);

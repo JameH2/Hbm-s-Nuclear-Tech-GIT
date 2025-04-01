@@ -46,8 +46,8 @@ public class WorldProviderMoho extends WorldProviderCelestial {
 
 		biomes = new GenLayerFuzzyZoom(2000L, biomes);
 		biomes = new GenLayerDiversify(1234L, biomes, 6, BiomeGenBaseMoho.mohoBasalt);
-		biomes = new GenLayerMohoPlateauExtend(9944L, biomes);
 		biomes = new GenLayerZoom(2001L, biomes);
+		biomes = new GenLayerMohoPlateauExtend(9944L, biomes);
 		biomes = new GenLayerZoom(1006L, biomes);
 		biomes = new GenLayerSmooth(700L, biomes);
 		biomes = new GenLayerZoom(1000L, biomes);

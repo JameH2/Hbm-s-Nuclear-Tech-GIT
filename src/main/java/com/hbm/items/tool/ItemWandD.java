@@ -25,20 +25,20 @@ import net.minecraft.world.World;
 
 public class ItemWandD extends Item {
 
-	
+
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-		
+
 		if(world.isRemote)
 			return stack;
-		
+
 		MovingObjectPosition pos = Library.rayTrace(player, 500, 1, false, true, false);
-		
+
 		if(pos != null) {
 
 			if(stack.stackTagCompound == null)
 				stack.stackTagCompound = new NBTTagCompound();
-			
+
 			if(!player.isSneaking()) {
 				int targetId = stack.stackTagCompound.getInteger("dim");
 
@@ -47,7 +47,7 @@ public class ItemWandD extends Item {
 					player.addChatMessage(new ChatComponentText("Teleported to: ORBIT"));
 				} else {
 					SolarSystem.Body target = SolarSystem.Body.values()[targetId];
-	
+
 					DebugTeleporter.teleport(player, target.getBody().dimensionId, player.posX, 300, player.posZ, true);
 					player.addChatMessage(new ChatComponentText("Teleported to: " + target.getBody().getUnlocalizedName()));
 				}
@@ -59,7 +59,7 @@ public class ItemWandD extends Item {
 				if(targetId >= SolarSystem.Body.values().length) {
 					targetId = 0;
 				}
-				
+
 				stack.stackTagCompound.setInteger("dim", targetId);
 
 				if(targetId == 0) {
@@ -73,7 +73,7 @@ public class ItemWandD extends Item {
 			if(!player.isSneaking()) {
 				// TESTING: View atmospheric data
 				CBT_Atmosphere atmosphere = CelestialBody.getTrait(world, CBT_Atmosphere.class);
-	
+
 				boolean isVacuum = true;
 				if(atmosphere != null) {
 					for(FluidEntry entry : atmosphere.fluids) {
@@ -83,7 +83,7 @@ public class ItemWandD extends Item {
 						// }
 					}
 				}
-	
+
 				if(isVacuum)
 					player.addChatMessage(new ChatComponentText("Atmosphere: NEAR VACUUM"));
 			} else {
@@ -93,10 +93,10 @@ public class ItemWandD extends Item {
 
 					// TESTING: END OF TIME
 					star.modifyTraits(new CBT_Destroyed());
-		
+
 					// TESTING: END OF LIFE
 					CelestialBody.degas(world);
-		
+
 					// GOD
 					// DAMN
 					player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "GOD"));
@@ -107,7 +107,7 @@ public class ItemWandD extends Item {
 
 					star.clearTraits();
 					CelestialBody.clearTraits(world);
-					
+
 					player.addChatMessage(new ChatComponentText("kidding"));
 				}
 			}

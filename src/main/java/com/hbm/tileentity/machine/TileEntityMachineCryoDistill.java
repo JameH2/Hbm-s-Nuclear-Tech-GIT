@@ -20,7 +20,6 @@ import api.hbm.fluid.IFluidStandardTransceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,15 +28,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityMachineCryoDistill extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiver, IPersistentNBT, IGUIProvider {
-	
+
 	public long power;
 	public static final long maxPower = 1_000_000;
-	
+
 	public FluidTank[] tanks;
 
 	public TileEntityMachineCryoDistill() {
 		super(11);
-		
+
 		this.tanks = new FluidTank[5];
 		this.tanks[0] = new FluidTank(Fluids.AIR, 64_000);
 		this.tanks[1] = new FluidTank(Fluids.NITROGEN, 24_000);
@@ -53,7 +52,7 @@ public class TileEntityMachineCryoDistill extends TileEntityMachineBase implemen
 
 	@Override
 	public void updateEntity() {
-		
+
 		if(!worldObj.isRemote) {
 			power = Library.chargeTEFromItems(slots, 0, power, maxPower);
 			tanks[0].setType(7, slots);
@@ -65,7 +64,7 @@ public class TileEntityMachineCryoDistill extends TileEntityMachineBase implemen
 
 			// Subscribe input tank
 			trySubscribe(tanks[0].getTankType(), worldObj, con[0].getX(), con[0].getY(), con[0].getZ(), con[0].getDir());
-			
+
 			distill();
 
 			tanks[1].unloadTank(1, 2, slots);
@@ -96,9 +95,9 @@ public class TileEntityMachineCryoDistill extends TileEntityMachineBase implemen
 		power = buf.readLong();
 		for(int i = 0; i < 5; i++) tanks[i].deserialize(buf);
 	}
-	
+
 	private void distill() {
-		
+
 		Quartet<FluidStack, FluidStack, FluidStack, FluidStack> out = CryoRecipes.getOutput(tanks[0].getTankType());
 		if(out == null) {
 			tanks[1].setTankType(Fluids.NONE);
@@ -112,7 +111,7 @@ public class TileEntityMachineCryoDistill extends TileEntityMachineBase implemen
 		tanks[2].setTankType(out.getX().type);
 		tanks[3].setTankType(out.getY().type);
 		tanks[4].setTankType(out.getZ().type);
-		
+
 		if(power < 20_000) return;
 		if(tanks[0].getFill() < 100) return;
 
@@ -128,14 +127,14 @@ public class TileEntityMachineCryoDistill extends TileEntityMachineBase implemen
 		tanks[3].setFill(tanks[3].getFill() + out.getY().fill);
 		tanks[4].setFill(tanks[4].getFill() + out.getZ().fill);
 
-		
+
 		power -= 20_000;
 	}
-	
+
 	public DirPos[] getConPos() {
 		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
 		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		
+
 		return new DirPos[] {
 			// Input
 			new DirPos(xCoord + dir.offsetX * -1 + rot.offsetX * -3, yCoord - 2, zCoord + dir.offsetZ * -1 + rot.offsetZ * -3, rot),
@@ -150,7 +149,7 @@ public class TileEntityMachineCryoDistill extends TileEntityMachineBase implemen
 			new DirPos(xCoord + dir.offsetX * -2 + rot.offsetX * -3, yCoord - 2, zCoord + dir.offsetZ * -2 + rot.offsetZ * -3, rot),
 		};
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -162,11 +161,11 @@ public class TileEntityMachineCryoDistill extends TileEntityMachineBase implemen
 		tanks[3].readFromNBT(nbt, "o3");
 		tanks[4].readFromNBT(nbt, "o4");
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		
+
 		nbt.setLong("power", power);
 		tanks[0].writeToNBT(nbt, "input");
 		tanks[1].writeToNBT(nbt, "o1");
@@ -174,9 +173,9 @@ public class TileEntityMachineCryoDistill extends TileEntityMachineBase implemen
 		tanks[3].writeToNBT(nbt, "o3");
 		tanks[4].writeToNBT(nbt, "o4");
 	}
-	
+
 	AxisAlignedBB bb = null;
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		if(bb == null) {
@@ -189,10 +188,10 @@ public class TileEntityMachineCryoDistill extends TileEntityMachineBase implemen
 				zCoord + 4
 			);
 		}
-		
+
 		return bb;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared() {

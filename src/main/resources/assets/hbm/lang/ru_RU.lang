@@ -2662,6 +2662,10 @@ item.combine_scrap.name=Металлолом Альянса
 item.component_emitter.name=Компонент излучателя
 item.component_limiter.name=Компонент стабилизатора
 item.containment_box.name=Защитная коробка
+item.conveyor_wand.regular.name=Конвейер
+item.conveyor_wand.express.name=Быстрый конвейер
+item.conveyor_wand.double.name=Двухполосный конвейер
+item.conveyor_wand.triple.name=Трёхполосный конвейер
 item.cordite.name=Кордит
 item.cotton_candy.name=Радиоактивная сахарная вата
 item.crackpipe.name=Оздоровительная трубка
@@ -6842,6 +6846,7 @@ chem.SCHRABIDIUM_BROMIDE=Производство бромида шрабиди�
 chem.THORIUM_BROMIDE=Производство бромида тория
 chem.CHLOROMETHANE=Галогенирование природного газа
 chem.SOIL=Производство почвы
+chem.HYDRAPISS=Производство гидрозина с использованием мочи
 
 crucible.arse=Производство арсенида галлия
 crucible.conglomerate=Переплавка конгломерата в железо и никель
@@ -6939,3 +6944,5 @@ potion.hbm_nitan=Aмброзия
 
 trait.confusion=Аутизм
 trait.neutron=Нейтронная радиация
+
+// last updated 23.03.2025 //

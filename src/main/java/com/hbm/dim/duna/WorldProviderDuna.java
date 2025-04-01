@@ -165,8 +165,6 @@ public class WorldProviderDuna extends WorldProviderCelestial {
 		biomes = new GenLayerFuzzyZoom(1000L, biomes);
 		biomes = new GenLayerSmooth(705L, biomes);
 		biomes = new GenLayerFuzzyZoom(1001L, biomes);
-		biomes = new GenLayerSmooth(706L, biomes);
-		biomes = new GenLayerFuzzyZoom(1002L, biomes);
 		biomes = new GenLayerZoom(1006L, biomes);
 
 		GenLayer genlayerVoronoiZoom = new GenLayerVoronoiZoom(10L, biomes);

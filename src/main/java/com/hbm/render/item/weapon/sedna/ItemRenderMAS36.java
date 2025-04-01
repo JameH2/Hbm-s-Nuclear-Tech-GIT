@@ -5,6 +5,7 @@ import java.nio.DoubleBuffer;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
+import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.HbmAnimations;
 
@@ -20,7 +21,7 @@ public class ItemRenderMAS36 extends ItemRenderWeaponBase {
 	@Override
 	public float getViewFOV(ItemStack stack, float fov) {
 		float aimingProgress = ItemGunBaseNT.prevAimingProgress + (ItemGunBaseNT.aimingProgress - ItemGunBaseNT.prevAimingProgress) * interp;
-		return  fov * (1 - aimingProgress * 0.33F);
+		return  fov * (1 - aimingProgress * (isScoped(stack) ? 0.66F : 0.33F));
 	}
 
 	@Override
@@ -28,18 +29,24 @@ public class ItemRenderMAS36 extends ItemRenderWeaponBase {
 		GL11.glTranslated(0, 0, 0.875);
 		
 		float offset = 0.8F;
-		standardAimingTransform(stack,
+		
+		if(isScoped(stack)) {
+			standardAimingTransform(stack,
 				-1.5F * offset, -1.25F * offset, 1.75F * offset,
-				0, -4.6825 / 8D, 0.75);
-		/*standardAimingTransform(stack,
-				-1.5F * offset, -1.25F * offset, 1.75F * offset,
-				-0.2, -5.875 / 8D, 1.125);*/
+				-0.2, -5.875 / 8D, 1.125);
+		} else {
+			standardAimingTransform(stack,
+					-1.5F * offset, -1.25F * offset, 1.75F * offset,
+					0, -4.6825 / 8D, 0.75);
+		}
 	}
 	
 	private static DoubleBuffer buf = null;
 
 	@Override
 	public void renderFirstPerson(ItemStack stack) {
+		boolean isScoped = isScoped(stack);
+		if(isScoped && ItemGunBaseNT.prevAimingProgress == 1 && ItemGunBaseNT.aimingProgress == 1) return;
 		if(buf == null) buf = GLAllocation.createDirectByteBuffer(8*4).asDoubleBuffer();
 		
 		ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
@@ -57,16 +64,20 @@ public class ItemRenderMAS36 extends ItemRenderWeaponBase {
 		double[] showClip = HbmAnimations.getRelevantTransformation("SHOW_CLIP");
 		double[] clip = HbmAnimations.getRelevantTransformation("CLIP");
 		double[] bullets = HbmAnimations.getRelevantTransformation("BULLETS");
+		double[] stab = HbmAnimations.getRelevantTransformation("STAB");
 		
 		GL11.glTranslated(0, -3, -3);
 		GL11.glRotated(equip[0], 1, 0, 0);
 		GL11.glRotated(lift[0], 1, 0, 0);
 		GL11.glTranslated(0, 3, 3);
+
+		GL11.glTranslated(stab[0], stab[1], stab[2]);
 		
 		GL11.glTranslated(0, 0, recoil[2]);
 
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		ResourceManager.mas36.renderPart("Gun");
+		if(hasBayonet(stack))  ResourceManager.mas36.renderPart("Bayonet");
 		
 		GL11.glPushMatrix();
 		GL11.glTranslated(0, 0.3125, -2.125);
@@ -76,9 +87,9 @@ public class ItemRenderMAS36 extends ItemRenderWeaponBase {
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
-		GL11.glTranslated(0, 1.125, 0);
+		GL11.glTranslated(0, 0.0625 * 18.5, 0);
 		GL11.glRotated(boltTurn[2], 0, 0, 1);
-		GL11.glTranslated(0, -1.125, 0);
+		GL11.glTranslated(0, 0.0625 * -18.5, 0);
 		GL11.glTranslated(0, 0, boltPull[2]);
 		ResourceManager.mas36.renderPart("Bolt");
 		GL11.glPopMatrix();
@@ -88,7 +99,7 @@ public class ItemRenderMAS36 extends ItemRenderWeaponBase {
 		ResourceManager.mas36.renderPart("Bullet");
 		GL11.glPopMatrix();
 		
-		//ResourceManager.mas36.renderPart("Scope");
+		if(isScoped) ResourceManager.mas36.renderPart("Scope");
 
 		if(showClip[0] != 0) {
 			GL11.glPushMatrix();
@@ -145,6 +156,28 @@ public class ItemRenderMAS36 extends ItemRenderWeaponBase {
 	}
 
 	@Override
+	public void setupModTable(ItemStack stack) {
+		double scale = -7.5D;
+		GL11.glScaled(scale, scale, scale);
+		GL11.glRotated(90, 0, 1, 0);
+		GL11.glTranslated(0, -0.25, -2.5);
+	}
+
+	@Override
+	public void renderModTable(ItemStack stack, int index) {
+		GL11.glEnable(GL11.GL_LIGHTING);
+		
+		GL11.glShadeModel(GL11.GL_SMOOTH);
+		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.mas36_tex);
+		ResourceManager.mas36.renderPart("Gun");
+		ResourceManager.mas36.renderPart("Stock");
+		ResourceManager.mas36.renderPart("Bolt");
+		if(isScoped(stack)) ResourceManager.mas36.renderPart("Scope");
+		if(hasBayonet(stack)) ResourceManager.mas36.renderPart("Bayonet");
+		GL11.glShadeModel(GL11.GL_FLAT);
+	}
+
+	@Override
 	public void renderOther(ItemStack stack, ItemRenderType type) {
 		GL11.glEnable(GL11.GL_LIGHTING);
 		
@@ -153,9 +186,17 @@ public class ItemRenderMAS36 extends ItemRenderWeaponBase {
 		ResourceManager.mas36.renderPart("Gun");
 		ResourceManager.mas36.renderPart("Stock");
 		ResourceManager.mas36.renderPart("Bolt");
-		//ResourceManager.mas36.renderPart("Scope");
+		if(isScoped(stack)) ResourceManager.mas36.renderPart("Scope");
 		GL11.glTranslated(0, -1, -6);
-		//ResourceManager.mas36.renderPart("Bayonet");
+		if(hasBayonet(stack)) ResourceManager.mas36.renderPart("Bayonet");
 		GL11.glShadeModel(GL11.GL_FLAT);
+	}
+	
+	public boolean isScoped(ItemStack stack) {
+		return WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SCOPE);
+	}
+	
+	public boolean hasBayonet(ItemStack stack) {
+		return WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_MAS_BAYONET);
 	}
 }

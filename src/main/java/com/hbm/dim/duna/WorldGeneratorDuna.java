@@ -3,6 +3,7 @@ package com.hbm.dim.duna;
 import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.machine.Spotlight;
 import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
@@ -63,7 +64,9 @@ public class WorldGeneratorDuna implements IWorldGenerator {
 			int z = 0;
 			int y = world.getHeightValue(x, z) - 1;
 
+			Spotlight.disableOnGeneration = false;
 			StructureManager.martian.build(world, x, y, z);
+			Spotlight.disableOnGeneration = true;
 		}
 	}
 

@@ -13,8 +13,11 @@ import com.hbm.inventory.fluid.trait.*;
 import com.hbm.inventory.fluid.trait.FluidTraitSimple.*;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.util.EnumSymbol;
+import com.hbm.uninos.INetworkProvider;
+import com.hbm.uninos.networkproviders.FluidNetProvider;
 import com.hbm.util.I18nUtil;
 
+import api.hbm.fluidmk2.FluidNetMK2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.tileentity.TileEntity;
@@ -253,5 +256,11 @@ public class FluidType {
 	@Deprecated
 	public String name() {
 		return this.stringId;
+	}
+	
+	protected INetworkProvider<FluidNetMK2> NETWORK_PROVIDER = new FluidNetProvider(this);
+	
+	public INetworkProvider<FluidNetMK2> getNetworkProvider() {
+		return NETWORK_PROVIDER;
 	}
 }

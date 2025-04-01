@@ -25,29 +25,29 @@ public class RenderDecoBlock extends TileEntitySpecialRenderer {
 	private static final ResourceLocation texture7 = new ResourceLocation(RefStrings.MODID + ":" + "textures/models/ModelRadio.png");
 	private static final ResourceLocation texture8 = new ResourceLocation(RefStrings.MODID + ":" + "textures/models/ModelRadioReceiver.png");
 	private static final ResourceLocation texture9 = new ResourceLocation(RefStrings.MODID + ":" + "textures/models/ModelGeiger.png");
-	
+
 	private ModelSteelRoof model3;
 	private ModelBroadcaster model6;
 	private ModelRadio model7;
 	private ModelGeiger model8;
-	
+
 	public RenderDecoBlock() {
 		this.model3 = new ModelSteelRoof();
 		this.model6 = new ModelBroadcaster();
 		this.model7 = new ModelRadio();
 		this.model8 = new ModelGeiger();
 	}
-	
+
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f) {
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glRotatef(180, 0F, 0F, 1F);
-		
+
 		GL11.glEnable(GL11.GL_LIGHTING);
-		
+
 		Block b = tileentity.getWorldObj().getBlock(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord);
-		
+
 		if(b == ModBlocks.steel_roof) {
 			this.bindTexture(texture3);
 		}
@@ -96,7 +96,7 @@ public class RenderDecoBlock extends TileEntitySpecialRenderer {
 			}
 			GL11.glTranslatef(0, 0, 1);
 		}
-		
+
 		GL11.glPushMatrix();
 			if(b == ModBlocks.steel_roof) this.model3.renderModel(0.0625F);
 			if(b == ModBlocks.broadcaster_pc) this.model6.renderModel(0.0625F);
@@ -104,7 +104,7 @@ public class RenderDecoBlock extends TileEntitySpecialRenderer {
 			if(b == ModBlocks.radiobox) this.model7.renderModel(0.0625F, tileentity.getBlockMetadata() > 5 ? 160 : 20);
 			if(b == ModBlocks.radiorec) this.model6.renderModel(0.0625F);
 		GL11.glPopMatrix();
-			
+
 		if(b == ModBlocks.boxcar) {
 
 			GL11.glRotatef(180, 0F, 0F, 1F);
@@ -248,37 +248,19 @@ public class RenderDecoBlock extends TileEntitySpecialRenderer {
 			ResourceManager.sat_foeq.renderAll();
 		}
 
-		if(b == ModBlocks.sat_dock || b == ModBlocks.transporter_rocket || b == ModBlocks.gas_dock) {
+		if(b == ModBlocks.sat_dock || b == ModBlocks.gas_dock) {
 			GL11.glRotatef(180, 0F, 0F, 1F);
 			GL11.glTranslatef(0, -1.5F, 0);
-			
+
 			bindTexture(ResourceManager.satdock_tex);
 			ResourceManager.satDock.renderAll();
 
-			if(b == ModBlocks.transporter_rocket) {
-				if(tileentity instanceof TileEntityTransporterRocket && ((TileEntityTransporterRocket)tileentity).launchTicks < 100) {
-					TileEntityTransporterRocket transporter = (TileEntityTransporterRocket) tileentity;
-					GL11.glPushMatrix();
-					{
-						
-						GL11.glTranslatef(0.0F, 0.75F + MathHelper.clamp_float(transporter.launchTicks + (transporter.hasRocket ? -f : f), 0, 200), 0.0F);
-						GL11.glDisable(GL11.GL_CULL_FACE);
-
-						bindTexture(ResourceManager.minerRocket_tex);
-
-						ResourceManager.minerRocket.renderAll();
-
-						GL11.glEnable(GL11.GL_CULL_FACE);
-
-					}
-					GL11.glPopMatrix();
-				}
-			} else if(b == ModBlocks.gas_dock) {
+			if(b == ModBlocks.gas_dock) {
 				if(tileentity instanceof TileEntityMachineGasDock && ((TileEntityMachineGasDock)tileentity).launchTicks < 100) {
 					TileEntityMachineGasDock transporter = (TileEntityMachineGasDock) tileentity;
 					GL11.glPushMatrix();
 					{
-						
+
 						GL11.glTranslatef(0.0F, 0.75F + MathHelper.clamp_float(transporter.launchTicks + (transporter.hasRocket ? -f : f), 0, 200), 0.0F);
 						GL11.glDisable(GL11.GL_CULL_FACE);
 

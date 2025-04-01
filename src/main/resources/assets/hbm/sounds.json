@@ -245,6 +245,7 @@
 	"weapon.explosionLargeFar": {"category": "player", "sounds": [{"name": "weapon/explosionLargeFar", "stream": false}]},
     "weapon.explosionSmallNear": {"category": "player", "sounds": ["weapon/explosionSmallNear1", "weapon/explosionSmallNear2", "weapon/explosionSmallNear3"]},
     "weapon.explosionSmallFar": {"category": "player", "sounds": ["weapon/explosionSmallFar1", "weapon/explosionSmallFar2"]},
+    "weapon.explosionTiny": {"category": "player", "sounds": ["weapon/explosionTiny1", "weapon/explosionTiny2"]},
 
 	"weapon.dFlash": {"category": "player", "sounds": [{"name": "weapon/dFlash", "stream": false}]},
 
@@ -278,6 +279,7 @@
     "weapon.fire.uzi": {"category": "player", "sounds": ["weapon/fire/uzi"]},
     "weapon.fire.tesla": {"category": "player", "sounds": ["weapon/fire/tesla"]},
     "weapon.fire.aberrator": {"category": "player", "sounds": ["weapon/fire/aberrator"]},
+    "weapon.fire.stab": {"category": "player", "sounds": ["weapon/fire/stab1", "weapon/fire/stab2"]},
 
     "weapon.reload.boltClose": {"category": "player", "sounds": ["weapon/reload/boltClose"]},
     "weapon.reload.boltOpen": {"category": "player", "sounds": ["weapon/reload/boltOpen"]},

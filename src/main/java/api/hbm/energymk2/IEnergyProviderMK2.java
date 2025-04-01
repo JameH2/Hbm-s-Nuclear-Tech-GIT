@@ -1,9 +1,7 @@
 package api.hbm.energymk2;
 
-import com.hbm.packet.PacketDispatcher;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
-import com.hbm.uninos.IGenProvider;
-import com.hbm.uninos.networkproviders.PowerProvider;
 import com.hbm.util.Compat;
 
 import api.hbm.energymk2.Nodespace.PowerNode;
@@ -14,35 +12,35 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /** If it sends energy, use this */
-public interface IEnergyProviderMK2 extends IEnergyHandlerMK2, IGenProvider<PowerProvider> {
+public interface IEnergyProviderMK2 extends IEnergyHandlerMK2 {
 
 	/** Uses up available power, default implementation has no sanity checking, make sure that the requested power is lequal to the current power */
 	public default void usePower(long power) {
 		this.setPower(this.getPower() - power);
 	}
-	
+
 	public default long getProviderSpeed() {
 		return this.getMaxPower();
 	}
-	
+
 	public default void tryProvide(World world, int x, int y, int z, ForgeDirection dir) {
 
 		TileEntity te = Compat.getTileStandard(world, x, y, z);
 		boolean red = false;
-		
+
 		if(te instanceof IEnergyConductorMK2) {
 			IEnergyConductorMK2 con = (IEnergyConductorMK2) te;
 			if(con.canConnect(dir.getOpposite())) {
-				
+
 				PowerNode node = Nodespace.getNode(world, x, y, z);
-				
+
 				if(node != null && node.net != null) {
 					node.net.addProvider(this);
 					red = true;
 				}
 			}
 		}
-		
+
 		if(te instanceof IEnergyReceiverMK2 && te != this) {
 			IEnergyReceiverMK2 rec = (IEnergyReceiverMK2) te;
 			if(rec.canConnect(dir.getOpposite())) {
@@ -53,7 +51,7 @@ public interface IEnergyProviderMK2 extends IEnergyHandlerMK2, IGenProvider<Powe
 				this.usePower(toTransfer);
 			}
 		}
-		
+
 		if(particleDebug) {
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("type", "network");
@@ -64,7 +62,7 @@ public interface IEnergyProviderMK2 extends IEnergyHandlerMK2, IGenProvider<Powe
 			data.setDouble("mX", dir.offsetX * (red ? 0.025 : 0.1));
 			data.setDouble("mY", dir.offsetY * (red ? 0.025 : 0.1));
 			data.setDouble("mZ", dir.offsetZ * (red ? 0.025 : 0.1));
-			PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, posX, posY, posZ), new TargetPoint(world.provider.dimensionId, posX, posY, posZ, 25));
+			PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, posX, posY, posZ), new TargetPoint(world.provider.dimensionId, posX, posY, posZ, 25));
 		}
 	}
 }

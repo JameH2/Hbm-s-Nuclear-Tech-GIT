@@ -1,8 +1,7 @@
 package com.hbm.tileentity.machine.rbmk;
 
-import api.hbm.fluid.IFluidConductor;
-import api.hbm.fluid.IFluidConnector;
-import api.hbm.fluid.IPipeNet;
+import api.hbm.fluidmk2.FluidNetMK2;
+
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.rbmk.RBMKBase;
 import com.hbm.entity.effect.EntitySpear;
@@ -10,8 +9,8 @@ import com.hbm.entity.projectile.EntityRBMKDebris;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
 import com.hbm.handler.neutron.NeutronNodeWorld;
 import com.hbm.handler.neutron.RBMKNeutronHandler.RBMKType;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.saveddata.TomSaveData;
 import com.hbm.tileentity.IOverpressurable;
@@ -422,7 +421,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase {
 	}
 
 	public static HashSet<TileEntityRBMKBase> columns = new HashSet<>();
-	public static HashSet<IPipeNet> pipes = new HashSet<>();
+	public static HashSet<FluidNetMK2> pipes = new HashSet<>();
 
 	//assumes that !worldObj.isRemote
 	@SuppressWarnings("unchecked")
@@ -489,22 +488,22 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase {
 
 		/* Hanlde overpressure event */
 		if(RBMKDials.getOverpressure(worldObj) && !pipes.isEmpty()) {
-			HashSet<IFluidConductor> pipeBlocks = new HashSet<>();
-			HashSet<IFluidConnector> pipeReceivers = new HashSet<>();
+			HashSet pipeBlocks = new HashSet<>();
+			HashSet pipeReceivers = new HashSet<>();
 
 			//unify all parts into single sets to prevent redundancy
 			pipes.forEach(x -> {
-				pipeBlocks.addAll(x.getLinks());
-				pipeReceivers.addAll(x.getSubscribers());
+				pipeBlocks.addAll(x.links);
+				pipeReceivers.addAll(x.receiverEntries.entrySet());
 			});
 
 			int count = 0;
 			int max = Math.min(pipeBlocks.size() / 5, 100);
-			Iterator<IFluidConductor>  itPipes = pipeBlocks.iterator();
-			Iterator<IFluidConnector>  itReceivers = pipeReceivers.iterator();
+			Iterator itPipes = pipeBlocks.iterator();
+			Iterator itReceivers = pipeReceivers.iterator();
 
 			while(itPipes.hasNext() && count < max) {
-				IFluidConductor pipe = itPipes.next();
+				Object pipe = itPipes.next();
 				if(pipe instanceof TileEntity) {
 					TileEntity tile = (TileEntity) pipe;
 					worldObj.setBlock(tile.xCoord, tile.yCoord, tile.zCoord, Blocks.air);
@@ -513,7 +512,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase {
 			}
 
 			while(itReceivers.hasNext()) {
-				IFluidConnector con = itReceivers.next();
+				Object con = itReceivers.next();
 				if(con instanceof TileEntity) {
 					TileEntity tile = (TileEntity) con;
 					if(con instanceof IOverpressurable) {
@@ -533,7 +532,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase {
 		NBTTagCompound data = new NBTTagCompound();
 		data.setString("type", "rbmkmush");
 		data.setFloat("scale", smallDim);
-		PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, avgX + 0.5, yCoord + 1, avgZ + 0.5), new TargetPoint(worldObj.provider.dimensionId,avgX + 0.5, yCoord + 1, avgZ + 0.5, 250));
+		PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, avgX + 0.5, yCoord + 1, avgZ + 0.5), new TargetPoint(worldObj.provider.dimensionId,avgX + 0.5, yCoord + 1, avgZ + 0.5, 250));
 		MainRegistry.proxy.effectNT(data);
 
 		worldObj.playSoundEffect(avgX + 0.5, yCoord + 1, avgZ + 0.5, "hbm:block.rbmk_explosion", 50.0F, 1.0F);
