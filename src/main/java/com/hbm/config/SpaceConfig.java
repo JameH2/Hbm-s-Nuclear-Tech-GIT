@@ -56,6 +56,7 @@ public class SpaceConfig {
 	public static int tektoHalogenHill = 101;
 	public static int tektoRiver = 102;
 
+	public static int bedrockPackedIceSpawn = 3;
 
 
 
@@ -90,6 +91,7 @@ public class SpaceConfig {
 		maxProbeDistance = CommonConfig.createConfigInt(config, CATEGORY_GENERAL, "1.90_maxProbeDistance", "How far from the center of the dimension can probes generate landing coordinates", maxProbeDistance);
 		enableVolcanoGen = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.91_enableVolcanoGen", "Should volcanoes be active when spawning, disabling will prevent natural volcanoes from spewing lava and growing", enableVolcanoGen);
 
+
 		final String CATEGORY_BIOME = CommonConfig.CATEGORY_BIOMES;
 		moonBiome = CommonConfig.createConfigInt(config, CATEGORY_BIOME, "16.02_moonBiome", "Mun Biome ID", moonBiome);
 		dunaBiome = CommonConfig.createConfigInt(config, CATEGORY_BIOME, "16.03_dunaBiome", "Duna Biome ID", dunaBiome);
@@ -116,6 +118,9 @@ public class SpaceConfig {
 		laytheCoastBiome = CommonConfig.createConfigInt(config, CATEGORY_BIOME, "16.24_laytheCoastBiome", "Laythe Coast Biome ID", laytheCoastBiome);
 		mohoLavaBiome = CommonConfig.createConfigInt(config, CATEGORY_BIOME, "16.25_mohoLavaBiome", "Moho Lava Biome ID", mohoLavaBiome);
 		mohoPlateauBiome = CommonConfig.createConfigInt(config, CATEGORY_BIOME, "16.26_mohoPlateauBiome", "Moho Plateau Biome ID", mohoPlateauBiome);
+
+		final String CATEGORY_OREGEN = CommonConfig.CATEGORY_ORES;
+		bedrockPackedIceSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.B19_bedrockPackedIcePeriodicity", "How often you will find packed ice bedrock ore spots on planets with ice. 1/x chunks.", bedrockPackedIceSpawn);
 	}
 
 }

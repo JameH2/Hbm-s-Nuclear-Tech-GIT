@@ -7,6 +7,7 @@ import java.util.Random;
 
 import com.hbm.blocks.BlockEnums.EnumStoneType;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.inventory.FluidStack;
 import com.hbm.items.ModItems;
@@ -199,12 +200,12 @@ public class WorldGeneratorCelestial implements IWorldGenerator {
     public void generateBedrockOres(World world, Random rand, int x, int z, Block planetStone, boolean hasIce, FluidStack drillAcid) {
         if(WorldConfig.newBedrockOres) {
 
-            if(rand.nextInt(10) == 0) {
+            if(rand.nextInt(WorldConfig.newBedrockOresSpawn) == 0) {
                 int randPosX = x + rand.nextInt(2) + 8;
                 int randPosZ = z + rand.nextInt(2) + 8;
 
                 BedrockOre.generate(world, randPosX, randPosZ, new ItemStack(ModItems.bedrock_ore_base), drillAcid, 0xD78A16, 1, ModBlocks.stone_depth, planetStone);
-            } else if(hasIce && rand.nextInt(3) == 0) {
+            } else if(hasIce && rand.nextInt(SpaceConfig.bedrockPackedIceSpawn) == 0) {
                 int randPosX = x + rand.nextInt(2) + 8;
                 int randPosZ = z + rand.nextInt(2) + 8;
 

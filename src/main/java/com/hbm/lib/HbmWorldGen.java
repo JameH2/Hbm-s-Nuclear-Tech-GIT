@@ -73,7 +73,7 @@ public class HbmWorldGen implements IWorldGenerator {
 		// Don't generate anything for non-surface dimensions
 		if(world.provider instanceof WorldProviderHell || world.provider instanceof WorldProviderEnd)
 			return;
-		
+
 		BiomeGenBase biome = world.getWorldChunkManager().getBiomeGenAt(i, j);
 
 		/// CELESTIAL AND EARTH EVENTS
@@ -83,7 +83,7 @@ public class HbmWorldGen implements IWorldGenerator {
 			int y = world.getHeightValue(x, z) - rand.nextInt(10);
 			if(y > 1) (new Meteorite()).generate(world, rand, x, y, z, false, false, false, false);
 		}
-		
+
 		if(WorldConfig.spaceshipStructure > 0 && rand.nextInt(WorldConfig.spaceshipStructure) == 0) {
 			int x = i + rand.nextInt(16);
 			int z = j + rand.nextInt(16);
@@ -128,7 +128,7 @@ public class HbmWorldGen implements IWorldGenerator {
 
 		if(WorldConfig.explosivebubbleSpawn > 0 && rand.nextInt(WorldConfig.explosivebubbleSpawn) == 0)
 			DungeonToolbox.generateOre(world, rand, i, j, 1, 32, 30, 10, ModBlocks.gas_explosive, 1);
-			
+
 		if(WorldConfig.alexandriteSpawn > 0 && rand.nextInt(WorldConfig.alexandriteSpawn) == 0)
 			DungeonToolbox.generateOre(world, rand, i, j, 1, 3, 10, 5, ModBlocks.ore_alexandrite);
 
@@ -179,7 +179,7 @@ public class HbmWorldGen implements IWorldGenerator {
 
 			if(WorldConfig.newBedrockOres) {
 
-				if(rand.nextInt(10) == 0) {
+				if(rand.nextInt(WorldConfig.newBedrockOresSpawn) == 0) {
 					int randPosX = i + rand.nextInt(2) + 8;
 					int randPosZ = j + rand.nextInt(2) + 8;
 
