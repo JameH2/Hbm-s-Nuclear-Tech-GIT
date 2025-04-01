@@ -64,6 +64,11 @@ public class EntityTomBlast extends EntityExplosionChunkloading {
 
 			exp = new ExplosionTom((int) this.posX, (int) this.posY, (int) this.posZ, this.worldObj, this.destructionRange);
 
+			if(!worldObj.isRemote) {
+				CelestialBody body = CelestialBody.getBody(worldObj);
+				body.modifyTraits(new CBT_Impact(worldObj.getTotalWorldTime()));
+			}
+
 			this.did = true;
 		}
 
@@ -79,9 +84,6 @@ public class EntityTomBlast extends EntityExplosionChunkloading {
 				data.impact = true;
 				data.fire = 1F;
 				data.markDirty();
-
-				CelestialBody body = CelestialBody.getBody(worldObj);
-				body.modifyTraits(new CBT_Impact(worldObj.getTotalWorldTime()));
 			}
 		}
 

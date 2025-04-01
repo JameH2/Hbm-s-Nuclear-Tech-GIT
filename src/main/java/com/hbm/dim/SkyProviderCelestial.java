@@ -39,8 +39,11 @@ public class SkyProviderCelestial extends IRenderHandler {
 	private static final ResourceLocation flareTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/sunspike.png");
 	private static final ResourceLocation nightTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/night.png");
 	private static final ResourceLocation digammaStar = new ResourceLocation(RefStrings.MODID, "textures/misc/space/star_digamma.png");
-	private static final ResourceLocation impactTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/impact.png");
 	private static final ResourceLocation lodeStar = new ResourceLocation(RefStrings.MODID, "textures/misc/star_lode.png");
+
+	private static final ResourceLocation impactTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/impact.png");
+	private static final ResourceLocation shockwaveTexture = new ResourceLocation(RefStrings.MODID, "textures/particle/shockwave.png");
+	private static final ResourceLocation shockFlareTexture = new ResourceLocation(RefStrings.MODID, "textures/particle/flare.png");
 
 	private static final ResourceLocation noise = new ResourceLocation(RefStrings.MODID, "shaders/iChannel1.png");
 
@@ -670,7 +673,19 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 					planetShader.stop();
 
-					if(metric.body.hasTrait(CBT_Impact.class)) {
+					OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
+
+					CBT_Impact impact = metric.body.getTrait(CBT_Impact.class);
+					if(impact != null) {
+						double impactTime = (world.getTotalWorldTime() - impact.time) + partialTicks;
+						double lavaAlpha = Math.min(impactTime * 0.1, 1.0);
+
+						double impactSize = (impactTime * 0.1) * size * 0.035;
+						double impactAlpha = 1.0 - Math.min(1.0, impactTime * 0.0015);
+						double flareSize = size * 1.5;
+						double flareAlpha = 1.0 - Math.min(1.0, impactTime * 0.002);
+
+						GL11.glColor4d(1.0, 1.0, 1.0, lavaAlpha);
 						mc.renderEngine.bindTexture(impactTexture);
 
 						tessellator.startDrawingQuads();
@@ -679,6 +694,37 @@ public class SkyProviderCelestial extends IRenderHandler {
 						tessellator.addVertexWithUV(size, 100.0D, size, 1.0D, 1.0D);
 						tessellator.addVertexWithUV(-size, 100.0D, size, 0.0D, 1.0D);
 						tessellator.draw();
+
+						GL11.glPushMatrix();
+						{
+
+							GL11.glTranslated(-size * 0.5, 0, size * 0.4);
+
+							// impact shockwave, increases in size and fades out
+							GL11.glColor4d(1.0, 1.0, 1.0F, impactAlpha);
+							mc.renderEngine.bindTexture(shockwaveTexture);
+
+							tessellator.startDrawingQuads();
+							tessellator.addVertexWithUV(-impactSize, 100.0D, -impactSize, 0.0D + uvOffset, 0.0D);
+							tessellator.addVertexWithUV(impactSize, 100.0D, -impactSize, 1.0D + uvOffset, 0.0D);
+							tessellator.addVertexWithUV(impactSize, 100.0D, impactSize, 1.0D + uvOffset, 1.0D);
+							tessellator.addVertexWithUV(-impactSize, 100.0D, impactSize, 0.0D + uvOffset, 1.0D);
+							tessellator.draw();
+
+
+							// impact flare, remains static in size and fades out
+							GL11.glColor4d(1.0F, 1.0F, 1.0F, flareAlpha);
+							mc.renderEngine.bindTexture(shockFlareTexture);
+
+							tessellator.startDrawingQuads();
+							tessellator.addVertexWithUV(-flareSize, 100.0D, -flareSize, 0.0D + uvOffset, 0.0D);
+							tessellator.addVertexWithUV(flareSize, 100.0D, -flareSize, 1.0D + uvOffset, 0.0D);
+							tessellator.addVertexWithUV(flareSize, 100.0D, flareSize, 1.0D + uvOffset, 1.0D);
+							tessellator.addVertexWithUV(-flareSize, 100.0D, flareSize, 0.0D + uvOffset, 1.0D);
+							tessellator.draw();
+
+						}
+						GL11.glPopMatrix();
 					}
 
 
@@ -686,7 +732,6 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 					// Draw another layer on top to blend with the atmosphere
 					GL11.glColor4d(planetTint.xCoord - blendDarken, planetTint.yCoord - blendDarken, planetTint.zCoord - blendDarken, (1 - blendAmount * visibility));
-					OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
 
 					tessellator.startDrawingQuads();
 					tessellator.addVertexWithUV(-size, 100.0D, -size, 0.0D, 0.0D);
