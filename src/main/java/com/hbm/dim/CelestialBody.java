@@ -14,6 +14,7 @@ import com.hbm.dim.trait.CBT_Dyson;
 import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
 import com.hbm.dim.trait.CBT_Water;
 import com.hbm.dim.trait.CelestialBodyTrait;
+import com.hbm.extprop.HbmLivingProps;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemVOTVdrive.Target;
@@ -23,6 +24,7 @@ import com.hbm.util.AstronomyUtil;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -403,7 +405,7 @@ public class CelestialBody {
 	}
 
 	public static Target getTarget(World world, int x, int z) {
-		if(world.provider.dimensionId == SpaceConfig.orbitDimension) {
+		if(inOrbit(world)) {
 			OrbitalStation station = !world.isRemote ? OrbitalStation.getStationFromPosition(x, z) : OrbitalStation.clientStation;
 			return new Target(station.orbiting, true, station.hasStation);
 		}
@@ -417,6 +419,25 @@ public class CelestialBody {
 
 	public static CelestialBody getPlanet(World world) {
 		return getBody(world).getPlanet();
+	}
+
+	public static float getGravity(EntityLivingBase entity) {
+		if(inOrbit(entity.worldObj)) {
+			if(HbmLivingProps.hasGravity(entity)) {
+				OrbitalStation station = entity.worldObj.isRemote
+					? OrbitalStation.clientStation
+					: OrbitalStation.getStationFromPosition((int)entity.posX, (int)entity.posZ);
+
+				float gravity = AstronomyUtil.STANDARD_GRAVITY * station.gravityMultiplier;
+				if(gravity < 0.2) return 0;
+				return gravity;
+			}
+
+			return 0;
+		}
+
+		CelestialBody body = CelestialBody.getBody(entity.worldObj);
+		return body.getSurfaceGravity() * AstronomyUtil.PLAYER_GRAVITY_MODIFIER;
 	}
 
 	public static boolean inOrbit(World world) {

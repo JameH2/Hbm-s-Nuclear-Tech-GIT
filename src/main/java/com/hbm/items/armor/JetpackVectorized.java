@@ -47,10 +47,10 @@ public class JetpackVectorized extends JetpackFueledBase {
 		}
 
 		if(getFuel(stack) > 0 && props.isJetpackActive()) {
-			float gravity = Math.min(CelestialBody.getBody(world).getSurfaceGravity(), AstronomyUtil.STANDARD_GRAVITY);
+			float gravity = CelestialBody.getGravity(player);
 
 			if(player.motionY < 0.4D)
-				player.motionY += 0.1D * (gravity * AstronomyUtil.PLAYER_GRAVITY_MODIFIER);
+				player.motionY += 0.1D * Math.min(gravity / AstronomyUtil.STANDARD_GRAVITY, 1);
 
 			Vec3 look = player.getLookVec();
 

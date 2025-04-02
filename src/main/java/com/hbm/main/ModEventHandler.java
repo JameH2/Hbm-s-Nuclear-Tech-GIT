@@ -642,48 +642,35 @@ public class ModEventHandler {
 		boolean isFlying = event.entity instanceof EntityPlayer ? ((EntityPlayer) event.entity).capabilities.isFlying : false;
 
 		if(!isFlying) {
-			if(event.entity.worldObj.provider instanceof WorldProviderOrbit) {
-				float gravity = 0;
+			float gravity = CelestialBody.getGravity(event.entityLiving);
 
-				if(HbmLivingProps.hasGravity(event.entityLiving)) {
-					OrbitalStation station = event.entity.worldObj.isRemote
-						? OrbitalStation.clientStation
-						: OrbitalStation.getStationFromPosition((int)event.entityLiving.posX, (int)event.entityLiving.posZ);
-
-					gravity = AstronomyUtil.STANDARD_GRAVITY * station.gravityMultiplier;
-					if(gravity < 0.2) gravity = 0;
-				}
-
+			if(gravity == 0) {
 				event.entityLiving.motionY /= 0.98F;
 				event.entityLiving.motionY += (AstronomyUtil.STANDARD_GRAVITY / 20F);
-				event.entityLiving.motionY -= (gravity / 20F);
 
-				if(event.entity instanceof EntityPlayer && gravity == 0) {
-					EntityPlayer player = (EntityPlayer) event.entity;
+				if(event.entityLiving instanceof EntityPlayer) {
+					EntityPlayer player = (EntityPlayer) event.entityLiving;
 					if(player.isSneaking()) event.entityLiving.motionY -= 0.01F;
 					if(player.isJumping) event.entityLiving.motionY += 0.01F;
+				} else if(event.entity instanceof EntityChicken) {
+					event.entityLiving.motionY = 0;
 				}
 
-				event.entityLiving.motionY *= gravity == 0 ? 0.91F : 0.98F;
-			} else {
-				CelestialBody body = CelestialBody.getBody(event.entity.worldObj);
-				float gravity = body.getSurfaceGravity() * AstronomyUtil.PLAYER_GRAVITY_MODIFIER;
-
+				event.entityLiving.motionY *= 0.91F;
+			} else if(!event.entityLiving.isInWater() && event.entityLiving.ticksExisted > 20 && (gravity < 1.5F || gravity > 1.7F)) {
 				// If gravity is basically the same as normal, do nothing
 				// Also do nothing in water, or if we've been alive less than a second (so we don't glitch into the ground)
-				if(!event.entityLiving.isInWater() && event.entityLiving.ticksExisted > 20 && (gravity < 1.5F || gravity > 1.7F)) {
 
-					// Minimum gravity to prevent floating bug
-					if(gravity < 0.2F) gravity = 0.2F;
+				// Minimum gravity to prevent floating bug
+				if(gravity < 0.2F) gravity = 0.2F;
 
-					// Undo falling, and add our intended falling speed
-					// On high gravity planets, only apply falling speed when descending, so we can still jump up single blocks
-					if((gravity < 1.5F || event.entityLiving.motionY < 0) && !(event.entity instanceof EntityChicken)) {
-						event.entityLiving.motionY /= 0.98F;
-						event.entityLiving.motionY += (AstronomyUtil.STANDARD_GRAVITY / 20F);
-						event.entityLiving.motionY -= (gravity / 20F);
-						event.entityLiving.motionY *= 0.98F;
-					}
+				// Undo falling, and add our intended falling speed
+				// On high gravity planets, only apply falling speed when descending, so we can still jump up single blocks
+				if((gravity < 1.5F || event.entityLiving.motionY < 0) && !(event.entity instanceof EntityChicken)) {
+					event.entityLiving.motionY /= 0.98F;
+					event.entityLiving.motionY += (AstronomyUtil.STANDARD_GRAVITY / 20F);
+					event.entityLiving.motionY -= (gravity / 20F);
+					event.entityLiving.motionY *= 0.98F;
 				}
 			}
 		}
@@ -1174,18 +1161,13 @@ public class ModEventHandler {
 
 		EntityLivingBase e = event.entityLiving;
 
-		if(event.entity.worldObj.provider instanceof WorldProviderOrbit) {
-			event.distance = 0;
-		} else {
-			CelestialBody body = CelestialBody.getBody(event.entity.worldObj);
-			float gravity = body.getSurfaceGravity() * AstronomyUtil.PLAYER_GRAVITY_MODIFIER;
+		float gravity = CelestialBody.getGravity(e);
 
-			// Reduce fall damage on low gravity bodies
-			if(gravity < 0.3F) {
-				event.distance = 0;
-			} else if(gravity < 1.5F) {
-				event.distance *= gravity / AstronomyUtil.STANDARD_GRAVITY;
-			}
+		// Reduce fall damage on low gravity bodies
+		if(gravity < 0.3F) {
+			event.distance = 0;
+		} else if(gravity < 1.5F) {
+			event.distance *= gravity / AstronomyUtil.STANDARD_GRAVITY;
 		}
 
 		if(e instanceof EntityPlayer && ((EntityPlayer)e).inventory.armorInventory[2] != null && ((EntityPlayer)e).inventory.armorInventory[2].getItem() instanceof ArmorFSB)

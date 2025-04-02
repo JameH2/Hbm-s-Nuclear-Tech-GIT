@@ -8,6 +8,7 @@ import com.hbm.dim.WorldChunkManagerCelestial.BiomeGenLayers;
 import com.hbm.dim.duna.genlayer.GenLayerDiversifyDuna;
 import com.hbm.dim.duna.genlayer.GenLayerDunaBiomes;
 import com.hbm.dim.duna.genlayer.GenLayerDunaLowlands;
+import com.hbm.util.BobMathUtil;
 import com.hbm.util.ParticleUtil;
 
 import io.netty.buffer.ByteBuf;
@@ -47,25 +48,28 @@ public class WorldProviderDuna extends WorldProviderCelestial {
 
 	private int dustStormTimer = 0;
 	private float dustStormIntensity = 1;
+	private float dustStormSmoothed = 0;
 
 	@Override
 	public void updateWeather() {
 		super.updateWeather();
 
+		dustStormSmoothed = (float)BobMathUtil.lerp(0.008, dustStormSmoothed, dustStormIntensity);
+
 		if(!worldObj.isRemote) {
 			if(dustStormTimer <= 0) {
-				if(dustStormIntensity >= 0.5F) {
+				if(dustStormIntensity >= 0.05F) {
 					dustStormIntensity = 0;
 					dustStormTimer = worldObj.rand.nextInt(168000) + 12000;
 				} else {
-					dustStormIntensity = worldObj.rand.nextFloat() * 0.5F + 0.5F;
+					dustStormIntensity = worldObj.rand.nextFloat() * 0.75F + 0.25F;
 					dustStormTimer = worldObj.rand.nextInt(12000) + 12000;
 				}
 			}
 
 			dustStormTimer--;
 		} else {
-			if(dustStormIntensity >= 0.5F) {
+			if(dustStormSmoothed >= 0.05F && worldObj.rand.nextFloat() < dustStormSmoothed) {
 				EntityLivingBase viewEntity = Minecraft.getMinecraft().renderViewEntity;
 				Vec3 vec = Vec3.createVectorHelper(20, 0, 50);
 				vec.rotateAroundZ((float)(worldObj.rand.nextDouble() * Math.PI * 10));
@@ -77,15 +81,15 @@ public class WorldProviderDuna extends WorldProviderCelestial {
 
 	@Override
 	public float fogDensity(FogDensity event) {
-		if(dustStormIntensity >= 0.5F)
-			return dustStormIntensity * dustStormIntensity * 0.05F;
+		if(dustStormSmoothed >= 0.25F)
+			return dustStormSmoothed * dustStormSmoothed * 0.075F;
 
 		return super.fogDensity(event);
 	}
 
 	@Override
 	public boolean isDaytime() {
-		if(dustStormIntensity >= 0.5F) return false;
+		if(dustStormIntensity >= 0.2F) return false;
 		return super.isDaytime();
 	}
 
@@ -119,6 +123,7 @@ public class WorldProviderDuna extends WorldProviderCelestial {
 	public void resetRainAndThunder() {
 		super.resetRainAndThunder();
 		dustStormIntensity = 0;
+		dustStormSmoothed = 0;
 		dustStormTimer = worldObj.rand.nextInt(168000) + 12000;
 	}
 

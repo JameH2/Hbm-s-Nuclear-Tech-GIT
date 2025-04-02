@@ -16,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class JetpackBreak extends JetpackFueledBase {
@@ -34,10 +35,11 @@ public class JetpackBreak extends JetpackFueledBase {
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
 
 		HbmPlayerProps props = HbmPlayerProps.getData(player);
+		float gravity = CelestialBody.getGravity(player);
 
 		if(!world.isRemote) {
 
-			if(getFuel(stack) > 0 && (props.isJetpackActive() || (!player.onGround && !player.isSneaking() && props.enableBackpack))) {
+			if(getFuel(stack) > 0 && (props.isJetpackActive() || (!player.onGround && !player.isSneaking() && props.enableBackpack && gravity > 0))) {
 
 	    		NBTTagCompound data = new NBTTagCompound();
 	    		data.setString("type", "jetpack");
@@ -47,20 +49,26 @@ public class JetpackBreak extends JetpackFueledBase {
 		}
 
 		if(getFuel(stack) > 0) {
-			float gravity = Math.max(CelestialBody.getBody(world).getSurfaceGravity(), AstronomyUtil.STANDARD_GRAVITY);
-			float thrustMultiplier = gravity * AstronomyUtil.PLAYER_GRAVITY_MODIFIER;
-
 			if(props.isJetpackActive()) {
 				player.fallDistance = 0;
 
-				if(player.motionY < 0.4D)
-					player.motionY += 0.1D * thrustMultiplier;
+				if(gravity == 0) {
+					Vec3 look = player.getLookVec();
+
+					player.motionX += look.xCoord * 0.05;
+					player.motionY += look.yCoord * 0.05;
+					player.motionZ += look.zCoord * 0.05;
+				} else if(player.motionY < 0.4D) {
+					player.motionY += 0.1D * Math.max(gravity / AstronomyUtil.STANDARD_GRAVITY, 1);
+				}
 
 				world.playSoundEffect(player.posX, player.posY, player.posZ, "hbm:weapon.flamethrowerShoot", 0.25F, 1.5F);
 				this.useUpFuel(player, stack, 5);
 
-			} else if(!player.isSneaking() && !player.onGround && props.enableBackpack) {
+			} else if(!player.isSneaking() && !player.onGround && props.enableBackpack && gravity > 0) {
 				player.fallDistance = 0;
+
+				float thrustMultiplier = Math.max(gravity / AstronomyUtil.STANDARD_GRAVITY, 1);
 
 				if(player.motionY < -1 * thrustMultiplier)
 					player.motionY += 0.2D * thrustMultiplier;

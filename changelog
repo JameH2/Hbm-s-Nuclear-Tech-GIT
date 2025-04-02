@@ -1,3 +1,18 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5279 - the escape plan](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5279)
+# Changed
+* Gerald orbital impact effects!
+* Enhanced conveyor placing!
+    * Placing a conveyor will instead start a new belt, with a preview, place the endpoint to finish creating the belt
+    * Switching items in the hotbar will cancel the conveyor placement
+    * You can crouch-click to place conveyors manually
+    * Conveyor lifts/chutes have been rolled into the one conveyor block
+* Satellite weights rebalanced, now only light ones (16t or lighter) can be hand launched from stations
+* Reworked mob breathing, a fair few more no longer require air to survive
+* Smoother dust storm transitions on Duna
 
-**Big fluidnet bugfix update upstream!**, also includes missing weapon mod recipes and fixes a bunch of dupes
+# Fixed
+* Cascading generation on depth stone
+* Rare crash on structure generation
+* Gerald atmospheric effects missing
+* Fluid burners consuming O2 when tank is empty
+* Duplicate mixer recipes
+* Floating Quackos in low gravity

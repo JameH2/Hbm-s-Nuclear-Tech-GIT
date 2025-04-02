@@ -689,10 +689,10 @@ public class SkyProviderCelestial extends IRenderHandler {
 						mc.renderEngine.bindTexture(impactTexture);
 
 						tessellator.startDrawingQuads();
-						tessellator.addVertexWithUV(-size, 100.0D, -size, 0.0D, 0.0D);
-						tessellator.addVertexWithUV(size, 100.0D, -size, 1.0D, 0.0D);
-						tessellator.addVertexWithUV(size, 100.0D, size, 1.0D, 1.0D);
-						tessellator.addVertexWithUV(-size, 100.0D, size, 0.0D, 1.0D);
+						tessellator.addVertexWithUV(-size, 100.0D, -size, 0.0D + uvOffset, 0.0D);
+						tessellator.addVertexWithUV(size, 100.0D, -size, 1.0D + uvOffset, 0.0D);
+						tessellator.addVertexWithUV(size, 100.0D, size, 1.0D + uvOffset, 1.0D);
+						tessellator.addVertexWithUV(-size, 100.0D, size, 0.0D + uvOffset, 1.0D);
 						tessellator.draw();
 
 						GL11.glPushMatrix();
@@ -705,10 +705,10 @@ public class SkyProviderCelestial extends IRenderHandler {
 							mc.renderEngine.bindTexture(shockwaveTexture);
 
 							tessellator.startDrawingQuads();
-							tessellator.addVertexWithUV(-impactSize, 100.0D, -impactSize, 0.0D + uvOffset, 0.0D);
-							tessellator.addVertexWithUV(impactSize, 100.0D, -impactSize, 1.0D + uvOffset, 0.0D);
-							tessellator.addVertexWithUV(impactSize, 100.0D, impactSize, 1.0D + uvOffset, 1.0D);
-							tessellator.addVertexWithUV(-impactSize, 100.0D, impactSize, 0.0D + uvOffset, 1.0D);
+							tessellator.addVertexWithUV(-impactSize, 100.0D, -impactSize, 0.0D, 0.0D);
+							tessellator.addVertexWithUV(impactSize, 100.0D, -impactSize, 1.0D, 0.0D);
+							tessellator.addVertexWithUV(impactSize, 100.0D, impactSize, 1.0D, 1.0D);
+							tessellator.addVertexWithUV(-impactSize, 100.0D, impactSize, 0.0D, 1.0D);
 							tessellator.draw();
 
 
@@ -717,10 +717,10 @@ public class SkyProviderCelestial extends IRenderHandler {
 							mc.renderEngine.bindTexture(shockFlareTexture);
 
 							tessellator.startDrawingQuads();
-							tessellator.addVertexWithUV(-flareSize, 100.0D, -flareSize, 0.0D + uvOffset, 0.0D);
-							tessellator.addVertexWithUV(flareSize, 100.0D, -flareSize, 1.0D + uvOffset, 0.0D);
-							tessellator.addVertexWithUV(flareSize, 100.0D, flareSize, 1.0D + uvOffset, 1.0D);
-							tessellator.addVertexWithUV(-flareSize, 100.0D, flareSize, 0.0D + uvOffset, 1.0D);
+							tessellator.addVertexWithUV(-flareSize, 100.0D, -flareSize, 0.0D, 0.0D);
+							tessellator.addVertexWithUV(flareSize, 100.0D, -flareSize, 1.0D, 0.0D);
+							tessellator.addVertexWithUV(flareSize, 100.0D, flareSize, 1.0D, 1.0D);
+							tessellator.addVertexWithUV(-flareSize, 100.0D, flareSize, 0.0D, 1.0D);
 							tessellator.draw();
 
 						}
