@@ -33,7 +33,7 @@ public class WorldProviderOrbit extends WorldProvider {
 	protected float getOrbitalAltitude(CelestialBody body) {
 		return getAltitudeForPeriod(body.massKg, ORBITAL_PERIOD);
 	}
-	
+
 	// r = ∛[(G x Me x T2) / (4π2)]
 	private float getAltitudeForPeriod(float massKg, float period) {
 		return (float)Math.cbrt((AstronomyUtil.GRAVITATIONAL_CONSTANT * massKg * (period * period)) / (4 * Math.PI * Math.PI));
@@ -57,7 +57,7 @@ public class WorldProviderOrbit extends WorldProvider {
 	public String getDimensionName() {
 		return "Orbit";
 	}
-	
+
 	@Override
 	public IChunkProvider createChunkGenerator() {
 		return new ChunkProviderOrbit(this.worldObj);
@@ -65,7 +65,7 @@ public class WorldProviderOrbit extends WorldProvider {
 
 	@Override
 	public void updateWeather() {
-		
+		isHellWorld = !worldObj.isRemote;
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class WorldProviderOrbit extends WorldProvider {
 	public boolean canDoRainSnowIce(Chunk chunk) {
 		return false;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getCloudHeight() {
@@ -182,5 +182,5 @@ public class WorldProviderOrbit extends WorldProvider {
 
 		return false;
 	}
-	
+
 }

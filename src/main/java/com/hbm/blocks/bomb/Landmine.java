@@ -9,11 +9,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.config.ServerConfig;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.explosion.vanillant.ExplosionVNT;
-import com.hbm.explosion.vanillant.standard.BlockAllocatorStandard;
-import com.hbm.explosion.vanillant.standard.BlockProcessorStandard;
-import com.hbm.explosion.vanillant.standard.EntityProcessorCrossSmooth;
-import com.hbm.explosion.vanillant.standard.ExplosionEffectWeapon;
-import com.hbm.explosion.vanillant.standard.PlayerProcessorStandard;
+import com.hbm.explosion.vanillant.standard.*;
 import com.hbm.interfaces.IBomb;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
@@ -30,6 +26,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -71,8 +68,7 @@ public class Landmine extends BlockContainer implements IBomb {
 		if(this == ModBlocks.mine_ap) this.setBlockBounds(5 * f, 0.0F, 5 * f, 11 * f, 1 * f, 11 * f);
 		if(this == ModBlocks.mine_he) this.setBlockBounds(4 * f, 0.0F, 4 * f, 12 * f, 2 * f, 12 * f);
 		if(this == ModBlocks.mine_shrap) this.setBlockBounds(5 * f, 0.0F, 5 * f, 11 * f, 1 * f, 11 * f);
-		if(this == ModBlocks.mine_fat) this.setBlockBounds(5 * f, 0.0F, 4 * f, 11 * f, 6 * f, 12 * f);
-	}
+		if(this == ModBlocks.mine_fat) this.setBlockBounds(5 * f, 0.0F, 4 * f, 11 * f, 6 * f, 12 * f);}
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
@@ -137,6 +133,18 @@ public class Landmine extends BlockContainer implements IBomb {
 		return false;
 	}
 
+	public boolean isWaterAbove(World world, int x, int y, int z) {
+		for(int xo = -1; xo <= 1; xo++) {
+			for(int zo = -1; zo <= 1; zo++) {
+				Block blockAbove = world.getBlock(x + xo, y + 1, z + zo);
+				if(blockAbove == Blocks.water || blockAbove == Blocks.flowing_water) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public BombReturnCode explode(World world, int x, int y, int z) {
 
@@ -169,6 +177,23 @@ public class Landmine extends BlockContainer implements IBomb {
 
 				ExplosionLarge.spawnShrapnelShower(world, x + 0.5, y + 0.5, z + 0.5, 0, 1D, 0, 45, 0.2D);
 				ExplosionLarge.spawnShrapnels(world, x + 0.5, y + 0.5, z + 0.5, 5);
+			} else if(this == ModBlocks.mine_naval) {
+				ExplosionVNT vnt = new ExplosionVNT(world, x + 5, y + 5, z + 5, 25F);
+				vnt.setBlockAllocator(new BlockAllocatorWater(32));
+				vnt.setBlockProcessor(new BlockProcessorStandard());
+				vnt.setEntityProcessor(new EntityProcessorCrossSmooth(0.5, ServerConfig.MINE_NAVAL_DAMAGE.get()).setupPiercing(5F, 0.2F));
+				vnt.setPlayerProcessor(new PlayerProcessorStandard());
+				vnt.setSFX(new ExplosionEffectWeapon(10, 1F, 0.5F));
+				vnt.explode();
+
+				ExplosionLarge.spawnParticlesRadial(world, x + 0.5, y + 2, z + 0.5, 30);
+				ExplosionLarge.spawnRubble(world,x + 0.5, y + 0.5, z + 0.5, 5 );
+
+				// Only spawn water effects if there's water above the mine
+				if (isWaterAbove(world, x, y, z)) {
+					ExplosionLarge.spawnFoam(world, x + 0.5, y + 0.5, z + 0.5, 60);
+				}
+
 			} else if(this == ModBlocks.mine_fat) {
 
 				ExplosionVNT vnt = new ExplosionVNT(world, x + 0.5, y + 0.5, z + 0.5, 10);
@@ -184,6 +209,7 @@ public class Landmine extends BlockContainer implements IBomb {
 				data.setBoolean("balefire", MainRegistry.polaroidID == 11 || world.rand.nextInt(100) == 0);
 				PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, x + 0.5, y + 0.5, z + 0.5), new TargetPoint(world.provider.dimensionId, x + 0.5, y + 0.5, z + 0.5, 250));
 
+				world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "hbm:weapon.mukeExplosion", 25.0F, 0.9F); // this has to be the single worst solution ever
 			}
 		}
 

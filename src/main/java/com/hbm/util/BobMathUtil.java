@@ -329,6 +329,25 @@ public class BobMathUtil {
 		}
 	}
 
+	public static void shuffleIntArray(int[] array) {
+		Random rand = new Random();
+		for(int i = array.length - 1; i > 0; i--) {
+			int r = rand.nextInt(i + 1);
+			int temp = array[r];
+			array[r] = array[i];
+			array[i] = temp;
+		}
+	}
+
+	public static void reverseIntArray(int[] array) {
+		int len = array.length;
+		for(int i = 0; i < len / 2; i++) {
+			int temp = array[i];
+			array[i] = array[len - 1 - i];
+			array[len - 1 - i] = temp;
+		}
+	}
+
 	/** Soft peak sine */
 	public static double sps(double x) {
 		return Math.sin(Math.PI / 2D * Math.cos(x));

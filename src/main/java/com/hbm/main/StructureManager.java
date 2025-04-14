@@ -103,6 +103,9 @@ public class StructureManager {
 
 	public static final NBTStructure vertibird = new NBTStructure(new ResourceLocation(RefStrings.MODID, "structures/vertibird.nbt"));
 	public static final NBTStructure crashed_vertibird = new NBTStructure(new ResourceLocation(RefStrings.MODID, "structures/crashed-vertibird.nbt"));
+	public static final NBTStructure aircraft_carrier = new NBTStructure(new ResourceLocation(RefStrings.MODID, "structures/aircraft_carrier.nbt"));
+	public static final NBTStructure oil_rig = new NBTStructure(new ResourceLocation(RefStrings.MODID, "structures/oil_rig.nbt"));
+	public static final NBTStructure beached_patrol = new NBTStructure(new ResourceLocation(RefStrings.MODID, "structures/beached_patrol.nbt"));
 
 	public static final NBTStructure trenches = new NBTStructure(new ResourceLocation(RefStrings.MODID, "structures/trenches.nbt"));
 

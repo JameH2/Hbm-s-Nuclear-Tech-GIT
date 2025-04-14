@@ -317,6 +317,7 @@ public class ItemRenderLibrary {
 				ResourceManager.turbofan.renderPart("Afterburner");
 				GL11.glShadeModel(GL11.GL_FLAT);
 			}});
+
 		renderers.put(Item.getItemFromBlock(ModBlocks.plasma_heater), new ItemRenderBase() {
 			public void renderInventory() {
 				GL11.glTranslated(0, -1, 0);
@@ -385,18 +386,6 @@ public class ItemRenderLibrary {
 		        ResourceManager.bomb_prototype.renderAll();
 			}});
 
-		renderers.put(Item.getItemFromBlock(ModBlocks.nuke_fleija), new ItemRenderBase() {
-			public void renderInventory() {
-				GL11.glTranslated(0, -2, 0);
-				GL11.glScaled(4.5, 4.5, 4.5);
-			}
-			public void renderCommon() {
-				GL11.glScaled(2, 2, 2);
-				GL11.glRotated(90, 0, 1, 0);
-		        bindTexture(ResourceManager.bomb_fleija_tex);
-		        ResourceManager.bomb_fleija.renderAll();
-			}});
-
 		renderers.put(Item.getItemFromBlock(ModBlocks.nuke_solinium), new ItemRenderBase() {
 			public void renderInventory() {
 				GL11.glScaled(4, 4, 4);
@@ -443,19 +432,6 @@ public class ItemRenderLibrary {
 				GL11.glTranslated(-1, 0, 0);
 		        bindTexture(ResourceManager.bomb_custom_tex);
 		        ResourceManager.bomb_boy.renderAll();
-			}});
-
-		renderers.put(Item.getItemFromBlock(ModBlocks.crashed_balefire), new ItemRenderBase() {
-			public void renderInventory() {
-				GL11.glTranslated(0, 3, 0);
-				GL11.glScaled(2, 2, 2);
-			}
-			public void renderCommon() {
-				GL11.glRotated(90, 0, 1, 0);
-	            GL11.glDisable(GL11.GL_CULL_FACE);
-		        bindTexture(ResourceManager.dud_tex);
-		        ResourceManager.dud.renderAll();
-	            GL11.glEnable(GL11.GL_CULL_FACE);
 			}});
 
 		renderers.put(Item.getItemFromBlock(ModBlocks.bomb_multi), new ItemRenderBase() {
@@ -517,6 +493,20 @@ public class ItemRenderLibrary {
 				GL11.glShadeModel(GL11.GL_SMOOTH);
 				bindTexture(ResourceManager.mine_shrap_tex); ResourceManager.mine_ap.renderAll();
 				GL11.glShadeModel(GL11.GL_FLAT);
+				GL11.glEnable(GL11.GL_CULL_FACE);
+			}});
+
+		renderers.put(Item.getItemFromBlock(ModBlocks.mine_naval), new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(0, 2, -1);
+				GL11.glScaled(5, 5, 5);
+			}
+			public void renderCommon() {
+				GL11.glTranslated(0, 0, 0);
+				GL11.glDisable(GL11.GL_CULL_FACE);
+				GL11.glShadeModel(GL11.GL_SMOOTH);
+				bindTexture(ResourceManager.mine_naval_tex);
+				ResourceManager.mine_naval.renderAll();
 				GL11.glEnable(GL11.GL_CULL_FACE);
 			}});
 

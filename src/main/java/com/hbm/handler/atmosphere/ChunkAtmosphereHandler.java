@@ -21,6 +21,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;
+import net.minecraft.block.BlockRedstoneTorch;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -177,7 +178,7 @@ public class ChunkAtmosphereHandler {
 	 */
 	private boolean runEffectsOnBlock(CBT_Atmosphere atmosphere, World world, Block block, int x, int y, int z, boolean fetchAtmosphere) {
 		boolean requiresPressure = block == Blocks.water || block == Blocks.flowing_water;
-		boolean requiresO2 = block instanceof BlockTorch || block instanceof BlockFire;
+		boolean requiresO2 = (block instanceof BlockTorch && !(block instanceof BlockRedstoneTorch)) || block instanceof BlockFire;
 		boolean requiresCO2 = block instanceof IPlantable;
 
 		if(!requiresO2 && !requiresCO2 && !requiresPressure) return false;
@@ -199,7 +200,7 @@ public class ChunkAtmosphereHandler {
 		}
 
 		if(canExist) return false;
-		
+
 		block.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
 		world.setBlockToAir(x, y, z);
 
@@ -221,7 +222,7 @@ public class ChunkAtmosphereHandler {
 	public void registerAtmosphere(IAtmosphereProvider handler) {
 		HashMap<IAtmosphereProvider, AtmosphereBlob> blobs = worldBlobs.get(handler.getWorld().provider.dimensionId);
 		AtmosphereBlob blob = blobs.get(handler);
-		
+
 		if(blob == null) {
 			blob = new AtmosphereBlob(handler);
 			blob.addBlock(handler.getRootPosition());
@@ -329,12 +330,12 @@ public class ChunkAtmosphereHandler {
 			ExplosionEvent.Detonate event = pair.key;
 			ThreeInts explosion = new ThreeInts(MathHelper.floor_double(event.explosion.explosionX), MathHelper.floor_double(event.explosion.explosionY), MathHelper.floor_double(event.explosion.explosionZ));
 			List<AtmosphereBlob> nearbyBlobs = getBlobsWithinRadius(event.world, explosion, MAX_BLOB_RADIUS + MathHelper.ceiling_float_int(event.explosion.explosionSize));
-	
+
 			for(ThreeInts pos : pair.value) {
 				if(nearbyBlobs.size() == 0) break;
-	
+
 				Iterator<AtmosphereBlob> iterator = nearbyBlobs.iterator();
-	
+
 				while(iterator.hasNext()) {
 					AtmosphereBlob blob = iterator.next();
 					for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
@@ -350,5 +351,5 @@ public class ChunkAtmosphereHandler {
 
 		explosions.clear();
 	}
-	
+
 }

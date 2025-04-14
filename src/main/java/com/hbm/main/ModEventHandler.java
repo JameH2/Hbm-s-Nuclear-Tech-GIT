@@ -456,12 +456,10 @@ public class ModEventHandler {
 			if(rand.nextInt(1024) == 0)
 				entity.setCurrentItemOrArmor(3, new ItemStack(ModItems.starmetal_plate, 1, world.rand.nextInt(ModItems.starmetal_plate.getMaxDamage())));
 
-			if(rand.nextInt(128) == 0)
+			if(rand.nextInt(64) == 0)
 				entity.setCurrentItemOrArmor(0, new ItemStack(ModItems.pipe_lead, 1, world.rand.nextInt(100)));
 			if(rand.nextInt(128) == 0)
 				entity.setCurrentItemOrArmor(0, new ItemStack(ModItems.reer_graar, 1, world.rand.nextInt(100)));
-			if(rand.nextInt(128) == 0)
-				entity.setCurrentItemOrArmor(0, new ItemStack(ModItems.pipe_rusty, 1, world.rand.nextInt(100)));
 			if(rand.nextInt(128) == 0)
 				entity.setCurrentItemOrArmor(0, new ItemStack(ModItems.crowbar, 1, world.rand.nextInt(100)));
 			if(rand.nextInt(128) == 0)
@@ -576,7 +574,7 @@ public class ModEventHandler {
 	public void onBucketUse(FillBucketEvent event) {
 		if(event.world.isRemote) return;
 		if(event.target.typeOfHit != MovingObjectType.BLOCK) return;
-		if(!(event.world.provider instanceof WorldProviderCelestial)) return;
+		if(!(event.world.provider instanceof WorldProviderCelestial) && !(event.world.provider instanceof WorldProviderOrbit)) return;
 
 		if(event.current != null && event.current.getItem() == Items.water_bucket) {
 			ForgeDirection dir = ForgeDirection.getOrientation(event.target.sideHit);
@@ -762,11 +760,14 @@ public class ModEventHandler {
 
 			if(reference != null) {
 				for(Object player : event.world.playerEntities) {
-					if(((EntityPlayer) player).ridingEntity != null) { didSit = true; }
+					if(((EntityPlayer) player).ridingEntity != null && event.world.getTotalWorldTime() % (1 * 60 * 20) == 0) {
+						((EntityPlayer) player).mountEntity(null);
+						didSit = true;
+					}
 				}
-				if(didSit && event.world.getTotalWorldTime() % (1 * 20 * 20) == 0) {
+				/*if(didSit && event.world.getTotalWorldTime() % (1 * 20 * 20) == 0) {
 					try { reference.setFloat(null, (float) (rand.nextGaussian() * 0.1 + Math.PI)); } catch(Throwable e) { }
-				}
+				}*/
 			}
 
 			int thunder = AuxSavedData.getThunder(event.world);

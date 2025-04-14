@@ -61,6 +61,14 @@ public class BlockEnums {
 		SMALL
 	}
 	
+	public static enum LightstoneType {
+		UNREFINED,
+		TILE,
+		BRICKS,
+		BRICKS_CHISELED,
+		CHISELED
+	}
+	
 	public static enum DecoComputerEnum {
 		IBM_300PL
 	}

@@ -392,7 +392,7 @@ public class ItemConveyorWand extends Item {
 		ForgeDirection horDir = dir == ForgeDirection.UP || dir == ForgeDirection.DOWN ? ForgeDirection.getOrientation(getFacingMeta(player)).getOpposite() : dir;
 
 		// Initial dropdown to floor level, if possible
-		if(y > ty) {
+		if(hasVertical && y > ty) {
 			if(routeWorld.getBlock(x, y - 1, z).isReplaceable(routeWorld, x, y - 1, z)) {
 				dir = ForgeDirection.DOWN;
 			}

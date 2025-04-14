@@ -75,6 +75,8 @@
     "block.hephaestusRunning": {"category": "block", "sounds": [{"name": "block/hephaestusRunning", "stream": false}]},
     "block.squeakyToy": {"category": "block", "sounds": [{"name": "block/squeakyToy", "stream": false}]},
     "block.pyroOperate": {"category": "block", "sounds": [{"name": "block/pyroOperate", "stream": false}]},
+    "block.motor": {"category": "block", "sounds": [{"name": "block/motor", "stream": false}]},
+    "block.engine": {"category": "block", "sounds": [{"name": "block/engine", "stream": false}]},
 	"block.dysonBeam": {"category": "block", "sounds": [{"name": "block/dysonBeam", "stream": false}]},
     "block.teto": {"category": "block", "sounds": [{"name": "block/teto", "stream": false}]},
     "block.akita": {"category": "block", "sounds": [{"name": "block/akita", "stream": false}]},

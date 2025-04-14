@@ -1,6 +1,7 @@
 package com.hbm.main;
 
 import com.hbm.blocks.BlockEnums.DecoCabinetEnum;
+import com.hbm.blocks.BlockEnums.LightstoneType;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockConcreteColoredExt.EnumConcreteType;
 import com.hbm.blocks.generic.BlockGenericStairs;
@@ -80,7 +81,7 @@ public class CraftingManager {
 	public static void AddCraftingRec() {
 
 		for(Object[] array : BlockMultiSlab.recipeGen) {
-			addRecipeAuto(new ItemStack((Block) array[1], 6, (int) array[2]), new Object[] { "###", '#', (Block) array[0] });
+			addRecipeAuto(new ItemStack((Block) array[2], 6, (int) array[3]), new Object[] { "###", '#', new ItemStack((Block) array[0], 1, (int) array[1]) });
 		}
 		for(Object[] array : BlockGenericStairs.recipeGen) {
 			addRecipeAuto(new ItemStack((Block) array[2], 4), new Object[] { "#  ",  "## ",  "###", '#', new ItemStack((Block) array[0], 1, (int) array[1]) });
@@ -366,14 +367,6 @@ public class CraftingManager {
 			addRecipeAuto(new ItemStack(ModItems.stamp_desh_flat, 1), new Object[] { "BDB", "DSD", "BDB", 'B', brick, 'D', DESH.ingot(), 'S', FERRO.ingot() });
 		}
 
-		addRecipeAuto(new ItemStack(ModItems.mechanism_revolver_1, 1), new Object[] { "ICI", "CAC", "ICI", 'I', IRON.plate(), 'C', CU.ingot(), 'A', AL.ingot() });
-		addRecipeAuto(new ItemStack(ModItems.mechanism_revolver_2, 1), new Object[] { "ATA", "TDT", "ATA", 'A', ALLOY.plate(), 'T', W.ingot(), 'D', DURA.ingot() });
-		addRecipeAuto(new ItemStack(ModItems.mechanism_rifle_1, 1), new Object[] { "ICI", "MAM", "ICI", 'I', IRON.plate(), 'C', CU.ingot(), 'A', AL.ingot(), 'M', ModItems.mechanism_revolver_1 });
-		addRecipeAuto(new ItemStack(ModItems.mechanism_rifle_2, 1), new Object[] { "ATA", "MDM", "ATA", 'A', ALLOY.plate(), 'T', W.ingot(), 'D', DURA.ingot(), 'M', ModItems.mechanism_revolver_2 });
-		addRecipeAuto(new ItemStack(ModItems.mechanism_launcher_1, 1), new Object[] { "TTT", "SSS", "BBI", 'T', TI.plate(), 'S', STEEL.ingot(), 'B', W.bolt(), 'I', MINGRADE.ingot() });
-		addRecipeAuto(new ItemStack(ModItems.mechanism_launcher_2, 1), new Object[] { "TTT", "SSS", "BBI", 'T', ALLOY.plate(), 'S', ANY_PLASTIC.ingot(), 'B', W.bolt(), 'I', DESH.ingot() });
-		addRecipeAuto(new ItemStack(ModItems.mechanism_special, 1), new Object[] { "PCI", "ISS", "PCI", 'P', ModItems.plate_desh, 'C', ModItems.coil_advanced_alloy, 'I', STAR.ingot(), 'S', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED) });
-
 		addRecipeAuto(new ItemStack(ModBlocks.watz_pump, 1), new Object[] { "MPM", "PCP", "PSP", 'M', ModItems.motor_desh, 'P', ANY_RESISTANTALLOY.plateCast(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BISMOID), 'S', ModItems.pipes_steel });
 
 		addRecipeAuto(new ItemStack(ModBlocks.reinforced_stone, 4), new Object[] { "FBF", "BFB", "FBF", 'F', Blocks.cobblestone, 'B', Blocks.stone });
@@ -431,7 +424,12 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.basalt_polished, 4), new Object[] { "CC", "CC", 'C', ModBlocks.basalt_smooth });
 		addRecipeAuto(new ItemStack(ModBlocks.basalt_brick, 4), new Object[] { "CC", "CC", 'C', ModBlocks.basalt_polished });
 		addRecipeAuto(new ItemStack(ModBlocks.basalt_tiles, 4), new Object[] { "CC", "CC", 'C', ModBlocks.basalt_brick });
-
+		
+		addShapelessAuto(new ItemStack(ModBlocks.lightstone, 4), new Object[] { Blocks.stone, Blocks.stone, Blocks.stone, ModItems.powder_limestone });
+		addRecipeAuto(new ItemStack(ModBlocks.lightstone, 4, LightstoneType.TILE.ordinal()), new Object[] { "CC", "CC", 'C', new ItemStack(ModBlocks.lightstone, 1, 0) });
+		addRecipeAuto(new ItemStack(ModBlocks.lightstone, 4, LightstoneType.BRICKS.ordinal()), new Object[] { "CC", "CC", 'C', new ItemStack(ModBlocks.lightstone, 1, LightstoneType.TILE.ordinal()) });
+		addShapelessAuto(new ItemStack(ModBlocks.lightstone, 1, LightstoneType.BRICKS_CHISELED.ordinal()), new Object[] { new ItemStack(ModBlocks.lightstone, 1, LightstoneType.BRICKS.ordinal()) });
+		addShapelessAuto(new ItemStack(ModBlocks.lightstone, 1, LightstoneType.CHISELED.ordinal()), new Object[] { ModBlocks.lightstone });
 
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.reinforced_brick), 4), new Object[] { "FBF", "BFB", "FBF", 'F', Blocks.iron_bars, 'B', ModBlocks.brick_concrete });
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.brick_compound), 4), new Object[] { "FBF", "BTB", "FBF", 'F', STEEL.bolt(), 'B', ModBlocks.reinforced_brick, 'T', ANY_TAR.any() });
@@ -618,6 +616,9 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModBlocks.fluid_duct_gauge), new Object[] { ModBlocks.fluid_duct_paintable, STEEL.ingot(), DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BASIC) });
 		addRecipeAuto(new ItemStack(ModBlocks.fluid_valve, 1), new Object[] { "S", "W", 'S', Blocks.lever, 'W', ModBlocks.fluid_duct_paintable });
 		addRecipeAuto(new ItemStack(ModBlocks.fluid_switch, 1), new Object[] { "S", "W", 'S', REDSTONE.dust(), 'W', ModBlocks.fluid_duct_paintable });
+		addRecipeAuto(new ItemStack(ModBlocks.pneumatic_tube, 8), new Object[] { "CRC", 'C', CU.plateCast(), 'R', ANY_RUBBER.ingot() });
+		addRecipeAuto(new ItemStack(ModBlocks.pneumatic_tube, 24), new Object[] { "CRC", 'C', CU.plateWelded(), 'R', ANY_RUBBER.ingot() });
+		
 		addRecipeAuto(new ItemStack(ModItems.template_folder, 1), new Object[] { "LPL", "BPB", "LPL", 'P', Items.paper, 'L', "dye", 'B', "dye" });
 		addRecipeAuto(new ItemStack(ModItems.pellet_antimatter, 1), new Object[] { "###", "###", "###", '#', ModItems.cell_antimatter });
 		addRecipeAuto(new ItemStack(ModItems.fluid_tank_empty, 8), new Object[] { "121", "1G1", "121", '1', AL.plate(), '2', IRON.plate(), 'G', KEY_ANYPANE });
@@ -764,7 +765,7 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.dfc_emitter, 1), new Object[] { "SDS", "TXL", "SDS", 'S', OSMIRIDIUM.plateWelded(), 'D', ModItems.plate_desh, 'T', ModBlocks.machine_transformer_dnt, 'X', ModItems.crystal_xen, 'L', ModItems.sat_head_laser });
 		addRecipeAuto(new ItemStack(ModBlocks.dfc_receiver, 1), new Object[] { "SDS", "TXL", "SDS", 'S', OSMIRIDIUM.plateWelded(), 'D', ModItems.plate_desh, 'T', ModBlocks.machine_transformer_dnt, 'X', ModBlocks.block_dineutronium, 'L', STEEL.shell() });
 		addRecipeAuto(new ItemStack(ModBlocks.dfc_injector, 1), new Object[] { "SDS", "TXL", "SDS", 'S', OSMIRIDIUM.plateWelded(), 'D', CMB.plate(), 'T', ModBlocks.machine_fluidtank, 'X', ModItems.motor, 'L', ModItems.pipes_steel });
-		addRecipeAuto(new ItemStack(ModBlocks.dfc_stabilizer, 1), new Object[] { "SDS", "TXL", "SDS", 'S', OSMIRIDIUM.plateWelded(), 'D', ModItems.plate_desh, 'T', ModItems.singularity_spark, 'X', ModItems.magnet_circular, 'L', ModItems.crystal_xen });
+		addRecipeAuto(new ItemStack(ModBlocks.dfc_stabilizer, 1), new Object[] { "SDS", "TXL", "SDS", 'S', OSMIRIDIUM.plateWelded(), 'D', ModItems.plate_desh, 'T', ModItems.singularity_spark, 'X', ModBlocks.fusion_conductor, 'L', ModItems.crystal_xen });
 		addRecipeAuto(new ItemStack(ModBlocks.barrel_plastic, 1), new Object[] { "IPI", "I I", "IPI", 'I', ModItems.plate_polymer, 'P', AL.plate() });
 		addRecipeAuto(new ItemStack(ModBlocks.barrel_iron, 1), new Object[] { "IPI", "I I", "IPI", 'I', IRON.plate(), 'P', IRON.ingot() });
 		addShapelessAuto(new ItemStack(ModBlocks.barrel_iron, 1), new Object[] { ModBlocks.barrel_corroded, ANY_TAR.any() });
@@ -1026,6 +1027,7 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModItems.ingot_firebrick, 4), new Object[] { ModBlocks.brick_fire });
 
 		addRecipeAuto(new ItemStack(ModBlocks.machine_drain), new Object[] { "PPP", "T  ", "PPP", 'P', STEEL.plateCast(), 'T', ModItems.tank_steel });
+		addRecipeAuto(new ItemStack(ModBlocks.machine_intake), new Object[] { "GGG", "PMP", "PTP", 'G', ModBlocks.steel_grate, 'P', STEEL.plate(), 'M', ModItems.motor, 'T', ModItems.tank_steel });
 
 		addRecipeAuto(new ItemStack(ModBlocks.filing_cabinet, 1, DecoCabinetEnum.STEEL.ordinal()), new Object[] { " P ", "PIP", " P ", 'P', STEEL.plate(), 'I', ModItems.plate_polymer });
 

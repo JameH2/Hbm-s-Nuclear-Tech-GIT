@@ -62,7 +62,6 @@ import com.hbm.sound.MovingSoundPlayerLoop.EnumHbmSound;
 import com.hbm.tileentity.bomb.TileEntityNukeCustom;
 import com.hbm.tileentity.bomb.TileEntityNukeCustom.CustomNukeEntry;
 import com.hbm.tileentity.bomb.TileEntityNukeCustom.EnumEntryType;
-import com.hbm.tileentity.machine.TileEntityNukeFurnace;
 import com.hbm.util.*;
 import com.hbm.util.ArmorRegistry.HazardClass;
 import com.hbm.wiaj.GuiWorldInAJar;
@@ -237,6 +236,8 @@ public class ModEventHandlerClient {
 						((ILookOverlay) entity).printHook(event, world, 0, 0, 0);
 					}
 				}
+
+				GL11.glColor4f(1F, 1F, 1F, 1F);
 			}
 
 			/*List<String> text = new ArrayList();
@@ -847,13 +848,6 @@ public class ModEventHandlerClient {
 					list.add(EnumChatFormatting.YELLOW + "Stack: " + ((Math.floor(level * 1000 * stack.stackSize) / 1000) + "RAD/s"));
 				}
 			}
-		}
-
-		/// NUCLEAR FURNACE FUELS ///
-		int breeder = TileEntityNukeFurnace.getFuelValue(stack);
-
-		if(breeder != 0) {
-			list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("trait.furnace", breeder));
 		}
 
 		/// CUSTOM NUKE ///

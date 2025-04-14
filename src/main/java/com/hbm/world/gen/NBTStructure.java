@@ -31,10 +31,12 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.structure.MapGenStructure;
+import net.minecraft.world.gen.structure.MapGenStructureData;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
@@ -794,6 +796,7 @@ public class NBTStructure {
 
 	}
 
+
 	// Each jigsaw block in a structure will instance one of these
 	private static class JigsawConnection {
 
@@ -1227,12 +1230,48 @@ public class NBTStructure {
 		private SpawnCondition findSpawn(BiomeGenBase biome) {
 			List<SpawnCondition> spawnList = weightedMap.get(worldObj.provider.dimensionId);
 
-			for(int i = 0; i < 64; i++) {
+			for(int i = 0; i < 256; i++) {
 				SpawnCondition spawn = spawnList.get(rand.nextInt(spawnList.size()));
 				if(spawn.isValid(biome)) return spawn;
 			}
 
 			return null;
+		}
+
+		// Thermos was written by fucking monkeys
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Override
+		public void func_143027_a(World p_143027_1_) {
+			if(this.field_143029_e == null) {
+				this.field_143029_e = (MapGenStructureData)p_143027_1_.perWorldStorage.loadData(MapGenStructureData.class, this.func_143025_a());
+
+				if(this.field_143029_e == null) {
+					this.field_143029_e = new MapGenStructureData(this.func_143025_a());
+					p_143027_1_.perWorldStorage.setData(this.func_143025_a(), this.field_143029_e);
+				} else {
+					NBTTagCompound nbttagcompound = this.field_143029_e.func_143041_a();
+					Iterator iterator = nbttagcompound.func_150296_c().iterator();
+
+					while(iterator.hasNext()) {
+						String s = (String)iterator.next();
+						NBTBase nbtbase = nbttagcompound.getTag(s);
+
+						if(nbtbase.getId() == 10) {
+							NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbtbase;
+
+							if(nbttagcompound1.hasKey("ChunkX") && nbttagcompound1.hasKey("ChunkZ")) {
+								int i = nbttagcompound1.getInteger("ChunkX");
+								int j = nbttagcompound1.getInteger("ChunkZ");
+								StructureStart structurestart = MapGenStructureIO.func_143035_a(nbttagcompound1, p_143027_1_);
+
+								if(structurestart != null) {
+									this.structureMap.put(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(i, j)), structurestart);
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 
 	}

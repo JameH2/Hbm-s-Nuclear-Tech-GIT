@@ -110,7 +110,7 @@ public class MachineChungus extends BlockDummyable implements ITooltipProvider, 
 
 	@Override
 	public int[] getDimensions() {
-		return new int[] { 3, 0, 0, 3, 2, 2 };
+		return new int[] { 4, 0, 10, 3, 2, 2 };
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class MachineChungus extends BlockDummyable implements ITooltipProvider, 
 
 	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
-		super.fillSpace(world, x, y, z, dir, o);
+		MultiblockHandlerXR.fillSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {3, 0, 0, 3, 2, 2}, this, dir);
 		MultiblockHandlerXR.fillSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {4, -4, 0, 3, 1, 1}, this, dir);
 		MultiblockHandlerXR.fillSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {3, 0, 6, -1, 1, 1}, this, dir);
 		MultiblockHandlerXR.fillSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {2, 0, 10, -7, 1, 1}, this, dir);
@@ -136,7 +136,8 @@ public class MachineChungus extends BlockDummyable implements ITooltipProvider, 
 	@Override
 	protected boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
 
-		if(!MultiblockHandlerXR.checkSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, getDimensions(), x, y, z, dir)) return false;
+		if(!MultiblockHandlerXR.checkSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {3, 0, 0, 3, 2, 2}, x, y, z, dir)) return false;
+		if(!MultiblockHandlerXR.checkSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {4, -4, 0, 3, 1, 1}, x, y, z, dir)) return false;
 		if(!MultiblockHandlerXR.checkSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {3, 0, 6, -1, 1, 1}, x, y, z, dir)) return false;
 		if(!MultiblockHandlerXR.checkSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {2, 0, 10, -7, 1, 1}, x, y, z, dir)) return false;
 		if(!world.getBlock(x + dir.offsetX, y + 2, z + dir.offsetZ).canPlaceBlockAt(world, x + dir.offsetX, y + 2, z + dir.offsetZ)) return false;

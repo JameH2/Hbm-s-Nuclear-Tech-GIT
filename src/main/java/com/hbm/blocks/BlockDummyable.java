@@ -221,7 +221,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 			}
 		}
 
-		if(!checkRequirement(world, ox, oy, oz, dir, 0)) {
+		if(!checkRequirement(world, ox - dir.offsetX * o, oy, oz - dir.offsetZ * o, dir, o)) {
 
 			if(!pl.capabilities.isCreativeMode) {
 				ItemStack stack = pl.inventory.mainInventory[pl.inventory.currentItem];

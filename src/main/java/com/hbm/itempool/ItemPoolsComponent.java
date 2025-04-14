@@ -3,6 +3,7 @@ package com.hbm.itempool;
 import static com.hbm.lib.HbmChestContents.weighted;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ItemEnums.EnumCokeType;
 import com.hbm.items.machine.ItemCircuit.EnumCircuitType;
@@ -26,6 +27,7 @@ public class ItemPoolsComponent {
 	public static final String POOL_VAULT_LOCKERS = "POOL_VAULT_LOCKERS";
 	public static final String POOL_SUBMARINE = "POOL_SUBMARINE";
 	public static final String POOL_METEOR_SAFE = "POOL_METEOR_SAFE";
+	public static final String POOL_OIL_RIG = "POOL_OIL_RIG";
 
 	public static void init() {
 
@@ -227,6 +229,17 @@ public class ItemPoolsComponent {
 					weighted(Items.clock, 0, 1, 1, 3),
 					weighted(Items.compass, 0, 1, 1, 3),
 					weighted(Items.book, 0, 1, 5, 4),
+			};
+		}};
+
+		new ItemPool(POOL_OIL_RIG) {{
+			this.pool = new WeightedRandomChestContent[] {
+				weighted(ModItems.oil_detector, 0, 1, 1, 1),
+				weighted(ModItems.canister_full, Fluids.OIL.getID(), 1, 4, 5),
+				weighted(ModBlocks.machine_fraction_tower,0, 0, 1, 1),
+				weighted(ModBlocks.fraction_spacer,0, 0, 1, 1),
+				weighted(ModItems.circuit,EnumCircuitType.ANALOG.ordinal(), 1, 4, 1),
+				weighted(ModItems.circuit, EnumCircuitType.CAPACITOR.ordinal(), 1, 1, 3),
 			};
 		}};
 	}

@@ -11,18 +11,20 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderTNTPrimedBase extends Render {
-	
+
 	private RenderBlocks blockRenderer = new RenderBlocks();
 
 	public RenderTNTPrimedBase() {
 		this.shadowSize = 0.5F;
 	}
-	
+
 	public void doRender(EntityTNTPrimedBase tnt, double x, double y, double z, float f0, float f1) {
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x, (float) y, (float) z);
 		GL11.glRotatef(-90F, 0F, 1F, 0F);
-		
+		GL11.glRotatef(tnt.rotationYaw, 0, 1, 0);
+		GL11.glRotatef(tnt.rotationPitch, 0, 0, 1);
+
 		float f2;
 
 		if((float) tnt.fuse - f1 + 1.0F < 10.0F) {
@@ -45,9 +47,9 @@ public class RenderTNTPrimedBase extends Render {
 		f2 = (1.0F - ((float) tnt.fuse - f1 + 1.0F) / 100.0F) * 0.8F;
 		this.bindEntityTexture(tnt);
 		this.blockRenderer.renderBlockAsItem(tnt.getBlock(), 0, tnt.getBrightness(f1));
-		
+
 		if(tnt.fuse / 5 % 2 == 0) {
-			
+
 			GL11.glScaled(1.01, 1.01, 1.01);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_LIGHTING);
@@ -66,15 +68,15 @@ public class RenderTNTPrimedBase extends Render {
 
 		GL11.glPopMatrix();
 	}
-	
+
 	protected ResourceLocation getEntityTexture(EntityTNTPrimedBase tnt) {
 		return TextureMap.locationBlocksTexture;
 	}
-	
+
 	protected ResourceLocation getEntityTexture(Entity entity) {
 		return this.getEntityTexture((EntityTNTPrimedBase) entity);
 	}
-	
+
 	public void doRender(Entity entity, double x, double y, double z, float f0, float f1) {
 		this.doRender((EntityTNTPrimedBase) entity, x, y, z, f0, f1);
 	}
