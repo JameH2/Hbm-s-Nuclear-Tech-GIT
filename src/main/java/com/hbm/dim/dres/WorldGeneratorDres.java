@@ -5,10 +5,12 @@ import java.util.Map;
 import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockOre;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
+import com.hbm.dim.SolarSystem;
 import com.hbm.dim.dres.biome.BiomeGenBaseDres;
 import com.hbm.main.StructureManager;
 import com.hbm.world.gen.NBTStructure;
@@ -69,6 +71,12 @@ public class WorldGeneratorDres implements IWorldGenerator {
 		}});
 
 		NBTStructure.registerNullWeight(SpaceConfig.dresDimension, 20);
+
+		BlockOre.addValidBody(ModBlocks.ore_shale, SolarSystem.Body.DRES);
+		BlockOre.addValidBody(ModBlocks.ore_lanthanium, SolarSystem.Body.DRES);
+		BlockOre.addValidBody(ModBlocks.ore_niobium, SolarSystem.Body.DRES);
+		BlockOre.addValidBody(ModBlocks.ore_coltan, SolarSystem.Body.DRES);
+		BlockOre.addValidBody(ModBlocks.ore_lanthanium, SolarSystem.Body.DRES);
 	}
 
 	@Override

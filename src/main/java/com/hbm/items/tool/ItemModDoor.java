@@ -13,7 +13,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class ItemModDoor extends Item {
-	
+
 	public ItemModDoor() {
 		this.maxStackSize = 1;
 		this.setCreativeTab(CreativeTabs.tabRedstone);
@@ -24,13 +24,14 @@ public class ItemModDoor extends Item {
 			return false;
 		} else {
 			++y;
-			
+
 			Block block = Blocks.air;
 
 			if(this == ModItems.door_metal) block = ModBlocks.door_metal;
 			if(this == ModItems.door_office) block = ModBlocks.door_office;
 			if(this == ModItems.door_bunker) block = ModBlocks.door_bunker;
 			if(this == ModItems.door_red) block = ModBlocks.door_red;
+			if(this == ModItems.fence_gate) block = ModBlocks.fence_gate;
 
 			if(player.canPlayerEdit(x, y, z, side, stack) && player.canPlayerEdit(x, y + 1, z, side, stack)) {
 				if(!block.canPlaceBlockAt(world, x, y, z)) {

@@ -158,7 +158,7 @@ public class BlockModDoor extends Block implements INBTTransformable {
 		return (this.func_150012_g(p_150015_1_, p_150015_2_, p_150015_3_, p_150015_4_) & 4) != 0;
 	}
 
-	private void func_150011_b(int p_150011_1_) {
+	protected void func_150011_b(int p_150011_1_) {
 		float f = 0.1875F;
 		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 2.0F, 1.0F);
 		int j = p_150011_1_ & 3;
@@ -234,7 +234,7 @@ public class BlockModDoor extends Block implements INBTTransformable {
 					p_149727_3_, p_149727_4_);
 		}
 
-		p_149727_1_.playSoundEffect(p_149727_2_, p_149727_3_, p_149727_4_, "hbm:block.openDoor", 1.0F, p_149727_1_.rand.nextFloat() * 0.1F + 0.9F);
+		p_149727_1_.playSoundEffect(p_149727_2_, p_149727_3_, p_149727_4_, getSFX(), 1.0F, p_149727_1_.rand.nextFloat() * 0.1F + 0.9F);
 
 		return true;
 	}
@@ -258,8 +258,12 @@ public class BlockModDoor extends Block implements INBTTransformable {
 						p_150014_3_, p_150014_4_);
 			}
 
-			p_150014_1_.playSoundEffect(p_150014_2_, p_150014_3_, p_150014_4_, "hbm:block.openDoor", 1.0F, p_150014_1_.rand.nextFloat() * 0.1F + 0.9F);
+			p_150014_1_.playSoundEffect(p_150014_2_, p_150014_3_, p_150014_4_, getSFX(), 1.0F, p_150014_1_.rand.nextFloat() * 0.1F + 0.9F);
 		}
+	}
+
+	protected String getSFX() {
+		return "hbm:block.openDoor";
 	}
 
 	/**
@@ -322,8 +326,10 @@ public class BlockModDoor extends Block implements INBTTransformable {
 			return ModItems.door_office;
 		else if (this == ModBlocks.door_red)
 			return ModItems.door_red;
-		else
+		else if (this == ModBlocks.door_bunker)
 			return ModItems.door_bunker;
+		else
+			return ModItems.fence_gate;
 	}
 
 	/**
@@ -384,8 +390,10 @@ public class BlockModDoor extends Block implements INBTTransformable {
 			return ModItems.door_office;
 		else if (this == ModBlocks.door_red)
 			return ModItems.door_red;
-		else
+		else if (this == ModBlocks.door_bunker)
 			return ModItems.door_bunker;
+		else
+			return ModItems.fence_gate;
 	}
 
 	/**

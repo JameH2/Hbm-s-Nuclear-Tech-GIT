@@ -3,10 +3,12 @@ package com.hbm.dim.duna;
 import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockOre;
 import com.hbm.blocks.machine.Spotlight;
 import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
+import com.hbm.dim.SolarSystem;
 import com.hbm.dim.WorldTypeTeleport;
 import com.hbm.main.StructureManager;
 import com.hbm.world.feature.OilBubble;
@@ -28,6 +30,8 @@ public class WorldGeneratorDuna implements IWorldGenerator {
 			spawnWeight = 4;
 		}});
 		NBTStructure.registerNullWeight(SpaceConfig.dunaDimension, 20);
+
+        BlockOre.addValidBody(ModBlocks.ore_oil, SolarSystem.Body.DUNA);
 	}
 
 	@Override

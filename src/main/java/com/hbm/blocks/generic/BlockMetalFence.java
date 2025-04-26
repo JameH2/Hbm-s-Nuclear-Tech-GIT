@@ -3,19 +3,23 @@ package com.hbm.blocks.generic;
 import java.util.List;
 
 import com.hbm.blocks.IBlockMulti;
+import com.hbm.blocks.ModBlocks;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockMetalFence extends BlockFence implements IBlockMulti {
@@ -47,7 +51,7 @@ public class BlockMetalFence extends BlockFence implements IBlockMulti {
 	public int damageDropped(int meta) {
 		return rectify(meta);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
@@ -114,6 +118,13 @@ public class BlockMetalFence extends BlockFence implements IBlockMulti {
 		}
 
 		this.setBlockBounds(f, 0.0F, f2, f1, 1.0F, f3);
+	}
+
+    public boolean canConnectFenceTo(IBlockAccess world, int x, int y, int z) {
+		Block block = world.getBlock(x, y, z);
+		if(block == ModBlocks.fence_gate) return true;
+
+        return block != this && block != Blocks.fence_gate ? (block.getMaterial().isOpaque() && block.renderAsNormalBlock() ? block.getMaterial() != Material.gourd : false) : true;
 	}
 
 	private void addCol(World world, int x, int y, int z, AxisAlignedBB aabb, List list, Entity entity) {

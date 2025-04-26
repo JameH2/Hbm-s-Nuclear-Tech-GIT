@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockOre;
 import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
+import com.hbm.dim.SolarSystem;
 import com.hbm.main.StructureManager;
 import com.hbm.world.gen.NBTStructure;
 import com.hbm.world.gen.NBTStructure.JigsawPiece;
@@ -50,6 +52,10 @@ public class WorldGeneratorMoon implements IWorldGenerator {
 		}});
 
 		NBTStructure.registerNullWeight(SpaceConfig.moonDimension, 18);
+
+		BlockOre.addValidBody(ModBlocks.ore_lithium, SolarSystem.Body.MUN);
+		BlockOre.addValidBody(ModBlocks.ore_quartz, SolarSystem.Body.MUN);
+		BlockOre.addValidBody(ModBlocks.ore_shale, SolarSystem.Body.MUN);
 	}
 
 	@Override

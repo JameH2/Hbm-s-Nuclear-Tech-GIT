@@ -5,9 +5,11 @@ import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.bomb.BlockVolcano;
+import com.hbm.blocks.generic.BlockOre;
 import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
+import com.hbm.dim.SolarSystem;
 import com.hbm.main.StructureManager;
 import com.hbm.world.gen.NBTStructure;
 import com.hbm.world.gen.NBTStructure.JigsawPiece;
@@ -58,6 +60,12 @@ public class WorldGeneratorMoho implements IWorldGenerator {
 		}});
 
 		NBTStructure.registerNullWeight(SpaceConfig.mohoDimension, 20);
+
+		BlockOre.addValidBody(ModBlocks.ore_mineral, SolarSystem.Body.MOHO);
+		BlockOre.addValidBody(ModBlocks.ore_shale, SolarSystem.Body.MOHO);
+		BlockOre.addValidBody(ModBlocks.ore_glowstone, SolarSystem.Body.MOHO);
+		BlockOre.addValidBody(ModBlocks.ore_fire, SolarSystem.Body.MOHO);
+		BlockOre.addValidBody(ModBlocks.ore_australium, SolarSystem.Body.MOHO);
 	}
 
 	@Override

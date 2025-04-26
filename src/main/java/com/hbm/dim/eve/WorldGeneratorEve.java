@@ -3,9 +3,11 @@ package com.hbm.dim.eve;
 import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockOre;
 import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
+import com.hbm.dim.SolarSystem;
 import com.hbm.dim.eve.biome.BiomeGenBaseEve;
 import com.hbm.dim.eve.genlayer.WorldGenElectricVolcano;
 import com.hbm.dim.eve.genlayer.WorldGenEveSpike;
@@ -24,6 +26,10 @@ public class WorldGeneratorEve implements IWorldGenerator {
 
 	public WorldGeneratorEve() {
 		NBTStructure.registerNullWeight(SpaceConfig.eveDimension, 24);
+
+		BlockOre.addValidBody(ModBlocks.ore_niobium, SolarSystem.Body.EVE);
+		BlockOre.addValidBody(ModBlocks.ore_iodine, SolarSystem.Body.EVE);
+		BlockOre.addValidBody(ModBlocks.ore_gas, SolarSystem.Body.EVE);
 	}
 
 	@Override

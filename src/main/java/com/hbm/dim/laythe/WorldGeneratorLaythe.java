@@ -3,9 +3,11 @@ package com.hbm.dim.laythe;
 import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockOre;
 import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
+import com.hbm.dim.SolarSystem;
 import com.hbm.dim.laythe.biome.BiomeGenBaseLaythe;
 import com.hbm.main.StructureManager;
 import com.hbm.world.feature.OilBubble;
@@ -38,6 +40,11 @@ public class WorldGeneratorLaythe implements IWorldGenerator {
 			canSpawn = biome -> biome.rootHeight >= 0;
 			spawnWeight = 6;
 		}});
+
+        BlockOre.addValidBody(ModBlocks.ore_emerald, SolarSystem.Body.LAYTHE);
+        BlockOre.addValidBody(ModBlocks.ore_lapis, SolarSystem.Body.LAYTHE);
+        BlockOre.addValidBody(ModBlocks.ore_asbestos, SolarSystem.Body.LAYTHE);
+        BlockOre.addValidBody(ModBlocks.ore_oil, SolarSystem.Body.LAYTHE);
 	}
 
 	@Override

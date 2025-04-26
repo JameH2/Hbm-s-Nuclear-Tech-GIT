@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Random;
 
 import com.hbm.blocks.BlockEnums.EnumStoneType;
+import com.hbm.blocks.generic.BlockOre;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.WorldConfig;
 import com.hbm.inventory.FluidStack;
@@ -124,6 +125,41 @@ public class WorldGeneratorCelestial implements IWorldGenerator {
                 }});
 			}};
 		}}, PlanetGen.getSpaceDimensions());
+
+        // Specify which ores spawn where
+        BlockOre.addAllBodies(ModBlocks.ore_iron);
+        BlockOre.addAllBodies(ModBlocks.ore_gold);
+        BlockOre.addAllBodies(ModBlocks.ore_diamond);
+        BlockOre.addAllBodies(ModBlocks.ore_redstone);
+
+        BlockOre.addValidBody(ModBlocks.ore_emerald, SolarSystem.Body.KERBIN);
+        BlockOre.addValidBody(ModBlocks.ore_lapis, SolarSystem.Body.KERBIN);
+
+        BlockOre.addAllBodies(ModBlocks.ore_uranium);
+        BlockOre.addAllBodies(ModBlocks.ore_thorium);
+        BlockOre.addAllBodies(ModBlocks.ore_titanium);
+        BlockOre.addAllBodies(ModBlocks.ore_sulfur);
+        BlockOre.addAllBodies(ModBlocks.ore_aluminium);
+        BlockOre.addAllBodies(ModBlocks.ore_copper);
+        BlockOre.addAllBodies(ModBlocks.ore_zinc);
+        BlockOre.addAllBodies(ModBlocks.ore_fluorite);
+        BlockOre.addAllBodies(ModBlocks.ore_niter);
+        BlockOre.addAllBodies(ModBlocks.ore_tungsten);
+        BlockOre.addAllBodies(ModBlocks.ore_lead);
+        BlockOre.addAllBodies(ModBlocks.ore_beryllium);
+        BlockOre.addAllBodies(ModBlocks.ore_rare);
+        BlockOre.addAllBodies(ModBlocks.ore_cinnebar);
+        BlockOre.addAllBodies(ModBlocks.ore_cobalt);
+        BlockOre.addAllBodies(ModBlocks.cluster_iron);
+        BlockOre.addAllBodies(ModBlocks.cluster_titanium);
+        BlockOre.addAllBodies(ModBlocks.cluster_aluminium);
+        BlockOre.addAllBodies(ModBlocks.cluster_copper);
+
+        BlockOre.addValidBody(ModBlocks.ore_asbestos, SolarSystem.Body.KERBIN);
+        BlockOre.addValidBody(ModBlocks.ore_lignite, SolarSystem.Body.KERBIN);
+        BlockOre.addValidBody(ModBlocks.ore_oil, SolarSystem.Body.KERBIN);
+
+        BlockOre.addAllExcept(ModBlocks.ore_nickel, SolarSystem.Body.KERBIN);
     }
 
     @Override

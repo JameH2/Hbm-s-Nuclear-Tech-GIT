@@ -3,6 +3,7 @@ package com.hbm.main;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockAshes;
+import com.hbm.blocks.generic.BlockOre;
 import com.hbm.config.ClientConfig;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.SpaceConfig;
@@ -82,6 +83,7 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRedstoneOre;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -888,6 +890,19 @@ public class ModEventHandlerClient {
 				list.add(EnumChatFormatting.DARK_PURPLE + mat.material.names[0] + ": " + Mats.formatAmount(mat.amount * stack.stackSize));
 			}
 		}*/
+
+		/// ORES ///
+		Block block = stack != null ? Block.getBlockFromItem(stack.getItem()) : null;
+		if(block instanceof net.minecraft.block.BlockOre || block instanceof BlockRedstoneOre) {
+			BlockOre ore = BlockOre.vanillaMap.get(block);
+			if(ore != null) {
+				ore.addInformation(stack, event.entityPlayer, list, event.showAdvancedItemTooltips);
+			} else if(block == Blocks.coal_ore) {
+				// we don't have any celestial coal, special case
+				list.add(EnumChatFormatting.GOLD + "Can be found on:");
+				list.add(EnumChatFormatting.AQUA + " - " + I18nUtil.resolveKey("body.kerbin"));
+			}
+		}
 	}
 
 	private static long canneryTimestamp;

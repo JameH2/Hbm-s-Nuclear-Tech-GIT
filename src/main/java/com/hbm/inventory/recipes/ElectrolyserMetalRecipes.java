@@ -138,12 +138,12 @@ public class ElectrolyserMetalRecipes extends SerializableRecipe {
 
 		for(CelestialBedrockOreType type : CelestialBedrockOre.getAllTypes()) {
 			ArrayList<Pair<Object, Integer>> productsF = new ArrayList<>();
-			productsF.add(new Pair(type.primary, 12));
+			productsF.add(new Pair(type.primary, 8));
 			productsF.add(new Pair(ItemBedrockOreNew.make(BedrockOreGrade.CRUMBS, type), 1));
 			recipes.put(new ComparableStack(ItemBedrockOreNew.make(BedrockOreGrade.PRIMARY_FIRST, type)), makeBedrockOreProduct(productsF));
 
 			ArrayList<Pair<Object, Integer>> productsC = new ArrayList<>();
-			productsC.add(new Pair(type.primary, 4));
+			productsC.add(new Pair(type.primary, 2));
 
 			recipes.put(new ComparableStack(ItemBedrockOreNew.make(BedrockOreGrade.CRUMBS, type)), makeBedrockOreProduct(productsC));
 		}

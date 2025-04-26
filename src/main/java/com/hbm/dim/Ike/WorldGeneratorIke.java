@@ -3,9 +3,11 @@ package com.hbm.dim.Ike;
 import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockOre;
 import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
+import com.hbm.dim.SolarSystem;
 import com.hbm.world.dungeon.AncientTomb;
 import com.hbm.world.gen.NBTStructure;
 import com.hbm.world.generator.DungeonToolbox;
@@ -18,6 +20,11 @@ public class WorldGeneratorIke implements IWorldGenerator {
 
 	public WorldGeneratorIke() {
 		NBTStructure.registerNullWeight(SpaceConfig.ikeDimension, 16);
+
+		BlockOre.addValidBody(ModBlocks.ore_mineral, SolarSystem.Body.IKE);
+		BlockOre.addValidBody(ModBlocks.ore_lithium, SolarSystem.Body.IKE);
+		BlockOre.addValidBody(ModBlocks.ore_coltan, SolarSystem.Body.IKE);
+		BlockOre.addValidBody(ModBlocks.ore_asbestos, SolarSystem.Body.IKE);
 	}
 
 	@Override
