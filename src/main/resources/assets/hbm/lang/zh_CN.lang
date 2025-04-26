@@ -6536,3 +6536,5 @@ tile.pneumatic_tube.name=气动物流管道
 tile.pneumatic_tube.desc=使用压缩空气来运输物品$使用螺丝刀右键切换为输入$潜行右键则切换为输出$可以配置输入类型并连接到压缩空气$每秒最多发送4组物品
 tile.stones_slab.lightstone.1.name=淡色石瓷砖台阶
 tile.stones_slab.lightstone.2.name=淡色石砖块台阶
+item.fence_gate.name=铁丝网栅栏门
+tile.fence_gate.name=铁丝网栅栏门
