@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockPlushie;
+import com.hbm.blocks.generic.BlockPlushie.TileEntityPlushie;
 import com.hbm.inventory.UpgradeManagerNT;
 import com.hbm.inventory.container.ContainerMachineEPress;
 import com.hbm.inventory.gui.GUIMachineEPress;
@@ -27,8 +29,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -92,7 +96,8 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IE
 						this.press += stampSpeed;
 
 						if(this.press >= maxPress) {
-							this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord, "hbm:block.pressOperate", getVolume(1.5F), 1.0F);
+							String squish = worldObj.getBlock(xCoord, yCoord + 1, zCoord) instanceof BlockPlushie ? "hbm:block.squeakyPain" : "hbm:block.pressOperate";
+							this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord, squish, getVolume(1.5F), 1.0F);
 							ItemStack output = PressRecipes.getOutput(slots[2], slots[1]);
 							if(slots[3] == null) {
 								slots[3] = output.copy();
@@ -133,6 +138,12 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IE
 				--this.turnProgress;
 			} else {
 				this.renderPress = this.syncPress;
+			}
+
+			TileEntity te = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
+			if(te instanceof TileEntityPlushie) {
+				TileEntityPlushie abuseTarget = (TileEntityPlushie) te;
+				abuseTarget.miseryFactor = MathHelper.clamp_float(((float)syncPress - 100.0F) / 100.0F, 0, 1);
 			}
 		}
 	}

@@ -14,6 +14,7 @@ import com.hbm.packet.PermaSyncHandler;
 import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
 import com.hbm.render.model.ModelMan;
 import com.hbm.util.ArmorUtil;
+import com.hbm.util.Clock;
 import com.hbm.world.biome.BiomeGenCraterBase;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -409,13 +410,13 @@ public class ModEventHandlerRenderer {
 		if(event.entity.worldObj.provider instanceof WorldProviderCelestial) {
 			WorldProviderCelestial provider = (WorldProviderCelestial) event.entity.worldObj.provider;
 			lastFogDensity = provider.fogDensity(event);
-			
+
 			if(lastFogDensity > 0) {
 				if(GLContext.getCapabilities().GL_NV_fog_distance) {
 					GL11.glFogi(34138, 34139);
 				}
 				GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
-	
+
 				event.density = lastFogDensity;
 				event.setCanceled(true);
 
@@ -435,7 +436,7 @@ public class ModEventHandlerRenderer {
 			if(GLContext.getCapabilities().GL_NV_fog_distance) {
 				GL11.glFogi(34138, 34139);
 			}
-			
+
 			event.setCanceled(true);
 		}
 	}
@@ -483,7 +484,7 @@ public class ModEventHandlerRenderer {
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onRenderHUD(RenderGameOverlayEvent.Pre event) {
 		Tessellator tess = Tessellator.instance;
-		
+
 		if(event.type == ElementType.HOTBAR && (ModEventHandlerClient.shakeTimestamp + ModEventHandlerClient.shakeDuration - System.currentTimeMillis()) > 0 && ClientConfig.NUKE_HUD_SHAKE.get()) {
 			double mult = (ModEventHandlerClient.shakeTimestamp + ModEventHandlerClient.shakeDuration - System.currentTimeMillis()) / (double) ModEventHandlerClient.shakeDuration * 2;
 			double horizontal = MathHelper.clamp_double(Math.sin(System.currentTimeMillis() * 0.02), -0.7, 0.7) * 15;
@@ -498,11 +499,11 @@ public class ModEventHandlerRenderer {
 			int air = HbmLivingProps.getOxy(player);
 			if(air < 100) {
 				GuiIngame gui = Minecraft.getMinecraft().ingameGUI;
-	
+
 				GL11.glEnable(GL11.GL_BLEND);
 				int left = width / 2 + 91;
 				int top = height - GuiIngameForge.right_height;
-	
+
 				int full = MathHelper.ceiling_double_int((double)(air - 2) * 10.0D / 100.0D);
 				int partial = MathHelper.ceiling_double_int((double)air * 10.0D / 100.0D) - full;
 
@@ -510,9 +511,9 @@ public class ModEventHandlerRenderer {
 					gui.drawTexturedModalRect(left - i * 8 - 9, top, (i < full ? 16 : 25), 18, 9, 9);
 				}
 				GuiIngameForge.right_height += 10;
-	
+
 				GL11.glDisable(GL11.GL_BLEND);
-	
+
 				// Prevent regular bubbles rendering
 				event.setCanceled(true);
 			}
@@ -520,9 +521,9 @@ public class ModEventHandlerRenderer {
 			ItemStack tankStack = ArmorUtil.getOxygenTank(player);
 			if(tankStack != null) {
 				ItemModOxy tank = (ItemModOxy)tankStack.getItem();
-				
+
 				float tot = (float)ItemModOxy.getFuel(tankStack) / (float)tank.getMaxFuel();
-				
+
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				int right = width / 2 + 91;
 				int top = height - GuiIngameForge.right_height + 3;
@@ -539,14 +540,14 @@ public class ModEventHandlerRenderer {
 				tess.addVertex(right, top, 0);
 				tess.draw();
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
-				
+
 				GuiIngameForge.right_height += 6;
 				event.setCanceled(true);
 			}
 		}
 
 	}
-	
+
 	private static boolean fogInit = false;
 	private static int fogX;
 	private static int fogZ;
@@ -557,11 +558,11 @@ public class ModEventHandlerRenderer {
 	/** Same procedure as getting the blended sky color but for fog */
 	public static Vec3 getFogBlendColor(World world, int playerX, int playerZ, float red, float green, float blue, double partialTicks) {
 
-		long millis = System.currentTimeMillis() - fogTimer;
+		long millis = Clock.get_ms() - fogTimer;
 		if(playerX == fogX && playerZ == fogZ && fogInit && millis < 3000) return fogRGBMultiplier;
 
 		fogInit = true;
-		fogTimer = System.currentTimeMillis();
+		fogTimer = Clock.get_ms();
 		GameSettings settings = Minecraft.getMinecraft().gameSettings;
 		int[] ranges = ForgeModContainer.blendRanges;
 		int distance = 0;

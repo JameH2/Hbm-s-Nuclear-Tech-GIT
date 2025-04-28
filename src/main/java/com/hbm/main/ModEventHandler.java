@@ -19,11 +19,8 @@ import com.hbm.dim.orbit.OrbitalStation;
 import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.entity.mob.EntityCyberCrab;
-import com.hbm.entity.mob.EntityDuck;
 import com.hbm.entity.missile.EntityRideableRocket;
 import com.hbm.entity.missile.EntityRideableRocket.RocketState;
-import com.hbm.entity.mob.EntityCreeperNuclear;
-import com.hbm.entity.mob.EntityQuackos;
 import com.hbm.entity.mob.ai.EntityAIFireGun;
 import com.hbm.entity.mob.EntityCreeperTainted;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
@@ -39,6 +36,7 @@ import com.hbm.hazard.HazardRegistry;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.hazard.type.HazardTypeNeutron;
 import com.hbm.interfaces.IBomb;
+import com.hbm.interfaces.Spaghetti;
 import com.hbm.handler.HTTPHandler;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
@@ -51,7 +49,6 @@ import com.hbm.items.ModItems;
 import com.hbm.items.armor.*;
 import com.hbm.items.food.ItemConserve.EnumFoodType;
 import com.hbm.items.tool.ItemGuideBook.BookType;
-import com.hbm.items.weapon.ItemGunBase;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.factory.XFactory12ga;
@@ -63,7 +60,6 @@ import com.hbm.packet.toclient.PermaSyncPacket;
 import com.hbm.packet.toclient.PlayerInformPacket;
 import com.hbm.particle.helper.BlackPowderCreator;
 import com.hbm.potion.HbmPotion;
-import com.hbm.saveddata.AuxSavedData;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.network.RTTYSystem;
@@ -93,8 +89,6 @@ import net.minecraft.block.BlockFire;
 import net.minecraft.command.CommandGameRule;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -105,8 +99,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityMooshroom;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -130,7 +122,6 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -158,6 +149,7 @@ import org.apache.logging.log4j.Level;
 import java.lang.reflect.Field;
 import java.util.*;
 
+@Spaghetti("fuck")
 public class ModEventHandler {
 
 	private static Random rand = new Random();
@@ -437,55 +429,126 @@ public class ModEventHandler {
 		EntityLivingBase entity = event.entityLiving;
 		World world = event.world;
 
-		if(!MobConfig.enableMobGear || entity.isChild() || world.isRemote)
-			return;
+		if(!MobConfig.enableMobGear || entity.isChild() || world.isRemote) return;
+
+		Map<Integer, List<WeightedRandomObject>> slotPools = new HashMap<>();
 
 		if(entity instanceof EntityZombie) {
-			if(rand.nextInt(64) == 0) {
-				ItemStack mask = new ItemStack(ModItems.gas_mask_m65);
-				ArmorUtil.installGasMaskFilter(mask, new ItemStack(ModItems.gas_mask_filter));
-				entity.setCurrentItemOrArmor(4, mask);
+			if(world.rand.nextFloat() < 0.005F) { // full hazmat zombine
+				equipFullSet(entity, ModItems.hazmat_helmet, ModItems.hazmat_plate, ModItems.hazmat_legs, ModItems.hazmat_boots);
+				return;
 			}
-			if(rand.nextInt(128) == 0) {
-				ItemStack mask = new ItemStack(ModItems.gas_mask_olde);
-				ArmorUtil.installGasMaskFilter(mask, new ItemStack(ModItems.gas_mask_filter));
-				entity.setCurrentItemOrArmor(4, mask);
-			}
-			if(rand.nextInt(256) == 0)
-				entity.setCurrentItemOrArmor(4, new ItemStack(ModItems.mask_of_infamy, 1, world.rand.nextInt(100)));
-			if(rand.nextInt(1024) == 0)
-				entity.setCurrentItemOrArmor(3, new ItemStack(ModItems.starmetal_plate, 1, world.rand.nextInt(ModItems.starmetal_plate.getMaxDamage())));
 
-			if(rand.nextInt(64) == 0)
-				entity.setCurrentItemOrArmor(0, new ItemStack(ModItems.pipe_lead, 1, world.rand.nextInt(100)));
-			if(rand.nextInt(128) == 0)
-				entity.setCurrentItemOrArmor(0, new ItemStack(ModItems.reer_graar, 1, world.rand.nextInt(100)));
-			if(rand.nextInt(128) == 0)
-				entity.setCurrentItemOrArmor(0, new ItemStack(ModItems.crowbar, 1, world.rand.nextInt(100)));
-			if(rand.nextInt(128) == 0)
-				entity.setCurrentItemOrArmor(0, new ItemStack(ModItems.geiger_counter, 1));
-			if(rand.nextInt(128) == 0)
-				entity.setCurrentItemOrArmor(0, new ItemStack(ModItems.steel_pickaxe, 1, world.rand.nextInt(300)));
-			if(rand.nextInt(512) == 0)
-				entity.setCurrentItemOrArmor(0, new ItemStack(ModItems.stopsign));
-			if(rand.nextInt(512) == 0)
-				entity.setCurrentItemOrArmor(0, new ItemStack(ModItems.sopsign));
-			if(rand.nextInt(512) == 0)
-				entity.setCurrentItemOrArmor(0, new ItemStack(ModItems.chernobylsign));
+			if(world.rand.nextFloat() < 0.005F) { // full security zombine
+				equipFullSet(entity, ModItems.security_helmet, ModItems.security_plate, ModItems.security_legs, ModItems.security_boots);
+				return;
+			}
+
+			slotPools.put(4, createSlotPool(8000, new Object[][]{ //new slots, smooth, brushed, no wrinkles // old slots, wrinkled, rusty, not smooth
+				{ModItems.gas_mask_m65, 16}, {ModItems.gas_mask_olde, 12}, {ModItems.mask_of_infamy, 8},
+				{ModItems.gas_mask_mono, 8}, {ModItems.robes_helmet, 32}, {ModItems.no9, 16},
+				{ModItems.cobalt_helmet, 2}, {ModItems.rag_piss, 1}, {ModItems.hat, 1}, {ModItems.alloy_helmet, 2},
+				{ModItems.titanium_helmet, 4}, {ModItems.steel_helmet, 8}
+			}));
+			slotPools.put(3, createSlotPool(7000, new Object[][]{
+				{ModItems.starmetal_plate, 1}, {ModItems.cobalt_plate, 2}, {ModItems.robes_plate, 32},
+				{ModItems.jackt, 32}, {ModItems.jackt2, 32}, {ModItems.alloy_plate, 2},
+				{ModItems.steel_plate, 2}
+			}));
+			slotPools.put(2, createSlotPool(7000, new Object[][]{
+				{ModItems.zirconium_legs, 1}, {ModItems.cobalt_legs, 2}, {ModItems.steel_legs, 16},
+				{ModItems.titanium_legs, 8}, {ModItems.robes_legs, 32}, {ModItems.alloy_legs, 2}
+			}));
+			slotPools.put(1, createSlotPool(7000, new Object[][]{
+				{ModItems.robes_boots, 32}, {ModItems.steel_boots, 16}, {ModItems.cobalt_boots, 2}, {ModItems.alloy_boots, 2}
+			}));
+			slotPools.put(0, createSlotPool(10000, new Object[][]{
+				{ModItems.pipe_lead, 30}, {ModItems.crowbar, 25}, {ModItems.geiger_counter, 20},
+				{ModItems.reer_graar, 16}, {ModItems.steel_pickaxe, 12}, {ModItems.stopsign, 10},
+				{ModItems.sopsign, 8}, {ModItems.chernobylsign, 6}, {ModItems.steel_sword, 15},
+				{ModItems.alloy_axe, 5}, {ModItems.titanium_sword, 8}, {ModItems.lead_gavel, 4},
+				{ModItems.wrench, 20}, {ModItems.cobalt_decorated_sword, 2}, {ModItems.detonator_de, 1}
+			}));
+
+		} else if(entity instanceof EntitySkeleton) {
+			float soot = PollutionHandler.getPollution(entity.worldObj,
+				MathHelper.floor_double(event.x), MathHelper.floor_double(event.y), MathHelper.floor_double(event.z), PollutionType.SOOT); //uhfgfg
+
+			slotPools.put(4, createSlotPool(12000, new Object[][]{
+				{ModItems.gas_mask_m65, 16}, {ModItems.gas_mask_olde, 12}, {ModItems.mask_of_infamy, 8},
+				{ModItems.gas_mask_mono, 8}, {ModItems.robes_helmet, 32}, {ModItems.no9, 16},
+				{ModItems.cobalt_helmet, 2}, {ModItems.rag_piss, 1}, {ModItems.hat, 1}, {ModItems.alloy_helmet, 2},
+				{ModItems.titanium_helmet, 4}, {ModItems.steel_helmet, 8}
+			}));
+			slotPools.put(3, createSlotPool(10000, new Object[][]{
+				{ModItems.starmetal_plate, 1}, {ModItems.cobalt_plate, 2}, {ModItems.alloy_plate, 2}, //sadly they cant wear jackets bc it breaks it
+				{ModItems.steel_plate, 8}, {ModItems.titanium_plate, 4}
+			}));
+			slotPools.put(2, createSlotPool(10000, new Object[][]{
+				{ModItems.zirconium_legs, 1}, {ModItems.cobalt_legs, 2}, {ModItems.steel_legs, 16},
+				{ModItems.titanium_legs, 8}, {ModItems.robes_legs, 32}, {ModItems.alloy_legs, 2},
+			}));
+			slotPools.put(1, createSlotPool(10000, new Object[][]{
+				{ModItems.robes_boots, 32}, {ModItems.steel_boots, 16}, {ModItems.cobalt_boots, 2}, {ModItems.alloy_boots, 2},
+				{ModItems.titanium_boots, 6}
+			}));
+
+			ItemStack bowReplacement = getSkelegun(soot, world.rand);
+			slotPools.put(0, createSlotPool(50, bowReplacement != null ? new Object[][]{{bowReplacement, 1}} : new Object[][]{}));
 		}
-		if(entity instanceof EntitySkeleton) {
-			if(rand.nextInt(16) == 0) {
-				ItemStack mask = new ItemStack(ModItems.gas_mask_m65);
-				ArmorUtil.installGasMaskFilter(mask, new ItemStack(ModItems.gas_mask_filter));
-				entity.setCurrentItemOrArmor(4, mask);
-			}
-			if(rand.nextInt(64) == 0)
-				entity.setCurrentItemOrArmor(3, new ItemStack(ModItems.steel_plate, 1, world.rand.nextInt(ModItems.steel_plate.getMaxDamage())));
 
-			float soot = PollutionHandler.getPollution(entity.worldObj, MathHelper.floor_double(event.x), MathHelper.floor_double(event.y), MathHelper.floor_double(event.z), PollutionType.SOOT);
-			ItemStack bowReplacement = getSkelegun(soot, entity.worldObj.rand);
-			if(bowReplacement != null) {
-				entity.setCurrentItemOrArmor(0, bowReplacement);
+		assignItemsToEntity(entity, slotPools);
+	}
+
+	private void equipFullSet(EntityLivingBase entity, Item helmet, Item chest, Item legs, Item boots) { //for brainlets (me) to add more armorsets later when i forget about how this works
+		entity.setCurrentItemOrArmor(4, new ItemStack(helmet)); //p_70062_1_ is the slot number
+		entity.setCurrentItemOrArmor(3, new ItemStack(chest));
+		entity.setCurrentItemOrArmor(2, new ItemStack(legs));
+		entity.setCurrentItemOrArmor(1, new ItemStack(boots));
+	}
+
+	private List<WeightedRandomObject> createSlotPool(int nullWeight, Object[][] items) {
+		List<WeightedRandomObject> pool = new ArrayList<>();
+		pool.add(new WeightedRandomObject(null, nullWeight));
+		for (Object[] item : items) {
+			Object obj = item[0];
+			int weight = (int) item[1];
+
+			if (obj instanceof Item) {
+				pool.add(new WeightedRandomObject(new ItemStack((Item) obj), weight));
+			} else if (obj instanceof ItemStack) {		//lol just make it pass ItemStack aswell
+				pool.add(new WeightedRandomObject(obj, weight));
+			}
+		}
+		return pool;
+	}
+
+
+	private void assignItemsToEntity(EntityLivingBase entity, Map<Integer, List<WeightedRandomObject>> slotPools) {
+		for (Map.Entry<Integer, List<WeightedRandomObject>> entry : slotPools.entrySet()) {
+			int slot = entry.getKey();
+			List<WeightedRandomObject> pool = entry.getValue();
+
+			WeightedRandomObject choice = (WeightedRandomObject) WeightedRandom.getRandomItem(rand, pool); //NullPointerException sludge fix
+			if (choice == null) {
+				continue;
+			}
+
+			ItemStack stack = choice.asStack();
+			if (stack == null || stack.getItem() == null) {
+				continue;
+			}
+
+			if (stack.getItem() == ModItems.gas_mask_m65 //eyesore
+				|| stack.getItem() == ModItems.gas_mask_olde
+				|| stack.getItem() == ModItems.gas_mask_mono) {
+				ArmorUtil.installGasMaskFilter(stack, new ItemStack(ModItems.gas_mask_filter));
+			}
+
+			entity.setCurrentItemOrArmor(slot, stack);
+
+			//Give skeleton AI if it has a gun
+			if (slot == 0 && entity instanceof EntitySkeleton && pool == slotPools.get(0)) {
 				addFireTask((EntityLiving) entity);
 			}
 		}
@@ -755,7 +818,6 @@ public class ModEventHandler {
 	@SubscribeEvent
 	public void worldTick(WorldTickEvent event) {
 
-		/// RADIATION STUFF START ///
 		if(event.world != null && !event.world.isRemote) {
 
 			if(reference != null) {
@@ -770,174 +832,40 @@ public class ModEventHandler {
 				}*/
 			}
 
-			int thunder = AuxSavedData.getThunder(event.world);
 
-			if(thunder > 0)
-				AuxSavedData.setThunder(event.world, thunder - 1);
+			for(Object e : event.world.loadedEntityList) {
 
-			if(!event.world.loadedEntityList.isEmpty()) {
+				if(e instanceof EntityPlayer) {
+					EntityPlayer player = (EntityPlayer) e;
 
-				List<Object> oList = new ArrayList<Object>();
-				oList.addAll(event.world.loadedEntityList);
+					// handle dismount events, or our players will splat upon leaving tall rockets
+					if(player.ridingEntity != null && player.ridingEntity instanceof EntityRideableRocket && player.isSneaking()) {
+						EntityRideableRocket rocket = (EntityRideableRocket) player.ridingEntity;
+						RocketState state = rocket.getState();
 
-				/**
-				 *  REMOVE THIS V V V
-				 * except the entity dismounting part, it literally can NOT be done elsewhere
-				 */
-				for(Object e : oList) {
-					if(e instanceof EntityLivingBase) {
+						// Prevent leaving a rocket in motion, for safety
+						if(state != RocketState.LANDING && state != RocketState.LAUNCHING && state != RocketState.DOCKING && state != RocketState.UNDOCKING) {
+							boolean inOrbit = event.world.provider instanceof WorldProviderOrbit;
+							Entity ridingEntity = player.ridingEntity;
+							float prevHeight = ridingEntity.height;
 
-						//effect for radiation
-						EntityLivingBase entity = (EntityLivingBase) e;
-
-						if(entity instanceof EntityPlayer) {
-							EntityPlayer player = (EntityPlayer) entity;
-
-							int randSlot = rand.nextInt(player.inventory.mainInventory.length);
-							HazardTypeNeutron.decay(player.inventory.getStackInSlot(randSlot), 0.999916F);
-
-							// handle dismount events, or our players will splat upon leaving tall rockets
-							if(player.ridingEntity != null && player.ridingEntity instanceof EntityRideableRocket && player.isSneaking()) {
-								EntityRideableRocket rocket = (EntityRideableRocket) player.ridingEntity;
-								RocketState state = rocket.getState();
-
-								// Prevent leaving a rocket in motion, for safety
-								if(state != RocketState.LANDING && state != RocketState.LAUNCHING && state != RocketState.DOCKING && state != RocketState.UNDOCKING) {
-									boolean inOrbit = event.world.provider instanceof WorldProviderOrbit;
-									Entity ridingEntity = player.ridingEntity;
-									float prevHeight = ridingEntity.height;
-
-									ridingEntity.height = inOrbit ? ridingEntity.height + 1.0F : 1.0F;
-									player.mountEntity(null);
-									if(!inOrbit) player.setPositionAndUpdate(player.posX + 2, player.posY, player.posZ);
-									ridingEntity.height = prevHeight;
-								}
-
-								player.setSneaking(false);
-							}
+							ridingEntity.height = inOrbit ? ridingEntity.height + 1.0F : 1.0F;
+							player.mountEntity(null);
+							if(!inOrbit) player.setPositionAndUpdate(player.posX + 2, player.posY, player.posZ);
+							ridingEntity.height = prevHeight;
 						}
 
-						if(entity instanceof EntityPlayer && ((EntityPlayer)entity).capabilities.isCreativeMode)
-							continue;
-
-						float eRad = HbmLivingProps.getRadiation(entity);
-
-						if(entity.getClass().equals(EntityCreeper.class) && eRad >= 200 && entity.getHealth() > 0) {
-
-							if(event.world.rand.nextInt(3) == 0 ) {
-								EntityCreeperNuclear creep = new EntityCreeperNuclear(event.world);
-								creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
-
-								if(!entity.isDead)
-									if(!event.world.isRemote)
-										event.world.spawnEntityInWorld(creep);
-								entity.setDead();
-							} else {
-								entity.attackEntityFrom(ModDamageSource.radiation, 100F);
-							}
-							continue;
-
-						} else if(entity instanceof EntityCow && !(entity instanceof EntityMooshroom) && eRad >= 50) {
-							EntityMooshroom creep = new EntityMooshroom(event.world);
-							creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
-
-							if(!entity.isDead)
-								if(!event.world.isRemote)
-									event.world.spawnEntityInWorld(creep);
-							entity.setDead();
-							continue;
-
-						} else if(entity instanceof EntityVillager && eRad >= 500) {
-							EntityZombie creep = new EntityZombie(event.world);
-							creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
-
-							if(!entity.isDead)
-								if(!event.world.isRemote)
-									event.world.spawnEntityInWorld(creep);
-							entity.setDead();
-							continue;
-						} else if(entity.getClass().equals(EntityDuck.class) && eRad >= 200) {
-
-							EntityQuackos quacc = new EntityQuackos(event.world);
-							quacc.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
-
-							if(!entity.isDead && !event.world.isRemote)
-								event.world.spawnEntityInWorld(quacc);
-
-							entity.setDead();
-							continue;
-						}
-						if(eRad < 200 || ContaminationUtil.isRadImmune(entity))
-							continue;
-
-						if(eRad > 2500)
-							HbmLivingProps.setRadiation(entity, 2500);
-
-						if(eRad >= 1000) {
-
-							entity.attackEntityFrom(ModDamageSource.radiation, 1000F);
-							HbmLivingProps.setRadiation(entity, 0);
-
-							if(entity.getHealth() > 0) {
-								entity.setHealth(0);
-								entity.onDeath(ModDamageSource.radiation);
-							}
-
-							if(entity instanceof EntityPlayer)
-								((EntityPlayer)entity).triggerAchievement(MainRegistry.achRadDeath);
-
-						} else if(eRad >= 800) {
-							if(event.world.rand.nextInt(300) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.confusion.id, 5 * 30, 0));
-							if(event.world.rand.nextInt(300) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10 * 20, 2));
-							if(event.world.rand.nextInt(300) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 10 * 20, 2));
-							if(event.world.rand.nextInt(500) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.poison.id, 3 * 20, 2));
-							if(event.world.rand.nextInt(700) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.wither.id, 3 * 20, 1));
-
-						} else if(eRad >= 600) {
-							if(event.world.rand.nextInt(300) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.confusion.id, 5 * 30, 0));
-							if(event.world.rand.nextInt(300) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10 * 20, 2));
-							if(event.world.rand.nextInt(300) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 10 * 20, 2));
-							if(event.world.rand.nextInt(500) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.poison.id, 3 * 20, 1));
-
-						} else if(eRad >= 400) {
-							if(event.world.rand.nextInt(300) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.confusion.id, 5 * 30, 0));
-							if(event.world.rand.nextInt(500) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5 * 20, 0));
-							if(event.world.rand.nextInt(300) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 5 * 20, 1));
-
-						} else if(eRad >= 200) {
-							if(event.world.rand.nextInt(300) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.confusion.id, 5 * 20, 0));
-							if(event.world.rand.nextInt(500) == 0)
-								entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 5 * 20, 0));
-
-							if(entity instanceof EntityPlayer)
-								((EntityPlayer)entity).triggerAchievement(MainRegistry.achRadPoison);
-						}
+						player.setSneaking(false);
 					}
+				}
 
+				if(event.phase == Phase.END) {
 					if(e instanceof EntityItem) {
 						EntityItem item = (EntityItem) e;
 						HazardSystem.updateDroppedItem(item);
 					}
 				}
-				/**
-				 * REMOVE THIS ^ ^ ^
-				 */
 			}
-			/// RADIATION STUFF END ///
-
 
 			if(event.phase == Phase.END) {
 				EntityRailCarBase.updateMotion(event.world);
@@ -1457,29 +1385,6 @@ public class ModEventHandler {
 						e.addPotionEffect(new PotionEffect(HbmPotion.radiation.id, 300, 2));
 					}
 				}
-				int slot = new Random().nextInt(35);
-				if(player.experience >=1)
-				{
-				player.addExperience(-1);
-				}
-				//if (!(Library.checkForHazmat((EntityPlayer)player) || Library.checkForRads((EntityPlayer)player)))
-				//{
-				Random rand = new Random();
-
-				//if (Library.checkInventory(player, Items.experience_bottle, slot))
-				//{
-				//	((EntityPlayer)player).inventory.mainInventory[slot] = new ItemStack(Items.glass_bottle);
-				//}
-				if (HbmLivingProps.getRadiation(((EntityPlayer)player))>10 && ((EntityPlayer)player).ticksExisted %20 == 0)
-				{
-					((EntityPlayer)player).getFoodStats().addStats(1, 0);
-					HbmLivingProps.incrementRadiation(((EntityPlayer)player), -10);
-				}
-				if (HbmLivingProps.getRadiation(((EntityPlayer)player))>100 && ((EntityPlayer)player).ticksExisted %20 == 0)
-				{
-					((EntityPlayer)player).heal(1);
-					HbmLivingProps.incrementRadiation(((EntityPlayer)player), -100);
-				}
 
 			}
 
@@ -1559,13 +1464,16 @@ public class ModEventHandler {
 
 		if(event.phase == Phase.START) {
 
-			// do other shit I guess?
+			// Redstone over Radio
 			RTTYSystem.updateBroadcastQueue();
+			// Logistics drone network
 			RequestNetwork.updateEntries();
+			// Radar entry handling
 			TileEntityMachineRadarNT.updateSystem();
-			//Nodespace.updateNodespace();
-			CelestialBody.updateSwarms();
+			// Networks! All of them!
 			UniNodespace.updateNodespace();
+			// Dyson Swarms
+			CelestialBody.updateSwarms();
 		}
 
 		// There is an issue here somewhere...
@@ -1750,30 +1658,6 @@ public class ModEventHandler {
 		}
 	}
 
-	@SubscribeEvent
-	public void onEntityHeal(LivingHealEvent event) {
-		if (!event.entity.worldObj.isRemote) {
-			EntityLivingBase entity = event.entityLiving;
-
-			if (entity.isEntityAlive()) {
-				if(entity instanceof EntityPlayer) {
-					if (((EntityPlayer)entity).getUniqueID().toString().equals(ShadyUtil.Pu_238)) {
-						return;
-					}
-				}
-				double amount = event.amount;
-				double rad = HbmLivingProps.getRadiation(entity);
-				if (rad > 100 && rad < 800) { ///TODO get per entity
-					amount *=1-(((rad-100)*(1-0))/(800-100))+0;
-				}
-				if (rad > 800) { ///TODO get per entity
-					amount = 0;
-					event.setCanceled(true);
-				}
-			}
-		}
-	}
-
 	// PULL THE LEVER KRONK
 	@SubscribeEvent
 	public void onPull(PlayerInteractEvent event) {
@@ -1862,31 +1746,6 @@ public class ModEventHandler {
 			player.inventoryContainer.detectAndSendChanges();
 			event.setCanceled(true);
 		}
-
-	}
-
-	@SubscribeEvent
-	public void anvilUpdateEvent(AnvilUpdateEvent event) {
-
-		if(event.left.getItem() instanceof ItemGunBase && event.right.getItem() == Items.enchanted_book) {
-
-			event.output = event.left.copy();
-
-			Map mapright = EnchantmentHelper.getEnchantments(event.right);
-			Iterator itr = mapright.keySet().iterator();
-
-			while(itr.hasNext()) {
-
-				int i = ((Integer) itr.next()).intValue();
-				int j = ((Integer) mapright.get(Integer.valueOf(i))).intValue();
-				Enchantment e = Enchantment.enchantmentsList[i];
-
-				EnchantmentUtil.removeEnchantment(event.output, e);
-				EnchantmentUtil.addEnchantment(event.output, e, j);
-			}
-
-			event.cost = 10;
-		}
 	}
 
 	@SubscribeEvent
@@ -1954,8 +1813,6 @@ public class ModEventHandler {
 
 		Entity entity = event.entity;
 		Entity[] parts = entity.getParts();
-
-		//MainRegistry.logger.error("Trying to spawn entity " + entity.getClass().getCanonicalName());
 
 		if(parts != null) {
 

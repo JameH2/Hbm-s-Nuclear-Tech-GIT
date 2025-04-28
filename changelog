@@ -1,5 +1,13 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5299 - now less comically broken](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5299)
+Includes all changes and bugfixes from the latest upstream NTMain update - [X5313 - "i'm done with the gun rework" and other hilarious jokes i like to tell myself, volume IV](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5313)
+
+## Added
+* Fence gates
+* Ores now indicate on which planets they can be found
+
+## Changed
+* Antimatter is no longer a valid pneumatic propellant
+* Plushies can be abused
 
 ## Fixed
-* Biogas gated behind space-grade machinery due to AIR fluid requirement
-* Redstone torches erroneously don't work without O2
+* Pipe rotations in NBT structures wonky
+* RBMK cherenkov radiation not rendering

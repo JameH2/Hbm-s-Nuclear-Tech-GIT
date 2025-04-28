@@ -12,6 +12,7 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.render.util.HorsePronter;
+import com.hbm.util.BobMathUtil;
 import com.hbm.util.EnumUtil;
 
 import net.minecraft.client.Minecraft;
@@ -57,7 +58,9 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 		GL11.glRotated(22.5D * tile.getBlockMetadata() + 90, 0, -1, 0);
 		TileEntityPlushie te = (TileEntityPlushie) tile;
 
-		if(te.squishTimer > 0) {
+		if(te.miseryFactor > 0.01F) {
+			GL11.glScaled(1, 1 - BobMathUtil.interp(te.lastMiseryFactor, te.miseryFactor, interp), 1);
+		} else if(te.squishTimer > 0) {
 			double squish = te.squishTimer - interp;
 			GL11.glScaled(1, 1 + (-(Math.sin(squish)) * squish) * 0.025, 1);
 		}

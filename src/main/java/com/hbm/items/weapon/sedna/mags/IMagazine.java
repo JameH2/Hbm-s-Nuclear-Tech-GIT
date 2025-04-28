@@ -1,6 +1,7 @@
 package com.hbm.items.weapon.sedna.mags;
 
 import com.hbm.items.ModItems;
+import com.hbm.items.armor.ArmorTrenchmaster;
 import com.hbm.items.tool.ItemCasingBag;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.particle.SpentCasing;
@@ -32,6 +33,8 @@ public interface IMagazine<T> {
 	public void useUpAmmo(ItemStack stack, IInventory inventory, int amount);
 	/** If a reload can even be initiated, i.e. the player even has bullets to load, inventory can be null */
 	public boolean canReload(ItemStack stack, IInventory inventory);
+	/** On the begin of a reload, potentially change the mag type before the reload happens for animation purposes */
+	public void initNewType(ItemStack stack, IInventory inventory);
 	/** The action done at the end of one reload cycle, either loading one shell or replacing the whole mag, inventory can be null */
 	public void reloadAction(ItemStack stack, IInventory inventory);
 	/** The stack that should be displayed for the ammo HUD */
@@ -57,5 +60,15 @@ public interface IMagazine<T> {
 				if(stack != null && stack.getItem() == ModItems.casing_bag && ItemCasingBag.pushCasing(stack, config.casingItem, 1F / config.casingAmount * 0.5F * shotsFired)) return;
 			}
 		}
+	}
+	
+	public static boolean shouldUseUpTrenchie(IInventory inv) {
+		if(inv instanceof InventoryPlayer) {
+			InventoryPlayer invPlayer = (InventoryPlayer) inv;
+			boolean trenchie = ArmorTrenchmaster.isTrenchMaster(invPlayer.player);
+			boolean aos = ArmorTrenchmaster.hasAoS(invPlayer.player);
+			if(trenchie || aos) return invPlayer.player.getRNG().nextInt(3) < 2;
+		}
+		return true;
 	}
 }

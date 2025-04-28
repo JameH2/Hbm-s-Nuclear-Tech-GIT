@@ -318,6 +318,7 @@ public class MainRegistry {
 		OreDictManager.registerOres();
 
 		if(WorldConfig.enableCraterBiomes) BiomeGenCraterBase.initDictionary();
+		//BiomeGenNoMansLand.initDictionary();
 
 		aMatSchrab.customCraftingMaterial = ModItems.ingot_schrabidium;
 		aMatHaz.customCraftingMaterial = ModItems.hazmat_cloth;
@@ -1772,6 +1773,8 @@ public class MainRegistry {
 		ignoreMappings.add("hbm:item.singularity_micro");
 		ignoreMappings.add("hbm:item.alloy_knife");
 		ignoreMappings.add("hbm:tile.hazmat");
+		ignoreMappings.add("hbm:item.gun_cryocannon");
+		ignoreMappings.add("hbm:item.gun_cryolator_ammo");
 
 		/// REMAP ///
 		remapItems.put("hbm:item.gadget_explosive8", ModItems.early_explosive_lenses);

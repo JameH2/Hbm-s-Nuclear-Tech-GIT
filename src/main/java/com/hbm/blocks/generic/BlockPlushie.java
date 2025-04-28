@@ -102,7 +102,7 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 			return true;
 		} else {
 			TileEntityPlushie plushie = (TileEntityPlushie) world.getTileEntity(x, y, z);
-			if (plushie != null) {
+			if(plushie != null) {
 				world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, plushie.type.sound, 0.25F, 1F);
 			}
 			return true;
@@ -118,10 +118,13 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 
 		public PlushieType type = PlushieType.NONE;
 		public int squishTimer;
+		public float miseryFactor;
+		public float lastMiseryFactor;
 
 		@Override
 		public void updateEntity() {
 			if(squishTimer > 0) squishTimer--;
+			lastMiseryFactor = miseryFactor;
 		}
 
 		@Override

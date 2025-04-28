@@ -164,4 +164,46 @@ public interface INBTTransformable {
 		return meta;
 	}
 
+	public static int transformMetaVine(int meta, int coordBaseMode) { //Sloppppp coddee aa
+		int result = 0;
+
+		for (int i = 0; i < 4; i++) {
+			int bit = 1 << i;
+			if ((meta & bit) != 0) {
+				result |= rotateVineBit(bit, coordBaseMode);
+			}
+		}
+
+		return result;
+	}
+
+	static int rotateVineBit(int bit, int coordBaseMode) {
+		int index = -1;
+
+		switch (bit) {
+			case 1: index = 0; break; // south
+			case 2: index = 1; break; // west
+			case 4: index = 2; break; // north
+			case 8: index = 3; break; // east
+			default: return 0;
+		}
+
+		int rotated = index;
+
+		switch (coordBaseMode) {
+			case 1: rotated = (index + 1) % 4; break; // 90°
+			case 2: rotated = (index + 2) % 4; break; // 180°
+			case 3: rotated = (index + 3) % 4; break; // 270°
+			// case 0: vines work ughhggh (im dragging it)
+		}
+
+		switch (rotated) {
+			case 0: return 1; // south
+			case 1: return 2; // west
+			case 2: return 4; // north
+			case 3: return 8; // east
+		}
+
+		return 0;
+	}
 }

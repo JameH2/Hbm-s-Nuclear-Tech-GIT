@@ -234,6 +234,8 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 
 	public void generate() {
 
+		if(this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) return;
+
 		if(hasAcceptableFuel()) {
 			if (tank.getFill() > 0 && breatheAir(1)) {
 
