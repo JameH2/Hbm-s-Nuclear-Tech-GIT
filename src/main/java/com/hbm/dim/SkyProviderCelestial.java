@@ -40,6 +40,7 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 public class SkyProviderCelestial extends IRenderHandler {
 
 	private static final ResourceLocation planetTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/planet.png");
+	private static final ResourceLocation satelliteTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/satellite.png");
 	private static final ResourceLocation flareTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/sunspike.png");
 	private static final ResourceLocation nightTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/night.png");
 	private static final ResourceLocation digammaStar = new ResourceLocation(RefStrings.MODID, "textures/misc/space/star_digamma.png");
@@ -869,7 +870,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 			GL11.glColor4f(color[0], color[1], color[2], 1F);
 
-			mc.renderEngine.bindTexture(planetTexture);
+			mc.renderEngine.bindTexture(satelliteTexture);
 
 			float size = 0.5F;
 
