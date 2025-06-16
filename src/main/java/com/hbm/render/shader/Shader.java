@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import org.lwjgl.opengl.GL11;
@@ -24,11 +25,12 @@ public class Shader {
     private int shaderProgram;
     private int vertexShader;
     private int fragmentShader;
-    private int timeUniform;
-    private int channel1Uniform;
-    private int offsetUniform;
 
     private int previousProgram;
+
+    // hash lookup because getUniformLocation is slow... maybe?
+    // honestly I can't get a straight answer out of the internet
+    private HashMap<String, Integer> uniforms = new HashMap<>();
 
     public Shader(ResourceLocation fragment) {
         this(new ResourceLocation(RefStrings.MODID, "shaders/default.vert"), fragment);
@@ -38,19 +40,15 @@ public class Shader {
         try {
             vertexShader = loadShader(vertex, GL20.GL_VERTEX_SHADER);
             fragmentShader = loadShader(fragment, GL20.GL_FRAGMENT_SHADER);
-    
+
             shaderProgram = GL20.glCreateProgram();
             GL20.glAttachShader(shaderProgram, vertexShader);
             GL20.glAttachShader(shaderProgram, fragmentShader);
             GL20.glLinkProgram(shaderProgram);
-    
+
             if (GL20.glGetProgrami(shaderProgram, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
                 throw new RuntimeException("Failed to link shader program: " + GL20.glGetProgramInfoLog(shaderProgram, 1024));
             }
-    
-            timeUniform = GL20.glGetUniformLocation(shaderProgram, "iTime");
-            channel1Uniform = GL20.glGetUniformLocation(shaderProgram, "iChannel1");
-            offsetUniform = GL20.glGetUniformLocation(shaderProgram, "iOffset");
 
             hasLoaded = true;
         } catch(RuntimeException ex) {
@@ -109,19 +107,31 @@ public class Shader {
         GL20.glDeleteProgram(shaderProgram);
     }
 
-    public void setTime(float time) {
-        if(!hasLoaded) return;
-        GL20.glUniform1f(timeUniform, time);
-    }
-    
-    public void setTextureUnit(int unit) {
-        if(!hasLoaded) return;
-        GL20.glUniform1i(channel1Uniform, unit);
+    public int getUniformLocation(String name) {
+        if(!hasLoaded) return 0;
+        return uniforms.computeIfAbsent(name, (n) -> GL20.glGetUniformLocation(shaderProgram, n));
     }
 
-    public void setOffset(float offset) {
+    public void setUniform1f(String name, float value) {
         if(!hasLoaded) return;
-        GL20.glUniform1f(offsetUniform, offset);
+        int location = uniforms.computeIfAbsent(name, (n) -> GL20.glGetUniformLocation(shaderProgram, n));
+        GL20.glUniform1f(location, value);
+    }
+
+    public void setUniform1f(int location, float value) {
+        if(!hasLoaded) return;
+        GL20.glUniform1f(location, value);
+    }
+
+    public void setUniform1i(String name, int value) {
+        if(!hasLoaded) return;
+        int location = uniforms.computeIfAbsent(name, (n) -> GL20.glGetUniformLocation(shaderProgram, n));
+        GL20.glUniform1i(location, value);
+    }
+
+    public void setUniform1i(int location, int value) {
+        if(!hasLoaded) return;
+        GL20.glUniform1i(location, value);
     }
 
 }

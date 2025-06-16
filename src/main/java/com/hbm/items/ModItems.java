@@ -520,6 +520,7 @@ public class ModItems {
 	//now i cant do anything but sing this stupid song!!!!!!!!!!
 	public static Item crystal_zinc;
 
+	public static Item nickel_salts;
 
 
 	public static Item gem_sodalite;
@@ -2994,6 +2995,8 @@ public class ModItems {
 		powder_borax = new Item().setUnlocalizedName("powder_borax").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_borax");
 		powder_chlorocalcite = new Item().setUnlocalizedName("powder_chlorocalcite").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_chlorocalcite");
 		powder_molysite = new Item().setUnlocalizedName("powder_molysite").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_molysite");
+
+		nickel_salts = new Item().setUnlocalizedName("nickel_salts").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":nickel_salts");
 
 		fragment_neodymium = new Item().setUnlocalizedName("fragment_neodymium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":fragment_neodymium");
 		fragment_cobalt = new Item().setUnlocalizedName("fragment_cobalt").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":fragment_cobalt");
@@ -5743,6 +5746,8 @@ public class ModItems {
 		GameRegistry.registerItem(powder_limestone, powder_limestone.getUnlocalizedName());
 		GameRegistry.registerItem(powder_cement, powder_cement.getUnlocalizedName());
 
+		GameRegistry.registerItem(nickel_salts, nickel_salts.getUnlocalizedName());
+		
 		//Powders
 		GameRegistry.registerItem(powder_fire, powder_fire.getUnlocalizedName());
 		GameRegistry.registerItem(powder_ice, powder_ice.getUnlocalizedName());

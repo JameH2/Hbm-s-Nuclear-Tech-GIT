@@ -66,7 +66,7 @@ public class OrbitalStation {
 	public static final int WARNING_SIZE = 32; // size of the region that warns the player about falling out of orbit
 
 
-	
+
 	/**
 	 * Space station spatial space
 	 * - Stations are spread out over the orbital dimension, in restricted areas
@@ -113,7 +113,7 @@ public class OrbitalStation {
 				}
 			}
 
-			SolarSystemWorldSavedData.get().markDirty();
+			SolarSystemWorldSavedData.get(world).markDirty();
 
 			hasEngines = engines.size() > 0;
 
@@ -193,7 +193,7 @@ public class OrbitalStation {
 		stateTimer = 0;
 		maxStateTimer = timeUntilNext;
 	}
-	
+
 	public static void addPropulsion(IPropulsion propulsion) {
 		TileEntity te = propulsion.getTileEntity();
 		OrbitalStation station = getStationFromPosition(te.xCoord, te.zCoord);
@@ -353,7 +353,7 @@ public class OrbitalStation {
 			int x = buf.readInt();
 			int y = buf.readInt();
 			int z = buf.readInt();
-			
+
 			station.errorsAt.add(new ThreeInts(x, y, z));
 		}
 		return station;

@@ -131,7 +131,7 @@ public class SolarSystem {
 
 						new CelestialBody("laythe", SpaceConfig.laytheDimension, Body.LAYTHE)
 							.withMassRadius(2.94e22F, 500)
-							.withOrbitalParameters(27_184, 0.0F, 0.0F, 0.0F, 0.0F)
+							.withOrbitalParameters(27_184, 0.0288F, 0.0F, 0.348F, 0.0F)
 							.withRotationalPeriod(52_981)
 							.withTidalLockingTo("jool")
 							.withMinProcessingLevel(3)
@@ -140,12 +140,12 @@ public class SolarSystem {
 
 						new CelestialBody("vall") //probably
 							.withMassRadius(3.109e21F, 300)
-							.withOrbitalParameters(43_152, 0.0F, 0.0F, 0.0F, 0.0F)
+							.withOrbitalParameters(43_152, 0.111F, 342.9F, 7.48F, 128.0F)
 							.withRotationalPeriod(105_962),
 
 						new CelestialBody("tylo") // what value is this planet gonna add???
 							.withMassRadius(4.233e22F, 600)
-							.withOrbitalParameters(68_500, 0.0F, 0.0F, 0.025F, 0.0F)
+							.withOrbitalParameters(68_500, 0.002F, 0.0F, 0.3F, 0.0F)
 							.withRotationalPeriod(211_926),
 
 						new CelestialBody("bop")
@@ -275,16 +275,24 @@ public class SolarSystem {
 	 */
 
 	// Create an ordered list for rendering all bodies within the system, minus the parent star
-	public static List<AstroMetric> calculateMetricsFromBody(World world, float partialTicks, double longitude, CelestialBody body) {
+	public static List<AstroMetric> calculateMetricsFromBody(World world, float partialTicks, CelestialBody body, float solarAngle) {
 		List<AstroMetric> metrics = new ArrayList<AstroMetric>();
 
-		// You know not the horrors I have suffered through, in order to fix tidal locking
-		double offset = (double)body.getRotationalPeriod() * (longitude / 360.0);
+		// You know not the horrors I have suffered through, in order to fix tidal locking even betterer
+		double rotOffset = -120.0F;
+		CelestialBody tidalLockedBody = body.tidallyLockedTo != null ? CelestialBody.getBody(body.tidallyLockedTo) : null;
+		if(tidalLockedBody != null) {
+			// If locked to parent, adjust child
+			if(tidalLockedBody.getPlanet() != body) {
+				tidalLockedBody = body;
+				rotOffset += 180.0F;
+			}
+		}
 
-		double ticks = ((double)world.getTotalWorldTime() + offset + partialTicks) * (double)AstronomyUtil.TIME_MULTIPLIER;
+		double ticks = ((double)world.getTotalWorldTime() + partialTicks) * (double)AstronomyUtil.TIME_MULTIPLIER;
 
 		// Get our XYZ coordinates of all bodies
-		calculatePositionsRecursive(metrics, null, body.getStar(), ticks);
+		calculatePositionsRecursive(metrics, null, body.getStar(), ticks, tidalLockedBody, solarAngle * 360.0, rotOffset);
 
 		// Get the metrics from a given body
 		calculateMetricsFromBody(metrics, body);
@@ -306,7 +314,7 @@ public class SolarSystem {
 		calculatePositionsRecursive(metrics, null, orbiting.getStar(), ticks);
 
 		// Add our orbiting satellite position
-		Vec3 position = calculatePosition(orbiting, altitude, ticks);
+		Vec3 position = calculatePositionSatellite(orbiting, altitude, ticks);
 		for(AstroMetric metric : metrics) {
 			if(metric.body == orbiting) {
 				position = position.addVector(metric.position.xCoord, metric.position.yCoord, metric.position.zCoord);
@@ -334,8 +342,8 @@ public class SolarSystem {
 		calculatePositionsRecursive(metrics, null, from.getStar(), ticks);
 
 		// Add our orbiting satellite position
-		Vec3 fromPos = calculatePosition(from, fromAltitude, ticks);
-		Vec3 toPos = calculatePosition(to, toAltitude, ticks);
+		Vec3 fromPos = calculatePositionSatellite(from, fromAltitude, ticks);
+		Vec3 toPos = calculatePositionSatellite(to, toAltitude, ticks);
 		for(AstroMetric metric : metrics) {
 			if(metric.body == from) {
 				fromPos = fromPos.addVector(metric.position.xCoord, metric.position.yCoord, metric.position.zCoord);
@@ -387,24 +395,39 @@ public class SolarSystem {
 
 	// Recursively calculate the XYZ position of all planets from polar coordinates + time
 	private static void calculatePositionsRecursive(List<AstroMetric> metrics, AstroMetric parentMetric, CelestialBody body, double ticks) {
+		calculatePositionsRecursive(metrics, parentMetric, body, ticks, null, 0, 0);
+	}
+
+	private static void calculatePositionsRecursive(List<AstroMetric> metrics, AstroMetric parentMetric, CelestialBody body, double ticks, CelestialBody lockBody, double solarAngle, double rotOffset) {
 		Vec3 parentPosition = parentMetric != null ? parentMetric.position : Vec3.createVectorHelper(0, 0, 0);
 
 		for(CelestialBody satellite : body.satellites) {
-			Vec3 position = calculatePosition(satellite, ticks).addVector(parentPosition.xCoord, parentPosition.yCoord, parentPosition.zCoord);
+			Vec3 position = satellite == lockBody
+				? calculatePositionFromAngle(satellite, solarAngle + calculateSiderealAngle(satellite, ticks) - Math.toDegrees(satellite.argumentPeriapsis) - Math.toDegrees(satellite.ascendingNode) + rotOffset)
+				: calculatePositionFromTime(satellite, ticks);
+			position = position.addVector(parentPosition.xCoord, parentPosition.yCoord, parentPosition.zCoord);
 			AstroMetric metric = new AstroMetric(satellite, position);
 
 			metrics.add(metric);
 
-			calculatePositionsRecursive(metrics, metric, satellite, ticks);
+			calculatePositionsRecursive(metrics, metric, satellite, ticks, lockBody, solarAngle, rotOffset);
 		}
 	}
 
 	// Calculates the position of the body around its parent
-	private static Vec3 calculatePosition(CelestialBody body, double ticks) {
+	private static Vec3 calculatePositionFromTime(CelestialBody body, double ticks) {
 		// Get mean anomaly, or how far (in radians) a planet has gone around its parent
 		double yearTicks = body.getOrbitalPeriod() * (double)AstronomyUtil.TICKS_IN_DAY;
 		double meanAnomaly = 2 * Math.PI * (ticks / yearTicks);
 
+		return calculatePosition(body, meanAnomaly);
+	}
+
+	private static Vec3 calculatePositionFromAngle(CelestialBody body, double angle) {
+		return calculatePosition(body, Math.toRadians(angle));
+	}
+
+	private static Vec3 calculatePosition(CelestialBody body, double meanAnomaly) {
 		double eccentricAnomaly = calculateEccentricAnomaly(meanAnomaly, body.eccentricity);
 
 		// Orbital plane
@@ -430,7 +453,7 @@ public class SolarSystem {
 	}
 
 	// Same but for an arbitrary satellite around a body
-	private static Vec3 calculatePosition(CelestialBody body, double altitude, double ticks) {
+	private static Vec3 calculatePositionSatellite(CelestialBody body, double altitude, double ticks) {
 		// The mean anomaly (angular position in circular orbit) measured in radians
 		double orbitalPeriod = 2 * Math.PI * Math.sqrt((altitude * altitude * altitude) / (AstronomyUtil.GRAVITATIONAL_CONSTANT * body.massKg));
 		orbitalPeriod /= (double)AstronomyUtil.SECONDS_IN_KSP_DAY;
@@ -443,7 +466,7 @@ public class SolarSystem {
 		return Vec3.createVectorHelper(x, y, 0);
 	}
 
-	private static final int ECCENTRICITY_ITERATION_COUNT = 8;
+	private static final int ECCENTRICITY_ITERATION_COUNT = 4;
 
 	// Eccentric anomaly from mean, calculated backwards from:
 	//    M = E - e * sin(E)
@@ -486,7 +509,7 @@ public class SolarSystem {
 		metric.distance = position.distanceTo(metric.position);
 
 		// Calculate apparent size, for scaling in render
-		metric.apparentSize = getApparentSize(metric.body.radiusKm, metric.distance);
+		metric.apparentSize = getApparentSize(Math.min(metric.body.radiusKm, 3_000), metric.distance);
 
 		// Calculate angle in relation to 0, 0 (sun position, origin)
 		metric.angle = getApparentAngleDegrees(position, metric.position);
@@ -568,7 +591,7 @@ public class SolarSystem {
 		calculatePositionsRecursive(metrics, null, orbiting.getStar(), ticks);
 
 		// Add our orbiting satellite position
-		Vec3 from = calculatePosition(orbiting, altitude, ticks);
+		Vec3 from = calculatePositionSatellite(orbiting, altitude, ticks);
 		Vec3 to = Vec3.createVectorHelper(0, 0, 0);
 		for(AstroMetric metric : metrics) {
 			if(metric.body == orbiting) {
@@ -579,6 +602,20 @@ public class SolarSystem {
 		}
 
 		return getApparentAngleDegrees(from, to);
+	}
+
+	public static double calculateSiderealAngle(World world, float partialTicks, CelestialBody body) {
+		double ticks = ((double)world.getTotalWorldTime() + partialTicks) * (double)AstronomyUtil.TIME_MULTIPLIER;
+
+		return calculateSiderealAngle(body, ticks);
+	}
+
+	public static double calculateSiderealAngle(CelestialBody body, double ticks) {
+		body = body.getPlanet();
+
+		Vec3 position = calculatePositionFromTime(body, ticks);
+
+		return Math.toDegrees(Math.atan2(position.yCoord, position.xCoord));
 	}
 
 

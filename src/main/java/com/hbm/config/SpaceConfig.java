@@ -21,11 +21,12 @@ public class SpaceConfig {
 	public static int orbitDimension = 413_023;
 	public static int tektoDimension = 413_024;
 
-	// Biome ID limit is 127(!!) It is not 255!!
-	// Make sure no defaults exceed this!
+	// Biome ID limit is 255
 
 	// NOTE: some popular mod biome IDs, try to avoid colliding with these
 
+	// Vanilla biomes: 0-39
+	// Vanilla mutated variants: 128-167
 	// Biomes O' Plenty: too many, EndlessIDs is required
 	// Aether Legacy: 127
 	// Galacticraft: 102+ (variable, ugh, just assume up to 110 I guess)

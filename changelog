@@ -1,28 +1,9 @@
 Includes all changes and bugfixes from the latest upstream NTMain update - [X5356 - what did i do these past 3 weeks?](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5356)
 
 ## Added
-* Planets/moons with many light sources now light up at night when viewed from other bodies
-    * These bodies suffer planetwide blackouts during severe impacts
-* Zinc crystals
-* Flour - efficient production of bread from wheat
+* Fully simulated orbital elements, including inclination and eccentricity
+    * Now the moon may only partially eclipse the sun at times, rather than always fully eclipsing
+* New nickel + copper production chains for Mun and Minmus
 
 ## Changed
-* Biome conflicts now crash, rather than silently fuck your world up
-    * Includes helpful error messages, specifically regarding Biomes O' Plenty support
-    * Crash can be disabled in config if absolutely necessary, for old worlds and server operators
-* All default biome IDs moved around to avoid as many conflicts with other mods as possible
-* If EndlessIDs is detected, default biome IDs are incremented by 12,000 to avoid conflicts
-    * Has no effect if your config file is already generated
-* New chemplant recipes using air changes:
-    * Xenon production removed, must be extracted from Eve or Laythe
-    * Biogas requires CO2 for anaerobic production
-    * Nitric acid from air must use Cryogenic Distillation Machine
-    * For now, the old chemplant is still craftable and useable, and these changes will be rebalanced once it is axed
-
-## Fixed
-* Rare crash on closing an empty crate
-* Coral drops unusable calcium item
-* Mods that add worldgen features to the nether erroneously adding those features to atmosphereless bodies
-* Rocket pad dupe
-* Turbine blades cast/craft for 3 ingots but only recover 2 ingots
-* Vanilla furnaces work without oxygen
+* Removed BoP crash, some idiot (read: me) figured the wrong limit months ago and didn't think to double check.

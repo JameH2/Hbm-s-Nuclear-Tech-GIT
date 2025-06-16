@@ -50,20 +50,6 @@ public class ChemplantRecipes extends SerializableRecipe {
 					new OreDictStack(ASBESTOS.ingot(), 1))
 				.inputFluids(new FluidStack(Fluids.HYDROGEN, 4000))
 				.outputFluids(new FluidStack(Fluids.URANIUM_BROMIDE, 4000)));
-		recipes.add(new ChemRecipe(1005, "PLUTONIUM_BROMIDE", 50)
-		        .inputItems(
-			        new OreDictStack(PU239.billet(), 1),
-			        new ComparableStack(ModItems.powder_bromine),
-			        new OreDictStack(ASBESTOS.ingot(), 1))
-		        .inputFluids(new FluidStack(Fluids.HYDROGEN, 4000))
-		        .outputFluids(new FluidStack(Fluids.PLUTONIUM_BROMIDE, 4000)));
-		recipes.add(new ChemRecipe(1006, "SCHRABIDIUM_BROMIDE", 50)
-		        .inputItems(
-			        new OreDictStack(SA326.billet(), 1),
-			        new ComparableStack(ModItems.powder_bromine),
-			        new OreDictStack(ASBESTOS.ingot(), 1))
-		        .inputFluids(new FluidStack(Fluids.HYDROGEN, 4000))
-		        .outputFluids(new FluidStack(Fluids.SCHRABIDIUM_BROMIDE, 4000)));
 		recipes.add(new ChemRecipe(1007, "THORIUM_BROMIDE", 50)
 		        .inputItems(
 			        new OreDictStack(TH232.billet(), 1),

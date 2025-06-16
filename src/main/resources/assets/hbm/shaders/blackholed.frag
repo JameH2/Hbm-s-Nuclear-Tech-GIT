@@ -37,7 +37,7 @@ vec2 quantize(vec2 inp, vec2 period) {
 }
 
 void main() {
-    vec2 pp = quantize(gl_TexCoord[0].xy, vec2(0.00425, 0.00425));
+	vec2 pp = quantize(gl_TexCoord[0].xy, vec2(0.00425, 0.00425));
 	//vec2 pp = gl_TexCoord[0].xy;
 	pp = -1.0 + 2.0 * pp;
 	pp *= 2.0;
@@ -93,16 +93,16 @@ void main() {
 
 		vec3 dcol = mix(c2, c1, pow(length(bhv) - bhr, 2.0)) * max(0.0, texture2D(iChannel1, ra * vec2(0.1, 0.5)).r + 0.15) * (4.0 / ((0.001 + (length(bhv) - bhr) * 50.0)));
 
-        col += max(vec3(0.0), dcol * step(0.0, -sdTorus((p * vec3(1.0, 50.0, 1.0)) - bh, vec2(0.8, 0.99))) * noncaptured);
-        col += vec3(1.0, 0.9, 0.7) * (1.0 / vec3(dot(bhv, bhv)+  0.004)) * 0.002 * noncaptured  * clamp(r, 0.0, 1.0);
-        col -= 0.0004;
+		col += max(vec3(0.0), dcol * step(0.0, -sdTorus((p * vec3(1.0, 50.0, 1.0)) - bh, vec2(0.8, 0.99))) * noncaptured);
+		col += vec3(1.0, 0.9, 0.7) * (1.0 / vec3(dot(bhv, bhv)+  0.004)) * 0.002 * noncaptured  * clamp(r, 0.0, 1.0);
+		col -= 0.0004;
 
-        if(r < 0.5) {
-            alpha = 1.0;
-        } else {
-            alpha = col.r;
-        }
-    }
+		if(r < 0.5) {
+			alpha = 1.0;
+		} else {
+			alpha = col.r;
+		}
+	}
 
 	gl_FragColor = vec4(smoothstep(0.1, 0.6, col.r), smoothstep(0.5, 0.9, col.g), smoothstep(0.1, 0.9, col.b),alpha);
 }

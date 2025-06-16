@@ -983,7 +983,6 @@ public class MainRegistry {
 		PlanetGen.overrideOverworldProvider(); // Doing it as late as possible
 
 		Compat.handleRailcraftNonsense();
-		Compat.handleBopBiomeIDs();
 		SuicideThreadDump.register();
 		CommandReloadClient.register();
 

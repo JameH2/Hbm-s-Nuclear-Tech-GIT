@@ -9,6 +9,7 @@ import java.util.List;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.inventory.FluidStack;
+import com.hbm.inventory.OreDictManager.DictFrame;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
@@ -85,10 +86,8 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 				.inputItems(new ComparableStack(Items.sugar, 10))
 				.outputFluids(new FluidStack(Fluids.ETHANOL, 1000)));
 
-		// Anaerobic decomposition
 		this.register(new GenericRecipe("chem.biogas").setupNamed(60, 100).setIcon(ModItems.gas_full, Fluids.BIOGAS.getID())
 				.inputItems(new ComparableStack(ModItems.biomass, 16))
-				.inputFluids(new FluidStack(Fluids.CARBONDIOXIDE, 250))
 				.outputFluids(new FluidStack(Fluids.BIOGAS, 2_000)));
 
 		this.register(new GenericRecipe("chem.biofuel").setupNamed(60, 100).setIcon(ModItems.canister_full, Fluids.BIOFUEL.getID())
@@ -353,6 +352,77 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 				.inputItems(new ComparableStack(ModItems.powder_paleogenite), new OreDictStack(F.dust(), 8), new ComparableStack(ModItems.nugget_bismuth, 4))
 				.inputFluids(new FluidStack(Fluids.PEROXIDE, 1_000, 5))
 				.outputFluids(new FluidStack(Fluids.DEATH, 1_000, 0)));
+
+		/// SPACE ///
+		this.register(new GenericRecipe("chem.coppersulf").setup(50, 100).setIcon(ModItems.fluid_icon, Fluids.COPPERSULFATE.getID())
+				.inputFluids(new FluidStack(Fluids.AQUEOUS_COPPER, 500))
+				.outputItems(new ItemStack(ModItems.powder_nickel, 2), new ItemStack(ModItems.powder_copper, 2))
+				.outputFluids(new FluidStack(Fluids.COPPERSULFATE, 200)));
+
+		this.register(new GenericRecipe("chem.uraniumbromide").setup(200, 1_000).setIcon(ModItems.fluid_icon, Fluids.URANIUM_BROMIDE.getID())
+				.inputItems(new OreDictStack(U235.billet(), 1), new ComparableStack(ModItems.powder_bromine), new OreDictStack(ASBESTOS.ingot(), 1))
+				.inputFluids(new FluidStack(Fluids.HYDROGEN, 4_000))
+				.outputFluids(new FluidStack(Fluids.URANIUM_BROMIDE, 4_000)));
+
+		this.register(new GenericRecipe("chem.thoriumbromide").setup(200, 1_000).setIcon(ModItems.fluid_icon, Fluids.THORIUM_BROMIDE.getID())
+				.inputItems(new OreDictStack(TH232.billet(), 1), new ComparableStack(ModItems.powder_bromine), new OreDictStack(ASBESTOS.ingot(), 1))
+				.inputFluids(new FluidStack(Fluids.HYDROGEN, 4_000))
+				.outputFluids(new FluidStack(Fluids.THORIUM_BROMIDE, 4_000)));
+
+		this.register(new GenericRecipe("chem.hydrazine").setup(250, 1_000)
+				.inputFluids(new FluidStack(Fluids.NITRIC_ACID, 2_000), new FluidStack(Fluids.AMMONIA, 1_000))
+				.outputFluids(new FluidStack(Fluids.HYDRAZINE, 800)));
+
+		this.register(new GenericRecipe("chem.ammonia").setup(250, 1_000)
+				.inputFluids(new FluidStack(Fluids.NITROGEN, 600), new FluidStack(Fluids.WATER, 1_000))
+				.outputFluids(new FluidStack(Fluids.AMMONIA, 800)));
+
+		this.register(new GenericRecipe("chem.bloodfuel").setup(250, 1_000)
+				.inputFluids(new FluidStack(Fluids.AMMONIA, 350), new FluidStack(Fluids.BLOOD, 800))
+				.outputFluids(new FluidStack(Fluids.BLOODGAS, 1000)));
+
+		this.register(new GenericRecipe("chem.hcl").setup(250, 1_000)
+				.inputFluids(new FluidStack(Fluids.HYDROGEN, 300), new FluidStack(Fluids.CHLORINE, 1000))
+				.outputFluids(new FluidStack(Fluids.HCL, 400)));
+
+		this.register(new GenericRecipe("chem.ammoniumnitrate").setup(250, 1_000)
+				.inputFluids(new FluidStack(Fluids.AMMONIA, 500), new FluidStack(Fluids.NITROGEN, 1000))
+				.outputItems(new ItemStack(ModItems.ammonium_nitrate, 4)));
+
+		this.register(new GenericRecipe("chem.nmass").setup(250, 1_000)
+				.inputFluids(new FluidStack(Fluids.SCHRABIDIC, 650), (new FluidStack(Fluids.IONGEL, 800)))
+				.inputItems(new ComparableStack(ModItems.pellet_charged, 1), new ComparableStack(ModItems.ingot_euphemium, 1))
+				.outputFluids(new FluidStack(Fluids.NMASS, 1000), new FluidStack(Fluids.WASTEGAS, 2000)));
+
+		this.register(new GenericRecipe("chem.masscake").setup(250, 1_000)
+				.inputFluids(new FluidStack(Fluids.CMILK, 4000), new FluidStack(Fluids.CREAM, 1000)) // why not regular milk? well its because the refined products allow for higher mass cakes while still needing less milk
+				.inputItems(
+						new ComparableStack(Items.sugar, 8),				// if there is a hole in my logic i will shoot myself
+						new ComparableStack(Items.egg, 4))				//ex: since a cake needs 3 buckets of milk, c-milk is more dense, leading to it being only 4 buckets of condensed milk, thats 1 bucket per cake.
+				.outputItems(new ItemStack(Items.cake, 4)));
+
+		this.register(new GenericRecipe("chem.butter").setup(250, 1_000)
+				.inputFluids(new FluidStack(Fluids.EMILK, 1000))
+				.outputItems(new ItemStack(ModItems.butter)));
+		this.register(new GenericRecipe("chem.strawberryicecream").setup(250, 1_000)
+				.inputFluids(new FluidStack(Fluids.CREAM, 1000))
+				.inputItems(new ComparableStack(ModItems.butter, 2), new ComparableStack(Blocks.packed_ice, 1), new ComparableStack(ModItems.strawberry, 4))
+				.outputItems(new ItemStack(ModItems.s_cream, 4)));
+
+		this.register(new GenericRecipe("chem.soil").setup(250, 1_000)
+				.inputFluids(new FluidStack(Fluids.WATER, 4000))
+				.inputItems(new ComparableStack(ModItems.ammonium_nitrate, 1), new ComparableStack(Blocks.gravel, 8))
+				.outputItems(new ItemStack(Blocks.dirt, 8)));
+
+		this.register(new GenericRecipe("chem.chloromethane").setup(250, 1_000)
+				.inputFluids(new FluidStack(Fluids.GAS, 750), new FluidStack(Fluids.CHLORINE, 250))
+				.outputFluids(new FluidStack(Fluids.CHLOROMETHANE, 1000)));
+
+		// WARNING: NILERED CHEMISTRY ZONE //
+		this.register(new GenericRecipe("chem.hydrapiss").setup(250, 1_000)
+				.inputFluids(new FluidStack(Fluids.NITRIC_ACID, 2000))
+				.inputItems(new ComparableStack(ModItems.rag_piss)) // urea...
+				.outputFluids(new FluidStack(Fluids.HYDRAZINE, 800)));
 
 	}
 

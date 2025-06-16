@@ -25,7 +25,7 @@ public abstract class BiomeGenBaseCelestial extends BiomeGenBase {
 
         // If we go outside the bounds, don't crash here, it'll crash elsewhere already, with a more useful message
         if(id < biomeList.length && biomeList[id] != null && !(biomeList[id] instanceof BiomeGenBaseCelestial))
-            throw new BiomeCollisionException("Biome ID conflict, attempted to register NTM Space biome to ID " + id + " which is already in use. Please modify hbm.cfg to fix this error. Note that the maximum biome ID is 127, if you run out you MUST install EndlessIDs!");
+            throw new BiomeCollisionException("Biome ID conflict, attempted to register NTM Space biome to ID " + id + " which is already in use. Please modify hbm.cfg to fix this error. Note that the maximum biome ID is 255, if you run out you MUST install EndlessIDs!");
 
         return id;
     }

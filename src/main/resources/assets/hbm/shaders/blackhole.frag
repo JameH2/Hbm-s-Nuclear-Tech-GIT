@@ -91,21 +91,21 @@ void main() {
 
 		vec3 dcol = mix(c2, c1, pow(length(bhv) - bhr, 2.0)) * max(0.0, texture2D(iChannel1, ra * vec2(0.1, 0.5)).r + 0.15) * (4.0 / ((0.001 + (length(bhv) - bhr) * 50.0)));
 
-        
-        col += max(vec3(0.0),dcol * step(0.0,-sdTorus( (p * vec3(1.0,50.0,1.0)) - bh, vec2(0.8,0.99))) * noncaptured);
-        
-        //col += dcol * (1.0/dr) * noncaptured * 0.01;
-        
-        // glow
-        col += vec3(1.0,0.9,0.7) * (3.0/vec3(dot(bhv,bhv))) * 0.0008 * noncaptured * clamp(r, 0.8, 0.9);
-        col -= 0.0004;
 
-        if(r < 0.5) {
-            alpha = 1.0;
-        } else {
-            alpha = col.r;
-        }
-    }
+		col += max(vec3(0.0),dcol * step(0.0,-sdTorus( (p * vec3(1.0,50.0,1.0)) - bh, vec2(0.8,0.99))) * noncaptured);
+
+		//col += dcol * (1.0/dr) * noncaptured * 0.01;
+
+		// glow
+		col += vec3(1.0,0.9,0.7) * (3.0/vec3(dot(bhv,bhv))) * 0.0008 * noncaptured * clamp(r, 0.8, 0.9);
+		col -= 0.0004;
+
+		if(r < 0.5) {
+			alpha = 1.0;
+		} else {
+			alpha = col.r;
+		}
+	}
 
 	gl_FragColor = vec4(smoothstep(0.1, 0.6, col.r), smoothstep(0.5, 0.9, col.g), smoothstep(0.1, 0.9, col.b),alpha);
 }

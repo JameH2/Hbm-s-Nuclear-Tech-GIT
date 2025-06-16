@@ -26,6 +26,9 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.inventory.material.NTMMaterial.SmeltingBehavior;
+import com.hbm.inventory.recipes.GasCentrifugeRecipes;
+import com.hbm.inventory.recipes.MixerRecipes;
+import com.hbm.inventory.recipes.MixerRecipes.MixerRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.ItemEnums.EnumAshType;
 import com.hbm.items.ItemEnums.EnumBriquetteType;
@@ -266,7 +269,7 @@ public class OreDictManager {
 	public static final DictFrame SODALITE = new DictFrame("Sodalite");
 	public static final DictFrame VOLCANIC = new DictFrame("Volcanic");
 	public static final DictFrame HEMATITE = new DictFrame("Hematite");
-	public static final DictFrame CONGLOMERATE  = new DictFrame("conglomerate");
+	public static final DictFrame CONGLOMERATE  = new DictFrame("Conglomerate");
 	public static final DictFrame MALACHITE = new DictFrame("Malachite");
 	public static final DictFrame LIMESTONE = new DictFrame("Limestone");
 	public static final DictFrame SLAG = new DictFrame("Slag");
@@ -274,6 +277,8 @@ public class OreDictManager {
 	public static final DictFrame CRYOLITE = new DictFrame("Cryolite");
 	public static final DictFrame RICHMAGMA = new DictFrame("RichMagma");
 	public static final DictFrame FLOUR = new DictFrame("foodFlour");
+	public static final DictFrame PENTLANDITE = new DictFrame("Pentlandite");
+	
 	/*
 	 * HAZARDS, MISC
 	 */
@@ -513,6 +518,7 @@ public class OreDictManager {
 		SLAG																									.block(block_slag);
 		CONGLOMERATE																													.ore(fromOne(stone_resource, EnumStoneType.CONGLOMERATE));
 		RICHMAGMA						.ingot(ingot_magma);
+		PENTLANDITE	.crystal(fromOne(chunk_ore, EnumChunkType.PENTLANDITE));
 
 		/*
 		 * HAZARDS, MISC

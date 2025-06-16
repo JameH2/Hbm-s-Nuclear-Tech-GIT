@@ -46,8 +46,8 @@ public class Fluids {
 	public static FluidType COOLANT_HOT;
 	public static FluidType SUPERHEATED_HYDROGEN;
 	public static FluidType URANIUM_BROMIDE;
-	public static FluidType PLUTONIUM_BROMIDE;
-	public static FluidType SCHRABIDIUM_BROMIDE;
+	public static FluidType AQUEOUS_COPPER;
+	public static FluidType COPPERSULFATE;
 	public static FluidType THORIUM_BROMIDE;
 	public static FluidType GASEOUS_URANIUM_BROMIDE;
 	public static FluidType GASEOUS_PLUTONIUM_BROMIDE;
@@ -224,7 +224,7 @@ public class Fluids {
 	public static FluidType THORIUM_SALT;
 	public static FluidType THORIUM_SALT_HOT;
 	public static FluidType THORIUM_SALT_DEPLETED;
-	public static FluidType EMILK; //ghostycore
+	public static FluidType EMILK; 
 	public static FluidType CMILK;
 	public static FluidType CREAM;
 	public static FluidType DICYANOACETYLENE;//DICYANOACETYLENE
@@ -234,31 +234,6 @@ public class Fluids {
 	public static FluidType CONGLOMERA;
 	public static FluidType PHEROMONE;
 	public static FluidType PHEROMONE_M;
-
-	//morkite would be like a gravelly oil. it would be a goopy liquidized gravel.
-	//point being, if the crystals were melted down and the liquid extracted
-	//you could be able to dissolve it directly with the vacuum refinery, or maybe something else
-	//you would get a slurry, a gaseous version, and maybe some other mysterious product.
-	//the slurry would be churned into various minerals like copper and quartz.
-	//the gaseous version would be distilled to get acetylene, hydrogen, maybe some aromatics.
-	//or fractioned for acetylene and sour gas? im making shit up here oh god...
-	//regardless, you can get some fuels from it, but its more utility wise imo... would be best for welding
-	//or chemical mixing with nitrogens.
-
-	//bitch its simple
-	//fraction the morkine gas to get ethylene
-	//sourgas never fit anyway
-
-	//alright well thats the *light* part of morkite done. now for the heavier shit.
-	//im thinking it actually needs to be gas centrifuged maybe to get the other products or something else entirely.
-	//reformation of hydrocarbons, aka that feedstock shit could be used in the "MSLURRY", the oils get extracted while leaving some goopy deposits idfk.
-	//MSLURRY should defintely be dissolved though, acidized and fed through some sort of machine that settles the silica goop to the bottom before finally leaving
-	//some aqueous gel-like fluid behind.
-	//that aqueous gel would then be the main plaything of this godforsaken chain
-
-
-	//hello guys i have decided to just literally give up on "morkite"
-
 	public static FluidType STELLAR_FLUX;
 	public static FluidType VITRIOL;
 	public static FluidType SLOP;
@@ -266,6 +241,7 @@ public class Fluids {
 	public static FluidType SODIUM_ALUMINATE;
 	public static FluidType BAUXITE_SOLUTION;
 	public static FluidType ALUMINA;
+	public static FluidType AQUEOUS_NICKEL;
 
 	/* Lagacy names for compatibility purposes */
 	@Deprecated public static FluidType ACID;	//JAOPCA uses this, apparently
@@ -519,8 +495,8 @@ public class Fluids {
 		LEAD_HOT =				new FluidType("LEAD_HOT",			0x776563, 4, 0, 0, EnumSymbol.NONE).setTemp(1500).addTraits(LIQUID, VISCOUS);
 		GAS_WATZ =					new FluidType("GAS_WATZ",				0x86653E, 4, 0, 3, EnumSymbol.ACID).setTemp(2500).addTraits(GASEOUS, NOCON, NOID, new FT_Polluting().release(PollutionType.POISON, POISON_EXTREME), new FT_Rocket(1200, 700_000));
 		URANIUM_BROMIDE =	new FluidType("URANIUM_BROMIDE",		0xD1CEBE, 0, 0, 0, EnumSymbol.NONE).setTemp(200).addTraits(LIQUID, VISCOUS, new FT_Corrosive(65), new FT_VentRadiation(0.1F));
-		PLUTONIUM_BROMIDE =	new FluidType("PLUTONIUM_BROMIDE",		0x4C4C4C, 0, 0, 0, EnumSymbol.NONE).setTemp(200).addTraits(LIQUID, VISCOUS, new FT_Corrosive(65), new FT_VentRadiation(0.1F));
-		SCHRABIDIUM_BROMIDE =	new FluidType("SCHRABIDIUM_BROMIDE",		0x006B6B, 0, 0, 0, EnumSymbol.NONE).setTemp(200).addTraits(LIQUID, VISCOUS, new FT_Corrosive(65), new FT_VentRadiation(0.1F));
+		AQUEOUS_COPPER =	new FluidType("AQUEOUS_COPPER",		0x4CC2A2, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS);
+		COPPERSULFATE =		new FluidType("COPPERSULFATE",		0x55E5CF, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS);
 		THORIUM_BROMIDE =	new FluidType("THORIUM_BROMIDE",		0x7A5542, 0, 0, 0, EnumSymbol.NONE).setTemp(200).addTraits(LIQUID, VISCOUS, new FT_Corrosive(65), new FT_VentRadiation(0.1F));
 		GASEOUS_URANIUM_BROMIDE =	new FluidType("GASEOUS_URANIUM_BROMIDE",		0xD1CEBE, 0, 0, 0, EnumSymbol.NONE).setTemp(2500).addTraits(GASEOUS, NOCON, NOID, new FT_Rocket(1500, 700_000));
 		GASEOUS_PLUTONIUM_BROMIDE =	new FluidType("GASEOUS_PLUTONIUM_BROMIDE",		0x4C4C4C, 0, 0, 0, EnumSymbol.NONE).setTemp(2600).addTraits(GASEOUS, NOCON, NOID, new FT_Rocket(2000, 700_000));
@@ -533,6 +509,7 @@ public class Fluids {
 		SODIUM_ALUMINATE =		new FluidType("SODIUM_ALUMINATE",	0xFFD191, 3, 0, 1, EnumSymbol.ACID).addTraits(new FT_Corrosive(30), LIQUID);
 		BAUXITE_SOLUTION =		new FluidType("BAUXITE_SOLUTION",	0xE2560F, 3, 0, 3, EnumSymbol.ACID).addTraits(new FT_Corrosive(40), LIQUID, VISCOUS);
 		ALUMINA =				new FluidType("ALUMINA",		0xDDFFFF, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID);
+		AQUEOUS_NICKEL =		new FluidType("AQUEOUS_NICKEL",		0xDACEBA, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID);
 
 		// ^ ^ ^ ^ ^ ^ ^ ^
 		//ADD NEW FLUIDS HERE
@@ -675,8 +652,8 @@ public class Fluids {
 		metaOrder.add(SULFURIC_ACID);
 		metaOrder.add(BROMINE);
 		metaOrder.add(URANIUM_BROMIDE);
-		metaOrder.add(PLUTONIUM_BROMIDE);
-		metaOrder.add(SCHRABIDIUM_BROMIDE);
+		metaOrder.add(AQUEOUS_COPPER);
+		metaOrder.add(COPPERSULFATE);
 		metaOrder.add(THORIUM_BROMIDE);
 		//meths
 		metaOrder.add(CHLOROMETHANE);
@@ -720,6 +697,7 @@ public class Fluids {
 		metaOrder.add(SODIUM_ALUMINATE);
 		metaOrder.add(BAUXITE_SOLUTION);
 		metaOrder.add(ALUMINA);
+		metaOrder.add(AQUEOUS_NICKEL);
 		//solutions and working fluids
 		metaOrder.add(FRACKSOL);
 		metaOrder.add(LYE);
@@ -845,11 +823,6 @@ public class Fluids {
 		URANIUM_BROMIDE.addTraits(new FT_Heatable().setEff(HeatingType.PWR, 1.0D).addStep(300, 1, GASEOUS_URANIUM_BROMIDE, 1), new FT_PWRModerator(1.75D));
 		GASEOUS_URANIUM_BROMIDE.addTraits(new FT_Coolable(URANIUM_BROMIDE, 1, 1, 300));
 
-		PLUTONIUM_BROMIDE.addTraits(new FT_Heatable().setEff(HeatingType.PWR, 1.0D).addStep(300, 1, GASEOUS_PLUTONIUM_BROMIDE, 1), new FT_PWRModerator(2.0D));
-		GASEOUS_PLUTONIUM_BROMIDE.addTraits(new FT_Coolable(PLUTONIUM_BROMIDE, 1, 1, 300));
-
-		SCHRABIDIUM_BROMIDE.addTraits(new FT_Heatable().setEff(HeatingType.PWR, 1.0D).addStep(300, 1, GASEOUS_SCHRABIDIUM_BROMIDE, 1), new FT_PWRModerator(2.50D));
-		GASEOUS_SCHRABIDIUM_BROMIDE.addTraits(new FT_Coolable(SCHRABIDIUM_BROMIDE, 1, 1, 300));
 
 		THORIUM_BROMIDE.addTraits(new FT_Heatable().setEff(HeatingType.PWR, 1.0D).addStep(300, 1, GASEOUS_THORIUM_BROMIDE, 1), new FT_PWRModerator(1.50D));
 		GASEOUS_THORIUM_BROMIDE.addTraits(new FT_Coolable(THORIUM_BROMIDE, 1, 1, 300));
