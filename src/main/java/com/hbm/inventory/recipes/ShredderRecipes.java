@@ -211,6 +211,7 @@ public class ShredderRecipes extends SerializableRecipe {
 		ShredderRecipes.setRecipe(Items.reeds, new ItemStack(Items.sugar, 3));
 		ShredderRecipes.setRecipe(Items.apple, new ItemStack(Items.sugar, 1));
 		ShredderRecipes.setRecipe(Items.carrot, new ItemStack(Items.sugar, 1));
+		ShredderRecipes.setRecipe(ModItems.strawberry, new ItemStack(Items.sugar, 2));
 		ShredderRecipes.setRecipe(ModItems.crystal_cleaned, new ItemStack(ModItems.mineral_dust, 4));
 		ShredderRecipes.setRecipe(ModBlocks.laythe_coral_block, new ItemStack(ModItems.powder_calcium, 4));
 
