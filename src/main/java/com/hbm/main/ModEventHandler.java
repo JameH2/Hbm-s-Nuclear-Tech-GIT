@@ -352,6 +352,10 @@ public class ModEventHandler {
 			event.entity.dropItem(ModItems.book_of_, 1);
 		}
 
+		if(event.entity.getUniqueID().toString().equals(ShadyUtil.MellowRPG8)) {
+			event.entity.entityDropItem(new ItemStack(ModBlocks.block_meteor, 1 + rand.nextInt(10)), 0.0F);
+		}
+
 		if(event.entity instanceof EntityCreeperTainted && event.source == ModDamageSource.boxcar) {
 
 			for(Object o : event.entity.worldObj.getEntitiesWithinAABB(EntityPlayer.class, event.entity.boundingBox.expand(50, 50, 50))) {

@@ -46,12 +46,13 @@ public class RenderAccessoryUtility {
 	private static ResourceLocation vaer = new ResourceLocation(RefStrings.MODID + ":textures/models/capes/CapeVaer.png");
 	private static ResourceLocation adam = new ResourceLocation(RefStrings.MODID + ":textures/models/capes/CapeAdam.png");
 	private static ResourceLocation gwen = new ResourceLocation(RefStrings.MODID + ":textures/models/capes/CapeGwen.png");
+	private static ResourceLocation mlow = new ResourceLocation(RefStrings.MODID + ":textures/models/capes/CapeMellow.png");
 
 	private static ResourceLocation alcater = new ResourceLocation(RefStrings.MODID + ":textures/models/capes/CapeAlcater.png");
 	private static ResourceLocation jame = new ResourceLocation(RefStrings.MODID + ":textures/models/capes/CapeJame.png");
-	
+
 	public static ResourceLocation getCloakFromPlayer(EntityPlayer player) {
-		
+
 		String uuid = player.getUniqueID().toString();
 		String name = player.getDisplayName();
 
@@ -140,73 +141,76 @@ public class RenderAccessoryUtility {
 		if(uuid.equals(ShadyUtil.DUODEC_)) {
 			return gwen;
 		}
-		
+		if(uuid.equals(ShadyUtil.MellowRPG8)) {
+			return mlow;
+		}
+
 		return null;
 	}
-	
+
 	private static ModelBiped[] wingModels = new ModelBiped[10];
 	public static void renderWings(RenderPlayerEvent.SetArmorModel event, int mode) {
 
 		if(wingModels[mode] == null)
 			wingModels[mode] = new ModelArmorWings(mode);
-		
+
 		RenderPlayer renderer = event.renderer;
 		ModelBiped model = renderer.modelArmor;
 		EntityPlayer player = event.entityPlayer;
 
 		wingModels[mode].isSneak = model.isSneak;
-		
+
 		float interp = event.partialRenderTick;
 		float yawHead = player.prevRotationYawHead + (player.rotationYawHead - player.prevRotationYawHead) * interp;
 		float yawOffset = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * interp;
 		float yaw = yawHead - yawOffset;
 		float yawWrapped = MathHelper.wrapAngleTo180_float(yawHead - yawOffset);
 		float pitch = player.rotationPitch;
-		
+
 		wingModels[mode].render(event.entityPlayer, 0.0F, 0.0F, yawWrapped, yaw, pitch, 0.0625F);
 	}
-	
+
 	private static ModelBiped axePackModel;
 	public static void renderAxePack(RenderPlayerEvent.SetArmorModel event) {
 
 		if(axePackModel == null)
 			axePackModel = new ModelArmorWingsPheo();
-		
+
 		RenderPlayer renderer = event.renderer;
 		ModelBiped model = renderer.modelArmor;
 		EntityPlayer player = event.entityPlayer;
 
 		axePackModel.isSneak = model.isSneak;
-		
+
 		float interp = event.partialRenderTick;
 		float yawHead = player.prevRotationYawHead + (player.rotationYawHead - player.prevRotationYawHead) * interp;
 		float yawOffset = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * interp;
 		float yaw = yawHead - yawOffset;
 		float yawWrapped = MathHelper.wrapAngleTo180_float(yawHead - yawOffset);
 		float pitch = player.rotationPitch;
-		
+
 		axePackModel.render(event.entityPlayer, 0.0F, 0.0F, yawWrapped, yaw, pitch, 0.0625F);
 	}
-	
+
 	private static ModelBiped tailModel;
 	public static void renderFaggot(RenderPlayerEvent.SetArmorModel event) {
 
 		if(tailModel == null)
 			tailModel = new ModelArmorTailPeep();
-		
+
 		RenderPlayer renderer = event.renderer;
 		ModelBiped model = renderer.modelArmor;
 		EntityPlayer player = event.entityPlayer;
 
 		tailModel.isSneak = model.isSneak;
-		
+
 		float interp = event.partialRenderTick;
 		float yawHead = player.prevRotationYawHead + (player.rotationYawHead - player.prevRotationYawHead) * interp;
 		float yawOffset = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * interp;
 		float yaw = yawHead - yawOffset;
 		float yawWrapped = MathHelper.wrapAngleTo180_float(yawHead - yawOffset);
 		float pitch = player.rotationPitch;
-		
+
 		tailModel.render(event.entityPlayer, 0.0F, 0.0F, yawWrapped, yaw, pitch, 0.0625F);
 	}
 }
