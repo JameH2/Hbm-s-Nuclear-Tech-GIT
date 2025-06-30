@@ -209,6 +209,7 @@ public class ShredderRecipes extends SerializableRecipe {
 		ShredderRecipes.setRecipe(ModBlocks.ore_tektite_osmiridium, new ItemStack(ModItems.powder_tektite, 1));
 		ShredderRecipes.setRecipe(Blocks.dirt, new ItemStack(ModItems.dust, 1));
 		ShredderRecipes.setRecipe(Items.reeds, new ItemStack(Items.sugar, 3));
+		ShredderRecipes.setRecipe(ModItems.strawberry, new ItemStack(Items.sugar, 2));
 		ShredderRecipes.setRecipe(Items.apple, new ItemStack(Items.sugar, 1));
 		ShredderRecipes.setRecipe(Items.carrot, new ItemStack(Items.sugar, 1));
 		ShredderRecipes.setRecipe(ModItems.crystal_cleaned, new ItemStack(ModItems.mineral_dust, 4));

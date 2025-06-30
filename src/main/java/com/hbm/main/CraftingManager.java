@@ -164,6 +164,7 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModItems.biomass, 4), new Object[] { Items.sugar, ModItems.powder_sawdust, ModItems.powder_sawdust, Items.reeds, Items.reeds, Items.reeds });
 		addShapelessAuto(new ItemStack(ModItems.biomass, 4), new Object[] { Items.sugar, ModItems.powder_sawdust, ModItems.powder_sawdust, Items.rotten_flesh, Items.rotten_flesh, Items.rotten_flesh });
 		addShapelessAuto(new ItemStack(ModItems.biomass, 4), new Object[] { Items.sugar, ModItems.powder_sawdust, ModItems.powder_sawdust, Items.carrot, Items.carrot, Items.carrot, Items.carrot, Items.carrot, Items.carrot });
+		addShapelessAuto(new ItemStack(ModItems.biomass, 4), new Object[] { Items.sugar, ModItems.powder_sawdust, ModItems.powder_sawdust, ModItems.strawberry , ModItems.strawberry, ModItems.strawberry, ModItems.strawberry, ModItems.strawberry, ModItems.strawberry });
 		addShapelessAuto(new ItemStack(ModItems.biomass, 4), new Object[] { Items.sugar, ModItems.powder_sawdust, ModItems.powder_sawdust, Items.potato, Items.potato, Items.potato, Items.potato, Items.potato, Items.potato });
 		addShapelessAuto(new ItemStack(ModItems.biomass, 4), new Object[] { Items.sugar, ModItems.powder_sawdust, ModItems.powder_sawdust, KEY_SAPLING, KEY_SAPLING, KEY_SAPLING, KEY_SAPLING, KEY_SAPLING, KEY_SAPLING });
 		addShapelessAuto(new ItemStack(ModItems.biomass, 4), new Object[] { Items.sugar, ModItems.powder_sawdust, ModItems.powder_sawdust, KEY_LEAVES, KEY_LEAVES, KEY_LEAVES, KEY_LEAVES, KEY_LEAVES, KEY_LEAVES });
