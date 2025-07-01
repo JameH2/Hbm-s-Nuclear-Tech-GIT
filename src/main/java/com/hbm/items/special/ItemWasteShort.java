@@ -53,6 +53,7 @@ public class ItemWasteShort extends Item {
 		AMERICIUM242("Americium-242", 750, 1000),	//funny fission fragments + the same as 242 but with more curium
 		AMERICIUM241("Americium-241", 750, 1000),   //funny fission fragments + cm242 / am242 / more curium / pu239
 		SCHRABIDIUM("Schrabidium-326", 1000, 1000), //funniest fission fragments
+		BERKELIUM247("Berkelium-247", 1000, 1000),  //funny fission fragments + curium / californium / americium
 		CURIUM244("Curium-244", 1000, 1000),	    //californium / lots rare curium isotopes
 		CURIUM245("Curium-245", 1000, 1000);        //more californium
 		

@@ -525,6 +525,17 @@ public class SILEXRecipes {
 					.addOut(new ItemStack(ModItems.nugget_bk247), 1 + 10 * i / 50)
 					.addOut(new ItemStack(ModItems.powder_xe135_tiny), 3)
 					.addOut(new ItemStack(ModItems.nuclear_waste_short_tiny, 1, ItemWasteShort.WasteClass.AMERICIUM241.ordinal()), 4 + 6 * i));
+			//BK247//
+			recipes.put(new ComparableStack(ModItems.rbmk_pellet_bk247, 1, i), new SILEXRecipe(600, 100, 4)
+				.addOut(new ItemStack(ModItems.nugget_bk247), 100 - i * 20)
+				.addOut(new ItemStack(ModItems.nugget_cf251), 1 + 10 * i / 40)
+				.addOut(new ItemStack(ModItems.nuclear_waste_short_tiny, 1, ItemWasteShort.WasteClass.BERKELIUM247.ordinal()), 4 + 6 * i));
+
+			recipes.put(new ComparableStack(ModItems.rbmk_pellet_bk247, 1, i + 5), new SILEXRecipe(600, 100, 4)
+				.addOut(new ItemStack(ModItems.nugget_bk247), 100 - i * 20)
+				.addOut(new ItemStack(ModItems.nugget_cf251), 1 + 10 * i / 40)
+				.addOut(new ItemStack(ModItems.powder_xe135_tiny), 3)
+				.addOut(new ItemStack(ModItems.nuclear_waste_short_tiny, 1, ItemWasteShort.WasteClass.BERKELIUM247.ordinal()), 4 + 6 * i));
 			//LEC//
 			recipes.put(new ComparableStack(ModItems.rbmk_pellet_lecm, 1, i), new SILEXRecipe(600, 100, 4)
 					.addOut(new ItemStack(ModItems.nugget_cm_fuel), 100 - i * 20)
@@ -769,6 +780,21 @@ public class SILEXRecipes {
 				.addOut(new ItemStack(ModItems.nuclear_waste_tiny), 10)
 				.addOut(new ItemStack(ModItems.nugget_cm242), 20)
 				);
+		recipes.put(new ComparableStack(ModItems.nuclear_waste_short, 1, ItemWasteShort.WasteClass.BERKELIUM247.ordinal()), new SILEXRecipe(900, 100, 2)
+			.addOut(new ItemStack(ModItems.nugget_cf251), 40)
+			.addOut(new ItemStack(ModItems.nugget_am_mix), 10)
+			.addOut(new ItemStack(ModItems.powder_cs137_tiny), 5)
+			.addOut(new ItemStack(ModItems.powder_sr90_tiny), 5)
+			.addOut(new ItemStack(ModItems.nuclear_waste_tiny), 10)
+		);
+
+		recipes.put(new ComparableStack(ModItems.nuclear_waste_short_depleted, 1, ItemWasteShort.WasteClass.BERKELIUM247.ordinal()), new SILEXRecipe(900, 100, 2)
+			.addOut(new ItemStack(ModItems.nugget_cm_mix), 50)
+			.addOut(new ItemStack(ModItems.nugget_cf251), 20)
+			.addOut(new ItemStack(ModItems.nuclear_waste_tiny), 10)
+			.addOut(new ItemStack(ModItems.nugget_am_mix), 20)
+		);
+
 		recipes.put(new ComparableStack(ModItems.nuclear_waste_short, 1, ItemWasteShort.WasteClass.CURIUM244.ordinal()), new SILEXRecipe(900, 100, 2)
 				.addOut(new ItemStack(ModItems.nugget_cm245), 30)
 				.addOut(new ItemStack(ModItems.nugget_cm246), 15)

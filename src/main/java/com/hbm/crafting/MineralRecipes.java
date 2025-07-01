@@ -94,6 +94,9 @@ public class MineralRecipes {
 		add1To9Pair(ModItems.ingot_cm245, ModItems.nugget_cm245);
 		add1To9Pair(ModItems.ingot_cm246, ModItems.nugget_cm246);
 		add1To9Pair(ModItems.ingot_cm247, ModItems.nugget_cm247);
+		add1To9Pair(ModItems.ingot_cf251, ModItems.nugget_cf251);
+		add1To9Pair(ModItems.ingot_cf252, ModItems.nugget_cf252);
+		add1To9Pair(ModItems.ingot_es253, ModItems.nugget_es253);
 
 		add1To9Pair(ModItems.ingot_gaas, ModItems.nugget_gaas);
 		add1To9Pair(ModItems.ingot_platnium, ModItems.nugget_platnium);
@@ -145,6 +148,9 @@ public class MineralRecipes {
 		addBillet(ModItems.billet_am241,				ModItems.ingot_am241,				ModItems.nugget_am241, AM241.all(MaterialShapes.NUGGET));
 		addBillet(ModItems.billet_am242,				ModItems.ingot_am242,				ModItems.nugget_am242, AM242.all(MaterialShapes.NUGGET));
 		addBillet(ModItems.billet_bk247,				ModItems.ingot_bk247,				ModItems.nugget_bk247, BK247.all(MaterialShapes.NUGGET));
+		addBillet(ModItems.billet_cf251,				ModItems.ingot_cf251,				ModItems.nugget_cf251, CF251.all(MaterialShapes.NUGGET));
+		addBillet(ModItems.billet_cf252,				ModItems.ingot_cf252,				ModItems.nugget_cf252, CF252.all(MaterialShapes.NUGGET));
+		addBillet(ModItems.billet_es253,				ModItems.ingot_es253,				ModItems.nugget_es253, ES253.all(MaterialShapes.NUGGET));
 		addBillet(ModItems.billet_cm242,				ModItems.ingot_cm242,				ModItems.nugget_cm242, CM242.all(MaterialShapes.NUGGET));
 		addBillet(ModItems.billet_cm243,				ModItems.ingot_cm243,				ModItems.nugget_cm243, CM243.all(MaterialShapes.NUGGET));
 		addBillet(ModItems.billet_cm244,				ModItems.ingot_cm244,				ModItems.nugget_cm244, CM244.all(MaterialShapes.NUGGET));
@@ -280,13 +286,16 @@ public class MineralRecipes {
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.pellet_rtg_gold), new Object[] { ModItems.billet_au198, ModItems.billet_au198, ModItems.billet_au198, NI.plate() }));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.pellet_rtg_americium), new Object[] { ModItems.billet_am241, ModItems.billet_am241, ModItems.billet_am241, IRON.plate() }));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.pellet_rtg_berkelium), new Object[] { ModItems.billet_bk247, ModItems.billet_bk247, ModItems.billet_bk247, NI.plate() }));
-		
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.pellet_rtg_cf251), new Object[] { ModItems.billet_cf251, ModItems.billet_cf251, ModItems.billet_cf251, NI.plate() }));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.pellet_rtg_cf252), new Object[] { ModItems.billet_cf252, ModItems.billet_cf252, ModItems.billet_cf252, NI.plate() }));
+
 		//There's no need for anvil recycling recipes if you simply set the container item
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.billet_bismuth, 3), new Object[] { new ItemStack(ModItems.pellet_rtg_depleted, 1, DepletedRTGMaterial.BISMUTH.ordinal()) });
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.ingot_lead, 2), new Object[] { new ItemStack(ModItems.pellet_rtg_depleted, 1, DepletedRTGMaterial.LEAD.ordinal()) });
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.ingot_mercury, 2), new Object[] { new ItemStack(ModItems.pellet_rtg_depleted, 1, DepletedRTGMaterial.MERCURY.ordinal()) });
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.billet_neptunium, 3), new Object[] { new ItemStack(ModItems.pellet_rtg_depleted, 1, DepletedRTGMaterial.NEPTUNIUM.ordinal()) });
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.billet_zirconium, 3), new Object[] { new ItemStack(ModItems.pellet_rtg_depleted, 1, DepletedRTGMaterial.ZIRCONIUM.ordinal()) });
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.billet_am_mix, 3), new Object[] { new ItemStack(ModItems.pellet_rtg_depleted, 1, DepletedRTGMaterial.AMERICIUM.ordinal()) });
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.ingot_nickel, 2), new Object[] { new ItemStack(ModItems.pellet_rtg_depleted, 1, DepletedRTGMaterial.NICKEL.ordinal()) });
 		
 		GameRegistry.addRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.block_copper), 1), new Object[] { "###", "###", "###", '#', ModItems.ingot_copper });

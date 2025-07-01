@@ -17,9 +17,7 @@ import com.hbm.extprop.HbmPlayerProps;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.handler.HTTPHandler;
 import com.hbm.handler.HazmatRegistry;
-import com.hbm.handler.HbmKeybinds;
 import com.hbm.handler.ImpactWorldHandler;
-import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.hazard.HazardRegistry;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.hazard.type.HazardTypeNeutron;
@@ -30,6 +28,7 @@ import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.gui.GUIArmorTable;
 import com.hbm.inventory.gui.GUIScreenPreview;
 import com.hbm.inventory.gui.GUIScreenWikiRender;
+import com.hbm.inventory.gui.LoadingScreenRendererNT;
 import com.hbm.items.ItemCustomLore;
 import com.hbm.items.ModItems;
 import com.hbm.items.armor.*;
@@ -43,7 +42,6 @@ import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.potion.HbmPotion;
 import com.hbm.packet.toserver.AuxButtonPacket;
-import com.hbm.packet.toserver.KeybindPacket;
 import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.Animation;
 import com.hbm.render.block.ct.CTStitchReceiver;
@@ -73,7 +71,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
@@ -97,7 +94,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -1012,16 +1008,18 @@ public class ModEventHandlerClient {
 					ItemFluidDuct.class
 				);
 
-				String prefix = "Gun ";
-				int scale = 8;
+				String prefix = "Slot ";
+				//int gunScale = 8;
+				int slotScale = 1;
 				boolean ignoreNonNTM = true;
+				boolean onlyGuns = true;
 
 				List<ItemStack> stacks = new ArrayList<ItemStack>();
 				for (Object reg : Item.itemRegistry) {
 					Item item = (Item) reg;
 					if(ignoreNonNTM && !Item.itemRegistry.getNameForObject(item).startsWith("hbm:")) continue;
 					if(ignoredItems.contains(item)) continue;
-					if(!(item instanceof ItemGunBaseNT) && prefix.toLowerCase(Locale.US).startsWith("gun")) continue;
+					if(onlyGuns && !(item instanceof ItemGunBaseNT)) continue;
 					if(collapsedClasses.contains(item.getClass())) {
 						stacks.add(new ItemStack(item));
 					} else {
@@ -1030,7 +1028,7 @@ public class ModEventHandlerClient {
 				}
 
 				Minecraft.getMinecraft().thePlayer.closeScreen();
-				FMLCommonHandler.instance().showGuiScreen(new GUIScreenWikiRender(stacks.toArray(new ItemStack[0]), prefix, "wiki-block-renders-256", scale));
+				FMLCommonHandler.instance().showGuiScreen(new GUIScreenWikiRender(stacks.toArray(new ItemStack[0]), prefix, "wiki-block-renders-256", slotScale));
 			}
 		} else {
 			isRenderingItems = false;
@@ -1132,12 +1130,17 @@ public class ModEventHandlerClient {
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onClientTickLast(ClientTickEvent event) {
 
+		Minecraft mc = Minecraft.getMinecraft();
+		if(!(mc.loadingScreen instanceof LoadingScreenRendererNT)) {
+			mc.loadingScreen = new LoadingScreenRendererNT(mc);
+		}
+
 		if(event.phase == Phase.START) {
 			// I didn't see anything boss, I swears it
-			World world = Minecraft.getMinecraft().theWorld;
+			World world = mc.theWorld;
 			if(world == null) return;
 
-			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+			EntityPlayer player = mc.thePlayer;
 			long millis = Clock.get_ms();
 
 			if(lastStarCheck + 200 < millis) {
@@ -1156,7 +1159,8 @@ public class ModEventHandlerClient {
 			}
 		}
 
-		if(event.phase == Phase.START) {
+		// ???
+		/*if(event.phase == Phase.START) {
 
 			Minecraft mc = Minecraft.getMinecraft();
 
@@ -1172,7 +1176,7 @@ public class ModEventHandlerClient {
 					}
 				}
 			}
-		}
+		}*/
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -1194,73 +1198,6 @@ public class ModEventHandlerClient {
 			player.motionY < 0.15
 		) {
 			player.motionY = 0.15;
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent(priority = EventPriority.LOW)
-	public void onMouseClicked(InputEvent.MouseInputEvent event) {
-
-		Minecraft mc = Minecraft.getMinecraft();
-		if(GeneralConfig.enableKeybindOverlap && (mc.currentScreen == null || mc.currentScreen.allowUserInput)) {
-			boolean state = Mouse.getEventButtonState();
-			int keyCode = Mouse.getEventButton() - 100;
-
-			//if anything errors here, run ./gradlew clean setupDecompWorkSpace
-			for(Object o : KeyBinding.keybindArray) {
-				KeyBinding key = (KeyBinding) o;
-
-				if(key.getKeyCode() == keyCode && KeyBinding.hash.lookup(key.getKeyCode()) != key) {
-
-					key.pressed = state;
-					if(state && key.pressTime == 0) {
-						key.pressTime = 1;
-					}
-				}
-			}
-
-			boolean gunKey = keyCode == HbmKeybinds.gunPrimaryKey.getKeyCode() || keyCode == HbmKeybinds.gunSecondaryKey.getKeyCode() ||
-					keyCode == HbmKeybinds.gunTertiaryKey.getKeyCode() || keyCode == HbmKeybinds.reloadKey.getKeyCode();
-
-			EntityPlayer player = mc.thePlayer;
-
-			if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemGunBaseNT) {
-
-				/* Shoot in favor of attacking */
-				if(gunKey && keyCode == mc.gameSettings.keyBindAttack.getKeyCode()) {
-					mc.gameSettings.keyBindAttack.pressed = false;
-					mc.gameSettings.keyBindAttack.pressTime = 0;
-				}
-
-				if(gunKey && keyCode == mc.gameSettings.keyBindPickBlock.getKeyCode()) {
-					mc.gameSettings.keyBindPickBlock.pressed = false;
-					mc.gameSettings.keyBindPickBlock.pressTime = 0;
-				}
-			}
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent(priority = EventPriority.LOW)
-	public void onKeyTyped(InputEvent.KeyInputEvent event) {
-
-		Minecraft mc = Minecraft.getMinecraft();
-		if(GeneralConfig.enableKeybindOverlap && (mc.currentScreen == null || mc.currentScreen.allowUserInput)) {
-			boolean state = Keyboard.getEventKeyState();
-			int keyCode = Keyboard.getEventKey();
-
-			//if anything errors here, run ./gradlew clean setupDecompWorkSpace
-			for(Object o : KeyBinding.keybindArray) {
-				KeyBinding key = (KeyBinding) o;
-
-				if(keyCode != 0 && key.getKeyCode() == keyCode && KeyBinding.hash.lookup(key.getKeyCode()) != key) {
-
-					key.pressed = state;
-					if(state && key.pressTime == 0) {
-						key.pressTime = 1;
-					}
-				}
-			}
 		}
 	}
 
