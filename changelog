@@ -1,20 +1,10 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5377 - girl dinner (a bottle of whiskey and a gun)](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5377)
+Includes all changes and bugfixes from the latest upstream NTMain update - [X5378 - yeag](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5378)
 
 ## Added
-* Finished new nickel processing chain!
-* Brine deposits on Mun and Minmus
-    * For existing worlds, brine can be produced from conglomerate
+* BK-247 RBMK fuel recipes (it was in the last update but I forgor)
 
 ## Changed
-* "Open doors can now be interacted through" reverted because a lot of doors were authored without reasonable hitboxes for their open states, making them a pain in the ass to close, sorry abel
-* Nickel oredict tweaked, "ferrous dust" from other mods can be processed into pure nickel via brine, and pentlandite can be used as ferrous dust!
-* Improved biome ID conflict message
-* Configuration for oil machines changed, now oil amounts are per planet instead, and the machines instead have multipliers to production
+* Changed one little datatype in UniNodespace for a 23x performance improvement on endgame bases!
 
 ## Fixed
-* Charging Stations now fill the last 1HE rather than running forever leaving your armor slightly uncharged
-* #273 - Rocket travel with Hodgepodge installed could leave you stuck until leaving + rejoining a world
-* Cryodistil power input not accepting power from connectors
-* Aluminium ore shredding to regular powder instead of cryolite
-* Water evaporating with CoFHCore installed
-* Crash when entering Limbo
+* New chemplant doesn't activate achievement, making vocaloid plushies unobtainable :o

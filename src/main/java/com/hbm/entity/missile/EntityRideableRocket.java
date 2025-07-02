@@ -472,7 +472,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 	}
 
 	@Override
-	public void onImpact() {
+	public void onMissileImpact(MovingObjectPosition mop) {
 		// no boom
 	}
 

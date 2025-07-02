@@ -70,9 +70,14 @@ public class BiomeGenDunaLowlands extends BiomeGenBaseDuna {
 								meta[i2] = b0;
 							} else if (l1 < 62) {
 								block = null;
-								block1 = ModBlocks.duna_cobble;
-								if (Math.random() > 0.4) {
+								block1 = topBlock;
+								float randValue = rand.nextFloat();
+								if(l1 < 55 && randValue > 0.75) {
 									blocks[i2] = ModBlocks.duna_cobble;
+								} else if(l1 < 54 && randValue > 0.5) {
+									blocks[i2] = ModBlocks.duna_cobble;
+								} else if(randValue > 0.4) {
+									blocks[i2] = ModBlocks.duna_rock;
 								} else {
 									blocks[i2] = ModBlocks.duna_sands;
 								}

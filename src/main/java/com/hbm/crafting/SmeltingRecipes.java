@@ -94,7 +94,7 @@ public class SmeltingRecipes {
 		GameRegistry.addSmelting(DictFrame.fromOne(ModItems.briquette, EnumBriquetteType.COAL), DictFrame.fromOne(ModItems.coke, EnumCokeType.COAL), 1.0F);
 		GameRegistry.addSmelting(DictFrame.fromOne(ModItems.briquette, EnumBriquetteType.LIGNITE), DictFrame.fromOne(ModItems.coke, EnumCokeType.LIGNITE), 1.0F);
 		GameRegistry.addSmelting(DictFrame.fromOne(ModItems.briquette, EnumBriquetteType.WOOD), new ItemStack(Items.coal, 1, 1), 1.0F);
-		
+
 		GameRegistry.addSmelting(ModItems.powder_lead, new ItemStack(ModItems.ingot_lead), 1.0F);
 
 		GameRegistry.addSmelting(ModItems.powder_lead, new ItemStack(ModItems.ingot_lead), 1.0F);
@@ -202,8 +202,9 @@ public class SmeltingRecipes {
 		GameRegistry.addSmelting(ModItems.crystal_trixite, new ItemStack(ModItems.ingot_plutonium, 4), 2.0F);
 		GameRegistry.addSmelting(ModItems.crystal_cinnebar, new ItemStack(ModItems.cinnebar, 4), 2.0F);
 		GameRegistry.addSmelting(ModItems.crystal_osmiridium, new ItemStack(ModItems.ingot_osmiridium, 1), 2.0F);
-		GameRegistry.addSmelting(ModItems.crystal_nickel, new ItemStack(ModItems.ingot_nickel, 1), 2.0F);
-		GameRegistry.addSmelting(ModItems.crystal_niobium, new ItemStack(ModItems.ingot_niobium, 1), 2.0F);
+		GameRegistry.addSmelting(ModItems.crystal_nickel, new ItemStack(ModItems.ingot_nickel, 2), 2.0F);
+		GameRegistry.addSmelting(ModItems.crystal_niobium, new ItemStack(ModItems.ingot_niobium, 2), 2.0F);
+		GameRegistry.addSmelting(ModItems.crystal_zinc, new ItemStack(ModItems.ingot_zinc, 2), 2.0F);
 
 		GameRegistry.addSmelting(ModItems.ingot_chainsteel, ItemHot.heatUp(new ItemStack(ModItems.ingot_chainsteel)), 0.0F);
 		GameRegistry.addSmelting(ModItems.ingot_meteorite, ItemHot.heatUp(new ItemStack(ModItems.ingot_meteorite)), 0.0F);

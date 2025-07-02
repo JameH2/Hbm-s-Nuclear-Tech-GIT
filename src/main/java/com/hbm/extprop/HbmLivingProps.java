@@ -54,6 +54,7 @@ public class HbmLivingProps implements IExtendedEntityProperties {
 	public int fire;
 	public int phosphorus;
 	public int balefire;
+	public int blackFire;
 	private List<ContaminationEffect> contamination = new ArrayList();
 	private CBT_Atmosphere atmosphere;
 	private boolean gravity = false;
@@ -399,6 +400,7 @@ public class HbmLivingProps implements IExtendedEntityProperties {
 		props.setInteger("hfr_fire", fire);
 		props.setInteger("hfr_phosphorus", phosphorus);
 		props.setInteger("hfr_balefire", balefire);
+		props.setInteger("hfr_blackfire", blackFire);
 
 		props.setInteger("hfr_cont_count", this.contamination.size());
 
@@ -429,6 +431,7 @@ public class HbmLivingProps implements IExtendedEntityProperties {
 			fire = props.getInteger("hfr_fire");
 			phosphorus = props.getInteger("hfr_phosphorus");
 			balefire = props.getInteger("hfr_balefire");
+			blackFire = props.getInteger("hfr_blackfire");
 
 			int cont = props.getInteger("hfr_cont_count");
 

@@ -54,7 +54,8 @@ public class ItemEnums {
 		RARE,
 		MALACHITE,
 		CRYOLITE,
-		PENTLANDITE
+		PENTLANDITE,
+		MOONSTONE
 	}
 
 	public static enum EnumAchievementType {
