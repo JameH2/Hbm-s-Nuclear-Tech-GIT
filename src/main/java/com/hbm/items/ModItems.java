@@ -143,6 +143,7 @@ public class ModItems {
 	public static Item powder_ash;
 	public static Item powder_limestone;
 	public static Item powder_cement;
+	public static Item powder_salt;
 
 	public static Item niter;
 	public static Item ingot_copper;
@@ -2752,6 +2753,7 @@ public class ModItems {
 		powder_ash = new ItemEnumMulti(EnumAshType.class, true, true).setUnlocalizedName("powder_ash").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_ash");
 		powder_limestone = new Item().setUnlocalizedName("powder_limestone").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_limestone");
 		powder_cement = new ItemLemon(2, 0.5F, false).setUnlocalizedName("powder_cement").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_cement");
+		powder_salt = new Item().setUnlocalizedName("powder_salt").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_salt");
 
 		ingot_gh336 = new ItemCustomLore().setRarity(EnumRarity.epic).setUnlocalizedName("ingot_gh336").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":ingot_gh336");
 		nugget_gh336 = new ItemCustomLore().setRarity(EnumRarity.epic).setUnlocalizedName("nugget_gh336").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":nugget_gh336");

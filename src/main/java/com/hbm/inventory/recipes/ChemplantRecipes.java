@@ -97,6 +97,13 @@ public class ChemplantRecipes extends SerializableRecipe {
 						new OreDictStack(F.dust()))
 				.inputFluids(new FluidStack(Fluids.PETROLEUM, 500, GeneralConfig.enable528 ? 1 : 0))
 				.outputItems(new ItemStack(ModItems.ingot_polymer)));
+		recipes.add(new ChemRecipe(777, "salt", 200)
+				.inputFluids(new FluidStack(Fluids.WATER, 1000))
+				.outputItems(new ItemStack(ModItems.powder_salt)));
+		recipes.add(new ChemRecipe(778, "NaCl", 200)
+				.inputItems(new ItemStack(ModItems.powder_salt, 2))
+				.outputFluids(new FluidStack(Fluids.CHLORINE, 500))
+				.outputItems(new ItemStack(ModItems.powder_sodium)));
 		recipes.add(new ChemRecipe(81, "BAKELITE", 100)
 				.inputFluids(
 						new FluidStack(Fluids.AROMATICS, 500, GeneralConfig.enable528 ? 1 : 0),
