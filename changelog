@@ -1,10 +1,10 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5378 - yeag](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5378)
+Includes all changes and bugfixes from the latest upstream NTMain update - [X0001 - yeag](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X0001)
 
 ## Added
-* BK-247 RBMK fuel recipes (it was in the last update but I forgor)
+ * salt forever
 
 ## Changed
-* Changed one little datatype in UniNodespace for a 23x performance improvement on endgame bases!
+
 
 ## Fixed
-* New chemplant doesn't activate achievement, making vocaloid plushies unobtainable :o
+
