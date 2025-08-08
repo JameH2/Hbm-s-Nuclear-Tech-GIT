@@ -35,6 +35,9 @@ public class EntityFallingBlockNT extends Entity {
 	private float damageAmount;
 	public NBTTagCompound tileNBT;
 
+	// William Foster wants to order from the breakfast menu
+	public boolean fallingUp;
+
 	public EntityFallingBlockNT(World world) {
 		super(world);
 		this.canDrop = true;
@@ -71,27 +74,27 @@ public class EntityFallingBlockNT extends Entity {
 		this.dataWatcher.addObject(10, new Integer(0));
 		this.dataWatcher.addObject(11, new Integer(0));
 	}
-	
+
 	public Block getBlock() {
 		if(this.fallingBlock != null) return this.fallingBlock;
-		
+
 		this.fallingBlock = Block.getBlockById(this.dataWatcher.getWatchableObjectInt(10));
 		return this.fallingBlock;
 	}
-	
+
 	public int getMeta() {
 		if(this.fallingMeta != -1) return this.fallingMeta;
 		this.fallingMeta = 0;
-		
+
 		this.fallingMeta = this.dataWatcher.getWatchableObjectInt(11);
 		return this.fallingMeta;
 	}
-	
+
 	@Override protected boolean canTriggerWalking() { return false; }
 	@Override public boolean canBeCollidedWith() { return !this.isDead; }
 
 	public void onUpdate() {
-		
+
 		if(this.getBlock().getMaterial() == Material.air || this.getBlock() instanceof ISpotlight) {
 			this.setDead();
 		} else {
@@ -99,7 +102,7 @@ public class EntityFallingBlockNT extends Entity {
 			this.prevPosY = this.posY;
 			this.prevPosZ = this.posZ;
 			++this.fallingTicks;
-			this.motionY -= 0.04D;
+			this.motionY += fallingUp ? 0.01D : -0.04D;
 			this.moveEntity(this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.98D;
 			this.motionY *= 0.98D;
@@ -120,7 +123,9 @@ public class EntityFallingBlockNT extends Entity {
 					this.worldObj.setBlockToAir(x, y, z);
 				}
 
-				if(this.onGround) {
+				if(fallingUp) y++;
+
+				if(this.isCollidedVertically) {
 					this.motionX *= 0.7D;
 					this.motionZ *= 0.7D;
 					this.motionY *= -0.5D;
@@ -159,7 +164,7 @@ public class EntityFallingBlockNT extends Entity {
 						}
 					}
 				} else if(this.fallingTicks > 100 && !this.worldObj.isRemote && (y < 1 || y > 256) || this.fallingTicks > 600) {
-					if(this.canDrop && this.getBlock().getItemDropped(meta, rand, 0) != null) {
+					if(this.canDrop && y < 256 && this.getBlock().getItemDropped(meta, rand, 0) != null) {
 						this.entityDropItem(new ItemStack(this.getBlock().getItemDropped(meta, rand, 0), 1, this.getBlock().damageDropped(meta)), 0.0F);
 					}
 
@@ -168,14 +173,14 @@ public class EntityFallingBlockNT extends Entity {
 			}
 		}
 	}
-	
+
 	public boolean replacementCheck(int x, int y, int z) {
 		return worldObj.getBlock(x, y, z).isReplaceable(worldObj, x, y, z) && this.getBlock().canBlockStay(worldObj, x, y, z);
 	}
 
 	@Override
 	protected void fall(float fallDistance) {
-		
+
 		if(this.canHurtEntities) {
 			int fall = MathHelper.ceiling_float_int(fallDistance - 1.0F);
 
@@ -215,6 +220,7 @@ public class EntityFallingBlockNT extends Entity {
 		nbt.setBoolean("HurtEntities", this.canHurtEntities);
 		nbt.setFloat("FallHurtAmount", this.damageAmount);
 		nbt.setInteger("FallHurtMax", this.damageCap);
+		nbt.setBoolean("FallingUp", fallingUp);
 
 		if(this.tileNBT != null) {
 			nbt.setTag("TileEntityData", this.tileNBT);
@@ -223,7 +229,7 @@ public class EntityFallingBlockNT extends Entity {
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		
+
 		if(nbt.hasKey("TileID", 99)) {
 			this.fallingBlock = Block.getBlockById(nbt.getInteger("TileID"));
 		} else {
@@ -252,6 +258,8 @@ public class EntityFallingBlockNT extends Entity {
 		if(this.fallingBlock.getMaterial() == Material.air) {
 			this.fallingBlock = Blocks.sand;
 		}
+
+		this.fallingUp = nbt.getBoolean("FallingUp");
 	}
 
 	public void func_145806_a(boolean p_145806_1_) {
