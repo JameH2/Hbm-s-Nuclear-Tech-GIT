@@ -6590,15 +6590,15 @@ tile.dres_rock.name=Камень Дреса
 tile.bromine_block.name=Смесь алкилбромидов
 
 // Laythe //
-tile.laythe_silt.name=Ил Лейта
+tile.laythe_silt.name=Ил Лейт
 tile.stalactite.flesh.name=Свисающие волокна плоти
 tile.stalagmite.flesh.name=Растущие волокна плоти
-tile.plant_tall_laythe.laythe.name=Высокая морская трава Лейта
-tile.laythe_kelp.name=Ламинария Лейта
-tile.laythe_seagrass.name=Морская трава Лейта
+tile.plant_tall_laythe.laythe.name=Высокая морская трава Лейт
+tile.laythe_kelp.name=Ламинария Лейт
+tile.laythe_seagrass.name=Морская трава Лейт
 tile.laythe_glowgrass.name=Светящаяся трава Лейиа
-tile.laythe_coral.name=Корал Лейта
-tile.laythe_coral_block.name=Блок коралов Лейта
+tile.laythe_coral.name=Корал Лейт
+tile.laythe_coral_block.name=Блок коралов Лейт
 tile.tumor.name=Мясистая масса
 
 // Tekto
