@@ -6604,7 +6604,7 @@ tile.tumor.name=Мясистая масса
 // Tekto
 tile.ore_tekto.name=Тектифтовый карман
 tile.ore_tekto_empty.name=Пустой тектифтовый карман
-tile.orrery.name=Оррери
+tile.orrery.name=Планетарий
 tile.pet_leaves.name=Пластиковые листья
 tile.pvc_log.name=ПВХ-бревно
 tile.rubber_farmland.name=Пашня Текто
