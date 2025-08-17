@@ -6621,7 +6621,7 @@ tile.vinyl_vine.name=Виниловые лозы
 tile.crop_paraffin=Воскоцвет
 
 // Blocks //
-tile.geysir_vapor.name=Ослабленный гезер
+tile.geysir_vapor.name=Ослабленный гейзер
 tile.geysir_volcanic.name=Вулканический гейзер
 tile.plant_flower.strawberry.name=Куст дикой клубники
 tile.crop_coffee.name=Кофе
@@ -6667,7 +6667,7 @@ tile.machine_htrf4.name=Ракетный двигатель HTR-F4
 tile.nuke_antimatter.name=Антиматериальная бомба
 container.nukeAntimatter=Антиматериальная бомба
 tile.rbmk_burner.name=Жидкостный прогреватель РБМК
-tile.capacitor_complex.name=Конденсатор на Волновой функция
+tile.capacitor_complex.name=Конденсатор на Волновой функции
 tile.machine_vacuum_circuit.name=Вакуумный паяльный стол
 tile.machine_vacuum_circuit.desc=Требуется практически полный вакуум для функционирования.
 container.machineVacuumCircuit=ВПС
