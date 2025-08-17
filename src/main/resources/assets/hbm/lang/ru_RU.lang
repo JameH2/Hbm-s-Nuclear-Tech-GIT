@@ -7051,7 +7051,7 @@ entity.entity_scutterfish.name=Скаттер
 entity.entity_scuttlecrab.name=Краб-бегун
 entity.entity_siftereel.name=Угорь-просейщик
 entity.entity_tankbot.name=Танкбот
-entity.entity_war_behemoth.name=Стальной бегемот
+entity.entity_war_behemoth.name=Стальной колосс
 
 // Templates (Old) //
 chem.ANIMAN=Синтез литературного ужаса
