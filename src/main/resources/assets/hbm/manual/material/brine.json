@@ -1,0 +1,11 @@
+{
+	"name": "Brine",
+	"icon": ["hbm:item.fluid_icon", 1, 162],
+    "trigger": [["hbm:item.fluid_icon", 1, 162]],
+    "title": {
+        "en_US": "Brine"
+    },
+	"content": {
+		"en_US": "Brine is obtained on the moons: Mun, Minmus, and Ike. used mostly in the production of [[nickel|Nickel]]. Obtained via fluid extraction with a [[derrick|Derrick]]."
+	}
+}

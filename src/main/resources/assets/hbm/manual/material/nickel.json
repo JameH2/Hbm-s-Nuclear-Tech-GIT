@@ -1,0 +1,11 @@
+{
+	"name": "Nickel",
+	"icon": ["hbm:item.ingot_nickel", 1, 0],
+    "trigger": [["hbm:item.ingot_nickel"], ["hbm:item.plate_nickel"], ["hbm:item.powder_nickel"]],
+    "title": {
+        "en_US": "Nickel"
+    },
+	"content": {
+		"en_US": "Nickel is obtained in the form of pentlandite everywhere in space except Earth. used mostly in the production of [[stainless steel|Stainless Steel]]. Obtained by purifying pentlandite with [[brine|Brine]]."
+	}
+}

@@ -9,7 +9,7 @@ public class WorldProviderEarth extends WorldProviderCelestial {
 
 	@Override
 	public String getDimensionName() {
-		return "Earth";
+		return "Overworld";
 	}
 
 	@Override

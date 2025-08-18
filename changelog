@@ -1,20 +1,11 @@
-## Added
-* Vinyl and PVC planks
-* Vinyl sticks
-* A bunch more crafting recipes for vinyl and PVC logs
+Includes all changes and bugfixes from the latest upstream NTMain update - [X5425 - we got QMAW to work (i think)](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5425)
 
-## Changed
-* Heavy boots can now be worn on their own
-    * Has a player model when not attached to armor
-* Updated Russian translation
-* Tekto logs now oredicted as regular logs
+## Added
+* QMAW articles for:
+    * Stainless Steel
+    * Nickel
+    * Brine
 
 ## Fixed
-* Poor skybox rendering performance, particularly in orbit
-    * Improved: down from 17,728ms over 60s to 76ms!
-* Rain in orbit
-* Rubber farmland turning into regular dirt when trampled
-* A bunch of broken localisations
-* Crash on servers
-* Crash with invalid ores in bedrock ore processor
-* Debug wand behaviour restored
+* #315 - Hodgepodge simulation distance option breaking rocket dimension switches (fixed for reals this time)
+* #317 - Unexpected dimension name for Overworld breaking GT ore generation

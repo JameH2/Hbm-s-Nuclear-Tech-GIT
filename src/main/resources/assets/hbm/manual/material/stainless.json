@@ -1,0 +1,11 @@
+{
+	"name": "Stainless Steel",
+	"icon": ["hbm:item.ingot_stainless", 1, 0],
+    "trigger": [["hbm:item.ingot_stainless"], ["hbm:item.plate_stainless"]],
+    "title": {
+        "en_US": "Stainless Steel"
+    },
+	"content": {
+		"en_US": "Steel mixed with nickel to improve corrosion resistance, space-grade material. Used in most space-grade machinery. Obtained by combining [[steel|Steel]] and [[nickel|Nickel]] in a [[blast furnace|Blast Furnace]] or a [[crucible|Crucible]]."
+	}
+}
