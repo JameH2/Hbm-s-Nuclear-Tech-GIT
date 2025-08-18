@@ -95,13 +95,12 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+		TileEntityPlushie plushie = (TileEntityPlushie) world.getTileEntity(x, y, z);
 
 		if(world.isRemote) {
-			TileEntityPlushie plushie = (TileEntityPlushie) world.getTileEntity(x, y, z);
 			plushie.squishTimer = 11;
 			return true;
 		} else {
-			TileEntityPlushie plushie = (TileEntityPlushie) world.getTileEntity(x, y, z);
 			if(plushie != null) {
 				world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, plushie.type.sound, 0.25F, 1F);
 			}
@@ -161,7 +160,7 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 		NONE(		"NONE",				null, null),
 		YOMI(		"Yomi",				"Hi! Can I be your rabbit friend?", "hbm:block.squeakyToy"),
 		NUMBERNINE(	"Number Nine",		"None of y'all deserve coal.", "hbm:block.squeakyToy"),
-		POOH(		"Winnie the Pooh",	"Beloved children's character with no malicious intent.", "hbm:block.squeakyToy"),
+		HUNDUN(		"Hundun",				"混沌", "hbm:block.hunduns_magnificent_howl"),
 		TETO(		"Kasane Teto",		"please help I've been trapped in her basement for da-", "hbm:block.teto"),
 		MIKU(		"Hatsune Miku",		"In your wifi, and your heart.", "hbm:block.miku"),
 		NERU(		"Akita Neru",			"Careful, she might electrocute you.", "hbm:block.akita");

@@ -12,7 +12,7 @@
 	"misc.htrstop": {"category": "player", "sounds": [{"name": "misc/htrstop", "stream": false}]},
 	"misc.htrloop": {"category": "player", "sounds": [{"name": "misc/htrloop", "stream": false}]},
 	"misc.fireflash": {"category": "player", "sounds": [{"name": "misc/flashfire", "stream": false}]},
-	
+
 	"misc.spinshot": {"category": "block", "sounds": ["misc/spinshot1", "misc/spinshot2"]},
 	"misc.spincharge": {"category": "block", "sounds": [{"name": "misc/spincharge", "stream": false}]},
 
@@ -79,6 +79,7 @@
     "block.hephaestusRunning": {"category": "block", "sounds": [{"name": "block/hephaestusRunning", "stream": false}]},
     "block.squeakyToy": {"category": "block", "sounds": [{"name": "block/squeakyToy", "stream": false}]},
     "block.squeakyPain": {"category": "block", "sounds": [{"name": "block/squeakyPain", "stream": false}]},
+    "block.hunduns_magnificent_howl": {"category": "block", "sounds": [{"name": "block/hunduns_magnificent_howl", "stream": false}]},
     "block.pyroOperate": {"category": "block", "sounds": [{"name": "block/pyroOperate", "stream": false}]},
     "block.motor": {"category": "block", "sounds": [{"name": "block/motor", "stream": false}]},
     "block.engine": {"category": "block", "sounds": [{"name": "block/engine", "stream": false}]},
