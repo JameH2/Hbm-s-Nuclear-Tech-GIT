@@ -123,7 +123,7 @@ public class ModItems {
 	public static Item ingot_cobalt;
 	public static Item ingot_gallium;
 	public static Item ingot_zinc;
-	public static Item ingot_platnium;
+	public static Item ingot_platinum;
 	public static Item ingot_gaas;
 	public static Item ingot_iridium;
 	public static Item sulfur;
@@ -228,7 +228,7 @@ public class ModItems {
 	public static Item nugget_nickel;
 	public static Item nugget_zinc;
 	public static Item nugget_gallium;
-	public static Item nugget_platnium;
+	public static Item nugget_platinum;
 	public static Item nugget_gaas;
 	public static Item nugget_mercury;
 	public static Item ingot_mercury; //It's to prevent any ambiguity, as it was treated as a full ingot in the past anyway
@@ -569,7 +569,7 @@ public class ModItems {
 	public static Item powder_gallium;
 	public static Item powder_zinc;
 	public static Item powder_tungsten;
-	public static Item powder_platnium;
+	public static Item powder_platinum;
 	public static Item powder_uranium;
 	public static Item powder_plutonium;
 	public static Item dust;
@@ -2833,9 +2833,9 @@ public class ModItems {
 		nugget_zinc = new Item().setUnlocalizedName("nugget_zinc").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":nugget_zinc");
 		ingot_zinc = new Item().setUnlocalizedName("ingot_zinc").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":ingot_zinc");
 		powder_zinc = new Item().setUnlocalizedName("powder_zinc").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_zinc");
-		nugget_platnium = new Item().setUnlocalizedName("nugget_platnium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":nugget_platnium");
-		ingot_platnium = new Item().setUnlocalizedName("ingot_platnium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":ingot_platnium");
-		powder_platnium = new Item().setUnlocalizedName("powder_platnium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_platnium");
+		nugget_platinum = new Item().setUnlocalizedName("nugget_platinum").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":nugget_platinum");
+		ingot_platinum = new Item().setUnlocalizedName("ingot_platinum").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":ingot_platinum");
+		powder_platinum = new Item().setUnlocalizedName("powder_platinum").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_platinum");
 		nugget_niobium = new Item().setUnlocalizedName("nugget_niobium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":nugget_niobium");
 		ingot_osmiridium = new ItemCustomLore().setRarity(EnumRarity.rare).setUnlocalizedName("ingot_osmiridium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":ingot_osmiridium");
 		nugget_osmiridium = new ItemCustomLore().setRarity(EnumRarity.rare).setUnlocalizedName("nugget_osmiridium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":nugget_osmiridium");
@@ -5489,7 +5489,7 @@ public class ModItems {
 		GameRegistry.registerItem(ingot_gaas, ingot_gaas.getUnlocalizedName());
 		GameRegistry.registerItem(ingot_tt, ingot_tt.getUnlocalizedName());
 		GameRegistry.registerItem(ingot_ttas, ingot_ttas.getUnlocalizedName());
-		GameRegistry.registerItem(ingot_platnium, ingot_platnium.getUnlocalizedName());
+		GameRegistry.registerItem(ingot_platinum, ingot_platinum.getUnlocalizedName());
 		GameRegistry.registerItem(ingot_iridium, ingot_iridium.getUnlocalizedName());
 		GameRegistry.registerItem(ingot_palladium, ingot_palladium.getUnlocalizedName());
 		GameRegistry.registerItem(ingot_aluminium, ingot_aluminium.getUnlocalizedName());
@@ -5697,7 +5697,7 @@ public class ModItems {
 		GameRegistry.registerItem(powder_nickel, powder_nickel.getUnlocalizedName());
 		GameRegistry.registerItem(powder_copper, powder_copper.getUnlocalizedName());
 		GameRegistry.registerItem(powder_zinc, powder_zinc.getUnlocalizedName());
-		GameRegistry.registerItem(powder_platnium, powder_platnium.getUnlocalizedName());
+		GameRegistry.registerItem(powder_platinum, powder_platinum.getUnlocalizedName());
 		GameRegistry.registerItem(powder_gallium_tiny, powder_gallium_tiny.getUnlocalizedName());
 		GameRegistry.registerItem(powder_gallium, powder_gallium.getUnlocalizedName());
 		GameRegistry.registerItem(powder_red_copper, powder_red_copper.getUnlocalizedName());
@@ -5946,7 +5946,7 @@ public class ModItems {
 		GameRegistry.registerItem(nugget_les, nugget_les.getUnlocalizedName());
 		GameRegistry.registerItem(nugget_zirconium, nugget_zirconium.getUnlocalizedName());
 		GameRegistry.registerItem(nugget_nickel, nugget_nickel.getUnlocalizedName());
-		GameRegistry.registerItem(nugget_platnium, nugget_platnium.getUnlocalizedName());
+		GameRegistry.registerItem(nugget_platinum, nugget_platinum.getUnlocalizedName());
 		GameRegistry.registerItem(nugget_gaas, nugget_gaas.getUnlocalizedName());
 		GameRegistry.registerItem(nugget_zinc, nugget_zinc.getUnlocalizedName());
 		GameRegistry.registerItem(nugget_gallium, nugget_gallium.getUnlocalizedName());

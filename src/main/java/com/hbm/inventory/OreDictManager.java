@@ -245,7 +245,7 @@ public class OreDictManager {
 	public static final DictFrame ZI = new DictFrame("Zinc");
 	public static final DictFrame GALLIUM = new DictFrame("Gallium");
 	public static final DictFrame GAAS = new DictFrame("GalliumArsenide");
-	public static final DictFrame PLATNIUM = new DictFrame("Platnium"); //ah shit forgot this was in the mod
+	public static final DictFrame PLATINUM = new DictFrame("Platinum"); //ah shit forgot this was in the mod
 
 	public static final DictFrame MIN = new DictFrame("Mineral");
 	/*
@@ -488,7 +488,7 @@ public class OreDictManager {
 		ZI			.nugget(nugget_zinc)									.ingot(ingot_zinc)													.dust(powder_zinc)		.oreAll(ore_zinc);
 		GALLIUM		.nugget(nugget_gallium)									.ingot(ingot_gallium)												.dust(powder_gallium)		.dustSmall(powder_gallium_tiny);
 		GAAS		.nugget(nugget_gaas)									.ingot(ingot_gaas)													.billet(billet_gaas);
-		PLATNIUM	.nugget(nugget_platnium)								.ingot(ingot_platnium)												.dust(powder_platnium);
+		PLATINUM	.nugget(nugget_platinum)								.ingot(ingot_platinum)												.dust(powder_platinum);
 		HAFNIUM		.nugget(nugget_hafnium)									.ingot(ingot_hafnium);
 		IRIDIUM		.ingot(ingot_iridium);
 
