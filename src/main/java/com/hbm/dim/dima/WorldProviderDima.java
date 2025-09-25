@@ -45,6 +45,15 @@ public class WorldProviderDima extends WorldProviderCelestial {
 		return new SkyProviderDima();
 	}
 
+	private IRenderHandler weatherProvider;
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IRenderHandler getWeatherRenderer() {
+		if(weatherProvider == null) weatherProvider = new WeatherProviderDima();
+		return weatherProvider;
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Vec3 getFogColor(float solarAngle, float y) {

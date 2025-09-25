@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.List;
 
 import com.hbm.config.GeneralConfig;
+import com.hbm.config.SpaceConfig;
 import com.hbm.dim.SolarSystem.AstroMetric;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
@@ -109,7 +110,7 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 		// Will prevent water from existing, will be unset immediately before using a bucket if inside a pressurized room
 		isHellWorld = !worldObj.isRemote && pressure <= 0.2F && !Loader.isModLoaded(Compat.MOD_COFH);
 
-		if(pressure > 0.5F) {
+		if(pressure > 0.5F || worldObj.provider.dimensionId == SpaceConfig.dimaDimension) {
 			super.updateWeather();
 			return;
 		}

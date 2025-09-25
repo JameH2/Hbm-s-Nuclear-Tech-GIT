@@ -20,7 +20,6 @@ public class BiomeGenDima extends BiomeGenBaseCelestial {
 	public BiomeGenDima(int id) {
 		super(id);
 		this.setBiomeName("Dima");
-		this.setDisableRain();
 
 		BiomeDecoratorCelestial decorator = new BiomeDecoratorCelestial(ModBlocks.dima_stone);
 		decorator.lakeChancePerChunk = 8;
