@@ -37,6 +37,17 @@ public class WorldGeneratorDima implements IWorldGenerator {
 		// anomaly.posZ = j;
 
 		// world.spawnEntityInWorld(anomaly);
+
+		// fire that floats on occasion
+		{
+			int x = i + rand.nextInt(16);
+			int z = j + rand.nextInt(16);
+			int y = world.getHeightValue(x, z);
+
+			if(rand.nextInt(10) == 0) y += rand.nextInt(6);
+
+			world.setBlock(x, y, z, ModBlocks.fire_digamma);
+		}
 	}
 
 }
