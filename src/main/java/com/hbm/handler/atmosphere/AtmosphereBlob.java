@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.config.GeneralConfig;
 import com.hbm.dim.trait.CBT_Atmosphere;
+import com.hbm.entity.effect.EntityDepress;
 import com.hbm.handler.ThreeInts;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.main.MainRegistry;
@@ -51,6 +52,10 @@ public class AtmosphereBlob implements Runnable {
 
 	private boolean executing;
 	private ThreeInts blockPos;
+
+	// If true, run depressurization effects on blobbing failure
+	public boolean runDepress;
+	public ForgeDirection depressDir = ForgeDirection.UP;
 
 	private LinkedHashMap<ThreeInts, Integer> plants = new LinkedHashMap<>();
 
@@ -298,6 +303,9 @@ public class AtmosphereBlob implements Runnable {
 								stack.push(searchNextPosition);
 								addableBlocks.add(searchNextPosition);
 							} else {
+								// BANG HISSS
+								if(runDepress) decompress(blockPos, depressDir);
+
 								// Failed to seal, void
 								clearBlob();
 								executing = false;
@@ -343,6 +351,19 @@ public class AtmosphereBlob implements Runnable {
 			final Block block = world.getBlock(pos.x, pos.y, pos.z);
 			ChunkAtmosphereManager.proxy.runEffectsOnBlock(newAtmosphere, world, block, pos.x, pos.y, pos.z);
 		}
+	}
+
+	public void decompress(ThreeInts pos, ForgeDirection dir) {
+		World world = handler.getWorld();
+
+		EntityDepress depress = new EntityDepress(world, dir.getOpposite(), 20);
+		depress.posX = pos.x + 0.5;
+		depress.posY = pos.y + 0.5;
+		depress.posZ = pos.z + 0.5;
+		world.spawnEntityInWorld(depress);
+
+		world.playSoundEffect(depress.posX, depress.posY, depress.posZ, "random.explode", 1.0F, 1.6F);
+		world.playSoundEffect(depress.posX, depress.posY, depress.posZ, "random.fizz", 1.0F, 0.25F);
 	}
 
 	public void checkGrowth() {

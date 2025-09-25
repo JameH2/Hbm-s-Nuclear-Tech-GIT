@@ -353,19 +353,19 @@ public class TileEntityITER extends TileEntityMachineBase implements IEnergyRece
 	}
 
 	@Override
-	public boolean canExtractItem(int i, ItemStack itemStack, int j) {
-		return true;
+	public boolean canExtractItem(int slot, ItemStack stack, int side) {
+		return slot == 2 || slot == 4; // only allow removing breeder outputs <- ?????
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int p_94128_1_) {
+	public int[] getAccessibleSlotsFromSide(int side) {
 		return new int[] { 1, 2, 4 };
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+	public boolean isItemValidForSlot(int i, ItemStack stack) {
 
-		if(i == 1 && BreederRecipes.getOutput(itemStack) != null)
+		if(i == 1 && BreederRecipes.getOutput(stack) != null)
 			return true;
 
 		return false;
@@ -717,14 +717,14 @@ public class TileEntityITER extends TileEntityMachineBase implements IEnergyRece
 
 	@Override
 	public String runRORFunction(String name, String[] params) {
-		
+
 		if((PREFIX_FUNCTION + "toggle").equals(name)) {
 			this.isOn = !this.isOn;
 			this.markChanged();
 			return null;
 		}
-			
-		
+
+
 		if((PREFIX_FUNCTION + "switch").equals(name) && params.length > 0) {
 			if("on".equals(params[0])) {
 				this.isOn = true;
@@ -737,7 +737,7 @@ public class TileEntityITER extends TileEntityMachineBase implements IEnergyRece
 				return null;
 			}
 		}
-		
+
 		return null;
 	}
 }

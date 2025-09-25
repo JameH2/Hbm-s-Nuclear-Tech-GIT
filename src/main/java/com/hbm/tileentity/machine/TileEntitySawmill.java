@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.projectile.EntitySawblade;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.inventory.RecipesCommon.OreDictStack;
+import com.hbm.inventory.OreDictManager;
+import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -24,6 +26,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -32,6 +35,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class TileEntitySawmill extends TileEntityMachineBase {
 
@@ -71,14 +75,15 @@ public class TileEntitySawmill extends TileEntityMachineBase {
 					if(result != null) {
 						progress += heat / 10;
 
-						if(progress >= this.processingTime) {
+						if(progress >= processingTime) {
 							progress = 0;
 							slots[0] = null;
 							slots[1] = result;
 
-							if(result.getItem() != ModItems.powder_sawdust) {
-								float chance = result.getItem() == Items.stick ? 0.1F : 0.5F;
-								if(worldObj.rand.nextFloat() < chance) {
+							float sawdustChance = sawdustChance(result);
+
+							if(sawdustChance > 0) {
+								if(worldObj.rand.nextFloat() < sawdustChance) {
 									slots[2] = new ItemStack(ModItems.powder_sawdust);
 								}
 							}
@@ -233,14 +238,48 @@ public class TileEntitySawmill extends TileEntityMachineBase {
 		return new int[] {0, 1, 2};
 	}
 
+	public float sawdustChance(ItemStack result) {
+		Item item = result.getItem();
+		Block block = Block.getBlockFromItem(item);
+		if(item == ModItems.powder_sawdust) return 0;
+		if(item == ModItems.stick_pvc || item == ModItems.stick_vinyl) return 0;
+		if(block == ModBlocks.vinyl_planks || block == ModBlocks.pvc_planks) return 0;
+		if(block == ModBlocks.vinyl_log || block == ModBlocks.pvc_log) return 0;
+		if(item == Items.stick) return 0.1F;
+		return 0.5F;
+	}
+
 	public ItemStack getOutput(ItemStack input) {
 
 		if(input == null)
 			return null;
 
+		Block block = Block.getBlockFromItem(input.getItem());
+
 		craftingInventory.setInventorySlotContents(0, input);
 
 		List<String> names = ItemStackUtil.getOreDictNames(input);
+
+		if(input.getItem() == ModItems.stick_vinyl) {
+			return new ItemStack(ModItems.dust);
+		}
+		if(input.getItem() == ModItems.stick_pvc) {
+			return new ItemStack(ModItems.dust);
+		}
+
+		if(block == ModBlocks.vinyl_planks) {
+			return new ItemStack(ModItems.stick_vinyl, 6);
+		}
+		if(block == ModBlocks.pvc_planks) {
+			return new ItemStack(ModItems.stick_vinyl, 6);
+		}
+
+		if(block == ModBlocks.vinyl_log) {
+			return new ItemStack(ModBlocks.vinyl_planks, 4 * 6 / 4);
+		}
+		if(block == ModBlocks.pvc_log) {
+			return new ItemStack(ModBlocks.pvc_planks, 4 * 6 / 4);
+		}
 
 		if(names.contains("stickWood")) {
 			return new ItemStack(ModItems.powder_sawdust);
@@ -275,10 +314,42 @@ public class TileEntitySawmill extends TileEntityMachineBase {
 
 		HashMap<Object, Object[]> recipes = new HashMap<Object, Object[]>();
 
-		recipes.put(new OreDictStack("logWood"), new ItemStack[] { new ItemStack(Blocks.planks, 6), ItemStackUtil.addTooltipToStack(new ItemStack(ModItems.powder_sawdust), EnumChatFormatting.RED + "50%") });
-		recipes.put(new OreDictStack("plankWood"), new ItemStack[] { new ItemStack(Items.stick, 6), ItemStackUtil.addTooltipToStack(new ItemStack(ModItems.powder_sawdust), EnumChatFormatting.RED + "10%") });
-		recipes.put(new OreDictStack("stickWood"), new ItemStack[] { new ItemStack(ModItems.powder_sawdust) });
-		recipes.put(new OreDictStack("treeSapling"), new ItemStack[] { new ItemStack(Items.stick, 1), ItemStackUtil.addTooltipToStack(new ItemStack(ModItems.powder_sawdust), EnumChatFormatting.RED + "10%") });
+		// Overrides
+		recipes.put(new ComparableStack(ModBlocks.vinyl_log), new ItemStack[] { new ItemStack(ModBlocks.vinyl_planks, 6)});
+		recipes.put(new ComparableStack(ModBlocks.pvc_log), new ItemStack[] { new ItemStack(ModBlocks.pvc_planks, 6)});
+
+		recipes.put(new ComparableStack(ModItems.stick_vinyl), new ItemStack[] { new ItemStack(ModItems.dust)});
+		recipes.put(new ComparableStack(ModItems.stick_pvc), new ItemStack[] { new ItemStack(ModItems.dust)});
+
+		recipes.put(new ComparableStack(ModBlocks.vinyl_planks), new ItemStack[] { new ItemStack(ModItems.stick_vinyl, 6)});
+		recipes.put(new ComparableStack(ModBlocks.pvc_planks), new ItemStack[] { new ItemStack(ModItems.stick_pvc, 6)});
+
+		// Generics
+		List<ItemStack> logs = OreDictionary.getOres(OreDictManager.KEY_LOG);
+		List<ItemStack> planks = OreDictionary.getOres(OreDictManager.KEY_PLANKS);
+		List<ItemStack> sticks = OreDictionary.getOres(OreDictManager.KEY_STICK);
+		List<ItemStack> saplings = OreDictionary.getOres(OreDictManager.KEY_SAPLING);
+
+		for(ItemStack log : logs) {
+			ComparableStack stack = new ComparableStack(log);
+			if(recipes.containsKey(stack)) continue;
+			recipes.put(stack, new ItemStack[] { new ItemStack(Blocks.planks, 6), ItemStackUtil.addTooltipToStack(new ItemStack(ModItems.powder_sawdust), EnumChatFormatting.RED + "50%") });
+		}
+		for(ItemStack plank : planks) {
+			ComparableStack stack = new ComparableStack(plank);
+			if(recipes.containsKey(stack)) continue;
+			recipes.put(stack, new ItemStack[] { new ItemStack(Items.stick, 6), ItemStackUtil.addTooltipToStack(new ItemStack(ModItems.powder_sawdust), EnumChatFormatting.RED + "10%") });
+		}
+		for(ItemStack stick : sticks) {
+			ComparableStack stack = new ComparableStack(stick);
+			if(recipes.containsKey(stack)) continue;
+			recipes.put(stack, new ItemStack[] { new ItemStack(ModItems.powder_sawdust) });
+		}
+		for(ItemStack sapling : saplings) {
+			ComparableStack stack = new ComparableStack(sapling);
+			if(recipes.containsKey(stack)) continue;
+			recipes.put(stack, new ItemStack[] { new ItemStack(Items.stick, 1), ItemStackUtil.addTooltipToStack(new ItemStack(ModItems.powder_sawdust), EnumChatFormatting.RED + "10%") });
+		}
 
 		return recipes;
 	}

@@ -14,6 +14,7 @@ import com.hbm.config.SpaceConfig;
 import com.hbm.dim.BiomeDecoratorCelestial;
 import com.hbm.dim.BiomeGenBaseCelestial;
 import com.hbm.entity.mob.EntityScutterfish;
+import com.hbm.entity.mob.EntitySifterEel;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -33,8 +34,9 @@ public abstract class BiomeGenBaseLaythe extends BiomeGenBaseCelestial {
 		super(id);
 		this.waterColorMultiplier = 0x5b009a;
 
-		this.waterCreatures.add(new BiomeGenBase.SpawnListEntry(EntityScutterfish.class, 1, 1, 4));
-
+		this.waterCreatures.add(new BiomeGenBase.SpawnListEntry(EntityScutterfish.class, 10, 4, 4));
+		this.waterCreatures.add(new BiomeGenBase.SpawnListEntry(EntitySifterEel.class, 10, 1, 3));
+		
 		BiomeDecoratorCelestial decorator = new BiomeDecoratorCelestial(Blocks.stone);
 		decorator.waterPlantsPerChunk = 32;
 		// decorator.seaLevel = 96;

@@ -216,20 +216,7 @@ public class ShredderRecipes extends SerializableRecipe {
 
 		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.ore_mineral, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.mineral_dust, 1)); // it was deserved
 
-
 		ShredderRecipes.setRecipe(ModItems.bean_roast,  new ItemStack(ModItems.powder_coffee, 1));
-
-		//BYPRODUCTS
-		//ShredderRecipes.setRecipe(new ItemStack(ModItems.ore_byproduct, 1, 0), new ItemStack(ModItems.powder_iron, 10));
-		//ShredderRecipes.setRecipe(new ItemStack(ModItems.ore_byproduct, 1, 1), new ItemStack(ModItems.powder_copper, 10));
-		//ShredderRecipes.setRecipe(new ItemStack(ModItems.ore_byproduct, 1, 2), new ItemStack(ModItems.powder_lithium, 10));
-		//ShredderRecipes.setRecipe(new ItemStack(ModItems.ore_byproduct, 1, 3), new ItemStack(ModItems.powder_quartz, 8));
-		//ShredderRecipes.setRecipe(new ItemStack(ModItems.ore_byproduct, 1, 4), new ItemStack(ModItems.powder_lead, 6));
-		//ShredderRecipes.setRecipe(new ItemStack(ModItems.ore_byproduct, 1, 5), new ItemStack(ModItems.powder_titanium, 9));
-		//ShredderRecipes.setRecipe(new ItemStack(ModItems.ore_byproduct, 1, 6), new ItemStack(ModItems.powder_aluminium, 12));
-	//	ShredderRecipes.setRecipe(new ItemStack(ModItems.ore_byproduct, 1, 7), new ItemStack(ModItems.sulfur, 6));
-		//ShredderRecipes.setRecipe(new ItemStack(ModItems.ore_byproduct, 1, 8), new ItemStack(Items.bone, 4));
-		//ShredderRecipes.setRecipe(new ItemStack(ModItems.ore_byproduct, 2, 9), new ItemStack(ModItems.nugget_bismuth, 1));
 
 		ShredderRecipes.setRecipe(DictFrame.fromOne(ModBlocks.stone_resource, EnumStoneType.LIMESTONE), new ItemStack(ModItems.powder_calcium, 4));
 		ShredderRecipes.setRecipe(DictFrame.fromOne(ModBlocks.stone_resource, EnumStoneType.CALCIUM), new ItemStack(ModItems.powder_calcium, 6));
@@ -240,9 +227,14 @@ public class ShredderRecipes extends SerializableRecipe {
 		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.ore_aluminium, 1, OreDictionary.WILDCARD_VALUE), DictFrame.fromOne(ModItems.chunk_ore, EnumChunkType.CRYOLITE, 2));
 		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.ore_nickel, 1, OreDictionary.WILDCARD_VALUE), DictFrame.fromOne(ModItems.chunk_ore, EnumChunkType.PENTLANDITE, 2));
 
-		List<ItemStack> logs = OreDictionary.getOres("logWood");
-		List<ItemStack> planks = OreDictionary.getOres("plankWood");
-		List<ItemStack> saplings = OreDictionary.getOres("treeSapling");
+		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.vinyl_log), new ItemStack(ModItems.powder_rubber, 4));
+		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.pvc_log), new ItemStack(ModItems.powder_pvc, 4));
+		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.vinyl_planks), new ItemStack(ModItems.powder_rubber, 1));
+		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.pvc_planks), new ItemStack(ModItems.powder_pvc, 1));
+
+		List<ItemStack> logs = OreDictionary.getOres(OreDictManager.KEY_LOG);
+		List<ItemStack> planks = OreDictionary.getOres(OreDictManager.KEY_PLANKS);
+		List<ItemStack> saplings = OreDictionary.getOres(OreDictManager.KEY_SAPLING);
 		List<ItemStack> stones = OreDictionary.getOres(OreDictManager.KEY_STONE);
 		List<ItemStack> cobbles = OreDictionary.getOres(OreDictManager.KEY_COBBLESTONE);
 		List<ItemStack> sands = OreDictionary.getOres(OreDictManager.KEY_SAND);

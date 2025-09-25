@@ -20,8 +20,8 @@ public class BiomeGenPolyvinylPlains extends BiomeGenBaseTekto {
 
 		this.setHeight(height);
 
-		this.topBlock = ModBlocks.sand_boron;
-		this.fillerBlock = ModBlocks.sand_boron;
+		this.topBlock = ModBlocks.rubber_grass;
+		this.fillerBlock = ModBlocks.rubber_silt;
 	}
 
 	@Override

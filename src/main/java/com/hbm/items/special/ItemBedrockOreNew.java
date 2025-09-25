@@ -176,90 +176,110 @@ public class ItemBedrockOreNew extends Item {
 	public static class CelestialBedrockOre {
 		// TODO: rebalance cryolite, Laythe gets regular aluminium for now
 		static {
-			//							primary							sulfuric							solvent							special(?)
+			//					primary						sulfuric					solvent						dcm
 			register(
 				SolarSystem.Body.KERBIN,
-				T("light",		o(MAT_IRON, 18),			o(MAT_COPPER, 9),			o(MAT_CRYOLITE, 6),		o(MAT_SODIUM, 3)),
-				T("heavy",		o(MAT_TUNGSTEN, 18),		o(MAT_TUNGSTEN, 9),			o(MAT_TUNGSTEN, 6),		o(MAT_ZINC, 3)),
-				T("nonmetal",	o(MAT_COAL, 18),			o(MAT_LIGNITE, 9),			o(MAT_SULFUR, 6),		o(MAT_KNO, 3)),
-				T("crystal",		o(MAT_ASBESTOS, 18),		o(MAT_DIAMOND, 9),			o(MAT_EMERALD, 6),		o(MAT_EMERALD, 3))
+				T("light",		o(MAT_IRON, 18),			o(MAT_COPPER, 9),			o(MAT_CRYOLITE, 6),			o(MAT_SODIUM, 3)),
+				T("heavy",		o(MAT_TUNGSTEN, 18),		o(MAT_TUNGSTEN, 9),			o(MAT_TUNGSTEN, 6),			o(MAT_ZINC, 3)),
+				T("nonmetal",	o(MAT_COAL, 18),			o(MAT_LIGNITE, 9),			o(MAT_SULFUR, 6),			o(MAT_KNO, 3)),
+				T("crystal",	o(MAT_REDSTONE, 18),		o(MAT_ASBESTOS, 9),			o(MAT_DIAMOND, 6),			o(MAT_EMERALD, 3))
 			);
 
 			register(
 				SolarSystem.Body.MUN,
-				T("light",		o(MAT_IRON, 18),			o(MAT_LITHIUM, 9),			o(MAT_SODIUM, 6),		o(MAT_CHLOROCALCITE, 3)),
-				T("heavy",		o(MAT_LEAD, 18),			o(MAT_ZINC, 9),				o(MAT_GOLD, 6),			o(MAT_BISMUTH, 3)),
-				T("rare",		o(MAT_COBALT, 18),		o(MAT_RAREEARTH, 9),		o(MAT_NEODYMIUM, 6),		o(MAT_STRONTIUM, 3)),
-				T("nonmetal",	o(MAT_SULFUR, 18),		o(MAT_FLUORITE, 9),			o(MAT_KNO, 6),			o(MAT_SILICON, 3)),
-				T("crystal",		o(MAT_REDSTONE, 18),		o(MAT_SODALITE, 9),			o(MAT_EMERALD, 6),		o(MAT_CINNABAR, 3))
+				T("light",		o(MAT_LITHIUM, 18),			o(MAT_IRON, 9),				o(MAT_SODIUM, 6),			o(MAT_CHLOROCALCITE, 3)),
+				T("heavy",		o(MAT_LEAD, 18),			o(MAT_ZINC, 9),				o(MAT_GOLD, 6),				o(MAT_BISMUTH, 3)),
+				T("rare",		o(MAT_COBALT, 18),			o(MAT_RAREEARTH, 9),		o(MAT_NEODYMIUM, 6),		o(MAT_STRONTIUM, 3)),
+				T("nonmetal",	o(MAT_SULFUR, 18),			o(MAT_FLUORITE, 9),			o(MAT_KNO, 6),				o(MAT_SILICON, 3)),
+				T("crystal",	o(MAT_QUARTZ, 18),			o(MAT_SODALITE, 9),			o(MAT_EMERALD, 6),			o(MAT_CINNABAR, 3))
 			);
 
 			register(
 				SolarSystem.Body.MINMUS,
-				T("light",		o(MAT_COPPER, 18),		o(MAT_TITANIUM, 9),			o(MAT_CHLOROCALCITE, 6),	o(MAT_COPPER, 3)),
-				T("heavy",		o(MAT_LEAD, 18),			o(MAT_GOLD, 9),				o(MAT_TUNGSTEN, 6),		o(MAT_BISMUTH, 3)),
-				T("rare",		o(MAT_ZIRCONIUM, 18),	o(MAT_BORON, 9),			o(MAT_COBALT, 6),		o(MAT_STRONTIUM, 3)),
-				T("nonmetal",	o(MAT_SULFUR, 18),		o(MAT_KNO, 9),				o(MAT_FLUORITE, 6),		o(MAT_SILICON, 3)),
-				T("crystal",		o(MAT_EMERALD, 18),		o(MAT_SODALITE, 9),			o(MAT_DIAMOND, 6),		o(MAT_EMERALD, 3))
+				T("light",		o(MAT_COPPER, 18),			o(MAT_TITANIUM, 9),			o(MAT_CHLOROCALCITE, 6),	o(MAT_COPPER, 3)),
+				T("heavy",		o(MAT_LEAD, 18),			o(MAT_GOLD, 9),				o(MAT_TUNGSTEN, 6),			o(MAT_BISMUTH, 3)),
+				T("rare",		o(MAT_ZIRCONIUM, 18),		o(MAT_BORON, 9),			o(MAT_COBALT, 6),			o(MAT_STRONTIUM, 3)),
+				T("nonmetal",	o(MAT_SULFUR, 18),			o(MAT_KNO, 9),				o(MAT_FLUORITE, 6),			o(MAT_SILICON, 3)),
+				T("crystal",	o(MAT_EMERALD, 18),			o(MAT_SODALITE, 9),			o(MAT_DIAMOND, 6),			o(MAT_EMERALD, 3))
 			);
 
 			register(
 				SolarSystem.Body.DUNA,
-				T("light",		o(MAT_IRON, 18),			o(MAT_NICKEL, 9),			o(MAT_TITANIUM, 6),		o(MAT_CHLOROCALCITE, 3)),
-				T("heavy",		o(MAT_BERYLLIUM, 18),	o(MAT_TUNGSTEN, 9),			o(MAT_ZINC, 6),			o(MAT_BISMUTH, 3)),
-				T("rare",		o(MAT_RAREEARTH, 18),	o(MAT_BORON, 9),			o(MAT_ZIRCONIUM, 6),		o(MAT_STRONTIUM, 3)),
-				T("actinide",	o(MAT_THORIUM, 18),		o(MAT_RADIUM, 9),			o(MAT_POLONIUM, 6),		o(MAT_U233, 3)),
-				T("nonmetal",	o(MAT_FLUORITE, 18),		o(MAT_SULFUR, 9),			o(MAT_SILICON, 6),		o(MAT_PHOSPHORUS, 3)),
-				T("crystal",		o(MAT_REDSTONE, 18),		o(MAT_CINNABAR, 9),			o(MAT_DIAMOND, 6),		o(MAT_MOLYSITE, 3))
+				T("light",		o(MAT_IRON, 18),			o(MAT_NICKEL, 9),			o(MAT_TITANIUM, 6),			o(MAT_CHLOROCALCITE, 3)),
+				T("heavy",		o(MAT_BERYLLIUM, 18),		o(MAT_TUNGSTEN, 9),			o(MAT_ZINC, 6),				o(MAT_BISMUTH, 3)),
+				T("rare",		o(MAT_RAREEARTH, 18),		o(MAT_BORON, 9),			o(MAT_ZIRCONIUM, 6),		o(MAT_STRONTIUM, 3)),
+				T("actinide",	o(MAT_THORIUM, 18),			o(MAT_RADIUM, 9),			o(MAT_POLONIUM, 6),			o(MAT_U233, 3)),
+				T("nonmetal",	o(MAT_FLUORITE, 18),		o(MAT_SULFUR, 9),			o(MAT_SILICON, 6),			o(MAT_PHOSPHORUS, 3)),
+				T("crystal",	o(MAT_REDSTONE, 18),		o(MAT_CINNABAR, 9),			o(MAT_DIAMOND, 6),			o(MAT_MOLYSITE, 3))
 			);
 
 			register(
 				SolarSystem.Body.MOHO,
-				T("light",		o(MAT_TITANIUM, 18),		o(MAT_CHLOROCALCITE, 9),	o(MAT_NICKEL, 6),		o(MAT_LITHIUM, 3)),
-				T("heavy",		o(MAT_GOLD, 18),			o(MAT_ZINC, 9),				o(MAT_LEAD, 6),			o(MAT_BISMUTH, 3)),
-				T("rare",		o(MAT_NEODYMIUM, 18),	o(MAT_ZIRCONIUM, 9),		o(MAT_BROMINE, 6),		o(MAT_STRONTIUM, 3)),
-				T("actinide",	o(MAT_AUSTRALIUM, 18),	o(MAT_AUSTRALIUM, 9),		o(MAT_TASMANITE, 6),		o(MAT_AYERITE, 3)),
-				T("nonmetal",	o(MAT_GLOWSTONE, 18),	o(MAT_PHOSPHORUS, 9),		o(MAT_SULFUR, 6),		o(MAT_PHOSPHORUS_W, 3)),
-				T("crystal",		o(MAT_CINNABAR, 18),		o(MAT_REDSTONE, 9),			o(MAT_QUARTZ, 6),		o(MAT_MOLYSITE, 3))
+				T("light",		o(MAT_TITANIUM, 18),		o(MAT_CHLOROCALCITE, 9),	o(MAT_NICKEL, 6),			o(MAT_LITHIUM, 3)),
+				T("heavy",		o(MAT_GOLD, 18),			o(MAT_ZINC, 9),				o(MAT_LEAD, 6),				o(MAT_BISMUTH, 3)),
+				T("rare",		o(MAT_NEODYMIUM, 18),		o(MAT_ZIRCONIUM, 9),		o(MAT_BROMINE, 6),			o(MAT_STRONTIUM, 3)),
+				T("actinide",	o(MAT_AUSTRALIUM, 18),		o(MAT_AUSTRALIUM, 9),		o(MAT_TASMANITE, 6),		o(MAT_AYERITE, 3)),
+				T("nonmetal",	o(MAT_GLOWSTONE, 18),		o(MAT_PHOSPHORUS, 9),		o(MAT_SULFUR, 6),			o(MAT_PHOSPHORUS_W, 3)),
+				T("crystal",	o(MAT_CINNABAR, 18),		o(MAT_REDSTONE, 9),			o(MAT_QUARTZ, 6),			o(MAT_MOLYSITE, 3))
 			);
 
 			register(
 				SolarSystem.Body.DRES,
-				T("light",		o(MAT_NICKEL, 18),		o(MAT_TITANIUM, 9),			o(MAT_CADMIUM, 6),		o(MAT_GALLIUM, 3)),
-				T("heavy",		o(MAT_ZINC, 18),			o(MAT_GOLD, 9),				o(MAT_BISMUTH, 6),		o(MAT_ARSENIC, 3)),
-				T("rare",		o(MAT_TANTALIUM, 18),	o(MAT_LANTHANIUM, 9),		o(MAT_NIOBIUM, 6),		o(MAT_STRONTIUM, 3)),
-				T("actinide",	o(MAT_URANIUM, 18),		o(MAT_RADIUM, 9),			o(MAT_TECHNETIUM, 6),	o(MAT_U238, 3)),
-				T("nonmetal",	o(MAT_SILICON, 18),		o(MAT_SILICON, 9),			o(MAT_FLUORITE, 6),		o(MAT_FLUORITE, 3)),
-				T("crystal",		o(MAT_DIAMOND, 18),		o(MAT_BORAX, 9),			o(MAT_MOLYSITE, 6),		o(MAT_MOLYSITE, 3))
+				T("light",		o(MAT_NICKEL, 18),			o(MAT_TITANIUM, 9),			o(MAT_CADMIUM, 6),			o(MAT_GALLIUM, 3)),
+				T("heavy",		o(MAT_ZINC, 18),			o(MAT_GOLD, 9),				o(MAT_BISMUTH, 6),			o(MAT_ARSENIC, 3)),
+				T("rare",		o(MAT_TANTALIUM, 18),		o(MAT_LANTHANIUM, 9),		o(MAT_NIOBIUM, 6),			o(MAT_STRONTIUM, 3)),
+				T("actinide",	o(MAT_URANIUM, 18),			o(MAT_RADIUM, 9),			o(MAT_TECHNETIUM, 6),		o(MAT_U238, 3)),
+				T("nonmetal",	o(MAT_SILICON, 18),			o(MAT_SILICON, 9),			o(MAT_FLUORITE, 6),			o(MAT_FLUORITE, 3)),
+				T("crystal",	o(MAT_DIAMOND, 18),			o(MAT_BORAX, 9),			o(MAT_MOLYSITE, 6),			o(MAT_MOLYSITE, 3))
 			);
 
 			register(
 				SolarSystem.Body.EVE,
-				T("light",		o(MAT_SODIUM, 18),		o(MAT_CHLOROCALCITE, 9),	o(MAT_IRON, 6),			o(MAT_CO60, 3)),
-				T("heavy",		o(MAT_TUNGSTEN, 18),		o(MAT_LEAD, 9),				o(MAT_ARSENIC, 6),		o(MAT_PB209, 3)),
-				T("rare",		o(MAT_NIOBIUM, 18),		o(MAT_STRONTIUM, 9),		o(MAT_IODINE, 6),		o(MAT_AU198, 3)),
-				T("actinide",	o(MAT_PLUTONIUM, 18),	o(MAT_POLONIUM, 9),			o(MAT_NEPTUNIUM, 6),		o(MAT_PU239, 3)),
-				T("schrabidic",	o(MAT_SCHRABIDIUM, 18),	o(MAT_SOLINIUM, 9),			o(MAT_GHIORSIUM, 6),		o(MAT_SCHRABIDIUM, 3)),
-				T("crystal",		o(MAT_SODALITE, 18),		o(MAT_MOLYSITE, 9),			o(MAT_DIAMOND, 6),		o(MAT_BORAX, 3))
+				T("light",		o(MAT_SODIUM, 18),			o(MAT_CHLOROCALCITE, 9),	o(MAT_IRON, 6),				o(MAT_CO60, 3)),
+				T("heavy",		o(MAT_TUNGSTEN, 18),		o(MAT_LEAD, 9),				o(MAT_ARSENIC, 6),			o(MAT_PB209, 3)),
+				T("rare",		o(MAT_NIOBIUM, 18),			o(MAT_STRONTIUM, 9),		o(MAT_IODINE, 6),			o(MAT_AU198, 3)),
+				T("actinide",	o(MAT_PLUTONIUM, 18),		o(MAT_POLONIUM, 9),			o(MAT_NEPTUNIUM, 6),		o(MAT_PU239, 3)),
+				T("schrabidic",	o(MAT_SCHRABIDIUM, 18),		o(MAT_SOLINIUM, 9),			o(MAT_GHIORSIUM, 6),		o(MAT_SCHRABIDIUM, 3)),
+				T("crystal",	o(MAT_SODALITE, 18),		o(MAT_MOLYSITE, 9),			o(MAT_DIAMOND, 6),			o(MAT_BORAX, 3))
 			);
 
 			register(
 				SolarSystem.Body.IKE,
-				T("light",		o(MAT_COPPER, 18),		o(MAT_BAUXITE, 9),			o(MAT_NICKEL, 6),		o(MAT_SODIUM, 3)),
-				T("heavy",		o(MAT_LEAD, 18),			o(MAT_ZINC, 9),				o(MAT_GOLD, 6),			o(MAT_ARSENIC, 3)),
-				T("rare",		o(MAT_BORON, 18),		o(MAT_NEODYMIUM, 9),		o(MAT_STRONTIUM, 6),		o(MAT_LANTHANIUM, 3)),
-				T("hazard",		o(MAT_URANIUM, 18),		o(MAT_U238, 9),				o(MAT_PLUTONIUM, 6),		o(MAT_TECHNETIUM, 3))
+				T("light",		o(MAT_COPPER, 18),			o(MAT_BAUXITE, 9),			o(MAT_NICKEL, 6),			o(MAT_SODIUM, 3)),
+				T("heavy",		o(MAT_LEAD, 18),			o(MAT_ZINC, 9),				o(MAT_GOLD, 6),				o(MAT_ARSENIC, 3)),
+				T("rare",		o(MAT_BORON, 18),			o(MAT_NEODYMIUM, 9),		o(MAT_STRONTIUM, 6),		o(MAT_LANTHANIUM, 3)),
+				T("hazard",		o(MAT_URANIUM, 18),			o(MAT_U238, 9),				o(MAT_PLUTONIUM, 6),		o(MAT_TECHNETIUM, 3))
 			);
 
 			register(
 				SolarSystem.Body.LAYTHE,
-				T("light",		o(MAT_ALUMINIUM, 18),	o(MAT_TITANIUM, 9),			o(MAT_GALLIUM, 6),		o(MAT_HAFNIUM, 3)),
-				T("heavy",		o(MAT_BERYLLIUM, 18),	o(MAT_TUNGSTEN, 9),			o(MAT_LEAD, 6),			o(MAT_ARSENIC, 3)),
-				T("rare",		o(MAT_RAREEARTH, 18),	o(MAT_NEODYMIUM, 9),		o(MAT_STRONTIUM, 6),		o(MAT_NIOBIUM, 3)),
-				T("actinide",	o(MAT_URANIUM, 18),		o(MAT_THORIUM, 9),			o(MAT_POLONIUM, 6),		o(MAT_U235, 3)),
-				T("nonmetal",	o(MAT_CHLOROCALCITE, 18),o(MAT_COAL, 9),				o(MAT_FLUORITE, 6),		o(MAT_SILICON, 3)),
-				T("crystal",		o(MAT_ASBESTOS, 18),		o(MAT_SODALITE, 9),			o(MAT_DIAMOND, 6),		o(MAT_SODALITE, 3))
+				T("light",		o(MAT_ALUMINIUM, 18),		o(MAT_TITANIUM, 9),			o(MAT_GALLIUM, 6),			o(MAT_HAFNIUM, 3)),
+				T("heavy",		o(MAT_BERYLLIUM, 18),		o(MAT_TUNGSTEN, 9),			o(MAT_LEAD, 6),				o(MAT_ARSENIC, 3)),
+				T("rare",		o(MAT_RAREEARTH, 18),		o(MAT_NEODYMIUM, 9),		o(MAT_STRONTIUM, 6),		o(MAT_NIOBIUM, 3)),
+				T("actinide",	o(MAT_URANIUM, 18),			o(MAT_THORIUM, 9),			o(MAT_POLONIUM, 6),			o(MAT_U235, 3)),
+				T("nonmetal",	o(MAT_CHLOROCALCITE, 18),	o(MAT_COAL, 9),				o(MAT_FLUORITE, 6),			o(MAT_SILICON, 3)),
+				T("crystal",	o(MAT_ASBESTOS, 18),		o(MAT_SODALITE, 9),			o(MAT_DIAMOND, 6),			o(MAT_SODALITE, 3))
 			);
+			register(
+				SolarSystem.Body.TEKTO,
+				T("light",		o(MAT_TITANIUM, 18),		o(MAT_COPPER, 9),			o(MAT_NICKEL, 6),			o(MAT_LITHIUM, 3)),
+				T("heavy",		o(MAT_BERYLLIUM, 18),		o(MAT_LEAD, 9),				o(MAT_ZINC, 6),				o(MAT_ZINC, 3)),
+				T("rare",		o(MAT_BORON, 18),			o(MAT_RAREEARTH, 9),		o(MAT_TANTALIUM, 6),		o(MAT_BISMUTH, 3)),
+				T("actinide",	o(MAT_URANIUM, 18),			o(MAT_NEPTUNIUM, 9),		o(MAT_RADIUM, 6),			o(MAT_TECHNETIUM, 3)),
+				T("crystal",	o(MAT_EMERALD, 18),			o(MAT_SILICON, 9),			o(MAT_MOLYSITE, 6),			o(MAT_BORAX, 3)),
+				T("plastic",	o(MAT_POLYMER, 18),			o(MAT_RUBBER, 9),			o(MAT_SEMTEX, 6),			o(MAT_PVC, 3))
+			);
+			/*
+			register(
+				SolarSystem.Body.THATMO,
+				T("light",		o(MAT_CRYOLITE, 24),		o(MAT_TITANIUM, 12),			o(MAT_GALLIUM, 6),		o(MAT_HAFNIUM, 3)),
+				T("heavy",		o(MAT_BERYLLIUM, 24),	o(MAT_TUNGSTEN, 12),			o(MAT_LEAD, 6),			o(MAT_ARSENIC, 3)),
+				T("rare",		o(MAT_RAREEARTH, 24),	o(MAT_NEODYMIUM, 12),		o(MAT_STRONTIUM, 6),		o(MAT_NIOBIUM, 3)),
+				T("actinide",	o(MAT_URANIUM, 24),		o(MAT_THORIUM, 12),			o(MAT_POLONIUM, 6),		o(MAT_U235, 3)),
+				T("nonmetal",	o(MAT_CHLOROCALCITE, 24),o(MAT_COAL, 12),				o(MAT_FLUORITE, 6),		o(MAT_SILICON, 3)),
+				T("crystal",		o(MAT_ASBESTOS, 24),		o(MAT_SODALITE, 12),			o(MAT_DIAMOND, 6),		o(MAT_SODALITE, 3))
+				);
+				*/
 		}
 
 		public CelestialBedrockOreType[] types;

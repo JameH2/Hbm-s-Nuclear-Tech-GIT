@@ -46,6 +46,8 @@ public class TileEntityMachineStardar extends TileEntityMachineBase implements I
 	public float prevDishYaw = 0;
 	public float prevDishPitch = 0;
 
+	public boolean radarMode;
+	
 	// Sent by the server for the client to smoothly lerp to
 	public static float targetYaw = 0;
 	public static float targetPitch = 0;
@@ -152,6 +154,9 @@ public class TileEntityMachineStardar extends TileEntityMachineBase implements I
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
+		//nbt.setInteger("time", timeUntilPoint);
+
+		nbt.setBoolean("radarmode", radarMode);
 		nbt.setFloat("yaw", targetYaw);
 		nbt.setFloat("pitch", targetPitch);
 	}
@@ -159,6 +164,9 @@ public class TileEntityMachineStardar extends TileEntityMachineBase implements I
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		//timeUntilPoint = nbt.getInteger("time");
+		
+		radarMode = nbt.getBoolean("radarmode");
 		targetYaw = nbt.getFloat("yaw");
 		targetPitch = nbt.getFloat("pitch");
 	}
@@ -169,6 +177,8 @@ public class TileEntityMachineStardar extends TileEntityMachineBase implements I
 		buf.writeFloat(targetYaw);
 		buf.writeFloat(targetPitch);
 
+		
+		buf.writeBoolean(radarMode);
 		buf.writeBoolean(updateHeightmap);
 		if(updateHeightmap) {
 			if(heightmap != null) {
@@ -188,6 +198,7 @@ public class TileEntityMachineStardar extends TileEntityMachineBase implements I
 		targetYaw = buf.readFloat();
 		targetPitch = buf.readFloat();
 
+		radarMode = buf.readBoolean();
 		if(buf.readBoolean()) {
 			updateHeightmap = true;
 			int count = buf.readInt();
@@ -316,6 +327,9 @@ public class TileEntityMachineStardar extends TileEntityMachineBase implements I
 
 		if(data.hasKey("px") && data.hasKey("pz")) {
 			updateDriveCoords(data.getInteger("px"), data.getInteger("pz"));
+		}
+		if(data.hasKey("radarmode")) {
+			radarMode = data.getBoolean("radarmode");
 		}
 	}
 

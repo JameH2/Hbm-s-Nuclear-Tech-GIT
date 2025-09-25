@@ -2,30 +2,36 @@ package com.hbm.sound;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
 public class AudioWrapperClient extends AudioWrapper {
-	
+
 	AudioDynamic sound;
-	
+
 	public AudioWrapperClient(ResourceLocation source) {
 		if(source != null)
 			sound = new AudioDynamic(source);
 	}
-	
+
+	public AudioWrapperClient(ResourceLocation source, Entity entity) {
+		if(source != null && entity != null && !entity.isDead)
+			sound = new AudioDynamicEntity(source, entity);
+	}
+
 	@Override
 	public void setKeepAlive(int keepAlive) {
 		if(sound != null)
 			sound.setKeepAlive(keepAlive);
 	}
-	
+
 	@Override
 	public void keepAlive() {
 		if(sound != null)
 			sound.keepAlive();
 	}
-	
+
 	@Override
 	public void updatePosition(float x, float y, float z) {
 		if(sound != null)

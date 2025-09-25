@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 public class SatelliteRelay extends Satellite {
-	
+
 	public SatelliteRelay() {
 		this.satIface = Interfaces.NONE;
 	}
@@ -18,8 +18,8 @@ public class SatelliteRelay extends Satellite {
 	}
 
 	@Override
-	public float[] getColor() {
-		return new float[] { 0.0F, 0.0F, 0.0F };
+	protected float[] getColor() {
+		return new float[] { 0.0F, 0.0F, 0.0F, 0.0F };
 	}
-	
+
 }

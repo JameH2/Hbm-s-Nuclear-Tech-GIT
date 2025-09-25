@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.Collections;
@@ -41,9 +42,10 @@ public class CommandSatellites extends CommandBase {
 			sender.addChatMessage(new ChatComponentTranslation( "commands.satellite.should_be_run_as_player").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 			return;
 		}
+		EntityPlayer player = getCommandSenderAsPlayer(sender);
+
 		switch (args[0]) {
 			case "orbit":
-				EntityPlayer player = getCommandSenderAsPlayer(sender);
 				if(player.getHeldItem().getItem() instanceof ISatChip && player.getHeldItem().getItem() != ModItems.sat_chip) {
 					int freq = ISatChip.getFreqS(player.getHeldItem());
 					if(args.length >= 2) freq = parseInt(sender, args[1]);
@@ -61,7 +63,7 @@ public class CommandSatellites extends CommandBase {
 				break;
 			case "descend":
 				int freq = parseInt(sender, args[1]);
-				SatelliteSavedData data = SatelliteSavedData.getData(sender.getEntityWorld());
+				SatelliteSavedData data = SatelliteSavedData.getData(sender.getEntityWorld(), (int)player.posX, (int)player.posZ);
 				if(data.sats.containsKey(freq)) {
 					data.sats.remove(freq);
 					data.markDirty();
@@ -71,7 +73,7 @@ public class CommandSatellites extends CommandBase {
 				}
 				break;
 			case "list":
-				data = SatelliteSavedData.getData(sender.getEntityWorld());
+				data = SatelliteSavedData.getData(sender.getEntityWorld(), (int)player.posX, (int)player.posZ);
 				if (data.sats.isEmpty()) {
 					ChatComponentTranslation message = new ChatComponentTranslation("commands.satellite.no_active_satellites");
 					message.getChatStyle().setColor(EnumChatFormatting.RED);
@@ -102,7 +104,8 @@ public class CommandSatellites extends CommandBase {
 			return getListOfStringsMatchingLastWord(args, "orbit", "descend", "list");
 		}
 		if (args[0].equals("descend")) {
-			return getListOfStringsFromIterableMatchingLastWord(args, SatelliteSavedData.getData(sender.getEntityWorld()).sats.keySet().stream().map(String::valueOf).collect(Collectors.toList()));
+			ChunkCoordinates coords = sender.getPlayerCoordinates();
+			return getListOfStringsFromIterableMatchingLastWord(args, SatelliteSavedData.getData(sender.getEntityWorld(), coords.posX, coords.posZ).sats.keySet().stream().map(String::valueOf).collect(Collectors.toList()));
 		}
 		return Collections.emptyList();
 	}

@@ -15,6 +15,7 @@ import com.hbm.blocks.network.*;
 import com.hbm.blocks.rail.*;
 import com.hbm.blocks.test.*;
 import com.hbm.blocks.turret.*;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.block.*;
 import com.hbm.items.bomb.ItemPrototypeBlock;
 import com.hbm.items.special.ItemOreBlock;
@@ -26,6 +27,9 @@ import com.hbm.tileentity.machine.storage.TileEntityFileCabinet;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.block.material.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -181,6 +185,8 @@ public class ModBlocks {
 	public static Block ore_tikite;
 	public static Block ore_brine_empty;
 
+	public static Block ore_tekto;
+	public static Block ore_tekto_empty;
 
 	public static Block block_thorium;
 	public static Block block_thorium_fuel;
@@ -563,6 +569,9 @@ public class ModBlocks {
 		@Override public int getMaterialMobility() { return 1; }
 	};
 
+	public static Block crop_paraffin;
+	public static Block sapling_pvc;
+
 	public static Block waste_earth;
 	public static Block waste_mycelium;
 	public static Block waste_trinitite;
@@ -584,6 +593,15 @@ public class ModBlocks {
 	public static Block ore_tektite_osmiridium;
 	public static Block impact_dirt;
 	public static Block rubber_leaves;
+	public static Block rubber_grass;
+	public static Block rubber_silt;
+	public static Block spike_cacti;
+	public static Block rubber_farmland;
+	public static Block vinyl_sand;
+	public static Block vinyl_vines;
+	public static Block pet_leaves;
+	public static Block vinyl_planks;
+	public static Block pvc_planks;
 
 
 	public static Block fallout;
@@ -608,6 +626,7 @@ public class ModBlocks {
 	public static Block geysir_nether;
 	public static Block geysir_electric;
 	public static Block geysir_volcanic;
+	public static Block geysir_chloric;
 
 	public static Block flame_war;
 	public static Block float_bomb;
@@ -1110,6 +1129,7 @@ public class ModBlocks {
 	@Deprecated public static Block machine_assembler;
 	public static Block machine_assembly_machine;
 	@Deprecated public static Block machine_assemfac;
+	public static Block machine_assembly_factory;
 	public static Block machine_arc_welder;
 	public static Block machine_soldering_station;
 	public static Block machine_arc_furnace;
@@ -1262,6 +1282,13 @@ public class ModBlocks {
 	public static Block rail_large_switch;
 	public static Block rail_large_switch_flipped;
 
+	public static Block war_controller;
+
+
+	public static Block statue_elb;
+	public static Block statue_elb_g;
+	public static Block statue_elb_w;
+
 	public static Block statue_elb_f;
 
 	public static Block cheater_virus;
@@ -1347,6 +1374,10 @@ public class ModBlocks {
 
 	public static Block concrete_liquid;
 
+	public static Block ccl_block;
+	public static Fluid ccl_fluid;
+
+
 	public static Block flesh_block;
 	public static Block charred_flesh_block;
 	public static Block carbonized_flesh_block;
@@ -1378,6 +1409,8 @@ public class ModBlocks {
 
 
 	public static Block pvc_log;
+	public static Block rubber_plant;
+	public static Block vinyl_log;
 
 	public static Block ff;
 
@@ -1404,6 +1437,7 @@ public class ModBlocks {
 	public static Block wand_loot;
 	public static Block wand_jigsaw;
 	public static Block wand_logic;
+	public static Block wand_tandem;
 
 	public static Block logic_block;
 
@@ -1545,6 +1579,9 @@ public class ModBlocks {
 
 		ore_brine_empty = new BlockOre(Material.rock).setBlockName("ore_brine_empty").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ore_oil_empty");
 		ore_brine = new BlockOreFluid(Material.rock, ore_brine_empty, ReserveType.BRINE).setBlockName("ore_brine").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ore_brine");
+
+		ore_tekto_empty = new BlockOre(Material.rock).setBlockName("ore_tekto_empty").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ore_oil_empty");
+		ore_tekto = new BlockOreFluid(Material.rock, ore_tekto_empty, ReserveType.TCRUDE).setBlockName("ore_tekto").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ore_tekto");
 
 		ore_tikite = new BlockDragonProof(Material.rock).setBlockName("ore_tikite").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ore_tikite_alt");
 
@@ -1904,6 +1941,8 @@ public class ModBlocks {
 		glyphid_base = new BlockGlyphid(Material.coral).setBlockName("glyphid_base").setStepSound(Block.soundTypeCloth).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":glyphid_base");
 		glyphid_spawner = new BlockGlyphidSpawner(Material.coral).setBlockName("glyphid_spawner").setStepSound(Block.soundTypeCloth).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":glyphid_eggs_alt");
 
+		rubber_farmland = new BlockRubberFarm(Material.sand).setBlockName("rubber_farmland").setStepSound(Block.soundTypeGravel).setCreativeTab(MainRegistry.blockTab).setHardness(1.0F).setResistance(1.0F).setBlockTextureName(RefStrings.MODID + ":rubber_silt");
+
 		plant_flower = new BlockNTMFlower().setBlockName("plant_flower").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeGrass).setHardness(0.0F);
 		plant_tall = new BlockTallPlant().setBlockName("plant_tall").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeGrass).setHardness(0.0F);
 		plant_dead = new BlockDeadPlant().setBlockName("plant_dead").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeGrass).setHardness(0.0F);
@@ -1912,12 +1951,14 @@ public class ModBlocks {
 		laythe_kelp = new BlockKelp().setBlockName("laythe_kelp").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeGrass).setHardness(0.0F);
 		laythe_short = new BlockWaterPlant().setBlockName("laythe_seagrass").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeGrass).setHardness(0.0F).setBlockTextureName(RefStrings.MODID + ":laythe_seagrass");
 		laythe_glow = new BlockWaterPlant().setBlockName("laythe_glowgrass").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeGrass).setHardness(0.0F).setLightLevel(1.0F).setBlockTextureName(RefStrings.MODID + ":laythe_glowgrass");
+		crop_strawberry = new BlockCrop(Blocks.farmland, (atmosphere) -> atmosphere.hasFluid(Fluids.AIR, 0.1) || atmosphere.hasFluid(Fluids.OXYGEN, 0.1), true).setBlockName("crop_strawberry").setStepSound(Block.soundTypeGrass).setHardness(0.0F).setBlockTextureName(RefStrings.MODID + ":strawberry");
+		crop_coffee = new BlockCrop(Blocks.farmland, (atmosphere) -> atmosphere.hasFluid(Fluids.AIR, 0.1) || atmosphere.hasFluid(Fluids.OXYGEN, 0.1), true).setBlockName("crop_coffee").setStepSound(Block.soundTypeGrass).setHardness(0.0F).setBlockTextureName(RefStrings.MODID + ":coffee");
+		crop_tea = new BlockCrop(Blocks.farmland, (atmosphere) -> atmosphere.hasFluid(Fluids.AIR, 0.1) || atmosphere.hasFluid(Fluids.OXYGEN, 0.1), true).setBlockName("crop_tea").setStepSound(Block.soundTypeGrass).setHardness(0.0F).setBlockTextureName(RefStrings.MODID + ":tea");
 		laythe_coral = new BlockCoral().setBlockName("laythe_coral").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeGrass).setHardness(0.0F).setBlockTextureName(RefStrings.MODID + ":laythe_coral");
 		laythe_coral_block = new BlockEnumMulti(Material.coral, BlockCoral.EnumCoral.class, false, true).setHardness(0.5F).setBlockName("laythe_coral_block").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeGrass).setBlockTextureName(RefStrings.MODID + ":laythe_coral_block");
-		crop_strawberry = new BlockCrop().setBlockName("crop_strawberry").setStepSound(Block.soundTypeGrass).setHardness(0.0F).setBlockTextureName(RefStrings.MODID + ":strawberry");
-		crop_coffee = new BlockCrop().setBlockName("crop_coffee").setStepSound(Block.soundTypeGrass).setHardness(0.0F).setBlockTextureName(RefStrings.MODID + ":coffee");
-		crop_tea = new BlockCrop().setBlockName("crop_tea").setStepSound(Block.soundTypeGrass).setHardness(0.0F).setBlockTextureName(RefStrings.MODID + ":tea");
 		vine_phosphor = new BlockHangingVine(thick_foliage).setBlockName("vine_phosphor").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeGrass).setHardness(0.5F);
+		crop_paraffin = new BlockCrop(ModBlocks.rubber_farmland, (atmosphere) -> atmosphere.hasFluid(Fluids.TEKTOAIR, 0.1) || atmosphere.hasFluid(Fluids.CHLORINE, 0.1), false).setBlockName("crop_paraffin").setStepSound(Block.soundTypeGrass).setHardness(0.0F).setBlockTextureName(RefStrings.MODID + ":paraffin");
+		sapling_pvc = new BlockNTSapling().setBlockName("sapling").setCreativeTab(MainRegistry.blockTab);
 
 		waste_earth = new WasteEarth(Material.ground, true).setBlockName("waste_earth").setStepSound(Block.soundTypeGrass).setCreativeTab(MainRegistry.blockTab).setHardness(0.6F).setBlockTextureName(RefStrings.MODID + ":waste_earth");
 		waste_mycelium = new WasteEarth(Material.ground, true).setBlockName("waste_mycelium").setStepSound(Block.soundTypeGrass).setLightLevel(1F).setCreativeTab(MainRegistry.blockTab).setHardness(0.6F).setBlockTextureName(RefStrings.MODID + ":waste_mycelium_side");
@@ -1962,6 +2003,7 @@ public class ModBlocks {
 		geysir_nether = new BlockGeysir(Material.rock).setBlockName("geysir_nether").setLightLevel(1.0F).setStepSound(Block.soundTypeStone).setHardness(2.0F);
 		geysir_volcanic = new BlockGeysir(Material.rock).setBlockName("geysir_volcanic").setLightLevel(1.0F).setStepSound(Block.soundTypeStone).setHardness(2.0F);
 		geysir_electric = new BlockVolcanoV2(Material.rock).setBlockName("geysir_electric").setLightLevel(1.0F).setStepSound(Block.soundTypeStone).setHardness(2.0F).setBlockTextureName(RefStrings.MODID + ":basalt");
+		geysir_chloric = new BlockGeysierDCM(Material.rock).setBlockName("geysir_chloric").setLightLevel(1.0F).setStepSound(Block.soundTypeStone).setHardness(2.0F).setBlockTextureName(RefStrings.MODID + ":basalt");;
 
 		nuke_gadget = new NukeGadget(Material.iron).setBlockName("nuke_gadget").setCreativeTab(MainRegistry.nukeTab).setHardness(5.0F).setResistance(200.0F).setBlockTextureName(RefStrings.MODID + ":theGadget");
 		nuke_boy = new NukeBoy(Material.iron).setBlockName("nuke_boy").setCreativeTab(MainRegistry.nukeTab).setHardness(5.0F).setResistance(200.0F).setBlockTextureName(RefStrings.MODID + ":lilBoy");
@@ -2058,9 +2100,8 @@ public class ModBlocks {
 		machine_rotary_furnace = new MachineRotaryFurnace(Material.iron).setBlockName("machine_rotary_furnace").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":brick_fire");
 		machine_crystallizer = new MachineCrystallizer(Material.iron).setBlockName("machine_crystallizer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":machine_crystallizer");
 
-		machine_uf6_tank = new MachineUF6Tank(Material.iron).setBlockName("machine_uf6_tank").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-
-		machine_puf6_tank = new MachinePuF6Tank(Material.iron).setBlockName("machine_puf6_tank").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+		machine_uf6_tank = new MachineUF6Tank(Material.iron).setBlockName("machine_uf6_tank").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
+		machine_puf6_tank = new MachinePuF6Tank(Material.iron).setBlockName("machine_puf6_tank").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
 
 		machine_reactor_breeding = new MachineReactorBreeding(Material.iron).setBlockName("machine_reactor").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":machine_reactor");
 
@@ -2464,6 +2505,8 @@ public class ModBlocks {
 		boxcar = new DecoBlock(Material.iron).setBlockName("boxcar").setStepSound(Block.soundTypeMetal).setHardness(10.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab).setBlockTextureName(RefStrings.MODID + ":boxcar");
 		boat = new DecoBlock(Material.iron).setBlockName("boat").setStepSound(Block.soundTypeMetal).setHardness(10.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab).setBlockTextureName(RefStrings.MODID + ":asphalt");
 
+		war_controller = new WarController().setBlockName("war_controller").setStepSound(Block.soundTypeMetal).setHardness(10.0F).setResistance(10.0F).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":block_steel");
+
 		machine_well = new MachineOilWell().setBlockName("machine_well").setHardness(5.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":machine_well");
 		machine_pumpjack = new MachinePumpjack().setBlockName("machine_pumpjack").setHardness(5.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":machine_pumpjack");
 		machine_fracking_tower = new MachineFrackingTower().setBlockName("machine_fracking_tower").setHardness(5.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
@@ -2490,6 +2533,7 @@ public class ModBlocks {
 		machine_assembler = new MachineAssembler(Material.iron).setBlockName("machine_assembler").setHardness(5.0F).setResistance(30.0F).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":machine_assembler");
 		machine_assembly_machine = new MachineAssemblyMachine(Material.iron).setBlockName("machine_assembly_machine").setHardness(5.0F).setResistance(30.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		machine_assemfac = new MachineAssemfac(Material.iron).setBlockName("machine_assemfac").setHardness(5.0F).setResistance(30.0F).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":block_steel");
+		machine_assembly_factory = new MachineAssemblyFactory(Material.iron).setBlockName("machine_assembly_factory").setHardness(5.0F).setResistance(30.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		machine_arc_welder = new MachineArcWelder(Material.iron).setBlockName("machine_arc_welder").setHardness(5.0F).setResistance(30.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		machine_soldering_station = new MachineSolderingStation(Material.iron).setBlockName("machine_soldering_station").setHardness(5.0F).setResistance(30.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		machine_vacuum_circuit = new MachineVacuumCircuit(Material.iron).setBlockName("machine_vacuum_circuit").setHardness(5.0F).setResistance(30.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
@@ -2671,6 +2715,10 @@ public class ModBlocks {
 		charred_flesh_block = new MeltedFlesh(Material.snow).setBlockName("charred_flesh_block").setStepSound(Block.soundTypeGravel).setCreativeTab(MainRegistry.blockTab).setHardness(0.1F).setLightOpacity(0).setBlockTextureName(RefStrings.MODID + ":charredFlesh");
 		carbonized_flesh_block = new MeltedFlesh(Material.snow).setBlockName("carbonized_flesh_block").setStepSound(Block.soundTypeGravel).setCreativeTab(MainRegistry.blockTab).setHardness(0.1F).setLightOpacity(0).setBlockTextureName(RefStrings.MODID + ":carbonizedFlesh");
 
+		ccl_fluid = new GenericFluid("ccl_fluid").setDensity(1840).setViscosity(1000).setTemperature(273);
+		FluidRegistry.registerFluid(ccl_fluid);
+		ccl_block = new GenericFluidBlock(ccl_fluid, Material.water, "ccl", "ccl_flowing").setDamage(ModDamageSource.lead, 1F).setBlockName("ccl_block").setResistance(500F);
+
 
 		dummy_block_vault = new DummyBlockVault(Material.iron).setBlockName("dummy_block_vault").setHardness(10.0F).setResistance(10000.0F).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		dummy_block_blast = new DummyBlockBlast(Material.iron).setBlockName("dummy_block_blast").setHardness(10.0F).setResistance(10000.0F).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":block_steel");
@@ -2688,8 +2736,18 @@ public class ModBlocks {
 		pink_double_slab = new BlockPinkSlab(true, Material.wood).setBlockName("pink_double_slab").setStepSound(Block.soundTypeWood).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":pink_planks");
 		pink_stairs = new BlockGenericStairs(pink_planks, 0).setBlockName("pink_stairs").setStepSound(Block.soundTypeWood).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":pink_planks");
 
+		vinyl_log = new BlockLogNT(RefStrings.MODID + ":vinyl_log_side", RefStrings.MODID + ":vinyl_log_top").setBlockName("vinyl_log").setStepSound(Block.soundTypeWood).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setResistance(2.5F);
 		pvc_log = new BlockLogNT(RefStrings.MODID + ":pvc_log_side", RefStrings.MODID + ":pvc_log_top").setBlockName("pvc_log").setStepSound(Block.soundTypeWood).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setResistance(2.5F);
-		rubber_leaves = new BlockRubberLeaves(Material.leaves).setBlockName("rubber_leaves").setStepSound(Block.soundTypeGrass).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setResistance(2.5F).setBlockTextureName(RefStrings.MODID + ":rubber_leaves");
+		rubber_leaves = new BlockRubberLeaves().setBlockName("rubber_leaves").setStepSound(Block.soundTypeGrass).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setResistance(2.5F).setBlockTextureName(RefStrings.MODID + ":rubber_leaves");
+		rubber_grass = new RubberGrass(Material.grass, false).setBlockName("rubber_grass").setStepSound(Block.soundTypeGrass).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setResistance(2.5F);
+		rubber_silt = new BlockGeneric(Material.sand).setBlockName("rubber_silt").setStepSound(Block.soundTypeGravel).setCreativeTab(MainRegistry.blockTab).setHardness(1.0F).setResistance(1.0F).setBlockTextureName(RefStrings.MODID + ":rubber_silt");
+		rubber_plant = new BlockRubberPlant().setBlockName("rubber_plant").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeGrass).setHardness(0.0F);
+		spike_cacti = new BlockRubberCacti(Material.grass).setBlockName("rubber_tall").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeGrass).setHardness(0.0F);
+		vinyl_sand = new BlockFalling(Material.sand).setBlockName("vinyl_sand").setStepSound(Block.soundTypeSand).setCreativeTab(MainRegistry.blockTab).setHardness(1.0F).setResistance(1.0F).setBlockTextureName(RefStrings.MODID + ":sand_vinyl");
+		vinyl_vines = new BlockVinylVine().setBlockName("vinyl_vine").setStepSound(Block.soundTypeGrass).setCreativeTab(MainRegistry.blockTab).setHardness(1.0F).setResistance(1.0F).setBlockTextureName(RefStrings.MODID + ":vine");
+		pet_leaves = new BlockRubberLeaves().setBlockName("pet_leaves").setStepSound(Block.soundTypeGrass).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setResistance(2.5F).setBlockTextureName(RefStrings.MODID + ":pet_leaves");
+		vinyl_planks = new BlockGeneric(Material.wood).setBlockName("vinyl_planks").setStepSound(Block.soundTypeWood).setCreativeTab(MainRegistry.blockTab).setHardness(1.0F).setResistance(1.0F).setBlockTextureName(RefStrings.MODID + ":vinyl_planks");
+		pvc_planks = new BlockGeneric(Material.wood).setBlockName("pvc_planks").setStepSound(Block.soundTypeWood).setCreativeTab(MainRegistry.blockTab).setHardness(1.0F).setResistance(1.0F).setBlockTextureName(RefStrings.MODID + ":pvc_planks");
 
 		// stop self flagellating and do something about it
 		lattice_log = new BlockLogNT(RefStrings.MODID + ":rad_log_side", RefStrings.MODID + ":rad_log_top").setBlockName("lattice_log").setStepSound(Block.soundTypeWood).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setResistance(2.5F);
@@ -2721,6 +2779,7 @@ public class ModBlocks {
 		wand_loot = new BlockWandLoot().setBlockName("wand_loot").setBlockTextureName(RefStrings.MODID + ":wand_loot");
 		wand_jigsaw = new BlockWandJigsaw().setBlockName("wand_jigsaw").setBlockTextureName(RefStrings.MODID + ":wand_jigsaw");
 		wand_logic = new BlockWandLogic().setBlockName("wand_logic").setBlockTextureName(RefStrings.MODID + ":wand_logic");
+		wand_tandem = new BlockWandTandem().setBlockName("wand_tandem").setBlockTextureName(RefStrings.MODID + ":wand_tandem");
 
 		logic_block = new LogicBlock().setBlockName("logic_block").setBlockTextureName(RefStrings.MODID + ":logic_block");
 
@@ -2781,6 +2840,8 @@ public class ModBlocks {
 		GameRegistry.registerBlock(ore_shale, ItemBlockBase.class, ore_shale.getUnlocalizedName());
 		GameRegistry.registerBlock(ore_brine, ItemBlockLore.class, ore_brine.getUnlocalizedName());
 		GameRegistry.registerBlock(ore_brine_empty, ItemBlockLore.class, ore_brine_empty.getUnlocalizedName());
+		GameRegistry.registerBlock(ore_tekto, ItemBlockLore.class, ore_tekto.getUnlocalizedName());
+		GameRegistry.registerBlock(ore_tekto_empty, ItemBlockLore.class, ore_tekto_empty.getUnlocalizedName());
 
 		//Rare Minerals
 		GameRegistry.registerBlock(ore_australium, ItemBlockBase.class, ore_australium.getUnlocalizedName());
@@ -3111,6 +3172,8 @@ public class ModBlocks {
 
 		//Tiles
 		GameRegistry.registerBlock(vinyl_tile, ItemBlockBlastInfo.class, vinyl_tile.getUnlocalizedName()); //i would rather die than dip into fucking blocks with subtypes again
+		GameRegistry.registerBlock(vinyl_planks, vinyl_planks.getUnlocalizedName());
+		GameRegistry.registerBlock(pvc_planks, pvc_planks.getUnlocalizedName());
 
 		GameRegistry.registerBlock(tile_lab, tile_lab.getUnlocalizedName());
 		GameRegistry.registerBlock(tile_lab_cracked, tile_lab_cracked.getUnlocalizedName());
@@ -3204,8 +3267,10 @@ public class ModBlocks {
 		register(laythe_coral);
 		register(laythe_coral_block);
 		register(plant_dead);
+		register(rubber_plant);
 		register(reeds);
 		register(crop_strawberry);
+		register(crop_paraffin);
 		register(crop_coffee);
 		register(crop_tea);
 		register(vine_phosphor);
@@ -3217,6 +3282,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(moon_turf, moon_turf.getUnlocalizedName());
 
 		GameRegistry.registerBlock(moon_rock, moon_rock.getUnlocalizedName());
+		register(sapling_pvc);
 
 		GameRegistry.registerBlock(duna_sands, duna_sands.getUnlocalizedName());
 		GameRegistry.registerBlock(duna_cobble, duna_cobble.getUnlocalizedName());
@@ -3281,6 +3347,14 @@ public class ModBlocks {
 
 		GameRegistry.registerBlock(pvc_log, pvc_log.getUnlocalizedName());
 		GameRegistry.registerBlock(rubber_leaves, rubber_leaves.getUnlocalizedName());
+		GameRegistry.registerBlock(rubber_grass, rubber_grass.getUnlocalizedName());
+		GameRegistry.registerBlock(rubber_silt, rubber_silt.getUnlocalizedName());
+		GameRegistry.registerBlock(spike_cacti, spike_cacti.getUnlocalizedName());
+		GameRegistry.registerBlock(rubber_farmland, rubber_farmland.getUnlocalizedName());
+		GameRegistry.registerBlock(vinyl_sand, vinyl_sand.getUnlocalizedName());
+		GameRegistry.registerBlock(vinyl_vines, vinyl_vines.getUnlocalizedName());
+		GameRegistry.registerBlock(vinyl_log, vinyl_log.getUnlocalizedName());
+		GameRegistry.registerBlock(pet_leaves, pet_leaves.getUnlocalizedName());
 
 		//RAD
 		register(sellafield_slaked);
@@ -3299,6 +3373,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(geysir_nether, geysir_nether.getUnlocalizedName());
 		GameRegistry.registerBlock(geysir_volcanic, geysir_volcanic.getUnlocalizedName());
 		GameRegistry.registerBlock(geysir_electric, geysir_electric.getUnlocalizedName());
+		GameRegistry.registerBlock(geysir_chloric, geysir_chloric.getUnlocalizedName());
 
 		//Nukes
 		GameRegistry.registerBlock(nuke_gadget, nuke_gadget.getUnlocalizedName());
@@ -3447,6 +3522,7 @@ public class ModBlocks {
 		//Machines
 		register(machine_autocrafter);
 		register(machine_funnel);
+		register(war_controller);
 
 		register(anvil_iron);
 		register(anvil_lead);
@@ -3703,6 +3779,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(machine_assembler, machine_assembler.getUnlocalizedName());
 		register(machine_assembly_machine);
 		GameRegistry.registerBlock(machine_assemfac, machine_assemfac.getUnlocalizedName());
+		register(machine_assembly_factory);
 		GameRegistry.registerBlock(machine_chemplant, machine_chemplant.getUnlocalizedName());
 		register(machine_chemical_plant);
 		register(machine_chemfac);
@@ -3944,6 +4021,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(flesh_block, flesh_block.getUnlocalizedName());
 		GameRegistry.registerBlock(charred_flesh_block, charred_flesh_block.getUnlocalizedName());
 		GameRegistry.registerBlock(carbonized_flesh_block, carbonized_flesh_block.getUnlocalizedName());
+		GameRegistry.registerBlock(ccl_block, ccl_block.getUnlocalizedName());
 
 		//Multiblock Dummy Blocks
 		GameRegistry.registerBlock(dummy_block_vault, dummy_block_vault.getUnlocalizedName());
@@ -4018,6 +4096,7 @@ public class ModBlocks {
 		register(wand_loot);
 		register(wand_jigsaw);
 		register(wand_logic);
+		register(wand_tandem);
 
 		register(logic_block);
 	}

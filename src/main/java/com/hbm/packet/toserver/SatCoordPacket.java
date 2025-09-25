@@ -20,7 +20,7 @@ public class SatCoordPacket implements IMessage {
 
 	public SatCoordPacket()
 	{
-		
+
 	}
 
 	public SatCoordPacket(int x, int y, int z, int freq)
@@ -48,24 +48,24 @@ public class SatCoordPacket implements IMessage {
 	}
 
 	public static class Handler implements IMessageHandler<SatCoordPacket, IMessage> {
-		
+
 		@Override
 		public IMessage onMessage(SatCoordPacket m, MessageContext ctx) {
-			
+
 			EntityPlayer p = ctx.getServerHandler().playerEntity;
-			
+
 			if(p.getHeldItem() != null && p.getHeldItem().getItem() instanceof ItemSatInterface) {
-				
+
 				int freq = ISatChip.getFreqS(p.getHeldItem());
-				
+
 				if(freq == m.freq) {
-				    Satellite sat = SatelliteSavedData.getData(p.worldObj).getSatFromFreq(m.freq);
-				    
+				    Satellite sat = SatelliteSavedData.getData(p.worldObj, (int)p.posX, (int)p.posZ).getSatFromFreq(m.freq);
+
 				    if(sat != null)
 				    	sat.onCoordAction(p.worldObj, p, m.x, m.y, m.z);
 				}
 			}
-			
+
 			return null;
 		}
 	}

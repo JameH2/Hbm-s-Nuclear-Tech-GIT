@@ -38,6 +38,9 @@ public class HbmKeybinds {
 	public static KeyBinding dashKey = new KeyBinding(category + ".dash", Keyboard.KEY_LSHIFT, category);
 	public static KeyBinding trainKey = new KeyBinding(category + ".trainInv", Keyboard.KEY_R, category);
 	public static KeyBinding slamKey = new KeyBinding(category + ".slamkey", Keyboard.KEY_LCONTROL, category);
+
+	public static KeyBinding qmaw = new KeyBinding(category + ".qmaw", Keyboard.KEY_F1, category);
+
 	public static KeyBinding abilityCycle = new KeyBinding(category + ".ability", -99, category);
 	public static KeyBinding abilityAlt = new KeyBinding(category + ".abilityAlt", Keyboard.KEY_LMENU, category);
 	public static KeyBinding copyToolAlt = new KeyBinding(category + ".copyToolAlt", Keyboard.KEY_LMENU, category);
@@ -62,6 +65,8 @@ public class HbmKeybinds {
 		ClientRegistry.registerKeyBinding(dashKey);
 		ClientRegistry.registerKeyBinding(trainKey);
 		ClientRegistry.registerKeyBinding(slamKey);
+
+		ClientRegistry.registerKeyBinding(qmaw);
 
 		ClientRegistry.registerKeyBinding(reloadKey);
 		ClientRegistry.registerKeyBinding(gunPrimaryKey);

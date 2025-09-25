@@ -169,6 +169,11 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 				.inputItems(new OreDictStack(S.dust()), new OreDictStack(ZI.dust()))
 				.inputFluids(new FluidStack(Fluids.UNSATURATEDS, 500, GeneralConfig.enable528 ? 2 : 0))
 				.outputItems(new ItemStack(ModItems.ingot_rubber)));
+		
+		this.register(new GenericRecipe("chem.vinylrubber").setup(100, 400)
+				.inputFluids(new FluidStack(Fluids.VINYL, 500), new FluidStack(Fluids.UNSATURATEDS, 400, GeneralConfig.enable528 ? 2 : 0))
+				.outputItems(new ItemStack(ModItems.ingot_rubber)));
+
 
 		this.register(new GenericRecipe("chem.hardplastic").setup(100, 1_000)
 				.inputFluids(new FluidStack(Fluids.XYLENE, 500, GeneralConfig.enable528 ? 2 : 0), new FluidStack(Fluids.PHOSGENE, 500, GeneralConfig.enable528 ? 2 : 0))
@@ -187,7 +192,7 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 				.inputItems(new ComparableStack(Items.wheat), new ComparableStack(Items.dye, 2, 3))
 				.inputFluids(new FluidStack(Fluids.LUBRICANT, 400), new FluidStack(Fluids.PEROXIDE, 500))
 				.outputItems(new ItemStack(ModItems.chocolate, 4)));
-
+		
 		this.register(new GenericRecipe("chem.epearl").setup(100, 300)
 				.inputItems(new OreDictStack(DIAMOND.dust(), 1))
 				.inputFluids(new FluidStack(Fluids.XPJUICE, 500))
@@ -355,8 +360,8 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 				.outputFluids(new FluidStack(Fluids.BLOODGAS, 1000)));
 
 		this.register(new GenericRecipe("chem.hcl").setup(50, 100)
-				.inputFluids(new FluidStack(Fluids.HYDROGEN, 300), new FluidStack(Fluids.CHLORINE, 1000))
-				.outputFluids(new FluidStack(Fluids.HCL, 400)));
+				.inputFluids(new FluidStack(Fluids.HYDROGEN, 500), new FluidStack(Fluids.CHLORINE, 500))
+				.outputFluids(new FluidStack(Fluids.HCL, 1000)));
 
 		this.register(new GenericRecipe("chem.ammoniumnitrate").setup(250, 1_000)
 				.inputFluids(new FluidStack(Fluids.AMMONIA, 500), new FluidStack(Fluids.NITROGEN, 1000))

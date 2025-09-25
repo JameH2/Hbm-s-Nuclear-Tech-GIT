@@ -53,6 +53,7 @@ public class BeamPronter {
 
 		if(beam == EnumBeamType.SOLID) {
 			GL11.glDisable(GL11.GL_CULL_FACE);
+
 			GL11.glEnable(GL11.GL_BLEND);
 
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
@@ -144,6 +145,7 @@ public class BeamPronter {
 					tessellator.addVertex(pX + (radius * j), pY, pZ - (radius * j));
 					tessellator.draw();
 					
+					
 				}
 			}
 
@@ -169,6 +171,7 @@ public class BeamPronter {
 
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		
 		GL11.glPopMatrix();
 		GL11.glDepthMask(true);
 

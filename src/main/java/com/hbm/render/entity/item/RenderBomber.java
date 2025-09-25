@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.hbm.main.ResourceManager;
 
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -38,6 +39,7 @@ public class RenderBomber extends Render {
 		case 7: bindTexture(ResourceManager.b29_2_tex); break;
 		case 8: bindTexture(ResourceManager.b29_3_tex); break;
 		case 9: bindTexture(ResourceManager.airliner_tex); break;
+		case 10:bindTexture(ResourceManager.b2x_tex_mex_sex); break;
 		default: bindTexture(ResourceManager.dornier_1_tex); break;
 		}
 
@@ -65,6 +67,68 @@ public class RenderBomber extends Render {
 			GL11.glScalef(30F / 3.1F, 30F / 3.1F, 30F / 3.1F);
 			GL11.glRotatef(180, 0F, 1F, 0F);
 			ResourceManager.Airliner.renderAll();
+			break;
+		case 10:
+			
+			GL11.glScalef(3,3,3);
+			GL11.glTranslated(2, 0, 0);
+			GL11.glRotatef(-90, 0F, 1F, 0F);
+			ResourceManager.b2x.renderAll();
+			bindTexture(ResourceManager.b2x_tex_mex_sex);
+
+			float trailStretch = entity.worldObj.rand.nextFloat();
+			trailStretch = 1.2F - (trailStretch * trailStretch * 0.2F);
+			trailStretch *= 2;
+
+			GL11.glShadeModel(GL11.GL_SMOOTH);
+
+			
+			if(trailStretch > 0) {
+				GL11.glColor4d(0.25, 0.88, 0.82, 1);
+
+				GL11.glDisable(GL11.GL_CULL_FACE);
+				GL11.glDisable(GL11.GL_LIGHTING);
+				GL11.glEnable(GL11.GL_BLEND);
+				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+				GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
+				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+				GL11.glDepthMask(false);
+				
+				GL11.glPushMatrix();
+				GL11.glTranslatef(-0.56F, -0.56F, 1F);
+				GL11.glRotatef(180, 0, 1, 0);
+				GL11.glScalef(0.5F, 0.5F, trailStretch);
+				GL11.glTranslatef(0, 0, 1F);
+
+				bindTexture(ResourceManager.xenon_exhaust_tex);
+				ResourceManager.xenon_thruster.renderPart("Exhaust");
+				
+				GL11.glPopMatrix();
+				
+				GL11.glPushMatrix();
+				GL11.glTranslatef(0.56F, -0.56F, 1F);
+				GL11.glRotatef(180, 0, 1, 0);
+				GL11.glScalef(0.5F, 0.5F, trailStretch);
+				GL11.glTranslatef(0, 0, 1F);
+
+				bindTexture(ResourceManager.xenon_exhaust_tex);
+				ResourceManager.xenon_thruster.renderPart("Exhaust");
+				
+				
+				GL11.glPopMatrix();
+				
+				GL11.glDepthMask(true);
+				GL11.glPopAttrib();
+				GL11.glEnable(GL11.GL_LIGHTING);
+				GL11.glEnable(GL11.GL_CULL_FACE);
+				GL11.glDisable(GL11.GL_BLEND);
+
+				GL11.glColor4d(1, 1, 1, 1);
+			}
+
+			GL11.glShadeModel(GL11.GL_FLAT);
+
+			
 			break;
 		default:
 			ResourceManager.dornier.renderAll();

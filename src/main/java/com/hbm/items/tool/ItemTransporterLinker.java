@@ -22,7 +22,6 @@ import com.hbm.util.CompatExternal;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -37,20 +36,21 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
 public class ItemTransporterLinker extends Item implements IGUIProvider {
-	
+
 	@SideOnly(Side.CLIENT)
 	public static List<TransporterInfo> currentTransporters;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		list.add("Sneak-click to save transporter");
 		list.add("Use on transporter to link to a saved transporter");
 	}
-	
+
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float fx, float fy, float fz) {
 		TileEntity tile = CompatExternal.getCoreFromPos(world, x, y, z);
-		
+
 		if(!(tile instanceof TileEntityTransporterBase)) {
 			return false;
 		}
@@ -68,14 +68,14 @@ public class ItemTransporterLinker extends Item implements IGUIProvider {
 
 		return true;
 	}
-	
+
     public void onUpdate(ItemStack stack, World world, Entity entity, int i, boolean b) {
     	if(world.isRemote || !(entity instanceof EntityPlayerMP))
     		return;
-    	
+
     	if(((EntityPlayerMP)entity).getHeldItem() != stack)
     		return;
-		
+
 		List<TransporterInfo> transporters = getTransporters(stack);
 
 		if(entity.ticksExisted % 2 == 0) {
@@ -195,7 +195,7 @@ public class ItemTransporterLinker extends Item implements IGUIProvider {
 	private static Set<TransporterInfo> loadTransporters(ItemStack stack) {
 		if(stack.stackTagCompound == null)
 			stack.stackTagCompound = new NBTTagCompound();
-			
+
 		Set<TransporterInfo> transporterCoordinates = new HashSet<>();
 
 		int[] dimensionsToLoad = stack.stackTagCompound.getIntArray("dimensions");

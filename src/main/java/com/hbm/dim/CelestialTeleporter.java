@@ -38,7 +38,7 @@ public class CelestialTeleporter extends Teleporter {
 	}
 
 	@Override
-	public void placeInPortal(Entity pEntity, double p2, double p3, double p4, float p5) {
+	public void placeInPortal(Entity pEntity, double ox, double oy, double oz, float yaw) {
 		int ix = (int)x;
 		int iy = (int)y;
 		int iz = (int)z;
@@ -64,6 +64,9 @@ public class CelestialTeleporter extends Teleporter {
 		int fromDimension = playerMP.dimension;
 		Entity ridingEntity = playerMP.ridingEntity;
 
+		playerMP.posX = x;
+		playerMP.posZ = z;
+
 		manager.transferPlayerToDimension(playerMP, targetServer.provider.dimensionId, this);
 
 		if(ridingEntity != null && !ridingEntity.isDead) {
@@ -86,6 +89,9 @@ public class CelestialTeleporter extends Teleporter {
 			targetServer.resetUpdateEntityTick();
 
 			playerMP.mountEntity(newEntity);
+
+			// Send another packet to the client to make sure they load in correctly!
+			playerMP.setPositionAndUpdate(x, 900, z);
 		}
 	}
 

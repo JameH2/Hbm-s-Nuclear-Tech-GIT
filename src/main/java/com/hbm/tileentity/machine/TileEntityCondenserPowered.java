@@ -16,7 +16,7 @@ import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.IRepairable;
 import com.hbm.util.fauxpointtwelve.DirPos;
-import com.hbm.world.gen.INBTTileEntityTransformable;
+import com.hbm.world.gen.nbt.INBTTileEntityTransformable;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import cpw.mods.fml.relauncher.Side;

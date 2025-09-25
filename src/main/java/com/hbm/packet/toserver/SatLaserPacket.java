@@ -22,7 +22,7 @@ public class SatLaserPacket implements IMessage {
 
 	public SatLaserPacket()
 	{
-		
+
 	}
 
 	public SatLaserPacket(int x, int z, int freq)
@@ -47,24 +47,24 @@ public class SatLaserPacket implements IMessage {
 	}
 
 	public static class Handler implements IMessageHandler<SatLaserPacket, IMessage> {
-		
+
 		@Override
 		public IMessage onMessage(SatLaserPacket m, MessageContext ctx) {
-			
+
 			EntityPlayer p = ctx.getServerHandler().playerEntity;
-			
+
 			if(p.getHeldItem() != null && p.getHeldItem().getItem() instanceof ItemSatInterface) {
-				
+
 				int freq = ISatChip.getFreqS(p.getHeldItem());
-				
+
 				if(freq == m.freq) {
-				    Satellite sat = SatelliteSavedData.getData(p.worldObj).getSatFromFreq(m.freq);
-				    
+				    Satellite sat = SatelliteSavedData.getData(p.worldObj, (int)p.posX, (int)p.posZ).getSatFromFreq(m.freq);
+
 				    if(sat != null)
 				    	sat.onClick(p.worldObj, m.x, m.z);
 				}
 			}
-			
+
 			return null;
 		}
 	}

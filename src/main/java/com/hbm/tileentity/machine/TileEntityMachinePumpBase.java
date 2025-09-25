@@ -46,6 +46,9 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
 		validBlocks.add(ModBlocks.laythe_silt);
 		validBlocks.add(ModBlocks.moho_regolith);
 		validBlocks.add(ModBlocks.minmus_smooth);
+		validBlocks.add(ModBlocks.vinyl_sand);
+		validBlocks.add(ModBlocks.rubber_silt);
+		validBlocks.add(ModBlocks.rubber_grass);
 	}
 
 	public FluidTank water;
@@ -140,7 +143,7 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
 
 					if(y == -1 && !b.isNormalCube()) return false; // first layer has to be full solid
 
-					if(this.validBlocks.contains(b)) validBlocks++;
+					if(TileEntityMachinePumpBase.validBlocks.contains(b)) validBlocks++;
 					else invalidBlocks ++;
 				}
 			}

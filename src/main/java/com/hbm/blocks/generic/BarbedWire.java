@@ -4,6 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.ArmorUtil;
+import com.hbm.world.gen.nbt.INBTBlockTransformable;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.block.Block;
@@ -19,7 +20,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class BarbedWire extends Block {
+public class BarbedWire extends Block implements INBTBlockTransformable {
 
 	public BarbedWire(Material mat) {
 		super(mat);
@@ -110,5 +111,10 @@ public class BarbedWire extends Block {
 		if(i == 3) {
 			world.setBlockMetadataWithNotify(x, y, z, 2, 2);
 		}
+	}
+
+	@Override
+	public int transformMeta(int meta, int coordBaseMode) {
+		return INBTBlockTransformable.transformMetaDeco(meta, coordBaseMode);
 	}
 }

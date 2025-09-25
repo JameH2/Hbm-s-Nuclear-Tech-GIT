@@ -1,20 +1,24 @@
-# HBM's Nuclear Tech Mod + JameH2 Space for Minecraft 1.7.10
+# NTM: Space for Minecraft 1.7.10
 
 Hi, i am memeing things into existence, dont mind me! im just the bent fork at the end of the table -JamesH_2
 
-[NTM Space on Modrinth](https://modrinth.com/mod/ntmspace)
+And I turn the memes into reality, see you in orbit! -Mellow
 
-[NTM Space on CurseForge](https://www.curseforge.com/minecraft/mc-mods/ntm-space)
+[NTM: Space on Modrinth](https://modrinth.com/mod/ntmspace)
+
+[NTM: Space on CurseForge](https://www.curseforge.com/minecraft/mc-mods/ntm-space)
 
 [Official NTM Wiki](https://nucleartech.wiki/wiki/Main_Page)
+
+[NTM: Space Discord](https://discord.gg/u6bKmGNYCq)
 
 [Bobcat's Blog (the blag)](https://hbmmods.github.io/), you can find lengthy yapping, upcoming features and some secrets here.
 
 **This is for 1.7.10!** For 1.12, check out these projects:
 
-* NTM Reloaded: https://github.com/TheOriginalGolem/Hbm-s-Nuclear-Tech-GIT/releases
-* NTM Extended Edition (Alcater): https://github.com/Alcatergit/Hbm-s-Nuclear-Tech-GIT/releases
 * NTM Community Edition (WarFactory): https://github.com/MisterNorwood/Hbm-s-Nuclear-Tech-CE
+* NTM Extended Edition (Alcater): https://github.com/Alcatergit/Hbm-s-Nuclear-Tech-GIT/releases
+* NTM Reloaded: https://github.com/TheOriginalGolem/Hbm-s-Nuclear-Tech-GIT/releases
 
 For 1.18, try Martin's remake: https://codeberg.org/MartinTheDragon/Nuclear-Tech-Mod-Remake/releases
 
@@ -107,6 +111,8 @@ NTM has certain behaviors intended to fix vanilla code or to increase compatibil
 ### Thermos
 Thermos servers (along with its forks such as Crucible) have a "performance" feature that causes all tile entity ticking to slow down if there's no player present in the same chunk. For obvious reasons, this will heavily impact machines and cause phantom issues that, not having knowledge of this "performance" feature, are near impossible to diagnose. By default, NTM will crash on servers running the Thermos base code and print a lengthy message informing server owners about this "performance" feature as well as how to fix the issues it causes. The error message is printed in plain English on the top of the crash log, failure to read (as well as understand) it will leave the server inoperable.
 
+Worldgen with Thermos and its forks is broken, and will cause structures to spawn in the wrong dimensions. This is only the tip of the iceberg in terms of issues, and as Thermos/Crucible is effectively unmaintained, we recommend finding mod-based solutions instead of continuing to rely on Bukkit plugins.
+
 ### Shaders
 Shaders (loaded by either Optifine, Iris or otherwise) will in all likelihood break when a gun is held. This is because guns need to skip vanilla's first person item setup for the rendering, however shaders apparently use the setup step for setting certain GL states, and skipping that will break rendering. [Shader Fixer](https://modrinth.com/mod/shader-fixer) is a mod with various fixes, among which is explicit compatibility for NTM's guns.
 
@@ -122,11 +128,11 @@ In older versions, Angelica caused issues regarding model rendering, often times
 * Often times when making a new world, all items appear as white squares. Somehow, scrolling though the NEI pages fixes this permanently
 * Reeds will render weirdly, this is an incompatibility with the "Compact Vertex Format" feature. Disabling it will make reeds look normal. Alternatively, reed rendering can be disabled by using `/ntmclient set RENDER_REEDS false`, which works around the issue by not rendering the underwater portion of reeds at all.
 
-### Skybox chainloader
-NTM adds a few small things to the skybox using a custom skybox renderer. Minecraft can only have a single skybox renderer loaded, so setting the skybox to the NTM custom one would break compatibility with other mods' skyboxes. To mend this, NTM employs a **chainloader**. This chainloader will detect if a different skybox is loaded, save a reference to that skybox and then use NTM's skybox, which when used will also make sure to run the previous modded skybox renderer. In the event that NTM's skybox were to cause trouble, it can be disabled with the config option `1.31_enableSkyboxes`.
+### Skyboxes
+NTM: Space provides a considerable amount of information to players via the skybox (destruction state, player building density via lights, currently orbiting satellites, to name just a few things!). Due to this, our skybox can not be disabled via config.
 
 ### Custom world provider
-A world provider is a piece of code that minecraft can load to determine certain aspects of how the world should be handled, like light levels, sky color, day/night cycle, etc. In order for the Tom impact effects to work, NTM employs such a world provider, although this is known to cause issues with Hardcore Darkness. The world provider can be disabled with the config option `1.32_enableImpactWorldProvider`.
+A world provider is a piece of code that minecraft can load to determine certain aspects of how the world should be handled, like light levels, sky color, day/night cycle, etc. Our celestial handling requires that we replace the overworld provider in order to show atmospheric effects, render all celestial objects in the skybox correctly, run eclipse effects, etc. This causes a conflict with Hardcore Darkness by default, since our fog colour is calculated differently, which can be resolved by enabling the config option `1.44_hardcoreDarkness`.
 
 ### Stat re-registering
 An often overlooked aspect of Minecraft is its stats, the game keeps track of how many of an item were crafted, placed, broken, etc. By default, Minecraft can only handle vanilla items, modded items would not show up in the stats window. Forge does little to fix this, and since NTM has to keep track of certain things (such as the use of an acidizer for spawning Mask Man) it will run its own code which re-registers all stats for all modded items. In the event that re-registering causes issues, or another mod already does this better already, this behavior can be disabled with the config option `1.33_enableStatReRegistering`.

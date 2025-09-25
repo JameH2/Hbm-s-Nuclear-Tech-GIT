@@ -30,6 +30,7 @@ public class ChunkProviderMoho extends ChunkProviderCelestial {
 		smallCrater.setSize(8, 32);
 		largeCrater.setSize(96, 128);
 		volcano.setSize(64, 128);
+		volcano.setMaterial(ModBlocks.volcano_core, ModBlocks.basalt);
 
 		smallCrater.regolith = largeCrater.regolith = ModBlocks.moho_regolith;
 		smallCrater.rock = largeCrater.rock = ModBlocks.moho_stone;

@@ -11,12 +11,13 @@ import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
+import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.main.StructureManager;
 import com.hbm.world.feature.OilBubble;
-import com.hbm.world.gen.NBTStructure;
-import com.hbm.world.gen.NBTStructure.JigsawPiece;
-import com.hbm.world.gen.NBTStructure.JigsawPool;
-import com.hbm.world.gen.NBTStructure.SpawnCondition;
+import com.hbm.world.gen.nbt.NBTStructure;
+import com.hbm.world.gen.nbt.JigsawPiece;
+import com.hbm.world.gen.nbt.JigsawPool;
+import com.hbm.world.gen.nbt.SpawnCondition;
 import com.hbm.world.generator.DungeonToolbox;
 
 import cpw.mods.fml.common.IWorldGenerator;
@@ -28,13 +29,13 @@ import net.minecraft.world.gen.structure.StructureComponent.BlockSelector;
 public class WorldGeneratorMinmus implements IWorldGenerator {
 
 	public WorldGeneratorMinmus() {
-        Map<Block, BlockSelector> concrete = new HashMap<Block, BlockSelector>() {{
-            put(ModBlocks.concrete_colored, new DesertConcrete());
-        }};
+		Map<Block, BlockSelector> concrete = new HashMap<Block, BlockSelector>() {{
+			put(ModBlocks.concrete_colored, new DesertConcrete());
+		}};
 
 		JigsawPiece minmusBase = new JigsawPiece("minmus_base", StructureManager.mun_base) {{ alignToTerrain = true; heightOffset = -1; blockTable = concrete; }};
 
-		NBTStructure.registerStructure(SpaceConfig.minmusDimension, new SpawnCondition() {{
+		NBTStructure.registerStructure(SpaceConfig.minmusDimension, new SpawnCondition("minmus_base") {{
 			spawnWeight = 6;
 			sizeLimit = 32;
 			startPool = "start";
@@ -74,29 +75,32 @@ public class WorldGeneratorMinmus implements IWorldGenerator {
 
 	private void generateMinmus(World world, Random rand, int i, int j) {
 		int meta = CelestialBody.getMeta(world);
+		Block stone = ((WorldProviderCelestial) world.provider).getStone();
 
 		if(WorldConfig.minmusBrineSpawn > 0 && rand.nextInt(WorldConfig.minmusBrineSpawn) == 0) {
 			int randPosX = i + rand.nextInt(16);
 			int randPosY = rand.nextInt(25);
 			int randPosZ = j + rand.nextInt(16);
 
-			OilBubble.spawnOil(world, randPosX, randPosY, randPosZ, 10 + rand.nextInt(7), ModBlocks.ore_brine, meta, ModBlocks.minmus_stone);
+			OilBubble.spawnOil(world, randPosX, randPosY, randPosZ, 10 + rand.nextInt(7), ModBlocks.ore_brine, meta, stone);
 		}
 
-        DungeonToolbox.generateOre(world, rand, i, j, 1, 16, 6, 40, ModBlocks.stone_resource, EnumStoneType.MALACHITE.ordinal(), ModBlocks.minmus_stone);
-        DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.copperSpawn * 3, 12, 8, 56, ModBlocks.ore_copper, meta, ModBlocks.minmus_stone);
+		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.nickelSpawn, 8, 1, 43, ModBlocks.ore_nickel, meta, stone);
+		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.titaniumSpawn, 12, 4, 27, ModBlocks.ore_titanium, meta, stone);
+		DungeonToolbox.generateOre(world, rand, i, j, 1, 16, 6, 40, ModBlocks.stone_resource, EnumStoneType.MALACHITE.ordinal(), stone);
+		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.copperSpawn * 3, 12, 8, 56, ModBlocks.ore_copper, meta, stone);
 	}
 
 
 
-    private static class DesertConcrete extends BlockSelector {
+	private static class DesertConcrete extends BlockSelector {
 
-        @Override
+		@Override
 		public void selectBlocks(Random rand, int posX, int posY, int posZ, boolean notInterior) {
 			this.field_151562_a = ModBlocks.concrete_colored_ext;
 			this.selectedBlockMetaData = 6;
-        }
+		}
 
-    }
+	}
 
 }

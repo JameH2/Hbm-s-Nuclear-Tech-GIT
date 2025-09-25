@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableSet;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
+import com.hbm.particle.helper.ExplosionCreator;
 import com.hbm.particle.helper.ExplosionSmallCreator;
 import com.hbm.util.ParticleUtil;
 
@@ -126,6 +127,7 @@ public abstract class EntityPlaneBase extends Entity implements IChunkLoader {
 				
 				if((!worldObj.getBlock((int) posX, (int) posY, (int) posZ).isAir(worldObj, (int) posX, (int) posY, (int) posZ) || posY < 0)) {
 					this.setDead();
+					ExplosionCreator.composeEffectLarge(worldObj, posX, posY, posZ);
 					new ExplosionVNT(worldObj, posX, posY, posZ, 15F).makeStandard().explode();
 					worldObj.playSoundEffect(posX, posY, posZ, "hbm:entity.planeCrash", 25.0F, 1.0F);
 					return;

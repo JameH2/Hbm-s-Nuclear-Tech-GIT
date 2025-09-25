@@ -9,6 +9,8 @@ import java.util.Map;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystemWorldSavedData;
 import com.hbm.dim.WorldProviderCelestial;
+import com.hbm.dim.trait.CBT_War;
+import com.hbm.dim.trait.CBT_War.Projectile;
 import com.hbm.dim.trait.CelestialBodyTrait;
 import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.handler.pollution.PollutionHandler;
@@ -97,11 +99,13 @@ public class PermaSyncHandler {
 
 		/// SATELLITES ///
 		// Only syncs data required for rendering satellites on the client
-		HashMap<Integer, Satellite> sats = SatelliteSavedData.getData(world).sats;
+		HashMap<Integer, Satellite> sats = SatelliteSavedData.getData(world, (int)player.posX, (int)player.posZ).sats;
 		buf.writeInt(sats.size());
 		for(Map.Entry<Integer, Satellite> entry : sats.entrySet()) {
 			buf.writeInt(entry.getKey());
 			buf.writeInt(entry.getValue().getID());
+			entry.getValue().serialize(buf);
+
 		}
 		/// SATELLITES ///
 
@@ -121,6 +125,17 @@ public class PermaSyncHandler {
 			buf.writeInt(-1);
 		}
 		/// RIDING DESYNC FIX ///
+
+		// TODO: take out back and shoot
+		CBT_War war = CelestialBody.getTrait(world, CBT_War.class);
+		if (war != null) {
+			List<Projectile> projectiles = war.getProjectiles();
+			for (Projectile projectile : projectiles) {
+				buf.writeFloat(projectile.getFlashtime());
+				buf.writeFloat(projectile.getTravel());
+			}
+		}
+		// EFFECTS THAT I DONT KNOW HOW TO GET WORKING ELSEWHERE :P //
 	}
 
 	public static void readPacket(ByteBuf buf, World world, EntityPlayer player) {
@@ -198,9 +213,18 @@ public class PermaSyncHandler {
 		int satSize = buf.readInt();
 		HashMap<Integer, Satellite> sats = new HashMap<Integer, Satellite>();
 		for(int i = 0; i < satSize; i++) {
-			sats.put(buf.readInt(), Satellite.create(buf.readInt()));
+			int satelliteID = buf.readInt();
+
+			Satellite satellite = Satellite.create(buf.readInt());
+
+			sats.put(satelliteID, satellite);
+
+			satellite.deserialize(buf);
+
 		}
+
 		SatelliteSavedData.setClientSats(sats);
+
 		/// SATELLITES ///
 
 		/// TIME OF DAY ///
@@ -216,5 +240,20 @@ public class PermaSyncHandler {
 			player.mountEntity(entity);
 		}
 		/// RIDING DESYNC FIX ///
+
+		// TODO: remove this or lose your leg bone privileges
+		CBT_War war = CelestialBody.getTrait(world, CBT_War.class);
+		if (war != null) {
+			List<Projectile> projectiles = war.getProjectiles();
+			for (Projectile projectile : projectiles){
+					float flashtime = buf.readFloat();
+					float traveltime = buf.readFloat();
+
+					projectile.setFlashtime(flashtime);
+					projectile.setTravel(traveltime);
+				}
+			}
+		// EFFECTS THAT I DONT KNOW HOW TO GET WORKING ELSEWHERE :P //
 	}
+
 }

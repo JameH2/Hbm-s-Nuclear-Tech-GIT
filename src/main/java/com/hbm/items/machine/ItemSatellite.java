@@ -8,6 +8,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemCustomMissilePart;
 import com.hbm.saveddata.satellites.Satellite;
 
+import com.hbm.util.i18n.I18nUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
@@ -29,51 +30,58 @@ public class ItemSatellite extends ItemCustomMissilePart implements ISatChip {
 		if(mass <= 16_000) canLaunchByHand = true;
 	}
 
+	public ItemSatellite(int mass, WarheadType type) {
+		makeWarhead(type, 15F, mass, PartSize.SIZE_20);
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		super.addInformation(itemstack, player, list, bool);
 
-		list.add("Satellite frequency: " + getFreq(itemstack));
+		list.add(I18nUtil.resolveKey("item.sat.desc.frequency") + ": " + getFreq(itemstack));
 
 		if(this == ModItems.sat_foeq)
-			list.add("Gives you an achievement. That's it.");
+			list.add(I18nUtil.resolveKey("item.sat.desc.foeq"));
 
 		if(this == ModItems.sat_gerald) {
-			list.add("Single use.");
-			list.add("Requires orbital module.");
-			list.add("Melter of CPUs, bane of every server owner.");
+			list.add(I18nUtil.resolveKey("item.sat.desc.gerald.single_use"));
+			list.add(I18nUtil.resolveKey("item.sat.desc.gerald.orbital_module"));
+			list.add(I18nUtil.resolveKey("item.sat.desc.gerald.melter"));
 		}
 
 		if(this == ModItems.sat_laser)
-			list.add("Allows to summon lasers with a 15 second cooldown.");
+			list.add(I18nUtil.resolveKey("item.sat.desc.laser"));
 
 		if(this == ModItems.sat_mapper)
-			list.add("Displays currently loaded chunks.");
+			list.add(I18nUtil.resolveKey("item.sat.desc.mapper"));
 
 		if(this == ModItems.sat_miner)
-			list.add("Will deliver ore powders to a cargo landing pad.");
+			list.add(I18nUtil.resolveKey("item.sat.desc.miner"));
 
 		if(this == ModItems.sat_lunar_miner)
-			list.add("Mines moon turf to deliver it to a cargo landing pad.");
+			list.add(I18nUtil.resolveKey("item.sat.desc.lunar_miner"));
 
 		if(this == ModItems.sat_radar)
-			list.add("Shows a map of active entities.");
+			list.add(I18nUtil.resolveKey("item.sat.desc.radar"));
 
 		if(this == ModItems.sat_resonator)
-			list.add("Allows for teleportation with no cooldown.");
+			list.add(I18nUtil.resolveKey("item.sat.desc.resonator"));
 
 		if(this == ModItems.sat_scanner)
-			list.add("Creates a topdown map of underground ores.");
+			list.add(I18nUtil.resolveKey("item.sat.desc.scanner"));
+
+		if(this == ModItems.sat_war)
+			list.add(I18nUtil.resolveKey("item.sat.desc.war"));
 
 		if(this == ModItems.sat_dyson_relay)
-			list.add("Allows a Dyson Receiver to function at night");
+			list.add(I18nUtil.resolveKey("item.sat.desc.dyson_relay"));
 
 		if(canLaunchByHand) {
-			list.add(EnumChatFormatting.GOLD + "Can be launched by hand from an orbital station");
+			list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.sat.desc.launch_by_hand"));
 
 			if(CelestialBody.inOrbit(player.worldObj))
-				list.add(EnumChatFormatting.BOLD + "Interact to deploy into orbit");
+				list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.sat.desc.deploy_orbit"));
 		}
 	}
 

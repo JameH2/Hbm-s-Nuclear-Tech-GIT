@@ -11,6 +11,8 @@ public class WorldConfig {
 	public static boolean netherOre = true;
 	public static boolean endOre = true;
 
+	public static int ironSpawn = 9;
+
 	public static int uraniumSpawn = 6;
 	public static int thoriumSpawn = 7;
 	public static int titaniumSpawn = 8;
@@ -64,6 +66,12 @@ public class WorldConfig {
 	public static int laytheGasPerDepositMin = 100;
 	public static int laytheGasPerDepositMax = 500;
 	public static double laytheOilDrainChance = 0.05D;
+
+	public static int tektoOilSpawn = 100;
+	public static int tektoOilPerDeposit = 500;
+	public static int tektoGasPerDepositMin = 100;
+	public static int tektoGasPerDepositMax = 500;
+	public static double tektoOilDrainChance = 0.05D;
 
 	public static int eveGasPerDeposit = 500;
 	public static int evePetPerDepositMin = 20;
@@ -132,7 +140,7 @@ public class WorldConfig {
 	public static boolean enableSulfurCave = true;
 	public static boolean enableAsbestosCave = true;
 
-	public static int radioStructure = 500;
+//	public static int radioStructure = 500;
 	public static int antennaStructure = 250;
 	public static int atomStructure = 500;
 	public static int dungeonStructure = 64;
@@ -247,6 +255,13 @@ public class WorldConfig {
 		ikeBrinePerDeposit = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.O23_ikeBrinePerDeposit", "Brine extracted per Ike brine block suck", ikeBrinePerDeposit);
 		ikeBrineDrainChance = CommonConfig.createConfigDouble(config, CATEGORY_OREGEN, "2.O24_ikeBrineDrainChance", "Chance for an Ike brine block to become empty on suck", ikeBrineDrainChance);
 
+		tektoOilSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.33S_tektoOilSpawnRate", "Spawns a Tekto oil bubble every nTH chunk (on Tekto)", 100);
+		tektoOilPerDeposit = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.O25_tektoOilPerDeposit", "Oil extracted per Tekto oil block suck", tektoOilPerDeposit);
+		tektoGasPerDepositMin = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.O26_tektoGasPerDepositMin", "Minimum natural gas extracted per Tekto oil block suck", tektoGasPerDepositMin);
+		tektoGasPerDepositMax = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.O27_tektoGasPerDepositMax", "Maximum natural gas extracted per Tekto oil block suck", tektoGasPerDepositMax);
+		tektoOilDrainChance = CommonConfig.createConfigDouble(config, CATEGORY_OREGEN, "2.O28_tektoOilDrainChance", "Chance for a Tekto oil block to become empty on suck", tektoOilDrainChance);
+
+
 		newBedrockOres = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.NB_newBedrockOres", "Enables the newer genreric bedrock ores", true);
 		bedrockIronSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.B00_bedrockIronWeight", "Spawn weight for iron bedrock ore", 100);
 		bedrockCopperSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.B01_bedrockCopperWeight", "Spawn weight for copper bedrock ore", 200);
@@ -301,7 +316,7 @@ public class WorldConfig {
 		enableAsbestosCave = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.C01_enableAsbestosCave", "Toggles asbestos caves", true);
 
 		final String CATEGORY_DUNGEON = CommonConfig.CATEGORY_DUNGEONS;
-		radioStructure = CommonConfig.createConfigInt(config, CATEGORY_DUNGEON, "4.00_radioSpawn", "Spawn radio station on every nTH chunk", 500);
+//		radioStructure = CommonConfig.createConfigInt(config, CATEGORY_DUNGEON, "4.00_radioSpawn", "Spawn radio station on every nTH chunk", 500);
 		antennaStructure = CommonConfig.createConfigInt(config, CATEGORY_DUNGEON, "4.01_antennaSpawn", "Spawn antenna on every nTH chunk", 250);
 		atomStructure = CommonConfig.createConfigInt(config, CATEGORY_DUNGEON, "4.02_atomSpawn", "Spawn power plant on every nTH chunk", 500);
 		dungeonStructure = CommonConfig.createConfigInt(config, CATEGORY_DUNGEON, "4.04_dungeonSpawn", "Spawn library dungeon on every nTH chunk", 64);
@@ -345,7 +360,7 @@ public class WorldConfig {
 		craterBiomeOuterRad = (float) CommonConfig.createConfigDouble(config, CATEGORY_BIOMES, "17.R02_craterBiomeOuterRad", "RAD/s for the outer crater biome", 0.5D);
 		craterBiomeWaterMult = (float) CommonConfig.createConfigDouble(config, CATEGORY_BIOMES, "17.R03_craterBiomeWaterMult", "Multiplier for RAD/s in crater biomes when in water", 5D);
 
-		radioStructure = CommonConfig.setDefZero(radioStructure, 1000);
+//		radioStructure = CommonConfig.setDefZero(radioStructure, 1000);
 		antennaStructure = CommonConfig.setDefZero(antennaStructure, 1000);
 		atomStructure = CommonConfig.setDefZero(atomStructure, 1000);
 		dungeonStructure = CommonConfig.setDefZero(dungeonStructure, 1000);

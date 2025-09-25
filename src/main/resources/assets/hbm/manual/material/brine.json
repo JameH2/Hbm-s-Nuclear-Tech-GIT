@@ -1,0 +1,13 @@
+{
+	"name": "Brine",
+	"icon": ["hbm:item.fluid_icon", 1, 162],
+    "trigger": [["hbm:item.fluid_icon", 1, 162]],
+    "title": {
+        "en_US": "Brine",
+		"ru_RU": "Рудный рассол"
+    },
+	"content": {
+		"en_US": "Brine is obtained on the moons: Mun, Minmus, and Ike. used mostly in the production of [[nickel|Nickel]]. Obtained via fluid extraction with a [[derrick|Derrick]].",
+		"ru_RU": "Рудный рассол добывается на: Луна, Минмус и Айк. В основном используется в производстве [[никеля|Nickel]]. Получается путем извлечения жидкости с помощью [[нефтяной вышки|Derrick]]."
+	}
+}

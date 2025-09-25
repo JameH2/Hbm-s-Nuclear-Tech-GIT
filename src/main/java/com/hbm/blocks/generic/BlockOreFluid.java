@@ -11,6 +11,7 @@ import com.hbm.inventory.fluid.Fluids;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
+import scala.reflect.internal.Trees.Return;
 
 public class BlockOreFluid extends BlockOre {
 
@@ -25,6 +26,7 @@ public class BlockOreFluid extends BlockOre {
 		OIL,
 		GAS,
 		BRINE,
+		TCRUDE,
 	}
 
 	public BlockOreFluid(Material mat, Block empty, ReserveType type) {
@@ -42,7 +44,7 @@ public class BlockOreFluid extends BlockOre {
 		default: return "";
 		}
 	}
-
+	
 	public FluidType getPrimaryFluid(int meta) {
 		switch(type) {
 		case OIL:
@@ -50,6 +52,7 @@ public class BlockOreFluid extends BlockOre {
 			return Fluids.OIL;
 		case GAS: return Fluids.GAS;
 		case BRINE: return Fluids.BRINE;
+		case TCRUDE: return Fluids.TCRUDE;
 		default: return Fluids.NONE;
 		}
 	}
@@ -58,6 +61,7 @@ public class BlockOreFluid extends BlockOre {
 		switch(type) {
 		case OIL: return Fluids.GAS;
 		case GAS: return Fluids.PETROLEUM;
+		case TCRUDE: return Fluids.HGAS;
 		default: return Fluids.NONE;
 		}
 	}
@@ -67,6 +71,7 @@ public class BlockOreFluid extends BlockOre {
 		switch(type) {
 		case OIL: return 250;
 		case GAS: return 100;
+		case TCRUDE: return 70;
 		default: return 0;
 		}
 	}
@@ -79,6 +84,7 @@ public class BlockOreFluid extends BlockOre {
 		if(meta == SolarSystem.Body.MUN.ordinal()) return WorldConfig.munBrinePerDeposit;
 		if(meta == SolarSystem.Body.MINMUS.ordinal()) return WorldConfig.minmusBrinePerDeposit;
 		if(meta == SolarSystem.Body.IKE.ordinal()) return WorldConfig.ikeBrinePerDeposit;
+		if(meta == SolarSystem.Body.TEKTO.ordinal()) return WorldConfig.tektoOilPerDeposit;
 		return WorldConfig.earthOilPerDeposit;
 	}
 
@@ -87,6 +93,7 @@ public class BlockOreFluid extends BlockOre {
 		if(meta == SolarSystem.Body.DUNA.ordinal()) return WorldConfig.dunaGasPerDepositMin + rand.nextInt(WorldConfig.dunaGasPerDepositMax - WorldConfig.dunaGasPerDepositMin);
 		if(meta == SolarSystem.Body.LAYTHE.ordinal()) return WorldConfig.laytheGasPerDepositMin + rand.nextInt(WorldConfig.laytheGasPerDepositMax - WorldConfig.laytheGasPerDepositMin);
 		if(meta == SolarSystem.Body.EVE.ordinal()) return WorldConfig.evePetPerDepositMin + rand.nextInt(WorldConfig.evePetPerDepositMax - WorldConfig.evePetPerDepositMin);
+		if(meta == SolarSystem.Body.TEKTO.ordinal()) return WorldConfig.tektoGasPerDepositMin + rand.nextInt(WorldConfig.tektoGasPerDepositMax - WorldConfig.tektoGasPerDepositMin);
 		return WorldConfig.earthGasPerDepositMin + rand.nextInt(WorldConfig.earthGasPerDepositMax - WorldConfig.earthGasPerDepositMin);
 	}
 
@@ -98,6 +105,7 @@ public class BlockOreFluid extends BlockOre {
 		if(meta == SolarSystem.Body.MUN.ordinal()) return WorldConfig.munBrineDrainChance;
 		if(meta == SolarSystem.Body.MINMUS.ordinal()) return WorldConfig.minmusBrineDrainChance;
 		if(meta == SolarSystem.Body.IKE.ordinal()) return WorldConfig.ikeBrineDrainChance;
+		if(meta == SolarSystem.Body.TEKTO.ordinal()) return WorldConfig.tektoOilDrainChance;
 		return WorldConfig.earthOilDrainChance;
 	}
 

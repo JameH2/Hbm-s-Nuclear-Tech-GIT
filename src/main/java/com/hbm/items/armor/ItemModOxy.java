@@ -20,23 +20,24 @@ import net.minecraft.util.EnumChatFormatting;
 
 public class ItemModOxy extends ItemArmorMod implements IFillableItem {
 
-    // Quite similar to JetpackBase, but with a few crucial differences meaning we can't subclass
+	// Quite similar to JetpackBase, but with a few crucial differences meaning we can't subclass
 
-    private FluidType fuel;
-    private int maxFuel;
-    private int rate;
-    private int consumption;
+	private FluidType fuel;
+	private int maxFuel;
+	private int rate;
+	private int consumption;
 
-    private AudioWrapper audioBreathing;
+	private AudioWrapper audioBreathing;
 
-    public ItemModOxy(int maxFuel, int rate, int consumption) {
-        super(ArmorModHandler.plate_only, true, false, false, false);
-        this.maxFuel = maxFuel;
-        this.rate = rate;
-        this.consumption = consumption;
-        fuel = Fluids.OXYGEN;
-    }
+	public ItemModOxy(int maxFuel, int rate, int consumption) {
+		super(ArmorModHandler.plate_only, true, false, false, false);
+		this.maxFuel = maxFuel;
+		this.rate = rate;
+		this.consumption = consumption;
+		fuel = Fluids.OXYGEN;
+	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		list.add(EnumChatFormatting.LIGHT_PURPLE + fuel.getLocalizedName() + ": " + getFuel(itemstack) + "mB / " + this.maxFuel + "mB");
@@ -45,84 +46,88 @@ public class ItemModOxy extends ItemArmorMod implements IFillableItem {
 		list.add(EnumChatFormatting.GOLD + I18n.format("armor.mustSeal"));
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
 		list.add(EnumChatFormatting.RED + "  " + stack.getDisplayName() + " (" + fuel.getLocalizedName() + ": " + getFuel(stack) + "mB / " + this.maxFuel + "mB");
 	}
 
-    @Override
+	@Override
 	public void modUpdate(EntityLivingBase entity, ItemStack armor) {
-        if(entity.worldObj.isRemote) {
-            ItemStack stack = ArmorModHandler.pryMods(armor)[ArmorModHandler.plate_only];
-            if(getInUse(stack)) {
-                if(audioBreathing == null || !audioBreathing.isPlaying()) {
-                    audioBreathing = MainRegistry.proxy.getLoopedSound("hbm:player.plss_breathing", (float)entity.posX, (float)entity.posY, (float)entity.posZ, 0.1F, 5.0F, 1.0F, 5);
-                    audioBreathing.startSound();
-                }
+		if(entity.worldObj.isRemote) {
+			// only play breathing audio for self
+			EntityPlayer player = MainRegistry.proxy.me();
+			if(entity != player) return;
 
-                audioBreathing.updatePosition((float)entity.posX, (float)entity.posY, (float)entity.posZ);
-                audioBreathing.keepAlive();
-            } else {
-                if(audioBreathing != null) {
-                    audioBreathing.stopSound();
-                    audioBreathing = null;
-                }
-            }
-        }
-    }
+			ItemStack stack = ArmorModHandler.pryMods(armor)[ArmorModHandler.plate_only];
+			if(getInUse(stack) && !player.capabilities.isCreativeMode) {
+				if(audioBreathing == null || !audioBreathing.isPlaying()) {
+					audioBreathing = MainRegistry.proxy.getLoopedSound("hbm:player.plss_breathing", entity, 0.1F, 5.0F, 1.0F, 10);
+					audioBreathing.startSound();
+				}
 
-    // returns true if the entity can breathe, either via the contained air, or via the atmosphere itself
-    // if contained air is used, it'll be decremented here, this saves on multiple atmosphere checks
-    public boolean attemptBreathing(EntityLivingBase entity, ItemStack stack, CBT_Atmosphere atmosphere) {
-        if(ChunkAtmosphereManager.proxy.canBreathe(atmosphere)) {
-            setInUse(stack, false);
-            return true;
-        }
+				audioBreathing.keepAlive();
+			} else {
+				if(audioBreathing != null) {
+					audioBreathing.stopSound();
+					audioBreathing = null;
+				}
+			}
+		}
+	}
 
-        if(entity.ticksExisted % rate == 0)
-            setFuel(stack, Math.max(getFuel(stack) - consumption, 0));
+	// returns true if the entity can breathe, either via the contained air, or via the atmosphere itself
+	// if contained air is used, it'll be decremented here, this saves on multiple atmosphere checks
+	public boolean attemptBreathing(EntityLivingBase entity, ItemStack stack, CBT_Atmosphere atmosphere, boolean forceConsume) {
+		if(!forceConsume && ChunkAtmosphereManager.proxy.canBreathe(atmosphere)) {
+			setInUse(stack, false);
+			return true;
+		}
 
-        boolean hasFuel = getFuel(stack) > 0;
+		if(entity.ticksExisted % rate == 0)
+			setFuel(stack, Math.max(getFuel(stack) - consumption, 0));
 
-        setInUse(stack, hasFuel);
+		boolean hasFuel = getFuel(stack) > 0;
 
-        return hasFuel;
-    }
+		setInUse(stack, hasFuel);
 
-    @Override
-    public boolean acceptsFluid(FluidType type, ItemStack stack) {
-        return type == fuel;
-    }
+		return hasFuel;
+	}
 
-    @Override
-    public int tryFill(FluidType type, int amount, ItemStack stack) {
-        if(!acceptsFluid(type, stack))
-            return amount;
+	@Override
+	public boolean acceptsFluid(FluidType type, ItemStack stack) {
+		return type == fuel;
+	}
 
-        int fill = getFuel(stack);
-        int toFill = Math.min(amount, maxFuel - fill);
+	@Override
+	public int tryFill(FluidType type, int amount, ItemStack stack) {
+		if(!acceptsFluid(type, stack))
+			return amount;
 
-        setFuel(stack, fill + toFill);
+		int fill = getFuel(stack);
+		int toFill = Math.min(amount, maxFuel - fill);
 
-        return amount - toFill;
-    }
+		setFuel(stack, fill + toFill);
 
-    @Override
-    public boolean providesFluid(FluidType type, ItemStack stack) {
-        return false;
-    }
+		return amount - toFill;
+	}
 
-    @Override
-    public int tryEmpty(FluidType type, int amount, ItemStack stack) {
-        return 0;
-    }
+	@Override
+	public boolean providesFluid(FluidType type, ItemStack stack) {
+		return false;
+	}
 
-    @Override
-    public FluidType getFirstFluidType(ItemStack stack) {
-        return null;
-    }
+	@Override
+	public int tryEmpty(FluidType type, int amount, ItemStack stack) {
+		return 0;
+	}
 
-    public static boolean getInUse(ItemStack stack) {
+	@Override
+	public FluidType getFirstFluidType(ItemStack stack) {
+		return null;
+	}
+
+	public static boolean getInUse(ItemStack stack) {
 		if(stack.stackTagCompound == null) {
 			stack.stackTagCompound = new NBTTagCompound();
 			return false;
@@ -136,14 +141,14 @@ public class ItemModOxy extends ItemArmorMod implements IFillableItem {
 			stack.stackTagCompound = new NBTTagCompound();
 		}
 
-        if(inUse) {
-            stack.stackTagCompound.setInteger("ticks", stack.stackTagCompound.getInteger("ticks") + 1);
-        } else {
-            stack.stackTagCompound.setInteger("ticks", 0);
-        }
+		if(inUse) {
+			stack.stackTagCompound.setInteger("ticks", stack.stackTagCompound.getInteger("ticks") + 1);
+		} else {
+			stack.stackTagCompound.setInteger("ticks", 0);
+		}
 	}
 
-    public static int getFuel(ItemStack stack) {
+	public static int getFuel(ItemStack stack) {
 		if(stack.stackTagCompound == null) {
 			stack.stackTagCompound = new NBTTagCompound();
 			return 0;
@@ -160,13 +165,13 @@ public class ItemModOxy extends ItemArmorMod implements IFillableItem {
 		stack.stackTagCompound.setInteger("fuel", i);
 	}
 
-    public int getMaxFuel() {
-        return maxFuel;
-    }
+	public int getMaxFuel() {
+		return maxFuel;
+	}
 
-    @Override
-    public int getFill(ItemStack stack) {
-        return 0;
-    }
+	@Override
+	public int getFill(ItemStack stack) {
+		return 0;
+	}
 
 }

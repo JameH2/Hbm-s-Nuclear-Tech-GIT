@@ -143,6 +143,8 @@ public class CrystallizerRecipes extends SerializableRecipe {
 		registerRecipe(new ComparableStack(ModItems.saltleaf),	new CrystallizerRecipe(ModItems.gem_sodalite, baseTime).setReq(5), new FluidStack(Fluids.SCUTTERBLOOD, 1_000));
 		registerRecipe(MALACHITE.ingot(), new CrystallizerRecipe(ModItems.crystal_copper, baseTime).prod(0.1F), new FluidStack(Fluids.COPPERSULFATE, 350));
 		registerRecipe(new ComparableStack(ModItems.nickel_salts),	new CrystallizerRecipe(ModItems.crystal_nickel, baseTime), nitric);
+		registerRecipe(new ComparableStack(ModItems.leaf_rubber),	new CrystallizerRecipe(ModItems.ingot_rubber, baseTime).setReq(64), chloric);
+		//registerRecipe(new ComparableStack(ModItems.leaf_pet),	new CrystallizerRecipe(ModItems.ingot_pc, baseTime).setReq(32), new FluidStack(Fluids.VINYL, 250));
 
 		for(int i = 0; i < ScrapType.values().length; i++) {
 			registerRecipe(new ComparableStack(ModItems.scrap_plastic, 1, i), new CrystallizerRecipe(new ItemStack(ModItems.circuit_star_piece, 1, i), baseTime));

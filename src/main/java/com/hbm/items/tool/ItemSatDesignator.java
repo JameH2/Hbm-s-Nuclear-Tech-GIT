@@ -16,19 +16,19 @@ public class ItemSatDesignator extends ItemSatChip {
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-		
+
 		if(!world.isRemote) {
-			
-			Satellite sat = SatelliteSavedData.getData(world).getSatFromFreq(this.getFreq(stack));
-			
+
+			Satellite sat = SatelliteSavedData.getData(world, (int)player.posX, (int)player.posZ).getSatFromFreq(this.getFreq(stack));
+
 			if(sat != null) {
 				MovingObjectPosition pos = Library.rayTrace(player, 300, 1);
-				
+
 				ForgeDirection dir = ForgeDirection.getOrientation(pos.sideHit);
 				int x = pos.blockX + dir.offsetX;
 				int y = pos.blockY + dir.offsetY;
 				int z = pos.blockZ + dir.offsetZ;
-				
+
 				if(sat.satIface == Interfaces.SAT_COORD) {
 					sat.onCoordAction(world, player, x, y, z);
 				} else if(sat.satIface == Interfaces.SAT_PANEL) {
@@ -36,7 +36,7 @@ public class ItemSatDesignator extends ItemSatChip {
 				}
 			}
 		}
-		
+
 		return stack;
 	}
 

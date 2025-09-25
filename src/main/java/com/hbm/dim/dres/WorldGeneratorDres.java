@@ -11,12 +11,13 @@ import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
+import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.dim.dres.biome.BiomeGenBaseDres;
 import com.hbm.main.StructureManager;
-import com.hbm.world.gen.NBTStructure;
-import com.hbm.world.gen.NBTStructure.JigsawPiece;
-import com.hbm.world.gen.NBTStructure.JigsawPool;
-import com.hbm.world.gen.NBTStructure.SpawnCondition;
+import com.hbm.world.gen.nbt.NBTStructure;
+import com.hbm.world.gen.nbt.JigsawPiece;
+import com.hbm.world.gen.nbt.JigsawPool;
+import com.hbm.world.gen.nbt.SpawnCondition;
 import com.hbm.world.gen.component.Component.LabTiles;
 import com.hbm.world.generator.DungeonToolbox;
 
@@ -29,12 +30,12 @@ import net.minecraft.world.gen.structure.StructureComponent.BlockSelector;
 public class WorldGeneratorDres implements IWorldGenerator {
 
 	public WorldGeneratorDres() {
-        Map<Block, BlockSelector> tiles = new HashMap<Block, BlockSelector>() {{
-            put(ModBlocks.tile_lab, new LabTiles(0.2F));
-        }};
+		Map<Block, BlockSelector> tiles = new HashMap<Block, BlockSelector>() {{
+			put(ModBlocks.tile_lab, new LabTiles(0.2F));
+		}};
 
-		NBTStructure.registerStructure(SpaceConfig.dresDimension, new SpawnCondition() {{
-			spawnWeight = 4;
+		NBTStructure.registerStructure(SpaceConfig.dresDimension, new SpawnCondition("dres_rbmk") {{
+			spawnWeight = 8;
 			minHeight = 40;
 			maxHeight = 40;
 			sizeLimit = 128;
@@ -70,7 +71,7 @@ public class WorldGeneratorDres implements IWorldGenerator {
 			}};
 		}});
 
-		NBTStructure.registerNullWeight(SpaceConfig.dresDimension, 20);
+		NBTStructure.registerNullWeight(SpaceConfig.dresDimension, 16);
 
 		BlockOre.addValidBody(ModBlocks.ore_shale, SolarSystem.Body.DRES);
 		BlockOre.addValidBody(ModBlocks.ore_lanthanium, SolarSystem.Body.DRES);
@@ -88,13 +89,15 @@ public class WorldGeneratorDres implements IWorldGenerator {
 
 	private void generateDres(World world, Random rand, int i, int j) {
 		int meta = CelestialBody.getMeta(world);
+		Block stone = ((WorldProviderCelestial) world.provider).getStone();
 
-		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.cobaltSpawn, 4, 3, 22, ModBlocks.ore_cobalt, meta, ModBlocks.dres_rock);
-		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.copperSpawn, 9, 4, 27, ModBlocks.ore_iron, meta, ModBlocks.dres_rock);
-		DungeonToolbox.generateOre(world, rand, i, j, 12,  8, 1, 33, ModBlocks.ore_niobium, meta, ModBlocks.dres_rock);
-		DungeonToolbox.generateOre(world, rand, i, j, GeneralConfig.coltanRate, 4, 15, 40, ModBlocks.ore_coltan, meta, ModBlocks.dres_rock);
-		DungeonToolbox.generateOre(world, rand, i, j, 1, 6, 4, 64, ModBlocks.ore_lanthanium, meta, ModBlocks.dres_rock);
+		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.cobaltSpawn, 4, 3, 22, ModBlocks.ore_cobalt, meta, stone);
+		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.copperSpawn, 9, 4, 27, ModBlocks.ore_iron, meta, stone);
+		DungeonToolbox.generateOre(world, rand, i, j, 12,  8, 1, 33, ModBlocks.ore_niobium, meta, stone);
+		DungeonToolbox.generateOre(world, rand, i, j, GeneralConfig.coltanRate, 4, 15, 40, ModBlocks.ore_coltan, meta, stone);
+		DungeonToolbox.generateOre(world, rand, i, j, 1, 6, 4, 64, ModBlocks.ore_lanthanium, meta, stone);
 
-        DungeonToolbox.generateOre(world, rand, i, j, 1, 12, 8, 32, ModBlocks.ore_shale, meta, ModBlocks.dres_rock);
+		DungeonToolbox.generateOre(world, rand, i, j, 1, 12, 8, 32, ModBlocks.ore_shale, meta, stone);
 	}
+
 }

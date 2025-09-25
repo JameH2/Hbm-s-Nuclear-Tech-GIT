@@ -21,31 +21,31 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class ItemSatInterface extends ItemSatChip implements IGUIProvider {
-	
+
 	@SideOnly(Side.CLIENT)
 	public static Satellite currentSat;
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-		
+
 		if(world.isRemote) {
 
 			player.openGui(MainRegistry.instance, 0, world, 0, 0, 0);
 		}
-		
+
 		return stack;
 	}
-	
+
     public void onUpdate(ItemStack stack, World world, Entity entity, int i, boolean b) {
-    	
+
     	if(world.isRemote || !(entity instanceof EntityPlayerMP))
     		return;
-    	
+
     	if(((EntityPlayerMP)entity).getHeldItem() != stack)
     		return;
-    	
-    	Satellite sat = SatelliteSavedData.getData(world).getSatFromFreq(this.getFreq(stack));
-    	
+
+    	Satellite sat = SatelliteSavedData.getData(world, (int)entity.posX, (int)entity.posZ).getSatFromFreq(this.getFreq(stack));
+
     	if(sat != null && entity.ticksExisted % 2 == 0) {
     		PacketDispatcher.wrapper.sendTo(new SatPanelPacket(sat), (EntityPlayerMP) entity); //making this one sat that is static might not have been a good idea
     	}
@@ -63,7 +63,7 @@ public class ItemSatInterface extends ItemSatChip implements IGUIProvider {
 			return new GUIScreenSatInterface(player);
 		else if(this == ModItems.sat_coord)
 			return new GUIScreenSatCoord(player);
-		
+
 		return null;
 	}
 

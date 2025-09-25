@@ -8,22 +8,17 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.items.tool.ItemTransporterLinker.TransporterInfo;
-import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
-import com.hbm.uninos.GenNode;
-import com.hbm.uninos.UniNodespace;
 import com.hbm.util.BufferUtil;
-import com.hbm.util.Compat;
 import com.hbm.util.InventoryUtil;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
+import api.hbm.energymk2.IEnergyReceiverMK2.ConnectionPriority;
 import api.hbm.fluid.IFluidStandardTransceiver;
-import api.hbm.fluidmk2.IFluidConnectorMK2;
-import api.hbm.fluidmk2.IFluidReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
-import api.hbm.fluidmk2.IFluidUserMK2;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -286,6 +281,11 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 		@Override
 		public FluidTank[] getReceivingTanks() {
 			return (FluidTank[]) Arrays.copyOfRange(tanks, outputTankMax, tanks.length);
+		}
+
+		@Override
+		public ConnectionPriority getFluidPriority() {
+			return ConnectionPriority.HIGH;
 		}
 
 	}

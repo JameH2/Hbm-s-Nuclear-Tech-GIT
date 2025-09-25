@@ -437,7 +437,6 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
 
 	@Override
 	protected void spawnCasing() {
-
 		if(cachedCasingConfig == null) return;
 		CasingEjector ej = getEjector();
 

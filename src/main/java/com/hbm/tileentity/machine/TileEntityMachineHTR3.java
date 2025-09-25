@@ -71,7 +71,7 @@ public class TileEntityMachineHTR3 extends TileEntityMachineBase implements IPro
 				} else if(soundtime > 20) {
 					soundtime = 20;
 				}
-			}else {
+			} else {
 				soundtime--;
 
 				if(soundtime == 19) {

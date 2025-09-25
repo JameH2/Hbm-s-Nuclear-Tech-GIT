@@ -1,0 +1,28 @@
+package com.hbm.render.entity.mob;
+
+import com.hbm.entity.mob.EntityScutterfish;
+import com.hbm.entity.mob.EntitySifterEel;
+import com.hbm.lib.RefStrings;
+
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
+
+public class RenderSifterEel extends RenderLiving {
+
+	public static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID, "textures/entity/shifterEel_1.png");
+
+	public RenderSifterEel(ModelBase p_i1252_1_, float p_i1252_2_) {
+		super(p_i1252_1_, p_i1252_2_);
+	}
+
+	protected ResourceLocation getEntityTexture(Entity entity) {
+		return this.getEntityTexture((EntitySifterEel) entity);
+	}
+
+	protected ResourceLocation getEntityTexture(EntitySifterEel entity) {
+		return texture;
+	}
+
+}

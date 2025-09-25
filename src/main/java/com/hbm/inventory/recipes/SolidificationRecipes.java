@@ -75,6 +75,7 @@ public class SolidificationRecipes extends SerializableRecipe {
 		registerRecipe(SLOP,		250,			ModBlocks.ore_oil_sand);
 		registerRecipe(CARBONDIOXIDE, 1000,			ModBlocks.dry_ice);
 		registerRecipe(AQUEOUS_NICKEL, 500,		ModItems.nickel_salts);
+		registerRecipe(VINYL, 1000,				ModItems.ingot_pvc);
 
 		registerRecipe(OIL,				SF_OIL,			DictFrame.fromOne(ModItems.oil_tar, EnumTarType.CRUDE));
 		registerRecipe(CRACKOIL,		SF_CRACK,		DictFrame.fromOne(ModItems.oil_tar, EnumTarType.CRACK));

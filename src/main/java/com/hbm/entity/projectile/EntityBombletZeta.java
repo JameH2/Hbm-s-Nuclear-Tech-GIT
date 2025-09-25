@@ -87,6 +87,13 @@ public class EntityBombletZeta extends EntityThrowable {
 					PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, posX, posY + 0.5, posZ), new TargetPoint(dimension, posX, posY, posZ, 250));
 					worldObj.playSoundEffect(posX, posY, posZ, "hbm:weapon.mukeExplosion", 15.0F, 1.0F);
 				}
+				if(type == 9) {
+					ExplosionVNT vnt = new ExplosionVNT(worldObj, this.posX + 0.5F, this.posY + 1.5F, this.posZ + 0.5F, 4F);
+					vnt.setEntityProcessor(new EntityProcessorCrossSmooth(1, 100));
+					vnt.setPlayerProcessor(new PlayerProcessorStandard());
+					vnt.setSFX(new ExplosionEffectWeapon(15, 3.5F, 1.25F));
+					vnt.explode();
+				}
 				this.setDead();
 			}
 		}

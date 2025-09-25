@@ -9,6 +9,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.main.MainRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.eventhandler.EventBus;
 import cpw.mods.fml.common.eventhandler.IEventListener;
 import cpw.mods.fml.relauncher.ReflectionHelper;
@@ -39,6 +40,7 @@ public class Compat {
 	public static final String MOD_ANG = "angelica";
 	public static final String MOD_BOP = "BiomesOPlenty";
 	public static final String MOD_COFH = "CoFHCore";
+	public static final String MOD_TOR = "Torcherino";
 
 	public static Item tryLoadItem(String domain, String name) {
 		return (Item) Item.itemRegistry.getObject(getReg(domain, name));
@@ -51,11 +53,11 @@ public class Compat {
 	private static String getReg(String domain, String name) {
 		return domain + ":" + name;
 	}
-	
+
 	public static ItemStack getPreferredOreOutput(List<ItemStack> oreList) {
 		int lowestPref = -1;
 		ItemStack preferredStack = null;
-		
+
 		for(ItemStack item : oreList) {
 			String modid = ItemStackUtil.getModIdFromItemStack(item);
 			for(int i = 0; i < GeneralConfig.preferredOutputMod.length; i++) {
@@ -73,7 +75,7 @@ public class Compat {
 		}
 		return oreList.get(0).copy();
 	}
-	
+
 	public static boolean isModLoaded(String modid) {
 		return Loader.isModLoaded(modid);
 	}
@@ -260,5 +262,9 @@ public class Compat {
 	public static TileEntity getTileStandard(World world, int x, int y, int z) {
 		if(!world.getChunkProvider().chunkExists(x >> 4, z >> 4)) return null;
 		return world.getTileEntity(x, y, z);
+	}
+
+	public static void blacklistAccelerator(Class clazz) {
+		FMLInterModComms.sendMessage("Torcherino", "blacklist-tile", clazz.getName());
 	}
 }

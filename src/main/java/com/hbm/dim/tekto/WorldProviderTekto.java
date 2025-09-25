@@ -2,16 +2,14 @@ package com.hbm.dim.tekto;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.dim.WorldChunkManagerCelestial;
-import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.dim.WorldChunkManagerCelestial.BiomeGenLayers;
+import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.dim.tekto.GenLayerTekto.GenLayerTektoRiverMix;
 import com.hbm.dim.tekto.GenLayerTekto.GenlayerTektoBiomes;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.GenLayerRiver;
@@ -36,22 +34,6 @@ public class WorldProviderTekto extends WorldProviderCelestial {
 		return new ChunkProviderTekto(this.worldObj, this.getSeed(), false);
 	}
 
-
-	@Override
-	public void updateWeather() {
-		super.updateWeather();
-	}
-
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Vec3 getSkyColor(Entity camera, float partialTicks) {
-		Vec3 ohshit = super.getSkyColor(camera, partialTicks);
-
-		return Vec3.createVectorHelper(ohshit.xCoord , ohshit.yCoord, ohshit.zCoord);
-
-	}
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getSunBrightness(float par1) {
@@ -62,7 +44,12 @@ public class WorldProviderTekto extends WorldProviderCelestial {
 
 	@Override
 	public Block getStone() {
-		return ModBlocks.basalt; //temp
+		return ModBlocks.basalt;
+	}
+
+	@Override
+	public boolean hasIce() {
+		return true;
 	}
 
 	private static BiomeGenLayers createBiomeGenerators(long seed) {

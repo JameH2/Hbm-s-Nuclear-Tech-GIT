@@ -19,15 +19,15 @@ import net.minecraft.world.World;
 
 public class TileEntityMachineSatLinker extends TileEntity implements ISidedInventory, IGUIProvider {
 	private ItemStack[] slots;
-	
+
 	//public static final int maxFill = 64 * 3;
 
 	private static final int[] slots_top = new int[] {0};
 	private static final int[] slots_bottom = new int[] {1};
 	private static final int[] slots_side = new int[] {2};
-	
+
 	private String customName;
-	
+
 	public TileEntityMachineSatLinker() {
 		slots = new ItemStack[3];
 	}
@@ -70,7 +70,7 @@ public class TileEntityMachineSatLinker extends TileEntity implements ISidedInve
 	public boolean hasCustomInventoryName() {
 		return this.customName != null && this.customName.length() > 0;
 	}
-	
+
 	public void setCustomName(String name) {
 		this.customName = name;
 		markDirty();
@@ -89,7 +89,7 @@ public class TileEntityMachineSatLinker extends TileEntity implements ISidedInve
 			return player.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64;
 		}
 	}
-	
+
 	@Override
 	public void openInventory() {}
 	@Override
@@ -99,7 +99,7 @@ public class TileEntityMachineSatLinker extends TileEntity implements ISidedInve
 	public boolean isItemValidForSlot(int i, ItemStack stack) {
 		return false;
 	}
-	
+
 	@Override
 	public ItemStack decrStackSize(int i, int j) {
 		if(slots[i] != null) {
@@ -112,20 +112,20 @@ public class TileEntityMachineSatLinker extends TileEntity implements ISidedInve
 			if (slots[i].stackSize == 0) {
 				slots[i] = null;
 			}
-			
+
 			return itemStack1;
 		} else {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		NBTTagList list = nbt.getTagList("items", 10);
-		
+
 		slots = new ItemStack[getSizeInventory()];
-		
+
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound nbt1 = list.getCompoundTagAt(i);
 			byte b0 = nbt1.getByte("slot");
@@ -136,12 +136,12 @@ public class TileEntityMachineSatLinker extends TileEntity implements ISidedInve
 
 		customName = nbt.getString("name");
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		NBTTagList list = new NBTTagList();
-		
+
 		for(int i = 0; i < slots.length; i++) {
 			if(slots[i] != null) {
 				NBTTagCompound nbt1 = new NBTTagCompound();
@@ -151,12 +151,12 @@ public class TileEntityMachineSatLinker extends TileEntity implements ISidedInve
 			}
 		}
 		nbt.setTag("items", list);
-		
+
 		if (customName != null) {
 			nbt.setString("name", customName);
 		}
 	}
-	
+
 	@Override
 	public int[] getAccessibleSlotsFromSide(int p_94128_1_) {
         return p_94128_1_ == 0 ? slots_bottom : (p_94128_1_ == 1 ? slots_top : slots_side);
@@ -171,16 +171,16 @@ public class TileEntityMachineSatLinker extends TileEntity implements ISidedInve
 	public boolean canExtractItem(int i, ItemStack itemStack, int j) {
 		return true;
 	}
-	
+
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote) {
 			if(slots[0] != null && slots[1] != null && slots[0].getItem() instanceof ISatChip && slots[1].getItem() instanceof ISatChip) {
 				ISatChip.setFreqS(slots[1], ISatChip.getFreqS(slots[0]));
 			}
-			
+
 			if(slots[2] != null && slots[2].getItem() instanceof ISatChip) {
-				SatelliteSavedData satelliteData = SatelliteSavedData.getData(worldObj);
+				SatelliteSavedData satelliteData = SatelliteSavedData.getData(worldObj, xCoord, zCoord);
 				int newId = worldObj.rand.nextInt(100000);
 				if(!satelliteData.isFreqTaken(newId)) {
 					ISatChip.setFreqS(slots[2], newId);

@@ -1,10 +1,14 @@
 package com.hbm.dim.orbit;
 
+import java.util.List;
+
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
+import com.hbm.dim.SolarSystem.AstroMetric;
 import com.hbm.dim.WorldProviderCelestial;
+import com.hbm.dim.orbit.OrbitalStation.StationState;
 import com.hbm.dim.trait.CBT_Atmosphere;
-import com.hbm.dim.trait.CelestialBodyTrait.CBT_Destroyed;
+import com.hbm.dim.trait.CBT_Destroyed;
 import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
 import com.hbm.lib.Library;
 import com.hbm.util.AstronomyUtil;
@@ -30,6 +34,11 @@ public class WorldProviderOrbit extends WorldProvider {
 	// Orbit at an altitude that provides an hour-long realtime orbit (game time is fast so we go slow)
 	// We want a consistent orbital period to prevent orbiting too slow or fast (both for player comfort and feel)
 	private static final float ORBITAL_PERIOD = 7200;
+
+	public List<AstroMetric> metrics;
+
+	private double eclipseAmount;
+	private float celestialAngle;
 
 	protected float getOrbitalAltitude(CelestialBody body) {
 		return getAltitudeForPeriod(body.massKg, ORBITAL_PERIOD);
@@ -67,6 +76,49 @@ public class WorldProviderOrbit extends WorldProvider {
 	@Override
 	public void updateWeather() {
 		isHellWorld = !worldObj.isRemote && !Loader.isModLoaded(Compat.MOD_COFH);
+
+		worldObj.getWorldInfo().setRainTime(0);
+		worldObj.getWorldInfo().setRaining(false);
+		worldObj.getWorldInfo().setThunderTime(0);
+		worldObj.getWorldInfo().setThundering(false);
+		worldObj.rainingStrength = 0.0F;
+		worldObj.thunderingStrength = 0.0F;
+	}
+
+	// This is called once, at the beginning of every frame
+	// so we use this to memoise expensive calcs
+	@SideOnly(Side.CLIENT)
+	protected void updateSky(float partialTicks) {
+		CelestialBody body = CelestialBody.getBody(worldObj);
+		OrbitalStation station = OrbitalStation.clientStation;
+
+		// First fetch the suns true size
+		double sunSize = SolarSystem.calculateSunSize(body);
+
+		double progress = station.getTransferProgress(partialTicks);
+
+		// Get our orrery of bodies, this is cached for reuse in sky rendering
+		if(station.state == StationState.ORBIT) {
+			double altitude = getOrbitalAltitude(station.orbiting);
+			metrics = SolarSystem.calculateMetricsFromSatellite(worldObj, partialTicks, station.orbiting, altitude);
+		} else {
+			double fromAlt = getOrbitalAltitude(station.orbiting);
+			double toAlt = getOrbitalAltitude(station.target);
+			metrics = SolarSystem.calculateMetricsBetweenSatelliteOrbits(worldObj, partialTicks, station.orbiting, station.target, fromAlt, toAlt, progress);
+		}
+
+		// Get our sun angle
+		CelestialBody orbiting = station.orbiting;
+		CelestialBody target = station.target;
+		float angle = (float)SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, orbiting, getOrbitalAltitude(orbiting));
+		if(progress > 0) {
+			angle = (float)BobMathUtil.lerp(progress, angle, (float)SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, target, getOrbitalAltitude(target)));
+		}
+
+		celestialAngle = 0.5F - (angle / 360.0F);
+
+		// Get our eclipse amount
+		eclipseAmount = WorldProviderCelestial.getEclipseFactor(metrics, sunSize);
 	}
 
 	@Override
@@ -78,6 +130,9 @@ public class WorldProviderOrbit extends WorldProvider {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Vec3 getSkyColor(Entity camera, float partialTicks) {
+		// getSkyColor is called first on every frame, so if you want to memoise anything, do it here
+		updateSky(partialTicks);
+
 		return Vec3.createVectorHelper(0, 0, 0);
 	}
 
@@ -120,7 +175,11 @@ public class WorldProviderOrbit extends WorldProvider {
 		float solarAngle = worldObj.getCelestialAngle(par1);
 		float celestialPhase = (1 - (solarAngle + 0.5F) % 1) * 2 - 1;
 
-		return 1 - (float)Library.smoothstep(Math.abs(celestialPhase), 0.6, 0.8);
+		float sunBrightness = 1 - (float)Library.smoothstep(Math.abs(celestialPhase), 0.6, 0.8);
+
+		sunBrightness *= 1 - eclipseAmount * 0.6;
+
+		return sunBrightness;
 	}
 
 	@Override
@@ -145,16 +204,10 @@ public class WorldProviderOrbit extends WorldProvider {
 		return new SkyProviderOrbit();
 	}
 
+	// Just fetches a memoised angle instead, for speed
 	@Override
 	public float calculateCelestialAngle(long worldTime, float partialTicks) {
-		CelestialBody orbiting = OrbitalStation.clientStation.orbiting;
-		CelestialBody target = OrbitalStation.clientStation.target;
-		double progress = OrbitalStation.clientStation.getTransferProgress(partialTicks);
-		float angle = (float)SolarSystem.calculateSingleAngle(worldObj, partialTicks, orbiting, getOrbitalAltitude(orbiting));
-		if(progress > 0) {
-			angle = (float)BobMathUtil.lerp(progress, angle, (float)SolarSystem.calculateSingleAngle(worldObj, partialTicks, target, getOrbitalAltitude(target)));
-		}
-		return 0.5F - (angle / 360.0F);
+		return celestialAngle;
 	}
 
 	// Same shit as in Celestial

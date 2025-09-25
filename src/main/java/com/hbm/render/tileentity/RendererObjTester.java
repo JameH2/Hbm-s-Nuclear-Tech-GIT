@@ -6,14 +6,17 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.hbm.dim.SolarSystem;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.shader.Shader;
 import com.hbm.render.util.HorsePronter;
 import com.hbm.wiaj.WorldInAJar;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -24,85 +27,310 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 
 public class RendererObjTester extends TileEntitySpecialRenderer {
 
 	private static RenderBlocks renderer;
 	private static WorldInAJar world;
 	private static ResourceLocation extra = new ResourceLocation(RefStrings.MODID, "textures/models/horse/dyx.png");
-	
+	private static final ResourceLocation noise = new ResourceLocation(RefStrings.MODID, "shaders/iChannel1.png");
+	private static final Shader shaeder =  new Shader(new ResourceLocation(RefStrings.MODID, "shaders/fle.frag"));
 	@Override
-	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f) {
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f) {		
 		GL11.glPushMatrix();
-		GL11.glTranslated(x + 0.5, y + 1, z + 0.5);
+		GL11.glTranslated(x + 0.5, y + 0.2, z + 0.5);
 		GL11.glDisable(GL11.GL_CULL_FACE);
-		
-		if(world == null) {
-			world = new WorldInAJar(5, 3, 5);
-			for(int i = 0; i < 25; i++) world.setBlock(i / 5, 1, i % 5, Blocks.brick_block, 0);
-			for(int i = 0; i < 9; i++) world.setBlock(1 + i / 3, 0, 1 + i % 3, Blocks.brick_block, 0);
-		}
-		
-		if(renderer == null) {
-			renderer = new RenderBlocks(world);
-		}
-		renderer.enableAO = true;
-		world.lightlevel = tileEntity.getWorldObj().getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0);
+		long time = tileEntity.getWorldObj().getTotalWorldTime();
+		double sine = Math.sin(time * 0.05) * 15;
+		double sin3 = Math.sin(time * 0.05 + Math.PI * 0.5) * 15;
+		double sin2 = Math.sin(time * 0.05 + Math.PI);
+		double insine = Math.sin(time * 0.05) * -15;
+		double cy0 = Math.sin(time % (Math.PI * 2));
+		double cy1 = Math.sin(time % (Math.PI * 2) - Math.PI * 0.2);
+		double cy2 = Math.sin(time % (Math.PI * 2) - Math.PI * 0.4);
+		double cy3 = Math.sin(time % (Math.PI * 2) - Math.PI * 0.6);
 
-		RenderHelper.disableStandardItemLighting();
-		
+		GL11.glTranslatef(0, 0.5F, 0);
+		bindTexture(ResourceManager.eel_tex);
+
+
+		ResourceManager.sifter_eel.renderPart("jaw");
+
+
+
+
+
+		// Head
 		GL11.glPushMatrix();
-		GL11.glRotated(15, 0, 0, 1);
-		GL11.glRotated(System.currentTimeMillis() / 5D % 360D, 0, -1, 0);
-		GL11.glTranslated(-2.5, 0, -2.5);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-		GL11.glShadeModel(GL11.GL_SMOOTH);
-		Tessellator.instance.startDrawingQuads();
-		
-		for(int ix = 0; ix < world.sizeX; ix++) {
-			for(int iy = 0; iy < world.sizeY; iy++) {
-				for(int iz = 0; iz < world.sizeZ; iz++) {
-					try { renderer.renderBlockByRenderType(world.getBlock(ix, iy, iz), ix, iy, iz); } catch(Exception ex) { }
-				}
-			}
+		{
+			GL11.glRotatef(1 * 0.5F, -1, 0, 0);
+			GL11.glRotatef(0, 0, 0, 0);
+			ResourceManager.sifter_eel.renderPart("head");
 		}
+		GL11.glPopMatrix();
+
+		// Side fins
+		GL11.glPushMatrix();
+		{
+			GL11.glRotated(cy0 * 20, 0, 1, 0);
+			ResourceManager.sifter_eel.renderPart("finL");
+		}
+		GL11.glPopMatrix();
+		GL11.glPushMatrix();
+		{
+			GL11.glRotated(cy0 * -20, 0, 1, 0);
+			ResourceManager.sifter_eel.renderPart("finR");
+		}
+		GL11.glPopMatrix();
+
+		// Tail fin
+		GL11.glPushMatrix();
+		{
+			bindTexture(ResourceManager.eel_tex);
+			ResourceManager.sifter_eel.renderPart("frontbodyseg");
+
+			GL11.glRotated(cy1 * 10, 0, 1, 0);
+			GL11.glRotated(cy2 * -2, 0, 1, 0);
+			ResourceManager.sifter_eel.renderPart("topfinfront");
+
+
+			ResourceManager.sifter_eel.renderPart("midbodyseg");
+			GL11.glRotated(cy3 * -2 * 0.5, 0, 1, 0);
+			ResourceManager.sifter_eel.renderPart("topfinmid");
+			ResourceManager.sifter_eel.renderPart("topfinmidlast");
+			GL11.glRotated(cy1 * -6 * 0.5, 0, 1, 0);
+
+			ResourceManager.sifter_eel.renderPart("midbodysegtwo");
+
+			ResourceManager.sifter_eel.renderPart("bottomfinfront");
+			ResourceManager.sifter_eel.renderPart("bottomfinmid");
+			ResourceManager.sifter_eel.renderPart("bottomfinmidlast");
+			GL11.glRotated(cy2 * -4 * 0.5, 0, 1, 0);
+			ResourceManager.sifter_eel.renderPart("topfinlast");
+			ResourceManager.sifter_eel.renderPart("bottomfinlast");
+			ResourceManager.sifter_eel.renderPart("endbodyseg");
+			GL11.glRotated(cy3 * -6 * 0.5, 0, 1, 0);
+			ResourceManager.sifter_eel.renderPart("tail");
+
+			ResourceManager.sifter_eel.renderPart("tailbodyseg");
+
+			GL11.glRotated(cy1 * -3 * 0.5, 0, 1, 0);
+			ResourceManager.sifter_eel.renderPart("tailtipseg");
+
+
+
+
+			bindTexture(ResourceManager.eel_tex);
+
+		}
+		GL11.glPopMatrix();
+		GL11.glPopMatrix();
+
+	
 		
-		Tessellator.instance.draw();
+		/*
+		bindTexture(ResourceManager.b2x_tex_mex_sex);
+
+		ResourceManager.b2x.renderAll();
+		float trailStretch = tileEntity.getWorldObj().rand.nextFloat();
+		trailStretch = 1.2F - (trailStretch * trailStretch * 0.2F);
+		trailStretch *= 2;
+
+		GL11.glShadeModel(GL11.GL_SMOOTH);
+
+		
+		if(trailStretch > 0) {
+			GL11.glColor4d(0.25, 0.88, 0.82, 1);
+
+			GL11.glDisable(GL11.GL_CULL_FACE);
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_BLEND);
+			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+			GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+			GL11.glDepthMask(false);
+			
+			GL11.glPushMatrix();
+			GL11.glTranslatef(-0.56F, -0.56F, 1F);
+			GL11.glRotatef(180, 0, 1, 0);
+			GL11.glScalef(0.5F, 0.5F, trailStretch);
+			GL11.glTranslatef(0, 0, 1F);
+
+			bindTexture(ResourceManager.xenon_exhaust_tex);
+			ResourceManager.xenon_thruster.renderPart("Exhaust");
+			
+			
+			
+			GL11.glPopMatrix();
+			GL11.glPushMatrix();
+			GL11.glTranslatef(0.56F, -0.56F, 1F);
+			GL11.glRotatef(180, 0, 1, 0);
+			GL11.glScalef(0.5F, 0.5F, trailStretch);
+			GL11.glTranslatef(0, 0, 1F);
+
+			bindTexture(ResourceManager.xenon_exhaust_tex);
+			ResourceManager.xenon_thruster.renderPart("Exhaust");
+			
+			
+			GL11.glPopMatrix();
+			
+			GL11.glDepthMask(true);
+			GL11.glPopAttrib();
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_CULL_FACE);
+			GL11.glDisable(GL11.GL_BLEND);
+
+			GL11.glColor4d(1, 1, 1, 1);
+		}
+
 		GL11.glShadeModel(GL11.GL_FLAT);
 		GL11.glPopMatrix();
 
-		RenderHelper.enableStandardItemLighting();
+		
+		
+		/*
+		GL11.glRotated(sin2, 0, 1, 0); 
 
-		GL11.glRotated(15, 0, 0, 1);
-		GL11.glRotated(System.currentTimeMillis() / 5D % 360D, 0, -1, 0);
+		GL11.glPushMatrix();
+		GL11.glTranslatef(0, 8.6F, 0.5F);
 		
-		GL11.glTranslated(0, 2.1, 0.5);
+		GL11.glRotated(sin2, 0, 1, 0); 
+
+		GL11.glTranslatef(0, -8.7F, -0.5F);
+		bindTexture(ResourceManager.behemoth_body_tex);
+		ResourceManager.behemoth.renderPart("body");
+		ResourceManager.behemoth.renderPart("hatch1");
+		ResourceManager.behemoth.renderPart("hatch2");
+		ResourceManager.behemoth.renderPart("gun");
+
+		bindTexture(ResourceManager.behemoth_helmet_tex);
+		ResourceManager.behemoth.renderPart("helmet");
 		
-		this.bindTexture(extra);
-		HorsePronter.reset();
-		double r = 60;
-		HorsePronter.pose(HorsePronter.id_body, 0, -r, 0);
-		HorsePronter.pose(HorsePronter.id_tail, 0, 45, 90);
-		HorsePronter.pose(HorsePronter.id_lbl, 0, -90 + r, 35);
-		HorsePronter.pose(HorsePronter.id_rbl, 0, -90 + r, -35);
-		HorsePronter.pose(HorsePronter.id_lfl, 0, r - 10, 5);
-		HorsePronter.pose(HorsePronter.id_rfl, 0, r - 10, -5);
-		HorsePronter.pose(HorsePronter.id_head, 0, r, 0);
-		HorsePronter.enableHorn();
-		HorsePronter.enableWings();
-		HorsePronter.pront();
-		
-		ItemStack stack = new ItemStack(ModItems.cigarette);
-		double scale = 0.25;
-		GL11.glTranslated(0.02, 1.13, -0.42);
-		GL11.glScaled(scale, scale, scale);
-		GL11.glRotated(90, 0, -1, 0);
-		GL11.glRotated(60, 0, 0, -1);
-		bindTexture(TextureMap.locationItemsTexture);
-		IIcon icon = stack.getIconIndex();
-		ItemRenderer.renderItemIn2D(Tessellator.instance, icon.getMaxU(), icon.getMinV(), icon.getMinU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 0.0625F);
-		
+		GL11.glPushMatrix();
+
+		bindTexture(ResourceManager.behemoth_eye_tex);
+		ResourceManager.behemoth.renderPart("eye");
+
+		// Re-enable lighting
 		GL11.glPopMatrix();
+
+		GL11.glTranslatef(0, 8.7F, 0.5F);
+
+		GL11.glPopMatrix();
+
+	    GL11.glPushMatrix(); // RIGHT LEG MATRIX START
+
+	    // Define the target position for the right foot
+	    double targetFootX = 5.0; // Target X position for right foot
+	    double targetFootY = 2.0 * Math.sin(insine * 0.15) + 7; // Target Y position for right foot
+	    double targetFootZ = 2.0; // Target Z position for right foot
+	    // Define the length of the thigh and shin parts (you can adjust these values)
+	    double thighLength = 8.0;
+	    double shinLength = 6.0;
+
+	    // Calculate the distance between the hip and the target foot
+	    double deltaX = targetFootX;
+	    double deltaY = targetFootY - 8.5; // Hip height offset
+	    double deltaZ = targetFootZ - 0.5; // Foot Z offset
+
+	    // Calculate the hip and knee angles using basic inverse kinematics (Law of Cosines)
+	    double distanceToTarget = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+	    double cosKneeAngle = (thighLength * thighLength + shinLength * shinLength - distanceToTarget * distanceToTarget) / (2 * thighLength * shinLength);
+	    double kneeAngle = Math.acos(cosKneeAngle); // Knee angle in radians
+	    double hipAngle = Math.atan2(deltaY, deltaX) - Math.atan2(shinLength * Math.sin(kneeAngle), thighLength + shinLength * Math.cos(kneeAngle));
+
+	    // Apply the calculated angles to the right leg parts
+	    GL11.glTranslatef(0, 8.5F, 0.5F); // Move to the hip position
+	    GL11.glRotated(hipAngle * (180.0 / Math.PI), 1, 0, 0); // Rotate the hip to the calculated angle
+
+	    // Render the hip for the right leg
+	    bindTexture(ResourceManager.behemoth_hip_tex);
+	    GL11.glTranslatef(0, -8.6F, -0.5F);
+	    ResourceManager.behemoth.renderPart("hip_right");
+	    GL11.glTranslatef(0, 8.6F, 0.5F);
+
+	    // Calculate knee transformation and render knee part for the right leg
+	    GL11.glPushMatrix(); // KNEE MATRIX START
+	    GL11.glTranslatef(0, -1.8F, -0F);
+
+	    GL11.glRotated(kneeAngle * (180.0 / Math.PI), 1, 0, 0); // Rotate the knee to the calculated angle
+
+	    GL11.glTranslatef(0, -6.7F, -0.5F);
+	    bindTexture(ResourceManager.behemoth_knee_tex);
+	    ResourceManager.behemoth.renderPart("knee_right");
+	    GL11.glTranslatef(0, 6.7F, 0.5F);
+
+	    // Apply foot transformation for the right leg
+	    GL11.glTranslatef(0, -5.6F, 0F);
+	    GL11.glRotated(sine, 1, 0, 0); // Foot animation
+
+	    GL11.glTranslatef(0, -1F, -0.5F);
+	    bindTexture(ResourceManager.behemoth_leg_tex);
+	    ResourceManager.behemoth.renderPart("leg_right");
+
+	    GL11.glTranslatef(0, 1F, 0.5F);
+
+	    GL11.glPopMatrix(); // KNEE MATRIX END
+	    GL11.glPopMatrix(); // RIGHT LEG MATRIX END
+
+	    // Inverse Kinematics for the Left Leg
+	    GL11.glPushMatrix(); // LEFT LEG MATRIX START
+
+	    // Define the target position for the left foot
+	    double targetFootX_left = 1.0 * Math.sin(time * 0.15) + 2; // Target X position for left foot
+	    double targetFootY_left = 1.0 *  Math.sin(sin2 * 0.015) + 9 ; // Target Y position for left foot
+	    double targetFootZ_left =   Math.sin(time * 0.015) - 2 ; // Target Z position for left foot (opposite direction to right leg)
+
+	    // Calculate the distance between the hip and the target foot
+	    double deltaX_left = targetFootX_left;
+	    double deltaY_left = targetFootY_left - 8.5; // Hip height offset
+	    double deltaZ_left = targetFootZ_left - 0.5; // Foot Z offset
+
+	    // Calculate the hip and knee angles using basic inverse kinematics (Law of Cosines)
+	    double distanceToTarget_left = Math.sqrt(deltaX_left * deltaX_left + deltaY_left * deltaY_left + deltaZ_left * deltaZ_left);
+	    double cosKneeAngle_left = (thighLength * thighLength + shinLength * shinLength - distanceToTarget_left * distanceToTarget_left) / (2 * thighLength * shinLength);
+	    double kneeAngle_left = Math.acos(cosKneeAngle_left); // Knee angle in radians
+	    double hipAngle_left = Math.atan2(deltaY_left, deltaX_left) - Math.atan2(shinLength * Math.sin(kneeAngle_left), thighLength + shinLength * Math.cos(kneeAngle_left));
+
+	    // Apply the calculated angles to the left leg parts
+	    GL11.glTranslatef(0, 8.5F, 0.5F); // Move to the hip position
+	    GL11.glRotated(-hipAngle_left * (180.0 / Math.PI), 1, 0, 0); // Rotate the hip to the calculated angle (negative for left leg)
+
+	    // Render the hip for the left leg
+	    bindTexture(ResourceManager.behemoth_hip_tex);
+	    GL11.glTranslatef(0, -8.6F, -0.5F);
+	    ResourceManager.behemoth.renderPart("hip_left");
+	    GL11.glTranslatef(0, 8.6F, 0.5F);
+
+	    // Calculate knee transformation and render knee part for the left leg
+	    GL11.glPushMatrix(); // KNEE MATRIX START
+	    GL11.glTranslatef(0, -1.8F, -0F);
+
+	    GL11.glRotated(kneeAngle_left * (180.0 / Math.PI), 1, 0, 0); // Rotate the knee to the calculated angle
+
+	    GL11.glTranslatef(0, -6.7F, -0.5F);
+	    bindTexture(ResourceManager.behemoth_knee_tex);
+	    ResourceManager.behemoth.renderPart("knee_left");
+	    GL11.glTranslatef(0, 6.7F, 0.5F);
+
+	    // Apply foot transformation for the left leg
+	    GL11.glTranslatef(0, -5.6F, 0F);
+	    GL11.glRotated(sin2, 1, 0, 0); // Foot animation
+
+	    GL11.glTranslatef(0, -1F, -0.5F);
+	    bindTexture(ResourceManager.behemoth_leg_tex);
+	    ResourceManager.behemoth.renderPart("leg_left");
+
+	    GL11.glTranslatef(0, 1F, 0.5F);
+
+	    GL11.glPopMatrix(); // KNEE MATRIX END
+	    GL11.glPopMatrix(); // LEFT LEG MATRIX END
+
+	    GL11.glEnable(GL11.GL_CULL_FACE);
+
+		GL11.glPopMatrix();
+		*/
 	}
 	
 

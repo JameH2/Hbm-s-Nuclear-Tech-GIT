@@ -13,9 +13,15 @@ import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)
 public class ParticleRocketFlame extends EntityFX {
-	
+
 	protected int age;
 	protected int maxAge;
+
+	private float customRed;
+	private float customGreen;
+	private float customBlue;
+
+
 
 	protected double pressure = 1;
 
@@ -25,14 +31,21 @@ public class ParticleRocketFlame extends EntityFX {
 		maxAge = 300 + rand.nextInt(50);
 		this.particleScale = 1F;
 	}
-	
+
 	public ParticleRocketFlame setScale(float scale) {
 		this.particleScale = scale;
 		return this;
 	}
-	
+
 	public ParticleRocketFlame setMaxAge(int maxAge) {
 		this.maxAge = maxAge;
+		return this;
+	}
+
+	public ParticleRocketFlame setCustomColor(float red, float green, float blue) {
+		this.customRed = red;
+		this.customGreen = green;
+		this.customBlue = blue;
 		return this;
 	}
 
@@ -60,7 +73,7 @@ public class ParticleRocketFlame extends EntityFX {
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
 		this.prevPosZ = this.posZ;
-		
+
 		this.age++;
 
 		if(this.age == this.maxAge) {
@@ -70,7 +83,7 @@ public class ParticleRocketFlame extends EntityFX {
 		this.motionX *= 0.91D;
 		this.motionY *= 0.91D;
 		this.motionZ *= 0.91D;
-		
+
 		this.moveEntity(this.motionX, this.motionY, this.motionZ);
 	}
 
@@ -81,6 +94,7 @@ public class ParticleRocketFlame extends EntityFX {
 
 	@Override
 	public void renderParticle(Tessellator p_70539_1_, float interp, float sX, float sY, float sZ, float dX, float dZ) {
+		if(age == 0) return;
 
 		Random urandom = new Random(this.getEntityId());
 
@@ -89,9 +103,9 @@ public class ParticleRocketFlame extends EntityFX {
 			float add = urandom.nextFloat() * 0.3F;
 			float dark = 1 - Math.min(((float) (age) / (float) (maxAge * 0.25F)), 1);
 
-			this.particleRed = 1 * dark + add;
-			this.particleGreen = 0.6F * dark + add;
-			this.particleBlue = 0 + add;
+			this.particleRed = (customRed != 0) ? (customRed * dark + add) : (1 * dark + add);
+			this.particleGreen = (customGreen != 0) ? (customGreen * dark + add) : (0.6F * dark + add);
+			this.particleBlue = (customBlue != 0) ? (customBlue * dark + add) : (0 + add);
 
 			this.particleAlpha = (float) Math.pow(1 - Math.min(((float) (age) / (float) (maxAge)), 1), 0.5);
 

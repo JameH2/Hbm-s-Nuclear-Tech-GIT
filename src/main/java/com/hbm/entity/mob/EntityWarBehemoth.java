@@ -4,6 +4,7 @@ import com.hbm.entity.mob.ai.EntityAIBehemothGun;
 import com.hbm.entity.mob.ai.EntityAIMaskmanMinigun;
 import com.hbm.entity.mob.ai.EntityAIStepTowardsTarget;
 
+import api.hbm.entity.ISuffocationImmune;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -14,17 +15,23 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityEgg;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 //no model yet, im gonna take this low n slow
-public class EntityWarBehemoth extends EntityMob implements IRangedAttackMob {
+public class EntityWarBehemoth extends EntityMob implements IMob, IAnimals, ISuffocationImmune {
     private int stepTimer = 0;
+    public double headTargetYaw; 
 
     private static final IEntitySelector selector = new IEntitySelector() {
 		public boolean isEntityApplicable(Entity p_82704_1_) {
@@ -35,22 +42,21 @@ public class EntityWarBehemoth extends EntityMob implements IRangedAttackMob {
     public EntityWarBehemoth(World p_i1733_1_)
     {
         super(p_i1733_1_);
-        this.setSize(0.75F, 1.35F);
+        this.setSize(1.75F, 6.35F);
         this.getNavigator().setAvoidsWater(true);
-                
+        this.stepHeight = 5.0F;
         this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLiving.class, 0, true, true, selector));
-        this.tasks.addTask(3, new EntityAIStepTowardsTarget(this, 4, 0.4, 20, 60, 0.6));
-		this.tasks.addTask(4, new EntityAIBehemothGun(this, true, true, 2, 30, 70));
+        //this.tasks.addTask(3, new EntityAIStepTowardsTarget(this, 4, 0.18, 20, 60, 0.6));
+		this.tasks.addTask(3, new EntityAIStepTowardsTarget(this, 50, 0.3D, 50, 10, 0.6));
+        //this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 0.2D, false));
+		this.tasks.addTask(4, new EntityAIBehemothGun(this, true, true, 3, 35, 30));
 		this.targetTasks.addTask(5, new EntityAIHurtByTarget(this, false));
-
+		this.jumpMovementFactor = 0;
 
     }
-	@Override
-	public void attackEntityWithRangedAttack(EntityLivingBase p_82196_1_, float p_82196_2_) {
-		// TODO Auto-generated method stub
-		
-	}
+    
+
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		
@@ -79,10 +85,10 @@ public class EntityWarBehemoth extends EntityMob implements IRangedAttackMob {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(300.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(50.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(15.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(1.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(1000.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(100.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(200.0D);
 	}
 
     @Override
@@ -97,8 +103,26 @@ public class EntityWarBehemoth extends EntityMob implements IRangedAttackMob {
     @Override
     public void onUpdate() {
         super.onUpdate();
+        if (!this.worldObj.isRemote) {
+            this.motionY -= 0.10D;  // Increase the downward pull for heavier gravity (adjust value as needed)
+        }
+
     }
-    public double getMaxTargetRange() {
-        return 64;
+   
+    
+	protected void entityInit() {
+		super.entityInit();
+		this.dataWatcher.addObject(19, (int) 0);
+		
+	}
+	
+	protected boolean canDespawn() {
+		return false;
+	}
+	
+    @Override
+    public void setAttackTarget(EntityLivingBase entity) {
+        super.setAttackTarget(entity);
+        this.dataWatcher.updateObject(19, entity != null ? entity.getEntityId() : 0);
     }
 }

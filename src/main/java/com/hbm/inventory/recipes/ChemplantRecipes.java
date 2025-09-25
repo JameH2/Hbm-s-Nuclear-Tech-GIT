@@ -398,7 +398,7 @@ public class ChemplantRecipes extends SerializableRecipe {
 						new ComparableStack(ModItems.nugget_arsenic))
 				.outputItems(new ItemStack(ModItems.nugget_gaas, 1)));
 		recipes.add(new ChemRecipe(106, "ANIMAN", 250)
-				.inputFluids(new FluidStack(Fluids.OLIVEOIL, 500))
+				.inputFluids(new FluidStack(Fluids.NMASSTETRANOL, 500))
 				.inputItems(
 						new ComparableStack(ModItems.canned_conserve, 1, 5))
 				.outputItems(new ItemStack(ModItems.animan, 1)));

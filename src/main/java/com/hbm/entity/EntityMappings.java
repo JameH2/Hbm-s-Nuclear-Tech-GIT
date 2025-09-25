@@ -210,6 +210,7 @@ public class EntityMappings {
 		addEntity(EntityFallingBlockNT.class, "entity_falling_block_nt", 1000);
 		addEntity(EntityBoatRubber.class, "entity_rubber_boat", 250, false);
 		addEntity(EntityMissileStealth.class, "entity_missile_stealth", 1000);
+		addEntity(EntityCoin.class, "entity_coin", 1000);
 
 		addEntity(EntityItemWaste.class, "entity_item_waste", 100);
 		addEntity(EntityItemBuoyant.class, "entity_item_buoyant", 100);
@@ -221,7 +222,11 @@ public class EntityMappings {
 
 		addEntity(EntityDisperserCanister.class, "entity_disperser", 250);
 		addEntity(EntityWaypoint.class, "entity_waypoint", 250, false);
+
+		addEntity(EntityDepress.class, "entity_depress", 250, false);
+
 		addMob(EntityWarBehemoth.class, "entity_war_behemoth", 0x204131, 0x75CE00);
+		addMob(EntityTankbot.class, "entity_tankbot", 0x204131, 0x75CE00);
 
 		addMob(EntityCreeperNuclear.class, "entity_mob_nuclear_creeper", 0x204131, 0x75CE00);
 		addMob(EntityCreeperTainted.class, "entity_mob_tainted_creeper", 0x813b9b, 0xd71fdd);

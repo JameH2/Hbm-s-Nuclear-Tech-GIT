@@ -5,12 +5,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
 public class SatelliteResonator extends Satellite {
-	
+
 	public SatelliteResonator() {
 		this.coordAcs.add(CoordActions.HAS_Y);
 		this.satIface = Interfaces.SAT_COORD;
 	}
-	
+
 	public void onCoordAction(World world, EntityPlayer player, int x, int y, int z) {
 
 		if(!(player instanceof EntityPlayerMP))
@@ -23,8 +23,8 @@ public class SatelliteResonator extends Satellite {
 	}
 
 	@Override
-	public float[] getColor() {
-		return new float[] { 1.0F, 0.646F, 0.181F };
+	protected float[] getColor() {
+		return new float[] { 1.0F, 0.646F, 0.181F, 1.0F };
 	}
-	
+
 }

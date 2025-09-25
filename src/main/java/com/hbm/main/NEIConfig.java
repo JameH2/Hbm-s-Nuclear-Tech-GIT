@@ -98,6 +98,9 @@ public class NEIConfig implements IConfigureNEI {
 		API.hideItem(new ItemStack(ModBlocks.conveyor_express));
 		API.hideItem(new ItemStack(ModBlocks.conveyor_double));
 		API.hideItem(new ItemStack(ModBlocks.conveyor_triple));
+		
+		API.hideItem(new ItemStack(ModBlocks.war_controller));
+		API.hideItem(new ItemStack(ModItems.sat_war));
 
 		API.hideItem(new ItemStack(ModBlocks.furnace));
 		API.hideItem(new ItemStack(ModBlocks.lit_furnace));

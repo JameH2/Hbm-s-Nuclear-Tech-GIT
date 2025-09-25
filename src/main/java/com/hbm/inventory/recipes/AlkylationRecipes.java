@@ -45,7 +45,22 @@ public class AlkylationRecipes extends SerializableRecipe {
 			new FluidStack(Fluids.LIGHTOIL, 50), // but the output is highly useful!
 			new FluidStack(Fluids.PEROXIDE, 20) // "dehydrogenated sulfuric acid", aka we don't have that so sulfuric precursor, add water and sulfur to get a full loop
 		));
+		
+		recipes.put(Fluids.XYLENE, new Triplet<>( 
+				new FluidStack(Fluids.CCL, 60),
+				new FluidStack(Fluids.REFORMGAS, 100),
+				new FluidStack(Fluids.CHLOROMETHANE, 50)
+			));
+		
+		recipes.put(Fluids.CHLOROETHANE, new Triplet<>( 
+				new FluidStack(Fluids.UNSATURATEDS, 60),
+				new FluidStack(Fluids.CBENZ, 70),
+				new FluidStack(Fluids.CHLOROMETHANE, 10)
+			));
+
 	}
+	
+	
 	
 	public static Triplet<FluidStack, FluidStack, FluidStack> getOutput(FluidType type) {
 		return recipes.get(type);

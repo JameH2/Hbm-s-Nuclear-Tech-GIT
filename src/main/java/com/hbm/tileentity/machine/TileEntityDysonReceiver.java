@@ -80,7 +80,7 @@ public class TileEntityDysonReceiver extends TileEntityMachineBase {
 		if(!worldObj.isRemote) {
 			swarmId = ISatChip.getFreqS(slots[0]);
 
-			SatelliteSavedData data = SatelliteSavedData.getData(worldObj);
+			SatelliteSavedData data = SatelliteSavedData.getData(worldObj, xCoord, zCoord);
 			Satellite sat = data.getSatFromFreq(swarmId);
 			int sun = worldObj.getSavedLightValue(EnumSkyBlock.Sky, xCoord, yCoord, zCoord) - worldObj.skylightSubtracted - 11;
 

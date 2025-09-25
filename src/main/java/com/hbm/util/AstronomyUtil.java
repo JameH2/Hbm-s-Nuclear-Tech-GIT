@@ -24,7 +24,7 @@ public class AstronomyUtil {
 	public static final float KM_IN_AU = 13_599_840F; // Kerbin orbit is 1 AU
 
 	// How quickly time moves, for testing celestial mechanics
-	public static final long TIME_MULTIPLIER = 1;
+	public static long TIME_MULTIPLIER = 1;
 
 	// Conversion rate from millibuckets to atmospheres
 	// 1 atmosphere is 1 gigabucket

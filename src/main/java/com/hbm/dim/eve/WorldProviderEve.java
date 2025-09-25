@@ -8,12 +8,12 @@ import com.hbm.dim.eve.genlayer.GenLayerEveBiomes;
 import com.hbm.dim.eve.genlayer.GenLayerEveRiverMix;
 import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.main.MainRegistry;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
@@ -48,7 +48,6 @@ public class WorldProviderEve extends WorldProviderCelestial {
 	@Override
 	public void updateWeather() {
 		super.updateWeather();
-
 		if(!worldObj.isRemote) {
 			if (chargetime <= 0 || chargetime <= 800) {
 				chargetime += 1;
@@ -59,11 +58,12 @@ public class WorldProviderEve extends WorldProviderCelestial {
 			if (chargetime >= 800) {
 				flashd = 0;
 			} else if (chargetime >= 100) {
-				if (flashd <= 1) {
-					Minecraft.getMinecraft().thePlayer.playSound("hbm:misc.rumble", 10F, 1F);
+				if(flashd <= 1) {
+					MainRegistry.proxy.me().playSound("hbm:misc.rumble", 10F, 1F);
 				}
 				flashd += 0.1f;
 				flashd = Math.min(100.0f, flashd + 0.1f * (100.0f - flashd) * 0.15f);
+
 			}
 		}
 	}

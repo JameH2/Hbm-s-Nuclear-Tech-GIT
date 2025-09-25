@@ -446,7 +446,7 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 
 			if(link != null && link.getItem() == ModItems.sat_relay) {
 				World world = player.getEntityWorld();
-				Satellite sat = SatelliteSavedData.getData(world).getSatFromFreq(ISatChip.getFreqS(link));
+				Satellite sat = SatelliteSavedData.getData(world, xCoord, zCoord).getSatFromFreq(ISatChip.getFreqS(link));
 				if(sat instanceof SatelliteLaser) {
 					if(data.hasKey("launchPosX")) {
 						int x = data.getInteger("launchPosX");

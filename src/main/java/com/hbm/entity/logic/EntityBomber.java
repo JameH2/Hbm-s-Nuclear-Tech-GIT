@@ -44,8 +44,13 @@ public class EntityBomber extends EntityPlaneBase {
 			if(this.getDataWatcher().getWatchableObjectFloat(17) > 0) {
 				if(audio == null || !audio.isPlaying()) {
 					int bomberType = this.dataWatcher.getWatchableObjectByte(16);
-					audio = MainRegistry.proxy.getLoopedSound(bomberType <= 4 ? "hbm:entity.bomberSmallLoop" : "hbm:entity.bomberLoop", (float) posX, (float) posY, (float) posZ, 2F, 250F, 1F, 20);
-					audio.startSound();
+					System.out.println();
+					if (bomberType >= 9) {
+					    audio = MainRegistry.proxy.getLoopedSound("hbm:entity.jetloopbomb", (float) posX, (float) posY, (float) posZ, 2F, 250F, 1F, 20);
+					} else {
+					    audio = MainRegistry.proxy.getLoopedSound(bomberType <= 4 ? "hbm:entity.bomberSmallLoop" : "hbm:entity.bomberLoop", (float) posX, (float) posY, (float) posZ, 2F, 250F, 1F, 20);
+					}
+				audio.startSound();
 				}
 				audio.keepAlive();
 				audio.updatePosition((float) posX, (float) posY, (float) posZ);
@@ -85,7 +90,7 @@ public class EntityBomber extends EntityPlaneBase {
 				zeta.posX = posX + rand.nextDouble() - 0.5;
 				zeta.posY = posY - rand.nextDouble();
 				zeta.posZ = posZ + rand.nextDouble() - 0.5;
-				if(type == 0) {
+				if(type == 0 || type == 9 ) {
 					zeta.motionX = motionX + rand.nextGaussian() * 0.15; zeta.motionZ = motionZ + rand.nextGaussian() * 0.15;
 				} else {
 					zeta.motionX = motionX; zeta.motionZ = motionZ;
@@ -108,7 +113,12 @@ public class EntityBomber extends EntityPlaneBase {
 		this.motionX = vector.xCoord;
 		this.motionZ = vector.zCoord;
 		this.motionY = 0.0D;
-
+			
+		if(type == 9) {
+			this.motionX = vector.xCoord * 1.5;
+			this.motionZ = vector.zCoord * 1.5;
+		}
+		
 		this.rotation();
 
 		int i = 1;
@@ -256,6 +266,22 @@ public class EntityBomber extends EntityPlaneBase {
     	
     	return bomber;
     }
+    
+	public static EntityBomber statFacCarpetJet(World world, double x, double y, double z) {
+		EntityBomber bomber = new EntityBomber(world);
+
+		bomber.timer = 150;
+		bomber.bombStart = 10;
+		bomber.bombStop = 70;
+		bomber.bombRate = 3;
+		bomber.type = 9;
+
+		bomber.fac(world, x, y, z);
+		//bomber.addVelocity(0.6, 0, 0.6);
+
+    	bomber.getDataWatcher().updateObject(16, (byte)10);
+		return bomber;
+	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {

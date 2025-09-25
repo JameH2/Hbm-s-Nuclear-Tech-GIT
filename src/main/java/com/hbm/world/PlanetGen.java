@@ -24,6 +24,7 @@ import com.hbm.dim.moon.WorldProviderMoon;
 import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.tekto.WorldGeneratorTekto;
 import com.hbm.dim.tekto.WorldProviderTekto;
+import com.hbm.dim.thatmo.WorldProviderThatmo;
 import com.hbm.util.BobMathUtil;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -32,8 +33,7 @@ import net.minecraftforge.common.DimensionManager;
 
 public class PlanetGen {
 
-    public static void init() {
-
+	public static void init() {
 		registerDimension(SpaceConfig.moonDimension, WorldProviderMoon.class);
 		registerDimension(SpaceConfig.dunaDimension, WorldProviderDuna.class);
 		registerDimension(SpaceConfig.ikeDimension, WorldProviderIke.class);
@@ -44,6 +44,7 @@ public class PlanetGen {
 		registerDimension(SpaceConfig.laytheDimension, WorldProviderLaythe.class);
 		registerDimension(SpaceConfig.orbitDimension, WorldProviderOrbit.class);
 		registerDimension(SpaceConfig.tektoDimension, WorldProviderTekto.class);
+		registerDimension(SpaceConfig.thatmoDimension, WorldProviderThatmo.class);
 
 		// Register our ore providers
 		GameRegistry.registerWorldGenerator(new WorldGeneratorCelestial(), 2);
@@ -57,8 +58,7 @@ public class PlanetGen {
 		GameRegistry.registerWorldGenerator(new WorldGeneratorMinmus(), 1);
 		GameRegistry.registerWorldGenerator(new WorldGeneratorLaythe(), 1);
 		GameRegistry.registerWorldGenerator(new WorldGeneratorTekto(), 1);
-
-    }
+	}
 
 	private static ArrayList<Integer> spaceDimensions = new ArrayList<>();
 

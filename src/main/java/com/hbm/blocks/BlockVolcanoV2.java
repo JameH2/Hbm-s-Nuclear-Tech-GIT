@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Random;
 
 import com.hbm.lib.ModDamageSource;
+import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.packet.toclient.BufPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IBufPacketReceiver;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -18,8 +18,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
@@ -36,14 +34,14 @@ public class BlockVolcanoV2 extends BlockContainer {
 	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileEntityLightningVolcano();
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube() {
 		return false;
 	}
 
 	public static class TileEntityLightningVolcano extends TileEntity implements IBufPacketReceiver {
-		
+
 		public int chargetime;
 		public float flashd;
 
@@ -69,7 +67,7 @@ public class BlockVolcanoV2 extends BlockContainer {
 					double x = (int) (xCoord + dir.offsetX * (worldObj.getTotalWorldTime() / 5L) % 1) + 0.5;
 					double y = (int) (yCoord + dir.offsetY * (worldObj.getTotalWorldTime() / 5L) % 1) + 20.5;
 					double z = (int) (zCoord + dir.offsetZ * (worldObj.getTotalWorldTime() / 5L) % 1) + 0.5;
-						
+
 					NBTTagCompound data = new NBTTagCompound();
 					data.setString("type", "plasmablast");
 					data.setFloat("r", 1F);
@@ -77,7 +75,7 @@ public class BlockVolcanoV2 extends BlockContainer {
 					data.setFloat("b", 1F);
 					data.setFloat("scale", 10 * 4);
 					data.setFloat("yaw", 90);
-						
+
 					PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, x, y, z), new TargetPoint(worldObj.provider.dimensionId, x, y, z, 256));
 					worldObj.playSoundEffect(x, y, z, "ambient.weather.thunder", 200, 0.8F + this.worldObj.rand.nextFloat() * 0.2F);
 					vapor();
@@ -105,7 +103,7 @@ public class BlockVolcanoV2 extends BlockContainer {
 			super.writeToNBT(nbt);
 			nbt.setInteger("charge", this.chargetime);
 		}
-		
+
 		@Override
 		public AxisAlignedBB getRenderBoundingBox() {
 			return TileEntity.INFINITE_EXTENT_AABB;
@@ -126,14 +124,14 @@ public class BlockVolcanoV2 extends BlockContainer {
 		public void deserialize(ByteBuf buf) {
 			chargetime = buf.readInt();
 		}
-		private void vapor() {
 
+		private void vapor() {
 			List<Entity> entities = this.worldObj.getEntitiesWithinAABB(Entity.class,
 					AxisAlignedBB.getBoundingBox(this.xCoord - 0.5, this.yCoord + 0.5, this.zCoord - 0.5, this.xCoord + 1.5,
 							this.yCoord + 60, this.zCoord + 1.5));
-			
-			if (!entities.isEmpty()) {
-				for (Entity e : entities) {
+
+			if(!entities.isEmpty()) {
+				for(Entity e : entities) {
 
 					if(e instanceof EntityLivingBase)
 						if(e.attackEntityFrom(ModDamageSource.electricity, MathHelper.clamp_float(((EntityLivingBase) e).getMaxHealth() * 1F, 3, 20)))
@@ -141,8 +139,7 @@ public class BlockVolcanoV2 extends BlockContainer {
 				}
 			}
 		}
-		
+
 	}
-	
 
 }

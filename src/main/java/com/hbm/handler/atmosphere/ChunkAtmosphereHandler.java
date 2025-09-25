@@ -67,6 +67,7 @@ public class ChunkAtmosphereHandler {
 	public CBT_Atmosphere getAtmosphere(World world, int x, int y, int z, AtmosphereBlob excludeBlob) {
 		ThreeInts pos = new ThreeInts(x, y, z);
 		HashMap<IAtmosphereProvider, AtmosphereBlob> blobs = worldBlobs.get(world.provider.dimensionId);
+		if(blobs == null) return null;
 
 		CBT_Atmosphere atmosphere = getCelestialAtmosphere(world);
 
@@ -208,7 +209,11 @@ public class ChunkAtmosphereHandler {
 			canExist = hasLiquidPressure(atmosphere);
 		} else if(requiresCO2) {
 			// TODO: Make plants rely on CO2 once CO2 is more readily available (via natural gas most likely)
-			canExist = !(atmosphere == null || (!atmosphere.hasFluid(Fluids.OXYGEN, 0.01) && !atmosphere.hasFluid(Fluids.AIR, 0.1)));
+			if(block instanceof IPlantableBreathing) {
+				canExist = ((IPlantableBreathing) block).canBreathe(atmosphere);
+			} else {
+				canExist = !(atmosphere == null || (!atmosphere.hasFluid(Fluids.OXYGEN, 0.01) && !atmosphere.hasFluid(Fluids.AIR, 0.1)));
+			}
 		}
 
 		if(canExist) return false;
@@ -259,6 +264,7 @@ public class ChunkAtmosphereHandler {
 				if(blob.contains(pos)) {
 					blob.removeBlock(pos);
 				} else if(!blob.contains(blob.getRootPosition())) {
+					blob.runDepress = false;
 					blob.addBlock(blob.getRootPosition());
 				}
 			}
@@ -275,6 +281,7 @@ public class ChunkAtmosphereHandler {
 			if(blob.contains(pos)) {
 				blob.removeBlock(pos);
 			} else if(!blob.contains(blob.getRootPosition())) {
+				blob.runDepress = false;
 				blob.addBlock(blob.getRootPosition());
 			}
 		}
@@ -286,6 +293,8 @@ public class ChunkAtmosphereHandler {
 			// Make sure that a block can actually be attached to the blob
 			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 				if(blob.contains(pos.getPositionAtOffset(dir))) {
+					blob.runDepress = true;
+					blob.depressDir = dir;
 					blob.addBlock(pos);
 					break;
 				}
@@ -308,7 +317,7 @@ public class ChunkAtmosphereHandler {
 	}
 
 	public void receiveWorldTick(TickEvent.WorldTickEvent tick) {
-		if(tick.world.isRemote || tick.world.getTotalWorldTime() % 20 != 0) return;
+		if(tick.world.isRemote || tick.phase != Phase.END || tick.world.getTotalWorldTime() % 20 != 0) return;
 		HashMap<IAtmosphereProvider, AtmosphereBlob> blobs = worldBlobs.get(tick.world.provider.dimensionId);
 		for(AtmosphereBlob blob : blobs.values()) {
 			blob.checkGrowth();
@@ -360,6 +369,8 @@ public class ChunkAtmosphereHandler {
 					AtmosphereBlob blob = iterator.next();
 					for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 						if(blob.contains(pos.getPositionAtOffset(dir))) {
+							blob.runDepress = true;
+							blob.depressDir = dir;
 							blob.addBlock(pos);
 							iterator.remove();
 							break;

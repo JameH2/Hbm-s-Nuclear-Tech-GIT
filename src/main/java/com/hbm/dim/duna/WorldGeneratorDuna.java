@@ -5,33 +5,41 @@ import java.util.Random;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockOre;
 import com.hbm.blocks.machine.Spotlight;
+import com.hbm.config.GeneralConfig;
 import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
+import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.dim.WorldTypeTeleport;
+import com.hbm.handler.MultiblockHandlerXR;
+import com.hbm.main.MainRegistry;
 import com.hbm.main.StructureManager;
+import com.hbm.tileentity.deco.TileEntityLanternBehemoth;
+import com.hbm.util.LootGenerator;
 import com.hbm.world.feature.OilBubble;
-import com.hbm.world.gen.NBTStructure;
-import com.hbm.world.gen.NBTStructure.JigsawPiece;
-import com.hbm.world.gen.NBTStructure.SpawnCondition;
+import com.hbm.world.gen.nbt.NBTStructure;
+import com.hbm.world.gen.nbt.JigsawPiece;
+import com.hbm.world.gen.nbt.SpawnCondition;
 import com.hbm.world.generator.DungeonToolbox;
 
 import cpw.mods.fml.common.IWorldGenerator;
+import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class WorldGeneratorDuna implements IWorldGenerator {
 
 	public WorldGeneratorDuna() {
-		NBTStructure.registerStructure(SpaceConfig.dunaDimension, new SpawnCondition() {{
+		NBTStructure.registerStructure(SpaceConfig.dunaDimension, new SpawnCondition("duna_comms") {{
 			structure = new JigsawPiece("duna_comms", StructureManager.duna_comms, -1);
 			canSpawn = biome -> biome.heightVariation < 0.1F;
-			spawnWeight = 4;
+			spawnWeight = 6;
 		}});
-		NBTStructure.registerNullWeight(SpaceConfig.dunaDimension, 20);
+		NBTStructure.registerNullWeight(SpaceConfig.dunaDimension, 18);
 
-        BlockOre.addValidBody(ModBlocks.ore_oil, SolarSystem.Body.DUNA);
+		BlockOre.addValidBody(ModBlocks.ore_oil, SolarSystem.Body.DUNA);
 	}
 
 	@Override
@@ -43,17 +51,18 @@ public class WorldGeneratorDuna implements IWorldGenerator {
 
 	private void generateDuna(World world, Random rand, int i, int j) {
 		int meta = CelestialBody.getMeta(world);
+		Block stone = ((WorldProviderCelestial) world.provider).getStone();
 
 		if(WorldConfig.dunaOilSpawn > 0 && rand.nextInt(WorldConfig.dunaOilSpawn) == 0) {
 			int randPosX = i + rand.nextInt(16);
 			int randPosY = rand.nextInt(25);
 			int randPosZ = j + rand.nextInt(16);
 
-			OilBubble.spawnOil(world, randPosX, randPosY, randPosZ, 10 + rand.nextInt(7), ModBlocks.ore_oil, meta, ModBlocks.duna_rock);
+			OilBubble.spawnOil(world, randPosX, randPosY, randPosZ, 10 + rand.nextInt(7), ModBlocks.ore_oil, meta, stone);
 		}
 
-		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.nickelSpawn, 8, 1, 43, ModBlocks.ore_iron, meta, ModBlocks.duna_rock);
-		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.titaniumSpawn, 9, 4, 27, ModBlocks.ore_zinc, meta, ModBlocks.duna_rock);
+		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.ironSpawn, 8, 32, 64, ModBlocks.ore_iron, meta, stone);
+		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.zincSpawn, 9, 4, 27, ModBlocks.ore_zinc, meta, stone);
 
 		// Basalt rich in minerals, but only in basaltic caves!
 		DungeonToolbox.generateOre(world, rand, i, j, 12, 6, 0, 16, ModBlocks.ore_basalt, 0, ModBlocks.basalt);
@@ -71,6 +80,29 @@ public class WorldGeneratorDuna implements IWorldGenerator {
 			Spotlight.disableOnGeneration = false;
 			StructureManager.martian.build(world, x, y, z);
 			Spotlight.disableOnGeneration = true;
+		}
+
+		if(rand.nextInt(1234) == 0) {
+			int x = i + rand.nextInt(16);
+			int z = j + rand.nextInt(16);
+			int y = world.getHeightValue(x, z);
+
+			if(world.getBlock(x, y - 1, z).canPlaceTorchOnTop(world, x, y - 1, z) && world.getBlock(x, y, z).isReplaceable(world, x, y, z)) {
+
+				world.setBlock(x, y, z, ModBlocks.lantern_behemoth, 12, 3);
+				MultiblockHandlerXR.fillSpace(world, x, y, z, new int[] {4, 0, 0, 0, 0, 0}, ModBlocks.lantern_behemoth, ForgeDirection.NORTH);
+
+				TileEntityLanternBehemoth lantern = (TileEntityLanternBehemoth) world.getTileEntity(x, y, z);
+				lantern.isBroken = true;
+
+				if(rand.nextInt(2) == 0) {
+					LootGenerator.setBlock(world, x, y, z - 2);
+					LootGenerator.lootBooklet(world, x, y, z - 2);
+				}
+
+				if(GeneralConfig.enableDebugMode)
+					MainRegistry.logger.info("[Debug] Successfully spawned lantern at " + x + " " + (y) + " " + z);
+			}
 		}
 	}
 

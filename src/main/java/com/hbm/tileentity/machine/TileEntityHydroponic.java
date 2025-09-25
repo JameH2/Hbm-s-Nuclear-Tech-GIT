@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import java.util.List;
 
+import com.hbm.blocks.BlockCrop;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.atmosphere.ChunkAtmosphereHandler;
@@ -146,6 +147,8 @@ public class TileEntityHydroponic extends TileEntityMachineBase implements IGUIP
 
 						currentPlant = plantable.getPlant(worldObj, x, y, z);
 						if(!(currentPlant instanceof IGrowable) || currentPlant instanceof BlockStem) continue;
+
+						if(currentPlant instanceof BlockCrop && !((BlockCrop) currentPlant).canHydro) continue;
 
 						worldObj.setBlock(x, y, z, currentPlant);
 						prevMeta[i] = 0;

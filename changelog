@@ -1,16 +1,5 @@
-Includes all changes and bugfixes from the latest two upstream NTMain updates - [X5412 - lodestar is so cool i wish horses were real](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5412) & [X5412H1 - it just works (everything is comically broken)](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5412H1)
-
-## Added
-* Linkable remote access console for Stardar
-* Microblock support for stainless steel and meteor blocks
-* Config for ore location tooltip
-
-## Changed
-* X-Ray FEL crystal no longer uses balefire cells (for reals this time)
-* Added extended isotope processing to PUREX
-* Improved rocket fuel tank fuselage names, should make them easier to find
+Includes all changes and bugfixes from the latest upstream NTMain update - [X5454 - well that was fucking stupid](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5454)
 
 ## Fixed
-* A bunch of unasssemblable recipes
-* Missing paper in Martian
-* Fixed hydrazine localization
+* Minor localisation fixes
+* We definitely needed a whole release for this borb ;)

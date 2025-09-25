@@ -1,8 +1,11 @@
 package com.hbm.entity.mob.ai;
 
 import com.hbm.entity.projectile.EntityArtilleryShell;
+import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBulletBaseNT;
 import com.hbm.handler.BulletConfigSyncingUtil;
+import com.hbm.items.weapon.sedna.factory.XFactory12ga;
+import com.hbm.items.weapon.sedna.factory.XFactory762mm;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -69,16 +72,35 @@ public class EntityAIBehemothGun extends EntityAIBase {
     }
 
 	private void fireGatlingBarrage() {
-		EntityBulletBaseNT bullet = new EntityBulletBaseNT(owner.worldObj, BulletConfigSyncingUtil.WORLDWAR, owner, target, 1.0F, 0);
-		owner.worldObj.spawnEntityInWorld(bullet);
-		owner.playSound("hbm:weapon.calShoot", 1.0F, 1.0F);
+	    double xOffset = Math.cos(Math.toRadians(owner.rotationYaw)) * 1.5;
+	    double zOffset = Math.sin(Math.toRadians(owner.rotationYaw)) * 1.5;
+	    double yOffset = 10; 
+
+	    double targetX = target.posX - (owner.posX + xOffset);
+	    double targetY = target.posY + target.getEyeHeight() - (owner.posY + yOffset);
+	    double targetZ = target.posZ - (owner.posZ + zOffset);
+
+	    double distance = Math.sqrt(targetX * targetX + targetY * targetY + targetZ * targetZ);
+	    targetX /= distance;
+	    targetY /= distance;
+	    targetZ /= distance;
+
+	    EntityBulletBaseMK4 bullet = new EntityBulletBaseMK4(owner, XFactory762mm.r762_ap.setKnockback(0), 0.5F, 0.01F, owner.posX + xOffset, owner.posY + yOffset, owner.posZ + zOffset);
+	    bullet.setPosition(owner.posX + xOffset, owner.posY + yOffset, owner.posZ + zOffset);
+	    
+	    bullet.motionX = targetX * 0.5D;  
+	    bullet.motionY = targetY * 0.5D;
+	    bullet.motionZ = targetZ * 0.5D;
+
+	    owner.worldObj.spawnEntityInWorld(bullet);
+	    owner.playSound("hbm:weapon.calShoot", 15.0F, 1.0F);
 	}
 
 	private void fireArtilleryShell() {
 		if(reloadTimer <= 0) {
 			EntityArtilleryShell grenade = new EntityArtilleryShell(owner.worldObj);
-			grenade.setType(10);
-			grenade.setPosition(owner.posX, owner.posY + 10, owner.posZ);
+			grenade.setType(9);
+			grenade.setPosition(owner.posX, owner.posY + 14, owner.posZ);
 			Vec3 vec = Vec3.createVectorHelper(target.posX - owner.posX, 0, target.posZ - owner.posZ);
 			grenade.motionX = vec.xCoord * 0.05D;
 			grenade.motionY = 0.5D + owner.getRNG().nextDouble() * 0.5D;

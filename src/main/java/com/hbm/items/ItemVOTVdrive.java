@@ -116,11 +116,15 @@ public class ItemVOTVdrive extends ItemEnumMulti {
 		}
 	}
 
+	public static SolarSystem.Body getBody(ItemStack stack) {
+		return SolarSystem.Body.values()[stack.getItemDamage() % SolarSystem.Body.values().length];
+	}
+
 	public static Destination getDestination(ItemStack stack) {
 		if(!stack.hasTagCompound())
 			stack.stackTagCompound = new NBTTagCompound();
 
-		SolarSystem.Body body = SolarSystem.Body.values()[stack.getItemDamage()];
+		SolarSystem.Body body = getBody(stack);
 		int x = stack.stackTagCompound.getInteger("x");
 		int z = stack.stackTagCompound.getInteger("z");
 		return new Destination(body, x, z);
@@ -167,7 +171,7 @@ public class ItemVOTVdrive extends ItemEnumMulti {
 	}
 
 	public static int getProcessingTier(ItemStack stack, CelestialBody from) {
-		SolarSystem.Body body = SolarSystem.Body.values()[stack.getItemDamage()];
+		SolarSystem.Body body = getBody(stack);
 		return body.getProcessingLevel(from);
 	}
 
@@ -190,7 +194,7 @@ public class ItemVOTVdrive extends ItemEnumMulti {
 		if(!stack.hasTagCompound())
 			stack.stackTagCompound = new NBTTagCompound();
 
-		SolarSystem.Body body = SolarSystem.Body.values()[stack.getItemDamage()];
+		SolarSystem.Body body = getBody(stack);
 		if(!stack.stackTagCompound.hasKey("ax") || !stack.stackTagCompound.hasKey("az")) {
 			stack.stackTagCompound.setInteger("ax", itemRand.nextInt(SpaceConfig.maxProbeDistance * 2) - SpaceConfig.maxProbeDistance);
 			stack.stackTagCompound.setInteger("az", itemRand.nextInt(SpaceConfig.maxProbeDistance * 2) - SpaceConfig.maxProbeDistance);

@@ -38,6 +38,7 @@ public class ItemBedrockOreBase extends Item {
 	}
 
 	public static SolarSystem.Body getOreBody(ItemStack stack) {
+		if(stack.getItemDamage() >= SolarSystem.Body.values().length || stack.getItemDamage() <= 0) return SolarSystem.Body.KERBIN;
 		return SolarSystem.Body.values()[stack.getItemDamage()];
 	}
 

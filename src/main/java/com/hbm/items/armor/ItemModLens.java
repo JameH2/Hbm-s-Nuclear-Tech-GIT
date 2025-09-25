@@ -53,7 +53,7 @@ public class ItemModLens extends ItemArmorMod implements ISatChip {
 		if(lens == null) return;
 
 		int freq = this.getFreq(lens);
-		Satellite sat = SatelliteSavedData.getData(world).getSatFromFreq(freq);
+		Satellite sat = SatelliteSavedData.getData(world, (int)entity.posX, (int)entity.posZ).getSatFromFreq(freq);
 		if(!(sat instanceof SatelliteScanner)) return;
 
 		int x = (int) Math.floor(player.posX);

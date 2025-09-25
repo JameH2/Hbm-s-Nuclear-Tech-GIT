@@ -955,9 +955,9 @@ abstract public class Component extends StructureComponent {
 		}
 	}
 
-	static class ConcreteBricks extends StructureComponent.BlockSelector {
+	public static class ConcreteBricks extends StructureComponent.BlockSelector {
 
-		ConcreteBricks() { }
+		public ConcreteBricks() { } // is this a bad idea
 
 		/** Selects blocks */
 		@Override

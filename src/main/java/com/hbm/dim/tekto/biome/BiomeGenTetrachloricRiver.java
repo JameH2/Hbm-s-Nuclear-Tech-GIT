@@ -20,8 +20,8 @@ public class BiomeGenTetrachloricRiver extends BiomeGenBaseTekto {
 
 		this.setHeight(height);
 
-		this.topBlock = ModBlocks.sand_boron;
-		this.fillerBlock = ModBlocks.sand_boron;
+		this.topBlock = ModBlocks.vinyl_sand;
+		this.fillerBlock = ModBlocks.vinyl_sand;
 	}
 
 	@Override

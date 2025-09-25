@@ -27,7 +27,7 @@ import net.minecraft.world.World;
 public class TileEntityMachineMissileAssembly extends TileEntity implements ISidedInventory, IGUIProvider {
 
 	private ItemStack slots[];
-	
+
 	public MissileStruct load;
 
 	private static final int[] access = new int[] { 0 };
@@ -150,7 +150,7 @@ public class TileEntityMachineMissileAssembly extends TileEntity implements ISid
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		
+
 		NBTTagList list = new NBTTagList();
 
 		for (int i = 0; i < slots.length; i++) {
@@ -162,7 +162,7 @@ public class TileEntityMachineMissileAssembly extends TileEntity implements ISid
 			}
 		}
 		nbt.setTag("items", list);
-		
+
 		if (customName != null) {
 			nbt.setString("name", customName);
 		}
@@ -182,46 +182,46 @@ public class TileEntityMachineMissileAssembly extends TileEntity implements ISid
 	public boolean canExtractItem(int i, ItemStack itemStack, int j) {
 		return false;
 	}
-	
+
 	@Override
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
-			
+
 			MissileStruct multipart = new MissileStruct(slots[1], slots[2], slots[3], slots[4]);
-			
+
 			PacketDispatcher.wrapper.sendToAllAround(new TEMissileMultipartPacket(xCoord, yCoord, zCoord, multipart), new TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 250));
 		}
 	}
-	
+
 	public int fuselageState() {
-		
+
 		if(slots[2] != null && slots[2].getItem() instanceof ItemCustomMissilePart) {
-			
+
 			ItemCustomMissilePart part = (ItemCustomMissilePart)slots[2].getItem();
-			
+
 			if(part.type == PartType.FUSELAGE)
 				return 1;
 		}
-		
+
 		return 0;
 	}
 
 	public int chipState() {
-		
+
 		if(slots[0] != null && slots[0].getItem() instanceof ItemCustomMissilePart) {
-			
+
 			ItemCustomMissilePart part = (ItemCustomMissilePart)slots[0].getItem();
-			
+
 			if(part.type == PartType.CHIP)
 				return 1;
 		}
-		
+
 		return 0;
 	}
 
 	public int warheadState() {
-		
+
 		if(slots[1] != null && slots[1].getItem() instanceof ItemCustomMissilePart &&
 				slots[2] != null && slots[2].getItem() instanceof ItemCustomMissilePart &&
 				slots[4] != null && slots[4].getItem() instanceof ItemCustomMissilePart) {
@@ -231,68 +231,68 @@ public class TileEntityMachineMissileAssembly extends TileEntity implements ISid
 			ItemCustomMissilePart thruster = (ItemCustomMissilePart)slots[4].getItem();
 
 			if(part.type == PartType.WARHEAD && fuselage.type == PartType.FUSELAGE && thruster.type == PartType.THRUSTER) {
-				float weight = (float)part.mass * 0.001F;
-				float thrust = (Float)thruster.attributes[2];
-				
+				float weight = (float)part.mass;
+				float thrust = (float)thruster.attributes[2];
+
 				if(part.bottom == fuselage.top && weight <= thrust)
 					return 1;
 			}
 		}
-		
+
 		return 0;
 	}
 
 	public int stabilityState() {
-		
+
 		if(slots[3] == null)
 			return -1;
-		
+
 		if(slots[3] != null && slots[3].getItem() instanceof ItemCustomMissilePart &&
 				slots[2] != null && slots[2].getItem() instanceof ItemCustomMissilePart) {
 
 			ItemCustomMissilePart part = (ItemCustomMissilePart)slots[3].getItem();
 			ItemCustomMissilePart fuselage = (ItemCustomMissilePart)slots[2].getItem();
-			
+
 			if(part.top == fuselage.bottom && part.type == PartType.FINS)
 				return 1;
 		}
-		
+
 		return 0;
 	}
 
 	public int thrusterState() {
-		
+
 		if(slots[4] != null && slots[4].getItem() instanceof ItemCustomMissilePart &&
 				slots[2] != null && slots[2].getItem() instanceof ItemCustomMissilePart) {
 
 			ItemCustomMissilePart part = (ItemCustomMissilePart)slots[4].getItem();
 			ItemCustomMissilePart fuselage = (ItemCustomMissilePart)slots[2].getItem();
-			
+
 			if(part.type == PartType.THRUSTER && fuselage.type == PartType.FUSELAGE &&
 					part.top == fuselage.bottom && (FuelType)part.attributes[0] == (FuelType)fuselage.attributes[0]) {
 				return 1;
 			}
 		}
-		
+
 		return 0;
 	}
-	
+
 	public boolean canBuild() {
-		
+
 		if(slots[5] == null && chipState() == 1 && warheadState() == 1 && fuselageState() == 1 && thrusterState() == 1) {
 			return stabilityState() != 0;
 		}
-		
+
 		return false;
 	}
 
 	public void construct() {
-		
+
 		if(!canBuild())
 			return;
-		
+
 		slots[5] = ItemCustomMissile.buildMissile(slots[0], slots[1], slots[2], slots[3], slots[4]).copy();
-		
+
 		if(stabilityState() == 1)
 			slots[3] = null;
 
@@ -303,12 +303,12 @@ public class TileEntityMachineMissileAssembly extends TileEntity implements ISid
 
 		this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord, "hbm:block.missileAssembly2", 1F, 1F);
 	}
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return TileEntity.INFINITE_EXTENT_AABB;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared()

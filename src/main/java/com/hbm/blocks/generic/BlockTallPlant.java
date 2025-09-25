@@ -158,7 +158,7 @@ public class BlockTallPlant extends BlockEnumMulti implements IPlantable, IGrowa
 				world.setBlock(x, y, z, ModBlocks.plant_flower, EnumFlowerType.CD0.ordinal(), 3);
 		}
 	}
-
+	
 	@Override
 	public boolean canBlockStay(World world, int x, int y, int z) {
 		int meta = world.getBlockMetadata(x, y, z);

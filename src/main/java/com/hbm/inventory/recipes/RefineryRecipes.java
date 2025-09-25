@@ -127,7 +127,15 @@ public class RefineryRecipes {
 				new FluidStack(Fluids.LIGHTOIL_VACUUM,	vac_frac_light),
 				new FluidStack(Fluids.REFORMGAS,		vac_frac_sour)
 				));
+		vacuum.put(Fluids.TCRUDE, new Quartet(
+				new FluidStack(Fluids.HALOLIGHT,			vac_frac_heavy),
+				new FluidStack(Fluids.CHLOROMETHANE,	vac_frac_reform),
+				new FluidStack(Fluids.HCL,		vac_frac_light),
+				new FluidStack(Fluids.HGAS,		vac_frac_sour)
+				));
 	}
+	
+
 	
 	public static Quintet<FluidStack, FluidStack, FluidStack, FluidStack, ItemStack> getRefinery(FluidType oil) {
 		return refinery.get(oil);

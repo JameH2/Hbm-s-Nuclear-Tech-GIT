@@ -20,8 +20,8 @@ public class BiomeGenHalogenHills extends BiomeGenBaseTekto {
 
 		this.setHeight(height);
 
-		this.topBlock = ModBlocks.sand_lead;
-		this.fillerBlock = ModBlocks.sand_lead;
+		this.topBlock = ModBlocks.rubber_silt;
+		this.fillerBlock = ModBlocks.rubber_silt;
 	}
 
 	@Override

@@ -72,7 +72,7 @@ public class TileEntityAirPump extends TileEntityMachineBase implements IFluidSt
 			data.setFloat("base", 0.3F);
 			data.setFloat("max", 1F);
 			data.setInteger("life", 20 + worldObj.rand.nextInt(20));
-			data.setInteger("color",0x98bdf9);
+			data.setInteger("color",tank.getTankType().getColor());
 
 			data.setDouble("posX", xCoord + 0.5 + worldObj.rand.nextDouble() - 0.5);
 			data.setDouble("posZ", zCoord + 0.5 + worldObj.rand.nextDouble() -0.5);
@@ -345,6 +345,7 @@ public class TileEntityAirPump extends TileEntityMachineBase implements IFluidSt
 
 	public boolean registerScrubber(TileEntityAirScrubber scrubber) {
 		if(!this.isLoaded || this.isInvalid()) return false;
+		if(tank.getTankType() != Fluids.OXYGEN) return false;
 		if(this.scrubber == scrubber) return true;
 		if(this.scrubber != null && this.scrubber.isLoaded && !this.scrubber.isInvalid() && this.scrubber.canOperate()) return false;
 		this.scrubber = scrubber;

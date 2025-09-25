@@ -35,8 +35,8 @@ public class ModelSifterEel extends ModelBase {
 				GL11.glRotatef(rotationPitch, 1, 0, 0);
 				GL11.glRotatef(rotationHeadYaw, 0, 1, 0);
 				GL11.glTranslatef(0, 0, 0.5F);
-				ResourceManager.siftereel.renderPart("Head");
-				ResourceManager.siftereel.renderPart("Jaw");
+				ResourceManager.sifter_eel.renderPart("Head");
+				ResourceManager.sifter_eel.renderPart("Jaw");
 
 			}
 			GL11.glPopMatrix();
@@ -45,48 +45,48 @@ public class ModelSifterEel extends ModelBase {
 			GL11.glPushMatrix();
 			{
 				GL11.glRotated(cy0 * 20, 1, 0, 0);
-				ResourceManager.siftereel.renderPart("FinL");
+				ResourceManager.sifter_eel.renderPart("FinL");
 			}
 			GL11.glPopMatrix();
 			GL11.glPushMatrix();
 			{
 				GL11.glRotated(cy0 * -20, 1, 0, 0);
-				ResourceManager.siftereel.renderPart("FinR");
+				ResourceManager.sifter_eel.renderPart("FinR");
 			}
 			GL11.glPopMatrix();
 
 			// Tail fin
 			GL11.glPushMatrix();
 			{
-				ResourceManager.siftereel.renderPart("Body1");
+				ResourceManager.sifter_eel.renderPart("Body1");
 
 				GL11.glRotated(cy1 * 10, 0, 1, 0);
 				GL11.glRotated(cy2 * -2, 0, 1, 0);
-				ResourceManager.siftereel.renderPart("Dorsal1");
+				ResourceManager.sifter_eel.renderPart("Dorsal1");
 
 
-				ResourceManager.siftereel.renderPart("Body2");
+				ResourceManager.sifter_eel.renderPart("Body2");
 				GL11.glRotated(cy3 * -2, 0, 1, 0);
-				ResourceManager.siftereel.renderPart("Dorsal2");
-				ResourceManager.siftereel.renderPart("Dorsal3");
+				ResourceManager.sifter_eel.renderPart("Dorsal2");
+				ResourceManager.sifter_eel.renderPart("Dorsal3");
 				GL11.glRotated(cy4 * -6, 0, 1, 0);
 
-				ResourceManager.siftereel.renderPart("Body3");
+				ResourceManager.sifter_eel.renderPart("Body3");
 
-				ResourceManager.siftereel.renderPart("Ventral1");
-				ResourceManager.siftereel.renderPart("Ventral2");
-				ResourceManager.siftereel.renderPart("Ventral3");
+				ResourceManager.sifter_eel.renderPart("Ventral1");
+				ResourceManager.sifter_eel.renderPart("Ventral2");
+				ResourceManager.sifter_eel.renderPart("Ventral3");
 				GL11.glRotated(cy5 * -4, 0, 1, 0);
-				ResourceManager.siftereel.renderPart("Dorsal4");
-				ResourceManager.siftereel.renderPart("Ventral4");
-				ResourceManager.siftereel.renderPart("Body4");
+				ResourceManager.sifter_eel.renderPart("Dorsal4");
+				ResourceManager.sifter_eel.renderPart("Ventral4");
+				ResourceManager.sifter_eel.renderPart("Body4");
 				GL11.glRotated(cy6 * -6, 0, 1, 0);
-				ResourceManager.siftereel.renderPart("Body5");
+				ResourceManager.sifter_eel.renderPart("Body5");
 
-				ResourceManager.siftereel.renderPart("Body6");
+				ResourceManager.sifter_eel.renderPart("Body6");
 
 				GL11.glRotated(cy7 * -5, 0, 1, 0);
-				ResourceManager.siftereel.renderPart("Tail");
+				ResourceManager.sifter_eel.renderPart("Tail");
 
 			}
 

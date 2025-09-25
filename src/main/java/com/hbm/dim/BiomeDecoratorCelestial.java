@@ -18,21 +18,25 @@ public class BiomeDecoratorCelestial extends BiomeDecorator {
 	public int lavaCount = 20;
 
 	public int waterPlantsPerChunk = 0;
+	public int rubberPlantsPerChunk = 0;
 	public int coralPerChunk = 0;
+
 	public int seaLevel = 63;
 	public WorldGenWaterPlant genPlants;
+	public WorldGenRubberPlant genRPlants;
 	public WorldGenWaterCoral genCoral;
 
 	// ACTUAL lakes, not the single block stuff
 	// honestly MCP couldja give things better names pls?
 	public int lakeChancePerChunk = 0;
 	public Block lakeBlock = Blocks.water;
-	
+
 	private final Block stoneBlock;
 
 	public BiomeDecoratorCelestial(Block stoneBlock) {
 		this.stoneBlock = stoneBlock;
 		this.genPlants = new WorldGenWaterPlant();
+		this.genRPlants = new WorldGenRubberPlant();
 		this.genCoral = new WorldGenWaterCoral();
 	}
 
@@ -68,6 +72,15 @@ public class BiomeDecoratorCelestial extends BiomeDecorator {
 				int y = this.randomGenerator.nextInt(seaLevel);
 				genPlants.seaLevel = seaLevel;
 				genPlants.generate(currentWorld, randomGenerator, x, y, z);
+			}
+		}
+		doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, REED);
+		if(doGen && this.rubberPlantsPerChunk > 0) {
+			for (int i = 0; i < rubberPlantsPerChunk; ++i) {
+				int x = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
+				int z = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
+				int y = this.randomGenerator.nextInt(80);
+				genRPlants.generate(currentWorld, randomGenerator, x, y, z);
 			}
 		}
 
