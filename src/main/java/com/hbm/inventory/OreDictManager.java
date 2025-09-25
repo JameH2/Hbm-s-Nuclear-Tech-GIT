@@ -739,6 +739,8 @@ public class OreDictManager {
 		OreDictionary.registerOre(KEY_COBBLESTONE, dres_rock);
 		OreDictionary.registerOre(KEY_COBBLESTONE, ike_regolith);
 		OreDictionary.registerOre(KEY_STONE, ike_stone);
+		OreDictionary.registerOre(KEY_COBBLESTONE, dima_regolith);
+		OreDictionary.registerOre(KEY_STONE, dima_stone);
 		OreDictionary.registerOre(KEY_COBBLESTONE, eve_rock);
 		OreDictionary.registerOre(KEY_COBBLESTONE, moho_regolith);
 		OreDictionary.registerOre(KEY_STONE, moho_stone);

@@ -8,6 +8,8 @@ import com.hbm.dim.WorldGeneratorCelestial;
 import com.hbm.dim.WorldProviderEarth;
 import com.hbm.dim.Ike.WorldGeneratorIke;
 import com.hbm.dim.Ike.WorldProviderIke;
+import com.hbm.dim.dima.WorldGeneratorDima;
+import com.hbm.dim.dima.WorldProviderDima;
 import com.hbm.dim.dres.WorldProviderDres;
 import com.hbm.dim.duna.WorldGeneratorDuna;
 import com.hbm.dim.duna.WorldProviderDuna;
@@ -45,6 +47,7 @@ public class PlanetGen {
 		registerDimension(SpaceConfig.orbitDimension, WorldProviderOrbit.class);
 		registerDimension(SpaceConfig.tektoDimension, WorldProviderTekto.class);
 		registerDimension(SpaceConfig.thatmoDimension, WorldProviderThatmo.class);
+		registerDimension(SpaceConfig.dimaDimension, WorldProviderDima.class);
 
 		// Register our ore providers
 		GameRegistry.registerWorldGenerator(new WorldGeneratorCelestial(), 2);
@@ -58,6 +61,7 @@ public class PlanetGen {
 		GameRegistry.registerWorldGenerator(new WorldGeneratorMinmus(), 1);
 		GameRegistry.registerWorldGenerator(new WorldGeneratorLaythe(), 1);
 		GameRegistry.registerWorldGenerator(new WorldGeneratorTekto(), 1);
+		GameRegistry.registerWorldGenerator(new WorldGeneratorDima(), 1);
 	}
 
 	private static ArrayList<Integer> spaceDimensions = new ArrayList<>();
@@ -70,7 +74,7 @@ public class PlanetGen {
 		DimensionManager.registerProviderType(dimensionId, clazz, false);
 		DimensionManager.registerDimension(dimensionId, dimensionId);
 
-		if(dimensionId != SpaceConfig.orbitDimension) spaceDimensions.add(dimensionId);
+		if(dimensionId != SpaceConfig.orbitDimension && dimensionId != SpaceConfig.dimaDimension) spaceDimensions.add(dimensionId);
 	}
 
 	public static void overrideOverworldProvider() {

@@ -3,6 +3,7 @@ package com.hbm.items.tool;
 import java.util.List;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.config.GeneralConfig;
 import com.hbm.config.SpaceConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.CelestialTeleporter;
@@ -12,6 +13,7 @@ import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
 import com.hbm.dim.trait.CBT_Destroyed;
 import com.hbm.lib.Library;
+import com.hbm.world.PlanetGen;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -48,6 +50,26 @@ public class ItemWandD extends Item {
 				} else {
 					SolarSystem.Body target = SolarSystem.Body.values()[targetId];
 
+					if(target == SolarSystem.Body.DIMA) {
+						int[] dims = PlanetGen.getSpaceDimensions();
+						targetId = dims[world.rand.nextInt(dims.length)];
+
+						String[] validity = new String[] {
+							"Celestial body not found, please check your spelling and try again.",
+							"Body not recognised, did you mean: ",
+							"I can't take you there.",
+							"Not permitted.",
+							"Please stop asking.",
+							"I can't do that.",
+							"No.",
+							"Please leave, and don't come back.",
+							"Stop reading the source code, you'll get spoiled!",
+						};
+						String message = validity[world.rand.nextInt(validity.length - 1)];
+
+						player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + message));
+					}
+
 					CelestialTeleporter.teleport(player, target.getBody().dimensionId, player.posX, 300, player.posZ, true);
 					player.addChatMessage(new ChatComponentText("Teleported to: " + target.getBody().getUnlocalizedName()));
 				}
@@ -70,47 +92,21 @@ public class ItemWandD extends Item {
 				}
 			}
 		} else if(!(world.provider instanceof WorldProviderOrbit)) {
-			if(!player.isSneaking()) {
-				// TESTING: View atmospheric data
-				CBT_Atmosphere atmosphere = CelestialBody.getTrait(world, CBT_Atmosphere.class);
+			// TESTING: View atmospheric data
+			CBT_Atmosphere atmosphere = CelestialBody.getTrait(world, CBT_Atmosphere.class);
 
-				boolean isVacuum = true;
-				if(atmosphere != null) {
-					for(FluidEntry entry : atmosphere.fluids) {
-						// if(entry.pressure > 0.001) {
-							player.addChatMessage(new ChatComponentText("Atmosphere: " + entry.fluid.getUnlocalizedName() + " - " + entry.pressure + "bar"));
-							isVacuum = false;
-						// }
-					}
-				}
-
-				if(isVacuum)
-					player.addChatMessage(new ChatComponentText("Atmosphere: NEAR VACUUM"));
-			} else {
-				CelestialBody star = CelestialBody.getStar(world);
-
-				if(!star.hasTrait(CBT_Destroyed.class)) {
-
-					// TESTING: END OF TIME
-					star.modifyTraits(new CBT_Destroyed());
-
-					// TESTING: END OF LIFE
-					CelestialBody.degas(world);
-
-					// GOD
-					// DAMN
-					player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "GOD"));
-					player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "DAMN"));
-					player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "THE"));
-					player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "" + EnumChatFormatting.OBFUSCATED + "SUN"));
-				} else {
-
-					star.clearTraits();
-					CelestialBody.clearTraits(world);
-
-					player.addChatMessage(new ChatComponentText("kidding"));
+			boolean isVacuum = true;
+			if(atmosphere != null) {
+				for(FluidEntry entry : atmosphere.fluids) {
+					// if(entry.pressure > 0.001) {
+						player.addChatMessage(new ChatComponentText("Atmosphere: " + entry.fluid.getUnlocalizedName() + " - " + entry.pressure + "bar"));
+						isVacuum = false;
+					// }
 				}
 			}
+
+			if(isVacuum)
+				player.addChatMessage(new ChatComponentText("Atmosphere: NEAR VACUUM"));
 		} else {
 			world.setBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ), ModBlocks.concrete);
 		}

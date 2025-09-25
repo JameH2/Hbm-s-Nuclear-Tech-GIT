@@ -11,6 +11,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockWand;
 import com.hbm.blocks.generic.BlockWandTandem.TileEntityWandTandem;
 import com.hbm.config.GeneralConfig;
+import com.hbm.config.SpaceConfig;
 import com.hbm.config.StructureConfig;
 import com.hbm.handler.ThreeInts;
 import com.hbm.main.MainRegistry;
@@ -1143,7 +1144,7 @@ public class NBTStructure {
 				}
 			}
 
-			if (!weightedMap.containsKey(worldObj.provider.dimensionId))
+			if (worldObj.provider.dimensionId != SpaceConfig.dimaDimension && !weightedMap.containsKey(worldObj.provider.dimensionId))
 				return null;
 
 			int x = chunkX;
@@ -1179,6 +1180,12 @@ public class NBTStructure {
 		}
 
 		private SpawnCondition findSpawn(BiomeGenBase biome) {
+			// the fucked up everything dimension
+			if(worldObj.provider.dimensionId == SpaceConfig.dimaDimension) {
+				SpawnCondition[] spawnList = namedMap.values().toArray(new SpawnCondition[namedMap.size()]);
+				return spawnList[rand.nextInt(spawnList.length)];
+			}
+
 			List<SpawnCondition> spawnList = weightedMap.get(worldObj.provider.dimensionId);
 
 			for(int i = 0; i < 256; i++) {

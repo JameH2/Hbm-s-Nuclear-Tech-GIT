@@ -47,9 +47,9 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 	private static final ResourceLocation planetTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/planet.png");
 	private static final ResourceLocation flareTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/sunspike.png");
-	private static final ResourceLocation nightTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/night.png");
 	private static final ResourceLocation digammaStar = new ResourceLocation(RefStrings.MODID, "textures/misc/space/star_digamma.png");
 	private static final ResourceLocation lodeStar = new ResourceLocation(RefStrings.MODID, "textures/misc/star_lode.png");
+	protected ResourceLocation nightTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/night.png");
 
 	private static final ResourceLocation impactTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/impact.png");
 	private static final ResourceLocation shockwaveTexture = new ResourceLocation(RefStrings.MODID, "textures/particle/shockwave.png");
@@ -114,12 +114,13 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 		// Without mixins, we have to resort to some very wacky ways of checking that the lightmap needs to be updated
 		// fortunately, thanks to torch flickering, we can just check to see if the brightest pixel has been modified
-		if(lastBrightestPixel != mc.entityRenderer.lightmapColors[255] + mc.entityRenderer.lightmapColors[250]) {
-			if(celestialProvider.updateLightmap(mc.entityRenderer.lightmapColors)) {
+		int[] lmc = mc.entityRenderer.lightmapColors;
+		if(lastBrightestPixel != lmc[255] + lmc[250] + lmc[128]) {
+			if(celestialProvider.updateLightmap(lmc)) {
 				mc.entityRenderer.lightmapTexture.updateDynamicTexture();
 			}
 
-			lastBrightestPixel = mc.entityRenderer.lightmapColors[255] + mc.entityRenderer.lightmapColors[250];
+			lastBrightestPixel = lmc[255] + lmc[250] + lmc[128];
 		}
 
 		float fogIntensity = ModEventHandlerRenderer.lastFogDensity * 30;
@@ -542,7 +543,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 		CBT_Dyson dyson = sun.getTrait(CBT_Dyson.class);
 		int swarmCount = dyson != null ? dyson.size() : 0;
 
-		if(sun.shader != null && sun.hasTrait(CBT_Destroyed.class)) {
+		if(sun.shader != null) {
 			// BLACK HOLE SUN
 			// WON'T YOU COME
 			// AND WASH AWAY THE RAIN

@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 public class SolarSystem {
 
 	public static CelestialBody kerbol;
+	public static CelestialBody demeter;
 
 	// How much to scale celestial objects when rendering
 	public static final double RENDER_SCALE = 180;
@@ -41,7 +42,6 @@ public class SolarSystem {
 			.withMassRadius(1.757e28F, 261_600)
 			.withRotationalPeriod(432_000)
 			.withTexture(new ResourceLocation("textures/environment/sun.png"))
-			.withShader(new ResourceLocation(RefStrings.MODID, "shaders/blackhole.frag"), 3) // Only shows when CBT_Destroyed
 			.withSatellites(
 
 				new CelestialBody("moho", SpaceConfig.mohoDimension, Body.MOHO)
@@ -226,6 +226,23 @@ public class SolarSystem {
 					)
 			);
 
+		demeter = new CelestialBody("demeter")
+			.withMassRadius(1.757e28F, 261_600)
+			.withRotationalPeriod(432_000)
+			.withTexture(new ResourceLocation("textures/environment/sun.png"))
+			.withShader(new ResourceLocation(RefStrings.MODID, "shaders/blackhole.frag"), 3)
+			.withSatellites(
+
+				new CelestialBody("dima", SpaceConfig.dimaDimension, Body.DIMA)
+					.withMassRadius(5.292e22F, 600)
+					.withOrbitalParameters(13_599_840, 0.0F, 0.0F, 0.0F, 0.0F)
+					.withRotationalPeriod(21_549)
+					.withColor(0.608F, 0.914F, 1.0F)
+					.withAxialTilt(45)
+					.withMinProcessingLevel(1916169)
+
+			);
+
 		runTests();
 	}
 
@@ -241,8 +258,9 @@ public class SolarSystem {
 		EVE("eve"),
 		IKE("ike"),
 		LAYTHE("laythe"),
-		TEKTO("tekto");
+		TEKTO("tekto"),
 		//THATMO("thatmo"); sit this one out buddy :)
+		DIMA("dima");
 
 		public String name;
 

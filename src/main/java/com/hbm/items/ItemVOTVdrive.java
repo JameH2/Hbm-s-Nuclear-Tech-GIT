@@ -110,6 +110,7 @@ public class ItemVOTVdrive extends ItemEnumMulti {
 		stackTag.setInteger("ax", 1);
 		stackTag.setBoolean("Processed", true);
 		for(int i = 0; i < theEnum.getEnumConstants().length; i++) {
+			if(theEnum.getEnumConstants()[i] == SolarSystem.Body.DIMA) continue;
 			ItemStack stack = new ItemStack(item, 1, i);
 			stack.stackTagCompound = stackTag;
 			list.add(stack);

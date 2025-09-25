@@ -43,6 +43,8 @@ public class Spaceship extends WorldGenerator {
 			ModBlocks.duna_cobble,
 			ModBlocks.ike_regolith,
 			ModBlocks.ike_stone,
+			ModBlocks.dima_regolith,
+			ModBlocks.dima_stone,
 			ModBlocks.dres_rock,
 			ModBlocks.laythe_silt,
 			ModBlocks.eve_silt,

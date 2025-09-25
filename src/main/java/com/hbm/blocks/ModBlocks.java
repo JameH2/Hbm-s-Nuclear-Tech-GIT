@@ -449,6 +449,9 @@ public class ModBlocks {
 	public static Block ike_regolith;
 	public static Block ike_stone; //Genuinely wish i stopped fucking doing this 5000 stone type shit
 
+	public static Block dima_regolith;
+	public static Block dima_stone;
+
 	public static Block dres_rock;
 
 	public static Block laythe_silt;
@@ -1849,6 +1852,9 @@ public class ModBlocks {
 
 		ike_regolith = new BlockTint(Material.rock, "ike_regolith2", "ike_regolith3", "ike_regolith4", "ike_regolith5").setBlockName("ike_regolith").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ike_regolith");
 		ike_stone = new BlockGeneric(Material.rock).setBlockName("ike_stone").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ike_stone");
+
+		dima_regolith = new BlockFallingUp().setBlockName("dima_regolith").setStepSound(Block.soundTypeSnow).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":dima_regolith");
+		dima_stone = new BlockGeneric(Material.rock).setBlockName("dima_stone").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ike_stone");
 
 		dres_rock = new BlockGeneric(Material.rock).setBlockName("dres_rock").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":dresbase");
 
@@ -3297,6 +3303,9 @@ public class ModBlocks {
 
 		GameRegistry.registerBlock(ike_regolith, ike_regolith.getUnlocalizedName());
 		GameRegistry.registerBlock(ike_stone, ike_stone.getUnlocalizedName());
+
+		GameRegistry.registerBlock(dima_regolith, dima_regolith.getUnlocalizedName());
+		GameRegistry.registerBlock(dima_stone, dima_stone.getUnlocalizedName());
 
 		GameRegistry.registerBlock(dres_rock, dres_rock.getUnlocalizedName());
 

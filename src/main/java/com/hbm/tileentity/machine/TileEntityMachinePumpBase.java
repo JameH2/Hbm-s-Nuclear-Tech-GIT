@@ -41,6 +41,8 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
 		validBlocks.add(ModBlocks.eve_rock);
 		validBlocks.add(ModBlocks.ike_regolith);
 		validBlocks.add(ModBlocks.ike_stone);
+		validBlocks.add(ModBlocks.dima_regolith);
+		validBlocks.add(ModBlocks.dima_stone);
 		validBlocks.add(ModBlocks.duna_sands);
 		validBlocks.add(ModBlocks.moon_turf);
 		validBlocks.add(ModBlocks.laythe_silt);

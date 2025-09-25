@@ -45,6 +45,7 @@ public class SmeltingRecipes {
 		GameRegistry.addSmelting(Item.getItemFromBlock(ModBlocks.duna_cobble), new ItemStack(ModBlocks.duna_rock), 0.1F);
 		GameRegistry.addSmelting(Item.getItemFromBlock(ModBlocks.dres_rock), new ItemStack(Blocks.stone), 0.1F);
 		GameRegistry.addSmelting(Item.getItemFromBlock(ModBlocks.ike_regolith), new ItemStack(ModBlocks.ike_stone), 0.1F);
+		GameRegistry.addSmelting(Item.getItemFromBlock(ModBlocks.dima_regolith), new ItemStack(ModBlocks.dima_stone), 0.1F);
 		GameRegistry.addSmelting(Item.getItemFromBlock(ModBlocks.eve_rock), new ItemStack(Blocks.stone), 0.1F);
 		GameRegistry.addSmelting(Item.getItemFromBlock(ModBlocks.moho_regolith), new ItemStack(ModBlocks.moho_stone), 0.1F);
 		GameRegistry.addSmelting(Item.getItemFromBlock(ModBlocks.moon_rock), new ItemStack(Blocks.stone), 0.1F);

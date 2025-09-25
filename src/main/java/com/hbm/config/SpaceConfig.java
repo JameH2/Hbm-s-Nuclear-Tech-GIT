@@ -22,6 +22,7 @@ public class SpaceConfig {
 	public static int orbitDimension = 413_023;
 	public static int tektoDimension = 413_024;
 	public static int thatmoDimension = 413_025;
+	public static int dimaDimension = 413_026;
 
 	// Biome ID limit is 255
 
@@ -82,6 +83,8 @@ public class SpaceConfig {
 
 	public static int thatmoBiome = 87;
 
+	public static int dimaBiome = 86;
+
 
 
 	public static boolean allowNetherPortals = false;
@@ -111,6 +114,7 @@ public class SpaceConfig {
 		orbitDimension = CommonConfig.createConfigInt(config, CATEGORY_DIM, "17.09_orbitDimension", "Orbital dimension ID", orbitDimension);
 		tektoDimension = CommonConfig.createConfigInt(config, CATEGORY_DIM, "17.10_tektoDimension", "Tekto dimension ID", tektoDimension);
 		thatmoDimension = CommonConfig.createConfigInt(config, CATEGORY_DIM, "17.10_thatmoDimension", "Thatmo dimension ID", thatmoDimension);
+		dimaDimension = CommonConfig.createConfigInt(config, CATEGORY_DIM, "17.12_dimaDimension", "Dima dimension ID", dimaDimension);
 
 		final String CATEGORY_GENERAL = CommonConfig.CATEGORY_GENERAL;
 		maxProbeDistance = CommonConfig.createConfigInt(config, CATEGORY_GENERAL, "1.90_maxProbeDistance", "How far from the center of the dimension can probes generate landing coordinates", maxProbeDistance);
@@ -154,6 +158,7 @@ public class SpaceConfig {
 		tektoForestBiome = createConfigBiome(config, CATEGORY_BIOME, "16.30_tektoForestBiome", "Tekto Forest Biome ID", tektoForestBiome + defaultBiomeOffset);
 		tektoVinylIslandBiome = createConfigBiome(config, CATEGORY_BIOME, "16.31_tektoVinylSandsBiome", "Tekto Vinyl Sands Biome ID", tektoVinylIslandBiome + defaultBiomeOffset);
 		thatmoBiome = createConfigBiome(config, CATEGORY_BIOME, "16.32_thatmoBiome", "Thatmo Biome ID", thatmoBiome + defaultBiomeOffset);
+		dimaBiome = createConfigBiome(config, CATEGORY_BIOME, "16.33_dimaBiome", "Dima Biome ID", dimaBiome + defaultBiomeOffset);
 	}
 
 	private static HashMap<Integer, String> registeredIds = new HashMap<>();
