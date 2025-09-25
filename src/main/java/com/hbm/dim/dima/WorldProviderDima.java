@@ -2,11 +2,13 @@ package com.hbm.dim.dima;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.dim.WorldProviderCelestial;
+import com.hbm.main.MainRegistry;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.biome.WorldChunkManagerHell;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -77,9 +79,18 @@ public class WorldProviderDima extends WorldProviderCelestial {
 
 	@Override
 	public boolean updateLightmap(int[] lightmap) {
+		// for those with eyes to see
+		if(MainRegistry.proxy.me().isPotionActive(Potion.nightVision)) {
+			for(int i = 0; i < 256; i++) {
+				int[] color = unpackColor(lightmap[i]);
+				color[1] = 0;
+				color[2] = 0;
+				lightmap[i] = packColor(color);
+			}
+		}
+
 		float sun = getSunBrightness(1.0F);
 		for(int i = 0; i < 256; i++) {
-			// float sky = lightBrightnessTable[i / 16];
 			if(i / 15 >= 14) continue;
 
 			float diggems = Math.max(sun, 0);
