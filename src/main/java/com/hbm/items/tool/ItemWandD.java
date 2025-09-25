@@ -3,7 +3,6 @@ package com.hbm.items.tool;
 import java.util.List;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.config.GeneralConfig;
 import com.hbm.config.SpaceConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.CelestialTeleporter;
@@ -11,9 +10,7 @@ import com.hbm.dim.SolarSystem;
 import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
-import com.hbm.dim.trait.CBT_Destroyed;
 import com.hbm.lib.Library;
-import com.hbm.world.PlanetGen;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -51,8 +48,7 @@ public class ItemWandD extends Item {
 					SolarSystem.Body target = SolarSystem.Body.values()[targetId];
 
 					if(target == SolarSystem.Body.DIMA) {
-						int[] dims = PlanetGen.getSpaceDimensions();
-						targetId = dims[world.rand.nextInt(dims.length)];
+						target = SolarSystem.Body.values()[world.rand.nextInt(SolarSystem.Body.values().length - 2) + 1];
 
 						String[] validity = new String[] {
 							"Celestial body not found, please check your spelling and try again.",
@@ -63,6 +59,11 @@ public class ItemWandD extends Item {
 							"I can't do that.",
 							"No.",
 							"Please leave, and don't come back.",
+							"Get. Out.",
+							"Invalid Dimension.",
+							"Incorrect Input.",
+							"Please try again.",
+							"NO NO NO NO NO.",
 							"Stop reading the source code, you'll get spoiled!",
 						};
 						String message = validity[world.rand.nextInt(validity.length - 1)];

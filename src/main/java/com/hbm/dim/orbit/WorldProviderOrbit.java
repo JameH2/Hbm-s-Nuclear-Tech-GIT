@@ -169,7 +169,7 @@ public class WorldProviderOrbit extends WorldProvider {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getSunBrightness(float par1) {
-		if(SolarSystem.kerbol.hasTrait(CBT_Destroyed.class))
+		if(CelestialBody.getStar(worldObj).hasTrait(CBT_Destroyed.class))
 			return 0;
 
 		float solarAngle = worldObj.getCelestialAngle(par1);

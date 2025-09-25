@@ -605,7 +605,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, visibility);
 
-			mc.renderEngine.bindTexture(SolarSystem.kerbol.texture);
+			mc.renderEngine.bindTexture(sun.texture);
 
 			float[] sunColor = world.provider instanceof WorldProviderCelestial
 				? ((WorldProviderCelestial) world.provider).getSunColor()
