@@ -7,6 +7,7 @@ import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.WorldProviderCelestial;
+import com.hbm.entity.effect.EntityAnomaly;
 import com.hbm.world.generator.DungeonToolbox;
 
 import cpw.mods.fml.common.IWorldGenerator;
@@ -28,6 +29,14 @@ public class WorldGeneratorDima implements IWorldGenerator {
 		Block stone = ((WorldProviderCelestial) world.provider).getStone();
 
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.mineralSpawn, 10, 12, 32, ModBlocks.ore_mineral, meta, stone);
+
+		// // anomalous projections
+		// EntityAnomaly anomaly = new EntityAnomaly(world);
+		// anomaly.posX = i;
+		// anomaly.posY = world.getHeightValue(i, j);
+		// anomaly.posZ = j;
+
+		// world.spawnEntityInWorld(anomaly);
 	}
 
 }

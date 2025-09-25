@@ -225,6 +225,8 @@ public class EntityMappings {
 
 		addEntity(EntityDepress.class, "entity_depress", 250, false);
 
+		addEntity(EntityAnomaly.class, "entity_anomaly", 250, false);
+
 		addMob(EntityWarBehemoth.class, "entity_war_behemoth", 0x204131, 0x75CE00);
 		addMob(EntityTankbot.class, "entity_tankbot", 0x204131, 0x75CE00);
 

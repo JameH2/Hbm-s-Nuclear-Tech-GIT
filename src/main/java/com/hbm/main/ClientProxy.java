@@ -836,7 +836,9 @@ public class ClientProxy extends ServerProxy {
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityDummy.class, new RenderDummy());
 		RenderingRegistry.registerEntityRenderingHandler(EntityUndeadSoldier.class, new RenderUndeadSoldier());
+
 		RenderingRegistry.registerEntityRenderingHandler(EntityDepress.class, new RenderEmpty());
+		RenderingRegistry.registerEntityRenderingHandler(EntityAnomaly.class, new RenderAnomaly());
 
 		//"particles" (abysmal dogshit)
 		RenderingRegistry.registerEntityRenderingHandler(EntityChlorineFX.class, new MultiCloudRenderer(new Item[] { ModItems.chlorine1, ModItems.chlorine2, ModItems.chlorine3, ModItems.chlorine4, ModItems.chlorine5, ModItems.chlorine6, ModItems.chlorine7, ModItems.chlorine8 }));
