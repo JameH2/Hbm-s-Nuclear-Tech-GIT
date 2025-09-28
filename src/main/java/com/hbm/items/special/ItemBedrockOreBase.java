@@ -61,11 +61,11 @@ public class ItemBedrockOreBase extends Item {
 		SolarSystem.Body body = getOreBody(stack);
 		list.add("Mined on: " + I18nUtil.resolveKey("body." + body.name));
 
-		for(CelestialBedrockOreType type : CelestialBedrockOre.get(body).types) {
-			double amount = getOreAmount(stack, type);
-			String typeName = StatCollector.translateToLocalFormatted("item.bedrock_ore.type." + type.suffix + ".name");
-			list.add(typeName + ": " + ((int) (amount * 100)) / 100D + " (" + ItemOreDensityScanner.getColor(amount) + StatCollector.translateToLocalFormatted(ItemOreDensityScanner.translateDensity(amount)) + EnumChatFormatting.GRAY + ")");
-		}
+		//for(CelestialBedrockOreType type : CelestialBedrockOre.get(body).types) {
+			//double amount = getOreAmount(stack, type);
+			//String typeName = StatCollector.translateToLocalFormatted("item.bedrock_ore.type." + type.suffix + ".name");
+			//list.add(typeName + ": " + ((int) (amount * 100)) / 100D + " (" + ItemOreDensityScanner.getColor(amount) + StatCollector.translateToLocalFormatted(ItemOreDensityScanner.translateDensity(amount)) + EnumChatFormatting.GRAY + ")");
+		//}
 	}
 
 	public static double getOreLevel(World world, int x, int z, CelestialBedrockOreType type) {

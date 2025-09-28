@@ -47,6 +47,40 @@ public class WorldProviderDima extends WorldProviderCelestial {
 		return new SkyProviderDima();
 	}
 
+	static protected int ctime;
+	static protected float flash;
+
+	@Override
+	public void updateWeather() {
+		super.updateWeather();
+
+		if (!worldObj.isRemote) {
+			if (worldObj.isRaining()) {
+				if (ctime < 300) {
+					ctime++;
+				} else {
+					ctime = 0;
+				}
+			} else {
+				ctime = 0;
+			}
+		} else {
+			if (worldObj.isRaining()) {
+				if (ctime >= 300) {
+					flash = 0;
+				} 
+					if (flash <= 1) {
+						MainRegistry.proxy.me().playSound("hbm:misc.rumble", 10F, 1F);
+					}
+					flash += 0.1f;
+					flash = Math.min(100.0f, flash + 0.3f * (100.0f - flash) * 0.15f);
+				
+			} else {
+				flash = 100;
+			}
+		}
+	}
+
 	private IRenderHandler weatherProvider;
 
 	@Override
@@ -67,14 +101,16 @@ public class WorldProviderDima extends WorldProviderCelestial {
 	public Vec3 getSkyColor(Entity camera, float partialTicks) {
 		// getSkyColor is called first on every frame, so if you want to memoise anything, do it here
 		updateSky(partialTicks);
-
-		return Vec3.createVectorHelper(0, 0, 0);
+		Vec3 ohshit = super.getSkyColor(camera, partialTicks);
+		float alpha = (flash <= 0) ? 0.0F : 1.0F - Math.min(1.0F, flash / 100);
+		System.out.println(ctime);
+		return Vec3.createVectorHelper(0  ,0 , 0 );
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getSunBrightness(float par1) {
-		return Math.min(super.getSunBrightness(par1), 0.5F);
+		return Math.min(super.getSunBrightness(par1), 0.3F);
 	}
 
 	@Override
@@ -110,5 +146,7 @@ public class WorldProviderDima extends WorldProviderCelestial {
 		}
 		return true;
 	}
+	
+	
 
 }

@@ -1,6 +1,7 @@
 package com.hbm.render.tileentity;
 
 import java.nio.FloatBuffer;
+import java.util.Random;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -11,6 +12,7 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.shader.Shader;
+import com.hbm.render.util.BeamPronter;
 import com.hbm.render.util.HorsePronter;
 import com.hbm.wiaj.WorldInAJar;
 
@@ -39,32 +41,81 @@ public class RendererObjTester extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f) {		
 		GL11.glPushMatrix();
-		GL11.glTranslated(x + 0.5, y + 0.2, z + 0.5);
+		GL11.glTranslated(x + 0.5, y, z + 0.5);
+
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		GL11.glDepthMask(false);
 		GL11.glDisable(GL11.GL_CULL_FACE);
+
+		Tessellator tess = Tessellator.instance;
+
 		long time = tileEntity.getWorldObj().getTotalWorldTime();
-		double sine = Math.sin(time * 0.05) * 15;
-		double sin3 = Math.sin(time * 0.05 + Math.PI * 0.5) * 15;
-		double sin2 = Math.sin(time * 0.05 + Math.PI);
-		double insine = Math.sin(time * 0.05) * -15;
-		double cy0 = Math.sin(time % (Math.PI * 2));
-		double cy1 = Math.sin(time % (Math.PI * 2) - Math.PI * 0.2);
-		double cy2 = Math.sin(time % (Math.PI * 2) - Math.PI * 0.4);
-		double cy3 = Math.sin(time % (Math.PI * 2) - Math.PI * 0.6);
+		int cycleLength = 100; // ticks per shape
+		long cycle = time / cycleLength;
+		int segments = 8;
+		int strands = 4;
+		double height = 22.0;
+		double horizontalScale = 4.0;
+		float thickness = 0.05f;
+		int layers = 3;
+		int fadeDuration = 40;
 
-		GL11.glTranslatef(0, 5.5F, 3);
-		GL11.glRotatef(180, 0, 0, 0);
-		GL11.glRotatef(32, 1, 0, 0);
+		long cycleTime = time % cycleLength;
+		float alpha = 255;
+		if (cycleTime >= cycleLength - fadeDuration) {
+		    alpha = 255 * (1 - (cycleTime - (cycleLength - fadeDuration)) / (float)fadeDuration);
+		}
 
-		bindTexture(ResourceManager.lance_tex);
+		for (int strand = 0; strand < strands; strand++) {
+		    Random rand = new Random(cycle + strand * 1000L); // fixed per cycle
+		    double prevX = 0, prevZ = 0;
 
-		ResourceManager.lance.renderPart("Spear");
+		    for (int i = 0; i < segments; i++) {
+		        double nextX = prevX + (rand.nextDouble() - 0.5) * horizontalScale;
+		        double nextZ = prevZ + (rand.nextDouble() - 0.5) * horizontalScale;
+
+		        double spread = 0.2 * (i / (double)segments) * (strand - 1.5);
+		        nextX += spread;
+		        nextZ += spread;
+
+		        double y0 = (i / (double)segments) * height;
+		        double y1 = ((i + 1) / (double)segments) * height;
+
+		        for (int j = 1; j <= layers; j++) {
+		            float layerRadius = thickness * j;
+
+		            int innerColor = 0xFF0000;
+		            int outerColor = 0x880000;
+		            int r = ((outerColor & 0xFF0000) >> 16) + (((innerColor & 0xFF0000) >> 16 - ((outerColor & 0xFF0000) >> 16)) * j / layers);
+		            int g = ((outerColor & 0x00FF00) >> 8) + (((innerColor & 0x00FF00) >> 8 - ((outerColor & 0x00FF00) >> 8)) * j / layers);
+		            int b = (outerColor & 0x0000FF) + (((innerColor & 0x0000FF) - (outerColor & 0x0000FF)) * j / layers);
+		            int color = (r << 16) | (g << 8) | b;
+
+		            tess.startDrawingQuads();
+		            tess.setColorRGBA_I(color, (int)alpha);
+		            tess.addVertex(prevX + layerRadius, y0, prevZ + layerRadius);
+		            tess.addVertex(prevX - layerRadius, y0, prevZ + layerRadius);
+		            tess.addVertex(nextX - layerRadius, y1, nextZ + layerRadius);
+		            tess.addVertex(nextX + layerRadius, y1, nextZ + layerRadius);
+		            tess.draw();
+		        }
+
+		        prevX = nextX;
+		        prevZ = nextZ;
+		    }
+		}
+
+		GL11.glDepthMask(true);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glPopMatrix();
-	
-		
-		/*
-
-		*/
 	}
+	
 	
 
 	public void renderTileEntityAt2(TileEntity tileEntity, double x, double y, double z, float f)
