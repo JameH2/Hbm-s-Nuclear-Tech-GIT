@@ -198,10 +198,13 @@ public class WorldProviderOrbit extends WorldProvider {
 		return -99999;
 	}
 
+	private IRenderHandler skyRenderer;
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getSkyRenderer() {
-		return new SkyProviderOrbit();
+		if(skyRenderer == null) skyRenderer = new SkyProviderOrbit();
+		return skyRenderer;
 	}
 
 	// Just fetches a memoised angle instead, for speed

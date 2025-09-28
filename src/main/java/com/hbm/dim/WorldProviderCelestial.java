@@ -700,7 +700,7 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 		return super.getCloudHeight();
 	}
 
-	private IRenderHandler skyProvider;
+	protected IRenderHandler skyRenderer;
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -723,8 +723,17 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 		//  * player launched satellites won't be visible
 		//  * artificial moons/rings (once implemented) won't be visible
 
-		if(skyProvider == null) skyProvider = new SkyProviderCelestial();
-		return skyProvider;
+		if(skyRenderer == null) skyRenderer = new SkyProviderCelestial();
+		return skyRenderer;
+	}
+
+	protected IRenderHandler weatherRenderer;
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IRenderHandler getWeatherRenderer() {
+		if(weatherRenderer == null) weatherRenderer = new WeatherProviderCelestial();
+		return weatherRenderer;
 	}
 
 	protected double getDayLength() {

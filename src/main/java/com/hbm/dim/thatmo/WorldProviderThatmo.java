@@ -192,7 +192,8 @@ public class WorldProviderThatmo extends WorldProviderCelestial {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getSkyRenderer() {
-		return new SkyProviderThatmo();
+		if(skyRenderer == null) skyRenderer = new SkyProviderThatmo();
+		return skyRenderer;
 	}
 
 	@Override

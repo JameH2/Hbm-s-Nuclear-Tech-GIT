@@ -7,6 +7,9 @@ import com.hbm.main.MainRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EffectRenderer;
+import net.minecraft.client.particle.EntityRainFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.Vec3;
@@ -42,18 +45,37 @@ public class WorldProviderDima extends WorldProviderCelestial {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IRenderHandler getSkyRenderer() {
-		return new SkyProviderDima();
+	public void updateWeather() {
+		super.updateWeather();
+
+		if(worldObj.isRemote) updateParticles();
 	}
 
-	private IRenderHandler weatherProvider;
+	@SideOnly(Side.CLIENT)
+	private void updateParticles() {
+		// this code was written after a 4 day bender so please, kick my ass about it
+
+		EffectRenderer renderer = Minecraft.getMinecraft().effectRenderer;
+		for(Object o : renderer.fxLayers[0]) {
+			if(o.getClass() != EntityRainFX.class) continue;
+			EntityRainFX rain = (EntityRainFX) o;
+			if(rain.particleAge != 0) continue;
+			rain.setRBGColorF(1, 0, 0);
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IRenderHandler getSkyRenderer() {
+		if(skyRenderer == null) skyRenderer = new SkyProviderDima();
+		return skyRenderer;
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getWeatherRenderer() {
-		if(weatherProvider == null) weatherProvider = new WeatherProviderDima();
-		return weatherProvider;
+		if(weatherRenderer == null) weatherRenderer = new WeatherProviderDima();
+		return weatherRenderer;
 	}
 
 	@Override

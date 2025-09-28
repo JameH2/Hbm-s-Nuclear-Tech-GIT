@@ -42,7 +42,8 @@ public class WorldProviderLaythe extends WorldProviderCelestial {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getSkyRenderer() {
-		return new SkyProviderLaytheSunset();
+		if(skyRenderer == null) skyRenderer = new SkyProviderLaytheSunset();
+		return skyRenderer;
 	}
 
 	@Override
