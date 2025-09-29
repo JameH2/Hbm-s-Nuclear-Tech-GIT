@@ -280,6 +280,10 @@ public class ItemBedrockOreNew extends Item {
 				T("crystal",		o(MAT_ASBESTOS, 24),		o(MAT_SODALITE, 12),			o(MAT_DIAMOND, 6),		o(MAT_SODALITE, 3))
 				);
 				*/
+			register(
+				SolarSystem.Body.DIMA,
+				T("persona", o(MAT_IRON, 1), o(MAT_IRON, 1), o(MAT_IRON, 1), o(MAT_IRON, 1))
+			);
 		}
 
 		public CelestialBedrockOreType[] types;

@@ -240,6 +240,7 @@ public class SolarSystem {
 					.withColor(0.608F, 0.914F, 1.0F)
 					.withAxialTilt(45)
 					.withMinProcessingLevel(1916169)
+					.withBlockTextures(RefStrings.MODID + ":ike_stone", "", "", "")
 
 			);
 
