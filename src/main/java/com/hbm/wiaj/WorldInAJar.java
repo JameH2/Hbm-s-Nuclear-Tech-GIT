@@ -4,12 +4,14 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -32,6 +34,14 @@ public class WorldInAJar implements IBlockAccess {
 	private Block[][][] blocks;
 	private short[][][] meta;
 	private TileEntity[][][] tiles;
+
+	public WorldInAJar(ByteBuf buf) {
+		deserialize(buf);
+	}
+
+	public WorldInAJar(NBTTagCompound nbt) {
+		readFromNBT(nbt);
+	}
 
 	public WorldInAJar(int x, int y, int z) {
 		this.sizeX = x;
@@ -193,4 +203,95 @@ public class WorldInAJar implements IBlockAccess {
 	public boolean isSideSolid(int x, int y, int z, ForgeDirection side, boolean _default) {
 		return getBlock(x, y, z).isSideSolid(this, x, y, z, side);
 	}
+
+	public void readFromNBT(NBTTagCompound nbt) {
+		if(!nbt.hasKey("blocks")) {
+			sizeX = sizeY = sizeZ = 0;
+			blocks = new Block[0][0][0];
+			meta = new short[0][0][0];
+			tiles = new TileEntity[0][0][0];
+			return;
+		}
+
+		sizeX = nbt.getInteger("sizeX");
+		sizeY = nbt.getInteger("sizeY");
+		sizeZ = nbt.getInteger("sizeZ");
+
+		int[] blockIds = nbt.getIntArray("blocks");
+		int[] metaIds = nbt.getIntArray("data");
+
+		blocks = new Block[sizeX][sizeY][sizeZ];
+		meta = new short[sizeX][sizeY][sizeZ];
+		tiles = new TileEntity[sizeX][sizeY][sizeZ];
+
+		int i = 0;
+
+		for(int x = 0; x < sizeX; x++)
+		for(int y = 0; y < sizeY; y++)
+		for(int z = 0; z < sizeZ; z++) {
+			blocks[x][y][z] = Block.getBlockById(blockIds[i]);
+			meta[x][y][z] = (short)metaIds[i];
+
+			// no tiles yet, yabba dabba doo
+
+			i++;
+		}
+	}
+
+	public void writeToNBT(NBTTagCompound nbt) {
+		nbt.setInteger("sizeX", sizeX);
+		nbt.setInteger("sizeY", sizeY);
+		nbt.setInteger("sizeZ", sizeZ);
+
+		int size = sizeX * sizeY * sizeZ;
+		int[] blockIds = new int[size];
+		int[] metaIds = new int[size];
+
+		int i = 0;
+
+		for(int x = 0; x < sizeX; x++)
+		for(int y = 0; y < sizeY; y++)
+		for(int z = 0; z < sizeZ; z++) {
+			blockIds[i] = Block.getIdFromBlock(blocks[x][y][z]);
+			metaIds[i] = meta[x][y][z];
+
+			// no tiles yet, eeby deeby
+
+			i++;
+		}
+
+		nbt.setIntArray("blocks", blockIds);
+		nbt.setIntArray("data", metaIds);
+	}
+
+	public void serialize(ByteBuf buf) {
+		buf.writeShort(sizeX);
+		buf.writeShort(sizeY);
+		buf.writeShort(sizeZ);
+
+		for(int x = 0; x < sizeX; x++)
+		for(int y = 0; y < sizeY; y++)
+		for(int z = 0; z < sizeZ; z++) {
+			buf.writeInt(Block.getIdFromBlock(blocks[x][y][z]));
+			buf.writeShort(meta[x][y][z]);
+		}
+	}
+
+	public void deserialize(ByteBuf buf) {
+		sizeX = buf.readShort();
+		sizeY = buf.readShort();
+		sizeZ = buf.readShort();
+
+		blocks = new Block[sizeX][sizeY][sizeZ];
+		meta = new short[sizeX][sizeY][sizeZ];
+		tiles = new TileEntity[sizeX][sizeY][sizeZ];
+
+		for(int x = 0; x < sizeX; x++)
+		for(int y = 0; y < sizeY; y++)
+		for(int z = 0; z < sizeZ; z++) {
+			blocks[x][y][z] = Block.getBlockById(buf.readInt());
+			meta[x][y][z] = buf.readShort();
+		}
+	}
+
 }

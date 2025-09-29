@@ -1,13 +1,18 @@
 package com.hbm.entity.effect;
 
+import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toclient.EntityBufPacket;
+import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.wiaj.WorldInAJar;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityAnomaly extends Entity {
+public class EntityAnomaly extends Entity implements IBufPacketReceiver {
 
 	/**
 	 * gravitational anomaly
@@ -32,7 +37,14 @@ public class EntityAnomaly extends Entity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if(theMany == null) releaseFromGravity();
+		if(!worldObj.isRemote) {
+			if(theMany == null) releaseFromGravity();
+
+			// sync every five seconds, while avoiding updating all entities simultaneously
+			if(theMany != null && (worldObj.getTotalWorldTime() + getEntityId()) % 100 == 0) {
+				PacketDispatcher.wrapper.sendToAllAround(new EntityBufPacket(getEntityId(), this), new TargetPoint(this.worldObj.provider.dimensionId, posX, posY, posZ, 250));
+			}
+		}
 	}
 
 	protected void releaseFromGravity() {
@@ -65,12 +77,50 @@ public class EntityAnomaly extends Entity {
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		int count = nbt.getInteger("count");
+
+		if(count > 0) {
+			theMany = new WorldInAJar[count];
+
+			for(int i = 0; i < count; i++) {
+				NBTTagCompound data = nbt.getCompoundTag("w" + i);
+				theMany[i] = new WorldInAJar(data);
+			}
+		}
 
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		if(theMany != null) {
+			nbt.setInteger("count", theMany.length);
 
+			for(int i = 0; i < theMany.length; i++) {
+				NBTTagCompound data = new NBTTagCompound();
+				theMany[i].writeToNBT(data);
+				nbt.setTag("w" + i, data);
+			}
+		}
+	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		buf.writeByte(theMany.length);
+
+		for(int i = 0; i < theMany.length; i++) {
+			theMany[i].serialize(buf);
+		}
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		int count = buf.readByte();
+
+		theMany = new WorldInAJar[count];
+
+		for(int i = 0; i < count; i++) {
+			theMany[i] = new WorldInAJar(buf);
+		}
 	}
 
 }
