@@ -1,5 +1,6 @@
 package com.hbm.entity.effect;
 
+import com.hbm.explosion.ExplosionChaos;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.EntityBufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
@@ -41,7 +42,7 @@ public class EntityAnomaly extends Entity implements IBufPacketReceiver {
 		super.onUpdate();
 
 		if(!worldObj.isRemote) {
-			if(theMany == null) releaseFromGravity();
+			if(theMany == null && !isDead) releaseFromGravity();
 
 			// sync every five seconds, while avoiding updating all entities simultaneously
 			if(theMany != null && (worldObj.getTotalWorldTime() + getEntityId()) % 100 == 0) {
@@ -52,6 +53,12 @@ public class EntityAnomaly extends Entity implements IBufPacketReceiver {
 
 	protected void releaseFromGravity() {
 		if(!canRelease()) return;
+
+		if(rand.nextInt(3) == 0) {
+			ExplosionChaos.floater(worldObj, (int)posX, (int)posY, (int)posZ, rand.nextInt(24) + 8, rand.nextInt(16) + 16);
+			setDead();
+			return;
+		}
 
 		int count = rand.nextInt(3) + 1;
 		theMany = new WorldInAJar[count];
