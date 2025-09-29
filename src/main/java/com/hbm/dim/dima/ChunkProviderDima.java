@@ -18,8 +18,9 @@ public class ChunkProviderDima extends ChunkProviderCelestial {
 
 		spires.rock = ModBlocks.dima_regolith;
 		spires.regolith = ModBlocks.dima_stone; // inverted, because it falls up
-		spires.mid = 86;
+		spires.mid = 82;
 		spires.curve = true;
+		spires.maxTilt = 3.5F;
 
 		stoneBlock = ModBlocks.dima_stone;
 	}
