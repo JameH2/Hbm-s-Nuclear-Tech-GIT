@@ -8,6 +8,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
@@ -29,7 +30,15 @@ public class WorldInAJar implements IBlockAccess {
 	public int sizeY;
 	public int sizeZ;
 
+	// when ripped from the world, the origin position of the original blocks
+	public int posX;
+	public int posY;
+	public int posZ;
+
 	public int lightlevel = 15;
+
+	// should blocks below the top level have a reduced light level?
+	public boolean dimLowerBlocks = false;
 
 	private Block[][][] blocks;
 	private short[][][] meta;
@@ -64,8 +73,9 @@ public class WorldInAJar implements IBlockAccess {
 		this.tiles = new TileEntity[sizeX][sizeY][sizeZ];
 	}
 
-	// chained world eater
-	public WorldInAJar munch(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
+	private static WorldInAJar eatBlocks(World world, int x1, int y1, int z1, int x2, int y2, int z2, boolean consume, boolean blob) {
+		WorldInAJar wiaj = new WorldInAJar(x1, y1, z1, x2, y2, z2);
+
 		int minX = Math.min(x1, x2);
 		int minY = Math.min(y1, y2);
 		int minZ = Math.min(z1, z2);
@@ -73,36 +83,57 @@ public class WorldInAJar implements IBlockAccess {
 		int maxY = Math.max(y1, y2);
 		int maxZ = Math.max(z1, z2);
 
+		wiaj.posX = minX;
+		wiaj.posY = minY;
+		wiaj.posZ = minZ;
+
+		float radius = Math.max(wiaj.sizeX, Math.max(wiaj.sizeY, wiaj.sizeZ)) / 2;
+		float radiusSqr = radius * radius;
+
 		for(int x = minX; x <= maxX; x++)
 		for(int y = minY; y <= maxY; y++)
 		for(int z = minZ; z <= maxZ; z++) {
-			setBlock(x - minX, y - minY, z - minZ, world.getBlock(x, y, z), world.getBlockMetadata(x, y, z));
-			world.setBlockToAir(x, y, z);
+			if(blob) {
+				float rx = x - minX - wiaj.sizeX / 2;
+				float ry = y - minY - wiaj.sizeY / 2;
+				float rz = z - minZ - wiaj.sizeZ / 2;
+
+				if(ry < 0 && rx * rx + ry * ry + rz * rz > radiusSqr) continue;
+			}
+
+			wiaj.setBlock(x - minX, y - minY, z - minZ, world.getBlock(x, y, z), world.getBlockMetadata(x, y, z));
+			if(consume) world.setBlockToAir(x, y, z);
 		}
 
-		return this;
+		return wiaj;
+	}
+
+	// chained world eater
+	public static WorldInAJar munch(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
+		return eatBlocks(world, x1, y1, z1, x2, y2, z2, true, false);
+	}
+
+	public static WorldInAJar munchBlob(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
+		return eatBlocks(world, x1, y1, z1, x2, y2, z2, true, true);
 	}
 
 	// world eater in chains
-	public WorldInAJar repro(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
-		int minX = Math.min(x1, x2);
-		int minY = Math.min(y1, y2);
-		int minZ = Math.min(z1, z2);
-		int maxX = Math.max(x1, x2);
-		int maxY = Math.max(y1, y2);
-		int maxZ = Math.max(z1, z2);
-
-		for(int x = minX; x <= maxX; x++)
-		for(int y = minY; y <= maxY; y++)
-		for(int z = minZ; z <= maxZ; z++) {
-			setBlock(x - minX, y - minY, z - minZ, world.getBlock(x, y, z), world.getBlockMetadata(x, y, z));
-		}
-
-		return this;
+	public static WorldInAJar repro(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
+		return eatBlocks(world, x1, y1, z1, x2, y2, z2, false, false);
 	}
 
+	private RenderBlocks renderer;
+
 	// our disaster, our creation
-	public void render(RenderBlocks renderer) {
+	public void render() {
+		if(renderer == null) {
+			renderer = new RenderBlocks(this);
+			renderer.enableAO = true;
+		}
+
+		GL11.glColor3f(1, 1, 1);
+		RenderHelper.disableStandardItemLighting();
+
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		Tessellator.instance.startDrawingQuads();
@@ -167,6 +198,7 @@ public class WorldInAJar implements IBlockAccess {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getLightBrightnessForSkyBlocks(int x, int y, int z, int blockBrightness) {
+		if(dimLowerBlocks) return lightlevel - (sizeY - y - 1);
 		return lightlevel;
 	}
 
@@ -217,6 +249,10 @@ public class WorldInAJar implements IBlockAccess {
 		sizeY = nbt.getInteger("sizeY");
 		sizeZ = nbt.getInteger("sizeZ");
 
+		posX = nbt.getInteger("posX");
+		posY = nbt.getInteger("posY");
+		posZ = nbt.getInteger("posZ");
+
 		int[] blockIds = nbt.getIntArray("blocks");
 		int[] metaIds = nbt.getIntArray("data");
 
@@ -242,6 +278,10 @@ public class WorldInAJar implements IBlockAccess {
 		nbt.setInteger("sizeX", sizeX);
 		nbt.setInteger("sizeY", sizeY);
 		nbt.setInteger("sizeZ", sizeZ);
+
+		nbt.setInteger("posX", posX);
+		nbt.setInteger("posY", posY);
+		nbt.setInteger("posZ", posZ);
 
 		int size = sizeX * sizeY * sizeZ;
 		int[] blockIds = new int[size];
@@ -269,6 +309,10 @@ public class WorldInAJar implements IBlockAccess {
 		buf.writeShort(sizeY);
 		buf.writeShort(sizeZ);
 
+		buf.writeInt(posX);
+		buf.writeInt(posY);
+		buf.writeInt(posZ);
+
 		for(int x = 0; x < sizeX; x++)
 		for(int y = 0; y < sizeY; y++)
 		for(int z = 0; z < sizeZ; z++) {
@@ -281,6 +325,10 @@ public class WorldInAJar implements IBlockAccess {
 		sizeX = buf.readShort();
 		sizeY = buf.readShort();
 		sizeZ = buf.readShort();
+
+		posX = buf.readInt();
+		posY = buf.readInt();
+		posZ = buf.readInt();
 
 		blocks = new Block[sizeX][sizeY][sizeZ];
 		meta = new short[sizeX][sizeY][sizeZ];

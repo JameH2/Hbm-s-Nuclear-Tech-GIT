@@ -6,6 +6,8 @@ import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.wiaj.WorldInAJar;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,6 +28,7 @@ public class EntityAnomaly extends Entity implements IBufPacketReceiver {
 	// the violins sing
 	public EntityAnomaly(World world) {
 		super(world);
+		ignoreFrustumCheck = true;
 	}
 
 	@Override
@@ -54,8 +57,6 @@ public class EntityAnomaly extends Entity implements IBufPacketReceiver {
 		theMany = new WorldInAJar[count];
 
 		for(int i = 0; i < count; i++/*--unchained--*/) {
-			System.out.println("screams");
-
 			int x1 = MathHelper.floor_double(posX + rand.nextGaussian() * 8);
 			int y1 = MathHelper.floor_double(posY + rand.nextGaussian() * 8);
 			int z1 = MathHelper.floor_double(posZ + rand.nextGaussian() * 8);
@@ -63,8 +64,7 @@ public class EntityAnomaly extends Entity implements IBufPacketReceiver {
 			int y2 = MathHelper.floor_double(posY + rand.nextGaussian() * 8);
 			int z2 = MathHelper.floor_double(posZ + rand.nextGaussian() * 8);
 
-			WorldInAJar vessel = new WorldInAJar(x1, y1, z1, x2, y2, z2);
-			vessel.munch(worldObj, x1, y1, z1, x2, y2, z2);
+			WorldInAJar vessel = WorldInAJar.munchBlob(worldObj, x1, y1, z1, x2, y2, z2);
 
 			theMany[i] = vessel;
 		}
@@ -73,6 +73,12 @@ public class EntityAnomaly extends Entity implements IBufPacketReceiver {
 	private boolean canRelease() {
 		// make sure all surrounding chunks are generated before ripping them out of the ground
 		return worldObj.doChunksNearChunkExist(MathHelper.floor_double(this.posX), 128, MathHelper.floor_double(this.posZ), 32);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean isInRangeToRenderDist(double distance) {
+		return true;
 	}
 
 	@Override
