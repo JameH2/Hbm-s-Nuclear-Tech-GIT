@@ -20,144 +20,151 @@ public class SkyProviderDima extends SkyProviderCelestial {
 		super();
 		nightTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/night_2.png");
 	}
-	private static final ResourceLocation shockFlareTexture = new ResourceLocation(RefStrings.MODID, "textures/particle/flare.png");
 
 	@Override
 	protected void renderDigamma(float partialTicks, WorldClient world, Minecraft mc, float solarAngle) {
-		    WorldProviderDima provider = (WorldProviderDima) world.provider;
+		Tessellator tess = Tessellator.instance;
 
-		    Tessellator tess = Tessellator.instance;
-		    int fadeDuration = 40;
-		    float alpha = 1.0f - (provider.flash / 100.0f);
-		    int segments = 12;
-		    int strands = 10;
-		    double height = 252.0;
-		    double horizontalScale = 29.0;
-		    float thickness = 0.25f;
-		    int layers = 3;
-		    GL11.glPushMatrix();
+		float alpha = 1.0f - (WorldProviderDima.flash / 100.0f);
+		int segments = 12;
+		int strands = 10;
+		double height = 252.0;
+		double horizontalScale = 29.0;
+		float thickness = 0.25f;
+		int layers = 3;
 
-		    GL11.glRotatef(-solarAngle * 360.0F, 1.0F, 0.0F, 0.0F);
+		GL11.glPushMatrix();
+		{
 
-		    // ===================== FLARE =====================
-		    GL11.glPushMatrix();
-		    GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glRotatef(-solarAngle * 360.0F, 1.0F, 0.0F, 0.0F);
 
-		    OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
+			// ===================== FLARE =====================
+			GL11.glPushMatrix();
+			{
 
-		    float flareScale = 100f;
-		    GL11.glColor4f(1f, 0.2f, 0.2f, alpha * 0.3f);
-		    GL11.glRotatef(192, 1, 0, 0);
-		    GL11.glRotatef(62, 0, 0, 1);
-		    mc.renderEngine.bindTexture(shockFlareTexture);
+				GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-		    tess.startDrawingQuads();
-		    tess.addVertexWithUV(-flareScale, 100.0D, -flareScale, 0.0D, 0.0D);
-		    tess.addVertexWithUV(flareScale, 100.0D, -flareScale, 1.0D, 0.0D);
-		    tess.addVertexWithUV(flareScale, 100.0D, flareScale, 1.0D, 1.0D);
-		    tess.addVertexWithUV(-flareScale, 100.0D, flareScale, 0.0D, 1.0D);
-		    tess.draw();
+				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
 
-		    GL11.glDisable(GL11.GL_TEXTURE_2D);
-		    GL11.glPopMatrix();
-		    // ===================== END FLARE =====================
+				float flareScale = 100f;
+				GL11.glColor4f(1f, 0.2f, 0.2f, alpha * 0.3f);
+				GL11.glRotatef(192, 1, 0, 0);
+				GL11.glRotatef(62, 0, 0, 1);
+				mc.renderEngine.bindTexture(shockFlareTexture);
 
-		    // ===================== BOLTS =====================
-		    double clusterX = -160;
-		    double clusterY = -194;
-		    double clusterZ = -32;
-		    GL11.glTranslated(clusterX, clusterY, clusterZ + 12);
+				tess.startDrawingQuads();
+				tess.addVertexWithUV(-flareScale, 100.0D, -flareScale, 0.0D, 0.0D);
+				tess.addVertexWithUV(flareScale, 100.0D, -flareScale, 1.0D, 0.0D);
+				tess.addVertexWithUV(flareScale, 100.0D, flareScale, 1.0D, 1.0D);
+				tess.addVertexWithUV(-flareScale, 100.0D, flareScale, 0.0D, 1.0D);
+				tess.draw();
 
-		    int innerColor = 0xFF0000;
-		    int outerColor = 0x880000;
+				GL11.glDisable(GL11.GL_TEXTURE_2D);
 
+			}
+			GL11.glPopMatrix();
+			// ===================== END FLARE =====================
 
-		    for (int strand = 0; strand < strands; strand++) {
-			    Random rand = new Random(800 + strand * 1000L);
-			    double prevX = 0, prevZ = 0;
-		        int strandSegments = 4 + rand.nextInt(segments - 3);
+			// ===================== BOLTS =====================
+			GL11.glPushMatrix();
+			{
 
-		        for (int i = 0; i < strandSegments; i++) {
-		            double nextX = prevX + (rand.nextDouble() - 0.5) * horizontalScale;
-		            double nextZ = prevZ + (rand.nextDouble() - 0.5) * horizontalScale;
+				double clusterX = -160;
+				double clusterY = -194;
+				double clusterZ = -32;
+				GL11.glTranslated(clusterX, clusterY, clusterZ + 12);
 
-		            double spread = 0.2 * (i / (double)segments) * (strand - 1.5);
-		            nextX += spread;
-		            nextZ += spread;
+				int innerColor = 0xFF0000;
+				int outerColor = 0x880000;
 
-		            double y0 = (i / (double)segments) * height;
-		            double y1 = ((i + 1) / (double)segments) * height;
+				for(int strand = 0; strand < strands; strand++) {
+					Random rand = new Random(800 + strand * 1000L);
+					double prevX = 0, prevZ = 0;
+					int strandSegments = 4 + rand.nextInt(segments - 3);
 
-		            float radius = thickness / layers;
+					for(int i = 0; i < strandSegments; i++) {
+						double nextX = prevX + (rand.nextDouble() - 0.5) * horizontalScale;
+						double nextZ = prevZ + (rand.nextDouble() - 0.5) * horizontalScale;
 
-		            for (int j = 1; j <= layers; j++) {
-		                float inter = (float)(j - 1) / (float)(layers - 1);
+						double spread = 0.2 * (i / (double)segments) * (strand - 1.5);
+						nextX += spread;
+						nextZ += spread;
 
-		                int r1 = ((outerColor & 0xFF0000) >> 16);
-		                int g1 = ((outerColor & 0x00FF00) >> 8);
-		                int b1 = (outerColor & 0x0000FF);
+						double y0 = (i / (double)segments) * height;
+						double y1 = ((i + 1) / (double)segments) * height;
 
-		                int r2 = ((innerColor & 0xFF0000) >> 16);
-		                int g2 = ((innerColor & 0x00FF00) >> 8);
-		                int b2 = (innerColor & 0x0000FF);
+						float radius = thickness / layers;
 
-		                int r = ((int)(r1 + (r2 - r1) * inter)) << 16;
-		                int g = ((int)(g1 + (g2 - g1) * inter)) << 8;
-		                int b = ((int)(b1 + (b2 - b1) * inter));
-		                int color = r | g | b;
+						for(int j = 1; j <= layers; j++) {
+							float inter = (float)(j - 1) / (float)(layers - 1);
 
-		                for (int face = 0; face < 4; face++) {
-		                    tess.startDrawingQuads();
-		                    setColorWithAlpha(tess, color, alpha * 255);
+							int r1 = ((outerColor & 0xFF0000) >> 16);
+							int g1 = ((outerColor & 0x00FF00) >> 8);
+							int b1 = (outerColor & 0x0000FF);
 
-		                    switch (face) {
-		                        case 0:
-		                            tess.addVertex(prevX + radius * j, y0, prevZ + radius * j);
-		                            tess.addVertex(prevX + radius * j, y0, prevZ - radius * j);
-		                            tess.addVertex(nextX + radius * j, y1, nextZ - radius * j);
-		                            tess.addVertex(nextX + radius * j, y1, nextZ + radius * j);
-		                            break;
-		                        case 1:
-		                            tess.addVertex(prevX - radius * j, y0, prevZ + radius * j);
-		                            tess.addVertex(prevX - radius * j, y0, prevZ - radius * j);
-		                            tess.addVertex(nextX - radius * j, y1, nextZ - radius * j);
-		                            tess.addVertex(nextX - radius * j, y1, nextZ + radius * j);
-		                            break;
-		                        case 2:
-		                            tess.addVertex(prevX + radius * j, y0, prevZ + radius * j);
-		                            tess.addVertex(prevX - radius * j, y0, prevZ + radius * j);
-		                            tess.addVertex(nextX - radius * j, y1, nextZ + radius * j);
-		                            tess.addVertex(nextX + radius * j, y1, nextZ + radius * j);
-		                            break;
-		                        case 3:
-		                            tess.addVertex(prevX + radius * j, y0, prevZ - radius * j);
-		                            tess.addVertex(prevX - radius * j, y0, prevZ - radius * j);
-		                            tess.addVertex(nextX - radius * j, y1, nextZ - radius * j);
-		                            tess.addVertex(nextX + radius * j, y1, nextZ - radius * j);
-		                            break;
-		                    }
+							int r2 = ((innerColor & 0xFF0000) >> 16);
+							int g2 = ((innerColor & 0x00FF00) >> 8);
+							int b2 = (innerColor & 0x0000FF);
 
-		                    tess.draw();
-		                }
-		            }
+							int r = ((int)(r1 + (r2 - r1) * inter)) << 16;
+							int g = ((int)(g1 + (g2 - g1) * inter)) << 8;
+							int b = ((int)(b1 + (b2 - b1) * inter));
+							int color = r | g | b;
 
-		            prevX = nextX;
-		            prevZ = nextZ;
-		        }
-		    }
+							for(int face = 0; face < 4; face++) {
+								tess.startDrawingQuads();
+								setColorWithAlpha(tess, color, alpha * 255);
 
-		    // ===================== END BOLTS =====================
-		    GL11.glPopMatrix(); // pop global
+								switch (face) {
+								case 0:
+									tess.addVertex(prevX + radius * j, y0, prevZ + radius * j);
+									tess.addVertex(prevX + radius * j, y0, prevZ - radius * j);
+									tess.addVertex(nextX + radius * j, y1, nextZ - radius * j);
+									tess.addVertex(nextX + radius * j, y1, nextZ + radius * j);
+									break;
+								case 1:
+									tess.addVertex(prevX - radius * j, y0, prevZ + radius * j);
+									tess.addVertex(prevX - radius * j, y0, prevZ - radius * j);
+									tess.addVertex(nextX - radius * j, y1, nextZ - radius * j);
+									tess.addVertex(nextX - radius * j, y1, nextZ + radius * j);
+									break;
+								case 2:
+									tess.addVertex(prevX + radius * j, y0, prevZ + radius * j);
+									tess.addVertex(prevX - radius * j, y0, prevZ + radius * j);
+									tess.addVertex(nextX - radius * j, y1, nextZ + radius * j);
+									tess.addVertex(nextX + radius * j, y1, nextZ + radius * j);
+									break;
+								case 3:
+									tess.addVertex(prevX + radius * j, y0, prevZ - radius * j);
+									tess.addVertex(prevX - radius * j, y0, prevZ - radius * j);
+									tess.addVertex(nextX - radius * j, y1, nextZ - radius * j);
+									tess.addVertex(nextX + radius * j, y1, nextZ - radius * j);
+									break;
+								}
 
-	    }
-	
-			
-	private static void setColorWithAlpha(Tessellator tessellator, int color, float alpha) {
-		    float red = ((color >> 16) & 0xFF) / 255.0f;
-		    float green = ((color >> 8) & 0xFF) / 255.0f;
-		    float blue = (color & 0xFF) / 255.0f;
-		    float a = MathHelper.clamp_float(alpha / 255.0f, 0.0f, 1.0f); // convert to 0-1
-		    GL11.glColor4f(red, green, blue, a);
+								tess.draw();
+							}
+						}
+
+						prevX = nextX;
+						prevZ = nextZ;
+					}
+				}
+
+			}
+			GL11.glPopMatrix();
+			// ===================== END BOLTS =====================
+
 		}
+		GL11.glPopMatrix(); // pop global
+	}
+
+	private static void setColorWithAlpha(Tessellator tessellator, int color, float alpha) {
+		float red = ((color >> 16) & 0xFF) / 255.0f;
+		float green = ((color >> 8) & 0xFF) / 255.0f;
+		float blue = (color & 0xFF) / 255.0f;
+		float a = MathHelper.clamp_float(alpha / 255.0f, 0.0f, 1.0f); // convert to 0-1
+		GL11.glColor4f(red, green, blue, a);
+	}
 
 }

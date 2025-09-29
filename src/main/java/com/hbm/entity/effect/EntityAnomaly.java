@@ -36,7 +36,9 @@ public class EntityAnomaly extends Entity {
 	}
 
 	protected void releaseFromGravity() {
-		int count = rand.nextInt(4);
+		if(!canRelease()) return;
+
+		int count = rand.nextInt(3) + 1;
 		theMany = new WorldInAJar[count];
 
 		for(int i = 0; i < count; i++/*--unchained--*/) {
@@ -54,6 +56,11 @@ public class EntityAnomaly extends Entity {
 
 			theMany[i] = vessel;
 		}
+	}
+
+	private boolean canRelease() {
+		// make sure all surrounding chunks are generated before ripping them out of the ground
+		return worldObj.doChunksNearChunkExist(MathHelper.floor_double(this.posX), 128, MathHelper.floor_double(this.posZ), 32);
 	}
 
 	@Override

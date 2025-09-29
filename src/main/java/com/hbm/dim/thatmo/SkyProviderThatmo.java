@@ -171,7 +171,7 @@ public class SkyProviderThatmo extends SkyProviderCelestial {
 			float scalar = (float) (quadratic/vec2.lengthVector());
 			GL11.glScaled(scalar, scalar, scalar);
 			//System.out.println("scalar "+scalar);
-			renderGlow(new ResourceLocation(RefStrings.MODID + ":textures/particle/flare.png"), 1, 1, 1, partialTicks);
+			renderGlow(shockFlareTexture, 1, 1, 1, partialTicks);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glEnable(GL11.GL_FOG);
 			GL11.glPopMatrix();
@@ -196,7 +196,7 @@ public class SkyProviderThatmo extends SkyProviderCelestial {
 			float scalar = (float) (quadratic/vec2.lengthVector());
 			GL11.glScaled(scalar, scalar, scalar);
 			//System.out.println("scalar "+scalar);
-			renderGlow(new ResourceLocation(RefStrings.MODID + ":textures/particle/flare.png"), 1, 1, 1, partialTicks);
+			renderGlow(shockFlareTexture, 1, 1, 1, partialTicks);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glEnable(GL11.GL_FOG);
 			GL11.glPopMatrix();

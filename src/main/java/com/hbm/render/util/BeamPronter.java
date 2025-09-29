@@ -17,7 +17,7 @@ public class BeamPronter {
 	public static enum EnumBeamType {
 		SOLID, LINE
 	}
-	
+
 	private static boolean depthMask = false;
 
 	public static void prontBeamwithDepth(Vec3 skeleton, EnumWaveType wave, EnumBeamType beam, int outerColor, int innerColor, int start, int segments, float size, int layers, float thickness) {
@@ -105,7 +105,7 @@ public class BeamPronter {
 					int r1 = ((outerColor & 0xFF0000) >> 16);
 					int g1 = ((outerColor & 0x00FF00) >> 8);
 					int b1 = ((outerColor & 0x0000FF) >> 0);
-					
+
 					int r2 = ((innerColor & 0xFF0000) >> 16);
 					int g2 = ((innerColor & 0x00FF00) >> 8);
 					int b2 = ((innerColor & 0x0000FF) >> 0);
@@ -113,7 +113,7 @@ public class BeamPronter {
 					int r = ((int)(r1 + (r2 - r1) * inter)) << 16;
 					int g = ((int)(g1 + (g2 - g1) * inter)) << 8;
 					int b = ((int)(b1 + (b2 - b1) * inter)) << 0;
-					
+
 					int color = r | g | b;
 
 					tessellator.startDrawingQuads();
@@ -144,8 +144,8 @@ public class BeamPronter {
 					tessellator.addVertex(pX - (radius * j), pY, pZ - (radius * j));
 					tessellator.addVertex(pX + (radius * j), pY, pZ - (radius * j));
 					tessellator.draw();
-					
-					
+
+
 				}
 			}
 
@@ -171,17 +171,18 @@ public class BeamPronter {
 
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		
+
 		GL11.glPopMatrix();
 		GL11.glDepthMask(true);
 
 		GL11.glPopMatrix();
 	}
-    private static void setColorWithAlpha(Tessellator tessellator, int color, float alpha) {
-        float red = ((color >> 16) & 0xFF) / 255.0f;
-        float green = ((color >> 8) & 0xFF) / 255.0f;
-        float blue = (color & 0xFF) / 255.0f;
-        
-        GL11.glColor4f(red, green, blue, alpha);
-    }
+
+	private static void setColorWithAlpha(Tessellator tessellator, int color, float alpha) {
+		float red = ((color >> 16) & 0xFF) / 255.0f;
+		float green = ((color >> 8) & 0xFF) / 255.0f;
+		float blue = (color & 0xFF) / 255.0f;
+
+		GL11.glColor4f(red, green, blue, alpha);
+	}
 }

@@ -21,7 +21,7 @@ public class ChunkProviderDima extends ChunkProviderCelestial {
 		spires.mid = 86;
 		spires.curve = true;
 
-		stoneBlock = ModBlocks.dima_regolith;
+		stoneBlock = ModBlocks.dima_stone;
 	}
 
 	@Override

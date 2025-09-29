@@ -30,13 +30,15 @@ public class WorldGeneratorDima implements IWorldGenerator {
 
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.mineralSpawn, 10, 12, 32, ModBlocks.ore_mineral, meta, stone);
 
-		// // anomalous projections
-		// EntityAnomaly anomaly = new EntityAnomaly(world);
-		// anomaly.posX = i;
-		// anomaly.posY = world.getHeightValue(i, j);
-		// anomaly.posZ = j;
+		// anomalous projections
+		if(rand.nextInt(99) == 0) {
+			EntityAnomaly anomaly = new EntityAnomaly(world);
+			anomaly.posX = i;
+			anomaly.posY = world.getHeightValue(i, j) + 2;
+			anomaly.posZ = j;
 
-		// world.spawnEntityInWorld(anomaly);
+			world.spawnEntityInWorld(anomaly);
+		}
 
 		// fire that floats on occasion
 		{

@@ -48,10 +48,9 @@ public class WorldProviderDima extends WorldProviderCelestial {
 	public void updateWeather() {
 		super.updateWeather();
 
-		if(worldObj.isRemote) updateParticles();
-				if (!worldObj.isRemote) {
-			if (worldObj.isRaining()) {
-				if (ctime < 300) {
+		if(!worldObj.isRemote) {
+			if(worldObj.isRaining()) {
+				if(ctime < 300) {
 					ctime++;
 				} else {
 					ctime = 0;
@@ -60,16 +59,19 @@ public class WorldProviderDima extends WorldProviderCelestial {
 				ctime = 0;
 			}
 		} else {
-			if (worldObj.isRaining()) {
-				if (ctime >= 300) {
+			updateParticles();
+
+			if(worldObj.isRaining()) {
+				if(ctime >= 300) {
 					flash = 0;
-				} 
-					if (flash <= 1) {
-						MainRegistry.proxy.me().playSound("hbm:misc.rumble", 10F, 1F);
-					}
-					flash += 0.1f;
-					flash = Math.min(100.0f, flash + 0.3f * (100.0f - flash) * 0.15f);
-				
+				}
+
+				if(flash <= 1) {
+					MainRegistry.proxy.me().playSound("hbm:misc.rumble", 10F, 1F);
+				}
+
+				flash += 0.1f;
+				flash = Math.min(100.0f, flash + 0.3f * (100.0f - flash) * 0.15f);
 			} else {
 				flash = 100;
 			}
@@ -80,8 +82,6 @@ public class WorldProviderDima extends WorldProviderCelestial {
 	static protected float flash;
 
 
-
-	private IRenderHandler weatherProvider;
 	@SideOnly(Side.CLIENT)
 	private void updateParticles() {
 		// this code was written after a 4 day bender so please, kick my ass about it
@@ -120,9 +120,10 @@ public class WorldProviderDima extends WorldProviderCelestial {
 	public Vec3 getSkyColor(Entity camera, float partialTicks) {
 		// getSkyColor is called first on every frame, so if you want to memoise anything, do it here
 		updateSky(partialTicks);
-		Vec3 ohshit = super.getSkyColor(camera, partialTicks);
-		float alpha = (flash <= 0) ? 0.0F : 1.0F - Math.min(1.0F, flash / 100);
-		System.out.println(ctime);
+
+		// Vec3 skyColor = super.getSkyColor(camera, partialTicks);
+		// float alpha = (flash <= 0) ? 0.0F : 1.0F - Math.min(1.0F, flash / 100);
+
 		return Vec3.createVectorHelper(0  ,0 , 0 );
 	}
 
@@ -165,7 +166,5 @@ public class WorldProviderDima extends WorldProviderCelestial {
 		}
 		return true;
 	}
-	
-	
 
 }
