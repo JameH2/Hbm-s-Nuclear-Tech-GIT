@@ -44,7 +44,13 @@ public class RenderAnomaly extends Render {
 					double axisZ = BobMathUtil.sps(time + 42);
 
 					jar.lightlevel = entity.worldObj.getLightBrightnessForSkyBlocks((int) Math.floor(jar.posX) + 1, (int) Math.floor(jar.posY) + 16, (int) Math.floor(jar.posZ) + 1, 0);
-					jar.dimLowerBlocks = true;
+					jar.dimLowerBlocks = false;
+
+					double loopTime = time % 3.234;
+					if(loopTime > 0 && loopTime < 0.6) {
+						GL11.glTranslated(entity.worldObj.rand.nextGaussian() * 0.1, entity.worldObj.rand.nextGaussian() * 0.2, entity.worldObj.rand.nextGaussian() * 0.1);
+						jar.dimLowerBlocks = true;
+					}
 
 					GL11.glTranslated(jar.posX + offsetX, jar.posY + 16 + offsetY, jar.posZ + offsetZ);
 					GL11.glTranslated(jar.sizeX / 2, jar.sizeY / 2, jar.sizeZ / 2);

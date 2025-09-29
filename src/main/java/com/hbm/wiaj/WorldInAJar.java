@@ -35,7 +35,7 @@ public class WorldInAJar implements IBlockAccess {
 	public int posY;
 	public int posZ;
 
-	public int lightlevel = 15;
+	public int lightlevel = 15 << 20;
 
 	// should blocks below the top level have a reduced light level?
 	public boolean dimLowerBlocks = false;
@@ -198,7 +198,7 @@ public class WorldInAJar implements IBlockAccess {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getLightBrightnessForSkyBlocks(int x, int y, int z, int blockBrightness) {
-		if(dimLowerBlocks) return lightlevel - (sizeY - y - 1);
+		if(dimLowerBlocks) return Math.max(lightlevel - ((sizeY - y - 1) << 20), 0);
 		return lightlevel;
 	}
 
