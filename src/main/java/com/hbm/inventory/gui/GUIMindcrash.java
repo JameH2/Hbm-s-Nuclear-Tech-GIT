@@ -54,7 +54,7 @@ public class GUIMindcrash extends GuiScreen {
 	}
 
 	private double jitter() {
-		return rand.nextGaussian() * 0.1D;
+		return rand.nextGaussian() * 0.025D;
 	}
 
 }

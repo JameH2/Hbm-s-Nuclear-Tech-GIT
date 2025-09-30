@@ -6943,6 +6943,7 @@ tile.vitrified_barrel.name=Vitrified Nuclear Waste Drum
 tile.volcanic_lava_block.name=Volcanic Lava
 tile.volcano_core.name=Volcano Core
 tile.volcano_rad_core.name=Rad Volcano Core
+tile.wall_obsidian.name=Obsidian Wall
 tile.wand_air.name=Structure Wand Block (Air)
 tile.wand_loot.name=Structure Wand Block (Lootable)
 tile.wand_jigsaw.name=Structure Wand Block (Jigsaw)
