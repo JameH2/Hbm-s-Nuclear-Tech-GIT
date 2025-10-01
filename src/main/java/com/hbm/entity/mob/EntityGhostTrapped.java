@@ -74,7 +74,7 @@ public class EntityGhostTrapped extends EntityCreature implements IBufPacketRece
 
 	@SideOnly(Side.CLIENT)
 	private void quoteKillUnquote() {
-		Minecraft.getMinecraft().displayGuiScreen(new GUIRefuseDeath());
+		Minecraft.getMinecraft().displayGuiScreen(new GUIRefuseDeath(this));
 	}
 
 	@Override

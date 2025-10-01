@@ -2,10 +2,8 @@ package com.hbm.blocks.test;
 
 import com.hbm.entity.mob.EntityGhostTrapped;
 import com.hbm.lib.RefStrings;
-import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.deco.TileEntityObjTester;
 
-import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockContainer;
@@ -62,7 +60,6 @@ public class TestObjTester extends BlockContainer {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		// FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, x, y, z);
 		if(!world.isRemote) {
 			EntityGhostTrapped ghost = new EntityGhostTrapped(world);
 			ghost.setLocationAndAngles(x + 32, y + 8, z, world.rand.nextFloat() * 360.0F, 0.0F);
