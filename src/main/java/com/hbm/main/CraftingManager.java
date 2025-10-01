@@ -6,6 +6,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockConcreteColoredExt.EnumConcreteType;
 import com.hbm.blocks.generic.BlockGenericStairs;
 import com.hbm.blocks.generic.BlockMultiSlab;
+import com.hbm.blocks.generic.BlockWallNT;
 import com.hbm.blocks.generic.BlockNTMFlower.EnumFlowerType;
 import com.hbm.blocks.generic.BlockPlushie.PlushieType;
 import com.hbm.blocks.generic.BlockWoodStructure.EnumWoodStructure;
@@ -87,6 +88,9 @@ public class CraftingManager {
 		}
 		for(Object[] array : BlockGenericStairs.recipeGen) {
 			addRecipeAuto(new ItemStack((Block) array[2], 4), new Object[] { "#  ",  "## ",  "###", '#', new ItemStack((Block) array[0], 1, (int) array[1]) });
+		}
+		for(Object[] array : BlockWallNT.recipeGen) {
+			addRecipeAuto(new ItemStack((Block) array[2], 6, (int) array[1]), new Object[] { "###", "###", '#', new ItemStack((Block) array[0]) });
 		}
 
 		addRecipeAuto(new ItemStack(Blocks.stonebrick, 4), new Object[] { "SS", "SS", 'S', KEY_STONE });

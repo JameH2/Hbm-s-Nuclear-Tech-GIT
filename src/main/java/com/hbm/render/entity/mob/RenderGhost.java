@@ -2,7 +2,6 @@ package com.hbm.render.entity.mob;
 
 import org.lwjgl.opengl.GL11;
 
-import com.hbm.entity.mob.EntityGhost;
 import com.hbm.lib.RefStrings;
 
 import net.minecraft.client.model.ModelBiped;
@@ -20,18 +19,18 @@ public class RenderGhost extends RenderBiped {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityLiving entity) {
-		return this.getEntityTexture((EntityGhost) entity);
+		return this.getEntityTexture();
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
-		return this.getEntityTexture((EntityGhost) entity);
+		return this.getEntityTexture();
 	}
 
-	protected ResourceLocation getEntityTexture(EntityGhost entity) {
+	protected ResourceLocation getEntityTexture() {
 		return new ResourceLocation(RefStrings.MODID + ":textures/entity/ghost.png");
 	}
-	
+
 	@Override
 	public void doRender(EntityLiving p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
 		GL11.glEnable(GL11.GL_BLEND);

@@ -811,6 +811,7 @@ public class ClientProxy extends ServerProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntitySiegeCraft.class, new RenderSiegeCraft());
 		RenderingRegistry.registerEntityRenderingHandler(EntitySiegeTunneler.class, new RenderSiegeTunneler());
 		RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, new RenderGhost());
+		RenderingRegistry.registerEntityRenderingHandler(EntityGhostTrapped.class, new RenderGhost());
 		RenderingRegistry.registerEntityRenderingHandler(EntityGlyphid.class, new RenderGlyphid());
 		RenderingRegistry.registerEntityRenderingHandler(EntityGlyphidBrawler.class, new RenderGlyphid());
 		RenderingRegistry.registerEntityRenderingHandler(EntityGlyphidBehemoth.class, new RenderGlyphid());

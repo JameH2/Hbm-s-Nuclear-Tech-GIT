@@ -1,5 +1,6 @@
 package com.hbm.blocks.generic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.hbm.blocks.IBlockMulti;
@@ -15,11 +16,17 @@ import net.minecraft.util.IIcon;
 
 public class BlockWallNT extends BlockWall implements IBlockMulti {
 
+	public static List<Object[]> recipeGen = new ArrayList<>();
+
 	private final Block[] blocks;
 
 	public BlockWallNT(Block... blocks) {
 		super(blocks[0]);
 		this.blocks = blocks;
+
+		for(int i = 0; i < blocks.length; i++) {
+			recipeGen.add(new Object[] {blocks[i], i, this});
+		}
 	}
 
 	@Override
