@@ -321,8 +321,8 @@ public class SkyProviderCelestial extends IRenderHandler {
 				GL11.glDisable(GL11.GL_CULL_FACE);
 
 				fleshShader.use();
-				GL11.glScaled(194.5, 70.5, 94.5);
-				GL11.glRotated(90, 0, 0, 1);
+				GL11.glScaled(194.5, 66.5, 94.5);
+				GL11.glRotated(90, 1, 0, 0);
 
 				mc.renderEngine.bindTexture(noise);
 				ResourceManager.sphere_v2.renderAll();

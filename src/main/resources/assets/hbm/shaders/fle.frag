@@ -84,8 +84,9 @@ void main()
 {
     float pi = 3.141592;
 
-    // Calculate UV from the vertex position
-    vec2 uv = vec2(atan(vPosition.z, vPosition.x) / (2.0 * pi) + 0.5, vPosition.y * 0.5 + 0.5);
+    
+    vec3 n = normalize(vPosition);
+    vec2 uv = n.xy * 0.5 + 0.5;   
 
     // Create the noise
     float noise = FBM(uv);
