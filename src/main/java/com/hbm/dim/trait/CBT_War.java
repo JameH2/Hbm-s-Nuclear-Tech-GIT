@@ -63,6 +63,7 @@ public class CBT_War extends CelestialBodyTrait {
 		}
 	}
 
+	//todo: rework this to be less jank
 	@Override
 	public void update(boolean isremote) {
 		if(!isremote) {
@@ -80,7 +81,7 @@ public class CBT_War extends CelestialBodyTrait {
 						this.destroyProjectile(projectile);
 						World targetWorld = MinecraftServer.getServer().worldServerForDimension(projectile.getTarget());
 						i--;
-						System.out.println("damaged: " + targetWorld + " health left: " + this.health);
+						//System.out.println("damaged: " + targetWorld + " health left: " + this.health);
 
 						if(this.health > 0) {
 							CelestialBody.damage(projectile.getDamage(), targetWorld);
@@ -178,9 +179,7 @@ public class CBT_War extends CelestialBodyTrait {
 		private int target;
 
 		public Projectile() {
-			this.animtime = 0;
-			this.flashtime = 0;
-			this.type = ProjectileType.MEDIUM; // Default type
+			
 		}
 
 		public Projectile(float traveltime, int size, int damage, double posX, double posY, double posZ, ProjectileType type, int target) {
@@ -345,7 +344,8 @@ public class CBT_War extends CelestialBodyTrait {
 		HUGE,
 		INCENDIARY,
 		NUCLEAR,
-		SPLITSHOT
+		SPLITSHOT,
+		INFECTION
 		// Add more types as needed
 	}
 
