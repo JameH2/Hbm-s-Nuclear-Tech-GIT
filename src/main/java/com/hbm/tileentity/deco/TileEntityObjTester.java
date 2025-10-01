@@ -1,6 +1,7 @@
 package com.hbm.tileentity.deco;
 
 import com.hbm.inventory.gui.GUIMindcrash;
+import com.hbm.inventory.gui.GUIRefuseDeath;
 import com.hbm.tileentity.IGUIProvider;
 
 import cpw.mods.fml.relauncher.Side;
@@ -31,7 +32,7 @@ public class TileEntityObjTester extends TileEntity implements IGUIProvider {
 
 	@Override
 	public Object provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new GUIMindcrash();
+		return new GUIRefuseDeath();
 	}
 
 }

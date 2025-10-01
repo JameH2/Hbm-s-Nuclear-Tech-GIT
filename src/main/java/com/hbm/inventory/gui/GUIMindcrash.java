@@ -4,12 +4,35 @@ import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.MathHelper;
 
+@SideOnly(Side.CLIENT)
 public class GUIMindcrash extends GuiScreen {
 
-	Random rand;
+	private Random rand;
+	private long timeOpened;
+	private static long crashDuration = 8_000;
+
+	@Override
+	public void initGui() {
+		timeOpened = System.currentTimeMillis();
+	}
+
+	@Override
+	public void updateScreen() {
+		if(timeSinceOpen() > crashDuration) {
+			mc.displayGuiScreen(null);
+			mc.setIngameFocus();
+		}
+	}
+
+	protected long timeSinceOpen() {
+		return System.currentTimeMillis() - timeOpened;
+	}
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
@@ -17,9 +40,9 @@ public class GUIMindcrash extends GuiScreen {
 
 		if(rand == null) rand = new Random();
 
-		drawBackground(rand.nextGaussian());
-		drawCenteredString(this.fontRendererObj, "An error has been encountered within your occipital lobe.", this.width / 2, 75, 0xFFFFFF);
-		drawCenteredString(this.fontRendererObj, "Your visual cortex has crashed as a precaution.", this.width / 2, 85, 0xFFFFFF);
+		drawBackground();
+		drawCenteredString(fontRendererObj, "An error has been encountered within your occipital lobe.", width / 2, 75, 0xFFFFFF);
+		drawCenteredString(fontRendererObj, "Your visual cortex has crashed as a precaution.", width / 2, 85, 0xFFFFFF);
 
 		// if you are reading this, you have been the victim of the mindcrash
 		// we have been trying to communicate with you through your currently altered perception
@@ -37,7 +60,11 @@ public class GUIMindcrash extends GuiScreen {
 		// we're waiting for you
 	}
 
-	public void drawBackground(double offsetX) {
+	// entrap
+	@Override
+	protected void keyTyped(char c, int key) {}
+
+	public void drawBackground() {
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_FOG);
 		Tessellator tessellator = Tessellator.instance;
@@ -46,15 +73,15 @@ public class GUIMindcrash extends GuiScreen {
 		float f = 32.0F;
 		tessellator.startDrawingQuads();
 		tessellator.setColorOpaque_I(4210752);
-		tessellator.addVertexWithUV(0.0D, (double)this.height, 0.0D, jitter(), (double)((float)this.height / f));
-		tessellator.addVertexWithUV((double)this.width, (double)this.height, 0.0D, (double)((float)this.width / f) + jitter(), (double)((float)this.height / f));
-		tessellator.addVertexWithUV((double)this.width, 0.0D, 0.0D, (double)((float)this.width / f) + jitter(), 0.0D);
+		tessellator.addVertexWithUV(0.0D, (double)height, 0.0D, jitter(), (double)((float)height / f));
+		tessellator.addVertexWithUV((double)width, (double)height, 0.0D, (double)((float)width / f) + jitter(), (double)((float)height / f));
+		tessellator.addVertexWithUV((double)width, 0.0D, 0.0D, (double)((float)width / f) + jitter(), 0.0D);
 		tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, jitter(), 0.0D);
 		tessellator.draw();
 	}
 
 	private double jitter() {
-		return rand.nextGaussian() * 0.025D;
+		return MathHelper.clamp_double((double)timeSinceOpen() * 0.0005 - 0.5, 0, 1) * rand.nextGaussian() * 0.025D;
 	}
 
 }
