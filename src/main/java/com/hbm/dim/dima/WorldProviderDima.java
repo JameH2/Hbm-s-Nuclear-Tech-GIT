@@ -85,13 +85,13 @@ public class WorldProviderDima extends WorldProviderCelestial {
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setInteger("chargetime", ctime);
+		nbt.setInteger("ctime", ctime);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		ctime = nbt.getInteger("chargetime");
+		ctime = nbt.getInteger("ctime");
 	}
 
 	@Override
