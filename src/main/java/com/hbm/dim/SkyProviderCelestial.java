@@ -1164,5 +1164,57 @@ public class SkyProviderCelestial extends IRenderHandler {
 	protected void render3DModel(float partialTicks, WorldClient world, Minecraft mc) {
 
 	}
+	
+	// i dont know where to properly put this yet plus its 4 am so take that as you will (SEVEN)
+	/*
+	 
+			Shader shader = angel;
+			double shaderSize = sunSize * sun.shaderScale;
+
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+			shader.use();
+
+			float time = ((float)world.getWorldTime() + partialTicks) / 20.0F;
+
+
+			mc.renderEngine.bindTexture(noise);
+			GL11.glPushMatrix();
+			// Fix orbital plane
+			GL11.glRotatef(-90.0F, 0, 1, 0);
+			shader.setUniform1f("time", time * 1.2f);
+			shader.setUniform1f("divergence", 1f);
+			shader.setUniform1f("colorR", 1f);
+			shader.setUniform1f("colorG", 0.1f);
+			shader.setUniform1f("colorB", 0.3f);
+			shader.setUniform1f("interp", 4);
+
+			tessellator.startDrawingQuads();
+			tessellator.addVertexWithUV(-shaderSize, 100.0D, -shaderSize, 0.0D, 0.0D);
+			tessellator.addVertexWithUV(shaderSize, 100.0D, -shaderSize, 1.0D, 0.0D);
+			tessellator.addVertexWithUV(shaderSize, 100.0D, shaderSize, 1.0D, 1.0D);
+			tessellator.addVertexWithUV(-shaderSize, 100.0D, shaderSize, 0.0D, 1.0D);
+			tessellator.draw();
+
+			shader.stop();
+
+			GL11.glPushMatrix();	
+			GL11.glColor4f(1, 0.2f, 0.2f, 1);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glRotatef(180, 0, 1, 0);
+			GL11.glTranslatef(0, 0, -1);
+			mc.renderEngine.bindTexture(eyes);
+			float size = 7;
+			tessellator.startDrawingQuads();
+			tessellator.addVertexWithUV(-size, 100.0D, -size, 0.0D, 0.0D);
+			tessellator.addVertexWithUV(size, 100.0D, -size, 1.0D, 0.0D);
+			tessellator.addVertexWithUV(size, 100.0D, size, 1.0D, 1.0D);
+			tessellator.addVertexWithUV(-size, 100.0D, size, 0.0D, 1.0D);
+			tessellator.draw();
+			GL11.glPopMatrix();
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+
+			GL11.glPopMatrix();
+	 */
 
 }
