@@ -6,11 +6,13 @@ import com.hbm.main.MainRegistry;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityRainFX;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.biome.WorldChunkManagerHell;
@@ -80,7 +82,29 @@ public class WorldProviderDima extends WorldProviderCelestial {
 
 	static protected int ctime;
 	static protected float flash;
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setInteger("chargetime", ctime);
+	}
 
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		ctime = nbt.getInteger("chargetime");
+	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
+		buf.writeInt(ctime);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
+		ctime = buf.readInt();
+	}
 
 	@SideOnly(Side.CLIENT)
 	private void updateParticles() {
