@@ -20,6 +20,7 @@ public class GUIMindcrash extends GuiScreen {
 	@Override
 	public void initGui() {
 		timeOpened = System.currentTimeMillis();
+		mc.getSoundHandler().pauseSounds();
 	}
 
 	@Override

@@ -389,6 +389,8 @@ public class ModBlocks {
 	public static Block brick_double_slab;
 	public static Block stones_slab;
 	public static Block stones_double_slab;
+	public static Block meteor_slab;
+	public static Block meteor_double_slab;
 
 	public static Block concrete_smooth_stairs;
 	public static Block concrete_stairs;
@@ -410,6 +412,7 @@ public class ModBlocks {
 	public static Block asphalt_stairs;
 	public static Block lightstone_tile_stairs;
 	public static Block lightstone_bricks_stairs;
+	public static Block meteor_stairs;
 
 	public static Block cmb_brick;
 	public static Block cmb_brick_reinforced;
@@ -1834,6 +1837,9 @@ public class ModBlocks {
 		meteor_pillar = new BlockRotatablePillar(Material.rock, RefStrings.MODID + ":meteor_pillar_top").setBlockName("meteor_pillar").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(360.0F).setBlockTextureName(RefStrings.MODID + ":meteor_pillar");
 		meteor_spawner = new BlockCybercrab(Material.rock).setBlockName("meteor_spawner").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(360.0F);
 		meteor_battery = new BlockPillar(Material.rock, RefStrings.MODID + ":meteor_power").setBlockName("meteor_battery").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(360.0F).setBlockTextureName(RefStrings.MODID + ":meteor_spawner_side");
+		meteor_slab = new BlockMultiSlab(null, Material.rock, meteor_brick, meteor_brick_chiseled, meteor_brick_cracked, meteor_brick_mossy).setBlockName("meteor_slab").setCreativeTab(MainRegistry.blockTab);
+		meteor_double_slab = new BlockMultiSlab(meteor_slab, Material.rock, meteor_brick, meteor_brick_chiseled, meteor_brick_cracked, meteor_brick_mossy).setBlockName("meteor_double_slab").setCreativeTab(MainRegistry.blockTab);
+		meteor_stairs = new BlockGenericStairs(meteor_brick, 0).setBlockName("meteor_stairs").setCreativeTab(MainRegistry.blockTab);
 
 		moon_turf = new BlockFalling(Material.sand).setBlockName("moon_turf").setStepSound(Block.soundTypeSand).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":moon_turf");
 		moon_rock = new BlockGeneric(Material.rock).setBlockName("moon_rock").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":moon_rock");
@@ -3149,6 +3155,8 @@ public class ModBlocks {
 		register(lightstone_bricks_stairs);
 		register(stones_slab, ItemModSlab.class);
 		register(stones_double_slab, ItemModSlab.class);
+		register(meteor_slab, ItemModSlab.class);
+		register(meteor_double_slab, ItemModSlab.class);
 
 		GameRegistry.registerBlock(concrete_slab, ItemModSlab.class, concrete_slab.getUnlocalizedName());
 		GameRegistry.registerBlock(concrete_double_slab, ItemModSlab.class, concrete_double_slab.getUnlocalizedName());
@@ -3175,6 +3183,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(brick_fire_stairs, brick_fire_stairs.getUnlocalizedName());
 		GameRegistry.registerBlock(ducrete_stairs, ducrete_stairs.getUnlocalizedName());
 		GameRegistry.registerBlock(asphalt_stairs, asphalt_stairs.getUnlocalizedName());
+		GameRegistry.registerBlock(meteor_stairs, meteor_stairs.getUnlocalizedName());
 
 		//CMB Building Elements
 		GameRegistry.registerBlock(cmb_brick, ItemBlockBlastInfo.class, cmb_brick.getUnlocalizedName());

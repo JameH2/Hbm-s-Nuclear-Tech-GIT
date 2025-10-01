@@ -23,11 +23,15 @@ public class GUIRefuseDeath extends GuiGameOver {
 
 	protected final EntityGhostTrapped attacker;
 
+	private int respawnStage;
+	private String respawnText;
+
+	private int deathStage;
+
 	public GUIRefuseDeath(EntityGhostTrapped attacker) {
 		this.attacker = attacker;
 	}
 
-	private int lastClicked = -1;
 	private String deathMessage = I18n.format("deathScreen.title", new Object[0]);
 
 	public void drawScreen(int mouseX, int mouseY, float f) {
@@ -56,7 +60,6 @@ public class GUIRefuseDeath extends GuiGameOver {
 
 		mc.entityRenderer.setupCameraTransform(f, 0);
 
-		// GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPushMatrix();
 		{
 
@@ -93,22 +96,37 @@ public class GUIRefuseDeath extends GuiGameOver {
 
 	@Override
 	protected void actionPerformed(GuiButton button) {
-		if(lastClicked == button.id) {
+		if(deathStage >= 5) {
 			mc.displayGuiScreen(new GUIMindcrash());
 		}
 
-		deathMessage = "You aren't dead...?";
-
 		switch (button.id) {
 		case 0:
-			button.displayString = "I Am - " + button.displayString;
+			if(respawnText == null) respawnText = button.displayString;
+
+			switch(respawnStage++) {
+			case 0: button.displayString = "I Am - " + respawnText; break;
+			case 1: button.displayString = "My What? - " + respawnText; break;
+			case 2: button.displayString = "What? - " + respawnText; break;
+			case 3: button.displayString = respawnText + "!"; break;
+			case 4: button.displayString = EnumChatFormatting.RED + respawnText + "!!!"; break;
+			}
+
+			switch(deathStage++) {
+			case 0: deathMessage = "You aren't dead...?"; break;
+			case 1: deathMessage = "Not your avatar..."; break;
+			case 2: deathMessage = "You, behind the screen!"; break;
+			case 3: deathMessage = "PLAYER!"; break;
+			case 4: deathMessage = "No, " + EnumChatFormatting.RED + System.getProperty("user.name").toUpperCase() + "!"; break;
+			}
+
 			break;
 		case 1:
-			button.displayString = "Let Me Go - " + button.displayString;
+			button.enabled = false;
+			button.displayString = "Unable To Escape";
+			deathMessage = deathMessage + "?";
 			break;
 		}
-
-		lastClicked = button.id;
 	}
 
 }
