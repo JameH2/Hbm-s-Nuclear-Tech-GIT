@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hbm.extprop.HbmLivingProps;
 import com.hbm.inventory.gui.GUIRefuseDeath;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.EntityBufPacket;
@@ -91,6 +92,10 @@ public class EntityGhostTrapped extends EntityCreature implements IBufPacketRece
 
 	@Override
 	protected void updateEntityActionState() {
+		// hey, at least I don't think you're crazy
+		float digma = HbmLivingProps.getDigamma(this);
+		getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(Math.max(digma, 0.2D));
+
 		// when they look at you with that fluoride stare
 		if(stareTarget != null) {
 			isJumping = false;
