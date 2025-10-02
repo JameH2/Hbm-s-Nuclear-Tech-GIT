@@ -1,16 +1,20 @@
 package com.hbm.inventory.gui;
 
+import java.util.Random;
+
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.entity.mob.EntityGhostTrapped;
-import com.hbm.util.RenderUtil;
+import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toclient.EntityInteractPacket;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.gui.GuiLabel;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
@@ -23,16 +27,23 @@ public class GUIRefuseDeath extends GuiGameOver {
 
 	protected final EntityGhostTrapped attacker;
 
+	private Random rand;
+
 	private int respawnStage;
 	private String respawnText;
 
 	private int deathStage;
+	private String deathMessage = I18n.format("deathScreen.title", new Object[0]);
 
 	public GUIRefuseDeath(EntityGhostTrapped attacker) {
 		this.attacker = attacker;
 	}
 
-	private String deathMessage = I18n.format("deathScreen.title", new Object[0]);
+	@Override
+	public void initGui() {
+		super.initGui();
+		rand = new Random();
+	}
 
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		this.drawGradientRect(0, 0, this.width, this.height, 1615855616, -1602211792);
@@ -41,7 +52,7 @@ public class GUIRefuseDeath extends GuiGameOver {
 		{
 
 			GL11.glScalef(2.0F, 2.0F, 2.0F);
-			this.drawCenteredString(this.fontRendererObj, deathMessage, this.width / 2 / 2, 30, 16777215);
+			this.drawCenteredString(this.fontRendererObj, deathMessage, this.width / 2 / 2 + jitter(), 30 + jitter(), 16777215);
 
 		}
 		GL11.glPopMatrix();
@@ -66,7 +77,7 @@ public class GUIRefuseDeath extends GuiGameOver {
 			GL11.glLoadIdentity();
 
 			// Draw a plane at our intended distance to only the depth buffer
-			double dist = 2;
+			double dist = 0.5D;
 
 			GL11.glDisable(GL11.GL_CULL_FACE);
 			GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -97,11 +108,13 @@ public class GUIRefuseDeath extends GuiGameOver {
 	@Override
 	protected void actionPerformed(GuiButton button) {
 		if(deathStage >= 5) {
-			mc.displayGuiScreen(new GUIMindcrash());
+			mc.displayGuiScreen(new GUIMindcrash(attacker));
 		}
 
 		switch (button.id) {
 		case 0:
+			if(respawnStage == 0) attractAttention(0);
+			if(respawnStage == 3) attractAttention(1);
 			if(respawnText == null) respawnText = button.displayString;
 
 			switch(respawnStage++) {
@@ -127,6 +140,21 @@ public class GUIRefuseDeath extends GuiGameOver {
 			deathMessage = deathMessage + "?";
 			break;
 		}
+	}
+
+	private void attractAttention(int mode) {
+		int senderId = mc.thePlayer.getEntityId();
+
+		ByteBuf send = Unpooled.buffer();
+		send.writeByte(mode);
+		send.writeInt(senderId);
+		PacketDispatcher.wrapper.sendToServer(new EntityInteractPacket(attacker, send));
+		send.release();
+	}
+
+	private int jitter() {
+		if(deathStage >= 5) return (int)(rand.nextGaussian());
+		return 0;
 	}
 
 }

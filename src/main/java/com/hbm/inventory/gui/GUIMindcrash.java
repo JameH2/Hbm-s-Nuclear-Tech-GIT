@@ -4,8 +4,15 @@ import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
+import com.hbm.entity.mob.EntityGhostTrapped;
+import com.hbm.main.MainRegistry;
+import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toclient.EntityInteractPacket;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.MathHelper;
@@ -13,14 +20,23 @@ import net.minecraft.util.MathHelper;
 @SideOnly(Side.CLIENT)
 public class GUIMindcrash extends GuiScreen {
 
+	protected final EntityGhostTrapped attacker;
+
 	private Random rand;
 	private long timeOpened;
 	private static long crashDuration = 8_000;
+
+	public GUIMindcrash(EntityGhostTrapped attacker) {
+		this.attacker = attacker;
+
+		reportCrash();
+	}
 
 	@Override
 	public void initGui() {
 		timeOpened = System.currentTimeMillis();
 		mc.getSoundHandler().pauseSounds();
+		rand = new Random();
 	}
 
 	@Override
@@ -38,8 +54,6 @@ public class GUIMindcrash extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
-
-		if(rand == null) rand = new Random();
 
 		drawBackground();
 		drawCenteredString(fontRendererObj, "An error has been encountered within your occipital lobe.", width / 2, 75, 0xFFFFFF);
@@ -79,6 +93,16 @@ public class GUIMindcrash extends GuiScreen {
 		tessellator.addVertexWithUV((double)width, 0.0D, 0.0D, (double)((float)width / f) + jitter(), 0.0D);
 		tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, jitter(), 0.0D);
 		tessellator.draw();
+	}
+
+	private void reportCrash() {
+		int senderId = MainRegistry.proxy.me().getEntityId();
+
+		ByteBuf send = Unpooled.buffer();
+		send.writeByte(2);
+		send.writeInt(senderId);
+		PacketDispatcher.wrapper.sendToServer(new EntityInteractPacket(attacker, send));
+		send.release();
 	}
 
 	private double jitter() {
