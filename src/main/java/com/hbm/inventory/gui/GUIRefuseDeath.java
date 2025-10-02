@@ -5,6 +5,7 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.entity.mob.EntityGhostTrapped;
+import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.EntityInteractPacket;
 
@@ -43,6 +44,7 @@ public class GUIRefuseDeath extends GuiGameOver {
 	public void initGui() {
 		super.initGui();
 		rand = new Random();
+		attractAttention(0);
 	}
 
 	public void drawScreen(int mouseX, int mouseY, float f) {
@@ -77,7 +79,7 @@ public class GUIRefuseDeath extends GuiGameOver {
 			GL11.glLoadIdentity();
 
 			// Draw a plane at our intended distance to only the depth buffer
-			double dist = 0.5D;
+			double dist = 1.0D;
 
 			GL11.glDisable(GL11.GL_CULL_FACE);
 			GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -113,8 +115,8 @@ public class GUIRefuseDeath extends GuiGameOver {
 
 		switch (button.id) {
 		case 0:
-			if(respawnStage == 0) attractAttention(0);
-			if(respawnStage == 3) attractAttention(1);
+			if(respawnStage == 0) attractAttention(1);
+			if(respawnStage == 3) attractAttention(2);
 			if(respawnText == null) respawnText = button.displayString;
 
 			switch(respawnStage++) {
@@ -143,7 +145,7 @@ public class GUIRefuseDeath extends GuiGameOver {
 	}
 
 	private void attractAttention(int mode) {
-		int senderId = mc.thePlayer.getEntityId();
+		int senderId = MainRegistry.proxy.me().getEntityId();
 
 		ByteBuf send = Unpooled.buffer();
 		send.writeByte(mode);
