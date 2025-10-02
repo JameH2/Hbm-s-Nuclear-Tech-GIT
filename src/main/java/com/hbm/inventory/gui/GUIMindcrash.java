@@ -96,11 +96,9 @@ public class GUIMindcrash extends GuiScreen {
 	}
 
 	private void reportCrash() {
-		int senderId = MainRegistry.proxy.me().getEntityId();
-
 		ByteBuf send = Unpooled.buffer();
 		send.writeByte(3);
-		send.writeInt(senderId);
+		send.writeInt(MainRegistry.proxy.me().getEntityId());
 		PacketDispatcher.wrapper.sendToServer(new EntityInteractPacket(attacker, send));
 		send.release();
 	}
