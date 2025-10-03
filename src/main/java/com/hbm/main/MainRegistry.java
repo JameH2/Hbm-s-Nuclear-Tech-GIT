@@ -1505,6 +1505,8 @@ public class MainRegistry {
 		ignoreMappings.add("hbm:item.powder_platnium");
 		ignoreMappings.add("hbm:item.ingot_platnium");
 		ignoreMappings.add("hbm:item.nugget_platnium");
+		ignoreMappings.add("hbm:item.t45_kit");
+		ignoreMappings.add("hbm:item.fusion_core_infinite");
 
 		/// REMAP ///
 		remapItems.put("hbm:item.gadget_explosive8", ModItems.early_explosive_lenses);

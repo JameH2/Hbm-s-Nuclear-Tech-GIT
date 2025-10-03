@@ -28,7 +28,6 @@ import com.hbm.entity.train.*;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.Tuple.Quartet;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
@@ -279,11 +278,11 @@ public class EntityMappings {
 
 		int id = 0;
 		for(Quartet<Class<? extends Entity>, String, Integer, Boolean> entry : entityMappings) {
-			EntityRegistry.registerModEntity(entry.getW(), entry.getX(), id++, MainRegistry.instance, entry.getY(), 1, entry.getZ());
+			ModEntityList.registerEntity(entry.getW(), entry.getX(), id++, MainRegistry.instance, entry.getY(), 1, entry.getZ());
 		}
 
 		for(Quartet<Class<? extends Entity>, String, Integer, Integer> entry : mobMappings) {
-			EntityRegistry.registerGlobalEntityID(entry.getW(), entry.getX(), EntityRegistry.findGlobalUniqueEntityId(), entry.getY(), entry.getZ());
+			ModEntityList.registerEntity(entry.getW(), entry.getX(), id++, MainRegistry.instance, entry.getY(), entry.getZ());
 		}
 	}
 

@@ -205,6 +205,8 @@ public class ItemTransporterLinker extends Item implements IGUIProvider {
 			int[] coordinateList = dimensionTag.getIntArray("coords");
 			World world = DimensionManager.getWorld(dimensionId);
 
+			if(world == null) continue;
+
 			// 3 dimension strides
 			for(int i = 0; i < coordinateList.length; i += 3) {
 				TileEntity te = world.getTileEntity(coordinateList[i], coordinateList[i+1], coordinateList[i+2]);

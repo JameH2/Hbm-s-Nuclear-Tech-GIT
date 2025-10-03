@@ -36,6 +36,8 @@ public class ClientConfig extends RunningConfig {
 	public static ConfigWrapper<Integer> RENDER_HELIOSTAT_BEAM_LIMIT =		new ConfigWrapper(250);
 	public static ConfigWrapper<Integer> RENDER_REBAR_LIMIT =				new ConfigWrapper(250);
 	public static ConfigWrapper<Float> AUDIO_SHIP_HUM_VOLUME =				new ConfigWrapper(0.1F);
+	public static ConfigWrapper<Integer> TOOL_HUD_INDICATOR_X = 			new ConfigWrapper(0);
+	public static ConfigWrapper<Integer> TOOL_HUD_INDICATOR_Y = 			new ConfigWrapper(0);
 
 	private static void initDefaults() {
 		configMap.put("GEIGER_OFFSET_HORIZONTAL", GEIGER_OFFSET_HORIZONTAL);
@@ -61,6 +63,8 @@ public class ClientConfig extends RunningConfig {
 		configMap.put("RENDER_HELIOSTAT_BEAM_LIMIT", RENDER_HELIOSTAT_BEAM_LIMIT);
 		configMap.put("RENDER_REBAR_LIMIT", RENDER_REBAR_LIMIT);
 		configMap.put("AUDIO_SHIP_HUM_VOLUME", AUDIO_SHIP_HUM_VOLUME);
+		configMap.put("TOOL_HUD_INDICATOR_X", TOOL_HUD_INDICATOR_X);
+		configMap.put("TOOL_HUD_INDICATOR_Y", TOOL_HUD_INDICATOR_Y);
 	}
 
 	/** Initializes defaults, then reads the config file if it exists, then writes the config file. */
