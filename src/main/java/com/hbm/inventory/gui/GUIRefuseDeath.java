@@ -145,11 +145,9 @@ public class GUIRefuseDeath extends GuiGameOver {
 	}
 
 	private void attractAttention(int mode) {
-		int senderId = MainRegistry.proxy.me().getEntityId();
-
 		ByteBuf send = Unpooled.buffer();
 		send.writeByte(mode);
-		send.writeInt(senderId);
+		send.writeInt(MainRegistry.proxy.me().getEntityId());
 		PacketDispatcher.wrapper.sendToServer(new EntityInteractPacket(attacker, send));
 		send.release();
 	}

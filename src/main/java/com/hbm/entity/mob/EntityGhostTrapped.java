@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hbm.extprop.HbmLivingProps;
 import com.hbm.inventory.gui.GUIRefuseDeath;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.EntityBufPacket;
@@ -43,6 +44,12 @@ public class EntityGhostTrapped extends EntityCreature implements IBufPacketRece
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 	}
 
+	@Override
+	protected void applyEntityAttributes() {
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.2D);
+	}
+
 	private boolean awaiting;
 	private EntityPlayer stareTarget;
 	private PathEntity starePath;
@@ -76,23 +83,27 @@ public class EntityGhostTrapped extends EntityCreature implements IBufPacketRece
 		awaiting = true;
 
 		// find a position a few blocks in front of the player
-		double x = player.posX + Math.cos(player.rotationYawHead) * 5;
+		double x = player.posX - Math.sin(Math.toRadians(player.rotationYawHead)) * 5;
 		double y = player.posY;
-		double z = player.posZ + Math.sin(player.rotationYawHead) * 5;
+		double z = player.posZ + Math.cos(Math.toRadians(player.rotationYawHead)) * 5;
 
 		starePath = getNavigator().getPathToXYZ(x, y, z);
 	}
 
 	@Override
 	protected void updateEntityActionState() {
+		// hey, at least I don't think you're crazy
+		float digma = HbmLivingProps.getDigamma(this);
+		getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(Math.max(digma, 0.2D));
+
 		// when they look at you with that fluoride stare
 		if(stareTarget != null) {
 			isJumping = false;
 
 			if(shouldApproach && starePath == null) {
-				double x = stareTarget.posX + Math.cos(stareTarget.rotationYawHead) * 0.75;
+				double x = stareTarget.posX - Math.sin(Math.toRadians(stareTarget.rotationYawHead)) * 0.75;
 				double y = stareTarget.posY;
-				double z = stareTarget.posZ + Math.sin(stareTarget.rotationYawHead) * 0.75;
+				double z = stareTarget.posZ + Math.cos(Math.toRadians(stareTarget.rotationYawHead)) * 0.75;
 				// starePath = getNavigator().getPathToEntityLiving(stareTarget);
 				starePath = getNavigator().getPathToXYZ(x, y, z);
 			}

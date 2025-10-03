@@ -2,9 +2,12 @@ package com.hbm.entity.effect;
 
 import java.util.List;
 
+import com.hbm.extprop.HbmLivingProps;
 import com.hbm.main.MainRegistry;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
@@ -69,6 +72,12 @@ public class EntityDepress extends Entity {
 
 		for(Entity entity : entities) {
 			Vec3 vec = Vec3.createVectorHelper(posX - entity.posX, posY - entity.posY, posZ - entity.posZ);
+
+			// check if the player is in a different pressurized room
+			// other living entities update gravity too infrequently to use this check, so it is for players only
+			if(entity instanceof EntityPlayer) {
+				if(HbmLivingProps.hasGravity((EntityLivingBase) entity)) continue;
+			}
 
 			double dist = vec.lengthVector();
 

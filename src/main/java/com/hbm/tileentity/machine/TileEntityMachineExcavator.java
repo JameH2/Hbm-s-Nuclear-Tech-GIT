@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockDepth;
 import com.hbm.blocks.generic.BlockBedrockOreTE.TileEntityBedrockOre;
 import com.hbm.blocks.network.CraneInserter;
 import com.hbm.config.WorldConfig;
@@ -272,7 +273,12 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 							break;
 						}
 
-						if(shouldIgnoreBlock(b, x, y ,z)) continue;
+						// if hitting depth rock, turn off the drill
+						if(b instanceof BlockDepth) {
+							this.enableDrill = false;
+						}
+
+						if(shouldIgnoreBlock(b, x, y, z)) continue;
 
 						ignoreAll = false;
 
