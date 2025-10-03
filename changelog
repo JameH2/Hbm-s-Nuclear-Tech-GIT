@@ -1,5 +1,17 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5454 - well that was fucking stupid](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5454)
+Includes all changes and bugfixes from the latest upstream NTMain update - [X5467 - release name](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5467)
+
+## Added
+* Depressurization effects!
+    * Breaking any sealed room will cause depress event, which will suck entities through the hole, if they fit
+
+## Changed
+* Added animations to the LPW-3N
+* MORE MORE MORE electrolyser ports
+* PLSS will now consume O2 when underwater
+* QMAW pages for zinc
 
 ## Fixed
-* Minor localisation fixes
-* We definitely needed a whole release for this borb ;)
+* Crash on mismatched stored dimension IDs for transporter linker
+* Crash with OptimiazationsAndTweaks
+* Crash when using a linked stardar console after removing the stardar
+* Crash when dying in orbit
