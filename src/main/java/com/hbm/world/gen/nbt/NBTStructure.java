@@ -97,6 +97,10 @@ public class NBTStructure {
 
 		namedMap.put(spawn.name, spawn);
 
+		// it must not be  shown to the player
+		// it is not safe  for viewing
+		if(dimensionId == -99) return;
+
 		if(spawn.checkCoordinates != null) {
 			List<SpawnCondition> spawnList = customSpawnMap.computeIfAbsent(dimensionId, integer -> new ArrayList<SpawnCondition>());
 			spawnList.add(spawn);

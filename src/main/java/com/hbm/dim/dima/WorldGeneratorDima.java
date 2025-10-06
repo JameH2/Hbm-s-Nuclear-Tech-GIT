@@ -8,14 +8,26 @@ import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.entity.effect.EntityAnomaly;
+import com.hbm.lib.RefStrings;
+import com.hbm.world.gen.nbt.JigsawPiece;
+import com.hbm.world.gen.nbt.NBTStructure;
+import com.hbm.world.gen.nbt.SpawnCondition;
 import com.hbm.world.generator.DungeonToolbox;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.block.Block;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 
 public class WorldGeneratorDima implements IWorldGenerator {
+
+	public WorldGeneratorDima() {
+		NBTStructure.registerStructure(-99, new SpawnCondition(EnumChatFormatting.OBFUSCATED + "tower") {{
+			structure = new JigsawPiece("idma", new NBTStructure(new ResourceLocation(RefStrings.MODID, "structures/invalid/idma.nbt")), -20);
+		}});
+	}
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
