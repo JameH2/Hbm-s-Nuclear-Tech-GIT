@@ -109,10 +109,6 @@ public class GUIRefuseDeath extends GuiGameOver {
 
 	@Override
 	protected void actionPerformed(GuiButton button) {
-		if(deathStage >= 5) {
-			mc.displayGuiScreen(new GUIMindcrash(attacker));
-		}
-
 		switch (button.id) {
 		case 0:
 			if(respawnStage == 0) attractAttention(1);
@@ -120,19 +116,27 @@ public class GUIRefuseDeath extends GuiGameOver {
 			if(respawnText == null) respawnText = button.displayString;
 
 			switch(respawnStage++) {
-			case 0: button.displayString = "I Am - " + respawnText; break;
-			case 1: button.displayString = "My What? - " + respawnText; break;
-			case 2: button.displayString = "What? - " + respawnText; break;
-			case 3: button.displayString = respawnText + "!"; break;
-			case 4: button.displayString = EnumChatFormatting.RED + respawnText + "!!!"; break;
-			}
-
-			switch(deathStage++) {
-			case 0: deathMessage = "You aren't dead...?"; break;
-			case 1: deathMessage = "Not your avatar..."; break;
-			case 2: deathMessage = "You, behind the screen!"; break;
-			case 3: deathMessage = "PLAYER!"; break;
-			case 4: deathMessage = "No, " + EnumChatFormatting.RED + System.getProperty("user.name").toUpperCase() + "!"; break;
+			case 0:
+				deathMessage = "You aren't dead...?";
+				button.displayString = "I Am - " + respawnText;
+				break;
+			case 1:
+				deathMessage = "Not your avatar...";
+				button.displayString = "My What? - " + respawnText;
+				break;
+			case 2:
+				deathMessage = "You, behind the screen!";
+				button.displayString = "What? - " + respawnText;
+				break;
+			case 3:
+				deathMessage = "PLAYER!";
+				button.displayString = respawnText + "!";
+				break;
+			case 4:
+				deathMessage = "No, " + EnumChatFormatting.RED + System.getProperty("user.name").toUpperCase() + "!";
+				button.displayString = EnumChatFormatting.RED + respawnText + "!!!";
+				button.enabled = false;
+				break;
 			}
 
 			break;
@@ -144,6 +148,20 @@ public class GUIRefuseDeath extends GuiGameOver {
 		}
 	}
 
+	@Override
+	public void updateScreen() {
+		super.updateScreen();
+
+		if(deathStage > 0) {
+			deathStage--;
+			if(deathStage == 0) {
+				mc.displayGuiScreen(new GUIMindcrash(attacker));
+			}
+		}
+
+		if(respawnStage >= 3 && attacker.getDistanceToEntity(mc.thePlayer) < 1.9D) deathStage = 1;
+	}
+
 	private void attractAttention(int mode) {
 		ByteBuf send = Unpooled.buffer();
 		send.writeByte(mode);
@@ -153,7 +171,7 @@ public class GUIRefuseDeath extends GuiGameOver {
 	}
 
 	private int jitter() {
-		if(deathStage >= 5) return (int)(rand.nextGaussian());
+		if(respawnStage >= 5) return (int)(rand.nextGaussian());
 		return 0;
 	}
 

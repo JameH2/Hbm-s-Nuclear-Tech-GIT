@@ -38,10 +38,13 @@ public class EntityGhostTrapped extends EntityCreature implements IBufPacketRece
 
 	public EntityGhostTrapped(World world) {
 		super(world);
+
 		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, true));
 		this.tasks.addTask(2, new EntityAILookIdle(this));
 		this.tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 15.0F));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
+
+		setSize(0.4F, 1.8F);
 	}
 
 	@Override
@@ -113,6 +116,9 @@ public class EntityGhostTrapped extends EntityCreature implements IBufPacketRece
 				if(starePath != null) moveForward = 0.6F;
 				// float distance = this.entityToAttack.getDistanceToEntity(this);
 				// moveForward = distance > 1.0F ? 0.1F : 0.0F;
+			} else {
+				moveForward = 0;
+				moveStrafing = 0;
 			}
 
 			faceEntity(stareTarget, 10.0F, 10.0F);
