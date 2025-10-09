@@ -1437,6 +1437,8 @@ public class ModBlocks {
 
 	public static Block orrery;
 
+	public static Block machine_ftl;
+
 	public static Block dummy_beam;
 
 	// NBT Structure wand blocks
@@ -2790,6 +2792,8 @@ public class ModBlocks {
 
 		orrery = new BlockOrrery(Material.iron).setBlockName("orrery").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
 
+		machine_ftl = new MachineFTL(Material.iron).setBlockName("machine_ftl").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
+
 		dummy_beam = new BlockDummyableBeam(Material.iron).setBlockName("dummy_beam").setHardness(10.0F).setResistance(20.0F).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
 
 		wand_air = new BlockWand(Blocks.air).setBlockName("wand_air").setBlockTextureName(RefStrings.MODID + ":wand_air");
@@ -4116,6 +4120,8 @@ public class ModBlocks {
 		register(dyson_converter_anatmogenesis);
 
 		register(orrery);
+
+		register(machine_ftl);
 
 		register(dummy_beam);
 

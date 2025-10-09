@@ -19,7 +19,7 @@ public class ContainerChestInventory extends Container {
 
 		for(int row = 0; row < numRows; ++row) {
 			for(int col = 0; col < 9; ++col) {
-				int index = col + row * 9 + 9;
+				int index = col + row * 9;
 				if(index >= playerInv.getSizeInventory()) break;
 				this.addSlotToContainer(new Slot(playerInv, index, 8 + col * 18, 18 + row * 18));
 			}

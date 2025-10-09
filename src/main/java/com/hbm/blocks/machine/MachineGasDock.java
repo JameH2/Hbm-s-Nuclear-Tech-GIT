@@ -30,21 +30,6 @@ public class MachineGasDock extends BlockDummyable implements ILookOverlay {
 	}
 
 	@Override
-	public int getRenderType(){
-		return -1;
-	}
-
-	@Override
-	public boolean isOpaqueCube() {
-		return false;
-	}
-
-	@Override
-	public boolean renderAsNormalBlock() {
-		return false;
-	}
-
-	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_, int p_149719_2_, int p_149719_3_, int p_149719_4_) {
 		float f = 0.0625F;
 		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 12*f, 1.0F);

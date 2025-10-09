@@ -432,6 +432,8 @@ public class TileMappings {
 		put(TileEntityDysonConverterAnatmogenesis.class, "tileentity_dyson_converter_anatmogenesis");
 
 		put(TileEntityOrrery.class, "tileentity_orrery");
+
+		put(TileEntityMachineFTL.class, "tileentity_ftl");
 	}
 
 	private static void putPile() {
