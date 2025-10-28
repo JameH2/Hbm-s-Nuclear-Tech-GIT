@@ -8,6 +8,7 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import com.hbm.config.SpaceConfig;
 import com.hbm.dim.trait.CBT_Atmosphere;
+import com.hbm.dim.trait.CBT_DEMETER;
 import com.hbm.dim.trait.CBT_Temperature;
 import com.hbm.dim.trait.CBT_Water;
 import com.hbm.dim.trait.CelestialBodyTrait.CBT_BATTLEFIELD;
@@ -231,6 +232,7 @@ public class SolarSystem {
 			.withRotationalPeriod(432_000)
 			.withTexture(new ResourceLocation("textures/environment/sun.png"))
 			.withShader(new ResourceLocation(RefStrings.MODID, "shaders/blackhole.frag"), 3)
+			.withTraits(new CBT_DEMETER())
 			.withSatellites(
 
 				new CelestialBody("dima", SpaceConfig.dimaDimension, Body.DIMA)
