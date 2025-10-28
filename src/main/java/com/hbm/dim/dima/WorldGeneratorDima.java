@@ -8,14 +8,26 @@ import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.entity.effect.EntityAnomaly;
+import com.hbm.lib.RefStrings;
+import com.hbm.world.gen.nbt.JigsawPiece;
+import com.hbm.world.gen.nbt.NBTStructure;
+import com.hbm.world.gen.nbt.SpawnCondition;
 import com.hbm.world.generator.DungeonToolbox;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.block.Block;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 
 public class WorldGeneratorDima implements IWorldGenerator {
+
+	public WorldGeneratorDima() {
+		NBTStructure.registerStructure(-99, new SpawnCondition(EnumChatFormatting.OBFUSCATED + "tower") {{
+			structure = new JigsawPiece("idma", new NBTStructure(new ResourceLocation(RefStrings.MODID, "structures/invalid/idma.nbt")), -20);
+		}});
+	}
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
@@ -33,17 +45,19 @@ public class WorldGeneratorDima implements IWorldGenerator {
 		// anomalous projections
 		if(rand.nextInt(77) == 0) {
 			EntityAnomaly anomaly = new EntityAnomaly(world);
-			anomaly.posX = i;
-			anomaly.posY = world.getHeightValue(i, j) + 2;
-			anomaly.posZ = j;
+			int x = i + rand.nextInt(16) + 8;
+			int z = j + rand.nextInt(16) + 8;
+			anomaly.posX = x;
+			anomaly.posZ = z;
+			anomaly.posY = world.getHeightValue(x, z) + 2;
 
 			world.spawnEntityInWorld(anomaly);
 		}
 
 		// fire that floats on occasion
 		{
-			int x = i + rand.nextInt(16);
-			int z = j + rand.nextInt(16);
+			int x = i + rand.nextInt(16) + 8;
+			int z = j + rand.nextInt(16) + 8;
 			int y = world.getHeightValue(x, z);
 
 			if(rand.nextInt(10) == 0) y += rand.nextInt(6);

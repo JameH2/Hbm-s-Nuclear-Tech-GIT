@@ -27,9 +27,6 @@ import com.hbm.tileentity.machine.storage.TileEntityFileCabinet;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.block.material.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -773,6 +770,8 @@ public class ModBlocks {
 	public static Block furnace;
 	public static Block lit_furnace;
 
+	public static Block inv_chest;
+
 	public static Block furnace_iron;
 	public static Block furnace_steel;
 	public static Block furnace_combination;
@@ -1438,6 +1437,8 @@ public class ModBlocks {
 
 	public static Block orrery;
 
+	public static Block machine_ftl;
+
 	public static Block dummy_beam;
 
 	// NBT Structure wand blocks
@@ -2082,6 +2083,8 @@ public class ModBlocks {
 
 		furnace = new BlockFurnaceSpace(false).setHardness(3.5F).setStepSound(Block.soundTypePiston).setBlockName("furnace");
 		lit_furnace = new BlockFurnaceSpace(true).setHardness(3.5F).setStepSound(Block.soundTypePiston).setBlockName("lit_furnace").setLightLevel(0.875F);
+
+		inv_chest = new BlockChestInventory().setHardness(2.5F).setStepSound(Block.soundTypeWood).setBlockName("chest");
 
 		furnace_iron = new FurnaceIron().setBlockName("furnace_iron").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_aluminium");
 		furnace_steel = new FurnaceSteel().setBlockName("furnace_steel").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
@@ -2788,6 +2791,8 @@ public class ModBlocks {
 		dyson_converter_anatmogenesis = new MachineDysonConverterAnatmogenesis(Material.iron).setBlockName("dyson_converter_anatmogenesis").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
 
 		orrery = new BlockOrrery(Material.iron).setBlockName("orrery").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
+
+		machine_ftl = new MachineFTL(Material.iron).setBlockName("machine_ftl").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
 
 		dummy_beam = new BlockDummyableBeam(Material.iron).setBlockName("dummy_beam").setHardness(10.0F).setResistance(20.0F).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
 
@@ -3577,6 +3582,7 @@ public class ModBlocks {
 		register(heater_heatex);
 		register(furnace);
 		register(lit_furnace);
+		register(inv_chest);
 		register(furnace_iron);
 		register(furnace_steel);
 		register(furnace_combination);
@@ -4114,6 +4120,8 @@ public class ModBlocks {
 		register(dyson_converter_anatmogenesis);
 
 		register(orrery);
+
+		register(machine_ftl);
 
 		register(dummy_beam);
 

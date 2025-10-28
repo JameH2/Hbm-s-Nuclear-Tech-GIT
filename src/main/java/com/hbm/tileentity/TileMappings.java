@@ -77,6 +77,7 @@ public class TileMappings {
 		put(TileEntityMachinePuF6Tank.class, "tileentity_puf6_tank");
 		put(TileEntityMachineReactorBreeding.class, "tileentity_reactor");
 		put(TileEntityFurnaceSpace.class, "tileentity_furnace_space");
+		put(TileEntityChestInventory.class, "tileentity_chest_inventory");
 		put(TileEntityRtgFurnace.class, "tileentity_rtgfurnace");
 		put(TileEntityMachineElectricFurnace.class, "tileentity_electric_furnace");
 		put(TileEntityDecoTapeRecorder.class, "tileentity_taperecorder");
@@ -431,6 +432,8 @@ public class TileMappings {
 		put(TileEntityDysonConverterAnatmogenesis.class, "tileentity_dyson_converter_anatmogenesis");
 
 		put(TileEntityOrrery.class, "tileentity_orrery");
+
+		put(TileEntityMachineFTL.class, "tileentity_ftl");
 	}
 
 	private static void putPile() {
@@ -534,7 +537,7 @@ public class TileMappings {
 		if(IConfigurableMachine.class.isAssignableFrom(clazz)) {
 			configurables.add((Class<? extends IConfigurableMachine>) clazz);
 		}
-		
+
 		/**
 		 * Causes problems with most machines where two independently acting tiles work together (TU machines, RBMKs, fluid transfer)
 		 * Also breaks due to some sort of buffer leak in the threaded packets, if a boiler is involved (which uses a ByteBuf instead of the usual serializing) it crashes
