@@ -1,10 +1,12 @@
 package com.hbm.items.armor;
 
+import com.hbm.dim.CelestialBody;
 import com.hbm.extprop.HbmPlayerProps;
 import com.hbm.items.ModItems;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.model.ModelArmorWings;
 import com.hbm.util.ArmorUtil;
+import com.hbm.util.AstronomyUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -34,7 +36,7 @@ public class WingsMurk extends JetpackBase {
 			if(cachedModel == null) {
 				cachedModel = new ModelArmorWings(this == ModItems.wings_murk ? 0 : 1);
 			}
-			
+
 			return cachedModel;
 		}
 
@@ -42,20 +44,20 @@ public class WingsMurk extends JetpackBase {
 	}
 
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
-		
+
 		if(player.onGround)
 			return;
-		
+
 		ArmorUtil.resetFlightTime(player);
-		
+
 		if(player.fallDistance > 0)
 			player.fallDistance = 0;
-		
+
 		if(this == ModItems.wings_limp) {
-		
+
 			if(player.motionY < -0.4D)
 				player.motionY = -0.4D;
-			
+
 			if(player.isSneaking()) {
 				if(player.motionY < -0.08) {
 
@@ -75,7 +77,7 @@ public class WingsMurk extends JetpackBase {
 		}
 
 		HbmPlayerProps props = HbmPlayerProps.getData(player);
-		
+
 		if(this == ModItems.wings_murk) {
 
 			if(props.isJetpackActive()) {
@@ -93,35 +95,46 @@ public class WingsMurk extends JetpackBase {
 						player.motionY -= 0.2D;
 					else if(player.motionY > 0)
 						player.motionY = 0;
-					
+
 				} else {
 					if(player.motionY < 0.6D)
 						player.motionY += 0.2D;
 					else
 						player.motionY = 0.8D;
 				}
-				
-			} else if(props.enableBackpack && !player.isSneaking()) {
-				
-				if(player.motionY < -1)
-					player.motionY += 0.4D;
-				else if(player.motionY < -0.1)
-					player.motionY += 0.2D;
-				else if(player.motionY < 0)
-					player.motionY = 0;
+
+			} else if(props.enableBackpack) {
+
+				if(!player.isSneaking()) {
+					if(player.motionY < -1)
+						player.motionY += 0.4D;
+					else if(player.motionY < -0.1)
+						player.motionY += 0.2D;
+					else if(player.motionY < 0)
+						player.motionY = 0;
+				} else {
+					float gravity = CelestialBody.getGravity(player);
+					if(gravity > 1.5F) return;
+					if(gravity != 0 && gravity < 0.2F) gravity = 0.2F;
+
+					player.motionY /= 0.98F;
+					player.motionY += (gravity / 20F);
+					player.motionY -= (AstronomyUtil.STANDARD_GRAVITY / 20F);
+					player.motionY *= 0.98F;
+				}
 			}
-			
+
 			if(props.enableBackpack) {
-				
+
 				Vec3 orig = player.getLookVec();
 				Vec3 look = Vec3.createVectorHelper(orig.xCoord, 0, orig.zCoord).normalize();
 				double mod = player.isSprinting() ? 1D : 0.25D;
-				
+
 				if(player.moveForward != 0) {
 					player.motionX += look.xCoord * 0.35 * player.moveForward * mod;
 					player.motionZ += look.zCoord * 0.35 * player.moveForward * mod;
 				}
-				
+
 				if(player.moveStrafing != 0) {
 					look.rotateAroundY((float) Math.PI * 0.5F);
 					player.motionX += look.xCoord * 0.15 * player.moveStrafing * mod;

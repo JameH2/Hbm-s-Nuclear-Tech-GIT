@@ -347,6 +347,7 @@ public class FluidPump extends BlockContainer implements INBTBlockTransformable,
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static class GUIPump extends GuiScreen {
 
 		protected final TileEntityFluidPump pump;

@@ -30,7 +30,7 @@ import com.hbm.inventory.recipes.anvil.AnvilRecipes;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ItemEnums.EnumAchievementType;
 import com.hbm.items.ModItems;
-import com.hbm.items.weapon.sedna.mods.WeaponModManager;
+import com.hbm.items.weapon.sedna.mods.XWeaponModManager;
 import com.hbm.lib.HbmWorld;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
@@ -262,6 +262,7 @@ public class MainRegistry {
 		configHbmDir = new File(configDir.getAbsolutePath() + File.separatorChar + "hbmConfig");
 
 		if(!configHbmDir.exists()) configHbmDir.mkdir();
+		Identity.init(configDir);
 
 		logger.info("Let us celebrate the fact that the logger finally works again!");
 
@@ -297,7 +298,7 @@ public class MainRegistry {
 		SiegeTier.registerTiers();
 		HazardRegistry.registerItems();
 		HazardRegistry.registerTrafos();
-		WeaponModManager.init();
+		XWeaponModManager.init();
 
 		SolarSystem.init();
 
@@ -1507,6 +1508,16 @@ public class MainRegistry {
 		ignoreMappings.add("hbm:item.nugget_platnium");
 		ignoreMappings.add("hbm:item.t45_kit");
 		ignoreMappings.add("hbm:item.fusion_core_infinite");
+		ignoreMappings.add("hbm:item.fluid_identifier");
+		ignoreMappings.add("hbm:tile.sand_boron");
+		ignoreMappings.add("hbm:tile.sand_lead");
+		ignoreMappings.add("hbm:tile.sand_uranium");
+		ignoreMappings.add("hbm:tile.sand_polonium");
+		ignoreMappings.add("hbm:tile.sand_quartz");
+		ignoreMappings.add("hbm:tile.hadron_power_10m");
+		ignoreMappings.add("hbm:tile.hadron_power_100m");
+		ignoreMappings.add("hbm:tile.hadron_power_1g");
+		ignoreMappings.add("hbm:tile.hadron_power_10g");
 
 		/// REMAP ///
 		remapItems.put("hbm:item.gadget_explosive8", ModItems.early_explosive_lenses);

@@ -4,10 +4,12 @@
     "trigger": [["hbm:item.ingot_nickel"], ["hbm:item.plate_nickel"], ["hbm:item.powder_nickel"]],
     "title": {
         "en_US": "Nickel",
-		"ru_RU": "Никель"
+		"ru_RU": "Никель",
+		"zh_CN": "镍"
     },
 	"content": {
 		"en_US": "Nickel is obtained in the form of pentlandite everywhere in space except Earth. used mostly in the production of [[stainless steel|Stainless Steel]]. Obtained by purifying pentlandite with [[brine|Brine]].",
-		"ru_RU": "Никель добывается в форме пентландита повсюду в космосе, кроме Земли. В основном используется в производстве [[нержавеющей стали|Stainless Steel]]. Получается путем очистки пентландита с помощью [[рассола|Brine]]."
+		"ru_RU": "Никель добывается в форме пентландита повсюду в космосе, кроме Земли. В основном используется в производстве [[нержавеющей стали|Stainless Steel]]. Получается путем очистки пентландита с помощью [[рассола|Brine]].",
+		"zh_CN": "除去地球外，镍在太空中无处不在。镍多数用于生产[[不锈钢|Stainless Steel]]。可通过使用[[卤水|Brine]]在工业搅拌机内处理镍黄铁矿获得。"
 	}
 }

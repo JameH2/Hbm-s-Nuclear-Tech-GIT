@@ -426,6 +426,7 @@ public class ClientProxy extends ServerProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPylonMedium.class, new RenderPylonMedium());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPylonLarge.class, new RenderPylonLarge());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySubstation.class, new RenderSubstation());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipeAnchor.class, new RenderPipeAnchor());
 		//chargers
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCharger.class, new RenderCharger());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRefueler.class, new RenderRefueler());
@@ -1394,7 +1395,8 @@ public class ClientProxy extends ServerProxy {
 				if("blockdust".equals(data.getString("mode"))) {
 
 					Block b = Block.getBlockById(data.getInteger("block"));
-					fx = new net.minecraft.client.particle.EntityBlockDustFX(world, x, y, z, mX, mY + 0.2, mZ, b, 0);
+					int m = data.getByte("meta");
+					fx = new net.minecraft.client.particle.EntityBlockDustFX(world, x, y, z, mX, mY + 0.2, mZ, b, m);
 					ReflectionHelper.setPrivateValue(EntityFX.class, fx, 50 + rand.nextInt(50), "particleMaxAge", "field_70547_e");
 				}
 

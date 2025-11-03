@@ -11,14 +11,14 @@ public class FluidLoaderStandard extends FluidLoadingHandler {
 	public boolean fillItem(ItemStack[] slots, int in, int out, FluidTank tank) {
 		
 		if(tank.pressure != 0) return false;
-		
-		if(slots[in] == null)
-			return true;
+		if(slots[in] == null) return true;
 		
 		FluidType type = tank.getTankType();
 		ItemStack full = FluidContainerRegistry.getFullContainer(slots[in], type);
 		
 		if(full != null && slots[in] != null && tank.getFill() - FluidContainerRegistry.getFluidContent(full, type) >= 0) {
+			
+			String name = slots[in].hasDisplayName() ? slots[in].getDisplayName() : null;
 			
 			if(slots[out] == null) {
 				
@@ -29,6 +29,8 @@ public class FluidLoaderStandard extends FluidLoadingHandler {
 					slots[in] = null;
 				}
 				
+				if(name != null) slots[out].setStackDisplayName(name);
+				
 			} else if(slots[out] != null && slots[out].getItem() == full.getItem() && slots[out].getItemDamage() == full.getItemDamage() && slots[out].stackSize < slots[out].getMaxStackSize()) {
 				
 				tank.setFill(tank.getFill() - FluidContainerRegistry.getFluidContent(full, type));
@@ -38,6 +40,8 @@ public class FluidLoaderStandard extends FluidLoadingHandler {
 					slots[in] = null;
 				}
 				slots[out].stackSize++;
+				
+				if(name != null) slots[out].setStackDisplayName(name);
 			}
 		}
 		
@@ -57,10 +61,16 @@ public class FluidLoaderStandard extends FluidLoadingHandler {
 			
 			ItemStack emptyContainer = FluidContainerRegistry.getEmptyContainer(slots[in]);
 			
+			String name = slots[in].hasDisplayName() ? slots[in].getDisplayName() : null;
+			
 			if(slots[out] == null) {
 				
 				tank.setFill(tank.getFill() + amount);
 				slots[out] = emptyContainer;
+				
+				if(emptyContainer != null) {
+					if(name != null) slots[out].setStackDisplayName(name);
+				}
 				
 				slots[in].stackSize--;
 				if(slots[in].stackSize <= 0) {
@@ -78,6 +88,7 @@ public class FluidLoaderStandard extends FluidLoadingHandler {
 				
 				if(emptyContainer != null) {
 					slots[out].stackSize++;
+					if(name != null) slots[out].setStackDisplayName(name);
 				}
 			}
 			

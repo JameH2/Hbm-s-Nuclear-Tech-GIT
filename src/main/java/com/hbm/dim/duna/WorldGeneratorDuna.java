@@ -17,7 +17,6 @@ import com.hbm.main.MainRegistry;
 import com.hbm.main.StructureManager;
 import com.hbm.tileentity.deco.TileEntityLanternBehemoth;
 import com.hbm.util.LootGenerator;
-import com.hbm.world.feature.OilBubble;
 import com.hbm.world.gen.nbt.NBTStructure;
 import com.hbm.world.gen.nbt.JigsawPiece;
 import com.hbm.world.gen.nbt.SpawnCondition;
@@ -52,14 +51,6 @@ public class WorldGeneratorDuna implements IWorldGenerator {
 	private void generateDuna(World world, Random rand, int i, int j) {
 		int meta = CelestialBody.getMeta(world);
 		Block stone = ((WorldProviderCelestial) world.provider).getStone();
-
-		if(WorldConfig.dunaOilSpawn > 0 && rand.nextInt(WorldConfig.dunaOilSpawn) == 0) {
-			int randPosX = i + rand.nextInt(16);
-			int randPosY = rand.nextInt(25);
-			int randPosZ = j + rand.nextInt(16);
-
-			OilBubble.spawnOil(world, randPosX, randPosY, randPosZ, 10 + rand.nextInt(7), ModBlocks.ore_oil, meta, stone);
-		}
 
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.ironSpawn, 8, 32, 64, ModBlocks.ore_iron, meta, stone);
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.zincSpawn, 9, 4, 27, ModBlocks.ore_zinc, meta, stone);

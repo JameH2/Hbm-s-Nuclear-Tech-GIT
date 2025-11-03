@@ -1,6 +1,7 @@
 package com.hbm.crafting;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockNTMSand.EnumSandType;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.OreDictManager.DictFrame;
 import com.hbm.inventory.fluid.Fluids;
@@ -97,6 +98,7 @@ public class WeaponRecipes {
 		CraftingManager.addShapelessAuto(new ItemStack(ModItems.gun_double_barrel_sacred_dragon, 1), new Object[] { ModItems.gun_double_barrel, DictFrame.fromOne(ModItems.item_secret, EnumSecretType.SELENIUM_STEEL) });
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_charge_thrower, 1), new Object[] { "MMM", "BBL", "GG ", 'M', GUNMETAL.mechanism(), 'B', STEEL.heavyBarrel(), 'G', STEEL.grip(), 'L', Items.leather });
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_charge_thrower, 1), new Object[] { "MMM", "BBL", "GG ", 'M', GUNMETAL.mechanism(), 'B', STEEL.heavyBarrel(), 'G', STEEL.grip(), 'L', ANY_RUBBER.ingot() });
+		CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_drill, 1), new Object[] { " GL", "IBP", " GL", 'G', GUNMETAL.ingot(), 'L', ANY_RUBBER.ingot(), 'I', TI.ingot(), 'B', STEEL.block(), 'P', ModItems.piston_selenium });
 
 		//SEDNA Ammo
 		CraftingManager.addRecipeAuto(DictFrame.fromOne(ModItems.ammo_standard, EnumAmmo.STONE, 6), new Object[] { "C", "P", "G", 'C', KEY_COBBLESTONE, 'P', Items.paper, 'G', Items.gunpowder });
@@ -140,6 +142,17 @@ public class WeaponRecipes {
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.LAS_SHOTGUN.ordinal()), new Object[] { "PPP", "RCR", "PPP", 'P', ANY_HARDPLASTIC.ingot(), 'R', ModItems.crystal_redstone, 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED) });
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.LAS_CAPACITOR.ordinal()), new Object[] { "CCC", "PIP", 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.CAPACITOR_TANTALIUM), 'P', ANY_HARDPLASTIC.ingot(), 'I', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.CHIP_BISMOID) });
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.LAS_AUTO.ordinal()), new Object[] { " C ", "RFR", " C ", 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.CHIP_BISMOID), 'R', ModItems.crystal_redstone, 'F', ANY_BISMOIDBRONZE.heavyReceiver() });
+		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.DRILL_HSS.ordinal()), new Object[] { " IP", "IIM", " IP", 'I', DURA.ingot(), 'P', ANY_PLASTIC.ingot(), 'M', GUNMETAL.mechanism() });
+		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.DRILL_WEAPONSTEEL.ordinal()), new Object[] { " IP", "IIM", " IP", 'I', WEAPONSTEEL.ingot(), 'P', RUBBER.ingot(), 'M', GUNMETAL.mechanism() });
+		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.DRILL_TCALLOY.ordinal()), new Object[] { " IP", "IIM", " IP", 'I', ANY_RESISTANTALLOY.ingot(), 'P', RUBBER.ingot(), 'M', WEAPONSTEEL.mechanism() });
+		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.DRILL_SATURNITE.ordinal()), new Object[] { " IP", "IIM", " IP", 'I', BIGMT.ingot(), 'P', ANY_HARDPLASTIC.ingot(), 'M', WEAPONSTEEL.mechanism() });
+		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.ENGINE_DIESEL.ordinal()), new Object[] { "DSD", "PPP", "DSD", 'D', DURA.plate(), 'P', ModItems.piston_selenium, 'S', STEEL.pipe() });
+		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.ENGINE_AVIATION.ordinal()), new Object[] { "DSD", "PPP", "DSD", 'D', DURA.plateCast(), 'P', ModItems.piston_selenium, 'S', GUNMETAL.mechanism() });
+		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.ENGINE_ELECTRIC.ordinal()), new Object[] { "DSD", "PPP", "DSD", 'D', ANY_PLASTIC.ingot(), 'P', GOLD.wireDense(), 'S', ModBlocks.capacitor_gold });
+		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.ENGINE_TURBO.ordinal()), new Object[] { "DSD", "PPP", "DSD", 'D', ANY_BISMOIDBRONZE.plateCast(), 'P', ModItems.piston_selenium, 'S', WEAPONSTEEL.mechanism() });
+		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.MAGNET.ordinal()), new Object[] { "RGR", "GBG", "RGR", 'R', RUBBER.ingot(), 'G', GOLD.wireDense(), 'B', NB.block() });
+		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.SIFTER.ordinal()), new Object[] { "IGI", "IGI", 'I', DURA.ingot(), 'G', ModBlocks.steel_grate });
+		CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, EnumModSpecial.CANISTERS.ordinal()), new Object[] { " R ", "CCC", "SSS", 'R', RUBBER.pipe(), 'C', ModItems.canister_empty, 'S', STEEL.plate() });
 		
 		//Nitra!
 		CraftingManager.addShapelessAuto(DictFrame.fromOne(ModItems.ammo_standard, EnumAmmo.M357_SP, 6), new Object[] { DictFrame.fromOne(ModItems.ammo_standard, EnumAmmo.M357_SP), ModItems.nitra });
@@ -242,7 +255,7 @@ public class WeaponRecipes {
 		//Fire Extingusisher Tanks
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.ammo_fireext, 1), new Object[] { " P ", "BDB", " P ", 'P', STEEL.plate(), 'B', STEEL.bolt(), 'D', new ItemStack(ModItems.fluid_tank_full, 1, Fluids.WATER.getID()) });
 		CraftingManager.addRecipeAuto(ModItems.ammo_fireext.stackFromEnum(AmmoFireExt.FOAM), new Object[] { " N ", "NFN", " N ", 'N', KNO.dust(), 'F', ModItems.ammo_fireext });
-		CraftingManager.addRecipeAuto(ModItems.ammo_fireext.stackFromEnum(AmmoFireExt.SAND), new Object[] { "NNN", "NFN", "NNN", 'N', ModBlocks.sand_boron, 'F', ModItems.ammo_fireext });
+		CraftingManager.addRecipeAuto(ModItems.ammo_fireext.stackFromEnum(AmmoFireExt.SAND), new Object[] { "NNN", "NFN", "NNN", 'N', new ItemStack(ModBlocks.sand_mix, 1, EnumSandType.BORON.ordinal()), 'F', ModItems.ammo_fireext });
 
 		//Grenades
 		CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_generic, 4), new Object[] { "RS ", "ITI", " I ", 'I', IRON.plate(), 'R', MINGRADE.wireFine(), 'S', STEEL.plate(), 'T', Item.getItemFromBlock(Blocks.tnt) });

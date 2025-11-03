@@ -98,8 +98,8 @@ public class WorldGeneratorMoho implements IWorldGenerator {
 		DungeonToolbox.generateOre(world, rand, i, j, 8, 10, 16, 64, ModBlocks.ore_basalt, 4, ModBlocks.basalt);
 
 		for(int k = 0; k < 2; k++){
-			int x = i + rand.nextInt(16);
-			int z = j + rand.nextInt(16);
+			int x = i + rand.nextInt(16) + 8;
+			int z = j + rand.nextInt(16) + 8;
 			int d = 16 + rand.nextInt(96);
 
 			for(int y = d - 5; y <= d; y++) {
@@ -123,8 +123,8 @@ public class WorldGeneratorMoho implements IWorldGenerator {
 		for(int x = 0; x < 16; x++) {
 			for(int z = 0; z < 16; z++) {
 				for(int y = 32; y < 128; y++) {
-					int ox = i + x;
-					int oz = j + z;
+					int ox = i + x + 8;
+					int oz = j + z + 8;
 					Block b = world.getBlock(ox, y, oz);
 
 					if(b == Blocks.lava && world.getBlock(ox, y - 1, oz) == Blocks.air) {

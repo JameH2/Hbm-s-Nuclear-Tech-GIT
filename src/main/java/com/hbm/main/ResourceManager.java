@@ -441,15 +441,13 @@ public class ResourceManager {
 	public static final IModelCustom zirnox = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/zirnox.obj")).asVBO();
 	public static final IModelCustom zirnox_destroyed = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/zirnox_destroyed.obj")).asVBO();
 
-	//Belt
-	public static final IModelCustom arrow = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/blocks/arrow.obj"));
-
 	//Network
 	public static final IModelCustom connector = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/network/connector.obj"));
 	public static final IModelCustom pylon_medium = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/network/pylon_medium.obj"));
 	public static final IModelCustom pylon_large = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/network/pylon_large.obj"));
-	public static final IModelCustom substation = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/substation.obj"));
-	public static final IModelCustom fluid_pump = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/fluid_diode.obj"));
+	public static final IModelCustom substation = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/substation.obj")).asVBO();
+	public static final IModelCustom pipe_anchor = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/pipe_anchor.obj")).asVBO();
+	public static final IModelCustom fluid_pump = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/fluid_diode.obj")).asVBO();
 
 	//Radiolysis
 	public static final IModelCustom radiolysis = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/radiolysis.obj"));
@@ -933,6 +931,9 @@ public class ResourceManager {
 	public static final ResourceLocation substation_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/substation.png");
 	public static final ResourceLocation wire_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/wire.png");
 	public static final ResourceLocation wire_greyscale_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/wire_greyscale.png");
+	
+	//Pipes
+	public static final ResourceLocation pipe_anchor_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/pipe_anchor.png");
 	public static final ResourceLocation fluid_pump_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/fluid_diode.png");
 
 	//Radiolysis
@@ -1012,6 +1013,7 @@ public class ResourceManager {
 	public static final IModelCustom aberrator = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/aberrator.obj")).asVBO();
 	public static final IModelCustom mas36 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/mas36.obj")).asVBO();
 	public static final IModelCustom charge_thrower = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/charge_thrower.obj")).asVBO();
+	public static final IModelCustom drill = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/drill.obj")).asVBO();
 	public static final IModelCustom n_i_4_n_i = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/n_i_4_n_i.obj")).asVBO();
 
 	public static final HashMap<String, BusAnimation> spas_12_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/spas12.json"));
@@ -1151,6 +1153,7 @@ public class ResourceManager {
 	public static final ResourceLocation charge_thrower_hook_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/charge_thrower_hook.png");
 	public static final ResourceLocation charge_thrower_mortar_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/charge_thrower_mortar.png");
 	public static final ResourceLocation charge_thrower_rocket_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/charge_thrower_rocket.png");
+	public static final ResourceLocation drill_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/drill.png");
 	public static final ResourceLocation n_i_4_n_i_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/n_i_4_n_i.png");
 	public static final ResourceLocation n_i_4_n_i_greyscale_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/n_i_4_n_i_greyscale.png");
 

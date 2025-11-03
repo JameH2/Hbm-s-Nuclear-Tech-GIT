@@ -1,9 +1,12 @@
 package com.hbm.dim.eve;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.config.WorldConfig;
+import com.hbm.dim.CelestialBody;
 import com.hbm.dim.ChunkProviderCelestial;
 import com.hbm.dim.eve.biome.BiomeGenBaseEve;
 import com.hbm.dim.noise.MapGenVNoise;
+import com.hbm.world.gen.terrain.MapGenBubble;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -13,6 +16,8 @@ public class ChunkProviderEve extends ChunkProviderCelestial {
 
 	private final NoiseGeneratorPerlin crackNoise;
 	private final MapGenVNoise noise = new MapGenVNoise();
+
+	private MapGenBubble oil = new MapGenBubble(WorldConfig.eveGasSpawn);
 
 	public ChunkProviderEve(World world, long seed, boolean hasMapFeatures) {
 		super(world, seed, hasMapFeatures);
@@ -31,11 +36,17 @@ public class ChunkProviderEve extends ChunkProviderCelestial {
 		noise.plateStartY = 57;
 
 		noise.applyToBiome = BiomeGenBaseEve.eveOcean;
+
+		oil.block = ModBlocks.ore_gas;
+		oil.meta = (byte)CelestialBody.getMeta(world);
+		oil.replace = ModBlocks.eve_rock;
+		oil.setSize(8, 16);
 	}
 
 	@Override
 	public BlockMetaBuffer getChunkPrimer(int x, int z) {
 		BlockMetaBuffer buffer = super.getChunkPrimer(x, z);
+		oil.setMetas(buffer.metas);
 
 		boolean hasOcean = false;
 		boolean hasSeismic = false;
@@ -48,6 +59,8 @@ public class ChunkProviderEve extends ChunkProviderCelestial {
 
 		if(hasSeismic) generateCracks(x, z, buffer);
 		if(hasOcean) noise.func_151539_a(this, worldObj, x, z, buffer.blocks);
+
+		oil.func_151539_a(this, worldObj, x, z, buffer.blocks);
 
 		return buffer;
 	}

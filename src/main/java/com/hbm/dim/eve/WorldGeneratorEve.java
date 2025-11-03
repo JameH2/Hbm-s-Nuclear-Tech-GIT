@@ -5,14 +5,12 @@ import java.util.Random;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockOre;
 import com.hbm.config.SpaceConfig;
-import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.dim.eve.biome.BiomeGenBaseEve;
 import com.hbm.dim.eve.genlayer.WorldGenElectricVolcano;
 import com.hbm.dim.eve.genlayer.WorldGenEveSpike;
-import com.hbm.world.feature.OilBubble;
 import com.hbm.world.gen.nbt.NBTStructure;
 import com.hbm.world.generator.DungeonToolbox;
 
@@ -50,16 +48,8 @@ public class WorldGeneratorEve implements IWorldGenerator {
 		DungeonToolbox.generateOre(world, rand, i, j, 8,  4, 5, 48, ModBlocks.ore_iodine, meta, stone);
 		DungeonToolbox.generateOre(world, rand, i, j, 1,  4, 1, 16, ModBlocks.ore_schrabidium, meta, stone);
 
-		if(WorldConfig.eveGasSpawn > 0 && rand.nextInt(WorldConfig.eveGasSpawn) == 0) {
-			int randPosX = i + rand.nextInt(16);
-			int randPosY = rand.nextInt(25);
-			int randPosZ = j + rand.nextInt(16);
-
-			OilBubble.spawnOil(world, randPosX, randPosY, randPosZ, 10 + rand.nextInt(7), ModBlocks.ore_gas, meta, stone);
-		}
-
-		int x = i + rand.nextInt(16);
-		int z = j + rand.nextInt(16);
+		int x = i + rand.nextInt(16) + 8;
+		int z = j + rand.nextInt(16) + 8;
 		int y = world.getHeightValue(x, z);
 
 		BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
@@ -67,6 +57,7 @@ public class WorldGeneratorEve implements IWorldGenerator {
 			new WorldGenEveSpike().generate(world, rand, x, y, z);
 		}
 
+		// TODO: these span multiple chunks, fix this cascade!
 		if(rand.nextInt(100) == 0) {
 			volcano.generate(world, rand, x, y, z);
 		}

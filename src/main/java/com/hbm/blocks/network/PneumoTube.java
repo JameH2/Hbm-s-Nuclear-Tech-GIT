@@ -122,6 +122,9 @@ public class PneumoTube extends BlockContainer implements IToolable, ITooltipPro
 					}
 
 					return true;
+				} else if(tube.isEndpoint()) {
+					FMLNetworkHandler.openGui(player, MainRegistry.instance, 1, world, x, y, z);
+					return true;
 				}
 			}
 			return false;

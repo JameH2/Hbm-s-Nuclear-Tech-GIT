@@ -7,10 +7,12 @@ import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.extprop.HbmLivingProps;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
 import com.hbm.items.IAnimatedItem;
+import com.hbm.items.ModItems;
 import com.hbm.items.armor.IArmorDisableModel;
 import com.hbm.items.armor.IArmorDisableModel.EnumPlayerPart;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.armor.ItemModOxy;
+import com.hbm.items.weapon.sedna.factory.XFactoryDrill;
 import com.hbm.packet.PermaSyncHandler;
 import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
 import com.hbm.render.model.ModelMan;
@@ -169,7 +171,7 @@ public class ModEventHandlerRenderer {
 					0.1F + biped.bipedHead.rotateAngleY;
 			renderer.modelArmorChestplate.bipedRightArm.rotateAngleY = renderer.modelArmor.bipedRightArm.rotateAngleY = biped.bipedRightArm.rotateAngleY =
 					-0.5F + biped.bipedHead.rotateAngleY;
-			
+
 			if(!isManly) {
 				AbstractClientPlayer acp = (AbstractClientPlayer) player;
 				Minecraft.getMinecraft().getTextureManager().bindTexture(acp.getLocationSkin());
@@ -417,6 +419,14 @@ public class ModEventHandlerRenderer {
 
 	@SubscribeEvent
 	public void onDrawHighlight(DrawBlockHighlightEvent event) {
+
+		EntityPlayer player = MainRegistry.proxy.me();
+		if(player.getHeldItem() != null && player.getHeldItem().getItem() == ModItems.gun_drill) {
+			XFactoryDrill.drawBlockHighlight(player, player.getHeldItem(), event.partialTicks);
+			event.setCanceled(true);
+			return;
+		}
+
 		MovingObjectPosition mop = event.target;
 
 		if(mop != null && mop.typeOfHit == MovingObjectType.BLOCK) {

@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
@@ -14,8 +15,11 @@ public class AudioDynamic extends MovingSound {
 	public float maxVolume = 1;
 	public float range;
 	public int keepAlive;
-	public int timeSinceKA;;
-	public boolean shouldExpire = false;;
+	public int timeSinceKA;
+	public boolean shouldExpire = false;
+	// shitty addition that should make looped sounds on tools and guns work right
+	// position updates happen automatically and if the parent is the client player, volume is always on max
+	public Entity parentEntity = null;
 
 	protected AudioDynamic(ResourceLocation loc) {
 		super(loc);
@@ -30,16 +34,27 @@ public class AudioDynamic extends MovingSound {
 		this.zPosF = z;
 	}
 
+	public void attachTo(Entity e) {
+		this.parentEntity = e;
+	}
+
 	@Override
 	public void update() {
 
 		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 		float f = 0;
 
-		if(player != null) {
+		if(parentEntity != null && player != parentEntity) {
+			this.setPosition((float) parentEntity.posX, (float) parentEntity.posY, (float) parentEntity.posZ);
+		}
+
+		// only adjust volume over distance if the sound isn't attached to this entity
+		if(player != null && player != parentEntity) {
 			f = (float)Math.sqrt(Math.pow(getXPosF() - player.posX, 2) + Math.pow(getYPosF() - player.posY, 2) + Math.pow(getZPosF() - player.posZ, 2));
 			volume = func(f);
 		} else {
+			// shitty hack that prevents stereo weirdness when using 0 0 0
+			if(player == parentEntity) this.setPosition((float) parentEntity.posX, (float) parentEntity.posY + 10, (float) parentEntity.posZ);
 			volume = maxVolume;
 		}
 

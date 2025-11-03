@@ -1,10 +1,13 @@
 package com.hbm.dim.duna;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.config.WorldConfig;
+import com.hbm.dim.CelestialBody;
 import com.hbm.dim.ChunkProviderCelestial;
 import com.hbm.dim.duna.biome.BiomeGenBaseDuna;
 import com.hbm.dim.mapgen.ExperimentalCaveGenerator;
 import com.hbm.dim.mapgen.MapGenPlateau;
+import com.hbm.world.gen.terrain.MapGenBubble;
 
 import net.minecraft.world.World;
 
@@ -12,7 +15,10 @@ public class ChunkProviderDuna extends ChunkProviderCelestial {
 
 	private ExperimentalCaveGenerator caveGenSmall = new ExperimentalCaveGenerator(2, 12, 0.12F);
 	private ExperimentalCaveGenerator caveGenV2 = new ExperimentalCaveGenerator(2, 40, 3.0F);
+
 	private MapGenPlateau genPlateau = new MapGenPlateau(worldObj);
+
+	private MapGenBubble oil = new MapGenBubble(WorldConfig.dunaOilSpawn);
 
 	public ChunkProviderDuna(World world, long seed, boolean hasMapFeatures) {
 		super(world, seed, hasMapFeatures);
@@ -32,6 +38,11 @@ public class ChunkProviderDuna extends ChunkProviderCelestial {
 		genPlateau.stoneBlock = ModBlocks.duna_rock;
 		genPlateau.fillblock = ModBlocks.duna_sands;
 		genPlateau.applyToBiome = BiomeGenBaseDuna.dunaHills;
+
+		oil.block = ModBlocks.ore_oil;
+		oil.meta = (byte)CelestialBody.getMeta(world);
+		oil.replace = ModBlocks.duna_rock;
+		oil.setSize(8, 16);
 	}
 
 	@Override
@@ -59,6 +70,9 @@ public class ChunkProviderDuna extends ChunkProviderCelestial {
 		// Post-biome blocks
 		if(hasLowlands) caveGenV2.func_151539_a(this, worldObj, x, z, buffer.blocks);
 		if(hasNotLowlands) caveGenSmall.func_151539_a(this, worldObj, x, z, buffer.blocks);
+
+		oil.setMetas(buffer.metas);
+		oil.func_151539_a(this, worldObj, x, z, buffer.blocks);
 
 		return buffer;
 	}

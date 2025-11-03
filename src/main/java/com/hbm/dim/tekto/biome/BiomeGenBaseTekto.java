@@ -29,8 +29,8 @@ public abstract class BiomeGenBaseTekto extends BiomeGenBaseCelestial {
 		this.theBiomeDecorator = decorator;
 		this.theBiomeDecorator.generateLakes = false;
 
-		this.topBlock = ModBlocks.sand_boron;
-		this.fillerBlock = ModBlocks.sand_boron_layer;
+		this.topBlock = ModBlocks.vinyl_sand;
+		this.fillerBlock = ModBlocks.vinyl_sand;
 		BiomeDictionary.registerBiomeType(this, BiomeDictionary.Type.HOT, BiomeDictionary.Type.DRY, BiomeDictionary.Type.DEAD, BiomeDictionary.Type.SPOOKY);
 	}
 }

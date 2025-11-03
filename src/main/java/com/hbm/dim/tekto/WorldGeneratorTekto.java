@@ -10,8 +10,8 @@ import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.dim.tekto.biome.BiomeGenBaseTekto;
-import com.hbm.world.feature.OilBubble;
 import com.hbm.world.gen.nbt.NBTStructure;
+import com.hbm.world.generator.DungeonToolbox;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.block.Block;
@@ -35,51 +35,46 @@ public class WorldGeneratorTekto implements IWorldGenerator {
 		}
 	}
 
-	private void generateTekto(World world, Random rand, int cx, int cz) {
-		int x = cx + rand.nextInt(16);
-		int z = cz + rand.nextInt(16);
-		int y = world.getHeightValue(x, z);
+	private void generateTekto(World world, Random rand, int i, int j) {
 		int meta = CelestialBody.getMeta(world);
 		Block stone = ((WorldProviderCelestial) world.provider).getStone();
 
+		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.cobaltSpawn * 2,  6, 4, 8, ModBlocks.ore_cobalt, meta, stone);
 
-		if(WorldConfig.tektoOilSpawn > 0 && rand.nextInt(WorldConfig.tektoOilSpawn) == 0) {
-			int randPosX = cx + rand.nextInt(16);
-			int randPosY = rand.nextInt(25);
-			int randPosZ = cz + rand.nextInt(16);
-			OilBubble.spawnOil(world, randPosX, randPosY, randPosZ, 10 + rand.nextInt(7), ModBlocks.ore_tekto, meta, stone);
-		}
+		BiomeGenBase biome = world.getBiomeGenForCoords(i + 16, j + 16);
 
-		BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
-
-		for(int vx = 0; vx < 16; vx++) {
-			for(int vz = 0; vz < 16; vz++) {
-				for(int vy = 32; vy < 128; vy++) {
-					int ox = cx + vx;
-					int oz = cz + vz;
-					Block b = world.getBlock(ox, vy, oz);
+		for(int x = 0; x < 16; x++) {
+			for(int z = 0; z < 16; z++) {
+				for(int y = 32; y < 128; y++) {
+					int ox = i + x + 8;
+					int oz = j + z + 8;
+					Block b = world.getBlock(ox, y, oz);
 					if(b == ModBlocks.geysir_chloric) {
-						world.setBlock(ox, vy, oz, ModBlocks.geysir_chloric);
-						world.markBlockForUpdate(ox, vy, oz);
+						world.setBlock(ox, y, oz, ModBlocks.geysir_chloric);
+						world.markBlockForUpdate(ox, y, oz);
 					}
 				}
 			}
 		}
 
 		if(biome == BiomeGenBaseTekto.polyvinylPlains) {
-			for(int i = 0; i < 2; i++) {
+			for(int o = 0; o < 2; o++) {
 				if(rand.nextInt(10) == 0) {
+					int x = i + rand.nextInt(16) + 8;
+					int z = j + rand.nextInt(16) + 8;
+					int y = world.getHeightValue(x, z);
+
 					WorldGenAbstractTree customTreeGen = new TTree(false, 4, 2, 10, 2, 4, false, ModBlocks.pvc_log, ModBlocks.rubber_leaves);
 					customTreeGen.generate(world, rand, x, y, z);
 				}
 
 				if(rand.nextInt(8) == 0) {
-					int altX = cx + rand.nextInt(16);
-					int altZ = cz + rand.nextInt(16);
-					int altY = world.getHeightValue(altX, altZ);
+					int x = i + rand.nextInt(16) + 8;
+					int z = j + rand.nextInt(16) + 8;
+					int y = world.getHeightValue(x, z);
 
 					WorldGenAbstractTree chopped = new TTree(false, 2, 4, 5, 3, 2, false, ModBlocks.vinyl_log, ModBlocks.pet_leaves);
-					chopped.generate(world, rand, altX, altY, altZ);
+					chopped.generate(world, rand, x, y, z);
 				}
 			}
 
@@ -87,7 +82,11 @@ public class WorldGeneratorTekto implements IWorldGenerator {
 
 		if(biome == BiomeGenBaseTekto.halogenHills) {
 			if(rand.nextInt(12) == 0) {
-				for(int i = 0; i < 4; i++) {
+				for(int o = 0; o < 4; o++) {
+					int x = i + rand.nextInt(16) + 8;
+					int z = j + rand.nextInt(16) + 8;
+					int y = world.getHeightValue(x, z);
+
 					WorldGenAbstractTree customTreeGen = new TTree(false, 3, 2, 14, 3, 3, false, ModBlocks.pvc_log, ModBlocks.rubber_leaves);
 					customTreeGen.generate(world, rand, x, y, z);
 				}
@@ -95,17 +94,17 @@ public class WorldGeneratorTekto implements IWorldGenerator {
 		}
 
 		if(biome == BiomeGenBaseTekto.forest) {
-			for(int i = 0; i < 8; i++) {
-				int xe = cx + rand.nextInt(16);
-				int ze = cz + rand.nextInt(16);
-				int ye = world.getHeightValue(xe, ze);
+			for(int o = 0; o < 8; o++) {
+				int x = i + rand.nextInt(16) + 8;
+				int z = j + rand.nextInt(16) + 8;
+				int y = world.getHeightValue(x, z);
 
 				if(rand.nextInt(2) == 0) {
 					WorldGenAbstractTree customTreeGen = new TTree(false, 3, 2, 20, 3, 5, true, ModBlocks.pvc_log, ModBlocks.rubber_leaves);
-					customTreeGen.generate(world, rand, xe, ye, ze);
+					customTreeGen.generate(world, rand, x, y, z);
 				} else {
 					WorldGenAbstractTree tustomTreeGen = new TTree(false, 3, 1, 1, 3, 5, false, ModBlocks.pvc_log, ModBlocks.rubber_leaves);
-					tustomTreeGen.generate(world, rand, xe, ye, ze);
+					tustomTreeGen.generate(world, rand, x, y, z);
 				}
 			}
 		}

@@ -3,9 +3,11 @@
 	"icon": ["hbm:item.ingot_zinc", 1, 0],
     "trigger": [["hbm:item.ingot_zinc"], ["hbm:item.nugget_zinc"], ["hbm:item.powder_zinc"]],
     "title": {
-        "en_US": "Zinc"
+        "en_US": "Zinc",
+		"zh_CN": "锌"
     },
 	"content": {
-		"en_US": "Zinc is a space fork material found on all planets. used mostly in the production of [[rubber|Rubber]] and [[gunmetal|Gunmetal]]. Worlds created in regular NTM will not have this ore in already generated chunks, you'll have to search for it!"
+		"en_US": "Zinc is a space fork material found on all planets. used mostly in the production of [[rubber|Rubber]] and [[gunmetal|Gunmetal]]. Worlds created in regular NTM will not have this ore in already generated chunks, you'll have to search for it!",
+		"zh_CN": "锌是NTM:S中的一种能在任何行星上找到的材料。通常被用于生产[[橡胶|Rubber]]和[[炮铜|Gunmetal]]。常规NTM下创建的区块中不会生成该矿物，您必须自行寻找。"
 	}
 }

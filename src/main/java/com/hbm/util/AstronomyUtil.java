@@ -1,5 +1,7 @@
 package com.hbm.util;
 
+// NEVER add imports here or spool will break and gamwise samgee will obliterate yer frodo ass
+
 public class AstronomyUtil {
 
 	// the G in G*M1*M2/r

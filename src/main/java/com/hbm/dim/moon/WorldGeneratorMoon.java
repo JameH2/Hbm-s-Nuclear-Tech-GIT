@@ -11,7 +11,6 @@ import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.main.StructureManager;
-import com.hbm.world.feature.OilBubble;
 import com.hbm.world.gen.nbt.NBTStructure;
 import com.hbm.world.gen.nbt.JigsawPiece;
 import com.hbm.world.gen.nbt.JigsawPool;
@@ -73,14 +72,6 @@ public class WorldGeneratorMoon implements IWorldGenerator {
 	private void generateMoon(World world, Random rand, int i, int j) {
 		int meta = CelestialBody.getMeta(world);
 		Block stone = ((WorldProviderCelestial) world.provider).getStone();
-
-		if(WorldConfig.munBrineSpawn > 0 && rand.nextInt(WorldConfig.munBrineSpawn) == 0) {
-			int randPosX = i + rand.nextInt(16);
-			int randPosY = rand.nextInt(25);
-			int randPosZ = j + rand.nextInt(16);
-
-			OilBubble.spawnOil(world, randPosX, randPosY, randPosZ, 10 + rand.nextInt(7), ModBlocks.ore_brine, meta, stone);
-		}
 
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.lithiumSpawn,  6, 4, 8, ModBlocks.ore_lithium, meta, stone);
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.aluminiumSpawn,  6, 5, 40, ModBlocks.ore_aluminium, meta, stone);

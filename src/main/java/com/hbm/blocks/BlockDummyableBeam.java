@@ -52,7 +52,7 @@ public class BlockDummyableBeam extends BlockDummyable implements ILookOverlay {
 
 		Block b = world.getBlock(x, y, z);
 
-		if(b instanceof BlockDummyable) {
+		if(b instanceof BlockDummyable && !(b instanceof BlockDummyableBeam)) {
 			return ((BlockDummyable) b).findCore(world, x, y, z);
 		}
 
@@ -128,7 +128,7 @@ public class BlockDummyableBeam extends BlockDummyable implements ILookOverlay {
 
 		Block b = world.getBlock(x, y, z);
 
-		if(b instanceof BlockDummyable) {
+		if(b instanceof BlockDummyable && !(b instanceof BlockDummyableBeam)) {
 			return ((BlockDummyable) b).onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
 		}
 
@@ -150,7 +150,7 @@ public class BlockDummyableBeam extends BlockDummyable implements ILookOverlay {
 
 		Block b = world.getBlock(x, y, z);
 
-		if(b instanceof BlockDummyable && b instanceof ILookOverlay) {
+		if(b instanceof BlockDummyable && !(b instanceof BlockDummyableBeam) && b instanceof ILookOverlay) {
 			((ILookOverlay) b).printHook(event, world, x, y, z);
 		}
 	}

@@ -4,10 +4,13 @@
     "trigger": [["hbm:item.ingot_stainless"], ["hbm:item.plate_stainless"]],
     "title": {
         "en_US": "Stainless Steel",
-		"ru_RU": "Нержавеющая сталь"
+		"ru_RU": "Нержавеющая сталь",
+		"zh_CN": "不锈钢"
     },
 	"content": {
 		"en_US": "Steel mixed with nickel to improve corrosion resistance, space-grade material. Used in most space-grade machinery. Obtained by combining [[steel|Steel]] and [[nickel|Nickel]] in a [[blast furnace|Blast Furnace]] or a [[crucible|Crucible]].",
-		"ru_RU": "Сталь, смешанная с никелем для улучшения устойчивости к коррозии, материал космического качества. Используется в большинстве космических приспособлений. Получается путем комбинирования [[стали|Steel]] и [[никеля|Nickel]] в [[доменной печи|Blast Furnace]] или [[плавильне|Crucible]]."
+		"ru_RU": "Сталь, смешанная с никелем для улучшения устойчивости к коррозии, материал космического качества. Используется в большинстве космических приспособлений. Получается путем комбинирования [[стали|Steel]] и [[никеля|Nickel]] в [[доменной печи|Blast Furnace]] или [[плавильне|Crucible]].",
+		"zh_CN": "钢与镍的融合大大提高了其抗腐蚀性，使其能应对严酷的太空环境。大多数用于各类型航天级机器上。通过在[[高炉|Blast Furnace]]或[[坩埚|Crucible]]中用[[钢|Steel]]和[[镍|Nickel]]混合得到。"
 	}
 }
+

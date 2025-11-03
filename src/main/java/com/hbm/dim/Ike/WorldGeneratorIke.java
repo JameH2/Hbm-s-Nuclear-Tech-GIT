@@ -4,17 +4,13 @@ import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockOre;
-import com.hbm.config.GeneralConfig;
 import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
 import com.hbm.dim.WorldProviderCelestial;
-import com.hbm.main.MainRegistry;
 import com.hbm.main.StructureManager;
 import com.hbm.world.dungeon.AncientTomb;
-import com.hbm.world.feature.OilBubble;
-import com.hbm.world.feature.Sellafield;
 import com.hbm.world.gen.nbt.NBTStructure;
 import com.hbm.world.gen.nbt.JigsawPiece;
 import com.hbm.world.gen.nbt.SpawnCondition;
@@ -54,14 +50,6 @@ public class WorldGeneratorIke implements IWorldGenerator {
 		int meta = CelestialBody.getMeta(world);
 		Block stone = ((WorldProviderCelestial) world.provider).getStone();
 
-		if(WorldConfig.ikeBrineSpawn > 0 && rand.nextInt(WorldConfig.ikeBrineSpawn) == 0) {
-			int randPosX = i + rand.nextInt(16);
-			int randPosY = rand.nextInt(25);
-			int randPosZ = j + rand.nextInt(16);
-
-			OilBubble.spawnOil(world, randPosX, randPosY, randPosZ, 10 + rand.nextInt(7), ModBlocks.ore_brine, meta, stone);
-		}
-
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.asbestosSpawn, 8, 3, 22, ModBlocks.ore_asbestos, meta, stone);
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.copperSpawn, 9, 4, 27, ModBlocks.ore_copper, meta, stone);
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.ironSpawn,  8, 1, 33, ModBlocks.ore_iron, meta, stone);
@@ -75,7 +63,6 @@ public class WorldGeneratorIke implements IWorldGenerator {
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.mineralSpawn, 10, 12, 32, ModBlocks.ore_mineral, meta, stone);
 
 
-
 		if(WorldConfig.pyramidStructure > 0 && rand.nextInt(WorldConfig.pyramidStructure) == 0) {
 			int x = i + rand.nextInt(16);
 			int z = j + rand.nextInt(16);
@@ -83,22 +70,6 @@ public class WorldGeneratorIke implements IWorldGenerator {
 
 			new AncientTomb().build(world, rand, x, y, z);
 		}
-
-		if(WorldConfig.radfreq > 0 && GeneralConfig.enableRad && rand.nextInt(WorldConfig.radfreq) == 0) {
-			for (int a = 0; a < 1; a++) {
-				int x = i + rand.nextInt(16);
-				int z = j + rand.nextInt(16);
-
-				double r = rand.nextInt(15) + 10;
-
-				if(rand.nextInt(50) == 0)
-					r = 50;
-
-				new Sellafield().generate(world, x, z, r, r * 0.35D);
-
-				if(GeneralConfig.enableDebugMode)
-					MainRegistry.logger.info("[Debug] Successfully spawned raditation hotspot at " + x + " " + z);
-			}
-		}
 	}
+
 }

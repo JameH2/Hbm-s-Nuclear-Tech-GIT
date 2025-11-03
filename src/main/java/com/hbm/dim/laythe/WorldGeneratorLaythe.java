@@ -11,7 +11,6 @@ import com.hbm.dim.SolarSystem;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.dim.laythe.biome.BiomeGenBaseLaythe;
 import com.hbm.main.StructureManager;
-import com.hbm.world.feature.OilBubble;
 import com.hbm.world.gen.nbt.NBTStructure;
 import com.hbm.world.gen.nbt.JigsawPiece;
 import com.hbm.world.gen.nbt.SpawnCondition;
@@ -58,14 +57,6 @@ public class WorldGeneratorLaythe implements IWorldGenerator {
 	private void generateLaythe(World world, Random rand, int i, int j) {
 		int meta = CelestialBody.getMeta(world);
 		Block stone = ((WorldProviderCelestial) world.provider).getStone();
-
-		if(WorldConfig.laytheOilSpawn > 0 && rand.nextInt(WorldConfig.laytheOilSpawn) == 0) {
-			int randPosX = i + rand.nextInt(16);
-			int randPosY = rand.nextInt(25);
-			int randPosZ = j + rand.nextInt(16);
-
-			OilBubble.spawnOil(world, randPosX, randPosY, randPosZ, 10 + rand.nextInt(7), ModBlocks.ore_oil, meta, stone);
-		}
 
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.asbestosSpawn, 4, 16, 16, ModBlocks.ore_asbestos, meta, stone);
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.berylliumSpawn, 4, 5, 30, ModBlocks.ore_beryllium, meta, stone);
