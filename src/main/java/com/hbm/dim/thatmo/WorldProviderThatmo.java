@@ -45,9 +45,8 @@ public class WorldProviderThatmo extends WorldProviderCelestial {
 	public static float nmass;
 	public static float shielde;
 	public static float csyw;
+
 	public static ArrayList<Meteor> meteors = new ArrayList<>();
-	public static ArrayList<Meteor> fragments = new ArrayList<>();
-	public static ArrayList<Meteor> smoke = new ArrayList<>();
 
 	@Override
 	public void updateWeather() {
@@ -140,26 +139,16 @@ public class WorldProviderThatmo extends WorldProviderCelestial {
 					randPos = worldObj.rand.nextFloat();
 				}
 
-				for(Meteor meteor : meteors) {
-					meteor.update();
+				for(int i = 0; i < meteors.size(); i++) {
+					meteors.get(i).update();
 				}
 
-				for(Meteor fragment : fragments) {
-					fragment.update();
-				}
-
-				for(Meteor smoke : smoke) {
-					smoke.update();
-				}
-
-				if(rand.nextInt(1) == 0) {
+				if(rand.nextInt(4) == 0) {
 					Meteor meteor = new Meteor((player.posX + rand.nextInt(16000)) - 8000, 2017, (player.posZ + rand.nextInt(16000)) - 8000);
 					meteors.add(meteor);
 				}
 
 				meteors.removeIf(x -> x.isDead);
-				fragments.removeIf(xx -> xx.isDead);
-				smoke.removeIf(xxx -> xxx.isDead);
 			}
 		}
 	}
@@ -246,9 +235,10 @@ public class WorldProviderThatmo extends WorldProviderCelestial {
 
 		private void update() {
 			Random rand = new Random();
+
 			if(this.type != MeteorType.SMOKE && this.type != MeteorType.FRAGMENT) {
 				Meteor meteor = new Meteor((this.posX + rand.nextInt(16)) - 8, (this.posY + rand.nextInt(16)), (this.posZ + rand.nextInt(16)) - 8, MeteorType.SMOKE, 0, 0, 0);
-				smoke.add(meteor);
+				meteors.add(meteor);
 			}
 
 			if(this.posY <= 500 && this.type != MeteorType.SMOKE) {

@@ -26,6 +26,7 @@ import com.hbm.dim.moon.WorldProviderMoon;
 import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.tekto.WorldGeneratorTekto;
 import com.hbm.dim.tekto.WorldProviderTekto;
+import com.hbm.dim.thatmo.WorldGeneratorThatmo;
 import com.hbm.dim.thatmo.WorldProviderThatmo;
 import com.hbm.util.BobMathUtil;
 
@@ -61,6 +62,7 @@ public class PlanetGen {
 		GameRegistry.registerWorldGenerator(new WorldGeneratorMinmus(), 1);
 		GameRegistry.registerWorldGenerator(new WorldGeneratorLaythe(), 1);
 		GameRegistry.registerWorldGenerator(new WorldGeneratorTekto(), 1);
+		GameRegistry.registerWorldGenerator(new WorldGeneratorThatmo(), 1);
 		GameRegistry.registerWorldGenerator(new WorldGeneratorDima(), 1);
 	}
 

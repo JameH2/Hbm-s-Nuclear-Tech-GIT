@@ -7,8 +7,8 @@ import org.lwjgl.opengl.GL11;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SkyProviderCelestial;
 import com.hbm.dim.thatmo.WorldProviderThatmo.Meteor;
+import com.hbm.dim.thatmo.WorldProviderThatmo.MeteorType;
 import com.hbm.dim.trait.CelestialBodyTrait.CBT_BATTLEFIELD;
-import com.hbm.interfaces.Spaghetti;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.util.BeamPronter;
@@ -24,45 +24,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
 public class SkyProviderThatmo extends SkyProviderCelestial {
+
 	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/particle/shockwave.png");
-	private static final ResourceLocation ThatmoShield = new ResourceLocation("hbm:textures/particle/cens.png");
+	private static final ResourceLocation thatmoShield = new ResourceLocation("hbm:textures/particle/cens.png");
 	private static final ResourceLocation flash = new ResourceLocation("hbm:textures/misc/space/flare.png");
+	private static final ResourceLocation particleBase = new ResourceLocation(RefStrings.MODID + ":textures/particle/particle_base.png");
 
+	// james I appreciate you
+	// no more self-flagellating comments 2025
 
-	//someone beat me to a pulp for ever conceiving this awful noxious class my god take me out of my misery pls....
-
-	/*
-	 Father, O Father,
-	Mellow thy wrath, which lessons have brought great cherish and wisdom,
-	For I have sinned upon your gracious OpenGL gifts, the holy relics of your craft.
-	You have blessed me with your very blood and soul,
-	A lineage of knowledge, a testament to your enduring grace.
-
-	I kneel, broken, upon this very pedestal,
-	Begging for salvation from the sins I have wrought,
-	A desecration of thy divine creation.
-	This twisted caricature of competence,
-	This grim reflection of what could have been, bears my name.
-
-	Father, forgive the folly of my misguided hands,
-	They who dared to mold with imperfection,
-	To misinterpret the purity of your light.
-	Let your luminescence pierce through my errors,
-	Guiding me back to the path of clarity and redemption.
-
-	I offer my toil, my remorseful labor,
-	As a prayer, as an offering to cleanse my mistakes.
-	Let this humble plea ascend to the heavens of logic and form,
-	So that I may rise anew,
-	A disciple, unworthy but devoted,
-	To the mastery you have entrusted to me.
-
-	Illuminate my ignorance with your wisdom,
-	And restore my hands to craft with honor and precision.
-	Amen.
-	*/
 	@Override
-	@Spaghetti("jesus christ man please refactor this")
 	public void renderSpecialEffects(float partialTicks, WorldClient world, Minecraft mc) {
 		float alpha = (WorldProviderThatmo.flashd <= 0) ? 0.0F : 1.0F - Math.min(1.0F, WorldProviderThatmo.flashd / 100);
 
@@ -145,88 +116,50 @@ public class SkyProviderThatmo extends SkyProviderCelestial {
 
 		//GL11.glDepthMask(false);
 
-		mc.renderEngine.bindTexture(ThatmoShield);
+		mc.renderEngine.bindTexture(thatmoShield);
 		ResourceManager.plane.renderAll();
 
 		GL11.glPopMatrix();
 
 
+		double playerX = mc.thePlayer.prevPosX + (mc.thePlayer.posX - mc.thePlayer.prevPosX) * partialTicks;
+		double playerY = mc.thePlayer.prevPosY + (mc.thePlayer.posY - mc.thePlayer.prevPosY) * partialTicks;
+		double playerZ = mc.thePlayer.prevPosZ + (mc.thePlayer.posZ - mc.thePlayer.prevPosZ) * partialTicks;
+
+		GL11.glDisable(GL11.GL_FOG);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+
 		for(Meteor meteor : WorldProviderThatmo.meteors) {
 			GL11.glPushMatrix();
-			GL11.glDisable(GL11.GL_FOG);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			double dx = mc.thePlayer.prevPosX + (mc.thePlayer.posX - mc.thePlayer.prevPosX) * partialTicks;
-			double dy = mc.thePlayer.prevPosY + (mc.thePlayer.posY - mc.thePlayer.prevPosY) * partialTicks;
-			double dz = mc.thePlayer.prevPosZ + (mc.thePlayer.posZ - mc.thePlayer.prevPosZ) * partialTicks;
-			Vec3 vec = Vec3.createVectorHelper(meteor.posX - dx, meteor.posY - dy, meteor.posZ - dz);
-			Vec3 vec2 = Vec3.createVectorHelper(meteor.posX - dx, meteor.posY - dy, meteor.posZ - dz);
-			double l = Math.min(Minecraft.getMinecraft().gameSettings.renderDistanceChunks*16, vec.lengthVector());
-			// double sf = Math.max(0.2,(312.5/(vec2.lengthVector()/l)));
-			vec = vec.normalize();
-			Vec3 vecd = Vec3.createVectorHelper(vec.xCoord*l, vec.yCoord*l, vec.zCoord*l);
-			GL11.glTranslated( vecd.xCoord, vecd.yCoord , vecd.zCoord);
-			double descent = 2017d-meteor.posY;
-			double quadratic = (-1*Math.pow(descent, 2)+(1517*descent))/41;
-			//float scalar = (float) (7000f/vec2.lengthVector());
-			float scalar = (float) (quadratic/vec2.lengthVector());
+
+			// optimised 3 sqrt per meteor to just 1
+			Vec3 offset = Vec3.createVectorHelper(meteor.posX - playerX, meteor.posY - playerY, meteor.posZ - playerZ);
+			double offsetLength = offset.lengthVector();
+			double distance = Math.min(Minecraft.getMinecraft().gameSettings.renderDistanceChunks * 16, offsetLength);
+			Vec3 offsetNormal = offsetLength >= 1.0E-4D ? Vec3.createVectorHelper(offset.xCoord / offsetLength, offset.yCoord / offsetLength, offset.zCoord / offsetLength) : offset;
+			Vec3 renderOffset = Vec3.createVectorHelper(offsetNormal.xCoord * distance, offsetNormal.yCoord * distance, offsetNormal.zCoord * distance);
+
+			GL11.glTranslated(renderOffset.xCoord, renderOffset.yCoord, renderOffset.zCoord);
+
+			double descent = 2017d - meteor.posY;
+			double quadratic = (-(descent * descent) + (1517 * descent)) / 41;
+
+			float scalar = (float) (quadratic / offsetLength);
 			GL11.glScaled(scalar, scalar, scalar);
-			//System.out.println("scalar "+scalar);
-			renderGlow(shockFlareTexture, 1, 1, 1, partialTicks);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_FOG);
+
+			if(meteor.type == MeteorType.SMOKE) {
+				GL11.glColor4d(1, 0, 0, 1);
+				renderSmoke(particleBase, meteor.age);
+			} else {
+				GL11.glColor4d(1, 1, 1, 1);
+				renderGlow(shockFlareTexture, 1, 1, 1, partialTicks);
+			}
+
 			GL11.glPopMatrix();
 		}
-		for(Meteor fragment : WorldProviderThatmo.fragments) {
-			GL11.glPushMatrix();
-			GL11.glDisable(GL11.GL_FOG);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			double dx = mc.thePlayer.prevPosX + (mc.thePlayer.posX - mc.thePlayer.prevPosX) * partialTicks;
-			double dy = mc.thePlayer.prevPosY + (mc.thePlayer.posY - mc.thePlayer.prevPosY) * partialTicks;
-			double dz = mc.thePlayer.prevPosZ + (mc.thePlayer.posZ - mc.thePlayer.prevPosZ) * partialTicks;
-			Vec3 vec = Vec3.createVectorHelper(fragment.posX - dx, fragment.posY - dy, fragment.posZ - dz);
-			Vec3 vec2 = Vec3.createVectorHelper(fragment.posX - dx, fragment.posY - dy, fragment.posZ - dz);
-			double l = Math.min(Minecraft.getMinecraft().gameSettings.renderDistanceChunks*16, vec.lengthVector());
-			// double sf = Math.max(0.2,(312.5/(vec2.lengthVector()/l)));
-			vec = vec.normalize();
-			Vec3 vecd = Vec3.createVectorHelper(vec.xCoord*l, vec.yCoord*l, vec.zCoord*l);
-			GL11.glTranslated( vecd.xCoord, vecd.yCoord , vecd.zCoord);
-			double descent = 2017d-fragment.posY;
-			double quadratic = (-1*Math.pow(descent, 2)+(1517*descent))/82;
-			//float scalar = (float) (7000f/vec2.lengthVector());
-			float scalar = (float) (quadratic/vec2.lengthVector());
-			GL11.glScaled(scalar, scalar, scalar);
-			//System.out.println("scalar "+scalar);
-			renderGlow(shockFlareTexture, 1, 1, 1, partialTicks);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_FOG);
-			GL11.glPopMatrix();
-		}
-		for(Meteor smoke : WorldProviderThatmo.smoke) {
-			GL11.glPushMatrix();
-			GL11.glDisable(GL11.GL_FOG);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			double dx = mc.thePlayer.prevPosX + (mc.thePlayer.posX - mc.thePlayer.prevPosX) * partialTicks;
-			double dy = mc.thePlayer.prevPosY + (mc.thePlayer.posY - mc.thePlayer.prevPosY) * partialTicks;
-			double dz = mc.thePlayer.prevPosZ + (mc.thePlayer.posZ - mc.thePlayer.prevPosZ) * partialTicks;
-			Vec3 vec = Vec3.createVectorHelper(smoke.posX - dx, smoke.posY - dy, smoke.posZ - dz);
-			Vec3 vec2 = Vec3.createVectorHelper(smoke.posX - dx, smoke.posY - dy, smoke.posZ - dz);
-			double l = Math.min(Minecraft.getMinecraft().gameSettings.renderDistanceChunks*16, vec.lengthVector());
-			// double sf = Math.max(0.2,(312.5/(vec2.lengthVector()/l)));
-			vec = vec.normalize();
-			Vec3 vecd = Vec3.createVectorHelper(vec.xCoord*l, vec.yCoord*l, vec.zCoord*l);
-			GL11.glTranslated( vecd.xCoord, vecd.yCoord , vecd.zCoord);
-			double descent = 2017d-smoke.posY;
-			double quadratic = (-1*Math.pow(descent, 2)+(1517*descent))/82;
-			//float scalar = (float) (14000f/vec2.lengthVector());
-			float scalar = (float) (quadratic/vec2.lengthVector());
-			//scalar = 3500;
-			GL11.glColor4d(1, 0, 0, 1);
-			GL11.glScaled(scalar, scalar, scalar);
-			renderSmoke(new ResourceLocation(RefStrings.MODID + ":textures/particle/particle_base.png"), smoke.age);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_FOG);
-			GL11.glPopMatrix();
-		}
+
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_FOG);
 
 		GL11.glPushMatrix();
 

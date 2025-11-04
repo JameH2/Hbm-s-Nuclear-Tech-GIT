@@ -213,7 +213,7 @@ public class SolarSystem {
 					.withColor(1f, 0.6862f, 0.5882f)
 					.withSatellites(
 
-					new CelestialBody("thatmo")
+					new CelestialBody("thatmo", SpaceConfig.thatmoDimension, Body.THATMO)
 						.withMassRadius(2.788e21F, 286)
 						.withOrbitalParameters(32_301, 0.0534F, 0.0F, 4.02F, 284.0F)
 						.withRotationalPeriod(306_443)
@@ -262,7 +262,7 @@ public class SolarSystem {
 		IKE("ike"),
 		LAYTHE("laythe"),
 		TEKTO("tekto"),
-		//THATMO("thatmo"); sit this one out buddy :)
+		THATMO("thatmo"),
 		DIMA("dima");
 
 		public String name;

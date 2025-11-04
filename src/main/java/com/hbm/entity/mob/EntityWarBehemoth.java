@@ -88,9 +88,6 @@ public class EntityWarBehemoth extends EntityMob implements ISuffocationImmune {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if(!this.worldObj.isRemote) {
-			this.motionY -= 0.10D; // Increase the downward pull for heavier gravity (adjust value as needed)
-		}
 	}
 
 	@Override
