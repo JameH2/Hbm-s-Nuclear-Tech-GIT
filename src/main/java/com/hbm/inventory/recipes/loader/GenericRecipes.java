@@ -25,11 +25,11 @@ import net.minecraft.util.WeightedRandom;
  * * Chance-based outputs, for selecting items and for selecting items are produced in the first place
  * * Duration
  * * Tags for identification
- * 
+ *
  * @author hbm
  */
 public abstract class GenericRecipes<T extends GenericRecipe> extends SerializableRecipe {
-	
+
 	public static final Random RNG = new Random();
 
 	/** Alternate recipes, i.e. obtainable otherwise */
@@ -38,15 +38,17 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 	public static final String POOL_PREFIX_DISCOVER = "discover.";
 	/** Secret recipes, self-explantory. Why even have this comment? */
 	public static final String POOL_PREFIX_SECRET = "secret.";
+	/** Technology acquired from warzones */
+	public static final String POOL_PREFIX_WAR = "war.";
 
 	public List<T> recipeOrderedList = new ArrayList();
 	public HashMap<String, T> recipeNameMap = new HashMap();
-	
+
 	/** Blueprint pool name to list of recipe names that are part of this pool */
 	public static HashMap<String, List<String>> blueprintPools = new HashMap();
 	/** Name to recipe map for all recipes that are part of pools for lookup */
 	public static HashMap<String, GenericRecipe> pooledBlueprints = new HashMap();
-	
+
 	/** Groups for auto switch functionality (changes recipe automatically based on first solid input) */
 	public HashMap<String, List<GenericRecipe>> autoSwitchGroups = new HashMap();
 
@@ -56,7 +58,7 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 	public abstract int outputFluidLimit();
 	public boolean hasDuration() { return true; }
 	public boolean hasPower() { return true; }
-	
+
 	/** Adds a recipe to a blueprint pool (i.e. a blueprint item's recipe list) */
 	public static void addToPool(String pool, GenericRecipe recipe) {
 		List<String> list = blueprintPools.get(pool);
@@ -67,7 +69,7 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 		list.add(recipe.name);
 		pooledBlueprints.put(recipe.name, recipe);
 	}
-	
+
 	/** Adds a recipe to an auto switch group (recipe can switch based on first solid input) */
 	public void addToGroup(String group, GenericRecipe recipe) {
 		List<GenericRecipe> list = autoSwitchGroups.get(group);
@@ -75,7 +77,7 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 		list.add(recipe);
 		autoSwitchGroups.put(group, list);
 	}
-	
+
 	public static void clearPools() {
 		blueprintPools.clear();
 		pooledBlueprints.clear();
@@ -92,7 +94,7 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 		this.recipeNameMap.clear();
 		this.autoSwitchGroups.clear();
 	}
-	
+
 	public void register(T recipe) {
 		this.recipeOrderedList.add(recipe);
 		if(recipeNameMap.containsKey(recipe.name)) throw new IllegalStateException("Recipe " + recipe.name + " has been registered with a duplicate ID!");
@@ -106,21 +108,21 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 
 		if(this.inputItemLimit() > 0 && obj.has("inputItem")) recipe.inputItem = this.readAStackArray(obj.get("inputItem").getAsJsonArray());
 		if(this.inputFluidLimit() > 0 && obj.has("inputFluid")) recipe.inputFluid = this.readFluidArray(obj.get("inputFluid").getAsJsonArray());
-		
+
 		if(this.outputItemLimit() > 0 && obj.has("outputItem")) recipe.outputItem = this.readOutputArray(obj.get("outputItem").getAsJsonArray());
 		if(this.outputFluidLimit() > 0 && obj.has("outputFluid")) recipe.outputFluid = this.readFluidArray(obj.get("outputFluid").getAsJsonArray());
 
 		if(this.hasDuration()) recipe.setDuration(obj.get("duration").getAsInt());
 		if(this.hasPower()) recipe.setPower(obj.get("power").getAsLong());
-		
+
 		if(obj.has("icon")) recipe.setIcon(this.readItemStack(obj.get("icon").getAsJsonArray()));
 		if(obj.has("named") && obj.get("named").getAsBoolean()) recipe.setNamed();
 		if(obj.has("blueprintpool")) recipe.setPools(obj.get("blueprintpool").getAsString().split(":"));
 		if(obj.has("nameWrapper")) recipe.setNameWrapper(obj.get("nameWrapper").getAsString());
 		if(obj.has("autoSwitchGroup")) recipe.setGroup(obj.get("autoSwitchGroup").getAsString(), this);
-		
+
 		readExtraData(element, recipe);
-		
+
 		register(recipe);
 	}
 
@@ -130,27 +132,27 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 	@Override
 	public void writeRecipe(Object recipeObject, JsonWriter writer) throws IOException {
 		T recipe = (T) recipeObject;
-		
+
 		writer.name("name").value(recipe.name);
-		
+
 		if(this.inputItemLimit() > 0 && recipe.inputItem != null) {
 			writer.name("inputItem").beginArray();
 			for(AStack stack : recipe.inputItem) this.writeAStack(stack, writer);
 			writer.endArray();
 		}
-		
+
 		if(this.inputFluidLimit() > 0 && recipe.inputFluid != null) {
 			writer.name("inputFluid").beginArray();
 			for(FluidStack stack : recipe.inputFluid) this.writeFluidStack(stack, writer);
 			writer.endArray();
 		}
-		
+
 		if(this.outputItemLimit() > 0 && recipe.outputItem != null) {
 			writer.name("outputItem").beginArray();
 			for(IOutput stack : recipe.outputItem) stack.serialize(writer);
 			writer.endArray();
 		}
-		
+
 		if(this.outputFluidLimit() > 0 && recipe.outputFluid != null) {
 			writer.name("outputFluid").beginArray();
 			for(FluidStack stack : recipe.outputFluid) this.writeFluidStack(stack, writer);
@@ -159,7 +161,7 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 
 		if(this.hasDuration()) writer.name("duration").value(recipe.duration);
 		if(this.hasPower()) writer.name("power").value(recipe.power);
-		
+
 		if(recipe.writeIcon) {
 			writer.name("icon");
 			this.writeItemStack(recipe.icon, writer);
@@ -169,16 +171,16 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 		if(recipe.nameWrapper != null) writer.name("nameWrapper").value(recipe.nameWrapper);
 		if(recipe.blueprintPools != null && recipe.blueprintPools.length > 0) writer.name("blueprintpool").value(String.join(":", recipe.blueprintPools));
 		if(recipe.autoSwitchGroup != null) writer.name("autoSwitchGroup").value(recipe.autoSwitchGroup);
-		
+
 		writeExtraData(recipe, writer);
 	}
-	
+
 	public void writeExtraData(T recipe, JsonWriter writer) { }
-	
+
 	public IOutput[] readOutputArray(JsonArray array) {
 		IOutput[] output = new IOutput[array.size()];
 		int index = 0;
-		
+
 		for(JsonElement element : array) {
 			JsonArray arrayElement = element.getAsJsonArray();
 			String type = arrayElement.get(0).getAsString();
@@ -195,7 +197,7 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 			}
 			index++;
 		}
-		
+
 		return output;
 	}
 
@@ -214,12 +216,12 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 		public void deserialize(JsonArray array);
 		public String[] getLabel();
 	}
-	
+
 	/** A chance output, produces either an ItemStack or null */
 	public static class ChanceOutput extends WeightedRandom.Item implements IOutput {
-		
+
 		// a weight of 0 means this output is not part of a weighted output
-		
+
 		public ItemStack stack;
 		public float chance = 1F;
 
@@ -233,39 +235,39 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 			this.chance = chance;
 		}
 
-		@Override 
+		@Override
 		public ItemStack collapse() {
 			if(this.chance >= 1F) return getSingle().copy();
 			return RNG.nextFloat() <= chance ? getSingle().copy() : null;
 		}
-		
+
 		@Override public ItemStack getSingle() { return this.stack; }
 		@Override public boolean possibleMultiOutput() { return false; }
 		@Override public ItemStack[] getAllPossibilities() { return new ItemStack[] {getSingle()}; }
-		
+
 		@Override
 		public void serialize(JsonWriter writer) throws IOException {
 			boolean standardStack = chance >= 1 && itemWeight == 0;
-			
+
 			writer.beginArray();
 			writer.setIndent("");
-			
+
 			if(itemWeight == 0) writer.value("single");
 			SerializableRecipe.writeItemStack(stack, writer);
 			writer.setIndent("");
-			
+
 			if(!standardStack) {
 				writer.value(chance);
 				if(itemWeight > 0) writer.value(itemWeight);
 			}
-			
+
 			writer.endArray();
 			writer.setIndent("  ");
 		}
-		
+
 		@Override
 		public void deserialize(JsonArray array) {
-			
+
 			if(array.get(0).isJsonPrimitive()) { // "single" tag, don't apply weight
 				this.stack = SerializableRecipe.readItemStack(array.get(1).getAsJsonArray());
 				if(array.size() > 2) this.chance = array.get(2).getAsFloat();
@@ -275,28 +277,28 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 				if(array.size() > 2) this.itemWeight = array.get(2).getAsInt();
 			}
 		}
-		
+
 		@Override
 		public String[] getLabel() {
 			return new String[] {EnumChatFormatting.GRAY + "" + this.stack.stackSize + "x " + this.stack.getDisplayName() + (this.chance >= 1 ? "" : " (" + (int)(this.chance * 1000) / 10F + "%)")};
 		}
 	}
-	
+
 	/** Multiple choice chance output, produces a ChanceOutput chosen randomly by weight */
 	public static class ChanceOutputMulti implements IOutput {
-		
+
 		public List<ChanceOutput> pool = new ArrayList();
-		
+
 		@Override public ItemStack collapse() { return ((ChanceOutput) WeightedRandom.getRandomItem(RNG, pool)).collapse(); }
 		@Override public boolean possibleMultiOutput() { return pool.size() > 1; }
 		@Override public ItemStack getSingle() { return possibleMultiOutput() ? null : pool.get(0).getSingle(); }
-		
+
 		@Override public ItemStack[] getAllPossibilities() {
 			ItemStack[] outputs = new ItemStack[pool.size()];
 			for(int i = 0; i < outputs.length; i++) outputs[i] = pool.get(i).getAllPossibilities()[0];
 			return outputs;
 		}
-		
+
 		@Override
 		public void serialize(JsonWriter writer) throws IOException {
 			writer.beginArray();
@@ -304,7 +306,7 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 			for(ChanceOutput output : pool) output.serialize(writer);
 			writer.endArray();
 		}
-		
+
 		@Override
 		public void deserialize(JsonArray array) {
 			for(JsonElement element : array) {
@@ -313,7 +315,7 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 				pool.add(output);
 			}
 		}
-		
+
 		@Override
 		public String[] getLabel() {
 			String[] label = new String[pool.size() + 1];
