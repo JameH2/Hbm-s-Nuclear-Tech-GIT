@@ -14,6 +14,7 @@ public class BlockFallingUp extends BlockFallingNT {
 	public BlockFallingUp() {
 		super();
 		setTickRandomly(true);
+		blockParticleGravity = -blockParticleGravity;
 	}
 
 	// Don't schedule ticks, should only ever randomly fall up
