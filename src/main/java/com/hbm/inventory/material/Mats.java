@@ -183,6 +183,10 @@ public class Mats {
 	public static final NTMMaterial MAT_VALOR		= makeNonSmeltable(_EX + 667, 	df("Valor"),		0xBB0000, 0xCC0000, 0xCC0000).setAutogen(FRAGMENT).n();
 	public static final NTMMaterial MAT_COMPASSION	= makeNonSmeltable(_EX + 668, 	df("Compassion"),	0xDD0000, 0xEE0000, 0xEE0000).setAutogen(FRAGMENT).n();
 	public static final NTMMaterial MAT_LOVE		= makeNonSmeltable(_EX + 669, 	df("Love"),			0xEE0000, 0xFF0044, 0xFF0044).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_INDOLENCE	= makeNonSmeltable(_EX + 670, 	df("Indolence"),	0x000088, 0x000099, 0x000099).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_NEGLECT		= makeNonSmeltable(_EX + 671, 	df("Neglect"),		0x000066, 0x000077, 0x000077).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_VANITY		= makeNonSmeltable(_EX + 672, 	df("Vanity"),		0x000033, 0x000044, 0x000044).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_HATE		= makeNonSmeltable(_EX + 673, 	df("Hate"),			0x000000, 0x000000, 0x000000).setAutogen(FRAGMENT).n();
 
 	//Extension
 	public static final NTMMaterial MAT_RAREEARTH	= makeNonSmeltable(_ES + 00, 		RAREEARTH,		0xC1BDBD, 0x384646, 0x7B7F7F).setAutogen(FRAGMENT).n();

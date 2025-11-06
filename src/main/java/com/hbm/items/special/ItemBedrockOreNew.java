@@ -277,7 +277,8 @@ public class ItemBedrockOreNew extends Item {
 			);
 			register(
 				SolarSystem.Body.DIMA,
-				T("persona",	o(MAT_INTENT, 1),			o(MAT_VALOR, 1),			o(MAT_COMPASSION, 1),		o(MAT_LOVE, 1))
+				T("persona",	o(MAT_INTENT, 1),			o(MAT_VALOR, 1),			o(MAT_COMPASSION, 1),		o(MAT_LOVE, 1)),
+				T("shadow",		o(MAT_INDOLENCE, 1),		o(MAT_NEGLECT, 1),			o(MAT_VANITY, 1),			o(MAT_HATE, 1))
 			);
 		}
 

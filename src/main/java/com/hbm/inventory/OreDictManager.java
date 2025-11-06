@@ -761,6 +761,10 @@ public class OreDictManager {
 		OreDictionary.registerOre(KEY_STICK, stick_pvc);
 
 		OreDictionary.registerOre("ingotLove", heart_piece);
+		OreDictionary.registerOre("ingotHate", coin_ufo);
+		OreDictionary.registerOre("ingotVanity", coin_worm);
+		OreDictionary.registerOre("ingotNeglect", coin_maskman);
+		OreDictionary.registerOre("ingotIndolence", coin_creeper);
 
 		for(NTMMaterial mat : Mats.orderedList) {
 			if(mat.autogen.contains(MaterialShapes.FRAGMENT)) {
