@@ -179,14 +179,26 @@ public class Mats {
 	public static final NTMMaterial MAT_STAINLESS	= makeSmeltable(_EX + 01,		STAINLESS,			0xD8D8D8, 0x474747, 0x4A4A4A).setAutogen(PLATE, WELDEDPLATE, CASTPLATE).m();
 	public static final NTMMaterial MAT_RICH_MAGMA	= makeSmeltable(_EX + 02,		RICHMAGMA,			0x7F7F7F, 0x353555, 0xFF6212).n();
 	public static final NTMMaterial MAT_SEMTEX		= makeNonSmeltable(_EX + 03, 	SEMTEX,				0xEDAA28, 0x825D16, 0xF0B090).setAutogen(FRAGMENT).n();
+
 	public static final NTMMaterial MAT_INTENT		= makeNonSmeltable(_EX + 666, 	df("Intent"),		0x990000, 0xAA0000, 0xAA0000).setAutogen(FRAGMENT).n();
 	public static final NTMMaterial MAT_VALOR		= makeNonSmeltable(_EX + 667, 	df("Valor"),		0xBB0000, 0xCC0000, 0xCC0000).setAutogen(FRAGMENT).n();
 	public static final NTMMaterial MAT_COMPASSION	= makeNonSmeltable(_EX + 668, 	df("Compassion"),	0xDD0000, 0xEE0000, 0xEE0000).setAutogen(FRAGMENT).n();
 	public static final NTMMaterial MAT_LOVE		= makeNonSmeltable(_EX + 669, 	df("Love"),			0xEE0000, 0xFF0044, 0xFF0044).setAutogen(FRAGMENT).n();
-	public static final NTMMaterial MAT_INDOLENCE	= makeNonSmeltable(_EX + 670, 	df("Indolence"),	0x000088, 0x000099, 0x000099).setAutogen(FRAGMENT).n();
-	public static final NTMMaterial MAT_NEGLECT		= makeNonSmeltable(_EX + 671, 	df("Neglect"),		0x000066, 0x000077, 0x000077).setAutogen(FRAGMENT).n();
-	public static final NTMMaterial MAT_VANITY		= makeNonSmeltable(_EX + 672, 	df("Vanity"),		0x000033, 0x000044, 0x000044).setAutogen(FRAGMENT).n();
+
+	public static final NTMMaterial MAT_INDOLENCE	= makeNonSmeltable(_EX + 670, 	df("Indolence"),	0x008800, 0x009900, 0x009900).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_NEGLECT		= makeNonSmeltable(_EX + 671, 	df("Neglect"),		0x006600, 0x007700, 0x007700).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_VANITY		= makeNonSmeltable(_EX + 672, 	df("Vanity"),		0x003300, 0x004400, 0x004400).setAutogen(FRAGMENT).n();
 	public static final NTMMaterial MAT_HATE		= makeNonSmeltable(_EX + 673, 	df("Hate"),			0x000000, 0x000000, 0x000000).setAutogen(FRAGMENT).n();
+
+	public static final NTMMaterial MAT_NITRA		= makeNonSmeltable(_EX + 674, 	df("Nitra"),		0x000088, 0x000099, 0x000099).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_XANAX		= makeNonSmeltable(_EX + 675, 	df("Xanax"),		0x000066, 0x000077, 0x000077).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_LABRYS		= makeNonSmeltable(_EX + 676, 	df("Labrys"),		0x000033, 0x000044, 0x000044).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_LILY		= makeNonSmeltable(_EX + 677, 	df("Lily"),			0x000000, 0x000000, 0x000000).setAutogen(FRAGMENT).n();
+
+	public static final NTMMaterial MAT_NOTHING		= makeNonSmeltable(_EX + 678, 	df("Nothing"),		0x000000, 0xFFFFFF, 0x000000).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_EMPTY		= makeNonSmeltable(_EX + 679, 	df("Empty"),		0x000000, 0xFFFFFF, 0x000000).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_NULL		= makeNonSmeltable(_EX + 680, 	df("Null"),			0x000000, 0xFFFFFF, 0x000000).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_VOID		= makeNonSmeltable(_EX + 681, 	df("Void"),			0x000000, 0xFFFFFF, 0x000000).setAutogen(FRAGMENT).n();
 
 	//Extension
 	public static final NTMMaterial MAT_RAREEARTH	= makeNonSmeltable(_ES + 00, 		RAREEARTH,		0xC1BDBD, 0x384646, 0x7B7F7F).setAutogen(FRAGMENT).n();

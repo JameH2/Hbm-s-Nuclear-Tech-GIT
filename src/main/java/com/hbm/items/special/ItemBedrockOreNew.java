@@ -271,14 +271,16 @@ public class ItemBedrockOreNew extends Item {
 			);
 			register(
 				SolarSystem.Body.THATMO,
-				T("heavy",		o(MAT_GOLD, 24),			o(MAT_NIOBIUM, 12),			o(MAT_CADMIUM, 6),			o(MAT_ARSENIC, 3)),
-				T("scrap",		o(MAT_STEEL, 24),			o(MAT_MINGRADE, 12),		o(MAT_WEAPONSTEEL, 6),		o(MAT_SATURN, 3)),
-				T("hazard",		o(MAT_PU238, 24),			o(MAT_CO60, 12),			o(MAT_GAAS, 6),				o(MAT_AU198, 3))
+				T("heavy",		o(MAT_GOLD, 18),			o(MAT_NIOBIUM, 9),			o(MAT_CADMIUM, 6),			o(MAT_ARSENIC, 3)),
+				T("scrap",		o(MAT_STEEL, 18),			o(MAT_MINGRADE, 9),			o(MAT_WEAPONSTEEL, 6),		o(MAT_SATURN, 3)),
+				T("hazard",		o(MAT_PU238, 18),			o(MAT_CO60, 9),				o(MAT_GAAS, 6),				o(MAT_AU198, 3))
 			);
 			register(
 				SolarSystem.Body.DIMA,
 				T("persona",	o(MAT_INTENT, 1),			o(MAT_VALOR, 1),			o(MAT_COMPASSION, 1),		o(MAT_LOVE, 1)),
-				T("shadow",		o(MAT_INDOLENCE, 1),		o(MAT_NEGLECT, 1),			o(MAT_VANITY, 1),			o(MAT_HATE, 1))
+				T("shadow",		o(MAT_INDOLENCE, 1),		o(MAT_NEGLECT, 1),			o(MAT_VANITY, 1),			o(MAT_HATE, 1)),
+				T("animus",		o(MAT_NITRA, 18),			o(MAT_XANAX, 1),			o(MAT_LABRYS, 1),			o(MAT_LILY, 1)),
+				T("self",		o(MAT_NOTHING, 1),			o(MAT_EMPTY, 1),			o(MAT_NULL, 1),				o(MAT_VOID, 1))
 			);
 		}
 

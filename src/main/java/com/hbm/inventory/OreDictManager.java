@@ -760,11 +760,20 @@ public class OreDictManager {
 		OreDictionary.registerOre(KEY_STICK, stick_vinyl);
 		OreDictionary.registerOre(KEY_STICK, stick_pvc);
 
-		OreDictionary.registerOre("ingotLove", heart_piece);
+		OreDictionary.registerOre("ingotIntent", heart_piece);
+		OreDictionary.registerOre("ingotValor", heart_container);
+		OreDictionary.registerOre("ingotCompassion", heart_booster);
+		OreDictionary.registerOre("ingotLove", heart_fab);
+
 		OreDictionary.registerOre("ingotHate", coin_ufo);
 		OreDictionary.registerOre("ingotVanity", coin_worm);
 		OreDictionary.registerOre("ingotNeglect", coin_maskman);
 		OreDictionary.registerOre("ingotIndolence", coin_creeper);
+
+		OreDictionary.registerOre("dustNitra", nitra_small);
+		OreDictionary.registerOre("ingotXanax", xanax);
+		OreDictionary.registerOre("ingotLabrys", mese_axe);
+		OreDictionary.registerOre("ingotLily", morning_glory);
 
 		for(NTMMaterial mat : Mats.orderedList) {
 			if(mat.autogen.contains(MaterialShapes.FRAGMENT)) {
