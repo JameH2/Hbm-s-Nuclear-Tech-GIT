@@ -775,6 +775,8 @@ public class OreDictManager {
 		OreDictionary.registerOre("ingotLabrys", mese_axe);
 		OreDictionary.registerOre("ingotLily", morning_glory);
 
+		OreDictionary.registerOre("ingotVoid", anvil_murky);
+
 		for(NTMMaterial mat : Mats.orderedList) {
 			if(mat.autogen.contains(MaterialShapes.FRAGMENT)) {
 				String name = mat.names[0];
