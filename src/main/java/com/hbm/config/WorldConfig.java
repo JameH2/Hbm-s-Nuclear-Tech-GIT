@@ -73,6 +73,11 @@ public class WorldConfig {
 	public static int tektoGasPerDepositMax = 500;
 	public static double tektoOilDrainChance = 0.05D;
 
+	public static int tektoBedrockOilSpawn = 200;
+	public static int tektoBedrockOilPerDeposit = 100;
+	public static int tektoBedrockGasPerDepositMin = 10;
+	public static int tektoBedrockGasPerDepositMax = 50;
+
 	public static int eveGasPerDeposit = 500;
 	public static int evePetPerDepositMin = 20;
 	public static int evePetPerDepositMax = 100;
@@ -255,11 +260,17 @@ public class WorldConfig {
 		ikeBrinePerDeposit = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.O23_ikeBrinePerDeposit", "Brine extracted per Ike brine block suck", ikeBrinePerDeposit);
 		ikeBrineDrainChance = CommonConfig.createConfigDouble(config, CATEGORY_OREGEN, "2.O24_ikeBrineDrainChance", "Chance for an Ike brine block to become empty on suck", ikeBrineDrainChance);
 
-		tektoOilSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.33S_tektoOilSpawnRate", "Spawns a Tekto oil bubble every nTH chunk (on Tekto)", 100);
+		tektoOilSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.33S_tektoOilSpawnRate", "Spawns a Tekto oil bubble every nTH chunk (on Tekto)", tektoOilSpawn);
 		tektoOilPerDeposit = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.O25_tektoOilPerDeposit", "Oil extracted per Tekto oil block suck", tektoOilPerDeposit);
 		tektoGasPerDepositMin = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.O26_tektoGasPerDepositMin", "Minimum natural gas extracted per Tekto oil block suck", tektoGasPerDepositMin);
 		tektoGasPerDepositMax = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.O27_tektoGasPerDepositMax", "Maximum natural gas extracted per Tekto oil block suck", tektoGasPerDepositMax);
 		tektoOilDrainChance = CommonConfig.createConfigDouble(config, CATEGORY_OREGEN, "2.O28_tektoOilDrainChance", "Chance for a Tekto oil block to become empty on suck", tektoOilDrainChance);
+
+
+		tektoBedrockOilSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.34_tektoBedrockOilSpawnRate", "Spawns a Tekto bedrock oil bubble every nTH chunk (on Tekto)", tektoBedrockOilSpawn);
+		tektoBedrockOilPerDeposit = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.O35_tektoBedrockOilPerDeposit", "Oil extracted per bedrock oil block suck", tektoBedrockOilPerDeposit);
+		tektoBedrockGasPerDepositMin = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.O36_tektoBedrockGasPerDepositMin", "Minimum natural gas extracted per bedrock oil block suck", tektoBedrockGasPerDepositMin);
+		tektoBedrockGasPerDepositMax = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.O37_tektoBedrockGasPerDepositMax", "Maximum natural gas extracted per bedrock oil block suck", tektoBedrockGasPerDepositMax);
 
 
 		newBedrockOres = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.NB_newBedrockOres", "Enables the newer genreric bedrock ores", true);

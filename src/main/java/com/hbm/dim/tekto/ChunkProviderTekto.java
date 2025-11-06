@@ -4,9 +4,11 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.ChunkProviderCelestial;
+import com.hbm.dim.SolarSystem;
 import com.hbm.dim.mapgen.MapGenGreg;
 import com.hbm.dim.mapgen.MapGenVolcano;
 import com.hbm.dim.tekto.biome.BiomeGenBaseTekto;
+import com.hbm.world.gen.terrain.MapGenBedrockOil;
 import com.hbm.world.gen.terrain.MapGenBubble;
 
 import net.minecraft.world.World;
@@ -17,6 +19,7 @@ public class ChunkProviderTekto extends ChunkProviderCelestial {
 	private MapGenVolcano volcano = new MapGenVolcano(12);
 
 	private MapGenBubble tektonic = new MapGenBubble(WorldConfig.tektoOilSpawn);
+	private MapGenBedrockOil bedtonic = new MapGenBedrockOil(WorldConfig.tektoBedrockOilSpawn);
 
 	public ChunkProviderTekto(World world, long seed, boolean hasMapFeatures) {
 		super(world, seed, hasMapFeatures);
@@ -31,6 +34,9 @@ public class ChunkProviderTekto extends ChunkProviderCelestial {
 		tektonic.replace = ModBlocks.basalt;
 		tektonic.setSize(8, 16);
 
+		bedtonic.replace = ModBlocks.basalt;
+		bedtonic.meta = (byte)SolarSystem.Body.TEKTO.ordinal();
+
 		stoneBlock = ModBlocks.basalt;
 		seaBlock = ModBlocks.ccl_block;
 	}
@@ -39,6 +45,7 @@ public class ChunkProviderTekto extends ChunkProviderCelestial {
 	public BlockMetaBuffer getChunkPrimer(int x, int z) {
 		BlockMetaBuffer buffer = super.getChunkPrimer(x, z);
 		tektonic.setMetas(buffer.metas);
+		bedtonic.setMetas(buffer.metas);
 
 		if(biomesForGeneration[0] == BiomeGenBaseTekto.vinylsands) {
 			volcano.func_151539_a(this, worldObj, x, z, buffer.blocks);
@@ -47,6 +54,7 @@ public class ChunkProviderTekto extends ChunkProviderCelestial {
 		caveGenV3.func_151539_a(this, worldObj, x, z, buffer.blocks);
 
 		tektonic.func_151539_a(this, worldObj, x, z, buffer.blocks);
+		bedtonic.func_151539_a(this, worldObj, x, z, buffer.blocks);
 
 		// how many times do I gotta say BEEEEG
 		return buffer;

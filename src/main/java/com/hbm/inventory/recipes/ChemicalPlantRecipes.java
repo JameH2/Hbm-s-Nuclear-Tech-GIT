@@ -431,6 +431,11 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 				.inputItems(new ComparableStack(ModItems.rag_piss)) // urea...
 				.outputFluids(new FluidStack(Fluids.HYDRAZINE, 800)));
 
+		this.register(new GenericRecipe("chem.synleather").setup(200, 500)
+				.inputFluids(new FluidStack(Fluids.PEROXIDE, 250))
+				.inputItems(new OreDictStack(ANY_PLASTIC.ingot()), new ComparableStack(Items.string, 4))
+				.outputItems(new ItemStack(Items.leather)));
+
 	}
 
 	public static HashMap getRecipes() {

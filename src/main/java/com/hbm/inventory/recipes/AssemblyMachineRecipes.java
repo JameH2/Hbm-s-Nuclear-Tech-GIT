@@ -1199,7 +1199,7 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 						new OreDictStack(TI.plateWelded(), 4),
 						new ComparableStack(ModBlocks.crate_iron, 2),
 						new ComparableStack(ModItems.thruster_small, 1),
-						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.AVIONICS)));
+						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.AERO)));
 		this.register(new GenericRecipe("ass.gasdock").setup(400, 100).outputItems(new ItemStack(ModBlocks.gas_dock, 1))
 				.inputItems(
 						new OreDictStack(STEEL.plateWelded(), 5),
@@ -1219,14 +1219,12 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 						new OreDictStack(CU.wireFine(), 4),
 						new OreDictStack(IRON.dust(), 3),
 						new ComparableStack(ModItems.crt_display, 2),
-						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.BASIC),
-						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ANALOG)));
+						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.BASIC)));
 		this.register(new GenericRecipe("ass.vacuumcircuit").setup(400, 100).outputItems(new ItemStack(ModBlocks.machine_vacuum_circuit, 1))
 				.inputItems(
 						new OreDictStack(STEEL.plateWelded(), 2),
 						new OreDictStack(W.wireFine(), 4),
-						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ADVANCED),
-						new ComparableStack(ModItems.circuit, 4, EnumCircuitType.VACUUM_TUBE)));
+						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ADVANCED)));
 		this.register(new GenericRecipe("ass.solarpanel").setup(400, 100).outputItems(new ItemStack(ModBlocks.machine_solar, 1))
 				.inputItems(
 						new OreDictStack(STAINLESS.plate(), 4),
@@ -1241,7 +1239,7 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 						new OreDictStack(ANY_CONCRETE.any(), 64),
 						new OreDictStack(ANY_PLASTIC.ingot(), 16),
 						new ComparableStack(ModBlocks.steel_scaffold, 64),
-						new ComparableStack(ModItems.circuit, 4, EnumCircuitType.ADVANCED)));
+						new ComparableStack(ModItems.circuit, 4, EnumCircuitType.AERO)));
 		this.register(new GenericRecipe("ass.rocketassembly").setup(400, 100).outputItems(new ItemStack(ModBlocks.machine_rocket_assembly, 1))
 				.inputItems(
 						new OreDictStack(STEEL.plateCast(), 8),
@@ -1285,7 +1283,7 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 						new OreDictStack(KEY_CLEARGLASS, 1),
 						new OreDictStack(QUARTZ.dust(), 4), // has a liquid crystal display
 						new ComparableStack(ModItems.circuit, 4, EnumCircuitType.MOLYCHIP),
-						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.AVIONICS)));
+						new ComparableStack(ModItems.circuit, 4, EnumCircuitType.AERO)));
 
 		// thrusters
 		this.register(new GenericRecipe("ass.lpw2").setup(400, 100).outputItems(new ItemStack(ModBlocks.machine_lpw2, 1))
@@ -1305,7 +1303,7 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 						new OreDictStack(W.plateWelded(), 8),
 						new ComparableStack(ModItems.motor_bismuth, 1),
 						new OreDictStack(ANY_HARDPLASTIC.ingot(), 8),
-						new ComparableStack(ModItems.circuit, 4, EnumCircuitType.ADVANCED),
+						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.AERO),
 						new OreDictStack(DURA.pipe(), 8)));
 		this.register(new GenericRecipe("ass.htrf4").setup(400, 100).outputItems(new ItemStack(ModBlocks.machine_htrf4, 1))
 				.inputItems(
@@ -1411,7 +1409,7 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 				.inputItems(
 						new ComparableStack(ModItems.rocket_fuel, 8),
 						new ComparableStack(ModItems.thruster_small, 4),
-						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.AVIONICS),
+						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.AERO),
 						new OreDictStack(ANY_RUBBER.ingot(), 16),
 						new OreDictStack(AL.shell(), 4),
 						new OreDictStack(FIBER.ingot(), 12)));

@@ -1,30 +1,36 @@
 package com.hbm.world.feature;
 
+import java.util.Random;
+
+import com.hbm.blocks.BlockFallingNT;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockDeadPlant.EnumDeadPlantType;
 import com.hbm.blocks.generic.BlockNTMFlower.EnumFlowerType;
 import com.hbm.blocks.generic.BlockTallPlant;
 import com.hbm.blocks.generic.BlockTallPlant.EnumTallFlower;
+import com.hbm.entity.item.EntityFallingBlockNT;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockDoublePlant;
+import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockTallGrass;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.NoiseGeneratorPerlin;
 import net.minecraftforge.common.IPlantable;
 
 public class OilSpot {
 
 	public static void generateOilSpot(World world, int x, int z, int width, int count, boolean addWillows) {
-		
+
 		for(int i = 0; i < count; i++) {
 			int rX = x + (int)(world.rand.nextGaussian() * width);
 			int rZ = z + (int)(world.rand.nextGaussian() * width);
 			int rY = world.getHeightValue(rX, rZ);
-			
+
 			for(int y = rY; y > rY - 4; y--) {
 
 				Block below = world.getBlock(rX, y - 1, rZ);
@@ -34,7 +40,7 @@ public class OilSpot {
 				/* don't affect mustard willows */
 				if(ground == ModBlocks.plant_flower && (meta == EnumFlowerType.CD0.ordinal() || meta == EnumFlowerType.CD1.ordinal())) continue;
 				if(ground == ModBlocks.plant_tall && (meta == EnumTallFlower.CD2.ordinal() || meta == EnumTallFlower.CD3.ordinal() || meta == EnumTallFlower.CD4.ordinal())) continue;
-				
+
 				if(below.isNormalCube() && ground != ModBlocks.plant_dead) {
 					if(ground instanceof BlockTallGrass) {
 						if(world.rand.nextInt(10) == 0) {
@@ -56,32 +62,93 @@ public class OilSpot {
 						world.setBlock(rX, y, rZ, ModBlocks.plant_dead, EnumDeadPlantType.GENERIC.ordinal(), 3);
 					}
 				}
-				
+
 				if(ground == Blocks.grass || ground == Blocks.dirt) {
 					world.setBlock(rX, y, rZ, world.rand.nextInt(10) == 0 ? ModBlocks.dirt_oily : ModBlocks.dirt_dead);
-					
+
 					if(addWillows && world.rand.nextInt(50) == 0) {
 						if(ModBlocks.plant_flower.canPlaceBlockAt(world, rX, y + 1, rZ)) {
 							world.setBlock(rX, y + 1, rZ, ModBlocks.plant_flower, EnumFlowerType.CD0.ordinal(), 3);
 						}
 					}
-					
+
 					break;
-					
+
 				} else if(ground == Blocks.sand || ground == ModBlocks.ore_oil_sand) {
-					
+
 					if(world.getBlockMetadata(rX, y, rZ) == 1)
 						world.setBlock(rX, y, rZ, ModBlocks.sand_dirty_red);
 					else
 						world.setBlock(rX, y, rZ, ModBlocks.sand_dirty);
 					break;
-					
+
 				} else if(ground == Blocks.stone) {
 					world.setBlock(rX, y, rZ, ModBlocks.stone_cracked);
 					break;
-					
+
 				} else if(ground.getMaterial() == Material.leaves && (meta & 8) != 0 && (meta & 4) == 0) {
 					world.setBlockToAir(rX, y, rZ);
+					break;
+				}
+			}
+		}
+	}
+
+	public static NoiseGeneratorPerlin crackGeneratorPerlin = new NoiseGeneratorPerlin(new Random(73470), 4);
+
+	public static void generateCrack(World world, int x, int z, int width, int count) {
+		count *= 10; // only 10% of checks actually pass, so increase count
+
+		for(int i = 0; i < count; i++) {
+			int rX = x + (int)(world.rand.nextGaussian() * width);
+			int rZ = z + (int)(world.rand.nextGaussian() * width);
+
+			double crack = crackGeneratorPerlin.func_151601_a(rX * 0.25, rZ * 0.25);
+
+			if(crack < 0.9) continue;
+
+			int rY = world.getHeightValue(rX, rZ);
+
+			for(int y = rY; y > rY - 4; y--) {
+				Block below = world.getBlock(rX, y - 1, rZ);
+				Block ground = world.getBlock(rX, y, rZ);
+				int meta = world.getBlockMetadata(rX, y, rZ);
+
+				if(below.isNormalCube() && ground != ModBlocks.plant_dead) {
+					if(ground == ModBlocks.rubber_plant) {
+						world.setBlock(rX, y, rZ, ModBlocks.plant_dead, meta, 3);
+					}
+				}
+
+				if(ground == ModBlocks.rubber_grass) {
+					world.setBlock(rX, y, rZ, ModBlocks.rubber_silt);
+					break;
+				}
+
+				if(ground == ModBlocks.rubber_silt || ground == ModBlocks.vinyl_sand || ground == ModBlocks.sellafield_slaked || ground == ModBlocks.basalt) {
+					if(below.getBlockHardness(world, rX, y - 1, rZ) == -1.0) break;
+
+					world.setBlockToAir(rX, y - 1, rZ);
+
+					// manually drop any non BlockFalling blocks
+					if(ground != ModBlocks.vinyl_sand) {
+						byte range = 64;
+						if(!BlockFalling.fallInstantly && world.checkChunksExist(x - range, y - range, z - range, x + range, y + range, z + range)) {
+							EntityFallingBlockNT entityfallingblock = new EntityFallingBlockNT(world, rX + 0.5, y + 0.5, rZ + 0.5, ground, meta);
+							entityfallingblock.canDrop = false;
+							world.spawnEntityInWorld(entityfallingblock);
+						} else {
+							world.setBlockToAir(rX, y, rZ);
+
+							while(BlockFallingNT.canFallThrough(world, rX, y - 1, rZ) && y > 0) {
+								--y;
+							}
+
+							if(y > 0) {
+								world.setBlock(rX, y, rZ, ground, meta, 3);
+							}
+						}
+					}
 					break;
 				}
 			}

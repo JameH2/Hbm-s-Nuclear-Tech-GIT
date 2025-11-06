@@ -24,6 +24,7 @@ import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ItemGenericPart.EnumPartType;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemArcElectrode.EnumElectrodeType;
+import com.hbm.items.machine.ItemCircuit.EnumCircuitType;
 import com.hbm.items.machine.ItemFluidIcon;
 
 import net.minecraft.item.ItemStack;
@@ -119,10 +120,6 @@ public class ArcWelderRecipes extends SerializableRecipe {
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.missile_nuclear), 600, 50_000L, new ComparableStack(ModItems.warhead_nuclear), new ComparableStack(ModItems.fuel_tank_large), new ComparableStack(ModItems.thruster_large, 3)));
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.missile_nuclear_cluster), 600, 50_000L, new ComparableStack(ModItems.warhead_mirv), new ComparableStack(ModItems.fuel_tank_large), new ComparableStack(ModItems.thruster_large, 3)));
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.missile_volcano), 600, 50_000L, new ComparableStack(ModItems.warhead_volcano), new ComparableStack(ModItems.fuel_tank_large), new ComparableStack(ModItems.thruster_large, 3)));
-		// recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.rp_capsule_20), 600, 50_000L, new ComparableStack(ModItems.plate_stainless, 4), new OreDictStack(STEEL.shell()), new ComparableStack(ModItems.circuit, 1, EnumCircuitType.AVIONICS )));
-
-		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.insert_cmb), 600, 50_000L, new FluidStack(Fluids.NEON, 2_000),
-				new OreDictStack(CMB.plate(), 2), new OreDictStack(U238.ingot())));
 
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.sat_mapper), 600, 10_000L, new ComparableStack(ModItems.sat_base), new ComparableStack(ModItems.sat_head_mapper)));
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.sat_scanner), 600, 10_000L, new ComparableStack(ModItems.sat_base), new ComparableStack(ModItems.sat_head_scanner)));
@@ -136,6 +133,11 @@ public class ArcWelderRecipes extends SerializableRecipe {
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.rp_fuselage_20_3), 150, 30_000L, new OreDictStack(STAINLESS.plateWelded(), 1), new ComparableStack(ModItems.rp_fuselage_20_1), new OreDictStack(TI.shell(), 2))); // 2 weld stain, 3 tit shells
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.rp_fuselage_20_6), 200, 50_000L, new OreDictStack(STAINLESS.plateWelded(), 2), new ComparableStack(ModItems.rp_fuselage_20_3), new OreDictStack(TI.shell(), 3))); // 4 wain, 6 titties
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.rp_fuselage_20_12), 250, 60_000L, new FluidStack(Fluids.OXYGEN, 500), new OreDictStack(STAINLESS.plateWelded(), 4), new ComparableStack(ModItems.rp_fuselage_20_6), new OreDictStack(TI.shell(), 6))); // 8 win, 12 tit
+
+		// space misc
+		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.insert_cmb), 600, 50_000L, new FluidStack(Fluids.NEON, 2_000), new OreDictStack(CMB.plate(), 2), new OreDictStack(U238.ingot())));
+
+		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.circuit, 1, EnumCircuitType.AVIONICS.ordinal()), 250, 25_000L, new OreDictStack(AL.plateCast(), 2), new ComparableStack(ModItems.circuit, 2, EnumCircuitType.AERO)));
 
 	}
 

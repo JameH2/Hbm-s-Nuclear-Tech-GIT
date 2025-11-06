@@ -20,6 +20,7 @@ public class MapGenBedrockOil extends MapGenBaseMeta {
 
 	public Block block = ModBlocks.ore_bedrock_oil;
 	public Block replace = Blocks.stone;
+	public byte meta = 0;
 
 	public int spotWidth = 5;
 	public int spotCount = 50;
@@ -49,6 +50,7 @@ public class MapGenBedrockOil extends MapGenBaseMeta {
 
 					if(Math.abs(x) < 5 && Math.abs(z) < 5 && Math.abs(x) + Math.abs(y) + Math.abs(z) <= 6) {
 						blocks[index] = block;
+						metas[index] = meta;
 					}
 				}
 			}
@@ -94,6 +96,9 @@ public class MapGenBedrockOil extends MapGenBaseMeta {
 									break;
 								} else if(blocks[subIndex] == Blocks.stone) {
 									blocks[subIndex] = ModBlocks.stone_cracked;
+									break;
+								} else if(blocks[subIndex] == ModBlocks.rubber_silt || blocks[subIndex] == ModBlocks.rubber_grass || blocks[subIndex] == ModBlocks.vinyl_sand) {
+									blocks[subIndex] = ModBlocks.sellafield_slaked;
 									break;
 								}
 							}

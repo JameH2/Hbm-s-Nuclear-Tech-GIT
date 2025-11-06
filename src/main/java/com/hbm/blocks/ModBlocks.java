@@ -594,6 +594,7 @@ public class ModBlocks {
 	public static Block tektite;
 	public static Block ore_tektite_osmiridium;
 	public static Block impact_dirt;
+
 	public static Block rubber_leaves;
 	public static Block rubber_grass;
 	public static Block rubber_silt;
@@ -1584,7 +1585,7 @@ public class ModBlocks {
 		ore_brine = new BlockOreFluid(Material.rock, ore_brine_empty, ReserveType.BRINE).setBlockName("ore_brine").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ore_brine");
 
 		ore_tekto_empty = new BlockOre(Material.rock).setBlockName("ore_tekto_empty").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ore_oil_empty");
-		ore_tekto = new BlockOreFluid(Material.rock, ore_tekto_empty, ReserveType.TCRUDE).setBlockName("ore_tekto").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ore_tekto");
+		ore_tekto = new BlockOreFluid(Material.rock, ore_tekto_empty, ReserveType.OIL).setBlockName("ore_tekto").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ore_tekto");
 
 		ore_tikite = new BlockDragonProof(Material.rock).setBlockName("ore_tikite").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ore_tikite_alt");
 

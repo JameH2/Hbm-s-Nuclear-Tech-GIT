@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockOreFluid;
+import com.hbm.dim.SolarSystem;
 import com.hbm.inventory.container.ContainerMachineOilWell;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
@@ -89,9 +90,15 @@ public class TileEntityMachineFrackingTower extends TileEntityOilDrillBase {
 	public void onSuck(BlockOreFluid block, int x, int y, int z) {
 		super.onSuck(block, x, y, z);
 
+		int meta = worldObj.getBlockMetadata(x, y, z);
+
 		tanks[2].setFill(tanks[2].getFill() - solutionRequired);
 
-		OilSpot.generateOilSpot(worldObj, xCoord, zCoord, destructionRange, 10, false);
+		if(meta == SolarSystem.Body.TEKTO.ordinal()) {
+			OilSpot.generateCrack(worldObj, xCoord, zCoord, destructionRange, 10);
+		} else {
+			OilSpot.generateOilSpot(worldObj, xCoord, zCoord, destructionRange, 10, false);
+		}
 	}
 
 	@Override

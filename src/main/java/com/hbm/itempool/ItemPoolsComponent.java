@@ -241,11 +241,11 @@ public class ItemPoolsComponent {
 					weighted(Items.book, 0, 1, 5, 4),
 			};
 		}};
-		
+
 		new ItemPool(POOL_MACHINE_PARTSTHAT) {{
 			this.pool = new WeightedRandomChestContent[] {
 					weighted(ModItems.nugget_beryllium, 0, 3, 12, 5),
-					weighted(ModItems.circuit, EnumCircuitType.AVIONICS.ordinal(), 3, 12, 5),
+					weighted(ModItems.circuit, EnumCircuitType.AERO.ordinal(), 3, 12, 5),
 					weighted(ModItems.circuit, EnumCircuitType.PCB.ordinal(), 3, 6, 5),
 					weighted(ModItems.plate_steel, 0, 1, 1, 1),
 					weighted(ModItems.powder_steel, 0, 1, 1, 2),
@@ -263,14 +263,14 @@ public class ItemPoolsComponent {
 				weighted(ModItems.circuit, EnumCircuitType.CAPACITOR.ordinal(), 1, 1, 3),
 			};
 		}};
-    
+
 		new ItemPool(POOL_RTG) {{
 			this.pool = new WeightedRandomChestContent[] {
 				weighted(ModItems.pellet_rtg_depleted, ItemRTGPelletDepleted.DepletedRTGMaterial.LEAD.ordinal(), 1, 1, 40),
 				weighted(ModItems.pellet_rtg_weak,0, 0, 1, 1),
 			};
 		}};
-		
+
 		new ItemPool(POOL_REPAIR_MATERIALS) {{
 			this.pool = new WeightedRandomChestContent[] {
 				weighted(ModItems.ingot_aluminium, 0, 2, 8, 3),
