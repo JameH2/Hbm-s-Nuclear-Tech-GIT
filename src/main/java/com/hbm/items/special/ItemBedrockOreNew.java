@@ -269,20 +269,15 @@ public class ItemBedrockOreNew extends Item {
 				T("crystal",	o(MAT_EMERALD, 18),			o(MAT_SILICON, 9),			o(MAT_MOLYSITE, 6),			o(MAT_BORAX, 3)),
 				T("plastic",	o(MAT_POLYMER, 18),			o(MAT_RUBBER, 9),			o(MAT_SEMTEX, 6),			o(MAT_PVC, 3))
 			);
-			/*
 			register(
 				SolarSystem.Body.THATMO,
-				T("light",		o(MAT_CRYOLITE, 24),		o(MAT_TITANIUM, 12),			o(MAT_GALLIUM, 6),		o(MAT_HAFNIUM, 3)),
-				T("heavy",		o(MAT_BERYLLIUM, 24),	o(MAT_TUNGSTEN, 12),			o(MAT_LEAD, 6),			o(MAT_ARSENIC, 3)),
-				T("rare",		o(MAT_RAREEARTH, 24),	o(MAT_NEODYMIUM, 12),		o(MAT_STRONTIUM, 6),		o(MAT_NIOBIUM, 3)),
-				T("actinide",	o(MAT_URANIUM, 24),		o(MAT_THORIUM, 12),			o(MAT_POLONIUM, 6),		o(MAT_U235, 3)),
-				T("nonmetal",	o(MAT_CHLOROCALCITE, 24),o(MAT_COAL, 12),				o(MAT_FLUORITE, 6),		o(MAT_SILICON, 3)),
-				T("crystal",		o(MAT_ASBESTOS, 24),		o(MAT_SODALITE, 12),			o(MAT_DIAMOND, 6),		o(MAT_SODALITE, 3))
-				);
-				*/
+				T("heavy",		o(MAT_GOLD, 24),			o(MAT_NIOBIUM, 12),			o(MAT_CADMIUM, 6),			o(MAT_ARSENIC, 3)),
+				T("scrap",		o(MAT_STEEL, 24),			o(MAT_MINGRADE, 12),		o(MAT_WEAPONSTEEL, 6),		o(MAT_SATURN, 3)),
+				T("hazard",		o(MAT_PU238, 24),			o(MAT_CO60, 12),			o(MAT_GAAS, 6),				o(MAT_AU198, 3))
+			);
 			register(
 				SolarSystem.Body.DIMA,
-				T("persona", o(MAT_IRON, 1), o(MAT_IRON, 1), o(MAT_IRON, 1), o(MAT_IRON, 1))
+				T("persona",	o(MAT_INTENT, 1),			o(MAT_VALOR, 1),			o(MAT_COMPASSION, 1),		o(MAT_LOVE, 1))
 			);
 		}
 

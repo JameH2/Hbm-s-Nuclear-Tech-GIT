@@ -134,26 +134,26 @@ public class Mats {
 	public static final NTMMaterial MAT_KNO				= makeNonSmeltable(700,		KNO,			0xD4D4D4, 0x969696, 0xC9C9C9).setAutogen(FRAGMENT, DUST, BLOCK).n();
 	public static final NTMMaterial MAT_FLUORITE		= makeNonSmeltable(900,		F,				0xFFFFFF, 0xB0A192, 0xE1DBD4).setAutogen(FRAGMENT, DUST, BLOCK).n();
 	public static final NTMMaterial MAT_PHOSPHORUS		= makeNonSmeltable(1500,	P_RED,			0xCB0213, 0x600006, 0xBA0615).setAutogen(FRAGMENT, DUST, BLOCK).n();
-	public static final NTMMaterial MAT_PHOSPHORUS_W	= makeNonSmeltable(1501,	P_WHITE,			0xF5F5ED, 0xC4BD9A, 0xC4BD9A).setAutogen(FRAGMENT, DUST).n();
+	public static final NTMMaterial MAT_PHOSPHORUS_W	= makeNonSmeltable(1501,	P_WHITE,		0xF5F5ED, 0xC4BD9A, 0xC4BD9A).setAutogen(FRAGMENT, DUST).n();
 	public static final NTMMaterial MAT_CHLOROCALCITE	= makeNonSmeltable(1701, 	CHLOROCALCITE,	0xF7E761, 0x475B46, 0xB8B963).setAutogen(FRAGMENT, DUST).n();
 	public static final NTMMaterial MAT_MOLYSITE		= makeNonSmeltable(1702, 	MOLYSITE, 		0xF9E97B, 0x216E00, 0xD0D264).setAutogen(FRAGMENT, DUST).n();
 	public static final NTMMaterial MAT_CINNABAR		= makeNonSmeltable(8001,	CINNABAR,		0xD87070, 0x993030, 0xBF4E4E).setAutogen(FRAGMENT, GEM).n();
 	public static final NTMMaterial MAT_CADMIUM			= makeSmeltable(4800,		CD,				0xFFFADE, 0x350000, 0xA85600).setAutogen(FRAGMENT, DUST).m();
 	public static final NTMMaterial MAT_SILICON			= makeSmeltable(1400,		SI,				0xD1D7DF, 0x1A1A3D, 0x878B9E).setAutogen(FRAGMENT, NUGGET, BILLET).m();
 	public static final NTMMaterial MAT_ASBESTOS		= makeSmeltable(1401,		ASBESTOS,		0xD8D9CF, 0x616258, 0xB0B3A8).setAutogen(FRAGMENT, BLOCK).n();
-	public static final NTMMaterial MAT_QUARTZ			= makeNonSmeltable(1402,		NETHERQUARTZ,	0xF7F5F2, 0x6F5D5A, 0xF7F5F2).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_QUARTZ			= makeNonSmeltable(1402,	NETHERQUARTZ,	0xF7F5F2, 0x6F5D5A, 0xF7F5F2).setAutogen(FRAGMENT).n();
 	public static final NTMMaterial MAT_OSMIRIDIUM		= makeSmeltable(7699,		OSMIRIDIUM, 	0xDBE3EF, 0x7891BE, 0xACBDD9).setAutogen(NUGGET, CASTPLATE, WELDEDPLATE).m();
 	public static final NTMMaterial MAT_NICKEL			= makeSmeltable(2800,		NI,				0xE8D1C7, 0x87756E, 0xAE9572).setAutogen(FRAGMENT, NUGGET, DUST, BLOCK).m();
 	public static final NTMMaterial MAT_GALLIUM			= makeSmeltable(3100,		GALLIUM,		0x52687F, 0x52687F, 0x52687F).setAutogen(FRAGMENT, NUGGET, DUST, DUSTTINY).m();
 	public static final NTMMaterial MAT_ZINC			= makeSmeltable(3000,		ZI,				0xD7CBDA, 0x7A7277, 0xA79DA8).setAutogen(FRAGMENT, NUGGET, DUST, WIRE).m();
-	public static final NTMMaterial MAT_BROMINE			= makeNonSmeltable(3500,		BR,				0xFF642B, 0x720000, 0xFF642B).setAutogen(FRAGMENT).m();
-	public static final NTMMaterial MAT_IODINE			= makeNonSmeltable(5300,		I,				0x7A8796, 0x3F3049, 0x7A8796).setAutogen(FRAGMENT).m();
+	public static final NTMMaterial MAT_BROMINE			= makeNonSmeltable(3500,	BR,				0xFF642B, 0x720000, 0xFF642B).setAutogen(FRAGMENT).m();
+	public static final NTMMaterial MAT_IODINE			= makeNonSmeltable(5300,	I,				0x7A8796, 0x3F3049, 0x7A8796).setAutogen(FRAGMENT).m();
 	public static final NTMMaterial MAT_HAFNIUM			= makeSmeltable(7200,		HAFNIUM,		0xFFF8C7, 0x2E1600, 0xFFF8C7).setAutogen(FRAGMENT, DUST).m();
 	public static final NTMMaterial MAT_IRIDIUM			= makeSmeltable(7700,		IRIDIUM,		0xB8D0FF, 0xB8D0FF, 0xB8D0FF).setAutogen(INGOT).m();
 
 	//Alloys
-	public static final NTMMaterial MAT_STEEL		= makeSmeltable(_AS + 0,	STEEL,			0xAFAFAF, 0x0F0F0F, 0x4A4A4A).setAutogen(DUSTTINY, BOLT, WIRE, DUST, PLATE, CASTPLATE, WELDEDPLATE, SHELL, PIPE, BLOCK, LIGHTBARREL, HEAVYBARREL, LIGHTRECEIVER, GRIP).m();
-	public static final NTMMaterial MAT_MINGRADE	= makeSmeltable(_AS + 1,	MINGRADE,		0xFFBA7D, 0xAF1700, 0xE44C0F).setAutogen(WIRE, DUST, DENSEWIRE, BLOCK).m();
+	public static final NTMMaterial MAT_STEEL		= makeSmeltable(_AS + 0,	STEEL,			0xAFAFAF, 0x0F0F0F, 0x4A4A4A).setAutogen(FRAGMENT, DUSTTINY, BOLT, WIRE, DUST, PLATE, CASTPLATE, WELDEDPLATE, SHELL, PIPE, BLOCK, LIGHTBARREL, HEAVYBARREL, LIGHTRECEIVER, GRIP).m();
+	public static final NTMMaterial MAT_MINGRADE	= makeSmeltable(_AS + 1,	MINGRADE,		0xFFBA7D, 0xAF1700, 0xE44C0F).setAutogen(FRAGMENT, WIRE, DUST, DENSEWIRE, BLOCK).m();
 	public static final NTMMaterial MAT_ALLOY		= makeSmeltable(_AS + 2,	ALLOY,			0xFF8330, 0x700000, 0xFF7318).setAutogen(WIRE, DUST, DENSEWIRE, PLATE, CASTPLATE, BLOCK).m();
 	public static final NTMMaterial MAT_DURA		= makeSmeltable(_AS + 3,	DURA,			0x82A59C, 0x06281E, 0x42665C).setAutogen(BOLT, DUST, PLATE, CASTPLATE, PIPE, BLOCK, LIGHTBARREL, HEAVYBARREL, LIGHTRECEIVER, HEAVYRECEIVER, GRIP).m();
 	public static final NTMMaterial MAT_DESH		= makeSmeltable(_AS + 12,	DESH,			0xFF6D6D, 0x720000, 0xF22929).setAutogen(DUST, CASTPLATE, BLOCK, LIGHTBARREL, HEAVYBARREL, LIGHTRECEIVER, STOCK, GRIP).m();
@@ -171,14 +171,18 @@ public class Mats {
 	public static final NTMMaterial MAT_SLAG		= makeSmeltable(_AS + 11,	SLAG,			0x554940, 0x34281F, 0x6C6562).setAutogen(BLOCK).n();
 	public static final NTMMaterial MAT_MUD			= makeSmeltable(_AS + 14,	MUD,			0xBCB5A9, 0x481213, 0x96783B).n();
 	public static final NTMMaterial MAT_GUNMETAL	= makeSmeltable(_AS + 19,	GUNMETAL,		0xFFEF3F, 0xAD3600, 0xF9C62C).setAutogen(LIGHTBARREL, HEAVYBARREL, LIGHTRECEIVER, HEAVYRECEIVER, MECHANISM, STOCK, GRIP).n();
-	public static final NTMMaterial MAT_WEAPONSTEEL	= makeSmeltable(_AS + 20,	WEAPONSTEEL,	0xA0A0A0, 0x000000, 0x808080).setAutogen(CASTPLATE, SHELL, LIGHTBARREL, HEAVYBARREL, LIGHTRECEIVER, HEAVYRECEIVER, MECHANISM, STOCK, GRIP).n();
-	public static final NTMMaterial MAT_SATURN		= makeSmeltable(_AS + 4,	BIGMT,			0x3AC4DA, 0x09282C, 0x30A4B7).setAutogen(PLATE, CASTPLATE, SHELL, BLOCK, LIGHTBARREL, HEAVYBARREL, LIGHTRECEIVER, HEAVYRECEIVER, MECHANISM, STOCK, GRIP).m();
+	public static final NTMMaterial MAT_WEAPONSTEEL	= makeSmeltable(_AS + 20,	WEAPONSTEEL,	0xA0A0A0, 0x000000, 0x808080).setAutogen(FRAGMENT, CASTPLATE, SHELL, LIGHTBARREL, HEAVYBARREL, LIGHTRECEIVER, HEAVYRECEIVER, MECHANISM, STOCK, GRIP).n();
+	public static final NTMMaterial MAT_SATURN		= makeSmeltable(_AS + 4,	BIGMT,			0x3AC4DA, 0x09282C, 0x30A4B7).setAutogen(FRAGMENT, PLATE, CASTPLATE, SHELL, BLOCK, LIGHTBARREL, HEAVYBARREL, LIGHTRECEIVER, HEAVYRECEIVER, MECHANISM, STOCK, GRIP).m();
 
 	//Space extension alloys
-	public static final NTMMaterial MAT_GAAS		= makeSmeltable(_EX + 00,	GAAS,		0x6F4A57, 0x6F4A57, 0x6F4A57).setAutogen(NUGGET, BILLET).m();
-	public static final NTMMaterial MAT_STAINLESS	= makeSmeltable(_EX + 01,	STAINLESS,	0xD8D8D8, 0x474747, 0x4A4A4A).setAutogen(PLATE, WELDEDPLATE, CASTPLATE).m();
-	public static final NTMMaterial MAT_RICH_MAGMA	= makeSmeltable(_EX + 02,	RICHMAGMA,	0x7F7F7F, 0x353555, 0xFF6212).n();
-	public static final NTMMaterial MAT_SEMTEX		= makeNonSmeltable(_EX + 03, 		SEMTEX,			0xEDAA28, 0x825D16, 0xF0B090).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_GAAS		= makeSmeltable(_EX + 00,		GAAS,				0x6F4A57, 0x6F4A57, 0x6F4A57).setAutogen(FRAGMENT, NUGGET, BILLET).m();
+	public static final NTMMaterial MAT_STAINLESS	= makeSmeltable(_EX + 01,		STAINLESS,			0xD8D8D8, 0x474747, 0x4A4A4A).setAutogen(PLATE, WELDEDPLATE, CASTPLATE).m();
+	public static final NTMMaterial MAT_RICH_MAGMA	= makeSmeltable(_EX + 02,		RICHMAGMA,			0x7F7F7F, 0x353555, 0xFF6212).n();
+	public static final NTMMaterial MAT_SEMTEX		= makeNonSmeltable(_EX + 03, 	SEMTEX,				0xEDAA28, 0x825D16, 0xF0B090).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_INTENT		= makeNonSmeltable(_EX + 666, 	df("Intent"),		0x990000, 0xAA0000, 0xAA0000).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_VALOR		= makeNonSmeltable(_EX + 667, 	df("Valor"),		0xBB0000, 0xCC0000, 0xCC0000).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_COMPASSION	= makeNonSmeltable(_EX + 668, 	df("Compassion"),	0xDD0000, 0xEE0000, 0xEE0000).setAutogen(FRAGMENT).n();
+	public static final NTMMaterial MAT_LOVE		= makeNonSmeltable(_EX + 669, 	df("Love"),			0xEE0000, 0xFF0044, 0xFF0044).setAutogen(FRAGMENT).n();
 
 	//Extension
 	public static final NTMMaterial MAT_RAREEARTH	= makeNonSmeltable(_ES + 00, 		RAREEARTH,		0xC1BDBD, 0x384646, 0x7B7F7F).setAutogen(FRAGMENT).n();

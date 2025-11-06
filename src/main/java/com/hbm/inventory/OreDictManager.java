@@ -760,6 +760,8 @@ public class OreDictManager {
 		OreDictionary.registerOre(KEY_STICK, stick_vinyl);
 		OreDictionary.registerOre(KEY_STICK, stick_pvc);
 
+		OreDictionary.registerOre("ingotLove", heart_piece);
+
 		for(NTMMaterial mat : Mats.orderedList) {
 			if(mat.autogen.contains(MaterialShapes.FRAGMENT)) {
 				String name = mat.names[0];
