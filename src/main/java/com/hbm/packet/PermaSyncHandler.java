@@ -9,8 +9,6 @@ import java.util.Map;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystemWorldSavedData;
 import com.hbm.dim.WorldProviderCelestial;
-import com.hbm.dim.trait.CBT_War;
-import com.hbm.dim.trait.CBT_War.Projectile;
 import com.hbm.dim.trait.CelestialBodyTrait;
 import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.handler.pollution.PollutionHandler;
@@ -69,31 +67,25 @@ public class PermaSyncHandler {
 		/// POLLUTION ///
 
 		/// CBT ///
-		if(world.getTotalWorldTime() % 5 == 1) { // update a little less frequently to not blast the players with large packets
-			buf.writeBoolean(true);
+		SolarSystemWorldSavedData solarSystemData = SolarSystemWorldSavedData.get(world);
+		for(CelestialBody body : CelestialBody.getAllBodies()) {
+			HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> traits = solarSystemData.getTraits(body.name);
+			if(traits != null) {
+				buf.writeBoolean(true); // Has traits marker (since we can have an empty list)
+				buf.writeInt(traits.size());
 
-			SolarSystemWorldSavedData solarSystemData = SolarSystemWorldSavedData.get(world);
-			for(CelestialBody body : CelestialBody.getAllBodies()) {
-				HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> traits = solarSystemData.getTraits(body.name);
-				if(traits != null) {
-					buf.writeBoolean(true); // Has traits marker (since we can have an empty list)
-					buf.writeInt(traits.size());
+				for(int i = 0; i < CelestialBodyTrait.traitList.size(); i++) {
+					Class<? extends CelestialBodyTrait> traitClass = CelestialBodyTrait.traitList.get(i);
+					CelestialBodyTrait trait = traits.get(traitClass);
 
-					for(int i = 0; i < CelestialBodyTrait.traitList.size(); i++) {
-						Class<? extends CelestialBodyTrait> traitClass = CelestialBodyTrait.traitList.get(i);
-						CelestialBodyTrait trait = traits.get(traitClass);
-
-						if(trait != null) {
-							buf.writeInt(i); // ID of the trait, in order registered
-							trait.writeToBytes(buf);
-						}
+					if(trait != null) {
+						buf.writeInt(i); // ID of the trait, in order registered
+						trait.writeToBytes(buf);
 					}
-				} else {
-					buf.writeBoolean(false);
 				}
+			} else {
+				buf.writeBoolean(false);
 			}
-		} else {
-			buf.writeBoolean(false);
 		}
 		/// CBT ///
 
@@ -104,8 +96,8 @@ public class PermaSyncHandler {
 		for(Map.Entry<Integer, Satellite> entry : sats.entrySet()) {
 			buf.writeInt(entry.getKey());
 			buf.writeInt(entry.getValue().getID());
-			entry.getValue().serialize(buf);
 
+			entry.getValue().serialize(buf);
 		}
 		/// SATELLITES ///
 
@@ -125,17 +117,6 @@ public class PermaSyncHandler {
 			buf.writeInt(-1);
 		}
 		/// RIDING DESYNC FIX ///
-
-		// TODO: take out back and shoot
-		CBT_War war = CelestialBody.getTrait(world, CBT_War.class);
-		if (war != null) {
-			List<Projectile> projectiles = war.getProjectiles();
-			for (Projectile projectile : projectiles) {
-				buf.writeFloat(projectile.getFlashtime());
-				buf.writeFloat(projectile.getTravel());
-			}
-		}
-		// EFFECTS THAT I DONT KNOW HOW TO GET WORKING ELSEWHERE :P //
 	}
 
 	public static void readPacket(ByteBuf buf, World world, EntityPlayer player) {
@@ -161,51 +142,49 @@ public class PermaSyncHandler {
 		/// POLLUTION ///
 
 		/// CBT ///
-		if(buf.readBoolean()) {
-			try {
-				HashMap<String, HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait>> traitMap = SolarSystemWorldSavedData.clientTraits;
+		try {
+			HashMap<String, HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait>> traitMap = SolarSystemWorldSavedData.clientTraits;
 
-				if(traitMap == null) {
-					traitMap = new HashMap<String, HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait>>();
-					SolarSystemWorldSavedData.updateClientTraits(traitMap);
-				}
-
-				for(CelestialBody body : CelestialBody.getAllBodies()) {
-					if(buf.readBoolean()) {
-						HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> traits = traitMap.get(body.name);
-
-						if(traits == null) {
-							traits = new HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait>();
-							traitMap.put(body.name, traits);
-						}
-
-						List<Class<? extends CelestialBodyTrait>> sentTraits = new ArrayList<>();
-
-						int cbtSize = buf.readInt();
-						for(int i = 0; i < cbtSize; i++) {
-							Class<? extends CelestialBodyTrait> clazz = CelestialBodyTrait.traitList.get(buf.readInt());
-							sentTraits.add(clazz);
-
-							CelestialBodyTrait trait = traits.getOrDefault(clazz, clazz.newInstance());
-							trait.readFromBytes(buf);
-
-							traits.put(trait.getClass(), trait);
-						}
-
-						traits.keySet().removeIf(traitClass -> !sentTraits.contains(traitClass));
-					} else {
-						traitMap.remove(body.name);
-					}
-				}
-			} catch (Exception ex) {
-				// If any exception occurs, stop parsing any more bytes, they'll be unaligned
-				// We'll unset the client trait set to prevent any issues
-
-				MainRegistry.logger.catching(ex);
-				SolarSystemWorldSavedData.updateClientTraits(null);
-
-				return;
+			if(traitMap == null) {
+				traitMap = new HashMap<String, HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait>>();
+				SolarSystemWorldSavedData.updateClientTraits(traitMap);
 			}
+
+			for(CelestialBody body : CelestialBody.getAllBodies()) {
+				if(buf.readBoolean()) {
+					HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> traits = traitMap.get(body.name);
+
+					if(traits == null) {
+						traits = new HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait>();
+						traitMap.put(body.name, traits);
+					}
+
+					List<Class<? extends CelestialBodyTrait>> sentTraits = new ArrayList<>();
+
+					int cbtSize = buf.readInt();
+					for(int i = 0; i < cbtSize; i++) {
+						Class<? extends CelestialBodyTrait> clazz = CelestialBodyTrait.traitList.get(buf.readInt());
+						sentTraits.add(clazz);
+
+						CelestialBodyTrait trait = traits.getOrDefault(clazz, clazz.newInstance());
+						trait.readFromBytes(buf);
+
+						traits.put(trait.getClass(), trait);
+					}
+
+					traits.keySet().removeIf(traitClass -> !sentTraits.contains(traitClass));
+				} else {
+					traitMap.remove(body.name);
+				}
+			}
+		} catch (Exception ex) {
+			// If any exception occurs, stop parsing any more bytes, they'll be unaligned
+			// We'll unset the client trait set to prevent any issues
+
+			MainRegistry.logger.catching(ex);
+			SolarSystemWorldSavedData.updateClientTraits(null);
+
+			return;
 		}
 		/// CBT ///
 
@@ -214,13 +193,10 @@ public class PermaSyncHandler {
 		HashMap<Integer, Satellite> sats = new HashMap<Integer, Satellite>();
 		for(int i = 0; i < satSize; i++) {
 			int satelliteID = buf.readInt();
-
 			Satellite satellite = Satellite.create(buf.readInt());
 
 			sats.put(satelliteID, satellite);
-
 			satellite.deserialize(buf);
-
 		}
 
 		SatelliteSavedData.setClientSats(sats);
@@ -240,20 +216,6 @@ public class PermaSyncHandler {
 			player.mountEntity(entity);
 		}
 		/// RIDING DESYNC FIX ///
-
-		// TODO: remove this or lose your leg bone privileges
-		CBT_War war = CelestialBody.getTrait(world, CBT_War.class);
-		if (war != null) {
-			List<Projectile> projectiles = war.getProjectiles();
-			for (Projectile projectile : projectiles){
-					float flashtime = buf.readFloat();
-					float traveltime = buf.readFloat();
-
-					projectile.setFlashtime(flashtime);
-					projectile.setTravel(traveltime);
-				}
-			}
-		// EFFECTS THAT I DONT KNOW HOW TO GET WORKING ELSEWHERE :P //
 	}
 
 }

@@ -83,6 +83,8 @@ import com.hbm.packet.toclient.PlayerInformPacket;
 import com.hbm.packet.toclient.SerializableRecipePacket;
 import com.hbm.particle.helper.BlackPowderCreator;
 import com.hbm.potion.HbmPotion;
+import com.hbm.saveddata.SatelliteSavedData;
+import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.network.RTTYSystem;
@@ -871,6 +873,14 @@ public class ModEventHandler {
 				if(event.world.getTotalWorldTime() % 20 == 0) {
 					CelestialBody.updateChemistry(event.world);
 				}
+
+				// And update all satellites server-side
+				if(!CelestialBody.inOrbit(event.world)) {
+					SatelliteSavedData data = SatelliteSavedData.getData(event.world);
+					for(Satellite sat : data.sats.values()) {
+						sat.onUpdate(event.world);
+					}
+				}
 			}
 
 			// Tick our per celestial body timer
@@ -1480,12 +1490,12 @@ public class ModEventHandler {
 	public void onServerTick(TickEvent.ServerTickEvent event) {
 
 		if(event.phase == Phase.START) {
-				for(CelestialBody body : CelestialBody.getAllBodies()) {
-					List<CelestialBodyTrait> traits = new ArrayList<>(body.getTraits().values());
-					for (CelestialBodyTrait trait : traits) {
-						trait.update(false);
-					}
+			// CBT updates, including DYSON and WAR
+			for(CelestialBody body : CelestialBody.getAllBodies()) {
+				for(CelestialBodyTrait trait : body.getTraits().values()) {
+					trait.update(false);
 				}
+			}
 
 			// do other shit I guess?
 			RTTYSystem.updateBroadcastQueue();
@@ -1495,8 +1505,6 @@ public class ModEventHandler {
 			TileEntityMachineRadarNT.updateSystem();
 			// Networks! All of them!
 			UniNodespace.updateNodespace();
-			// Dyson Swarms
-			CelestialBody.updateSwarms();
 		}
 
 

@@ -106,7 +106,7 @@ public class GUIMachineStardar extends GuiInfoContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float interp, int x, int y) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+		mc.getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		pushScissor(9, 9, 158, 108);
 
@@ -137,10 +137,10 @@ public class GUIMachineStardar extends GuiInfoContainer {
 			}
 
 			if(star.heightmap == null) {
-				Minecraft.getMinecraft().getTextureManager().bindTexture(nightTexture);
+				mc.getTextureManager().bindTexture(nightTexture);
 				drawTexturedModalRect(guiLeft, guiTop, (int) starX * -1, (int) starY * -1, 256, 256);
 
-				Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+				mc.getTextureManager().bindTexture(texture);
 
 				for(POI peepee : pList) {
 					int px = (int) (guiLeft + starX + peepee.offsetX);
@@ -179,33 +179,31 @@ public class GUIMachineStardar extends GuiInfoContainer {
 				starX = MathHelper.clamp_float(starX, -256 + 158, 256);
 				starY = MathHelper.clamp_float(starY, -256 + 108, 256);
 			}
-			Minecraft.getMinecraft().getTextureManager().bindTexture(nightTexture);
+			mc.getTextureManager().bindTexture(nightTexture);
 			drawTexturedModalRect(guiLeft, guiTop, (int) starX * -1, (int) starY * -1, 256, 256);
 
-			if(CelestialBody.getBody(star.getWorldObj()).hasTrait(CBT_War.class)) {
-				CBT_War wardat = CelestialBody.getTrait(star.getWorldObj(), CBT_War.class);
-					for (int i = 0; i < wardat.getProjectiles().size(); i++) {
-						CBT_War.Projectile projectile = wardat.getProjectiles().get(i);
-						int projvel = (int) projectile.getTravel();
-						Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+			CBT_War war = CelestialBody.getTrait(star.getWorldObj(), CBT_War.class);
+			if(war != null) {
+				for(CBT_War.Projectile projectile : war.projectiles) {
+					int projvel = (int) projectile.getTravel();
 
-						float randomAngle = projectile.GUIangle;
-						float offsetX = (float) Math.cos(Math.toRadians(randomAngle)) * projvel;
-						float offsetY = (float) Math.sin(Math.toRadians(randomAngle)) * projvel;
+					float randomAngle = projectile.GUIangle;
+					float offsetX = (float) Math.cos(Math.toRadians(randomAngle)) * projvel;
+					float offsetY = (float) Math.sin(Math.toRadians(randomAngle)) * projvel;
 
-						Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+					mc.getTextureManager().bindTexture(texture);
 
-						long currentTime = System.currentTimeMillis();
+					long currentTime = System.currentTimeMillis();
 
-						if (currentTime % 300 < 120) {
-							drawTexturedModalRect(
-								(int) (guiLeft + starX + offsetX + 85),
-								(int) (guiTop + starY + offsetY + 60),
-								xSize + 1 * 44, 0, 8, 8
-							);
-						}
+					if(currentTime % 300 < 120) {
+						drawTexturedModalRect(
+							(int) (guiLeft + starX + offsetX + 85),
+							(int) (guiTop + starY + offsetY + 60),
+							xSize + 1 * 44, 0, 8, 8
+						);
 					}
 				}
+			}
 
 			for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
 				float radius = 20 + (entry.getKey() / 1000);
@@ -218,7 +216,7 @@ public class GUIMachineStardar extends GuiInfoContainer {
 				float offsetX = (float) Math.cos(Math.toRadians(angle)) * radius;
 				float offsetY = (float) Math.sin(Math.toRadians(angle)) * radius;
 
-				Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+				mc.getTextureManager().bindTexture(texture);
 
 				drawTexturedModalRect(
 					(int) (guiLeft + starX + offsetX + 85),
@@ -229,7 +227,7 @@ public class GUIMachineStardar extends GuiInfoContainer {
 
 			GL11.glPushMatrix();
 
-			Minecraft.getMinecraft().getTextureManager().bindTexture(CelestialBody.getBody(star.getWorldObj()).texture);
+			mc.getTextureManager().bindTexture(CelestialBody.getBody(star.getWorldObj()).texture);
 
 			Tessellator tessellator = Tessellator.instance;
 			tessellator.startDrawingQuads();

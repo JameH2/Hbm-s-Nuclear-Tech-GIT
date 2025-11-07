@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.DimensionManager;
 
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -73,8 +74,8 @@ public class SatelliteSavedData extends WorldSavedData {
 		}
 	}
 
-	@Deprecated // will return invalid results in orbit
-	public static SatelliteSavedData getData(World worldObj) {
+	// will return invalid results in orbit, make sure to pass in coordinates!
+	private static SatelliteSavedData getDataForWorld(World worldObj) {
 		SatelliteSavedData data = (SatelliteSavedData)worldObj.perWorldStorage.loadData(SatelliteSavedData.class, "satellites");
 		if(data == null) {
 			worldObj.perWorldStorage.setData("satellites", new SatelliteSavedData());
@@ -83,6 +84,11 @@ public class SatelliteSavedData extends WorldSavedData {
 		}
 
 		return data;
+	}
+
+	public static SatelliteSavedData getData(World worldObj) {
+		if(CelestialBody.inOrbit(worldObj)) throw new InvalidParameterException("Orbit dimensions MUST pass coordinates!");
+		return getDataForWorld(worldObj);
 	}
 
 	public static SatelliteSavedData getData(World worldObj, int x, int z) {
@@ -100,7 +106,7 @@ public class SatelliteSavedData extends WorldSavedData {
 			}
 		}
 
-		return getData(worldObj);
+		return getDataForWorld(worldObj);
 	}
 
 	public static HashMap<Integer, Satellite> clientSats = new HashMap<>();

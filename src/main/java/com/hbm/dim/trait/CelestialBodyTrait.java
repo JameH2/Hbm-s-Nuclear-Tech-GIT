@@ -53,6 +53,6 @@ public abstract class CelestialBodyTrait {
 	public void readFromBytes(ByteBuf buf) { }
 	public void writeToBytes(ByteBuf buf) { }
 
-	public void update(boolean isremote) { }
+	public void update(boolean isRemote) { }
 
 }

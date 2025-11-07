@@ -1,7 +1,6 @@
 package com.hbm.dim;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
@@ -16,10 +15,8 @@ import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
 import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.SatelliteSavedData;
 import com.hbm.saveddata.satellites.Satellite;
-import com.hbm.saveddata.satellites.SatelliteRailgun;
 import com.hbm.saveddata.satellites.SatelliteWar;
 import com.hbm.util.Compat;
 
@@ -80,30 +77,6 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 	@Override
 	public void updateWeather() {
 		CBT_Atmosphere atmosphere = CelestialBody.getTrait(worldObj, CBT_Atmosphere.class);
-
-		// funi get world from world (don't do this pls)
-		// World world = DimensionManager.getWorld(worldObj.provider.dimensionId);
-
-		if(!worldObj.isRemote) {
-			HashMap<Integer, Satellite> sats = SatelliteSavedData.getData(worldObj).sats;
-			for(Map.Entry<Integer, Satellite> entry : sats.entrySet()) {
-				if(entry.getValue() instanceof SatelliteWar) {
-					SatelliteWar war = (SatelliteWar) entry.getValue();
-					war.fire();
-				}
-			}
-		} else {
-			for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
-				if(entry.getValue() instanceof SatelliteWar) {
-
-					SatelliteRailgun war = (SatelliteRailgun) entry.getValue();
-
-					if(war.getInterp() >= 1 && war.interp <= 9) {
-						MainRegistry.proxy.me().playSound("hbm:misc.fireflash", 10F, 1F);
-					}
-				}
-			}
-		}
 
 		double pressure = atmosphere != null ? atmosphere.getPressure() : 0;
 
@@ -344,7 +317,7 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 		for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
 			if(entry instanceof SatelliteWar) {
 				SatelliteWar war = (SatelliteWar) entry.getValue();
-				float flame = war.getInterp();
+				float flame = war.getEffectTimer();
 				float alpd = 1.0F - Math.min(1.0F, flame / 100);
 
 				color.xCoord += alpd * 1.5;
@@ -387,26 +360,24 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 			);
 		}
 
-		if(CelestialBody.getBody(worldObj).hasTrait(CBT_War.class)) {
-			CBT_War wardat = CelestialBody.getTrait(worldObj, CBT_War.class);
-				for(int i = 0; i < wardat.getProjectiles().size(); i++) {
-					CBT_War.Projectile projectile = wardat.getProjectiles().get(i);
-					float flash = projectile.getFlashtime();
-					if(projectile.getAnimtime() > 0) {
-						float invertedFlash = 100 - flash;
+		CBT_War war = CelestialBody.getTrait(worldObj, CBT_War.class);
+		if(war != null) {
+			for(CBT_War.Projectile projectile : war.projectiles) {
+				if(projectile.getAnimtime() > 0) {
+					float invertedFlash = 100 - projectile.getFlashtime();
 
-						color.xCoord += invertedFlash * 0.5;
-						color.yCoord += invertedFlash * 0.5;
-						color.zCoord += invertedFlash * 0.5;
-					}
+					color.xCoord += invertedFlash * 0.5;
+					color.yCoord += invertedFlash * 0.5;
+					color.zCoord += invertedFlash * 0.5;
 				}
 			}
+		}
 
 
 		for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
 			if(entry instanceof SatelliteWar) {
-				SatelliteWar war = (SatelliteWar) entry.getValue();
-				float flame = war.getInterp();
+				SatelliteWar sat = (SatelliteWar) entry.getValue();
+				float flame = sat.getEffectTimer();
 				float alpd = 1.0F - Math.min(1.0F, flame / 100);
 
 				color.xCoord += alpd * 1.5;
@@ -568,25 +539,22 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 		float insideBrightness = 0;
 
 		for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
-			if (entry instanceof SatelliteWar) {
+			if(entry instanceof SatelliteWar) {
 				SatelliteWar war = (SatelliteWar) entry.getValue();
-				float flame = war.getInterp();
+				float flame = war.getEffectTimer();
 				float alpd = 1.0F - Math.min(1.0F, flame / 100);
 				insideBrightness += alpd;
 			}
 		}
 
-		if(CelestialBody.getBody(worldObj).hasTrait(CBT_War.class)) {
-			CBT_War wardat = CelestialBody.getTrait(worldObj, CBT_War.class);
-			for (int i = 0; i < wardat.getProjectiles().size(); i++) {
-				CBT_War.Projectile projectile = wardat.getProjectiles().get(i);
-				float flash = projectile.getFlashtime();
+		CBT_War war = CelestialBody.getTrait(worldObj, CBT_War.class);
+		if(war != null) {
+			for(CBT_War.Projectile projectile : war.projectiles) {
 				if(projectile.getAnimtime() > 0) {
-					insideBrightness += 100 - flash;
+					insideBrightness += 100 - projectile.getFlashtime();
 				}
 			}
 		}
-
 
 		if(atmosphere == null) {
 			return sunBrightness + insideBrightness;

@@ -230,6 +230,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 			renderCelestials(partialTicks, world, mc, celestialProvider.metrics, solarAngle, null, planetTint, visibility, blendAmount, null, 24);
 
 			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
 
 			if(visibility > 0.2F) {
 				// JEFF BOZOS WOULD LIKE TO KNOW YOUR LOCATION
@@ -251,8 +252,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 		CBT_War war = body.getTrait(CBT_War.class);
 		if(war != null) {
-			for(int i = 0; i < war.getProjectiles().size(); i++) {
-				CBT_War.Projectile projectile = war.getProjectiles().get(i);
+			for(CBT_War.Projectile projectile : war.projectiles) {
 				float thing = projectile.getFlashtime() + partialTicks;
 
 				if(projectile.getTravel() <= 0) {
@@ -802,14 +802,14 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 					if(d != null) {
 						// Stop calling things "interp", that's a verb not a noun
-						double interpr = d.interp + size * 0.5;
+						double interpr = d.effectTimer + size * 0.5;
 
 						float alpd = (float) (1.0F - Math.min(1.0F, interpr / 100));
 						Random random = new Random(12);
 
 						int numQuads = 30;
 						for (int i = 0; i < numQuads; i++) {
-							double radius = (random.nextDouble() * size) * d.interp;
+							double radius = (random.nextDouble() * size) * d.effectTimer;
 
 							double randomTheta = random.nextDouble() * Math.PI * 2;
 							double randomPhi = random.nextDouble() * Math.PI;
@@ -831,7 +831,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 								GL11.glTranslated(randomX * -0.05, randomY * 0.00, randomZ * -0.05);
 
-								GL11.glRotatef(randomRotation * d.interp * 0.05F, 0.0F, 1.0F, 0.0F);
+								GL11.glRotatef(randomRotation * d.effectTimer * 0.05F, 0.0F, 1.0F, 0.0F);
 
 								mc.renderEngine.bindTexture(metric.body.texture);
 								GL11.glColor4d(1, 1, 1, 1);
@@ -852,7 +852,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 								GL11.glTranslated(randomX * 0.04, randomY * 0.00, randomZ * 0.04);
 
-								GL11.glRotatef(randomRotation * d.interp * 0.05F, 0.0F, 1.0F, 0.0F);
+								GL11.glRotatef(randomRotation * d.effectTimer * 0.05F, 0.0F, 1.0F, 0.0F);
 								mc.renderEngine.bindTexture(destroyedBody);
 								GL11.glColor4d(1, 1, 1, 1);
 								tessellator.startDrawingQuads();
@@ -872,7 +872,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 						GL11.glColor4f(1.0F, 1.0F, 1.0F, alpd);
 						mc.renderEngine.bindTexture(shockwaveTexture);
-						double interpe = (d.interp * 0.5) * size * 0.1;
+						double interpe = (d.effectTimer * 0.5) * size * 0.1;
 						tessellator.startDrawingQuads();
 						tessellator.addVertexWithUV(-interpe, 100.0D, -interpe, 0.0D + uvOffset, 0.0D);
 						tessellator.addVertexWithUV(interpe, 100.0D, -interpe, 1.0D + uvOffset, 0.0D);
@@ -1164,10 +1164,10 @@ public class SkyProviderCelestial extends IRenderHandler {
 	protected void render3DModel(float partialTicks, WorldClient world, Minecraft mc) {
 
 	}
-	
+
 	// i dont know where to properly put this yet plus its 4 am so take that as you will (SEVEN)
 	/*
-	 
+
 			Shader shader = angel;
 			double shaderSize = sunSize * sun.shaderScale;
 
@@ -1198,7 +1198,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 			shader.stop();
 
-			GL11.glPushMatrix();	
+			GL11.glPushMatrix();
 			GL11.glColor4f(1, 0.2f, 0.2f, 1);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glRotatef(180, 0, 1, 0);

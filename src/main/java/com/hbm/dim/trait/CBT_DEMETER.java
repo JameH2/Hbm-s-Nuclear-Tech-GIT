@@ -13,13 +13,10 @@ public class CBT_DEMETER extends CelestialBodyTrait {
 	public float wingPhase;
 	public float spinSpeed;
 	public float attackTime;
-	public attackType currentAttack;
+	public AttackType currentAttack;
 
 	public CBT_DEMETER() {
-		this.health = 100.0f;
-		this.awakened = false;
-		this.awakenedTimer = 0;
-		this.currentAttack = null;
+		this(100.0F, false, 0);
 	}
 
 	public CBT_DEMETER(float health, boolean awakened, int awakenedTime) {
@@ -35,7 +32,7 @@ public class CBT_DEMETER extends CelestialBodyTrait {
 
 	public void selectAttackType() {
 		Random random = new Random();
-		attackType[] attacks = attackType.values();
+		AttackType[] attacks = AttackType.values();
 		currentAttack = attacks[random.nextInt(attacks.length)]; // store it
 	}
 
@@ -89,7 +86,7 @@ public class CBT_DEMETER extends CelestialBodyTrait {
 		attackTime = nbt.getFloat("attackTime");
 		int type = nbt.getInteger("attackType");
 		if(type >= 0) {
-			currentAttack = attackType.values()[type];
+			currentAttack = AttackType.values()[type];
 		}
 	}
 
@@ -109,10 +106,10 @@ public class CBT_DEMETER extends CelestialBodyTrait {
 		awakenedTimer = buf.readInt();
 		attackTime = buf.readFloat();
 		int type = buf.readInt();
-		currentAttack = type >= 0 ? attackType.values()[type] : null;
+		currentAttack = type >= 0 ? AttackType.values()[type] : null;
 	}
 
-	public enum attackType {
+	public enum AttackType {
 		METEORS(5, 0.5f),
 		ANGELIC(4, 0.5f),
 		BEAM(9, 0.5f),
@@ -121,7 +118,7 @@ public class CBT_DEMETER extends CelestialBodyTrait {
 		float spinSpeed;
 		float phase;
 
-		attackType(float phase, float spinSpeed) {
+		AttackType(float phase, float spinSpeed) {
 			this.phase = phase;
 			this.spinSpeed = spinSpeed;
 		}

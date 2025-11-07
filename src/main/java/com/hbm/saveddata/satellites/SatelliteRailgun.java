@@ -1,5 +1,7 @@
 package com.hbm.saveddata.satellites;
 
+import java.util.Random;
+
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.dim.CelestialBody;
@@ -7,12 +9,12 @@ import com.hbm.dim.trait.CBT_War;
 import com.hbm.dim.trait.CBT_War.Projectile;
 import com.hbm.dim.trait.CBT_War.ProjectileType;
 import com.hbm.lib.RefStrings;
+import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.util.BeamPronter;
 import com.hbm.render.util.BeamPronter.EnumBeamType;
 import com.hbm.render.util.BeamPronter.EnumWaveType;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,6 +40,8 @@ public class SatelliteRailgun extends SatelliteWar {
 	public int cooldown;
 	private CelestialBody target;
 
+	private Random rand = new Random();
+
 	public void writeToNBT(NBTTagCompound nbt) {
 		nbt.setLong("lastOp", lastOp);
 	}
@@ -52,83 +56,54 @@ public class SatelliteRailgun extends SatelliteWar {
 
 		if(!hasTarget) {
 			canFire = false;
-		}
-		else {
+		} else {
 			canFire = true;
 		}
 	}
 
 	@Override
 	public void fire() {
-		if (canFire) {
+		if(canFire) {
 			interp += 0.5f;
 			interp = Math.min(100.0f, interp + 0.3f * (100.0f - interp) * 0.15f);
 
-			if (interp >= 100) {
+			if(interp >= 100) {
 				interp = 0;
 				canFire = false;
 			}
-
 		}
-
 	}
 
 	@Override
 	public void setTarget(CelestialBody body) {
-		target = CelestialBody.getBody(body.dimensionId);
-		if(target != null) {
-			hasTarget = true;
-		}
-
+		target = body;
+		hasTarget = body.canLand;
 	}
 
-	@Override
 	public void fireAtTarget(CelestialBody body) {
 		if(hasTarget) {
-			if(!target.hasTrait(CBT_War.class)) {
-				target.modifyTraits(new CBT_War(100, 0));
-			} else {
-				CBT_War war = target.getTrait(CBT_War.class);
-				if(war != null) {
-					float rand = Minecraft.getMinecraft().theWorld.rand.nextFloat();
-					//TODO: be able to choose projectile types
-					Projectile projectile = new Projectile(100, 20, 50, 28 * rand * 5, 55, 20, ProjectileType.SMALL, body.dimensionId);
-					projectile.GUIangle = (int) (rand * 360);
-					war.launchProjectile(projectile);
-					System.out.println(war.health);
+			CBT_War war = body.getTrait(CBT_War.class);
+			if(war == null) war = new CBT_War();
 
-				}
-			}
+			//TODO: be able to choose projectile types
+			float r = rand.nextFloat();
+			Projectile projectile = new Projectile(100, 20, 50, 28 * r * 5, 55, 20, ProjectileType.SMALL, body.dimensionId);
+			projectile.GUIangle = (int) (r * 360);
+			war.launchProjectile(projectile);
+			System.out.println(war.health);
+
+			body.modifyTraits(war);
 		}
 	}
 
-	public void playsound() {
-		Minecraft.getMinecraft().thePlayer.playSound("hbm:misc.fireflash", 10F, 1F);
-	}
-
 	@Override
-	protected float[] getColor() {
-		return new float[] { 0.0F, 0.0F, 0.0F, 0.0F };
-	}
+	public void onUpdate(World world) {
+		super.onUpdate(world);
 
-	public float getInterp() {
-		return interp;
+		if(world.isRemote) {
+			MainRegistry.proxy.me().playSound("hbm:misc.fireflash", 10F, 1F);
+		}
 	}
-
-	public int magSize() {
-		return 0;
-	}
-	@Override
-	public void serialize(ByteBuf buf) {
-		buf.writeFloat(interp);
-
-	}
-
-	@Override
-	public void deserialize(ByteBuf buf) {
-		this.interp = buf.readFloat();
-	}
-
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc, float solarAngle, long id) {
@@ -145,7 +120,7 @@ public class SatelliteRailgun extends SatelliteWar {
 			double yPos = Math.min(Math.max(-rounded - 20 + y, -50), 50);
 
 			GL11.glTranslated(xPos, yPos, 20);
-			float fuck = this.getInterp();
+			float fuck = this.getEffectTimer();
 			float alped = 1.0F - Math.min(1.0F, fuck / 100);
 
 			GL11.glPushMatrix();

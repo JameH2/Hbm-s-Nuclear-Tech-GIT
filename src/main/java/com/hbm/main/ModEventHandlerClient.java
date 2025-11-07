@@ -59,6 +59,8 @@ import com.hbm.render.util.RenderAccessoryUtility;
 import com.hbm.render.util.RenderOverhead;
 import com.hbm.render.util.RenderScreenOverlay;
 import com.hbm.render.util.SoyuzPronter;
+import com.hbm.saveddata.SatelliteSavedData;
+import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.sound.MovingSoundChopper;
 import com.hbm.sound.MovingSoundChopperMine;
@@ -1108,15 +1110,8 @@ public class ModEventHandlerClient {
 				}
 			}
 
-			CBT_War war = CelestialBody.getTrait(mc.theWorld, CBT_War.class);
-
-			if(war != null) {
-				for(int i = 0; i < war.getProjectiles().size(); i++) {
-					CBT_War.Projectile projectile = war.getProjectiles().get(i);
-					if(projectile != null && projectile.getTravel() >= 18 && projectile.getTravel() <= 18) {
-						Minecraft.getMinecraft().thePlayer.playSound("hbm:misc.impact", 10F, 1F);
-					}
-				}
+			for(Satellite sat : SatelliteSavedData.getClientSats().values()) {
+				sat.onUpdate(mc.theWorld);
 			}
 		}
 

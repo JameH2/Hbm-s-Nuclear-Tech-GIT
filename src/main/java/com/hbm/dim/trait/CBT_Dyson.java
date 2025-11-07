@@ -81,6 +81,13 @@ public class CBT_Dyson extends CelestialBodyTrait {
 		return size;
 	}
 
+	@Override
+	public void update(boolean isRemote) {
+		if(!isRemote) {
+			attenuate();
+		}
+	}
+
 	// Called once per tick to lower swarm counts from satellite failures, encouraging continuous automation
 	// based on total across all swarms, meaning players on servers are encouraged to either annihilate other launchers or work together
 	public void attenuate() {

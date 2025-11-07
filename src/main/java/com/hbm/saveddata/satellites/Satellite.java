@@ -142,6 +142,12 @@ public abstract class Satellite {
 	 */
 	public void onCoordAction(World world, EntityPlayer player, int x, int y, int z) { }
 
+	/**
+	 * Any satellites that run autonomously can update their state with the following function
+	 * Make sure to respect `isRemote`!
+	 */
+	public void onUpdate(World world) { }
+
 
 	protected abstract float[] getColor();
 
@@ -180,11 +186,6 @@ public abstract class Satellite {
 
 		}
 		GL11.glPopMatrix();
-	}
-
-	// killing myself
-	public float getInterp() {
-		return 0;
 	}
 
 }
