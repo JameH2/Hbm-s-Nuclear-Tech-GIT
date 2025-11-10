@@ -60,6 +60,7 @@ public class TileEntityXenonThruster extends TileEntityMachineBase implements IP
 			if(!hasRegistered) {
 				if(isFacingPrograde()) registerPropulsion();
 				hasRegistered = true;
+				isOn = false;
 			}
 
 			for(DirPos pos : getConPos()) {
@@ -201,7 +202,7 @@ public class TileEntityXenonThruster extends TileEntityMachineBase implements IP
 	@Override
 	public float getThrust() {
 		// but le realisme :((((
-		// do not speak to me of realisme, mr I can carry 2,880,000kg of dirt in my fucking pocket
+		// do not speak to me of realisme, miss I can carry 2,880,000kg of dirt in my fucking pocket
 		return 1_400_000;
 	}
 

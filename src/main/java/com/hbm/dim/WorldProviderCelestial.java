@@ -36,12 +36,12 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.WeightedRandomFishable;
-import net.minecraft.world.WorldProvider;
+import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
 
-public abstract class WorldProviderCelestial extends WorldProvider {
+public abstract class WorldProviderCelestial extends WorldProviderSurface {
 
 	public List<AstroMetric> metrics;
 
@@ -88,12 +88,10 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 			return;
 		}
 
-		this.worldObj.getWorldInfo().setRainTime(0);
-		this.worldObj.getWorldInfo().setRaining(false);
-		this.worldObj.getWorldInfo().setThunderTime(0);
-		this.worldObj.getWorldInfo().setThundering(false);
-		this.worldObj.rainingStrength = 0.0F;
-		this.worldObj.thunderingStrength = 0.0F;
+		worldObj.prevRainingStrength = 0.0F;
+		worldObj.rainingStrength = 0.0F;
+		worldObj.prevThunderingStrength = 0.0F;
+		worldObj.thunderingStrength = 0.0F;
 	}
 
 	// Can be overridden to provide fog changing events based on weather
@@ -481,21 +479,13 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 	@Override
 	public boolean canDoLightning(Chunk chunk) {
 		CBT_Atmosphere atmosphere = CelestialBody.getTrait(worldObj, CBT_Atmosphere.class);
-
-		if(atmosphere != null && atmosphere.getPressure() > 0.2)
-			return super.canDoLightning(chunk);
-
-		return false;
+		return atmosphere != null && atmosphere.getPressure() > 0.5;
 	}
 
 	@Override
 	public boolean canDoRainSnowIce(Chunk chunk) {
 		CBT_Atmosphere atmosphere = CelestialBody.getTrait(worldObj, CBT_Atmosphere.class);
-
-		if(atmosphere != null && atmosphere.getPressure() > 0.2)
-			return super.canDoRainSnowIce(chunk);
-
-		return false;
+		return atmosphere != null && atmosphere.getPressure() > 0.5;
 	}
 
 	// Stars do not show up during the day in a vacuum, common misconception:

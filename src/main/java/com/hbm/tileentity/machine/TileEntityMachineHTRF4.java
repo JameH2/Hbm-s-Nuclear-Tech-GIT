@@ -61,6 +61,7 @@ public class TileEntityMachineHTRF4 extends TileEntityMachineBase implements IPr
 			if(!hasRegistered) {
 				if(isFacingPrograde()) registerPropulsion();
 				hasRegistered = true;
+				isOn = false;
 			}
 
 			// Only fill power, plasma heater filling handled separately
@@ -277,13 +278,13 @@ public class TileEntityMachineHTRF4 extends TileEntityMachineBase implements IPr
 		for(FluidTank tank : tanks) {
 			tank.setFill(tank.getFill() - fuelCost);
 		}
-		return 20;
+		return 180;
 	}
 
 	@Override
 	public int endBurn() {
 		isOn = false;
-		return 20; // Cooldown
+		return 180; // Cooldown
 	}
 
 	@Override
