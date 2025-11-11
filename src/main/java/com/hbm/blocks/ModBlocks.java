@@ -1433,6 +1433,7 @@ public class ModBlocks {
 	public static Block orrery;
 
 	public static Block machine_ftl;
+	public static Block dungeon_controller;
 
 	public static Block dummy_beam;
 
@@ -2783,6 +2784,7 @@ public class ModBlocks {
 		orrery = new BlockOrrery(Material.iron).setBlockName("orrery").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
 
 		machine_ftl = new MachineFTL(Material.iron).setBlockName("machine_ftl").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
+		dungeon_controller = new BlockDungeonController(Material.iron).setBlockName("dungeon_controller").setBlockUnbreakable().setResistance(Float.POSITIVE_INFINITY).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
 
 		dummy_beam = new BlockDummyableBeam(Material.iron).setBlockName("dummy_beam").setHardness(10.0F).setResistance(20.0F).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
 
@@ -4115,6 +4117,7 @@ public class ModBlocks {
 		register(orrery);
 
 		register(machine_ftl);
+		register(dungeon_controller);
 
 		register(dummy_beam);
 

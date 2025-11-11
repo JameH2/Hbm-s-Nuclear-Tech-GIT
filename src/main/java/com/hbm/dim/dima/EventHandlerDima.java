@@ -1,10 +1,12 @@
 package com.hbm.dim.dima;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import org.lwjgl.opengl.GL11;
 
@@ -26,12 +28,17 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.EntityEvent.EnteringChunk;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.event.world.ChunkDataEvent;
+import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.event.world.WorldEvent;
 
 public class EventHandlerDima {
 
@@ -58,8 +65,7 @@ public class EventHandlerDima {
 		if(!isValidDimension(event.entity.worldObj)) return;
 		if(event.entityPlayer.capabilities.isCreativeMode) return;
 
-		HbmPlayerProps props = HbmPlayerProps.getData(event.entityPlayer);
-		if(props.getMiningBlocked()) {
+		if(hasPsychosis(event.entity.worldObj, event.x, event.z, event.entityPlayer)) {
 			event.setCanceled(true);
 
 			if(event.entity.worldObj.isRemote) {
@@ -74,8 +80,12 @@ public class EventHandlerDima {
 		if(!isValidDimension(event.world)) return;
 		if(event.entityPlayer.capabilities.isCreativeMode) return;
 
-		HbmPlayerProps props = HbmPlayerProps.getData(event.entityPlayer);
-		if(props.getMiningBlocked()) {
+		ForgeDirection dir = ForgeDirection.getOrientation(event.face);
+		int x = event.x + dir.offsetX;
+		int y = event.y + dir.offsetY;
+		int z = event.z + dir.offsetZ;
+
+		if(hasPsychosis(event.world, x, z, event.entityPlayer)) {
 			ItemStack held = event.entityPlayer.getHeldItem();
 
 			if(event.action == Action.RIGHT_CLICK_BLOCK && held != null && held.getItem() instanceof ItemBlock) {
@@ -85,9 +95,7 @@ public class EventHandlerDima {
 					ItemBlock heldItem = (ItemBlock) held.getItem();
 					int meta = heldItem.getMetadata(held.getItemDamage());
 
-					ForgeDirection dir = ForgeDirection.getOrientation(event.face);
-
-					jitterBlocks.computeIfAbsent(new BlockPos(event.x + dir.offsetX, event.y + dir.offsetY, event.z + dir.offsetZ), j -> new BlockData(heldItem.field_150939_a, meta));
+					jitterBlocks.computeIfAbsent(new BlockPos(x, y, z), j -> new BlockData(heldItem.field_150939_a, meta));
 				}
 			}
 		}
@@ -157,10 +165,80 @@ public class EventHandlerDima {
 		}
 	}
 
+
+	private static Set<ChunkCoordIntPair> psychoChunks;
+	private static final String NBT_KEY_PSYCHOSIS = "chunk_psychosis";
+
+	public static void addPsychoChunk(World world, int x, int z) {
+		if(world.isRemote || !isValidDimension(world)) return;
+		psychoChunks.add(new ChunkCoordIntPair(x >> 4, z >> 4));
+	}
+
+	public static void removePsychoChunk(World world, int x, int z) {
+		if(world.isRemote || !isValidDimension(world)) return;
+		psychoChunks.remove(new ChunkCoordIntPair(x >> 4, z >> 4));
+	}
+
+	@SubscribeEvent
+	public void onWorldLoad(WorldEvent.Load event) {
+		if(event.world.isRemote || !isValidDimension(event.world)) return;
+		psychoChunks = new HashSet<>();
+	}
+
+	public void onWorldUnload(WorldEvent.Unload event) {
+		psychoChunks = null;
+	}
+
+	@SubscribeEvent
+	public void onChunkLoad(ChunkDataEvent.Load event) {
+		if(event.world.isRemote || !isValidDimension(event.world) || psychoChunks == null) return;
+
+		if(event.getData().getBoolean(NBT_KEY_PSYCHOSIS)) {
+			psychoChunks.add(event.getChunk().getChunkCoordIntPair());
+		}
+	}
+
+	@SubscribeEvent
+	public void onChunkSave(ChunkDataEvent.Save event) {
+		if(event.world.isRemote || !isValidDimension(event.world) || psychoChunks == null) return;
+
+		if(psychoChunks.contains(event.getChunk().getChunkCoordIntPair())) {
+			event.getData().setBoolean(NBT_KEY_PSYCHOSIS, true);
+		} else {
+			event.getData().removeTag(NBT_KEY_PSYCHOSIS);
+		}
+	}
+
+	@SubscribeEvent
+	public void onChunkUnload(ChunkEvent.Unload event) {
+		if(event.world.isRemote || !isValidDimension(event.world) || psychoChunks == null) return;
+
+		psychoChunks.remove(event.getChunk().getChunkCoordIntPair());
+	}
+
+	@SubscribeEvent
+	public void enteringChunk(EnteringChunk event) {
+		if(event.entity.worldObj.isRemote || !isValidDimension(event.entity.worldObj) || !(event.entity instanceof EntityPlayer)) return;
+
+		HbmPlayerProps props = HbmPlayerProps.getData((EntityPlayer) event.entity);
+		props.setMiningBlocked(psychoChunks.contains(new ChunkCoordIntPair(event.newChunkX, event.newChunkZ)));
+	}
+
+
 	// just in case something goes wrong, make sure it never affects normal gameplay
 	// weird shit in the weird dimension is a-okay
-	private boolean isValidDimension(World world) {
+	private static boolean isValidDimension(World world) {
 		return world.provider.dimensionId == SpaceConfig.dimaDimension;
+	}
+
+	// Check both player props AND chunk data, so both clients and servers can find the correct value
+	private static boolean hasPsychosis(World world, int x, int z, EntityPlayer player) {
+		HbmPlayerProps props = HbmPlayerProps.getData(player);
+		if(props.getMiningBlocked()) return true;
+
+		if(psychoChunks == null) return false;
+
+		return psychoChunks.contains(new ChunkCoordIntPair(x >> 4, z >> 4));
 	}
 
 }

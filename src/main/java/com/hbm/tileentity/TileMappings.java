@@ -9,6 +9,7 @@ import com.hbm.blocks.BlockVolcanoV2.TileEntityLightningVolcano;
 import com.hbm.blocks.bomb.BlockVolcano.TileEntityVolcanoCore;
 import com.hbm.blocks.generic.BlockBedrockOreTE.TileEntityBedrockOre;
 import com.hbm.blocks.generic.BlockBobble.TileEntityBobble;
+import com.hbm.blocks.generic.BlockDungeonController.TileEntityDungeonController;
 import com.hbm.blocks.generic.BlockDynamicSlag.TileEntitySlag;
 import com.hbm.blocks.generic.BlockEmitter.TileEntityEmitter;
 import com.hbm.blocks.generic.BlockFissure.TileEntityFissure;
@@ -434,6 +435,7 @@ public class TileMappings {
 		put(TileEntityOrrery.class, "tileentity_orrery");
 
 		put(TileEntityMachineFTL.class, "tileentity_ftl");
+		put(TileEntityDungeonController.class, "tileentity_dungeon_controller");
 	}
 
 	private static void putPile() {
@@ -485,7 +487,7 @@ public class TileMappings {
 		put(TileEntityPipeExhaustPaintable.class, "tileentity_pipe_exhaust_paintable");
 		put(TileEntityFluidValve.class, "tileentity_pipe_valve");
 		put(TileEntityFluidPump.class, "tileentity_pipe_pump");
-		
+
 		put(TileEntityPipeAnchor.class, "tileentity_pioe_anchor");
 
 		put(TileEntityCraneInserter.class, "tileentity_inserter");

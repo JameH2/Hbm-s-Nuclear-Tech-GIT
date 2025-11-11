@@ -56,6 +56,8 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 
 	public int lastDimension = 0;
 
+	public boolean miningPsychosis = false;
+
 	public HbmPlayerProps(EntityPlayer player) {
 		this.player = player;
 	}
@@ -184,8 +186,12 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 		return max;
 	}
 
+	public void setMiningBlocked(boolean blocked) {
+		miningPsychosis = blocked;
+	}
+
 	public boolean getMiningBlocked() {
-		return true; // testing, should only be applied when inside the [REDACTED]
+		return miningPsychosis;
 	}
 
 	@Override
@@ -200,6 +206,7 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 		buf.writeInt(this.reputation);
 		buf.writeBoolean(this.isOnLadder);
 		buf.writeBoolean(this.enableMagnet);
+		buf.writeBoolean(this.miningPsychosis);
 	}
 
 	public void deserialize(ByteBuf buf) {
@@ -212,6 +219,7 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 			this.reputation = buf.readInt();
 			this.isOnLadder = buf.readBoolean();
 			this.enableMagnet = buf.readBoolean();
+			this.miningPsychosis = buf.readBoolean();
 		}
 	}
 
@@ -232,6 +240,7 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 		props.setBoolean("isOnLadder", isOnLadder);
 		props.setBoolean("hasWarped", hasWarped);
 		props.setInteger("lastDimension", lastDimension);
+		props.setBoolean("psychosis", miningPsychosis);
 
 		nbt.setTag("HbmPlayerProps", props);
 	}
@@ -254,6 +263,7 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 			this.isOnLadder = props.getBoolean("isOnLadder");
 			this.hasWarped = props.getBoolean("hasWarped");
 			this.lastDimension = props.getInteger("lastDimension");
+			this.miningPsychosis = props.getBoolean("psychosis");
 		}
 	}
 }
