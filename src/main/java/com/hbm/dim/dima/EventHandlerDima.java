@@ -24,10 +24,14 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
-import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 public class EventHandlerDima {
 
@@ -52,6 +56,7 @@ public class EventHandlerDima {
 	@SubscribeEvent
 	public void onBreakSpeed(BreakSpeed event) {
 		if(!isValidDimension(event.entity.worldObj)) return;
+		if(event.entityPlayer.capabilities.isCreativeMode) return;
 
 		HbmPlayerProps props = HbmPlayerProps.getData(event.entityPlayer);
 		if(props.getMiningBlocked()) {
@@ -65,11 +70,24 @@ public class EventHandlerDima {
 
 	// Prevent placing of blocks
 	@SubscribeEvent
-	public void onPlaceBlock(PlaceEvent event) {
+	public void onPlayerInteract(PlayerInteractEvent event) {
 		if(!isValidDimension(event.world)) return;
+		if(event.entityPlayer.capabilities.isCreativeMode) return;
 
-		HbmPlayerProps props = HbmPlayerProps.getData(event.player);
-		if(props.getMiningBlocked()) event.setCanceled(true);
+		ItemStack held = event.entityPlayer.getHeldItem();
+
+		if(event.action == Action.RIGHT_CLICK_BLOCK && held != null && held.getItem() instanceof ItemBlock) {
+			event.setCanceled(true);
+
+			if(event.entityPlayer.worldObj.isRemote) {
+				ItemBlock heldItem = (ItemBlock) held.getItem();
+				int meta = heldItem.getMetadata(held.getItemDamage());
+
+				ForgeDirection dir = ForgeDirection.getOrientation(event.face);
+
+				jitterBlocks.computeIfAbsent(new BlockPos(event.x + dir.offsetX, event.y + dir.offsetY, event.z + dir.offsetZ), j -> new BlockData(heldItem.field_150939_a, meta));
+			}
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -106,7 +124,7 @@ public class EventHandlerDima {
 				Tessellator.instance.startDrawingQuads();
 
 				Tessellator.instance.disableColor();
-				GL11.glColor3f(1, 1, 1);
+				GL11.glColor3f(0.8F, 0, 0.1F);
 
 				for(int ix = 0; ix < jar.sizeX; ix++) {
 					for(int iy = 0; iy < jar.sizeY; iy++) {
