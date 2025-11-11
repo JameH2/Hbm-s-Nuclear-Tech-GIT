@@ -74,18 +74,21 @@ public class EventHandlerDima {
 		if(!isValidDimension(event.world)) return;
 		if(event.entityPlayer.capabilities.isCreativeMode) return;
 
-		ItemStack held = event.entityPlayer.getHeldItem();
+		HbmPlayerProps props = HbmPlayerProps.getData(event.entityPlayer);
+		if(props.getMiningBlocked()) {
+			ItemStack held = event.entityPlayer.getHeldItem();
 
-		if(event.action == Action.RIGHT_CLICK_BLOCK && held != null && held.getItem() instanceof ItemBlock) {
-			event.setCanceled(true);
+			if(event.action == Action.RIGHT_CLICK_BLOCK && held != null && held.getItem() instanceof ItemBlock) {
+				event.setCanceled(true);
 
-			if(event.entityPlayer.worldObj.isRemote) {
-				ItemBlock heldItem = (ItemBlock) held.getItem();
-				int meta = heldItem.getMetadata(held.getItemDamage());
+				if(event.entityPlayer.worldObj.isRemote) {
+					ItemBlock heldItem = (ItemBlock) held.getItem();
+					int meta = heldItem.getMetadata(held.getItemDamage());
 
-				ForgeDirection dir = ForgeDirection.getOrientation(event.face);
+					ForgeDirection dir = ForgeDirection.getOrientation(event.face);
 
-				jitterBlocks.computeIfAbsent(new BlockPos(event.x + dir.offsetX, event.y + dir.offsetY, event.z + dir.offsetZ), j -> new BlockData(heldItem.field_150939_a, meta));
+					jitterBlocks.computeIfAbsent(new BlockPos(event.x + dir.offsetX, event.y + dir.offsetY, event.z + dir.offsetZ), j -> new BlockData(heldItem.field_150939_a, meta));
+				}
 			}
 		}
 	}
