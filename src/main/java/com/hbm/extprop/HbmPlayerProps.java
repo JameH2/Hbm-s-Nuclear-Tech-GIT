@@ -184,6 +184,10 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 		return max;
 	}
 
+	public boolean getMiningBlocked() {
+		return true; // testing, should only be applied when inside the [REDACTED]
+	}
+
 	@Override
 	public void init(Entity entity, World world) { }
 

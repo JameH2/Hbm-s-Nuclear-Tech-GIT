@@ -90,9 +90,8 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import com.hbm.dim.SolarSystem;
-import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.dim.WorldTypeTeleport;
-import com.hbm.dim.trait.CBT_Atmosphere;
+import com.hbm.dim.dima.EventHandlerDima;
 import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 
@@ -712,6 +711,10 @@ public class MainRegistry {
 		ChunkAtmosphereManager atmosphere = new ChunkAtmosphereManager();
 		MinecraftForge.EVENT_BUS.register(atmosphere);
 		FMLCommonHandler.instance().bus().register(atmosphere);
+
+		EventHandlerDima dimaDome = new EventHandlerDima();
+		MinecraftForge.EVENT_BUS.register(dimaDome);
+		FMLCommonHandler.instance().bus().register(dimaDome);
 
 		NeutronHandler neutronHandler = new NeutronHandler();
 		MinecraftForge.EVENT_BUS.register(neutronHandler);
