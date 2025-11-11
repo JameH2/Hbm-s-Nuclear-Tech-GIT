@@ -185,7 +185,9 @@ public class EventHandlerDima {
 		psychoChunks = new HashSet<>();
 	}
 
+	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload event) {
+		if(event.world.isRemote || !isValidDimension(event.world)) return;
 		psychoChunks = null;
 	}
 
