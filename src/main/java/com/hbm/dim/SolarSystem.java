@@ -683,6 +683,9 @@ public class SolarSystem {
 
 	// Gets angle for a single planet, good for locking tidal bodies
 	public static double calculateSingleAngle(List<AstroMetric> metrics, CelestialBody from, CelestialBody to) {
+		if(from == null || to == null) return 0;
+		if(from.getStar() != to.getStar()) return 0;
+
 		AstroMetric metricFrom = null;
 		AstroMetric metricTo = null;
 

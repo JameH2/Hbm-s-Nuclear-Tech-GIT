@@ -199,6 +199,8 @@ public class OrbitalStation {
 	private int getTransferTime() {
 		if(mainPort == null) return -1;
 
+		if(orbiting.getStar() != target.getStar()) return 200;
+
 		int size = calculateSize();
 		double distance = SolarSystem.calculateDistanceBetweenTwoBodies(mainPort.getWorldObj(), orbiting, target);
 		float thrust = getTotalThrust();

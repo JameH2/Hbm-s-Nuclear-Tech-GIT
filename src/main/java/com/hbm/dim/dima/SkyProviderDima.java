@@ -16,9 +16,15 @@ import net.minecraft.util.ResourceLocation;
 
 public class SkyProviderDima extends SkyProviderCelestial {
 
+	public static final ResourceLocation dimaNightTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/night_2.png");;
+
 	public SkyProviderDima() {
 		super();
-		nightTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/night_2.png");
+	}
+
+	@Override
+	protected ResourceLocation getNightTexture() {
+		return nightTextureDemeter;
 	}
 
 	@Override

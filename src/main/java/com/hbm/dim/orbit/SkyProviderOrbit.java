@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import com.hbm.config.ClientConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SkyProviderCelestial;
 import com.hbm.dim.SolarSystem;
 import com.hbm.dim.SolarSystem.AstroMetric;
 import com.hbm.dim.orbit.OrbitalStation.StationState;
 import com.hbm.lib.Library;
+import com.hbm.main.ResourceManager;
 import com.hbm.util.BobMathUtil;
 
 import net.minecraft.client.Minecraft;
@@ -17,6 +19,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
 public class SkyProviderOrbit extends SkyProviderCelestial {
@@ -25,11 +28,6 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
-		WorldProviderOrbit provider = (WorldProviderOrbit) world.provider;
-		OrbitalStation station = OrbitalStation.clientStation;
-		double progress = station.getTransferProgress(partialTicks);
-		float orbitalTilt = 80;
-
 		GL11.glDepthMask(false);
 		GL11.glDisable(GL11.GL_FOG);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -39,6 +37,32 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 		RenderHelper.disableStandardItemLighting();
 
 		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+
+		OrbitalStation station = OrbitalStation.clientStation;
+
+
+		if(station.state == StationState.FTL || (station.target != null && station.orbiting.getStar() != station.target.getStar())) {
+			renderStarfield(partialTicks, world, mc);
+		} else {
+			renderOrbit(partialTicks, world, mc);
+		}
+
+
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glEnable(GL11.GL_FOG);
+
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glDepthMask(true);
+	}
+
+	private void renderOrbit(float partialTicks, WorldClient world, Minecraft mc) {
+		WorldProviderOrbit provider = (WorldProviderOrbit) world.provider;
+		OrbitalStation station = OrbitalStation.clientStation;
+		double progress = station.getTransferProgress(partialTicks);
+		float orbitalTilt = 80;
+
 
 		float solarAngle = getCelestialAngle(world, provider.metrics, partialTicks, station);
 		float siderealAngle = (float)SolarSystem.calculateSiderealAngle(world, partialTicks, station.orbiting);
@@ -79,15 +103,40 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 
 		}
 		GL11.glPopMatrix();
+	}
 
+	@Override
+	protected ResourceLocation getNightTexture() {
+		OrbitalStation station = OrbitalStation.clientStation;
+		CelestialBody orbiting = station.orbiting;
+		if(station.state == StationState.FTL) return nightTextureKerbol;
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glEnable(GL11.GL_FOG);
+		if(station.state != StationState.ORBIT && station.getTransferProgress(0) > 0.5) orbiting = station.target;
 
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glDepthMask(true);
+		if(orbiting.getStar() == SolarSystem.demeter) return nightTextureDemeter;
+		return nightTextureKerbol;
+	}
+
+	private void renderStarfield(float partialTicks, WorldClient world, Minecraft mc) {
+		GL11.glPushMatrix();
+		{
+
+			mc.renderEngine.bindTexture(getNightTexture());
+
+			GL11.glMatrixMode(GL11.GL_TEXTURE);
+			GL11.glPushMatrix();
+			{
+
+				GL11.glTranslated(0, ((double)System.currentTimeMillis() * 0.001) % 1, 0);
+				GL11.glScaled(0.25, 4, 1);
+				ResourceManager.bubble.renderAll();
+
+			}
+			GL11.glPopMatrix();
+			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+
+		}
+		GL11.glPopMatrix();
 	}
 
 	// All angles within are normalized to -180/180

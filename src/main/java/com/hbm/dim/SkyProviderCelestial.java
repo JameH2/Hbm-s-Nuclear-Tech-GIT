@@ -49,7 +49,9 @@ public class SkyProviderCelestial extends IRenderHandler {
 	private static final ResourceLocation flareTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/sunspike.png");
 	private static final ResourceLocation digammaStar = new ResourceLocation(RefStrings.MODID, "textures/misc/space/star_digamma.png");
 	private static final ResourceLocation lodeStar = new ResourceLocation(RefStrings.MODID, "textures/misc/star_lode.png");
-	protected ResourceLocation nightTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/night.png");
+
+	public static final ResourceLocation nightTextureKerbol = new ResourceLocation(RefStrings.MODID, "textures/misc/space/night.png");
+	public static final ResourceLocation nightTextureDemeter = new ResourceLocation(RefStrings.MODID, "textures/misc/space/night_2.png");
 
 	private static final ResourceLocation impactTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/impact.png");
 	private static final ResourceLocation shockwaveTexture = new ResourceLocation(RefStrings.MODID, "textures/particle/shockwave.png");
@@ -486,6 +488,10 @@ public class SkyProviderCelestial extends IRenderHandler {
 		}
 	}
 
+	protected ResourceLocation getNightTexture() {
+		return nightTextureKerbol;
+	}
+
 	protected void renderStars(float partialTicks, WorldClient world, Minecraft mc, float starBrightness, float siderealAngle, float axialTilt) {
 		Tessellator tessellator = Tessellator.instance;
 
@@ -494,7 +500,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 			{
 				GL11.glRotatef(axialTilt, 1.0F, 0.0F, 0.0F);
 
-				mc.renderEngine.bindTexture(nightTexture);
+				mc.renderEngine.bindTexture(getNightTexture());
 
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
