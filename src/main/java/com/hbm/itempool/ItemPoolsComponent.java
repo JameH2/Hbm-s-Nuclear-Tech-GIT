@@ -27,6 +27,7 @@ public class ItemPoolsComponent {
 	public static final String POOL_VAULT_LAB = "POOL_VAULT_LAB";
 	public static final String POOL_VAULT_LOCKERS = "POOL_VAULT_LOCKERS";
 	public static final String POOL_SUBMARINE = "POOL_SUBMARINE";
+	public static final String POOL_WAR = "POOL_WAR";
 	public static final String POOL_MACHINE_PARTSTHAT = "POOL_MACHINE_PARTSTHAT";
 	public static final String POOL_METEOR_SAFE = "POOL_METEOR_SAFE";
 	public static final String POOL_OIL_RIG = "POOL_OIL_RIG";
@@ -239,6 +240,14 @@ public class ItemPoolsComponent {
 					weighted(Items.clock, 0, 1, 1, 3),
 					weighted(Items.compass, 0, 1, 1, 3),
 					weighted(Items.book, 0, 1, 5, 4),
+			};
+		}};
+
+		// Generic Thatmo loot
+		new ItemPool(POOL_WAR) {{
+			this.pool = new WeightedRandomChestContent[] {
+					weighted(ModItems.blueprint_folder, 3, 1, 1, 1),
+					weighted(Items.paper, 0, 1, 6, 5),
 			};
 		}};
 

@@ -1248,10 +1248,18 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 						new OreDictStack(ANY_PLASTIC.ingot(), 8),
 						new ComparableStack(ModBlocks.steel_scaffold, 64),
 						new ComparableStack(ModItems.circuit, 4, EnumCircuitType.BASIC)));
+
+		// WAR template required
 		this.register(new GenericRecipe("ass.orrery").setup(400, 100).outputItems(new ItemStack(ModBlocks.orrery, 1))
-				.inputItems(new OreDictStack(KEY_ANYGLASS, 16), new ComparableStack(ModItems.circuit, 12, EnumCircuitType.ADVANCED))
+				.inputItems(new OreDictStack(KEY_ANYGLASS, 16), new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ADVANCED))
 				.inputFluids(new FluidStack(Fluids.TRITIUM, 2_000))
 				.setPools(GenericRecipes.POOL_PREFIX_WAR + "orrery"));
+
+		this.register(new GenericRecipe("ass.ftl").setup(400, 100).outputItems(new ItemStack(ModBlocks.machine_ftl, 1))
+				.inputItems(
+						new ComparableStack(ModItems.part_generic, 64, EnumPartType.HDE),
+						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER_QUANTUM))
+				.setPools(GenericRecipes.POOL_PREFIX_WAR + "ftl"));
 
 		// stations
 		this.register(new GenericRecipe("ass.orbitalstationport").setup(400, 100).outputItems(new ItemStack(ModBlocks.orbital_station_port, 1))
