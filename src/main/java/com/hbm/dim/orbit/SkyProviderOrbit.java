@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import com.hbm.config.ClientConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SkyProviderCelestial;
 import com.hbm.dim.SolarSystem;
@@ -128,7 +127,7 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 			{
 
 				GL11.glTranslated(0, ((double)System.currentTimeMillis() * 0.001) % 1, 0);
-				GL11.glScaled(0.25, 4, 1);
+				GL11.glScaled(0.1, 10, 1);
 				ResourceManager.bubble.renderAll();
 
 			}
