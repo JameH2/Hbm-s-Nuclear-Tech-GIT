@@ -228,6 +228,7 @@ public class SolarSystem {
 			);
 
 		demeter = new CelestialBody("demeter")
+			.withGalacticPosition(0, 0, 1.135e14F) // 12 lightyears away, for now
 			.withMassRadius(1.757e28F, 261_600)
 			.withRotationalPeriod(432_000)
 			.withTexture(new ResourceLocation("textures/environment/sun.png"))
@@ -824,6 +825,7 @@ public class SolarSystem {
 	// Does not currently support travelling to the main body (Sol)
 	// Our structure doesn't currently require this, but if it does, go annoy Mellow to add it lmao
 	public static double getDeltaVBetween(CelestialBody start, CelestialBody end) {
+		if(start.getStar() != end.getStar()) return 1_000_000_000;
 		return calculateHohmannTransfer(start, end);
 	}
 

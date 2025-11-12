@@ -56,6 +56,11 @@ public class CelestialBody {
 	public float ascendingNode = 0;
 	public float argumentPeriapsis = 0;
 
+	// Galactic elements
+	public float gLongitude;
+	public float gLatitude;
+	public float gDistanceKm;
+
 	private int rotationalPeriod = 6 * 60 * 60; // Day length in seconds
 
 	public float axialTilt = 0;
@@ -121,6 +126,13 @@ public class CelestialBody {
 		this.argumentPeriapsis = (float)Math.toRadians(argumentPeriapsisDegrees);
 		this.inclination = (float)Math.toRadians(inclinationDegrees);
 		this.ascendingNode = (float)Math.toRadians(ascendingNodeDegrees);
+		return this;
+	}
+
+	public CelestialBody withGalacticPosition(float longitude, float latitude, float distanceKm) {
+		this.gLongitude = longitude;
+		this.gLatitude = latitude;
+		this.gDistanceKm = distanceKm;
 		return this;
 	}
 

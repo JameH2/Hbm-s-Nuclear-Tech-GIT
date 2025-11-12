@@ -44,6 +44,7 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 		float siderealAngle = (float)SolarSystem.calculateSiderealAngle(world, partialTicks, station.orbiting);
 		float celestialPhase = (1 - (solarAngle + 0.5F) % 1) * 2 - 1;
 
+		CelestialBody star = station.orbiting.getStar();
 		float starBrightness = world.getStarBrightness(partialTicks);
 
 		renderStars(partialTicks, world, mc, starBrightness, solarAngle + siderealAngle, orbitalTilt);
@@ -56,7 +57,9 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 			GL11.glRotatef(solarAngle * 360.0F, 1.0F, 0.0F, 0.0F);
 
 			// digma balls
-			renderDigamma(partialTicks, world, mc, solarAngle);
+			if(star != SolarSystem.demeter) {
+				renderDigamma(partialTicks, world, mc, solarAngle);
+			}
 
 			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
 
@@ -67,7 +70,7 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 			}
 			double coronaSize = sunSize * (3 - Library.smoothstep(Math.abs(celestialPhase), 0.7, 0.8));
 
-			renderSun(partialTicks, world, mc, station.orbiting.getStar(), sunSize, coronaSize, 1, 0);
+			renderSun(partialTicks, world, mc, star, sunSize, coronaSize, 1, 0);
 
 			CelestialBody orbiting = station.orbiting;
 			if(station.state != StationState.ORBIT && progress > 0.5) orbiting = station.target;

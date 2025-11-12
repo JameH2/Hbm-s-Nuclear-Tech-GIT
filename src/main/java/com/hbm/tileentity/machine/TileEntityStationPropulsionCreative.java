@@ -54,6 +54,11 @@ public class TileEntityStationPropulsionCreative extends TileEntity implements I
 	}
 
 	@Override
+	public boolean isFtlCapable() {
+		return true;
+	}
+
+	@Override
 	public void addErrors(List<String> errors) { }
 
 	@Override
@@ -70,5 +75,5 @@ public class TileEntityStationPropulsionCreative extends TileEntity implements I
 	public int endBurn() {
 		return 20;
 	}
-	
+
 }

@@ -187,6 +187,11 @@ public class TileEntityXenonThruster extends TileEntityMachineBase implements IP
 	}
 
 	@Override
+	public boolean isFtlCapable() {
+		return false;
+	}
+
+	@Override
 	public void addErrors(List<String> errors) {
 		if(power < fuelCost * POWER_COST_MULTIPLIER) {
 			errors.add(EnumChatFormatting.RED + I18nUtil.resolveKey(getBlockType().getUnlocalizedName() + ".name") + " - Insufficient power: needs " + BobMathUtil.getShortNumber(fuelCost * POWER_COST_MULTIPLIER) + "HE");

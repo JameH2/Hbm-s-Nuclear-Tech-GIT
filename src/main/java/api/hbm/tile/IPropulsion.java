@@ -25,13 +25,16 @@ public interface IPropulsion {
 	}
 
 	public TileEntity getTileEntity();
-	
+
 	// Is the engine sufficiently fueled to perform a burn changing the velocity of a given mass by deltaV
 	public boolean canPerformBurn(int shipMass, double deltaV);
 
+	// Can the ship travel superluminally
+	public boolean isFtlCapable();
+
 	// If the above method fails, add any information about why it couldn't
 	public void addErrors(List<String> errors);
-	
+
 	// How much thrust does this engine produce? Higher = faster travel
 	public float getThrust();
 

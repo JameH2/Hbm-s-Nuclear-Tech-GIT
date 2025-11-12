@@ -51,6 +51,7 @@ public class OrbitalStation {
 		LEAVING, // prepare engines for transfer
 		TRANSFER, // going from A to B
 		ARRIVING, // spool down engines
+		FTL, // infinite nyoom
 	}
 
 	private TileEntityOrbitalStation mainPort;
@@ -99,15 +100,21 @@ public class OrbitalStation {
 	public void update(World world) {
 		if(!world.isRemote) {
 			if(state == StationState.LEAVING) {
+
 				if(stateTimer > maxStateTimer) {
-					setState(StationState.TRANSFER, getTransferTime());
+					StationState targetState = orbiting.getStar() == target.getStar() ? StationState.TRANSFER : StationState.FTL;
+					setState(targetState, getTransferTime());
 				}
-			} else if(state == StationState.TRANSFER) {
+
+			} else if(state == StationState.TRANSFER || state == StationState.FTL) {
+
 				if(stateTimer > maxStateTimer) {
 					setState(StationState.ARRIVING, getArriveTime());
 					orbiting = target;
 				}
+
 			} else if(state == StationState.ARRIVING) {
+
 				if(stateTimer > maxStateTimer) {
 					setState(StationState.ORBIT, 0);
 				}
@@ -129,6 +136,17 @@ public class OrbitalStation {
 
 	private boolean canTravel(CelestialBody from, CelestialBody to) {
 		if(engines.size() == 0) return false;
+
+		if(from.getStar() != to.getStar()) {
+			boolean canFtl = false;
+			for(IPropulsion engine : engines) {
+				if(engine.isFtlCapable()) {
+					canFtl = true;
+				}
+			}
+
+			if(!canFtl) return false;
+		}
 
 		double deltaV = SolarSystem.getDeltaVBetween(from, to);
 		int shipMass = 200_000; // Always static, to not punish building big cool stations
