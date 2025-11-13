@@ -11,6 +11,7 @@ import java.util.Set;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.config.SpaceConfig;
+import com.hbm.extprop.HbmLivingProps;
 import com.hbm.extprop.HbmPlayerProps;
 import com.hbm.util.fauxpointtwelve.BlockPos;
 import com.hbm.wiaj.WorldInAJar;
@@ -153,6 +154,10 @@ public class EventHandlerDima {
 		}
 	}
 
+	private Random rand = new Random();
+	public static boolean tunedToADeadChannel;
+	private int tuneTimer;
+
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void clientTick(ClientTickEvent event) {
@@ -162,6 +167,20 @@ public class EventHandlerDima {
 			jitter.volatility--;
 
 			if(jitter.volatility <= 0) iterator.remove();
+		}
+
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+
+		if(player != null && isValidDimension(player.worldObj)) {
+			if(HbmLivingProps.getDigamma(player) > 0.01F) {
+				tuneTimer--;
+				if(tuneTimer <= 0) {
+					tunedToADeadChannel = !tunedToADeadChannel;
+					tuneTimer = tunedToADeadChannel ? rand.nextInt(20) : rand.nextInt(1200);
+				}
+			} else {
+				tunedToADeadChannel = false;
+			}
 		}
 	}
 
