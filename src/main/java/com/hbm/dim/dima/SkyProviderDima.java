@@ -19,6 +19,8 @@ public class SkyProviderDima extends SkyProviderCelestial {
 
 	private static final ResourceLocation deadChannel = new ResourceLocation(RefStrings.MODID, "textures/misc/space/dead_channel.png");
 
+	private static final boolean PSYCHO_MANTIS = false; // turning this on violates the geneva convention
+
 	public SkyProviderDima() {
 		super();
 	}
@@ -30,6 +32,10 @@ public class SkyProviderDima extends SkyProviderCelestial {
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
+		GL11.glMatrixMode(GL11.GL_TEXTURE);
+		GL11.glLoadIdentity();
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+
 		if(!EventHandlerDima.tunedToADeadChannel) {
 			super.render(partialTicks, world, mc);
 			return;
@@ -63,7 +69,7 @@ public class SkyProviderDima extends SkyProviderCelestial {
 			tessellator.addVertexWithUV(100.0D, -100.0D, -100.0D, 16.0D, 0.0D);
 
 			GL11.glMatrixMode(GL11.GL_TEXTURE);
-			GL11.glPushMatrix();
+			if(!PSYCHO_MANTIS) GL11.glPushMatrix();
 			{
 
 				GL11.glTranslated(world.rand.nextDouble(), world.rand.nextDouble(), 0);
@@ -71,7 +77,7 @@ public class SkyProviderDima extends SkyProviderCelestial {
 				tessellator.draw();
 
 			}
-			GL11.glPopMatrix();
+			if(!PSYCHO_MANTIS) GL11.glPopMatrix();
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
 			GL11.glPopMatrix();
