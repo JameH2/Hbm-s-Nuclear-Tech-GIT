@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import com.hbm.dim.CelestialBody;
+import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.BobMathUtil;
@@ -74,6 +75,10 @@ public class EntityNukeTorex extends Entity {
 			}
 
 			if(ticksExisted < 100) this.worldObj.lastLightningBolt = 2;
+
+			if(ticksExisted < 20 && worldObj.provider instanceof WorldProviderCelestial) {
+				((WorldProviderCelestial) worldObj.provider).nuke((float)ticksExisted / 20.0F);
+			}
 
 			int spawnTarget = Math.max(worldObj.getHeightValue((int) Math.floor(posX), (int) Math.floor(posZ)) - 3, 1);
 			double moveSpeed = 0.5D;

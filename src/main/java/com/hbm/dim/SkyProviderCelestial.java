@@ -114,7 +114,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 		// Without mixins, we have to resort to some very wacky ways of checking that the lightmap needs to be updated
 		// fortunately, thanks to torch flickering, we can just check to see if the brightest pixel has been modified
-		if(lastBrightestPixel != mc.entityRenderer.lightmapColors[255] + mc.entityRenderer.lightmapColors[250]) {
+		if(celestialProvider.shouldUpdateLightmap() || lastBrightestPixel != mc.entityRenderer.lightmapColors[255] + mc.entityRenderer.lightmapColors[250]) {
 			if(celestialProvider.updateLightmap(mc.entityRenderer.lightmapColors)) {
 				mc.entityRenderer.lightmapTexture.updateDynamicTexture();
 			}

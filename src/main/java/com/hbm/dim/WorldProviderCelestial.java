@@ -109,6 +109,9 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		// Will prevent water from existing, will be unset immediately before using a bucket if inside a pressurized room
 		isHellWorld = !worldObj.isRemote && pressure <= 0.2F && !Loader.isModLoaded(Compat.MOD_COFH);
 
+		nukeFactor *= 0.98F;
+		if(nukeFactor < 0.01F) nukeFactor = 0.0F;
+
 		if(pressure > 0.5F) {
 			super.updateWeather();
 			return;
@@ -159,6 +162,12 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		}
 	}
 
+	public void nuke(float factor) {
+		nukeFactor = factor;
+	}
+
+	private float nukeFactor = 0.0F;
+
 
 	/**
 	 * Override to modify the lightmap, return true if the lightmap is actually modified
@@ -166,7 +175,37 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	 * @return whether or not the dynamic lightmap texture needs to be updated
 	 */
 	public boolean updateLightmap(int[] lightmap) {
+		// nukeFactor = Clock.get_ms() % 1000 / 1000.0F;
+
+		if(nukeFactor > 0.0F) {
+			for(int i = 0; i < 256; i++) {
+				int[] color = unpackColor(lightmap[i]);
+
+				if(i == 255) {
+					color[0] = 255;
+					color[1] = 255;
+					color[2] = 255;
+				} else if(i / 15 >= 15) {
+					color[0] = 255 - (int)(nukeFactor * 255);
+					color[1] = 180 - (int)(nukeFactor * 180);
+					color[2] = 200 - (int)(nukeFactor * 200);
+				} else {
+					color[0] = 0;
+					color[1] = 0;
+					color[2] = 0;
+				}
+
+				lightmap[i] = packColor(color);
+			}
+
+			return true;
+		}
+
 		return false;
+	}
+
+	public boolean shouldUpdateLightmap() {
+		return nukeFactor > 0.0F;
 	}
 
 	protected final int packColor(final int[] colors) {
@@ -326,6 +365,12 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 			color.zCoord *= 1 - dust;
 		}
 
+		if(nukeFactor > 0.0F) {
+			color.xCoord -= nukeFactor * 0.8;
+			color.yCoord -= nukeFactor;
+			color.zCoord -= nukeFactor * 0.9;
+		}
+
 		return color;
 	}
 
@@ -442,6 +487,12 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 			color.zCoord *= fire + (1 - dust);
 		}
 
+		if(nukeFactor > 0.0F) {
+			color.xCoord -= nukeFactor * 0.8;
+			color.yCoord -= nukeFactor;
+			color.zCoord -= nukeFactor * 0.9;
+		}
+
 		return color;
 	}
 
@@ -482,7 +533,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 				colors[2] = f5 * f5;
 				colors[3] = f6;
 			}
-		} else if( atmosphere.hasFluid(Fluids.TEKTOAIR) ||  atmosphere.hasFluid(Fluids.JOOLGAS) || atmosphere.hasFluid(Fluids.CHLORINE)) {
+		} else if(atmosphere.hasFluid(Fluids.TEKTOAIR) || atmosphere.hasFluid(Fluids.JOOLGAS) || atmosphere.hasFluid(Fluids.CHLORINE)) {
 			float tmp = colors[1];
 			colors[1] = colors[2];
 			colors[2] = tmp;
@@ -684,7 +735,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	public float getCloudHeight() {
 		CBT_Atmosphere atmosphere = CelestialBody.getTrait(worldObj, CBT_Atmosphere.class);
 
-		if(atmosphere == null || atmosphere.getPressure() < 0.5F) return -99999;
+		if(atmosphere == null || atmosphere.getPressure() < 0.5F || nukeFactor > 0.5F) return -99999;
 
 		return super.getCloudHeight();
 	}

@@ -29,7 +29,10 @@ public class RenderTorex extends Render {
 
 	@Override
 	public void doRender(Entity entity, double x, double y, double z, float f0, float interp) {
-		
+
+		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
 		boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
@@ -48,8 +51,10 @@ public class RenderTorex extends Render {
 		}
 		if(fog) GL11.glEnable(GL11.GL_FOG);
 		GL11.glPopMatrix();
+
+		GL11.glPopAttrib();
 	}
-	
+
 	private Comparator cloudSorter = new Comparator() {
 
 		@Override
@@ -59,7 +64,7 @@ public class RenderTorex extends Render {
 			EntityPlayer player = MainRegistry.proxy.me();
 			double dist1 = player.getDistanceSq(first.posX, first.posY, first.posZ);
 			double dist2 = player.getDistanceSq(second.posX, second.posY, second.posZ);
-			
+
 			return dist1 > dist2 ? -1 : dist1 == dist2 ? 0 : 1;
 		}
 	};
@@ -79,10 +84,10 @@ public class RenderTorex extends Render {
 
 		Tessellator tess = Tessellator.instance;
 		tess.startDrawingQuads();
-		
+
 		ArrayList<Cloudlet> cloudlets = new ArrayList(cloud.cloudlets);
 		cloudlets.sort(cloudSorter);
-		
+
 		for(Cloudlet cloudlet : cloudlets) {
 			Vec3 vec = cloudlet.getInterpPos(interp);
 			double x = vec.xCoord - cloud.posX;
@@ -100,7 +105,7 @@ public class RenderTorex extends Render {
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}
-	
+
 	private void flashWrapper(EntityNukeTorex cloud, float interp) {
 
 		GL11.glPushMatrix();
@@ -115,12 +120,12 @@ public class RenderTorex extends Render {
 
 		Tessellator tess = Tessellator.instance;
 		tess.startDrawingQuads();
-		
+
 		double age = Math.min(cloud.ticksExisted + interp, 100);
 		float alpha = (float) ((100D - age) / 100F);
-		
+
 		Random rand = new Random(cloud.getEntityId());
-		
+
 		for(int i = 0; i < 3; i++) {
 			float x = (float) (rand.nextGaussian() * 0.5F * cloud.rollerSize);
 			float y = (float) (rand.nextGaussian() * 0.5F * cloud.rollerSize);
