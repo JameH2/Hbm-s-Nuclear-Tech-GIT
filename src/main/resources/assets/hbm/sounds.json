@@ -369,6 +369,7 @@
 	"entity.rocketFlyHeavy": {"category": "player", "sounds": [{"name": "entity/rocketFlyHeavy", "stream": false}]},
 	"entity.rocketFlyLight": {"category": "player", "sounds": [{"name": "entity/rocketFlyLight", "stream": false}]},
 	"entity.rocketIgnition": {"category": "player", "sounds": [{"name": "entity/rocketIgnition", "stream": false}]},
+	"entity.rocketStage": {"category": "player", "sounds": [{"name": "entity/rocketStage", "stream": false}]},
 	"entity.pipefail": {"category": "player", "sounds": [{"name": "entity/pipefail", "stream": false}]},
 
 	"step.metal": {"category": "player", "sounds": [{"name": "footsteps/metal", "stream": false}]},

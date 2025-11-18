@@ -6,12 +6,14 @@ import java.util.List;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ITooltipProvider;
+import com.hbm.dim.CelestialBody;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.items.ModItems;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.bomb.TileEntityLaunchPadRocket;
+import com.hbm.util.BobMathUtil;
 import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.block.material.Material;
@@ -38,6 +40,7 @@ public class LaunchPadRocket extends BlockDummyable implements ILookOverlay, ITo
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+		if(CelestialBody.inOrbit(world)) return false;
 		return this.standardOpenBehavior(world, x, y, z, player, 0);
 	}
 
@@ -77,6 +80,12 @@ public class LaunchPadRocket extends BlockDummyable implements ILookOverlay, ITo
 
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
+		if(CelestialBody.inOrbit(world)) {
+			List<String> text = new ArrayList<String>();
+			text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! " + I18nUtil.resolveKey("atmosphere.yesOrbit") + " ! ! !");
+			ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
+			return;
+		}
 
 		int[] pos = this.findCore(world, x, y, z);
 
@@ -103,8 +112,8 @@ public class LaunchPadRocket extends BlockDummyable implements ILookOverlay, ITo
 			text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + tank.getTankType().getLocalizedName() + ": " + tank.getFill() + "/" + tank.getMaxFill() + "mB");
 		}
 
-		if(pad.maxSolidFuel > 0) {
-			text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey(ModItems.rocket_fuel.getUnlocalizedName() + ".name") + ": " + pad.solidFuel + "/" + pad.maxSolidFuel + "kg");
+		if(pad.solidFuel.max > 0) {
+			text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey(ModItems.rocket_fuel.getUnlocalizedName() + ".name") + ": " + pad.solidFuel.level + "/" + pad.solidFuel.max + "kg");
 		}
 
 		if(text.size() <= 1) return;

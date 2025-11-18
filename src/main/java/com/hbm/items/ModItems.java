@@ -143,6 +143,7 @@ public class ModItems {
 
 	public static Item butter; //////////////////////////////////////////////
 	public static Item s_cream;
+	public static Item min_cream;
 	public static Item powder_ash;
 	public static Item powder_limestone;
 	public static Item powder_cement;
@@ -2752,6 +2753,7 @@ public class ModItems {
 		woodemium_briquette = new Item().setUnlocalizedName("woodemium_briquette").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":briquette_woodemium");
 		butter = new Item().setUnlocalizedName("butter").setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":ingot_butter");
 		s_cream	= new ItemLemon(8, 1.0F, false).setUnlocalizedName("s_cream").setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":ice_cream_s");
+		min_cream	= new ItemLemon(10, 1.0F, false).setUnlocalizedName("min_cream").setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":ice_cream_min");
 
 		powder_ash = new ItemEnumMulti(EnumAshType.class, true, true).setUnlocalizedName("powder_ash").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_ash");
 		powder_limestone = new Item().setUnlocalizedName("powder_limestone").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_limestone");
@@ -7273,6 +7275,7 @@ public class ModItems {
 		GameRegistry.registerItem(pancake, pancake.getUnlocalizedName());
 		GameRegistry.registerItem(butter, butter.getUnlocalizedName());
 		GameRegistry.registerItem(s_cream, s_cream.getUnlocalizedName());
+		GameRegistry.registerItem(min_cream, min_cream.getUnlocalizedName());
 		GameRegistry.registerItem(nugget, nugget.getUnlocalizedName());
 		GameRegistry.registerItem(peas, peas.getUnlocalizedName());
 		GameRegistry.registerItem(marshmallow, marshmallow.getUnlocalizedName());

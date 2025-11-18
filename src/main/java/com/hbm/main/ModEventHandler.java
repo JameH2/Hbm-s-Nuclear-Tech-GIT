@@ -1324,7 +1324,7 @@ public class ModEventHandler {
 
 		if(!player.worldObj.isRemote && event.phase == TickEvent.Phase.START) {
 			// Check for players attempting to cross over to another orbital grid
-			if(player.worldObj.provider instanceof WorldProviderOrbit) {
+			if(player.worldObj.provider instanceof WorldProviderOrbit && !(player.ridingEntity instanceof EntityRideableRocket)) {
 				double rx = Math.abs(player.posX) % OrbitalStation.STATION_SIZE;
 				double rz = Math.abs(player.posZ) % OrbitalStation.STATION_SIZE;
 

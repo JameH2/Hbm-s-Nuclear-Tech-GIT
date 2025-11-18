@@ -1527,6 +1527,7 @@ public class ResourceManager {
 	public static final ResourceLocation rocket_pad_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/rocket_pad.png");
 	public static final ResourceLocation rocket_pad_support_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/rocket_pad_support.png");
 	public static final ResourceLocation docking_port_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/docking_port.png");
+	public static final ResourceLocation docking_port_launcher_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/docking_port_launcher.png");
 	public static final ResourceLocation strut_tex = new ResourceLocation(RefStrings.MODID, "textures/models/strut.png");
 	public static final ResourceLocation compact_launcher_tex = new ResourceLocation(RefStrings.MODID, "textures/models/compact_launcher.png");
 	public static final ResourceLocation launch_table_base_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/launch_table.png");

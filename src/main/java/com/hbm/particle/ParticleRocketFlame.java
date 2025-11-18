@@ -53,7 +53,7 @@ public class ParticleRocketFlame extends EntityFX {
 		this.pressure = pressure;
 
 		if(pressure < 0.08) {
-			double factor = (0.08 - pressure) * 100;
+			double factor = (0.08 - pressure) * 20;
 			this.motionX += (rand.nextDouble() - 0.5) * factor;
 			this.motionY += (rand.nextDouble() - 0.5) * factor;
 			this.motionZ += (rand.nextDouble() - 0.5) * factor;

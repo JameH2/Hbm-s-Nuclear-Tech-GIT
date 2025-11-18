@@ -2,6 +2,7 @@ package com.hbm.render.entity.rocket;
 
 import org.lwjgl.opengl.GL11;
 
+import com.hbm.dim.CelestialBody;
 import com.hbm.entity.missile.EntityRideableRocket;
 import com.hbm.handler.RocketStruct;
 import com.hbm.main.ResourceManager;
@@ -28,7 +29,7 @@ public class RenderRocketCustom extends Render {
 			GL11.glRotatef(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * interp, 0.0F, 0.0F, 1.0F);
 			GL11.glRotatef(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * interp - 90.0F, 0.0F, -1.0F, 0.0F);
 
-			MissilePronter.prontRocket(rocket, rocketEntity, Minecraft.getMinecraft().getTextureManager(), true, interp);
+			MissilePronter.prontRocket(rocket, rocketEntity, Minecraft.getMinecraft().getTextureManager(), !CelestialBody.inOrbit(entity.worldObj), rocketEntity.decoupleTimer, interp);
 
 		}
 		GL11.glPopMatrix();

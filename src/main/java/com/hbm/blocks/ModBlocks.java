@@ -1421,6 +1421,7 @@ public class ModBlocks {
 	public static Block transporter_rocket;
 	public static Block orbital_station;
 	public static Block orbital_station_port;
+	public static Block orbital_station_launcher;
 	public static Block orbital_station_computer;
 	public static Block propulsion_creative;
 
@@ -2772,6 +2773,7 @@ public class ModBlocks {
 		transporter_rocket = new BlockTransporterRocket(Material.iron).setBlockName("transporter_rocket").setHardness(1.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		orbital_station = new BlockOrbitalStation(Material.iron).setBlockName("orbital_station").setBlockUnbreakable().setResistance(Float.POSITIVE_INFINITY).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		orbital_station_port = new BlockOrbitalStation(Material.iron).setBlockName("orbital_station_port").setHardness(1.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
+		orbital_station_launcher = new BlockOrbitalStationLauncher(Material.iron).setBlockName("orbital_station_launcher").setHardness(1.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		orbital_station_computer = new BlockOrbitalStationComputer(Material.iron).setBlockName("orbital_station_computer").setHardness(1.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		propulsion_creative = new BlockStationPropulsionCreative(Material.iron).setBlockName("propulsion_creative").setHardness(1.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 
@@ -3336,7 +3338,7 @@ public class ModBlocks {
 
 		GameRegistry.registerBlock(minmus_regolith, minmus_regolith.getUnlocalizedName());
 		GameRegistry.registerBlock(minmus_stone, minmus_stone.getUnlocalizedName());
-		GameRegistry.registerBlock(minmus_smooth, minmus_smooth.getUnlocalizedName());
+		register(minmus_smooth, ItemBlockLore.class);
 
 
 		//Waste
@@ -4105,6 +4107,7 @@ public class ModBlocks {
 		register(transporter_rocket);
 		register(orbital_station);
 		register(orbital_station_port);
+		register(orbital_station_launcher);
 		register(orbital_station_computer);
 		register(propulsion_creative);
 

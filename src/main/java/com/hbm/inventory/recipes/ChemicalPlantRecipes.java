@@ -402,7 +402,7 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 				.inputItems(
 						new ComparableStack(Items.sugar, 8),				// if there is a hole in my logic i will shoot myself
 						new ComparableStack(Items.egg, 4))				//ex: since a cake needs 3 buckets of milk, c-milk is more dense, leading to it being only 4 buckets of condensed milk, thats 1 bucket per cake.
-				.outputItems(new ItemStack(Items.cake, 4)));
+						.outputItems(new ItemStack(Items.cake, 4)));  
 
 		this.register(new GenericRecipe("chem.butter").setup(100, 100)
 				.inputFluids(new FluidStack(Fluids.EMILK, 1000))
@@ -411,6 +411,10 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 				.inputFluids(new FluidStack(Fluids.CREAM, 1000))
 				.inputItems(new ComparableStack(ModItems.butter, 2), new ComparableStack(Blocks.packed_ice, 1), new ComparableStack(ModItems.strawberry, 4))
 				.outputItems(new ItemStack(ModItems.s_cream, 4)));
+		this.register(new GenericRecipe("chem.minmusicecream").setup(150, 100) 
+				.inputFluids(new FluidStack(Fluids.CREAM, 1000))
+				.inputItems(new ComparableStack(ModItems.butter, 4), new ComparableStack(ModBlocks.minmus_smooth, 2), new ComparableStack(ModBlocks.minmus_stone, 2))
+				.outputItems(new ItemStack(ModItems.min_cream, 4)));
 
 		this.register(new GenericRecipe("chem.soil").setup(100, 1_000)
 				.inputFluids(new FluidStack(Fluids.WATER, 4000))

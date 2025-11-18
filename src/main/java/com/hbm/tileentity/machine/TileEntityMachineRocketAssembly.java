@@ -8,6 +8,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.RocketStruct;
 import com.hbm.handler.RocketStruct.RocketStage;
 import com.hbm.interfaces.IControlReceiver;
+import com.hbm.inventory.SlotRocket.IStage;
 import com.hbm.inventory.container.ContainerMachineRocketAssembly;
 import com.hbm.inventory.gui.GUIMachineRocketAssembly;
 import com.hbm.items.ISatChip;
@@ -31,7 +32,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityMachineRocketAssembly extends TileEntityMachineBase implements IGUIProvider, IControlReceiver {
+public class TileEntityMachineRocketAssembly extends TileEntityMachineBase implements IGUIProvider, IControlReceiver, IStage {
 
 	public RocketStruct rocket;
 
@@ -320,6 +321,11 @@ public class TileEntityMachineRocketAssembly extends TileEntityMachineBase imple
 	@Override
 	public int getInventoryStackLimit() {
 		return 8;
+	}
+
+	@Override
+	public void setCurrentStage(int stage) {
+		currentStage = stage;
 	}
 
 }

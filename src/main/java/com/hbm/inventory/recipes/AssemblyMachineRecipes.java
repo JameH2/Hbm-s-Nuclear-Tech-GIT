@@ -1270,6 +1270,14 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 						new OreDictStack(ANY_PLASTIC.ingot(), 8),
 						new ComparableStack(ModItems.circuit, 4, EnumCircuitType.BASIC),
 						new OreDictStack(STAINLESS.plate(), 4)));
+		this.register(new GenericRecipe("ass.orbitalstationlauncher").setup(400, 100).outputItems(new ItemStack(ModBlocks.orbital_station_launcher, 1))
+				.inputItems(
+						new OreDictStack(TI.plateWelded(), 6),
+						new ComparableStack(ModItems.motor, 4),
+						new OreDictStack(KEY_CLEARGLASS, 8),
+						new OreDictStack(ANY_PLASTIC.ingot(), 8),
+						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.ADVANCED),
+						new OreDictStack(STAINLESS.plate(), 4)));
 		this.register(new GenericRecipe("ass.rpstationcore20").setup(400, 100).outputItems(new ItemStack(ModItems.rp_station_core_20, 1))
 				.inputItems(
 						new ComparableStack(ModBlocks.orbital_station_port, 1), // we're basically sending up a port
