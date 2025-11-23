@@ -40,7 +40,7 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 
 		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
 
-		float solarAngle = getCelestialAngle(world, provider.metrics, partialTicks, station);
+		float solarAngle = world.getCelestialAngle(partialTicks);
 		float siderealAngle = (float)SolarSystem.calculateSiderealAngle(world, partialTicks, station.orbiting);
 		float celestialPhase = (1 - (solarAngle + 0.5F) % 1) * 2 - 1;
 
@@ -87,26 +87,26 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 		GL11.glDepthMask(true);
 	}
 
-	// All angles within are normalized to -180/180
-	private float getCelestialAngle(WorldClient world, List<AstroMetric> metrics, float partialTicks, OrbitalStation station) {
-		float solarAngle = world.getCelestialAngle(partialTicks);
-		if(station.state == StationState.ORBIT) return solarAngle;
+	// // All angles within are normalized to -180/180
+	// private float getCelestialAngle(WorldClient world, List<AstroMetric> metrics, float partialTicks, OrbitalStation station) {
+	// 	float solarAngle = world.getCelestialAngle(partialTicks);
+	// 	if(station.state == StationState.ORBIT) return solarAngle;
 
-		solarAngle = solarAngle * 360.0F - 180.0F;
+	// 	solarAngle = solarAngle * 360.0F - 180.0F;
 
-		if(station.state != StationState.ARRIVING) lastBody = station.orbiting;
+	// 	if(station.state != StationState.ARRIVING) lastBody = station.orbiting;
 
-		double progress = station.getUnscaledProgress(partialTicks);
-		float travelAngle = -(float)SolarSystem.calculateSingleAngle(metrics, lastBody, station.target);
-		travelAngle = MathHelper.wrapAngleTo180_float(travelAngle + 90.0F);
+	// 	double progress = station.getUnscaledProgress(partialTicks);
+	// 	float travelAngle = -(float)SolarSystem.calculateSingleAngle(metrics, lastBody, station.target);
+	// 	travelAngle = MathHelper.wrapAngleTo180_float(travelAngle + 90.0F);
 
-		if(station.state == StationState.TRANSFER) {
-			return (travelAngle + 180.0F) / 360.0F;
-		} else if(station.state == StationState.LEAVING) {
-			return ((float)BobMathUtil.clerp(progress, solarAngle, travelAngle) + 180.0F) / 360.0F;
-		} else {
-			return ((float)BobMathUtil.clerp(progress, travelAngle, solarAngle) + 180.0F) / 360.0F;
-		}
-	}
+	// 	if(station.state == StationState.TRANSFER) {
+	// 		return (travelAngle + 180.0F) / 360.0F;
+	// 	} else if(station.state == StationState.LEAVING) {
+	// 		return ((float)BobMathUtil.clerp(progress, solarAngle, travelAngle) + 180.0F) / 360.0F;
+	// 	} else {
+	// 		return ((float)BobMathUtil.clerp(progress, travelAngle, solarAngle) + 180.0F) / 360.0F;
+	// 	}
+	// }
 
 }

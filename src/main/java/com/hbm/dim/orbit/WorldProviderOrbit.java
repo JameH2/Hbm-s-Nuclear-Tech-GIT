@@ -10,6 +10,7 @@ import com.hbm.dim.orbit.OrbitalStation.StationState;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Destroyed;
 import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
+import com.hbm.lib.Library;
 import com.hbm.util.AstronomyUtil;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.Compat;
@@ -105,15 +106,33 @@ public class WorldProviderOrbit extends WorldProvider {
 		}
 
 		// Get our sun angle
-		float angle = (float)SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, station.orbiting, getOrbitalAltitude(station.orbiting));
-		if(progress > 0) {
-			angle = (float)BobMathUtil.clerp(progress, angle, (float)SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, station.target, getOrbitalAltitude(station.target)));
-		}
+		// float angle = (float)SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, station.orbiting, getOrbitalAltitude(station.orbiting));
+		// if(progress > 0.4 && progress < 0.6) {
+		// 	angle = (float)BobMathUtil.clerp(progress, angle, (float)SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, station.target, getOrbitalAltitude(station.target)));
+		// }
 
-		celestialAngle = 0.5F - (angle / 360.0F);
+		celestialAngle = 0.5F - ((float)getSunAngle(partialTicks) / 360.0F);
 
 		// Get our eclipse amount
 		eclipseAmount = WorldProviderCelestial.getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_ORBIT);
+	}
+
+	private double getSunAngle(float partialTicks) {
+		OrbitalStation station = OrbitalStation.clientStation;
+		double progress = station.getUnscaledProgress(partialTicks);
+
+		if(station.state == StationState.ARRIVING) {
+			double angle = SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, station.target, getOrbitalAltitude(station.target));
+			return BobMathUtil.clerp(progress, 180.0D - angle, angle);
+		} else if(station.state != StationState.TRANSFER || progress < 0.4) {
+			return SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, station.orbiting, getOrbitalAltitude(station.orbiting));
+		} else if(progress < 0.6) {
+			double fromAngle = SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, station.orbiting, getOrbitalAltitude(station.orbiting));
+			double toAngle = 180.0D - SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, station.target, getOrbitalAltitude(station.target));
+			return BobMathUtil.clerp(Library.smoothstep(progress, 0.4, 0.6), fromAngle, toAngle);
+		} else {
+			return 180.0D - SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, station.target, getOrbitalAltitude(station.target));
+		}
 	}
 
 	@Override
