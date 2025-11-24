@@ -10,6 +10,7 @@ import com.hbm.dim.SolarSystem;
 import com.hbm.dim.SolarSystem.AstroMetric;
 import com.hbm.dim.orbit.OrbitalStation.StationState;
 import com.hbm.lib.Library;
+import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.util.BobMathUtil;
 
@@ -24,6 +25,8 @@ import net.minecraft.util.Vec3;
 public class SkyProviderOrbit extends SkyProviderCelestial {
 
 	private static CelestialBody lastBody;
+
+	public static final ResourceLocation starfield = new ResourceLocation(RefStrings.MODID, "textures/misc/space/starfield.png");
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
@@ -108,7 +111,6 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 	protected ResourceLocation getNightTexture() {
 		OrbitalStation station = OrbitalStation.clientStation;
 		CelestialBody orbiting = station.orbiting;
-		if(station.state == StationState.FTL) return nightTextureKerbol;
 
 		if(station.state != StationState.ORBIT && station.getTransferProgress(0) > 0.5) orbiting = station.target;
 
@@ -120,14 +122,13 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 		GL11.glPushMatrix();
 		{
 
-			mc.renderEngine.bindTexture(getNightTexture());
+			mc.renderEngine.bindTexture(starfield);
 
 			GL11.glMatrixMode(GL11.GL_TEXTURE);
 			GL11.glPushMatrix();
 			{
 
 				GL11.glTranslated(0, ((double)System.currentTimeMillis() * 0.001) % 1, 0);
-				GL11.glScaled(0.1, 10, 1);
 				ResourceManager.bubble.renderAll();
 
 			}
