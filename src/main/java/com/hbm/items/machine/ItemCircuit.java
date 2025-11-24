@@ -21,6 +21,7 @@ public class ItemCircuit extends ItemEnumMulti {
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tab, List list) {
 		list.add(new ItemStack(item, 1, EnumCircuitType.VACUUM_TUBE.ordinal()));
+		list.add(new ItemStack(item, 1, EnumCircuitType.NUMITRON.ordinal()));
 		list.add(new ItemStack(item, 1, EnumCircuitType.CAPACITOR.ordinal()));
 		list.add(new ItemStack(item, 1, EnumCircuitType.CAPACITOR_TANTALIUM.ordinal()));
 		list.add(new ItemStack(item, 1, EnumCircuitType.ATOMIC_CLOCK.ordinal()));
@@ -81,12 +82,13 @@ public class ItemCircuit extends ItemEnumMulti {
 		GASCHIP,
 		HFCHIP,
 		MOLYCHIP,
+		NUMITRON,
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		/*List<String> lines = new ArrayList();
-		
+
 		switch(stack.getItemDamage()) {
 		case 0: lines.add("We taught this filament how to think."); break;
 		case 1: lines.add("3300µF"); break;
@@ -101,7 +103,7 @@ public class ItemCircuit extends ItemEnumMulti {
 		case 10: lines.add("Uses that exceptionally stanky 90s yellow PCB."); break;
 		case 11: lines.add("Can do up to three different things (instead of two)!"); break;
 		}
-		
+
 		for(String line : lines) {
 			list.add(EnumChatFormatting.ITALIC + line);
 		}*/

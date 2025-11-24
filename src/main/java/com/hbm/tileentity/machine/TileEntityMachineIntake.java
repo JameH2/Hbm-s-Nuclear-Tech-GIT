@@ -1,21 +1,38 @@
 package com.hbm.tileentity.machine;
 
+import java.util.List;
+
+import com.hbm.dim.trait.CBT_Atmosphere;
+import com.hbm.handler.atmosphere.AtmosphereBlob;
+import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
+import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.trait.FT_Gaseous;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import com.hbm.util.fauxpointtwelve.DirPos;
 
+import api.hbm.energymk2.IEnergyReceiverMK2;
+import api.hbm.fluidmk2.IFluidStandardSenderMK2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityMachineIntake extends TileEntityLoadedBase {
+public class TileEntityMachineIntake extends TileEntityLoadedBase implements IEnergyReceiverMK2, IFluidStandardSenderMK2 {
 
+	public FluidTank compair;
+	public long power;
 	public float fan = 0;
 	public float prevFan = 0;
 	private AudioWrapper audio;
 
 	public TileEntityMachineIntake() {
-
+		this.compair = new FluidTank(Fluids.AIR, 1_000);
 	}
 
 	@Override
@@ -23,27 +40,93 @@ public class TileEntityMachineIntake extends TileEntityLoadedBase {
 
 		if(!worldObj.isRemote) {
 
+			boolean isInPressurizedRoom = ChunkAtmosphereManager.proxy.hasAtmosphere(worldObj, xCoord, yCoord, zCoord);
+			CBT_Atmosphere atmosphere = ChunkAtmosphereManager.proxy.getAtmosphere(worldObj, xCoord, yCoord, zCoord);
+
+			if(this.power >= this.getMaxPower() / 20) {
+				if(atmosphere != null && atmosphere.getPressure() > 0.01D) {
+
+					// 1mB of any given air -> 100mB of compressed air
+					// reasoning being: this is the same conversion ratio of water -> steam
+					// bob intends for this to absolutely shit out air, but that is just not feasible with air prod in space
+					// with a single klystron this is still 25mB/t, which is still more oxygen consumption than the old fusion reactor
+					int consumption = (this.compair.getMaxFill() - this.compair.getFill()) / 100;
+
+					if(consumption > 0) {
+						if(!isInPressurizedRoom) {
+							FT_Gaseous.capture(worldObj, atmosphere.getMainFluid(), consumption);
+						} else {
+							List<AtmosphereBlob> blobs = ChunkAtmosphereManager.proxy.getBlobs(worldObj, xCoord, yCoord, zCoord);
+							for(AtmosphereBlob blob : blobs) {
+								if(blob.hasPressure(0.1)) {
+									blob.consume(consumption);
+									break;
+								}
+							}
+						}
+					}
+
+					this.compair.setFill(this.compair.getMaxFill());
+				}
+
+				this.power -= this.getMaxPower() / 20;
+			}
+
+			for(DirPos pos : getConPos()) {
+				if(this.compair.getFill() > 0) this.tryProvide(compair, worldObj, pos);
+				this.trySubscribe(worldObj, pos);
+			}
+
+			this.networkPackNT(50);
+
 		} else {
 
 			this.prevFan = this.fan;
 
-			this.fan += 45;
+			if(this.power >= this.getMaxPower() / 20) {
+				this.fan += 45;
 
-			if(this.fan >= 360) {
-				this.fan -= 360;
-				this.prevFan -= 360;
+				if(this.fan >= 360) {
+					this.fan -= 360;
+					this.prevFan -= 360;
+				}
+
+				if(audio == null) {
+					audio = createAudioLoop();
+					audio.startSound();
+				} else if(!audio.isPlaying()) {
+					audio = rebootAudio(audio);
+				}
+
+				audio.keepAlive();
+				audio.updateVolume(this.getVolume(0.25F));
+
+			} else {
+
+				if(audio != null) {
+					audio.stopSound();
+					audio = null;
+				}
 			}
-
-			if(audio == null) {
-				audio = createAudioLoop();
-				audio.startSound();
-			} else if(!audio.isPlaying()) {
-				audio = rebootAudio(audio);
-			}
-
-			audio.keepAlive();
-			audio.updateVolume(this.getVolume(0.25F));
 		}
+	}
+
+	public DirPos[] getConPos() {
+		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+		return new DirPos[] {
+				new DirPos(xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ, dir),
+				new DirPos(xCoord + dir.offsetX + rot.offsetX, yCoord, zCoord + dir.offsetZ + rot.offsetZ, dir),
+
+				new DirPos(xCoord - dir.offsetX * 2, yCoord, zCoord - dir.offsetZ * 2, dir.getOpposite()),
+				new DirPos(xCoord - dir.offsetX * 2 + rot.offsetX, yCoord, zCoord - dir.offsetZ * 2 + rot.offsetZ, dir.getOpposite()),
+
+				new DirPos(xCoord + rot.offsetX * 2, yCoord, zCoord + rot.offsetZ * 2, rot),
+				new DirPos(xCoord + rot.offsetX * 2 - dir.offsetX, yCoord, zCoord + rot.offsetZ * 2 - dir.offsetZ, rot),
+
+				new DirPos(xCoord - rot.offsetX, yCoord, zCoord - rot.offsetZ, rot.getOpposite()),
+				new DirPos(xCoord - rot.offsetX - dir.offsetX, yCoord, zCoord - rot.offsetZ - dir.offsetZ, rot.getOpposite())
+		};
 	}
 
 	@Override public AudioWrapper createAudioLoop() {
@@ -58,6 +141,44 @@ public class TileEntityMachineIntake extends TileEntityLoadedBase {
 		super.invalidate();
 		if(audio != null) { audio.stopSound(); audio = null; }
 	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
+		buf.writeLong(power);
+		compair.serialize(buf);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
+		this.power = buf.readLong();
+		compair.deserialize(buf);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		this.power = nbt.getLong("power");
+		compair.readFromNBT(nbt, "compair");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setLong("power", power);
+		compair.writeToNBT(nbt, "compair");
+	}
+
+	@Override public boolean canConnect(ForgeDirection dir) { return dir != ForgeDirection.UP && dir != ForgeDirection.DOWN; }
+	@Override public boolean canConnect(FluidType type, ForgeDirection dir) { return type == Fluids.AIR && dir != ForgeDirection.UP && dir != ForgeDirection.DOWN; }
+
+	@Override public void setPower(long i) { power = i; }
+	@Override public long getPower() { return power; }
+	@Override public long getMaxPower() { return 2_000; }
+
+	@Override public FluidTank[] getAllTanks() { return new FluidTank[] {compair}; }
+	@Override public FluidTank[] getSendingTanks() { return new FluidTank[] {compair}; }
 
 	AxisAlignedBB bb = null;
 

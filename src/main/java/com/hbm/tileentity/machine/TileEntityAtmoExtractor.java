@@ -37,7 +37,7 @@ public class TileEntityAtmoExtractor extends TileEntityMachineBase implements IE
 
 	public TileEntityAtmoExtractor() {
 		super(0);
-		tank = new FluidTank(Fluids.AIR, 50000);
+		tank = new FluidTank(Fluids.EARTHAIR, 50000);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class TileEntityAtmoExtractor extends TileEntityMachineBase implements IE
 				? CelestialBody.getTrait(worldObj, CBT_Atmosphere.class)
 				: null;
 
-			if(atmosphere != null) {
+			if(atmosphere != null && atmosphere.getPressure() > 0.0D) {
 				// If the atmosphere doesn't contain the fluid we're sucking up, pick a new one
 				if(!atmosphere.hasFluid(tank.getTankType())) {
 					tank.setTankType(atmosphere.getMainFluid());

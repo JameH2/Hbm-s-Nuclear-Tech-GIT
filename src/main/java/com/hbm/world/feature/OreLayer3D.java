@@ -77,6 +77,7 @@ public class OreLayer3D {
 
 	@SubscribeEvent
 	public void onDecorate(DecorateBiomeEvent.Pre event) {
+
 		World world = event.world;
 		int cx = event.chunkX;
 		int cz = event.chunkZ;

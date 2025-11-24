@@ -9,8 +9,10 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockPlushie.TileEntityPlushie;
 import com.hbm.config.ClientConfig;
 import com.hbm.config.CustomMachineConfigJSON;
+import com.hbm.handler.nei.AnvilOverlayHandler;
 import com.hbm.handler.nei.CustomMachineHandler;
 import com.hbm.items.ItemEnums.EnumIngotMetal;
+import com.hbm.inventory.gui.GUIAnvil;
 import com.hbm.items.ItemEnums.EnumSecretType;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBattery;
@@ -37,6 +39,7 @@ public class NEIConfig implements IConfigureNEI {
 		for (TemplateRecipeHandler handler: NEIRegistry.listAllHandlers()) {
 			registerHandler(handler);
 		}
+		API.registerGuiOverlayHandler(GUIAnvil.class, new AnvilOverlayHandler(), "ntmAnvil");
 
 		for(CustomMachineConfigJSON.MachineConfiguration conf : CustomMachineConfigJSON.niceList) {
 			registerHandlerBypass(new CustomMachineHandler(conf));

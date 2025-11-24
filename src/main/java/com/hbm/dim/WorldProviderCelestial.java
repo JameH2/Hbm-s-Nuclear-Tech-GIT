@@ -173,21 +173,18 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		metrics = SolarSystem.calculateMetricsFromBody(worldObj, partialTicks, body, solarAngle);
 
 		// Get our eclipse amount
-		eclipseAmount = getEclipseFactor(metrics, sunSize);
+		eclipseAmount = getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_SURFACE);
 	}
 
-	public static double getEclipseFactor(List<AstroMetric> metrics, double sunSize) {
+	public static double getEclipseFactor(List<AstroMetric> metrics, double sunSize, double maxSize) {
 		double factor = 0;
+		double sunArc = getArc(sunSize);
 
 		// Calculate eclipse
 		for(AstroMetric metric : metrics) {
 			if(metric.apparentSize < 1) continue;
 
-			double sizeToArc = 0.0028; // due to rendering, the arc is not exactly 1deg = 1deg, this converts from apparentSize to 0-1
-			double planetSize = MathHelper.clamp_double(metric.apparentSize, 0, 24);
-
-			double planetArc = planetSize * sizeToArc;
-			double sunArc = sunSize * sizeToArc;
+			double planetArc = getArc(MathHelper.clamp_double(metric.apparentSize, 0, maxSize));
 			double minPhase = 1 - (planetArc + sunArc);
 			double maxPhase = 1 - (planetArc - sunArc);
 			if(metric.phaseObscure < minPhase) continue;
@@ -198,6 +195,12 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		}
 
 		return factor;
+	}
+
+	// due to rendering, the arc is not exactly 1deg = 1deg, this converts from apparentSize to 0-1
+	// note that we are rendering flat quads, so the arc size is warped more the larger you get!
+	private static double getArc(double apparentSize) {
+		return apparentSize * 0.0017D + Math.sqrt(apparentSize * 0.00003D);
 	}
 
 	@Override
@@ -231,7 +234,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 				fluidColor = Vec3.createVectorHelper(53F / 255F * sunR, 32F / 255F * sunG, 74F / 255F * sunB);
 			} else if(entry.fluid == Fluids.DUNAAIR || entry.fluid == Fluids.CARBONDIOXIDE) {
 				fluidColor = Vec3.createVectorHelper(212F / 255F * sunR, 112F / 255F * sunG, 78F / 255F * sunB);
-			} else if(entry.fluid == Fluids.AIR || entry.fluid == Fluids.OXYGEN || entry.fluid == Fluids.NITROGEN) {
+			} else if(entry.fluid == Fluids.EARTHAIR || entry.fluid == Fluids.OXYGEN || entry.fluid == Fluids.NITROGEN) {
 				// Default to regular ol' overworld
 				fluidColor = Vec3.createVectorHelper(0.7529412F * sunR, 0.84705883F * sunG, 1.0F * sunB);
 			} else {
@@ -340,7 +343,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 				fluidColor = Vec3.createVectorHelper(53F / 255F * sun, 32F / 255F * sun, 74F / 255F * sun);
 			} else if(entry.fluid == Fluids.DUNAAIR || entry.fluid == Fluids.CARBONDIOXIDE) {
 				fluidColor = Vec3.createVectorHelper(212F / 255F * sun, 112F / 255F * sun, 78F / 255F * sun);
-			} else if(entry.fluid == Fluids.AIR || entry.fluid == Fluids.OXYGEN || entry.fluid == Fluids.NITROGEN) {
+			} else if(entry.fluid == Fluids.EARTHAIR || entry.fluid == Fluids.OXYGEN || entry.fluid == Fluids.NITROGEN) {
 				// Default to regular ol' overworld
 				fluidColor = super.getSkyColor(camera, partialTicks);
 			} else {
@@ -747,7 +750,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		metrics = SolarSystem.calculateMetricsFromBody(worldObj, 0, body, solarAngle);
 
 		// Get our eclipse amount
-		return getEclipseFactor(metrics, sunSize) > 0.0;
+		return getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_SURFACE) > 0.0;
 	}
 
 	@Override

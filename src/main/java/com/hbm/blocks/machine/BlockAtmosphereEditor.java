@@ -136,7 +136,7 @@ public class BlockAtmosphereEditor extends BlockContainer implements IToolable, 
 
 		private boolean isOn = false;
 		private int throughputFactor = 10;
-		private FluidType fluid = Fluids.AIR;
+		private FluidType fluid = Fluids.EARTHAIR;
 		private boolean isEmitting = true;
 
 		@Override

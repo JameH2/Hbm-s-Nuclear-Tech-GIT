@@ -10,7 +10,6 @@ import com.hbm.dim.orbit.OrbitalStation.StationState;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Destroyed;
 import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
-import com.hbm.lib.Library;
 import com.hbm.util.AstronomyUtil;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.Compat;
@@ -106,17 +105,15 @@ public class WorldProviderOrbit extends WorldProvider {
 		}
 
 		// Get our sun angle
-		CelestialBody orbiting = station.orbiting;
-		CelestialBody target = station.target;
-		float angle = (float)SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, orbiting, getOrbitalAltitude(orbiting));
+		float angle = (float)SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, station.orbiting, getOrbitalAltitude(station.orbiting));
 		if(progress > 0) {
-			angle = (float)BobMathUtil.lerp(progress, angle, (float)SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, target, getOrbitalAltitude(target)));
+			angle = (float)BobMathUtil.clerp(progress, angle, (float)SolarSystem.calculateSingleAngle(worldObj, partialTicks, metrics, station.target, getOrbitalAltitude(station.target)));
 		}
 
 		celestialAngle = 0.5F - (angle / 360.0F);
 
 		// Get our eclipse amount
-		eclipseAmount = WorldProviderCelestial.getEclipseFactor(metrics, sunSize);
+		eclipseAmount = WorldProviderCelestial.getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_ORBIT);
 	}
 
 	@Override
@@ -157,9 +154,7 @@ public class WorldProviderOrbit extends WorldProvider {
 
 		float distanceFactor = MathHelper.clamp_float((semiMajorAxisKm - distanceStart) / (distanceEnd - distanceStart), 0F, 1F);
 
-		float solarAngle = worldObj.getCelestialAngle(par1);
-		float celestialPhase = (1 - (solarAngle + 0.5F) % 1) * 2 - 1;
-		float starBrightness = (float)Library.smoothstep(Math.abs(celestialPhase), 0.6, 0.75);
+		float starBrightness = (float)eclipseAmount;
 
 		return MathHelper.clamp_float(starBrightness, distanceFactor, 1F);
 	}
@@ -170,14 +165,7 @@ public class WorldProviderOrbit extends WorldProvider {
 		if(CelestialBody.getStar(worldObj).hasTrait(CBT_Destroyed.class))
 			return 0;
 
-		float solarAngle = worldObj.getCelestialAngle(par1);
-		float celestialPhase = (1 - (solarAngle + 0.5F) % 1) * 2 - 1;
-
-		float sunBrightness = 1 - (float)Library.smoothstep(Math.abs(celestialPhase), 0.6, 0.8);
-
-		sunBrightness *= 1 - eclipseAmount * 0.6;
-
-		return sunBrightness;
+		return 1.0F - (float)eclipseAmount;
 	}
 
 	@Override

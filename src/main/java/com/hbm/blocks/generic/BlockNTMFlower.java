@@ -41,7 +41,8 @@ public class BlockNTMFlower extends BlockEnumMulti implements IPlantable, IGrowa
 		WEED(false),
 		CD0(true),
 		CD1(true),
-		STRAWBERRY(false);
+		STRAWBERRY(false),
+		MINT(false);
 		
 		public boolean needsOil;
 		private EnumFlowerType(boolean needsOil) {
@@ -251,8 +252,13 @@ public class BlockNTMFlower extends BlockEnumMulti implements IPlantable, IGrowa
 			return ModItems.strawberry;
 		}
 
+		if(meta == EnumFlowerType.MINT.ordinal()) {
+			return ModItems.mint_leaves;
+		}
+		
 		return super.getItemDropped(meta, rand, j);
 	}
+
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {

@@ -53,6 +53,7 @@ import com.hbm.tileentity.bomb.*;
 import com.hbm.tileentity.deco.*;
 import com.hbm.tileentity.machine.*;
 import com.hbm.tileentity.machine.albion.*;
+import com.hbm.tileentity.machine.fusion.*;
 import com.hbm.tileentity.machine.oil.*;
 import com.hbm.tileentity.machine.pile.*;
 import com.hbm.tileentity.machine.rbmk.*;
@@ -285,6 +286,7 @@ public class TileMappings {
 		putMachines();
 		putPile();
 		putRBMK();
+		putFusion();
 
 		TileEntityMachineRadarNT.registerEntityClasses();
 		TileEntityMachineRadarNT.registerConverters();
@@ -389,6 +391,7 @@ public class TileMappings {
 		put(TileEntityMachineAssemblyMachine.class, "tileentity_assemblymachine");
 		put(TileEntityMachineAssemfac.class, "tileentity_assemfac");
 		put(TileEntityMachineAssemblyFactory.class, "tileentity_assemblyfactory");
+		put(TileEntityMachinePrecAss.class, "tileentity_precass");
 		put(TileEntityMachineChemplant.class, "tileentity_chemical_plant");
 		put(TileEntityMachineChemicalPlant.class, "tileentity_chemicalplant");
 		put(TileEntityMachineChemfac.class, "tileentity_chemfac");
@@ -466,6 +469,17 @@ public class TileMappings {
 		put(TileEntityRBMKInlet.class, "tileentity_rbmk_inlet");
 		put(TileEntityRBMKOutlet.class, "tileentity_rbmk_outlet");
 		put(TileEntityRBMKAutoloader.class, "tileentity_rbmk_autoloader");
+	}
+
+	private static void putFusion() {
+		put(TileEntityFusionTorusStruct.class, "tileentity_fusion_torus_struct");
+		put(TileEntityFusionTorus.class, "tileentity_fusion_torus");
+		put(TileEntityFusionKlystron.class, "tileentity_fusion_klystron");
+		put(TileEntityFusionBreeder.class, "tileentity_fusion_breeder");
+		put(TileEntityFusionCollector.class, "tileentity_fusion_collector");
+		put(TileEntityFusionBoiler.class, "tileentity_fusion_boiler");
+		put(TileEntityFusionMHDT.class, "tileentity_fusion_mhdt");
+		put(TileEntityFusionCoupler.class, "tileentity_fusion_coupler");
 	}
 
 	private static void putNetwork() {

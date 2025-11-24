@@ -67,6 +67,7 @@ import com.hbm.items.armor.ArmorFSB;
 import com.hbm.items.armor.IAttackHandler;
 import com.hbm.items.armor.IDamageHandler;
 import com.hbm.items.armor.ItemArmorMod;
+import com.hbm.items.armor.ItemModDefuser;
 import com.hbm.items.armor.ItemModRevive;
 import com.hbm.items.armor.ItemModShackles;
 import com.hbm.items.food.ItemConserve.EnumFoodType;
@@ -664,6 +665,10 @@ public class ModEventHandler {
 
 	@SubscribeEvent
 	public void onLivingUpdate(LivingUpdateEvent event) {
+
+		if(event.entityLiving instanceof EntityCreeper && event.entityLiving.getEntityData().getBoolean("hfr_defused")) {
+			ItemModDefuser.defuse((EntityCreeper) event.entityLiving, null, false);
+		}
 
 		if(!event.entity.worldObj.isRemote && event.entityLiving.isPotionActive(HbmPotion.slippery.id)) {
 			if (event.entityLiving.onGround) {
