@@ -122,18 +122,31 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 		GL11.glPushMatrix();
 		{
 
-			mc.renderEngine.bindTexture(starfield);
 
-			GL11.glMatrixMode(GL11.GL_TEXTURE);
-			GL11.glPushMatrix();
+			GL11.glEnable(GL11.GL_FOG);
+			GL11.glPushAttrib(GL11.GL_FOG_BIT);
 			{
 
-				GL11.glTranslated(0, ((double)System.currentTimeMillis() * 0.001) % 1, 0);
-				ResourceManager.bubble.renderAll();
+				GL11.glFogf(GL11.GL_FOG_START, 50.0F);
+				GL11.glFogf(GL11.GL_FOG_END, 200.0F);
+
+				mc.renderEngine.bindTexture(starfield);
+
+				GL11.glMatrixMode(GL11.GL_TEXTURE);
+				GL11.glPushMatrix();
+				{
+
+					GL11.glTranslated(0, ((double)System.currentTimeMillis() * 0.0014) % 1, 0);
+					GL11.glScalef(8.0F, 4.0F, 1.0F);
+					ResourceManager.bubble.renderAll();
+
+				}
+				GL11.glPopMatrix();
+				GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
 			}
-			GL11.glPopMatrix();
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+			GL11.glPopAttrib();
+			GL11.glDisable(GL11.GL_FOG);
 
 		}
 		GL11.glPopMatrix();

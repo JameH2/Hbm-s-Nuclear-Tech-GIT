@@ -113,7 +113,11 @@ public class WorldProviderOrbit extends WorldProvider {
 		celestialAngle = 0.5F - (angle / 360.0F);
 
 		// Get our eclipse amount
-		eclipseAmount = WorldProviderCelestial.getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_ORBIT);
+		if(station.state == StationState.FTL) {
+			eclipseAmount = 1;
+		} else {
+			eclipseAmount = WorldProviderCelestial.getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_ORBIT);
+		}
 	}
 
 	@Override
