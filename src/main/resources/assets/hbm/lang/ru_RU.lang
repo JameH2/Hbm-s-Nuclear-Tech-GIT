@@ -7379,7 +7379,7 @@ chem.SOIL=Производство почвы
 chem.HYDRAPISS=Производство гидрозина с использованием мочи
 
 // Chem And Assembly
-chem.nitricacidalt=Серная кислота из аммиака
+chem.nitricacidalt=Азотная кислота из аммиака
 chem.hydrapiss=Гидразин через мочу
 
 crucible.arse=Производство арсенида галлия
