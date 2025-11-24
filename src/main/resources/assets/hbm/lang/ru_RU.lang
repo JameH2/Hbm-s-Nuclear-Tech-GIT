@@ -6813,6 +6813,19 @@ desc.gui.upgrade.speed= * §4Скорость§r: Стакается до 3-х �
 
 tile.oc_cable_paintable.name=Окрашиваемый сетевой кабель
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 // NTM Space //
 
 // Celestial Bodies //
@@ -6838,7 +6851,7 @@ tile.eve_rock.name=Камень Евы
 tile.mercury_block.name=Ртуть
 
 // Moon //
-tile.moon_turf.name=Грунт Луны
+tile.moon_turf.name=Лунный грунт
 tile.moon_rock.name=Камень Луны
 tile.stone_resource.conglomerate.name=Конгломерат
 
@@ -6847,25 +6860,21 @@ tile.minmus_smooth.name=Гладкий камень Минмуса
 tile.minmus_regolith.name=Реголит Минмуса
 tile.minmus_stone.name=Камень Минмуса
 
-// Vitya note: Мне нравится переводить вещи так, чтобы звучали оригинально, а не тупо транслитом.
-// Конечно "Мята" звучало бы правильнее, но во первых, это не Земля, а Минмус, а во вторых так прикольнее звучит, да и смысл не теряет.
-// Такое ощущение как будто это растение с Минмуса открыли.
+// MrKimkimora note: never let this bro cook again PPLEEASE
 item.billet_menthol.name=Заготовка ментола
 item.chocolate_mint_billet.name=Мятное печенье
 item.ingot_menthol.name=Ментоловые кристаллы
-item.mint_leaves.name=Листочки мянтуса
+item.mint_leaves.name=Мятные листья
 item.nugget_menthol.name=Кусочек ментола
 
-tile.crop_mint.name=Мянтус
-tile.plant_flower.mint.name=Дикий мянтус
+tile.crop_mint.name=Мята
+tile.plant_flower.mint.name=Дикая мята
 
 // Duna //
 tile.duna_sands.name=Песок Дюны
 tile.duna_rock.name=Камень Дюны
 tile.duna_cobble.name=Булыжник Дюны
-
 tile.ferric_clay.name=Блок железистой глины
-
 tile.stone_resource.calcium.name=Кальцит
 tile.dry_ice.name=Сухой лёд
 
@@ -7349,8 +7358,6 @@ entity.entity_scutterfish.name=Скаттер
 entity.entity_scuttlecrab.name=Краб-бегун
 entity.entity_siftereel.name=Угорь-просейщик
 entity.entity_tankbot.name=Танкбот
-// Vitya note: Может быть лучше перевести как "Машина войны?".
-// Колосс звучит слишком литературно. В простонародье редко используется.
 entity.entity_war_behemoth.name=Колосс войны
 
 // Templates (Old) //
@@ -7437,8 +7444,8 @@ trait.confusion=Аутизм
 trait.neutron=Нейтронная радиация
 
 // Achievements //
-achievement.driveFail.desc=Забудьте создать копию диска орбитальной станции перед запуском
-achievement.driveFail=М-м... У нас есть копия?
+achievement.driveFail.desc=Ты забыл сделать копию диска орбитальной станции перед запуском
+achievement.driveFail=М-м... Ты же скопировал?
 achievement.rotConsum=Потребители плоти
 
 // Potions //
@@ -7465,5 +7472,4 @@ desc.util.warhead=Боеголовка
 desc.util.chip_inaccuracy=Неточность чипа
 desc.util.fin_inaccuracy=Неточность стабилизатора
 
-// Vitya note: Видимо датой изменения файла не умеют пользоваться, а про коммиты вообще молчу, но ладно...
-// last updated november 21th, 2025 by Vitya //
+// last updated november 24th, 2025 by MrKimkimora //
