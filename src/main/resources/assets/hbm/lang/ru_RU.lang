@@ -6844,6 +6844,7 @@ tile.stone_resource.conglomerate.name=Конгломерат
 
 // Minmus //
 tile.minmus_smooth.name=Гладкий камень Минмуса
+tile.minmus_smooth.desc=Пахнет... мятой?
 tile.minmus_regolith.name=Реголит Минмуса
 tile.minmus_stone.name=Камень Минмуса
 
@@ -6855,6 +6856,8 @@ item.chocolate_mint_billet.name=Мятное печенье
 item.ingot_menthol.name=Ментоловые кристаллы
 item.mint_leaves.name=Листочки мянтуса
 item.nugget_menthol.name=Кусочек ментола
+
+item.min_cream.name=Мятное мороженное "Мяумус"
 
 tile.crop_mint.name=Мянтус
 tile.plant_flower.mint.name=Дикий мянтус
@@ -6890,7 +6893,6 @@ tile.laythe_coral_block.name=Блок кораллов Лейта
 tile.tumor.name=Мясистая масса
 
 // Tekto
-
 tile.ore_tekto.name=Нефтяной карман Текто
 tile.ore_tekto_empty.name=Пустой нефтяной карман Текто
 
@@ -6985,13 +6987,13 @@ tile.pneumatic_tube.desc=Пересылает предметы за счёт с�
 tile.machine_radiator.name=Паровой радиатор
 tile.machine_stardar.name=Радиотелескоп "StarDar"
 tile.orrery.name=Планетарий
+tile.orbital_station_launcher.name=Орбитальная пусковая площадка
+tile.orbital_station_launcher.desc=Используется для сборки и запуска$ракет с орбитальной станции.
 
 // Items
 item.atmosphere_scanner.name=Анализатор атмосферы
 item.crystal_zinc.name=Кристаллизованный цинк
-
 item.ball_ferric_clay.name=Железистая глина
-
 item.bucket_ccl.name=Ведро тетрахлорметана
 item.chunk_ore.moonstone.name=Кусок лунного камня
 item.chunk_ore.pentlandite.name=Кусок пентландита
@@ -7000,10 +7002,10 @@ item.flour.name=Мука
 item.heavy_boots.name=Ботинки управляемой гравитации
 item.nickel_salts.name=Соли никеля
 item.paraffin_seeds.name=Хлорированные семена
-item.pet_leaves.name=Пластиковые листья
+item.pet_leaves.name=Пластиковые листочки
 item.powder_pvc.name=ПВХ-порошок
 item.powder_rubber.name=Резиновый порошок
-item.rubber_leaves.name=Резиновые листья
+item.rubber_leaves.name=Резиновые листочки
 item.stick_vinyl.name=Виниловый стержень
 item.stick_pvc.name=ПВХ-стержень
 item.turbine_syngas.name=Нержавеющие лопасти
@@ -7135,7 +7137,8 @@ item.circuit.capacitor_lanthanium.name=Лантановый конденсато
 item.circuit.molychip.name=Молизитовый микрочип
 item.circuit.gaschip.name=Микрочип из арсенида галлия
 item.circuit.hfchip.name=Гафниевый микрочип
-item.circuit.avionics.name=Блок авионики
+item.circuit.aero.name=Плата авионики
+item.circuit.avionics.name=Блок астрионики
 item.hard_drive.name=Пустой жёсткий диск
 item.hard_drive_full.name=Жёсткий диск
 item.circuit.processt1.name=Процессор обработки 1-го уровня
@@ -7195,12 +7198,11 @@ item.bucket_bromine.name=Ведро смеси алкилбромидов
 item.oxy_pinwheel.name=Кислородная вертушка
 item.coin_airliner.name=Монета Гражданский самолёт
 item.flask_infusion.nitan.name=Амброзия NITANÂ©
-item.flask_infusion.nitan.desc=Болеутоляющее исключительно для медицинского или развлекательного использования.
+item.flask_infusion.nitan.desc=Болеутоляющее, исключительно для медицинского или развлекательного использования.
 item.laser_crystal_iron.name=Железо-Арсенидовый жар-кристалл
 item.laser_crystal_iron.desc=Железное ядро с жар-сердцевиной, обёрнутое арсенидом галлия.
 
 // Fluids //
-hbmfluid.air=Сжатый воздух
 hbmfluid.ammonia=Аммиак
 hbmfluid.aqueous_copper=Раствор меди
 hbmfluid.aqueous_nickel=Раствор никеля
@@ -7218,10 +7220,8 @@ hbmfluid.conglomera=Раствор конгломерата
 hbmfluid.coppersulfate=Медный купорос
 hbmfluid.cream=Взбитые сливки
 hbmfluid.dicyanoacetylene=Дицианоацетилен
-hbmfluid.dunaair=Сжатый воздух (Дюна)
 hbmfluid.elbowgrease=Локтевая смазка
 hbmfluid.emilk=Сливки
-hbmfluid.eveair=Сжатый воздух (Ева)
 hbmfluid.fluorine=Фтор
 hbmfluid.gas_watz=Газообразные токсичные отходы
 hbmfluid.gaseous_plutonium_bromide=Газообразный бромид плутония
@@ -7234,22 +7234,13 @@ hbmfluid.hgas=Галогенный газ
 hbmfluid.honey=Мёд
 hbmfluid.htco4=Технециевая кислота
 hbmfluid.hydrazine=Гидразин
-hbmfluid.joolgas=Сжатый газ (Джул)
 hbmfluid.kmno4=Раствор перманганата калия
 hbmfluid.krypton=Криптон
 hbmfluid.methanol=Метанол
 hbmfluid.methylene=Метилен
 hbmfluid.milk=Молоко
 hbmfluid.minsol=Минеральный шлам
-
-// DEPRECATED //
-hbmfluid.morkine=Газообразный моркин
-hbmfluid.morkite=Моркит
-hbmfluid.mslurry=Моркитовый шлам
-// DEPRECATED //
-
 hbmfluid.neon=Неон
-hbmfluid.ngas=Сжатый газ (Нейдон)
 hbmfluid.nitrogen=Жидкий азот
 hbmfluid.nmass=N-Масс(II) Варп топливо
 hbmfluid.nmasstetranol=N-Масс(III) Тетрагексаэтанол
@@ -7257,20 +7248,33 @@ hbmfluid.oliveoil=Оливковое масло
 hbmfluid.plutonium_bromide=Бромид плутония
 hbmfluid.polythylene=Полиэтилен
 hbmfluid.rizz=Cum
-hbmfluid.sarnusgas=Сжатый газ (Сарнус)
 hbmfluid.schrabidium_bromide=Бромид шрабидия
 hbmfluid.scutterblood=Кровь скаттера
 hbmfluid.smilk=Клубничное молоко
 hbmfluid.superheated_hydrogen=Перегретый жидкий водород
 hbmfluid.tcrude=Неочищенная нефть Текто
 hbmfluid.tea=Чай
-hbmfluid.tektoair=Сжатый воздух (Текто)
 hbmfluid.thorium_bromide=Бромид тория
-hbmfluid.ugas=Сжатый газ (Урлум)
 hbmfluid.uranium_bromide=Бромид урана
 hbmfluid.vinyl=Винилхлорид
 hbmpseudofluid.minsol=Тяжёлый минеральный шлам
 hbmpseudofluid.minsolsep=Отделённый минеральный шлам
+
+hbmfluid.air=Сжатый воздух
+hbmfluid.dunaair=Сжатый воздух (Дюна)
+hbmfluid.earthair=Обогащённый кислородом воздух
+hbmfluid.eveair=Сжатый воздух (Ева)
+hbmfluid.joolgas=Сжатый газ (Джул)
+hbmfluid.ngas=Сжатый газ (Нейдон)
+hbmfluid.sarnusgas=Сжатый газ (Сарнус)
+hbmfluid.tektoair=Сжатый воздух (Текто)
+hbmfluid.ugas=Сжатый газ (Урлум)
+
+// DEPRECATED //
+hbmfluid.morkine=Газообразный моркин
+hbmfluid.morkite=Моркит
+hbmfluid.mslurry=Моркитовый шлам
+// DEPRECATED //
 
 // Ores //
 tile.ore_iron.name=Железная руда
@@ -7339,19 +7343,17 @@ container.hydrobay=Теплица
 container.machine_discharger=Устройство разрядки материи
 
 // Entities //
-entity.entity_depthsquid.name=Глубинный кальмар
-entity.entity_mob_flesh_creeper.name=Мясной крипер
-entity.entity_moon_cow.name=Лунная корова
-entity.entity_rideable_rocket.name=Ракета
-entity.entity_rideable_rocket_dummy.name=Ракета
-entity.entity_scrapfish.name=Металлоломорыба
-entity.entity_scutterfish.name=Скаттер
-entity.entity_scuttlecrab.name=Краб-бегун
-entity.entity_siftereel.name=Угорь-просейщик
-entity.entity_tankbot.name=Танкбот
-// Vitya note: Может быть лучше перевести как "Машина войны?".
-// Колосс звучит слишком литературно. В простонародье редко используется.
-entity.entity_war_behemoth.name=Колосс войны
+entity.hbm.entity_depthsquid.name=Глубинный кальмар
+entity.hbm.entity_mob_flesh_creeper.name=Мясной крипер
+entity.hbm.entity_moon_cow.name=Лунная корова
+entity.hbm.entity_rideable_rocket.name=Ракета
+entity.hbm.entity_rideable_rocket_dummy.name=Ракета
+entity.hbm.entity_scrapfish.name=Металлоломорыба
+entity.hbm.entity_scutterfish.name=Скаттер
+entity.hbm.entity_scuttlecrab.name=Крабегун
+entity.hbm.entity_siftereel.name=Угорь-просейщик
+entity.hbm.entity_tankbot.name=Танкбот
+entity.hbm.entity_war_behemoth.name=Машина войны
 
 // Templates (Old) //
 chem.ANIMAN=Синтез литературного ужаса
@@ -7376,6 +7378,10 @@ chem.CHLOROMETHANE=Галогенирование природного газа
 chem.SOIL=Производство почвы
 chem.HYDRAPISS=Производство гидрозина с использованием мочи
 
+// Chem And Assembly
+chem.nitricacidalt=Серная кислота из аммиака
+chem.hydrapiss=Гидразин через мочу
+
 crucible.arse=Производство арсенида галлия
 crucible.conglomerate=Переплавка конгломерата в железо и никель
 crucible.stainless=Производство нержавеющей стали
@@ -7384,8 +7390,8 @@ crucible.hsss=Альтернативное производство высоко
 // Texts //
 geiger.playerAct=Радиоактивность игрока:
 
-armor.canSeal=Обеспечивает герметичность (требуется PLSS)
-armor.mustSeal=Необходимо использовать$с полностью герметичным набором брони!
+armor.canSeal=Обеспечивает герметичность
+armor.mustSeal=Использовать с полностью герметичным набором брони!
 
 atmosphere.name=Статус атмосферы
 atmosphere.noSeal=КОМНАТА НЕГЕРМЕТИЧНА
@@ -7396,6 +7402,7 @@ atmosphere.noVacuum=ТРЕБУЕТСЯ АТМОСФЕРА
 atmosphere.noGravity=ТРЕБУЕТСЯ НЕВЕСОМОСТЬ
 atmosphere.noOrbit=РАБОТАЕТ ТОЛЬКО НА ОРБИТЕ
 atmosphere.engineFacing=НЕВЕРНОЕ НАПРАВЛЕНИЕ
+atmosphere.yesOrbit=НЕПРИМЕНИМА НА ОРБИТЕ
 
 station.retrieveRocket=Нажмите, чтобы извлечь накопленные ракеты
 station.removeRocket=Нажмите, чтобы удалить пристыкованную капсулу
@@ -7464,6 +7471,10 @@ desc.util.fuel_capacity=Ёмкость топливного бака
 desc.util.warhead=Боеголовка
 desc.util.chip_inaccuracy=Неточность чипа
 desc.util.fin_inaccuracy=Неточность стабилизатора
+
+item.missile.part.mass=Масса
+item.missile.part.thrust=Сила подъёма
+item.missile.part.isp=Специфичный импульс
 
 // Vitya note: Видимо датой изменения файла не умеют пользоваться, а про коммиты вообще молчу, но ладно...
 // last updated november 21th, 2025 by Vitya //
