@@ -6,7 +6,6 @@ import com.hbm.items.weapon.ItemCustomMissilePart;
 import com.hbm.items.weapon.ItemCustomRocket;
 import com.hbm.items.weapon.ItemCustomMissilePart.PartType;
 import com.hbm.items.weapon.ItemCustomMissilePart.WarheadType;
-import com.hbm.tileentity.machine.TileEntityMachineRocketAssembly;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -69,9 +68,9 @@ public class SlotRocket extends Slot {
 
 	public static class SlotDrive extends SlotLayer {
 
-		TileEntityMachineRocketAssembly inventory;
+		IStage inventory;
 
-		public SlotDrive(TileEntityMachineRocketAssembly inventory, int id, int x, int y, int layer) {
+		public SlotDrive(IStage inventory, int id, int x, int y, int layer) {
 			super(inventory, id, x, y, layer);
 			this.inventory = inventory;
 		}
@@ -85,8 +84,14 @@ public class SlotRocket extends Slot {
 		@Override
 		public void setLayer(int layer) {
 			super.setLayer(layer);
-			inventory.currentStage = layer;
+			inventory.setCurrentStage(layer);
 		}
+
+	}
+
+	public static interface IStage extends IInventory {
+
+		public void setCurrentStage(int stage);
 
 	}
 

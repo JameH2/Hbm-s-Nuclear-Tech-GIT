@@ -64,20 +64,18 @@ public class ModEventHandlerImpact {
 
 			if(data.time > 0) {
 				data.time--;
-				if(data.time<=2400)
-				{
+				if(data.time <= 2400) {
 					List<EntityPlayer> entities = event.world.playerEntities;
 					for(Iterator<EntityPlayer> en = new ArrayList<>(entities).iterator() ; en.hasNext();) {
 						EntityPlayer e = en.next();
 						Random rand = new Random();
-						if(rand.nextInt(100)==0)
-						{
-							BossSpawnHandler.spawnMeteorAtPlayer(e, false, true);
+						if(rand.nextInt(100) == 0) {
+							BossSpawnHandler.spawnMeteorAtPlayer(e, false);
 						}
 					}
 				}
-				if(data.time==data.dtime)
-				{
+
+				if(data.time == data.dtime) {
 					EntityTom tom = new EntityTom(event.world);
 					tom.setPosition(data.x + 0.5, 600, data.z + 0.5);
 					event.world.spawnEntityInWorld(tom);

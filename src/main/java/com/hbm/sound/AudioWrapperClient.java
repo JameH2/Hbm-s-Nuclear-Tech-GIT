@@ -33,7 +33,7 @@ public class AudioWrapperClient extends AudioWrapper {
 	public void updatePosition(float x, float y, float z) {
 		if(sound != null) sound.setPosition(x, y, z);
 	}
-	
+
 	@Override
 	public void attachTo(Entity e) {
 		if(sound != null) sound.attachTo(e);
@@ -82,5 +82,10 @@ public class AudioWrapperClient extends AudioWrapper {
 	@Override
 	public boolean isPlaying() {
 		return sound != null ? sound.isPlaying() : false;
+	}
+
+	@Override
+	public void setDoesRepeat(boolean repeat) {
+		if(sound != null) sound.setRepeat(repeat);
 	}
 }

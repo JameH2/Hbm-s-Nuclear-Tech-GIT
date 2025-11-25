@@ -104,4 +104,8 @@ public class AudioDynamic extends MovingSound {
 	public boolean isPlaying() {
 		return Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(this);
 	}
+
+	public void setRepeat(boolean repeat) {
+		this.repeat = repeat;
+	}
 }

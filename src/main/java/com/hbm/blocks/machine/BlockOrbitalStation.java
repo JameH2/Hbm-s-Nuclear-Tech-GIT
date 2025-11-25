@@ -54,6 +54,8 @@ public class BlockOrbitalStation extends BlockDummyable implements IBlockSealabl
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+		if(!CelestialBody.inOrbit(world)) return false;
+
 		int[] pos = this.findCore(world, x, y, z);
 
 		if(pos == null)

@@ -174,10 +174,13 @@ public class SolarSystemWorldSavedData extends WorldSavedData {
 	public ChunkCoordIntPair findFreeSpace() {
 		int size = SpaceConfig.maxStationDistance / OrbitalStation.STATION_SIZE;
 
-		// Has a guard so it doesn't loop forever on a spammed out world
-		ChunkCoordIntPair pos = new ChunkCoordIntPair(rand.nextInt(size * 2) - size, rand.nextInt(size * 2) - size);
-		for(int i = 0; stations.containsKey(pos) && i < 512; i++) {
+		// First half of the loop will attempt to find a completely empty station spot
+		// Second half will accept reserved but unlaunched station spots
+		ChunkCoordIntPair pos = null;
+		for(int i = 0; i < 512; i++) {
 			pos = new ChunkCoordIntPair(rand.nextInt(size * 2) - size, rand.nextInt(size * 2) - size);
+			if(!stations.containsKey(pos)) return pos;
+			if(i > 256 && !stations.get(pos).hasStation) return pos;
 		}
 
 		return pos;
@@ -205,6 +208,20 @@ public class SolarSystemWorldSavedData extends WorldSavedData {
 		markDirty();
 
 		return station;
+	}
+
+	public void removeStation(OrbitalStation station) {
+		removeStation(station.dX, station.dZ);
+	}
+
+	public void removeStation(int x, int z) {
+		ChunkCoordIntPair pos = new ChunkCoordIntPair(x, z);
+
+		// Don't remove stations with launched cores, only temporary stations!
+		OrbitalStation station = stations.get(pos);
+		if(station == null || station.hasStation) return;
+
+		stations.remove(pos);
 	}
 
 

@@ -1,12 +1,17 @@
 package com.hbm.blocks.machine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ITooltipProvider;
+import com.hbm.dim.CelestialBody;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntityMachineRocketAssembly;
+import com.hbm.util.BobMathUtil;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -14,9 +19,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class MachineRocketAssembly extends BlockDummyable implements ITooltipProvider {
+public class MachineRocketAssembly extends BlockDummyable implements ITooltipProvider, ILookOverlay {
 
 	public MachineRocketAssembly(Material mat) {
 		super(mat);
@@ -52,6 +58,7 @@ public class MachineRocketAssembly extends BlockDummyable implements ITooltipPro
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+		if(CelestialBody.inOrbit(world)) return false;
 		return standardOpenBehavior(world, x, y, z, player, 0);
 	}
 
@@ -98,6 +105,16 @@ public class MachineRocketAssembly extends BlockDummyable implements ITooltipPro
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 		addStandardInfo(stack, player, list, ext);
+	}
+
+	@Override
+	public void printHook(Pre event, World world, int x, int y, int z) {
+		if(CelestialBody.inOrbit(world)) {
+			List<String> text = new ArrayList<String>();
+			text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! " + I18nUtil.resolveKey("atmosphere.yesOrbit") + " ! ! !");
+			ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
+			return;
+		}
 	}
 
 }

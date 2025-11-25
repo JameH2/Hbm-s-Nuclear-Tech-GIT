@@ -229,7 +229,7 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
 
 		this.sendOrder = nbt.getByte("sendOrder");
 		this.receiveOrder = nbt.getByte("receiveOrder");
-		
+
 		this.whitelist = nbt.getBoolean("whitelist");
 		this.redstone = nbt.getBoolean("redstone");
 	}

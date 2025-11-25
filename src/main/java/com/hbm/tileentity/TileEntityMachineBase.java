@@ -191,7 +191,7 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 			}
 		}
 		nbt.setTag("items", list);
-		
+
 		if (customName != null) {
 			nbt.setString("name", customName);
 		}
@@ -228,14 +228,14 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 	public static boolean breatheAir(World world, int x, int y, int z, int amount) {
 		CBT_Atmosphere atmosphere = world.provider instanceof WorldProviderOrbit ? null : CelestialBody.getTrait(world, CBT_Atmosphere.class);
 		if(atmosphere != null) {
-			if(atmosphere.hasFluid(Fluids.AIR, 0.19) || atmosphere.hasFluid(Fluids.OXYGEN, 0.09)) {
+			if(atmosphere.hasFluid(Fluids.EARTHAIR, 0.19) || atmosphere.hasFluid(Fluids.OXYGEN, 0.09)) {
 				return true;
 			}
 		}
 
 		List<AtmosphereBlob> blobs = ChunkAtmosphereManager.proxy.getBlobs(world, x, y, z);
 		for(AtmosphereBlob blob : blobs) {
-			if(blob.hasFluid(Fluids.AIR, 0.19) || blob.hasFluid(Fluids.OXYGEN, 0.09)) {
+			if(blob.hasFluid(Fluids.EARTHAIR, 0.19) || blob.hasFluid(Fluids.OXYGEN, 0.09)) {
 				blob.consume(amount);
 				return true;
 			}

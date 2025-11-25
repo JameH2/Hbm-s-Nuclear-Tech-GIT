@@ -185,6 +185,7 @@ armorMod.type.servo=Сервоприводы
 armorMod.type.special=Особое
 
 autoswitch=Часть группы автоматического переключения "%s"$Рецепта изменяется в зависимости от первого ингредиента
+autoswitch.pile=Переработка стержней Чикагской поленницы
 autoswitch.plate=Переработка топливных пластин
 autoswitch.plates=Металические пластины
 autoswitch.pwr=Переработка стержней ВВЭР
@@ -809,7 +810,7 @@ container.machineITER=Термоядерный реактор
 container.machineLargeTurbine=Промышленная паровая турбина
 container.machineLiquefactor=Разжижитель
 container.machineMixer=Промышленный смеситель
-container.machinePUREX=PUREX
+container.machinePUREX=Пьюрекс
 container.machineOreSlopper=П.Б.Р.
 container.machinePyroOven=Пиролизная печь
 container.machineRefinery=Нефтеперерабатывающий завод
@@ -873,14 +874,14 @@ container.reactorLarge=Большой ядерный реактор
 container.reactorResearch=Исследовательский реактор
 container.rebar=Установщик арматуры
 container.reix=Мэйнфрейм Rei-X
-container.rttyController=Контроллер редстоун-радио
+container.rttyController=Редстоун-по-радио контроллер
 container.rtg=РИТЭГ-генератор
-container.rtgFurnace=РИТЭГ-печь
-container.rttyReader=Редстоун-радио считыватель
-container.rttyCounter=Редстоун-радио счётчик предметов
-container.rttyLogic=Редстоун-радио логический приёмник
-container.rttyReceiver=Редстоун-радио приёмник
-container.rttySender=Редстоун-радио передатчик
+container.rtgFurnace=РИТЭГ-печь (LEGACY)
+container.rttyReader=Редстоун-по-радио считыватель
+container.rttyCounter=Редстоун-по-радио счётчик предметов
+container.rttyLogic=Редстоун-по-радио логический приёмник
+container.rttyReceiver=Редстоун-по-радио приёмник
+container.rttySender=Редстоун-по-радио передатчик
 container.safe=Сейф
 container.satDock=Станция посадки груза
 container.satLinker=Устройство связи
@@ -945,7 +946,7 @@ damage.item=Сопротивления к:
 damage.category.EN=Энергетическому
 damage.category.EXPL=Взрывам
 damage.category.FIRE=Огню
-damage.category.PROJ=Физическому
+damage.category.PHYS=Физическому
 damage.exact.drown=Утоплению
 damage.exact.fall=Падению
 damage.exact.LASER=Лазерам
@@ -1930,6 +1931,8 @@ item.ammo_coilgun.name=Вольфрамовый шар для гаусс-пуш�
 item.ammo_coilgun_du.name=Ферроурановый шар для гаусс-пушки
 item.ammo_coilgun_rubber.name=Резиновый шар для гаусс-пушки
 item.ammo_container.name=Контейнер с боеприпасами
+item.ammo_container.desc=Выдаёт патроны не более чем для трёх оружий с хотбара.
+item.ammo_container.1.desc=Выдаёт патроны не более чем для трёх оружий с хотбара.$Это не распространяется на мини-ядерные заряды и прочие высокоуровневые боеприпасы.
 item.ammo_dart.name=Пластиковый дротик (Иссущающий)
 item.ammo_dart_nerf.name=Дротик NERF
 item.ammo_dart_nuclear.name=Пластиковый дротик (С взрывчаткой)
@@ -2410,6 +2413,8 @@ item.boy_target.name=Субкритическая цель U235
 item.briquette.coal.name=Брикет угля
 item.briquette.lignite.name=Брикет бурого угля
 item.briquette.wood.name=Брикет древесных опилок
+item.broken_item.name=Сломанный предмет
+item.broken_item.prefix=Сломанный %s
 item.bucket_acid.name=Ведро кислоты
 item.bucket_mud.name=Ведро токсичных отходов
 item.bucket_schrabidic_acid.name=Ведро шрабидиевой кислоты
@@ -2881,9 +2886,9 @@ item.door_metal.name=Металлическая дверь
 item.door_office.name=Офисная дверь
 item.door_red.name=Красная дверь
 item.dosimeter.name=Дозиметр
-item.drax.name=Терра-бур
-item.drax_mk2.name=Усиленный терра-бур
-item.drax_mk3.name=Шрабидиевый терра-бур
+item.drax.name=Терра-бур (LEGACY)
+item.drax_mk2.name=Усиленный терра-бур (LEGACY)
+item.drax_mk3.name=Шрабидиевый терра-бур (LEGACY)
 item.drillbit_desh.name=Деш-головка бура
 item.drillbit_desh_diamond.name=Деш-головка бура (с алмазным напылением)
 item.drillbit_ferro.name=Головка бура из ферроурана
@@ -2940,7 +2945,7 @@ item.envsuit_helmet.name=Шлем защитного костюма M1TTY
 item.envsuit_legs.name=Поножи защитного костюма M1TTY
 item.envsuit_plate.name=Нагрудник защитного костюма M1TTY
 item.euphemium_boots.name=Эвфемиевые ботинки
-item.euphemium_capacitor.name=Эвфемиевый конденсатор
+item.euphemium_capacitor.name=Эвфемиевый конденсатор (LEGACY)
 item.euphemium_capacitor.desc=Позволяет пассивно рассеивать накопленную положительную энергию.
 item.euphemium_helmet.name=Эвфемиевый шлем
 item.euphemium_kit.name=Эвфемиевый комплект
@@ -3132,6 +3137,7 @@ item.gun_bolt_action_ammo.name=Пуля 12x74 калибра(LEGACY)
 item.gun_bolt_action_green.name=Винтовка со скользящим затвором (Зелёный)
 item.gun_bolt_action_saturnite.name=Сатурнитовая винтовка
 item.gun_bolter.name=Болтер
+item.gun_drill.name=Силовой бур
 item.gun_bolter_digamma.name=Дигамма пушка
 item.gun_calamity.name=Каламити
 item.gun_calamity_ammo.name=Кал. 50 (LEGACY)
@@ -4106,6 +4112,7 @@ item.pellet_rtg_depleted.neptunium.name=Распавшаяся РИТЭГ-пел
 item.pellet_rtg_depleted.mercury.name=Распавшаяся РИТЭГ-пеллета ртути
 item.pellet_rtg_depleted.nickel.name=Распавшаяся РИТЭГ-пеллета никеля
 item.pellet_rtg_depleted.zirconium.name=Распавшаяся РИТЭГ-пеллета циркония
+item.pellet_rtg_depleted.americium.name=Распавшаяся РИТЭГ-пеллета америция
 item.pellet_rtg_lead.name=РИТЭГ-пеллета из свинца-209
 item.pellet_rtg_lead.desc=Излучение приведет к неминуемой смерти.
 item.pellet_rtg_gold.name=РИТЭГ-пеллета из золота-198
@@ -4469,7 +4476,7 @@ item.record.glass.desc=? ? ?
 item.record.lc.desc=Valve - Diabolic Adrenaline Guitar/Lambda Core
 item.record.ss.desc=Valve - Sector Sweep
 item.record.vc.desc=Valve - Vortal Combat
-item.redcoil_capacitor.name=Краснокатушечный конденсатор
+item.redcoil_capacitor.name=Краснокатушечный конденсатор (LEGACY)
 item.redstone_depleted.name=Обесцвеченная красная пыль
 item.redstone_sword.name=Меч из красного камня
 item.reer_graar.name=Рер Граар
@@ -5090,6 +5097,18 @@ item.weapon_mod_generic.wsteel_damage.name=Оптимизированный ор
 item.weapon_mod_generic.wsteel_dura.name=Высокопрочные запчасти из оружейной стали
 item.weapon_mod_special.bayonet.name=Штык
 item.weapon_mod_special.choke.name=Чок
+item.weapon_mod_special.doubloons.name=Два золотых дублона
+item.weapon_mod_special.drill_hss.name=Головка для силового бура из быстрорежущей стали
+item.weapon_mod_special.drill_saturnite.name=Головка для силового бура из сатурнита
+item.weapon_mod_special.drill_tcalloy.name=Головка для силового бура из технециевой стали
+item.weapon_mod_special.drill_weaponsteel.name=Головка для силового бура из оружейной стали
+item.weapon_mod_special.engine_aviation.name=Авиационный двигатель для силового бура
+item.weapon_mod_special.engine_diesel.name=Дизельный двигатель для силового бура
+item.weapon_mod_special.engine_electric.name=Электрический двигатель для силового бура
+item.weapon_mod_special.engine_turbo.name=Двигатель с турбонаддувом для силового бура
+item.weapon_mod_special.sifter.name=Решето для силового бура
+item.weapon_mod_special.magnet.name=Электромагнит для силового бура
+item.weapon_mod_special.canisters.name=Внешние баки для силового бура
 item.weapon_mod_special.furniture_black.name=Полимерная оснастка (Чёрный)
 item.weapon_mod_special.furniture_green.name=Полимерная оснастка (Зелёный)
 item.weapon_mod_special.greasegun.name=Набор модернизации для Маслёнки
@@ -6085,7 +6104,7 @@ tile.machine_powerrtg.name=ПТ-изотопная ячейка
 tile.machine_press.name=Пресс
 tile.machine_puf6_tank.name=Бочка гексафторида плутония
 tile.machine_pumpjack.name=Станок-качалка
-tile.machine_purex.name=PUREX
+tile.machine_purex.name=Пьюрекс
 tile.machine_purex.desc=Машина для переработки многих видов ядерного топлива.$Для большинства рецептов требуются керосин и азотная кислота.
 tile.machine_pyrooven.name=Пиролизная печь
 tile.machine_radar.name=Радар
@@ -6350,17 +6369,17 @@ tile.pwr_reflector.desc=Отражает нейтроны обратно к то
 tile.rad_lava_block.name=Вулканическая лава
 tile.radar_screen.name=Экран радара
 tile.radio_telex.name=Телекс
-tile.radio_torch_controller.name=Контроллер редстоун-радио
+tile.radio_torch_controller.name=Редстоун-по-радио контроллер
 tile.radio_torch_controller.desc=Может принимать сигналы команд и передавать$их на подключенное устройство
-tile.radio_torch_counter.name=Редстоун-радио счётчик предметов
+tile.radio_torch_counter.name=Редстоун-по-радио счётчик предметов
 tile.radio_torch_counter.desc=Ставится на плоские поверхности или совместимые компараторные блоки$Сигнал зависит от количества нужных предметов
-tile.radio_torch_logic.name=Редстоун-радио логический приёмник
+tile.radio_torch_logic.name=Редстоун-по-радио логический приёмник
 tile.radio_torch_logic.desc=Размещается на плоских поверхностях или совместимых с компаратором блоках$Сопоставляет сигналы красного камня с условиями, оцениваемыми в заданном порядке$Числовые или строковые входы сравниваются с константой
-tile.radio_torch_reader.name=Редстоун-радио считыватель
+tile.radio_torch_reader.name=Редстоун-по-радио считыватель
 tile.radio_torch_reader.desc=Считывает значения из подключенных блоков,$а затем отправляет их с указанной частотой
-tile.radio_torch_receiver.name=Редстоун-радио приёмник
+tile.radio_torch_receiver.name=Редстоун-по-радио приёмник
 tile.radio_torch_receiver.desc=Ставится на плоские поверхности или совместимые компараторные блоки
-tile.radio_torch_sender.name=Редстоун-радио передатчик
+tile.radio_torch_sender.name=Редстоун-по-радио передатчик
 tile.radio_torch_sender.desc=Ставится на плоские поверхности или совместимые компараторные блоки$Считывает редстоун сигнал или вход компаратора
 tile.radiobox.name=Коробка управления вредителями Розенберга
 tile.radiorec.name=FM радио
@@ -6491,6 +6510,7 @@ tile.reinforced_laminate_pane.name=Усиленная ламинатная па�
 tile.rejuvinator.name=ГЭКК
 tile.residue.name=Облачный осадок
 tile.safe.name=Сейф
+tile.salted_fallout.name=Солёные осадки
 tile.sand_boron.name=Борный песок
 tile.sand_boron_layer.name=Слой борного песка
 tile.sand_dirty.name=Пропитанный нефтью песок
@@ -6793,28 +6813,6 @@ desc.gui.upgrade.speed= * §4Скорость§r: Стакается до 3-х �
 
 tile.oc_cable_paintable.name=Окрашиваемый сетевой кабель
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // NTM Space //
 
 // Celestial Bodies //
@@ -6828,7 +6826,7 @@ body.ike=Айк
 body.dres=Дрес
 body.laythe=Лейт
 body.tekto=Текто
-body.thatmo=Тэтмо
+body.thatmo=Татмо
 
 // Moho //
 tile.moho_regolith.name=Реголит Мохо
@@ -6840,6 +6838,7 @@ tile.eve_rock.name=Камень Евы
 tile.mercury_block.name=Ртуть
 
 // Moon //
+tile.moon_turf.name=Грунт Луны
 tile.moon_rock.name=Камень Луны
 tile.stone_resource.conglomerate.name=Конгломерат
 
@@ -6848,15 +6847,23 @@ tile.minmus_smooth.name=Гладкий камень Минмуса
 tile.minmus_regolith.name=Реголит Минмуса
 tile.minmus_stone.name=Камень Минмуса
 
+// Vitya note: Мне нравится переводить вещи так, чтобы звучали оригинально, а не тупо транслитом.
+// Конечно "Мята" звучало бы правильнее, но во первых, это не Земля, а Минмус, а во вторых так прикольнее звучит, да и смысл не теряет.
+// Такое ощущение как будто это растение с Минмуса открыли.
+item.billet_menthol.name=Заготовка ментола
+item.chocolate_mint_billet.name=Мятное печенье
+item.ingot_menthol.name=Ментоловые кристаллы
+item.mint_leaves.name=Листочки мянтуса
+item.nugget_menthol.name=Кусочек ментола
+
+tile.crop_mint.name=Мянтус
+tile.plant_flower.mint.name=Дикий мянтус
+
 // Duna //
 tile.duna_sands.name=Песок Дюны
 tile.duna_rock.name=Камень Дюны
 tile.duna_cobble.name=Булыжник Дюны
 
-// Comment to MrKimkimora below:
-// "Железоносная глина" не совсем неправильна, но "железистая глина" точнее передаёт значение термина ferric clay,
-// особенно в геологическом или почвоведческом контексте, так как подчёркивает химическую природу железа в глине.
-// Если говорить колхозно - Железоносная глина - это глина, которая работает на заводе и носит железо
 tile.ferric_clay.name=Блок железистой глины
 
 tile.stone_resource.calcium.name=Кальцит
@@ -6884,13 +6891,13 @@ tile.tumor.name=Мясистая масса
 
 // Tekto
 
-// Тектоническое сырьё несёт другой смысл
 tile.ore_tekto.name=Нефтяной карман Текто
 tile.ore_tekto_empty.name=Пустой нефтяной карман Текто
 
-tile.orrery.name=Планетарий
+tile.crop_paraffin=Воскоцвет
 tile.pet_leaves.name=Пластиковые листья
 tile.pvc_log.name=ПВХ-бревно
+tile.pvc_planks.name=ПВХ-доски
 tile.rubber_farmland.name=Пашня Текто
 tile.rubber_grass.name=Резиновая трава Текто
 tile.rubber_leaves.name=Резиновые листья
@@ -6900,13 +6907,15 @@ tile.rubber_tall.name=Высокая травзина
 tile.sapling_pvc.name=Саженец пластикового дерева
 tile.sapling_vinyl.name=Саженец винилового дерева
 tile.vinyl_log.name=Прочное виниловое бревно
+tile.vinyl_planks.name=Виниловые доски
 tile.vinyl_sand.name=Виниловый песок
 tile.vinyl_vine.name=Виниловые лозы
-tile.crop_paraffin=Воскоцвет
 
 // Blocks //
+tile.geysir_chlorine.name=Хлорный гейзер
 tile.geysir_vapor.name=Ослабленный гейзер
 tile.geysir_volcanic.name=Вулканический гейзер
+tile.geysir_nether.name=Вулканический гейзер
 tile.plant_flower.strawberry.name=Куст дикой клубники
 tile.crop_coffee.name=Кофе
 tile.crop_strawberry.name=Клубника
@@ -6937,7 +6946,7 @@ tile.machine_rocket_assembly.name=Станция сборки многоступ
 tile.machine_rocket_assembly.desc=Позволяет создавать многоступенчатые ракеты.$Каждая ступень обеспечивает одноразовый полет к другой$планете при условии, что в ней достаточно топлива.$Пример: Двухступенчатая ракета может долететь$до Луны и обратно.
 tile.launch_pad_rocket.name=Стартовая ракетная площадка
 tile.launch_pad_rocket.desc=Заправляет и подготавливает к запуску ракету,$сконструированную на станции сборки многоступенчатых ракет.
-tile.det_salt.name=Соленной ядерный заряд
+tile.det_salt.name=Солёный ядерный заряд
 tile.air_vent.name=Воздушный клапан
 tile.gas_dock.name=Станция газового комбайна
 tile.transporter_rocket.name=Станция ракетного транспортера
@@ -6964,7 +6973,7 @@ tile.machine_magma.desc=Собирает обогащённую минерала
 tile.block_nickel.name=Никелевый блок
 tile.block_osmiridium.name=Осмиридиевый блок
 tile.dish_control.desc=Обеспечивает удалённый доступ к радиотелескопу "StarDar".$Shift-ПКМ Дистанционным датчиком реактора по$Радиотелескопу, затем Shift-ПКМ по консоли, чтобы связать.
-tile.dish_control.name=Дистанционная консоль радиотелескопа"StarDar"
+tile.dish_control.name=Дистанционная консоль радиотелескопа "StarDar"
 tile.dyson_converter_anatmogenesis.name=Анатмогенезисный терраформер Дайсона
 tile.dyson_converter_he.name=Энергетический конвертор Дайсона
 tile.dyson_converter_tu.name=Нагреватель Дайсона
@@ -6972,15 +6981,15 @@ tile.geysir_chloric.name=Дихлорметановый гейзер
 tile.geysir_electric.name=Сверхразрядный гейзер
 tile.hydrobay.desc=Преобразует CO2 -> O2 благодаря непрерывному росту урожая.$Может выращивать любые культуры размером в блок.
 tile.hydrobay.name=Промышленная теплица
-tile.machine_intake.name=Воздухозаборник (Декор)
 tile.pneumatic_tube.desc=Пересылает предметы за счёт сжатого воздуха.$ПКМ отвёрткой, чтобы задать вход.$ПКМ отвёрткой в присяде, чтобы задать выход.$Входы могут быть настроены и подключены к источнику сжатого воздуха.$Отсылает вплоть до полного стака четыре раза в секунду.$Тип воздуха можно задать идентификатором.
-tile.machine_radiator.name=Паровой радиатор для космоса
+tile.machine_radiator.name=Паровой радиатор
 tile.machine_stardar.name=Радиотелескоп "StarDar"
+tile.orrery.name=Планетарий
 
 // Items
 item.atmosphere_scanner.name=Анализатор атмосферы
+item.crystal_zinc.name=Кристаллизованный цинк
 
-// Чекни строку 6670
 item.ball_ferric_clay.name=Железистая глина
 
 item.bucket_ccl.name=Ведро тетрахлорметана
@@ -6995,6 +7004,7 @@ item.pet_leaves.name=Пластиковые листья
 item.powder_pvc.name=ПВХ-порошок
 item.powder_rubber.name=Резиновый порошок
 item.rubber_leaves.name=Резиновые листья
+item.stick_vinyl.name=Виниловый стержень
 item.stick_pvc.name=ПВХ-стержень
 item.turbine_syngas.name=Нержавеющие лопасти
 item.wand_time.name=Палочка контроля над временем
@@ -7190,77 +7200,77 @@ item.laser_crystal_iron.name=Железо-Арсенидовый жар-крис
 item.laser_crystal_iron.desc=Железное ядро с жар-сердцевиной, обёрнутое арсенидом галлия.
 
 // Fluids //
-hbmfluid.nitrogen=Жидкий азот
-hbmfluid.krypton=Криптон
-hbmfluid.argon=Аргон
-hbmfluid.neon=Неон
-hbmfluid.ammonia=Аммиак
-hbmfluid.hydrazine=Гидразин
-hbmfluid.nmasstetranol=N-Масс(III) Тетрагексаэтанол
-hbmfluid.elbowgrease=Локтевая смазка
-hbmfluid.minsol=Минеральный шлам
-hbmfluid.hcl=Соляная кислота
-hbmfluid.scutterblood=Кровь скаттера
-hbmfluid.bloodgas=Кровавое топливо
-hbmfluid.fluorine=Фтор
-hbmfluid.dicyanoacetylene=Дицианоацетилен
-hbmfluid.bromine=Смесь алкилбромидов
-hbmfluid.chloromethane=Хлорметан
-hbmfluid.methanol=Метанол
-hbmfluid.polythylene=Полиэтилен
-hbmfluid.methylene=Метилен
-hbmfluid.kmno4=Раствор перманганата калия
-hbmfluid.htco4=Технециевая кислота
-hbmfluid.oliveoil=Оливковое масло
-hbmfluid.honey=Мёд
-hbmfluid.tea=Чай
-hbmfluid.coffee=Кофе
-hbmfluid.cmilk=Сгущённое молоко
-hbmfluid.emilk=Сливки
-hbmfluid.smilk=Клубничное молоко
-hbmfluid.milk=Молоко
-hbmfluid.cream=Взбитые сливки
-hbmfluid.superheated_hydrogen=Перегретый жидкий водород
-hbmfluid.uranium_bromide=Бромид урана
-hbmfluid.plutonium_bromide=Бромид плутония
-hbmfluid.schrabidium_bromide=Бромид шрабидия
-hbmfluid.thorium_bromide=Бромид тория
-hbmfluid.gaseous_uranium_bromide=Газообразный бромид урана
-hbmfluid.gaseous_plutonium_bromide=Газообразный бромид плутония
-hbmfluid.gaseous_schrabidium_bromide=Газообразный бромид шрабидия
-hbmfluid.gaseous_thorium_bromide=Газообразный бромид тория
-hbmfluid.gas_watz=Газообразные токсичные отходы
-hbmfluid.rizz=Cum
-hbmfluid.mslurry=Моркитовый шлам
-hbmfluid.morkite=Моркит
-hbmfluid.morkine=Газообразный моркин
-hbmpseudofluid.minsol=Тяжёлый минеральный шлам
-hbmpseudofluid.minsolsep=Отделённый минеральный шлам
 hbmfluid.air=Сжатый воздух
+hbmfluid.ammonia=Аммиак
 hbmfluid.aqueous_copper=Раствор меди
 hbmfluid.aqueous_nickel=Раствор никеля
+hbmfluid.argon=Аргон
+hbmfluid.bloodgas=Кровавое топливо
 hbmfluid.brine=Рудный рассол
+hbmfluid.bromine=Смесь алкилбромидов
 hbmfluid.cbenz=Хлорированные бензолы
 hbmfluid.ccl=Тетрахлорметан
 hbmfluid.chloroethane=Хлорэтан
+hbmfluid.chloromethane=Хлорметан
+hbmfluid.cmilk=Сгущённое молоко
+hbmfluid.coffee=Кофе
 hbmfluid.conglomera=Раствор конгломерата
 hbmfluid.coppersulfate=Медный купорос
+hbmfluid.cream=Взбитые сливки
+hbmfluid.dicyanoacetylene=Дицианоацетилен
 hbmfluid.dunaair=Сжатый воздух (Дюна)
+hbmfluid.elbowgrease=Локтевая смазка
+hbmfluid.emilk=Сливки
 hbmfluid.eveair=Сжатый воздух (Ева)
+hbmfluid.fluorine=Фтор
+hbmfluid.gas_watz=Газообразные токсичные отходы
+hbmfluid.gaseous_plutonium_bromide=Газообразный бромид плутония
+hbmfluid.gaseous_schrabidium_bromide=Газообразный бромид шрабидия
+hbmfluid.gaseous_thorium_bromide=Газообразный бромид тория
+hbmfluid.gaseous_uranium_bromide=Газообразный бромид урана
 hbmfluid.halolight=Лёгкие галогенуглеводороды
+hbmfluid.hcl=Соляная кислота
 hbmfluid.hgas=Галогенный газ
+hbmfluid.honey=Мёд
+hbmfluid.htco4=Технециевая кислота
+hbmfluid.hydrazine=Гидразин
 hbmfluid.joolgas=Сжатый газ (Джул)
+hbmfluid.kmno4=Раствор перманганата калия
+hbmfluid.krypton=Криптон
+hbmfluid.methanol=Метанол
+hbmfluid.methylene=Метилен
+hbmfluid.milk=Молоко
+hbmfluid.minsol=Минеральный шлам
+
+// DEPRECATED //
+hbmfluid.morkine=Газообразный моркин
+hbmfluid.morkite=Моркит
+hbmfluid.mslurry=Моркитовый шлам
+// DEPRECATED //
+
+hbmfluid.neon=Неон
 hbmfluid.ngas=Сжатый газ (Нейдон)
+hbmfluid.nitrogen=Жидкий азот
 hbmfluid.nmass=N-Масс(II) Варп топливо
+hbmfluid.nmasstetranol=N-Масс(III) Тетрагексаэтанол
+hbmfluid.oliveoil=Оливковое масло
+hbmfluid.plutonium_bromide=Бромид плутония
+hbmfluid.polythylene=Полиэтилен
+hbmfluid.rizz=Cum
 hbmfluid.sarnusgas=Сжатый газ (Сарнус)
-
-// Чекни строку 6701
+hbmfluid.schrabidium_bromide=Бромид шрабидия
+hbmfluid.scutterblood=Кровь скаттера
+hbmfluid.smilk=Клубничное молоко
+hbmfluid.superheated_hydrogen=Перегретый жидкий водород
 hbmfluid.tcrude=Неочищенная нефть Текто
-
-
+hbmfluid.tea=Чай
 hbmfluid.tektoair=Сжатый воздух (Текто)
+hbmfluid.thorium_bromide=Бромид тория
 hbmfluid.ugas=Сжатый газ (Урлум)
+hbmfluid.uranium_bromide=Бромид урана
 hbmfluid.vinyl=Винилхлорид
+hbmpseudofluid.minsol=Тяжёлый минеральный шлам
+hbmpseudofluid.minsolsep=Отделённый минеральный шлам
 
 // Ores //
 tile.ore_iron.name=Железная руда
@@ -7339,6 +7349,8 @@ entity.entity_scutterfish.name=Скаттер
 entity.entity_scuttlecrab.name=Краб-бегун
 entity.entity_siftereel.name=Угорь-просейщик
 entity.entity_tankbot.name=Танкбот
+// Vitya note: Может быть лучше перевести как "Машина войны?".
+// Колосс звучит слишком литературно. В простонародье редко используется.
 entity.entity_war_behemoth.name=Колосс войны
 
 // Templates (Old) //
@@ -7425,7 +7437,7 @@ trait.confusion=Аутизм
 trait.neutron=Нейтронная радиация
 
 // Achievements //
-achievement.driveFail.desc=Ты не сделал копию диска орбитальной станции перед запуском
+achievement.driveFail.desc=Забудьте создать копию диска орбитальной станции перед запуском
 achievement.driveFail=М-м... У нас есть копия?
 achievement.rotConsum=Потребители плоти
 
@@ -7453,4 +7465,5 @@ desc.util.warhead=Боеголовка
 desc.util.chip_inaccuracy=Неточность чипа
 desc.util.fin_inaccuracy=Неточность стабилизатора
 
-// Last updated 26.08.2025 by Bufka2011, MrKimkimora and TactiCOOLHimZa //
+// Vitya note: Видимо датой изменения файла не умеют пользоваться, а про коммиты вообще молчу, но ладно...
+// last updated november 21th, 2025 by Vitya //

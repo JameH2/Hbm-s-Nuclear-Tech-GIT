@@ -6,26 +6,41 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
+import com.hbm.render.util.MissilePronter;
 import com.hbm.tileentity.machine.TileEntityOrbitalStation;
+import com.hbm.tileentity.machine.TileEntityOrbitalStationLauncher;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.IItemRenderer;
 
 public class RenderOrbitalStation extends TileEntitySpecialRenderer implements IItemRendererProvider {
-	
+
 	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float interp) {
-		if(!(te instanceof TileEntityOrbitalStation)) return;
-		TileEntityOrbitalStation station = (TileEntityOrbitalStation) te;
+		float armRotation;
+		if(te instanceof TileEntityOrbitalStation) {
+			TileEntityOrbitalStation station = (TileEntityOrbitalStation) te;
+			armRotation = station.prevRot + (station.rot - station.prevRot) * interp;
+			bindTexture(ResourceManager.docking_port_tex);
+		} else if(te instanceof TileEntityOrbitalStationLauncher) {
+			TileEntityOrbitalStationLauncher station = (TileEntityOrbitalStationLauncher) te;
+			armRotation = station.prevRot + (station.rot - station.prevRot) * interp;
+			bindTexture(ResourceManager.docking_port_launcher_tex);
+		} else {
+			return;
+		}
 
 		GL11.glPushMatrix();
 		{
 
 			GL11.glTranslated(x + 0.5D, y + 1.0D, z + 0.5D);
 			GL11.glEnable(GL11.GL_LIGHTING);
-	
+
 			switch(te.getBlockMetadata() - BlockDummyable.offset) {
 			case 2: GL11.glRotatef(0, 0F, 1F, 0F); break;
 			case 4: GL11.glRotatef(90, 0F, 1F, 0F); break;
@@ -34,11 +49,8 @@ public class RenderOrbitalStation extends TileEntitySpecialRenderer implements I
 			}
 
 			GL11.glShadeModel(GL11.GL_SMOOTH);
-	
-			bindTexture(ResourceManager.docking_port_tex);
-			ResourceManager.docking_port.renderPart("Port");
 
-			float rotation = station.prevRot + (station.rot - station.prevRot) * interp;
+			ResourceManager.docking_port.renderPart("Port");
 
 			for(int i = 0; i < 4; i++) {
 				GL11.glPushMatrix();
@@ -48,7 +60,7 @@ public class RenderOrbitalStation extends TileEntitySpecialRenderer implements I
 					GL11.glTranslatef(0, -1.75F, -2);
 
 					// criss cross
-					GL11.glRotatef(-rotation, 1, 0, 0);
+					GL11.glRotatef(-armRotation, 1, 0, 0);
 
 					// one hop this time
 					GL11.glTranslatef(0, 1.75F, 2);
@@ -61,6 +73,22 @@ public class RenderOrbitalStation extends TileEntitySpecialRenderer implements I
 
 				// cha cha real smooth
 				GL11.glRotatef(90, 0, 1, 0);
+			}
+
+			if(te instanceof TileEntityOrbitalStationLauncher) {
+				TileEntityOrbitalStationLauncher launcher = (TileEntityOrbitalStationLauncher) te;
+
+				if(launcher.rocket != null && launcher.rocket.extraIssues.size() == 0) {
+					GL11.glPushMatrix();
+					{
+
+						GL11.glTranslated(0, -launcher.rocket.getHeight() - 0.5, 0);
+
+						MissilePronter.prontRocket(launcher.rocket, Minecraft.getMinecraft().getTextureManager(), false);
+
+					}
+					GL11.glPopMatrix();
+				}
 			}
 
 			GL11.glShadeModel(GL11.GL_FLAT);
@@ -76,10 +104,15 @@ public class RenderOrbitalStation extends TileEntitySpecialRenderer implements I
 				GL11.glTranslated(0, 2, 0);
 				GL11.glScaled(2, 2, 2);
 			}
-			public void renderCommon() {
+			public void renderCommonWithStack(ItemStack stack) {
 				GL11.glDisable(GL11.GL_CULL_FACE);
 				GL11.glShadeModel(GL11.GL_SMOOTH);
-				bindTexture(ResourceManager.docking_port_tex);
+				ItemBlock itemBlock = (ItemBlock) stack.getItem();
+				if(itemBlock.field_150939_a == ModBlocks.orbital_station_launcher) {
+					bindTexture(ResourceManager.docking_port_launcher_tex);
+				} else {
+					bindTexture(ResourceManager.docking_port_tex);
+				}
 				ResourceManager.docking_port.renderAll();
 				GL11.glShadeModel(GL11.GL_FLAT);
 				GL11.glEnable(GL11.GL_CULL_FACE);
@@ -96,7 +129,8 @@ public class RenderOrbitalStation extends TileEntitySpecialRenderer implements I
 	public Item[] getItemsForRenderer() {
 		return new Item[] {
 			Item.getItemFromBlock(ModBlocks.orbital_station),
-			Item.getItemFromBlock(ModBlocks.orbital_station_port)
+			Item.getItemFromBlock(ModBlocks.orbital_station_port),
+			Item.getItemFromBlock(ModBlocks.orbital_station_launcher),
 		};
 	}
 

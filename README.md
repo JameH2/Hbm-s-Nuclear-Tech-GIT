@@ -31,7 +31,7 @@ Simply navigate to "Releases" on the right side of the page, download links for 
 Tired of waiting until the next version comes out? Here is a tutorial on how to compile the very newest version yourself:
 Please note that these installation instructions are assuming you're running Microsoft Windows operating system. Linux users should know what to do by looking at the same guide.
 
- 1. Make sure you have JDK8 installed. If not, download it from [adoptium.net](https://adoptium.net/?variant=openjdk8&jvmVariant=hotspot)
+ 1. Make sure you have JDK8 installed. If not, download it from [adoptium.net](https://adoptium.net/temurin/releases?version=8)
  2. If you don't have git installed, download&install it from [here](https://git-scm.com/downloads).
  3. Open up "Git Bash":
     * Press Windows Button, type "Git Bash" and press ENTER

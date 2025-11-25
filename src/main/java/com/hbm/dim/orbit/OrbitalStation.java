@@ -205,10 +205,14 @@ public class OrbitalStation {
 		double distance = SolarSystem.calculateDistanceBetweenTwoBodies(mainPort.getWorldObj(), orbiting, target);
 		float thrust = getTotalThrust();
 
+		return calculateTransferTime(distance, size, thrust);
+	}
+
+	public static int calculateTransferTime(double distance, int size, float thrust) {
 		return (int)(Math.log(1 + (distance * size / thrust * 100)) * 150);
 	}
 
-	private void setState(StationState state, int timeUntilNext) {
+	public void setState(StationState state, int timeUntilNext) {
 		this.state = state;
 		stateTimer = 0;
 		maxStateTimer = timeUntilNext;

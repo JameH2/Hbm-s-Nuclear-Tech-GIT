@@ -78,6 +78,11 @@ public class BlockCrop extends BlockBush implements IGrowable, IPlantableBreathi
 		if(this == ModBlocks.crop_strawberry) {
 			return ModItems.strawberry;
 		}
+
+		if(this == ModBlocks.crop_mint) {
+			return ModItems.mint_leaves;
+		}
+
 		if(this == ModBlocks.crop_coffee) {
 			return ModItems.bean_raw;
 		}

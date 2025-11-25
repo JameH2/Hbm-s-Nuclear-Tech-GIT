@@ -170,7 +170,7 @@ public class ChunkAtmosphereHandler {
 	}
 
 	public boolean canBreathe(CBT_Atmosphere atmosphere) {
-		return atmosphere != null && (atmosphere.hasFluid(Fluids.AIR, 0.21) || atmosphere.hasFluid(Fluids.OXYGEN, 0.09));
+		return atmosphere != null && (atmosphere.hasFluid(Fluids.EARTHAIR, 0.21) || atmosphere.hasFluid(Fluids.OXYGEN, 0.09));
 	}
 
 	// Is the air pressure high enough to support liquids
@@ -204,7 +204,7 @@ public class ChunkAtmosphereHandler {
 
 		if(requiresO2) {
 			// Check for an atmosphere and destroy torches if there is insufficient oxygen
-			canExist = !(atmosphere == null || (!atmosphere.hasFluid(Fluids.OXYGEN, 0.09) && !atmosphere.hasFluid(Fluids.AIR, 0.21)));
+			canExist = !(atmosphere == null || (!atmosphere.hasFluid(Fluids.OXYGEN, 0.09) && !atmosphere.hasFluid(Fluids.EARTHAIR, 0.21)));
 		} else if(requiresPressure) {
 			canExist = hasLiquidPressure(atmosphere);
 		} else if(requiresCO2) {
@@ -212,7 +212,7 @@ public class ChunkAtmosphereHandler {
 			if(block instanceof IPlantableBreathing) {
 				canExist = ((IPlantableBreathing) block).canBreathe(atmosphere);
 			} else {
-				canExist = !(atmosphere == null || (!atmosphere.hasFluid(Fluids.OXYGEN, 0.01) && !atmosphere.hasFluid(Fluids.AIR, 0.1)));
+				canExist = !(atmosphere == null || (!atmosphere.hasFluid(Fluids.OXYGEN, 0.01) && !atmosphere.hasFluid(Fluids.EARTHAIR, 0.1)));
 			}
 		}
 

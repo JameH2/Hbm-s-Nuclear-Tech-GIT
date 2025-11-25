@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import com.hbm.config.ClientConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SkyProviderCelestial;
 import com.hbm.dim.SolarSystem;
 import com.hbm.dim.SolarSystem.AstroMetric;
 import com.hbm.dim.orbit.OrbitalStation.StationState;
 import com.hbm.lib.Library;
+import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.util.BobMathUtil;
 
@@ -25,6 +25,8 @@ import net.minecraft.util.Vec3;
 public class SkyProviderOrbit extends SkyProviderCelestial {
 
 	private static CelestialBody lastBody;
+
+	public static final ResourceLocation starfield = new ResourceLocation(RefStrings.MODID, "textures/misc/space/starfield.png");
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
@@ -99,7 +101,7 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 			CelestialBody orbiting = station.orbiting;
 			if(station.state != StationState.ORBIT && progress > 0.5) orbiting = station.target;
 
-			renderCelestials(partialTicks, world, mc, provider.metrics, solarAngle, null, Vec3.createVectorHelper(0, 0, 0), 1, 1, orbiting, 160);
+			renderCelestials(partialTicks, world, mc, provider.metrics, solarAngle, null, Vec3.createVectorHelper(0, 0, 0), 1, 1, orbiting, SolarSystem.MAX_APPARENT_SIZE_ORBIT);
 
 		}
 		GL11.glPopMatrix();
@@ -109,7 +111,6 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 	protected ResourceLocation getNightTexture() {
 		OrbitalStation station = OrbitalStation.clientStation;
 		CelestialBody orbiting = station.orbiting;
-		if(station.state == StationState.FTL) return nightTextureKerbol;
 
 		if(station.state != StationState.ORBIT && station.getTransferProgress(0) > 0.5) orbiting = station.target;
 
@@ -121,19 +122,31 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 		GL11.glPushMatrix();
 		{
 
-			mc.renderEngine.bindTexture(getNightTexture());
 
-			GL11.glMatrixMode(GL11.GL_TEXTURE);
-			GL11.glPushMatrix();
+			GL11.glEnable(GL11.GL_FOG);
+			GL11.glPushAttrib(GL11.GL_FOG_BIT);
 			{
 
-				GL11.glTranslated(0, ((double)System.currentTimeMillis() * 0.001) % 1, 0);
-				GL11.glScaled(0.25, 4, 1);
-				ResourceManager.bubble.renderAll();
+				GL11.glFogf(GL11.GL_FOG_START, 50.0F);
+				GL11.glFogf(GL11.GL_FOG_END, 200.0F);
+
+				mc.renderEngine.bindTexture(starfield);
+
+				GL11.glMatrixMode(GL11.GL_TEXTURE);
+				GL11.glPushMatrix();
+				{
+
+					GL11.glTranslated(0, ((double)System.currentTimeMillis() * 0.0014) % 1, 0);
+					GL11.glScalef(8.0F, 4.0F, 1.0F);
+					ResourceManager.bubble.renderAll();
+
+				}
+				GL11.glPopMatrix();
+				GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
 			}
-			GL11.glPopMatrix();
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+			GL11.glPopAttrib();
+			GL11.glDisable(GL11.GL_FOG);
 
 		}
 		GL11.glPopMatrix();

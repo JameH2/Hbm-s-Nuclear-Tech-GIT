@@ -5,6 +5,7 @@ import java.util.List;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockOreFluid;
 import com.hbm.blocks.generic.RedBarrel;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,6 +21,18 @@ public class ItemBlockLore extends ItemBlockBase {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		super.addInformation(itemstack, player, list, bool);
+
+		// Check for a generic localisation so we can add descriptions to them regular ass blocks
+		String unloc = this.getUnlocalizedName() + ".desc";
+		String loc = I18nUtil.resolveKey(unloc);
+
+		if(!unloc.equals(loc)) {
+			String[] locs = loc.split("\\$");
+
+			for(String s : locs) {
+				list.add(s);
+			}
+		}
 
 		if(this.field_150939_a instanceof RedBarrel) {
 			list.add("Static fluid barrel");

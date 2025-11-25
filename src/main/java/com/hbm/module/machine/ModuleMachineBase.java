@@ -49,7 +49,7 @@ public abstract class ModuleMachineBase {
 		if(recipe == null) return false;
 		
 		// auto switch functionality
-		if(recipe.autoSwitchGroup != null && slots[inputSlots[0]] != null) {
+		if(recipe.autoSwitchGroup != null && inputSlots.length > 0 && slots[inputSlots[0]] != null) {
 			ItemStack itemToSwitchBy = slots[inputSlots[0]];
 			List<GenericRecipe> recipes = (List<GenericRecipe>) this.getRecipeSet().autoSwitchGroups.get(recipe.autoSwitchGroup);
 			if(recipes != null) for(GenericRecipe nextRec : recipes) {
@@ -65,6 +65,13 @@ public abstract class ModuleMachineBase {
 		if(power != 1 && battery.getPower() < recipe.power * power) return false; // only check with floating point numbers if mult is not 1
 		if(power == 1 && battery.getPower() < recipe.power) return false;
 		
+		if(!hasInput(recipe)) return false;
+		
+		return canFitOutput(recipe);
+	}
+	
+	protected boolean hasInput(GenericRecipe recipe) {
+		
 		if(recipe.inputItem != null) {
 			for(int i = 0; i < Math.min(recipe.inputItem.length, inputSlots.length); i++) {
 				if(!recipe.inputItem[i].matchesRecipe(slots[inputSlots[i]], false)) return false;
@@ -76,6 +83,12 @@ public abstract class ModuleMachineBase {
 				if(inputTanks[i].getFill() < recipe.inputFluid[i].fill) return false;
 			}
 		}
+		
+		return true;
+	}
+	
+	/** Whether the machine can hold the output produced by the recipe */
+	protected boolean canFitOutput(GenericRecipe recipe) {
 		
 		if(recipe.outputItem != null) {
 			for(int i = 0; i < Math.min(recipe.outputItem.length, outputSlots.length); i++) {
@@ -107,44 +120,52 @@ public abstract class ModuleMachineBase {
 		this.progress += step;
 		
 		if(this.progress >= 1D) {
+			consumeInput(recipe);
+			produceItem(recipe);
 			
-			if(recipe.inputItem != null) {
-				for(int i = 0; i < Math.min(recipe.inputItem.length, inputSlots.length); i++) {
-					slots[inputSlots[i]].stackSize -= recipe.inputItem[i].stacksize;
-					if(slots[inputSlots[i]].stackSize <= 0) slots[inputSlots[i]] = null;
-				}
-			}
-			
-			if(recipe.inputFluid != null) {
-				for(int i = 0; i < Math.min(recipe.inputFluid.length, inputTanks.length); i++) {
-					inputTanks[i].setFill(inputTanks[i].getFill() - recipe.inputFluid[i].fill);
-				}
-			}
-			
-			if(recipe.outputItem != null) {
-				for(int i = 0; i < Math.min(recipe.outputItem.length, outputSlots.length); i++) {
-					ItemStack collapse = recipe.outputItem[i].collapse();
-					if(slots[outputSlots[i]] == null) {
-						slots[outputSlots[i]] = collapse;
-					} else {
-						if(collapse != null) slots[outputSlots[i]].stackSize += collapse.stackSize; // we can do this because we've already established that the result slot is not null if it's a single output
-					}
-				}
-			}
-			
-			if(recipe.outputFluid != null) {
-				for(int i = 0; i < Math.min(recipe.outputFluid.length, outputTanks.length); i++) {
-					outputTanks[i].setFill(outputTanks[i].getFill() + recipe.outputFluid[i].fill);
-				}
-			}
-			
-			this.markDirty = true;
-			
-			if(this.canProcess(recipe, speed, power)) 
-				this.progress -= 1D;
-			else
-				this.progress = 0D;
+			if(this.canProcess(recipe, speed, power))  this.progress -= 1D;
+			else this.progress = 0D;
 		}
+	}
+	
+	/** Part 1 of the process completion, uses up input */
+	protected void consumeInput(GenericRecipe recipe) {
+		
+		if(recipe.inputItem != null) {
+			for(int i = 0; i < Math.min(recipe.inputItem.length, inputSlots.length); i++) {
+				slots[inputSlots[i]].stackSize -= recipe.inputItem[i].stacksize;
+				if(slots[inputSlots[i]].stackSize <= 0) slots[inputSlots[i]] = null;
+			}
+		}
+		
+		if(recipe.inputFluid != null) {
+			for(int i = 0; i < Math.min(recipe.inputFluid.length, inputTanks.length); i++) {
+				inputTanks[i].setFill(inputTanks[i].getFill() - recipe.inputFluid[i].fill);
+			}
+		}
+	}
+	
+	/** Part 2 of the process completion, generated output */
+	protected void produceItem(GenericRecipe recipe) {
+		
+		if(recipe.outputItem != null) {
+			for(int i = 0; i < Math.min(recipe.outputItem.length, outputSlots.length); i++) {
+				ItemStack collapse = recipe.outputItem[i].collapse();
+				if(slots[outputSlots[i]] == null) {
+					slots[outputSlots[i]] = collapse;
+				} else {
+					if(collapse != null) slots[outputSlots[i]].stackSize += collapse.stackSize; // we can do this because we've already established that the result slot is not null if it's a single output
+				}
+			}
+		}
+		
+		if(recipe.outputFluid != null) {
+			for(int i = 0; i < Math.min(recipe.outputFluid.length, outputTanks.length); i++) {
+				outputTanks[i].setFill(outputTanks[i].getFill() + recipe.outputFluid[i].fill);
+			}
+		}
+		
+		this.markDirty = true;
 	}
 
 	public GenericRecipe getRecipe() {
@@ -190,7 +211,7 @@ public abstract class ModuleMachineBase {
 			List<GenericRecipe> recipes = (List<GenericRecipe>) this.getRecipeSet().autoSwitchGroups.get(recipe.autoSwitchGroup); // why the FUCK does this need a cast
 			if(recipes != null) for(GenericRecipe newRec : recipes) {
 				if(newRec.inputItem == null) continue;
-				if(inputSlots[0] == slot && newRec.inputItem[0].matchesRecipe(stack, true)) {
+				if(inputSlots.length > 0 && inputSlots[0] == slot && newRec.inputItem[0].matchesRecipe(stack, true)) {
 					return true;
 				}
 			}

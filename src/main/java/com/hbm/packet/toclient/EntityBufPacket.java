@@ -61,4 +61,5 @@ public class EntityBufPacket extends PrecompiledPacket {
 			return null;
 		}
 	}
+
 }

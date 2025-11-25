@@ -6,6 +6,7 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import com.hbm.lib.RefStrings;
 import com.hbm.qmaw.components.*;
@@ -23,6 +24,7 @@ import net.minecraft.util.ResourceLocation;
 public class GuiQMAW extends GuiScreen {
 
 	protected static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_wiki.png");
+	protected static final ResourceLocation the_man = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_wiki_flix.png");
 
 	public String title;
 	public String qmawID;
@@ -174,6 +176,12 @@ public class GuiQMAW extends GuiScreen {
 
 		if(guiLeft + 3 <= x && guiLeft + 3 + 18 > x && guiTop + 3 < y && guiTop + 3 + 18 >= y) back();
 		if(guiLeft + 21 <= x && guiLeft + 21 + 18 > x && guiTop + 3 < y && guiTop + 3 + 18 >= y) forward();
+
+		if(lines.size() > 1 && scrollProgress == lines.size() - 1) {
+			if(guiLeft + 60 <= x && guiLeft + 60 + 80 > x && guiTop + this.ySize - 84 < y && guiTop + this.ySize - 4 >= y) {
+				Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("hbm:alarm.singer"), 1.0F));
+			}
+		}
 	}
 
 	public void back() {
@@ -264,6 +272,7 @@ public class GuiQMAW extends GuiScreen {
 		if(this.icon != null) {
 			GL11.glPushMatrix();
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			Minecraft mc = Minecraft.getMinecraft();
 			GL11.glRotated(180, 1, 0, 0);
 			RenderHelper.enableStandardItemLighting();
@@ -271,6 +280,7 @@ public class GuiQMAW extends GuiScreen {
 			itemRender.renderItemAndEffectIntoGUI(this.fontRendererObj, mc.renderEngine, this.icon, guiLeft + x, guiTop + y);
 			itemRender.renderItemOverlayIntoGUI(this.fontRendererObj, mc.renderEngine, this.icon, guiLeft + x, guiTop + y, null);
 			RenderHelper.disableStandardItemLighting();
+			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glPopMatrix();
 
@@ -300,7 +310,13 @@ public class GuiQMAW extends GuiScreen {
 		int y = guiTop + 30;
 		int lineNum = 0;
 
-		for(List<ManualElement> line : lines) {
+		
+		if(lines.size() > 1 && scrollProgress == lines.size() - 1) {
+			Minecraft.getMinecraft().getTextureManager().bindTexture(the_man);
+			drawTexturedModalRect(guiLeft + 60, guiTop + this.ySize - 84, 0, 0, 80, 80);
+			drawTexturedModalRect(guiLeft + 140, guiTop + this.ySize - 60, 0, 80, 77, 39);
+			
+		} else for(List<ManualElement> line : lines) {
 			lineNum++;
 
 			if(lineNum <= this.scrollProgress) continue;

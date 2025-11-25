@@ -50,7 +50,10 @@ public class JetpackBreak extends JetpackFueledBase {
 		}
 
 		if(getFuel(stack) > 0) {
-			if(props.isJetpackActive()) {
+			boolean playerTriesToHover = player.isSneaking() && props.isJetpackActive();
+			boolean playerShouldHover = playerTriesToHover || !player.isSneaking();
+
+			if(props.isJetpackActive() && !playerTriesToHover) {
 				player.fallDistance = 0;
 
 				if(gravity == 0) {
@@ -67,7 +70,7 @@ public class JetpackBreak extends JetpackFueledBase {
 				this.useUpFuel(player, stack, 5);
 				ArmorUtil.resetFlightTime(player);
 
-			} else if(!player.isSneaking() && !player.onGround && props.enableBackpack && gravity > 0) {
+			} else if(playerShouldHover && !player.onGround && props.enableBackpack && gravity > 0) {
 				player.fallDistance = 0;
 
 				float thrustMultiplier = Math.max(gravity / AstronomyUtil.STANDARD_GRAVITY, 1);
