@@ -51,15 +51,15 @@ public class MissilePronter {
 	}
 
 	public static void prontRocket(RocketStruct rocket, TextureManager tex) {
-		prontRocket(rocket, null, tex, true, 0, 0);
+		prontRocket(rocket, null, tex, true, 0, 0, 0);
 	}
 
 	public static void prontRocket(RocketStruct rocket, TextureManager tex, boolean isDeployed) {
-		prontRocket(rocket, null, tex, isDeployed, 0, 0);
+		prontRocket(rocket, null, tex, isDeployed, 0, 0, 0);
 	}
 
 	// Attaches a set of stages together
-	public static void prontRocket(RocketStruct rocket, EntityRideableRocket entity, TextureManager tex, boolean isDeployed, int decoupleTimer, float interp) {
+	public static void prontRocket(RocketStruct rocket, EntityRideableRocket entity, TextureManager tex, boolean isDeployed, int decoupleTimer, int shroudTimer, float interp) {
 		GL11.glPushMatrix();
 
 		GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -100,6 +100,13 @@ public class MissilePronter {
 
 					if(stage.thruster != null) {
 						if(hasShroud && stage.fuselage != null) {
+							if(shroudTimer > 0) {
+								float shroudLerp = shroudTimer + interp;
+								GL11.glPushMatrix();
+								GL11.glTranslated(0, -shroudLerp, 0);
+								GL11.glRotated(shroudLerp * 0.5D, 1, 0, 0);
+							}
+
 							tex.bindTexture(ResourceManager.universal);
 							buffer.put(new double[] {0, -1, 0, stage.thruster.height});
 							buffer.rewind();
@@ -107,10 +114,17 @@ public class MissilePronter {
 							GL11.glClipPlane(GL11.GL_CLIP_PLANE0, buffer);
 							stage.fuselage.getShroud().renderAll();
 							GL11.glDisable(GL11.GL_CLIP_PLANE0);
-						} else {
+
+							if(shroudTimer > 0) {
+								GL11.glPopMatrix();
+							}
+						}
+
+						if(!hasShroud || shroudTimer > 0) {
 							tex.bindTexture(stage.thruster.texture);
 							stage.thruster.getModel(isDeployed).renderAll();
 						}
+
 						GL11.glTranslated(0, stage.thruster.height, 0);
 					}
 
@@ -138,6 +152,7 @@ public class MissilePronter {
 			// Only the bottom-most stage can be deployed OR staged
 			isDeployed = false;
 			decoupleTimer = 0;
+			if(hasShroud) shroudTimer = 0; // Only the bottom-most shroud (second stage from bottom) should animate
 			hasShroud = true;
 		}
 

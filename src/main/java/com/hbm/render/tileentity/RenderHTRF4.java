@@ -28,7 +28,7 @@ public class RenderHTRF4 extends TileEntitySpecialRenderer implements IItemRende
 		}
 
 		GL11.glShadeModel(GL11.GL_SMOOTH);
-		bindTexture(ResourceManager.lpw2_tex);
+		bindTexture(ResourceManager.htrtex);
 		ResourceManager.htrf4.renderAll();
 		GL11.glShadeModel(GL11.GL_FLAT);
 		
