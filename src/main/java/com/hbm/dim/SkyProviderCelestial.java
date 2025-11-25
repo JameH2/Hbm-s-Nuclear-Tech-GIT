@@ -63,6 +63,8 @@ public class SkyProviderCelestial extends IRenderHandler {
 	private static final ResourceLocation thatmoShield = new ResourceLocation(RefStrings.MODID, "textures/particle/cens.png");
 
 	private static final Shader fleshShader = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/fle.frag"));
+	private static final Shader angel = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/angel.frag"));
+	private static final ResourceLocation eye = new ResourceLocation(RefStrings.MODID, "textures/misc/space/eyeball.png");
 
 	private static final ResourceLocation noise = new ResourceLocation(RefStrings.MODID, "shaders/iChannel1.png");
 
@@ -1166,7 +1168,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 	protected void renderSpecialEffects(float partialTicks, WorldClient world, Minecraft mc) {
 
 	}
-
+	
 	protected void render3DModel(float partialTicks, WorldClient world, Minecraft mc) {
 
 	}
