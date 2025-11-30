@@ -127,6 +127,7 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 			GL11.glPushAttrib(GL11.GL_FOG_BIT);
 			{
 
+				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_CONSTANT_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
 				GL11.glFogf(GL11.GL_FOG_START, 50.0F);
 				GL11.glFogf(GL11.GL_FOG_END, 200.0F);
 
@@ -136,8 +137,15 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 				GL11.glPushMatrix();
 				{
 
-					GL11.glTranslated(0, ((double)System.currentTimeMillis() * 0.0014) % 1, 0);
+					GL11.glTranslated(((double)System.currentTimeMillis() * 0.0001) % 1, ((double)System.currentTimeMillis() * 0.0014) % 1, 0);
 					GL11.glScalef(8.0F, 4.0F, 1.0F);
+
+					GL11.glColor3f(1, 0, 0);
+					ResourceManager.bubble.renderAll();
+
+					GL11.glTranslated(Math.sin(System.currentTimeMillis() * 0.001) * 0.004, 0.005, 0);
+
+					GL11.glColor3f(0, 1, 1);
 					ResourceManager.bubble.renderAll();
 
 				}
