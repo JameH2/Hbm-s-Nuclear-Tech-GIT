@@ -1,5 +1,8 @@
 package com.hbm.dim;
 
+import com.hbm.entity.missile.EntityRideableRocket;
+import com.hbm.entity.projectile.EntityThrowableNT;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.Entity;
@@ -89,6 +92,11 @@ public class CelestialTeleporter extends Teleporter {
 			targetServer.resetUpdateEntityTick();
 
 			playerMP.mountEntity(newEntity);
+
+			// Ensure rocket stickiness
+			if(newEntity instanceof EntityRideableRocket) {
+				((EntityRideableRocket) newEntity).setThrower(playerMP);
+			}
 
 			// Send another packet to the client to make sure they load in correctly!
 			playerMP.setPositionAndUpdate(x, 900, z);

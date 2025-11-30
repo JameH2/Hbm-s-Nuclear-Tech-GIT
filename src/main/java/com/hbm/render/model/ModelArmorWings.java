@@ -59,6 +59,8 @@ public class ModelArmorWings extends ModelArmorBase {
 		int tipZOffset = 2;
 		double inwardAngle = 10D;
 
+		boolean relaxWings = entity.onGround || entity.ridingEntity != null;
+
 		GL11.glPushMatrix();
 
 		GL11.glTranslatef(this.body.offsetX * (float) px, this.body.offsetY * (float) px, this.body.offsetZ * (float) px);
@@ -76,13 +78,13 @@ public class ModelArmorWings extends ModelArmorBase {
 			GL11.glRotatef(this.body.rotateAngleX * (180F / (float) Math.PI), 1.0F, 0.0F, 0.0F);
 		}
 
-		if(this.type != 1 && entity.onGround) {
+		if(this.type != 1 && relaxWings) {
 			rot = 20;
 			rot2 = 160;
 		}
 
 		if(this.type == 1) {
-			if(entity.onGround) {
+			if(relaxWings) {
 				rot = 30;
 				rot2 = -30;
 			} else if(entity.motionY < -0.1) {

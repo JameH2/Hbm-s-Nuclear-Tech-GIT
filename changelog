@@ -1,40 +1,5 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5523 - fusion rework, one week away](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5523)
-
-## Added
-* Animated orbital transfers for _all_ rockets, not just orbital stations!
-    * Sun occlusion is now calculated using the eclipse code, no more random darkness during transfers!
-    * Improvements to the orbital transfer animations for improved accuracy are planned
-        * Fuel calculations _are_ already accurate though, using derived dV based on Hohmann transfers
-* Oxygen-Rich Air - found on Earth and Laythe
-    * All your setups will automatically use this fluid instead of compressed air, where applicable
-* Minmus mint icecream and delicious Aussie Mint Slice biscuits
-    * Mint plants will spawn in the same places strawberries do
-* Orbital station launching port
-    * Allows you to construct and launch rockets from orbital stations
-    * The terrestial VAB and rocket launch pad no longer function in orbit
-* Tekto bedrock oil
-    * Avoid collecting this near your base, the fracking damage is a fair bit more pronounced than other bedrock deposits!
-* Synthetic leather/pleather
-    * Very useful for Martian playthroughs
+Includes all changes and bugfixes from the latest upstream NTMain update - [X5526 - can't bake a cake without losing a few dozen men](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5526)
 
 ## Changed
-* Air intake is no longer decorative, can create compressed air
-    * Will consume air inside pressurized rooms and convert it into compressed air at a 1:100 ratio
-    * This means a klystron will consume 25mB/t of oxygen if used in an orbital station, just a tad more than the old fusion reactor consumed
-* Stardar and drive processors now require blueprints to assemble, like the Soyuz recipes
-* Entanglement kits now use krypton instead of xenon, which can be acquired on Earth after stainless steel
-* T-51 armor can now be used as a spacesuit
-* Minor circuit rework
-    * Avionics chip added
-    * Existing avionics chip renamed to astrionics unit
-    * Cheaper military grade chips on Tekto!
-* Murky wings can now descend properly when used in orbit
-
-## Fixed
-* Player models now tilt with rockets, no more feet sticking out during gravity turns
-* Worldgen performance was poo poo, now it is 14x less poo poo (that's 28x less poo with RTG installed!)
-* Crash with certain malformed rideable rockets
-* Celestial world providers extended the wrong class, breaking oregen in GT
-* Meteors spawning in non-surface modded dimensions (like AE2 spatial cells)
-* Insane thunder spam when a dimension with no atmosphere is loaded
-* Attempt at fixing station thrusters remaining "on"
+* Stages now decouple in two steps, with the engine shroud decoupling shortly after the prior stage
+* Remove template requirement for Stardar and Drive Processor
