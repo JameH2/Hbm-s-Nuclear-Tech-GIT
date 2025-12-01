@@ -27,6 +27,7 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 	private static CelestialBody lastBody;
 
 	public static final ResourceLocation starfield = new ResourceLocation(RefStrings.MODID, "textures/misc/space/starfield.png");
+	public static final ResourceLocation ittyfield = new ResourceLocation(RefStrings.MODID, "textures/misc/space/ittyfield.png");
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
@@ -131,14 +132,15 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 				GL11.glFogf(GL11.GL_FOG_START, 50.0F);
 				GL11.glFogf(GL11.GL_FOG_END, 200.0F);
 
-				mc.renderEngine.bindTexture(starfield);
-
 				GL11.glMatrixMode(GL11.GL_TEXTURE);
+
 				GL11.glPushMatrix();
 				{
 
 					GL11.glTranslated(((double)System.currentTimeMillis() * 0.0001) % 1, ((double)System.currentTimeMillis() * 0.0014) % 1, 0);
 					GL11.glScalef(8.0F, 4.0F, 1.0F);
+
+					mc.renderEngine.bindTexture(starfield);
 
 					GL11.glColor3f(1, 0, 0);
 					ResourceManager.bubble.renderAll();
@@ -147,9 +149,35 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 
 					GL11.glColor3f(0, 1, 1);
 					ResourceManager.bubble.renderAll();
+				}
+				GL11.glPopMatrix();
+
+				GL11.glMatrixMode(GL11.GL_MODELVIEW);
+
+				GL11.glScaled(1.25, 0.75, 1.5);
+
+				GL11.glMatrixMode(GL11.GL_TEXTURE);
+
+				GL11.glPushMatrix();
+				{
+
+					mc.renderEngine.bindTexture(ittyfield);
+
+					// GL11.glTranslated(-((double)System.currentTimeMillis() * 0.0004) % 1, ((double)System.currentTimeMillis() * 0.0004) % 1, 0);
+					GL11.glTranslated(Math.sin(System.currentTimeMillis() * 0.0001) * 3, ((double)System.currentTimeMillis() * 0.0004) % 1, 0);
+					GL11.glScalef(8.0F, 4.0F, 1.0F);
+
+					GL11.glColor3f(0, 1, 0);
+					ResourceManager.bubble.renderAll();
+
+					GL11.glTranslated(Math.sin(System.currentTimeMillis() * 0.001) * 0.002, 0.001, 0);
+
+					GL11.glColor3f(1, 0, 1);
+					ResourceManager.bubble.renderAll();
 
 				}
 				GL11.glPopMatrix();
+
 				GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
 			}
