@@ -178,7 +178,7 @@ public class OrbitalStation {
 
 	// Has the side effect of beginning engine burns
 	private int getLeaveTime() {
-		int leaveTime = 20;
+		int leaveTime = 40;
 		for(IPropulsion engine : engines) {
 			int time = engine.startBurn();
 			if(time > leaveTime) leaveTime = time;
@@ -188,7 +188,7 @@ public class OrbitalStation {
 
 	// And this one will end engine burns
 	private int getArriveTime() {
-		int arriveTime = 20;
+		int arriveTime = 40;
 		for(IPropulsion engine : engines) {
 			int time = engine.endBurn();
 			if(time > arriveTime) arriveTime = time;
