@@ -160,6 +160,10 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 		GL11.glPushMatrix();
 		{
 
+			// vision will blind
+			// severance ties
+			// median am I
+			// true are all lies
 
 			GL11.glEnable(GL11.GL_FOG);
 			GL11.glPushAttrib(GL11.GL_FOG_BIT);
