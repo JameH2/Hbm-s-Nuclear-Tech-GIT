@@ -38,42 +38,24 @@ public class WorldGeneratorThatmo implements IWorldGenerator {
 				put(ModBlocks.brick_concrete_cracked, new ConcreteBricks());
 			}};
 		}});
-		/*
-		NBTStructure.registerStructure(SpaceConfig.thatmoDimension, new SpawnCondition() {{
-			sizeLimit = 128;
-			canSpawn = biome -> biome.heightVariation < 0.1F;
-			startPool = "default";
-			pools = new HashMap<String, NBTStructure.JigsawPool>() {{
-				put("default", new JigsawPool() {{
-					add(new JigsawPiece("tr1", StructureManager.tr1, -3){{ conformToTerrain = true; }}, 2);
-					add(new JigsawPiece("tr2", StructureManager.tr2, -3){{ conformToTerrain = true; }}, 2);
-					add(new JigsawPiece("tr3", StructureManager.tr3, -3){{ conformToTerrain = true; }}, 2);
-					add(new JigsawPiece("tr4", StructureManager.tr4, -3){{ conformToTerrain = true; }}, 2);
-				}});
 
-			}};
-		}});
-		*/
-
-		NBTStructure.registerStructure(SpaceConfig.thatmoDimension, new SpawnCondition("city") {{
-			sizeLimit = 128;
-			canSpawn = biome -> biome.heightVariation < 0.1F;
-			startPool = "default";
+		NBTStructure.registerStructure(SpaceConfig.thatmoDimension, new SpawnCondition("thatmocity") {{
+			sizeLimit = 256;
+			canSpawn = biome -> true;
+			startPool = "road";
 			pools = new HashMap<String, JigsawPool>() {{
 				put("default", new JigsawPool() {{
-					add(new JigsawPiece("intersection", StructureManager.intersection, 0){{ alignToTerrain = true; }}, 1);
-					add(new JigsawPiece("road_1", StructureManager.road, 0){{ conformToTerrain = true; }}, 1);
-					add(new JigsawPiece("curve_1", StructureManager.curve, 0){{ conformToTerrain = true; }}, 1);
-					add(new JigsawPiece("tshape", StructureManager.tshape, 0){{ conformToTerrain = true; }}, 1);
-					add(new JigsawPiece("block1", StructureManager.block1, 0){{ alignToTerrain = true; }}, 1);
-					add(new JigsawPiece("block2", StructureManager.block2, 0){{ alignToTerrain = true; }}, 1);
-					add(new JigsawPiece("pfmfac", StructureManager.pfmfac, 0){{ alignToTerrain = true; }}, 1);
+					add(new JigsawPiece("thatmocity-building-short", StructureManager.thatmocity_building_short), 1);
+					add(new JigsawPiece("thatmocity-building-medium", StructureManager.thatmocity_building_medium), 1);
 				}});
-				put("roadsonly", new JigsawPool() {{
-					add(new JigsawPiece("road_2", StructureManager.road, 0){{ conformToTerrain = true; }}, 1);
-					add(new JigsawPiece("curve_2", StructureManager.curve, 0){{ conformToTerrain = true; }}, 1);
+				put("road", new JigsawPool() {{
+					add(new JigsawPiece("thatmocity-road", StructureManager.thatmocity_road, -1) {{ conformToTerrain = true; }}, 1);
+					add(new JigsawPiece("thatmocity-intersection", StructureManager.thatmocity_intersection, -1) {{ conformToTerrain = true; }}, 1);
+					add(new JigsawPiece("thatmocity-intersection-t", StructureManager.thatmocity_intersection_t, -1) {{ conformToTerrain = true; }}, 1);
+					add(new JigsawPiece("thatmocity-block1", StructureManager.thatmocity_block1, -1) {{ conformToTerrain = true; }}, 1);
+					add(new JigsawPiece("thatmocity-block2", StructureManager.thatmocity_block2, -1) {{ conformToTerrain = true; }}, 1);
+					add(new JigsawPiece("thatmocity-curve", StructureManager.thatmocity_curve, -1) {{ conformToTerrain = true; }}, 1);
 				}});
-
 			}};
 		}});
 

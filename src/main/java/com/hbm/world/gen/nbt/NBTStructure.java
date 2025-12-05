@@ -434,11 +434,11 @@ public class NBTStructure {
 
 		TileEntity te = TileEntity.createAndLoadEntity(nbt);
 
-		if(te instanceof INBTTileEntityTransformable) {
+		if(!StructureConfig.debugStructures && te instanceof INBTTileEntityTransformable) {
 			((INBTTileEntityTransformable) te).transformTE(world, coordBaseMode);
 		}
 
-		if(te instanceof TileEntityWandTandem) {
+		if(!StructureConfig.debugStructures && te instanceof TileEntityWandTandem) {
 			((TileEntityWandTandem) te).arm(getStructure(structureName));
 		}
 
@@ -499,10 +499,10 @@ public class NBTStructure {
 		switch(coordBaseMode) {
 		case 1:
 		case 3:
-			bb = new StructureBoundingBox(x, y, z, x + piece.structure.size.z - 1, y + piece.structure.size.y - 1, z + piece.structure.size.x - 1);
+			bb = new StructureBoundingBox(x, y, z, x + piece.structure.size.z - 1, y + piece.structure.size.y, z + piece.structure.size.x - 1);
 			break;
 		default:
-			bb = new StructureBoundingBox(x, y, z, x + piece.structure.size.x - 1, y + piece.structure.size.y - 1, z + piece.structure.size.z - 1);
+			bb = new StructureBoundingBox(x, y, z, x + piece.structure.size.x - 1, y + piece.structure.size.y, z + piece.structure.size.z - 1);
 			break;
 		}
 
@@ -777,10 +777,10 @@ public class NBTStructure {
 			switch(this.coordBaseMode) {
 			case 1:
 			case 3:
-				this.boundingBox = new StructureBoundingBox(x, y, z, x + piece.structure.size.z - 1, y + piece.structure.size.y - 1, z + piece.structure.size.x - 1);
+				this.boundingBox = new StructureBoundingBox(x, y, z, x + piece.structure.size.z - 1, y + piece.structure.size.y, z + piece.structure.size.x - 1);
 				break;
 			default:
-				this.boundingBox = new StructureBoundingBox(x, y, z, x + piece.structure.size.x - 1, y + piece.structure.size.y - 1, z + piece.structure.size.z - 1);
+				this.boundingBox = new StructureBoundingBox(x, y, z, x + piece.structure.size.x - 1, y + piece.structure.size.y, z + piece.structure.size.z - 1);
 				break;
 			}
 		}
