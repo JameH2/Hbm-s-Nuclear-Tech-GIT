@@ -1,5 +1,11 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5526 - can't bake a cake without losing a few dozen men](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5526)
-
 ## Changed
-* Stages now decouple in two steps, with the engine shroud decoupling shortly after the prior stage
-* Remove template requirement for Stardar and Drive Processor
+* Seeding slurry is now appreciably boosted in growing power
+    * Will only work in atmospheres with at least trace amounts of CO2
+    * As an upside, will now convert CO2 into O2 at a rate of 100mB of O2 per block of grass
+
+## Fixed
+* Capsules can be exited during transfers, when the doors should be locked
+* Holding crouch can inconsistently drop you out of a capsule even when the doors are locked
+    * Due to some vanilla shenanigans, you'll sometimes encounter visual issues if you hold the key, but now you'll still remain in the capsule
+    * To prevent potential gamebreaking issues, you can force-leave a capsule by holding crouch for three seconds (unless in deep space, where you'll always be fully blocked from leaving)
+* Fixed the old fusion station thruster appearing as the new. as-of-yet unimplemented one
