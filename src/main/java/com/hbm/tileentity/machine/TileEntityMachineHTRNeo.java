@@ -360,4 +360,9 @@ implements IPropulsion, IFluidStandardTransceiverMK2, IFluidStandardReceiver, IE
 		return ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset) == ForgeDirection.SOUTH;
 	}
 
+	@Override
+	public boolean isFtlCapable() {
+		return false; //true actually
+	}
+
 }
