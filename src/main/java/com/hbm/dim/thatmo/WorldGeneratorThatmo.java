@@ -26,17 +26,18 @@ public class WorldGeneratorThatmo implements IWorldGenerator {
 			canSpawn = biome -> biome.heightVariation < 0.1F;
 		}});
 		NBTStructure.registerStructure(SpaceConfig.thatmoDimension, new SpawnCondition("thatmo2") {{
-			structure = new JigsawPiece("thatmotest2", StructureManager.thatmo2, 1);
+			structure = new JigsawPiece("thatmotest2", StructureManager.thatmo2, -1);
 			canSpawn = biome -> biome.heightVariation < 0.1F;
 		}});
 		NBTStructure.registerStructure(SpaceConfig.thatmoDimension, new SpawnCondition("trenches") {{
-			JigsawPiece rupture = new JigsawPiece("trenches", StructureManager.trenches, -1);
-			rupture.conformToTerrain = true;
+			structure = new JigsawPiece("trenches", StructureManager.trenches, -2) {{
+				conformToTerrain = true;
+				blockTable = new HashMap<Block, BlockSelector>() {{
+					put(ModBlocks.brick_concrete_cracked, new ConcreteBricks());
+				}};
+			}};
 			spawnWeight = 2;
 			canSpawn = biome -> biome.heightVariation < 0.1F;
-			rupture.blockTable = new HashMap<Block, BlockSelector>() {{
-				put(ModBlocks.brick_concrete_cracked, new ConcreteBricks());
-			}};
 		}});
 
 		NBTStructure.registerStructure(SpaceConfig.thatmoDimension, new SpawnCondition("thatmocity") {{
