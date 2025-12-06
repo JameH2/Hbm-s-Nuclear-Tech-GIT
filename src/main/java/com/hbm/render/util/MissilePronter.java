@@ -1,7 +1,5 @@
 package com.hbm.render.util;
 
-import java.nio.DoubleBuffer;
-
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.entity.missile.EntityRideableRocket;
@@ -9,13 +7,11 @@ import com.hbm.handler.RocketStruct;
 import com.hbm.handler.RocketStruct.RocketStage;
 import com.hbm.items.weapon.ItemCustomMissilePart.PartType;
 import com.hbm.main.ResourceManager;
+import com.hbm.util.RenderUtil;
 
-import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.texture.TextureManager;
 
 public class MissilePronter {
-
-	private static DoubleBuffer buffer;
 
 	public static void prontMissile(MissileMultipart missile, TextureManager tex) {
 
@@ -66,9 +62,6 @@ public class MissilePronter {
 
 		boolean hasShroud = false;
 
-		if(buffer == null)
-			buffer = GLAllocation.createDirectByteBuffer(8 * 4).asDoubleBuffer(); // four doubles
-
 		for(RocketStage stage : rocket.stages) {
 			int stack = stage.getStack();
 			int cluster = stage.getCluster();
@@ -107,13 +100,12 @@ public class MissilePronter {
 								GL11.glRotated(shroudLerp * 0.5D, 1, 0, 0);
 							}
 
+							RenderUtil.pushClip(0, -1, 0, stage.thruster.height);
+
 							tex.bindTexture(ResourceManager.universal);
-							buffer.put(new double[] {0, -1, 0, stage.thruster.height});
-							buffer.rewind();
-							GL11.glEnable(GL11.GL_CLIP_PLANE0);
-							GL11.glClipPlane(GL11.GL_CLIP_PLANE0, buffer);
 							stage.fuselage.getShroud().renderAll();
-							GL11.glDisable(GL11.GL_CLIP_PLANE0);
+
+							RenderUtil.popClip();
 
 							if(shroudTimer > 0) {
 								GL11.glPopMatrix();

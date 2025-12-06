@@ -1,6 +1,5 @@
 package com.hbm.dim.orbit;
 
-import java.nio.DoubleBuffer;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
@@ -14,10 +13,10 @@ import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.util.BobMathUtil;
+import com.hbm.util.RenderUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.MathHelper;
@@ -30,12 +29,6 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 
 	public static final ResourceLocation starfield = new ResourceLocation(RefStrings.MODID, "textures/misc/space/starfield.png");
 	public static final ResourceLocation ittyfield = new ResourceLocation(RefStrings.MODID, "textures/misc/space/ittyfield.png");
-
-	private static DoubleBuffer buffer;
-
-	public SkyProviderOrbit() {
-		if(buffer == null) buffer = GLAllocation.createDirectByteBuffer(8 * 4).asDoubleBuffer(); // four doubles
-	}
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
@@ -86,15 +79,11 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 		}
 		GL11.glPopMatrix();
 
-		buffer.put(new double[] { normal, 0, 0, slicePosition });
-		buffer.rewind();
-
-		GL11.glEnable(GL11.GL_CLIP_PLANE0);
-		GL11.glClipPlane(GL11.GL_CLIP_PLANE0, buffer);
+		RenderUtil.pushClip(normal, 0, 0, slicePosition);
 
 		renderStarfield(partialTicks, world, mc);
 
-		GL11.glDisable(GL11.GL_CLIP_PLANE0);
+		RenderUtil.popClip();
 	}
 
 	private void renderOrbit(float partialTicks, WorldClient world, Minecraft mc) {

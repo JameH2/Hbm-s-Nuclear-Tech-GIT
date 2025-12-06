@@ -44,13 +44,12 @@ public class EntityBomber extends EntityPlaneBase {
 			if(this.getDataWatcher().getWatchableObjectFloat(17) > 0) {
 				if(audio == null || !audio.isPlaying()) {
 					int bomberType = this.dataWatcher.getWatchableObjectByte(16);
-					System.out.println();
-					if (bomberType >= 9) {
+					if(bomberType >= 9) {
 						audio = MainRegistry.proxy.getLoopedSound("hbm:entity.jetloopbomb", (float) posX, (float) posY, (float) posZ, 2F, 250F, 1F, 20);
 					} else {
 						audio = MainRegistry.proxy.getLoopedSound(bomberType <= 4 ? "hbm:entity.bomberSmallLoop" : "hbm:entity.bomberLoop", (float) posX, (float) posY, (float) posZ, 2F, 250F, 1F, 20);
 					}
-				audio.startSound();
+					audio.startSound();
 				}
 				audio.keepAlive();
 				audio.updatePosition((float) posX, (float) posY, (float) posZ);
