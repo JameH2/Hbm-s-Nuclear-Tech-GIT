@@ -246,6 +246,10 @@ public class ItemPoolsComponent {
 		// Generic Thatmo loot
 		new ItemPool(POOL_WAR) {{
 			this.pool = new WeightedRandomChestContent[] {
+					weighted(ModItems.trenchmaster_helmet, 0, 1, 1, 1),
+					weighted(ModItems.trenchmaster_plate, 0, 1, 1, 1),
+					weighted(ModItems.trenchmaster_legs, 0, 1, 1, 1),
+					weighted(ModItems.trenchmaster_boots, 0, 1, 1, 1),
 					weighted(ModItems.blueprint_folder, 3, 1, 1, 1),
 					weighted(Items.paper, 0, 1, 6, 5),
 			};
