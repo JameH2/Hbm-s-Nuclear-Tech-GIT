@@ -7281,6 +7281,8 @@ hbmfluid.vinyl=Винилхлорид
 hbmpseudofluid.minsol=Тяжёлый минеральный шлам
 hbmpseudofluid.minsolsep=Отделённый минеральный шлам
 
+hbmfluid.earthair=Обогащённый кислородом воздух
+
 // Ores //
 tile.ore_iron.name=Железная руда
 tile.ore_gold.name=Золотая руда
@@ -7386,6 +7388,21 @@ chem.HYDRAPISS=Производство гидрозина с использов
 // Chem And Assembly
 chem.nitricacidalt=Азотная кислота из аммиака
 chem.hydrapiss=Гидразин из мочи
+chem.hydrazine=Гидразин
+chem.bloodfuel=Кровавое топливо
+chem.mentholfromminmus=Ментоловые кристаллы (прямиком с Минмуса!)
+chem.alkylbromine=Переработка смеси алкилбромидов
+chem.popermanganate=Переработка раствора перманганата калия
+chem.synleather=Синтетическая кожа
+chem.synsapling=Синтетический саженец
+chem.saltbiogas=Биогаз из солёных листьев
+chem.pcb=Травление печатных плат
+chem.hydramond=Алмаз с использованием гидразина
+chem.air=Искусственный сжатый воздух
+chem.oxyair=Искусственно-обогащённый кислородом воздух
+chem.dunair=Искусственный сжатый воздух Дюны
+chem.eveair=Искусственный сжатый воздух Евы
+chem.tektoair=Искусственный сжатый воздух Текто
 
 crucible.arse=Производство арсенида галлия
 crucible.conglomerate=Переплавка конгломерата в железо и никель

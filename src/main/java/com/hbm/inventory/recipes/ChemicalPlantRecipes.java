@@ -20,6 +20,7 @@ import com.hbm.items.ItemEnums.EnumFuelAdditive;
 import com.hbm.items.ItemGenericPart.EnumPartType;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFluidIcon;
+import com.hbm.items.machine.ItemCircuit.EnumCircuitType;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -376,7 +377,7 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 				.inputFluids(new FluidStack(Fluids.HYDROGEN, 4_000))
 				.outputFluids(new FluidStack(Fluids.THORIUM_BROMIDE, 4_000)));
 
-		this.register(new GenericRecipe("chem.hydrazine").setup(250, 1_000).setIcon(ModItems.canister_full, Fluids.HYDRAZINE.getID())
+		this.register(new GenericRecipe("chem.hydrazine").setupNamed(250, 1_000).setIcon(ModItems.canister_full, Fluids.HYDRAZINE.getID())
 				.inputFluids(new FluidStack(Fluids.NITRIC_ACID, 2_000), new FluidStack(Fluids.AMMONIA, 1_000))
 				.outputFluids(new FluidStack(Fluids.HYDRAZINE, 800)));
 
@@ -384,7 +385,7 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 				.inputFluids(new FluidStack(Fluids.NITROGEN, 600), new FluidStack(Fluids.WATER, 1_000))
 				.outputFluids(new FluidStack(Fluids.AMMONIA, 800)));
 
-		this.register(new GenericRecipe("chem.bloodfuel").setup(250, 1_000).setIcon(ModItems.canister_full, Fluids.BLOODGAS.getID())
+		this.register(new GenericRecipe("chem.bloodfuel").setupNamed(250, 1_000).setIcon(ModItems.canister_full, Fluids.BLOODGAS.getID())
 				.inputFluids(new FluidStack(Fluids.AMMONIA, 350), new FluidStack(Fluids.BLOOD, 800))
 				.outputFluids(new FluidStack(Fluids.BLOODGAS, 1000)));
 
@@ -432,7 +433,7 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 				.inputItems(new ComparableStack(ModItems.mint_leaves, 4))
 				.outputItems(new ItemStack(ModItems.ingot_menthol, 2)));
 			//this makes no sense but we're making stone with milk and mint so it doesn't matter
-		this.register(new GenericRecipe("chem.mentholfromminmus").setup(50, 300)
+		this.register(new GenericRecipe("chem.mentholfromminmus").setupNamed(50, 300)
 				.inputFluids(new FluidStack(Fluids.STEAM, 350), new FluidStack(Fluids.SULFURIC_ACID, 500))
 				.inputItems(new ComparableStack(ModBlocks.minmus_smooth, 40))
 				.outputItems(new ItemStack(ModItems.ingot_menthol, 15)));
@@ -460,16 +461,67 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 				.inputFluids(new FluidStack(Fluids.WATER, 500), new FluidStack(Fluids.AMMONIA, 1000))
 				.outputFluids(new FluidStack(Fluids.NITRIC_ACID, 1_000)));
 
+		this.register(new GenericRecipe("chem.alkylbromine").setupNamed(200, 1_000).setIcon(ModItems.powder_bromine)
+	           	.inputFluids(new FluidStack(Fluids.BROMINE, 1000))
+	            .outputItems(new ItemStack(ModItems.powder_coal, 2), new ItemStack(ModItems.powder_bromine, 2))
+	        	.outputFluids(new FluidStack(Fluids.HYDROGEN, 500)));
+
+		this.register(new GenericRecipe("chem.popermanganate").setupNamed(200, 1_000).setIcon(ModItems.fluid_icon, Fluids.KMnO4.getID())
+	           	.inputFluids(new FluidStack(Fluids.KMnO4, 1000))
+	            .outputItems(new ItemStack(ModItems.powder_calcium, 2), new ItemStack(ModItems.powder_iron, 2))
+	        	.outputFluids(new FluidStack(Fluids.HYDROGEN, 500)));
+
 		// WARNING: NILERED CHEMISTRY ZONE //
 		this.register(new GenericRecipe("chem.hydrapiss").setupNamed(250, 1_000).setIcon(ModItems.canister_full, Fluids.HYDRAZINE.getID())
 				.inputFluids(new FluidStack(Fluids.NITRIC_ACID, 2000))
 				.inputItems(new ComparableStack(ModItems.rag_piss)) // urea...
 				.outputFluids(new FluidStack(Fluids.HYDRAZINE, 800))); // this is an emergency recipe, so it should NOT have a required blueprint
 
-		this.register(new GenericRecipe("chem.synleather").setup(200, 500)
+		this.register(new GenericRecipe("chem.synleather").setupNamed(200, 500)
 				.inputFluids(new FluidStack(Fluids.PEROXIDE, 250))
 				.inputItems(new OreDictStack(ANY_PLASTIC.ingot()), new ComparableStack(Items.string, 4))
 				.outputItems(new ItemStack(Items.leather)));
+
+		this.register(new GenericRecipe("chem.synsapling").setupNamed(200, 500).setPools(GenericRecipes.POOL_PREFIX_DISCOVER + ".synsapling")
+				.inputFluids(new FluidStack(Fluids.WATER, 250))
+				.inputItems(new ComparableStack(ModItems.ammonium_nitrate), new ComparableStack(Items.wheat_seeds, 8), new ComparableStack(Items.stick, 4))
+				.outputItems(new ItemStack(Blocks.sapling)));
+
+		this.register(new GenericRecipe("chem.saltbiogas").setupNamed(120, 100).setIcon(ModItems.gas_full, Fluids.BIOGAS.getID())
+				.inputItems(new ComparableStack(ModItems.saltleaf, 16))
+				.outputFluids(new FluidStack(Fluids.BIOGAS, 800)));
+
+		this.register(new GenericRecipe("chem.pcb").setupNamed(100, 100).setPools(GenericRecipes.POOL_PREFIX_ALT + ".circuit")
+				.inputFluids(new FluidStack(Fluids.HCL, 80))
+				.inputItems(new ComparableStack(ModItems.plate_polymer), new OreDictStack(GOLD.wireFine(), 8))
+				.outputItems(new ItemStack(ModItems.circuit, 8, EnumCircuitType.PCB.ordinal())));
+
+		this.register(new GenericRecipe("chem.hydramond").setupNamed(200, 200)
+				.inputFluids(new FluidStack(Fluids.HYDRAZINE, 800))
+				.inputItems(new OreDictStack(COAL.dust(), 8))
+				.outputItems(new ItemStack(ModItems.powder_diamond)).setPools(GenericRecipes.POOL_PREFIX_ALT)); // the idea of recipe is taken from Astroneer
+
+		// For those who are worried about the atmosphere
+
+		this.register(new GenericRecipe("chem.air").setupNamed(200, 1_000).setPools(GenericRecipes.POOL_PREFIX_SECRET + "damnair")
+				.inputFluids(new FluidStack(Fluids.OXYGEN, 2000))
+				.outputFluids(new FluidStack(Fluids.AIR, 1000)));
+
+		this.register(new GenericRecipe("chem.oxyair").setupNamed(200, 1_000).setPools(GenericRecipes.POOL_PREFIX_SECRET + "damnair")
+				.inputFluids(new FluidStack(Fluids.AIR, 1000), new FluidStack(Fluids.OXYGEN, 1000))
+				.outputFluids(new FluidStack(Fluids.EARTHAIR, 1000)));
+
+		this.register(new GenericRecipe("chem.dunair").setupNamed(200, 1_000).setPools(GenericRecipes.POOL_PREFIX_SECRET + "damnair")
+				.inputFluids(new FluidStack(Fluids.AIR, 1000), new FluidStack(Fluids.CARBONDIOXIDE, 800))
+				.outputFluids(new FluidStack(Fluids.DUNAAIR, 1000)));
+
+		this.register(new GenericRecipe("chem.eveair").setupNamed(200, 1_000).setPools(GenericRecipes.POOL_PREFIX_SECRET + "damnair")
+				.inputFluids(new FluidStack(Fluids.AIR, 1000), new FluidStack(Fluids.KMnO4, 500), new FluidStack(Fluids.MERCURY, 500))
+				.outputFluids(new FluidStack(Fluids.EVEAIR, 1000)));
+
+		this.register(new GenericRecipe("chem.tektoair").setupNamed(200, 1_000).setPools(GenericRecipes.POOL_PREFIX_SECRET + "damnair")
+				.inputFluids(new FluidStack(Fluids.AIR, 1000), new FluidStack(Fluids.CHLOROMETHANE, 500), new FluidStack(Fluids.CHLORINE, 500))
+				.outputFluids(new FluidStack(Fluids.TEKTOAIR, 1000)));
 
 	}
 

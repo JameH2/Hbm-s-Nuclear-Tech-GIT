@@ -628,6 +628,21 @@ chem.lubeelectrodes=Instant Electrodes (Lubricant)
 
 chem.nitricacidalt=Nitric Acid from Ammonia
 chem.hydrapiss=Hydrazine via Urea
+chem.hydrazine=Hydrazine
+chem.bloodfuel=Blood Fuel
+chem.mentholfromminmus=Menthol Crystals from Minmus
+chem.alkylbromine=Alkyl Bromide Processing
+chem.popermanganate=Potassium Permanganate Solution Processing
+chem.synleather=Synthetic Leather
+chem.synsapling=Synthetic Sapling
+chem.saltbiogas=Biogas from Saltleafs
+chem.pcb=Etching of Printed Circuit Boards
+chem.hydramond=Diamond using Hydrazine
+chem.air=Compressed Air (Artificial)
+chem.oxyair=Oxygen-Rich Air (Artificial)
+chem.dunair=Duna Air (Artificial)
+chem.eveair=Eve Air (Artificial)
+chem.tektoair=Tekto Air (Artificial)
 
 chem.ARSENIC=Arsenic Extraction
 chem.ASPHALT=Asphalt Production
