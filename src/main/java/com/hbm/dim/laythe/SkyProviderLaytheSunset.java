@@ -9,6 +9,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 
 public class SkyProviderLaytheSunset extends SkyProviderCelestial {
 
@@ -17,7 +18,7 @@ public class SkyProviderLaytheSunset extends SkyProviderCelestial {
 	}
 
 	@Override
-	protected void renderSunset(float partialTicks, WorldClient world, Minecraft mc) {
+	protected void renderSunset(float partialTicks, WorldClient world, Minecraft mc, float solarAngle, float pressure, ResourceLocation surfaceTexture) {
 		Tessellator tessellator = Tessellator.instance;
 
 		float[] sunsetColor = world.provider.calcSunriseSunsetColors(world.getCelestialAngle(partialTicks), partialTicks);

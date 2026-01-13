@@ -70,6 +70,8 @@ public class ContainerOrbitalStationLauncher extends ContainerBase {
 		ItemStack ret = null;
 		ItemStack held = player.inventory.getItemStack();
 
+		if(held != null && !slot.isItemValid(held)) return null;
+
 		if(slot.getHasStack())
 			ret = slot.getStack().copy();
 

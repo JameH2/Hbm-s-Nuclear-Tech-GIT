@@ -24,15 +24,15 @@ public class ContainerVacuumCircuit extends Container {
 		sucker = tile;
 		
 		//Inputs
-		for(int i = 0; i < 2; i++) for(int j = 0; j < 2; j++) this.addSlotToContainer(new SlotNonRetarded(tile, i * 2 + j, 11 + j * 18, 39 + i * 18));
+		for(int i = 0; i < 2; i++) for(int j = 0; j < 2; j++) this.addSlotToContainer(new SlotNonRetarded(tile, i * 2 + j, 26 + j * 18, 18 + i * 18));
 		//Output
-		this.addSlotToContainer(new SlotCraftingOutput(playerInv.player, tile, 4, 85, 48));
+		this.addSlotToContainer(new SlotCraftingOutput(playerInv.player, tile, 4, 98, 27));
 		//Battery
-		this.addSlotToContainer(new Slot(tile, 5, 132, 72));
+		this.addSlotToContainer(new Slot(tile, 5, 143, 72));
 
 		//Upgrades
-		this.addSlotToContainer(new SlotUpgrade(tile, 6, 10, 13));
-		this.addSlotToContainer(new SlotUpgrade(tile, 7, 28, 13));
+		this.addSlotToContainer(new SlotUpgrade(tile, 6, 89, 72));
+		this.addSlotToContainer(new SlotUpgrade(tile, 7, 107, 72));
 
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {

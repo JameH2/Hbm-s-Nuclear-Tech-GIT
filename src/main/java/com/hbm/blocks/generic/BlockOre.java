@@ -189,7 +189,7 @@ public class BlockOre extends Block implements IBlockMultiPass, IBlockMulti, ITo
 
 		for(int i = 1; i < SolarSystem.Body.values().length; i++) {
 			SolarSystem.Body body = SolarSystem.Body.values()[i];
-			stoneIcons[i] = reg.registerIcon(body.getStoneTexture());
+			stoneIcons[i] = reg.registerIcon(body.getStoneTexture().toString().replaceAll("textures/blocks/", "").replaceAll("\\.png", ""));
 		}
 	}
 

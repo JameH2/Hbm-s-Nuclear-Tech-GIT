@@ -234,4 +234,9 @@ public class SkyProviderDima extends SkyProviderCelestial {
 		GL11.glColor4f(red, green, blue, a);
 	}
 
+	@Override
+	protected float[] calcSunriseSunsetColors(float partialTicks, WorldClient world, Minecraft mc, float solarAngle, float pressure) {
+		return world.provider.calcSunriseSunsetColors(world.getCelestialAngle(partialTicks), partialTicks);
+	}
+
 }

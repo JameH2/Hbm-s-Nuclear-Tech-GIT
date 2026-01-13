@@ -45,11 +45,6 @@ public class WorldProviderDres extends WorldProviderCelestial {
 	}
 
 	@Override
-	public boolean hasIce() {
-		return true;
-	}
-
-	@Override
 	public FluidStack getBedrockAcid() {
 		return new FluidStack(Fluids.NITRIC_ACID, 500);
 	}

@@ -16,6 +16,7 @@ import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
+import api.hbm.energymk2.IEnergyReceiverMK2.ConnectionPriority;
 import api.hbm.fluid.IFluidStandardReceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -128,6 +129,7 @@ public class TileEntityMachineDrain extends TileEntityLoadedBase implements IFlu
 
 	@Override public FluidTank[] getAllTanks() { return new FluidTank[] {tank}; }
 	@Override public FluidTank[] getReceivingTanks() { return new FluidTank[] {tank}; }
+	@Override public ConnectionPriority getFluidPriority() { return ConnectionPriority.LOW; }
 
 	@Override
 	public boolean canConnect(FluidType type, ForgeDirection dir) {

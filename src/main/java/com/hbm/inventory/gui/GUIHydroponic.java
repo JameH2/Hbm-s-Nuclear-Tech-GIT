@@ -55,7 +55,7 @@ public class GUIHydroponic extends GuiInfoContainer {
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = hydro.hasCustomInventoryName() ? hydro.getInventoryName() : I18n.format(hydro.getInventoryName());
 
-		this.fontRendererObj.drawString(name, 97 - this.fontRendererObj.getStringWidth(name) / 2, 5, 0xffffff);
+		this.fontRendererObj.drawString(name, 97 - this.fontRendererObj.getStringWidth(name) / 2, 5, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}
 

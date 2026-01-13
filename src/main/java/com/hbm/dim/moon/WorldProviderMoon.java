@@ -29,9 +29,4 @@ public class WorldProviderMoon extends WorldProviderCelestial {
 		return ModBlocks.moon_rock;
 	}
 
-	@Override
-	public boolean hasIce() {
-		return true;
-	}
-
 }

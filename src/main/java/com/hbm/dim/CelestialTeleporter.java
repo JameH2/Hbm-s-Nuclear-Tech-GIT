@@ -1,13 +1,14 @@
 package com.hbm.dim;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 import com.hbm.entity.missile.EntityRideableRocket;
-import com.hbm.entity.projectile.EntityThrowableNT;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
@@ -27,13 +28,13 @@ public class CelestialTeleporter extends Teleporter {
 
 	private boolean grounded; // Should we be placed directly on the first ground block below?
 
-	private EntityPlayerMP playerMP;
+	private Entity entity;
 
-	public CelestialTeleporter(WorldServer sourceServer, WorldServer targetServer, EntityPlayerMP playerMP, double x, double y, double z, boolean grounded) {
+	public CelestialTeleporter(WorldServer sourceServer, WorldServer targetServer, Entity entity, double x, double y, double z, boolean grounded) {
 		super(targetServer);
 		this.sourceServer = sourceServer;
 		this.targetServer = targetServer;
-		this.playerMP = playerMP;
+		this.entity = entity;
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -41,7 +42,7 @@ public class CelestialTeleporter extends Teleporter {
 	}
 
 	@Override
-	public void placeInPortal(Entity pEntity, double ox, double oy, double oz, float yaw) {
+	public void placeInPortal(Entity entity, double ox, double oy, double oz, float yaw) {
 		int ix = (int)x;
 		int iy = (int)y;
 		int iz = (int)z;
@@ -57,75 +58,98 @@ public class CelestialTeleporter extends Teleporter {
 			targetServer.getBlock(ix, MathHelper.clamp_int(iy, 1, 255), iz); // dummy load to maybe gen chunk
 		}
 
-		pEntity.setPosition(x, y, z);
+		entity.setPosition(x, y, z);
 	}
 
 	private void runTeleport() {
-		ServerConfigurationManager manager = playerMP.mcServer.getConfigurationManager();
+		MinecraftServer mcServer = MinecraftServer.getServer();
+		ServerConfigurationManager manager = mcServer.getConfigurationManager();
+
+		// If this entity got teleported with a player rider, switch to the rider!
+		if(entity.riddenByEntity instanceof EntityPlayerMP) {
+			entity = entity.riddenByEntity;
+		}
 
 		// Store these since they change after transfer
-		int fromDimension = playerMP.dimension;
-		Entity ridingEntity = playerMP.ridingEntity;
+		int fromDimension = entity.dimension;
 
-		playerMP.posX = x;
-		playerMP.posZ = z;
+		entity.posX = x;
+		entity.posZ = z;
 
-		manager.transferPlayerToDimension(playerMP, targetServer.provider.dimensionId, this);
+		if(entity instanceof EntityPlayerMP) {
+			EntityPlayerMP playerMP = (EntityPlayerMP) entity;
+			Entity ridingEntity = entity.ridingEntity;
 
-		if(ridingEntity != null && !ridingEntity.isDead) {
-			ridingEntity.dimension = fromDimension;
-			ridingEntity.worldObj.removeEntity(ridingEntity);
-			ridingEntity.isDead = false;
+			manager.transferPlayerToDimension(playerMP, targetServer.provider.dimensionId, this);
 
-			manager.transferEntityToWorld(ridingEntity, fromDimension, sourceServer, targetServer, this);
+			if(ridingEntity != null && !ridingEntity.isDead) {
+				ridingEntity.dimension = fromDimension;
+				ridingEntity.worldObj.removeEntity(ridingEntity);
+				ridingEntity.isDead = false;
 
-			Entity newEntity = EntityList.createEntityByName(EntityList.getEntityString(ridingEntity), targetServer);
+				manager.transferEntityToWorld(ridingEntity, fromDimension, sourceServer, targetServer, this);
+
+				Entity newEntity = EntityList.createEntityByName(EntityList.getEntityString(ridingEntity), targetServer);
+				if(newEntity != null) {
+					newEntity.copyDataFrom(ridingEntity, true);
+					newEntity.posX = x;
+					newEntity.posZ = z;
+					targetServer.spawnEntityInWorld(newEntity);
+					newEntity.dimension = targetServer.provider.dimensionId;
+				}
+
+				ridingEntity.isDead = true;
+				sourceServer.resetUpdateEntityTick();
+				targetServer.resetUpdateEntityTick();
+
+				playerMP.mountEntity(newEntity);
+
+				// Ensure rocket stickiness
+				if(newEntity instanceof EntityRideableRocket) {
+					((EntityRideableRocket) newEntity).setThrower(playerMP);
+				}
+
+				// Send another packet to the client to make sure they load in correctly!
+				playerMP.setPositionAndUpdate(x, 900, z);
+			}
+		} else {
+			entity.worldObj.removeEntity(entity);
+			entity.isDead = false;
+
+			manager.transferEntityToWorld(entity, fromDimension, sourceServer, targetServer, this);
+
+			Entity newEntity = EntityList.createEntityByName(EntityList.getEntityString(entity), targetServer);
 			if(newEntity != null) {
-				newEntity.copyDataFrom(ridingEntity, true);
+				newEntity.copyDataFrom(entity, true);
 				newEntity.posX = x;
 				newEntity.posZ = z;
 				targetServer.spawnEntityInWorld(newEntity);
+				newEntity.dimension = targetServer.provider.dimensionId;
 			}
 
-			ridingEntity.isDead = true;
+			entity.isDead = true;
 			sourceServer.resetUpdateEntityTick();
 			targetServer.resetUpdateEntityTick();
-
-			playerMP.mountEntity(newEntity);
-
-			// Ensure rocket stickiness
-			if(newEntity instanceof EntityRideableRocket) {
-				((EntityRideableRocket) newEntity).setThrower(playerMP);
-			}
-
-			// Send another packet to the client to make sure they load in correctly!
-			playerMP.setPositionAndUpdate(x, 900, z);
 		}
 	}
 
 	public static void runQueuedTeleport() {
-		if(queuedTeleport == null) return;
-
-		queuedTeleport.runTeleport();
-
-		queuedTeleport = null;
+		CelestialTeleporter teleporter = queue.poll();
+		if(teleporter != null) teleporter.runTeleport();
 	}
 
-	private static CelestialTeleporter queuedTeleport;
+	private static Queue<CelestialTeleporter> queue = new ArrayDeque<>();
 
-	public static void teleport(EntityPlayer player, int dim, double x, double y, double z, boolean grounded) {
-		if(player.dimension == dim) return; // ignore if we're teleporting to the same place
+	public static void teleport(Entity entity, int dim, double x, double y, double z, boolean grounded) {
+		if(entity.dimension == dim) return; // ignore if we're teleporting to the same place
 
-		MinecraftServer mServer = MinecraftServer.getServer();
+		MinecraftServer mcServer = MinecraftServer.getServer();
 		Side sidex = FMLCommonHandler.instance().getEffectiveSide();
 		if(sidex == Side.SERVER) {
-			if(player instanceof EntityPlayerMP) {
-				EntityPlayerMP playerMP = (EntityPlayerMP) player;
-				WorldServer sourceServer = playerMP.getServerForPlayer();
-				WorldServer targetServer = (WorldServer) mServer.worldServerForDimension(dim);
+			WorldServer sourceServer = mcServer.worldServerForDimension(entity.dimension);
+			WorldServer targetServer = mcServer.worldServerForDimension(dim);
 
-				queuedTeleport = new CelestialTeleporter(sourceServer, targetServer, playerMP, x, y, z, grounded);
-			}
+			queue.add(new CelestialTeleporter(sourceServer, targetServer, entity, x, y, z, grounded));
 		}
 	}
 

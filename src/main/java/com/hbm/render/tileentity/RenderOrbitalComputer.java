@@ -39,7 +39,7 @@ public class RenderOrbitalComputer extends TileEntitySpecialRenderer implements 
 			ResourceManager.orbital_computer.renderAllExcept("Drive");
 
 			if(computer.hasDrive) {
-				bindTexture(ResourceManager.drive_processor_tex);
+				bindTexture(ResourceManager.orbital_computer_tex);
 				ResourceManager.orbital_computer.renderPart("Drive");
 			}
 

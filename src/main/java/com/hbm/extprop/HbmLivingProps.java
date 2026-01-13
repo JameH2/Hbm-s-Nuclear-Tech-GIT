@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.hbm.config.RadiationConfig;
 import com.hbm.dim.trait.CBT_Atmosphere;
+import com.hbm.config.ServerConfig;
 import com.hbm.entity.mob.EntityDuck;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.lib.ModDamageSource;
@@ -28,6 +29,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
@@ -103,7 +105,7 @@ public class HbmLivingProps implements IExtendedEntityProperties {
 
 		data.setRadiation(entity, radiation);
 	}
-	
+
 	/// NEUTRON ACTIVATION ///
 	public static float getNeutronActivation(EntityLivingBase entity) {
 		if(RadiationConfig.disableNeutron)
@@ -111,22 +113,22 @@ public class HbmLivingProps implements IExtendedEntityProperties {
 
 		return getData(entity).activation;
 	}
-	
+
 	public static void setNeutronActivation(EntityLivingBase entity, float rad) {
 		if(!RadiationConfig.disableNeutron)
 			getData(entity).activation = rad;
 	}
-	
+
 	public static void incrementNeutronActivation(EntityLivingBase entity, float rad) {
 		if(RadiationConfig.disableNeutron)
 			return;
-		
+
 		HbmLivingProps data = getData(entity);
 		float neutrons = getData(entity).activation + rad;
-		
+
 		if(neutrons < 0)
 			neutrons = 0;
-		
+
 		data.setNeutronActivation(entity, neutrons);
 	}
 
@@ -259,14 +261,17 @@ public class HbmLivingProps implements IExtendedEntityProperties {
 	public static int getOxy(EntityLivingBase entity) {
 		return getData(entity).oxygen;
 	}
-	
+
 	public static void setOxy(EntityLivingBase entity, int oxygen) {
 		if(oxygen <= 0) {
-			oxygen = 0;
+			if(entity.ticksExisted < 20) oxygen = 0; // limit overdamage effects when relogging
+
+			int damageInterval = MathHelper.clamp_int(oxygen / 60 + 8, 1, 8);
+			int damageAmount = MathHelper.clamp_int(-oxygen / 40 - 10, 1, Integer.MAX_VALUE);
 
 			// Only damage every 4 ticks, giving the player more time to react
-			if(entity.ticksExisted % 4 == 0) {
-				entity.attackEntityFrom(ModDamageSource.oxyprime, 1);
+			if(entity.ticksExisted % damageInterval == 0) {
+				entity.attackEntityFrom(ModDamageSource.oxyprime, damageAmount);
 			}
 		}
 
@@ -309,6 +314,7 @@ public class HbmLivingProps implements IExtendedEntityProperties {
 
 	/// CONTAGION ///
 	public static int getContagion(EntityLivingBase entity) {
+		if(!ServerConfig.ENABLE_MKU.get()) return 0;
 		return getData(entity).contagion;
 	}
 
@@ -391,7 +397,7 @@ public class HbmLivingProps implements IExtendedEntityProperties {
 		props.setFloat("hfr_digamma", digamma);
 		props.setInteger("hfr_asbestos", asbestos);
 		props.setInteger("hfr_bomb", bombTimer);
-		props.setInteger("hfr_contagion", contagion);
+		if(ServerConfig.ENABLE_MKU.get()) props.setInteger("hfr_contagion", contagion);
 		props.setInteger("hfr_blacklung", blacklung);
 		props.setInteger("hfr_oil", oil);
 		props.setInteger("hfr_oxygen", oxygen);
@@ -422,7 +428,7 @@ public class HbmLivingProps implements IExtendedEntityProperties {
 			digamma = props.getFloat("hfr_digamma");
 			asbestos = props.getInteger("hfr_asbestos");
 			bombTimer = props.getInteger("hfr_bomb");
-			contagion = props.getInteger("hfr_contagion");
+			if(ServerConfig.ENABLE_MKU.get()) contagion = props.getInteger("hfr_contagion");
 			blacklung = props.getInteger("hfr_blacklung");
 			oil = props.getInteger("hfr_oil");
 			activation = props.getFloat("hfr_activation");

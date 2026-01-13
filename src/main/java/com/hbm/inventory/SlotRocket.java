@@ -77,6 +77,7 @@ public class SlotRocket extends Slot {
 
 		@Override
 		public boolean isItemValid(ItemStack stack) {
+			if(!isVisible()) return false;
 			if(stack == null) return false;
 			return stack.getItem() instanceof ItemVOTVdrive;
 		}

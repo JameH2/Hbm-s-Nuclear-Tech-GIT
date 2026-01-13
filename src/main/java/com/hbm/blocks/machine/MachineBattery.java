@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.IPersistentInfoProvider;
+import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
@@ -35,7 +36,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 
-public class MachineBattery extends BlockContainer implements ILookOverlay, IPersistentInfoProvider {
+public class MachineBattery extends BlockContainer implements ILookOverlay, IPersistentInfoProvider, ITooltipProvider {
 
 	private final Random field_149933_a = new Random();
 	private static boolean keepInventory;
@@ -148,7 +149,7 @@ public class MachineBattery extends BlockContainer implements ILookOverlay, IPer
 		if(itemStack.hasDisplayName()) {
 			((TileEntityMachineBattery) world.getTileEntity(x, y, z)).setCustomName(itemStack.getDisplayName());
 		}
-		
+
 		IPersistentNBT.restoreData(world, x, y, z, itemStack);
 	}
 
@@ -179,7 +180,7 @@ public class MachineBattery extends BlockContainer implements ILookOverlay, IPer
 
 			if(tile instanceof TileEntityMachineBattery) {
 				TileEntityMachineBattery battery = (TileEntityMachineBattery) tile;
-				
+
 				for(int i1 = 0; i1 < battery.getSizeInventory(); ++i1) {
 					ItemStack itemstack = battery.getStackInSlot(i1);
 
@@ -220,23 +221,23 @@ public class MachineBattery extends BlockContainer implements ILookOverlay, IPer
 
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
-		
+
 		TileEntity te = world.getTileEntity(x, y, z);
-		
+
 		if(!(te instanceof TileEntityMachineBattery))
 			return;
-		
+
 		TileEntityMachineBattery battery = (TileEntityMachineBattery) te;
-		
+
 		List<String> text = new ArrayList();
 		text.add(BobMathUtil.getShortNumber(battery.getPower()) + " / " + BobMathUtil.getShortNumber(battery.getMaxPower()) + "HE");
-		
+
 		double percent = (double) battery.getPower() / (double) battery.getMaxPower();
 		int charge = (int) Math.floor(percent * 10_000D);
 		int color = ((int) (0xFF - 0xFF * percent)) << 16 | ((int)(0xFF * percent) << 8);
-		
+
 		text.add("&[" + color + "&]" + (charge / 100D) + "%");
-		
+
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 
@@ -247,16 +248,16 @@ public class MachineBattery extends BlockContainer implements ILookOverlay, IPer
 
 	@Override
 	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
-		
+
 		TileEntity te = world.getTileEntity(x, y, z);
-		
+
 		if(!(te instanceof TileEntityMachineBattery))
 			return 0;
-		
+
 		TileEntityMachineBattery battery = (TileEntityMachineBattery) te;
 		return battery.getComparatorPower();
 	}
-	
+
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
 		return IPersistentNBT.getDrops(world, x, y, z, this);
@@ -264,14 +265,14 @@ public class MachineBattery extends BlockContainer implements ILookOverlay, IPer
 
 	@Override
 	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player) {
-		
+
 		if(!player.capabilities.isCreativeMode) {
 			harvesters.set(player);
 			this.dropBlockAsItem(world, x, y, z, meta, 0);
 			harvesters.set(null);
 		}
 	}
-	
+
 	@Override
 	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
 		player.addStat(StatList.mineBlockStatArray[getIdFromBlock(this)], 1);
@@ -280,9 +281,14 @@ public class MachineBattery extends BlockContainer implements ILookOverlay, IPer
 
 	@Override
 	public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {
+		list.add(EnumChatFormatting.YELLOW + "" + BobMathUtil.getShortNumber(persistentTag.getLong("power")) + "/" + BobMathUtil.getShortNumber(this.maxPower) + "HE");
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 		list.add(EnumChatFormatting.GOLD + "Stores up to "+ BobMathUtil.getShortNumber(this.maxPower) + "HE");
 		list.add(EnumChatFormatting.GOLD + "Charge speed: "+ BobMathUtil.getShortNumber(this.maxPower / 200) + "HE");
 		list.add(EnumChatFormatting.GOLD + "Discharge speed: "+ BobMathUtil.getShortNumber(this.maxPower / 600) + "HE");
-		list.add(EnumChatFormatting.YELLOW + "" + BobMathUtil.getShortNumber(persistentTag.getLong("power")) + "/" + BobMathUtil.getShortNumber(this.maxPower) + "HE");
 	}
+
 }

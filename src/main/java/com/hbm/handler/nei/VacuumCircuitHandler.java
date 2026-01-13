@@ -26,7 +26,7 @@ public class VacuumCircuitHandler extends NEIUniversalHandler {
 	@Override
 	public void loadTransferRects() {
 		super.loadTransferRects();
-		transferRectsGui.add(new RecipeTransferRect(new Rectangle(45, 38, 32, 14), "ntmVacuumCircuit"));
+		transferRectsGui.add(new RecipeTransferRect(new Rectangle(58, 17, 32, 14), "ntmVacuumCircuit"));
 		guiGui.add(GUIVacuumCircuit.class);
 		RecipeTransferRectHandler.registerRectsToGuis(guiGui, transferRectsGui);
 	}

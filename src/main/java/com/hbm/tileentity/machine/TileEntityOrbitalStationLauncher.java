@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
-import com.hbm.dim.orbit.OrbitalStation;
 import com.hbm.entity.missile.EntityRideableRocket;
 import com.hbm.entity.missile.EntityRideableRocket.RocketState;
 import com.hbm.handler.RocketStruct;
@@ -43,7 +42,6 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 
 	public RocketStruct rocket;
 
-	private OrbitalStation station;
 	private EntityRideableRocket docked;
 
 	public FluidTank[] tanks;
@@ -83,11 +81,6 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 
 		if(!worldObj.isRemote) {
 			// This TE acts almost entirely like a port, except doesn't register itself so nothing actually tries to dock here
-			station = OrbitalStation.getStationFromPosition(xCoord, zCoord);
-			if(station != null) {
-
-			}
-
 
 			// ROCKET CONSTRUCTION //
 			// Setup the constructed rocket
@@ -213,11 +206,6 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 	}
 
 	public void launch(EntityPlayer player) {
-		// if(docked != null) {
-		// 	enterCapsule(player);
-		// 	return;
-		// }
-
 		if(!canLaunch()) return;
 
 		ItemStack stack = ItemCustomRocket.build(rocket);
@@ -230,14 +218,16 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 		for(int i = 0; i < tanks.length; i++) tanks[i] = new FluidTank(Fluids.NONE, 64_000);
 		solidFuel.level = solidFuel.max = 0;
 
-		// power -= maxPower * 0.75;
-
 		slots[0] = null;
 		for(int i = 3; i < slots.length; i++) slots[i] = null;
 
 		dockRocket(rocket);
+	}
 
-		// if(rocket.canRide()) enterCapsule(player);
+	@Override
+	public int getSizeInventory() {
+		if(isBreaking) return super.getSizeInventory() - RocketStruct.MAX_STAGES * 2;
+		return super.getSizeInventory();
 	}
 
 	@Override
@@ -276,10 +266,6 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 		List<String> issues = new ArrayList<String>();
 
 		if(!rocket.validate()) return issues;
-
-		// if(power < maxPower * 0.75) {
-		// 	issues.add(EnumChatFormatting.RED + "Insufficient power");
-		// }
 
 		TileEntityLaunchPadRocket.findTankIssues(issues, tanks, solidFuel);
 		if(TileEntityLaunchPadRocket.findDriveIssues(issues, rocket, slots[0])) return issues;

@@ -664,6 +664,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 
 					if(stack.stackSize <= 0) {
 						item.setDead();
+						item.delayBeforeCanPickup = 60; // seems fucking stupid, but prevents frame-perfect dupe exploit
 						continue outer;
 					}
 				}
@@ -678,6 +679,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 
 					slots[i] = stack.copy();
 					item.setDead();
+					item.delayBeforeCanPickup = 60;
 					break;
 				}
 			}

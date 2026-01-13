@@ -13,6 +13,7 @@ import com.hbm.handler.ArmorModHandler;
 import com.hbm.handler.HazmatRegistry;
 import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
 import com.hbm.items.ModItems;
+import com.hbm.items.armor.ArmorDNT;
 import com.hbm.items.armor.ArmorFSB;
 import com.hbm.items.armor.ItemModInsert;
 import com.hbm.items.armor.ItemModOxy;
@@ -170,7 +171,7 @@ public class ArmorUtil {
 		if(!(entity instanceof EntityPlayer)) return ChunkAtmosphereManager.proxy.canBreathe(atmosphere);
 		EntityPlayer player = (EntityPlayer) entity;
 
-		if(player.capabilities.isCreativeMode) return true;
+		if(checkSpecialBreathing(player)) return true;
 		if(checkModBreathing(player)) return true;
 
 		ItemStack tank = getOxygenTank(player);
@@ -207,6 +208,18 @@ public class ArmorUtil {
 		}
 
 		return null;
+	}
+
+	private static boolean checkSpecialBreathing(EntityPlayer player) {
+		if(player.capabilities.isCreativeMode) return true;
+
+		// Check DNT
+		for(int i = 0; i < 4; i++) {
+			ItemStack stack = player.getCurrentArmor(i);
+			if(stack == null || !(stack.getItem() instanceof ArmorDNT)) return false;
+		}
+
+		return true;
 	}
 
 	/**

@@ -32,6 +32,7 @@ public class SolderingRecipes extends SerializableRecipe {
 	public void registerDefaults() {
 
 		boolean lbsm = GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSimpleCrafting;
+		boolean no528 = !GeneralConfig.enable528;
 
 		/*
 		 * CIRCUITS
@@ -108,44 +109,45 @@ public class SolderingRecipes extends SerializableRecipe {
 		 * COMPUTERS
 		 */
 
-		// a very, very vague guess on what the recipes should be. testing still needed, upgrade requirements are likely to change. maybe inclusion of caesium?
-		recipes.add(new SolderingRecipe(new ItemStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER.ordinal()), 400, 15_000,
-				new FluidStack(Fluids.PERFLUOROMETHYL, 1_000),
-				new AStack[] {
-						new ComparableStack(ModItems.circuit, lbsm ? 8 : 32, EnumCircuitType.CHIP),
-						new ComparableStack(ModItems.circuit, lbsm ? 8 : 32, EnumCircuitType.CAPACITOR),
-						new ComparableStack(ModItems.circuit, lbsm ? 8 : 16, EnumCircuitType.CAPACITOR_TANTALIUM)},
-				new AStack[] {
-						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER_CHASSIS),
-						new ComparableStack(ModItems.upgrade_speed_1)},
-				new AStack[] {
-						new OreDictStack(PB.wireFine(), 16)}
-		));
-		recipes.add(new SolderingRecipe(new ItemStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER_ADVANCED.ordinal()), 600, 25_000,
-				new FluidStack(Fluids.PERFLUOROMETHYL, 4_000),
-				new AStack[] {
-						new ComparableStack(ModItems.circuit, lbsm ? 8 : 16, EnumCircuitType.CHIP_BISMOID),
-						new ComparableStack(ModItems.circuit, lbsm ? 16 : 48, EnumCircuitType.CAPACITOR_TANTALIUM),
-						new ComparableStack(ModItems.circuit, lbsm ? 8 : 32, EnumCircuitType.CAPACITOR_LANTHANIUM)},
-				new AStack[] {
-						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER_CHASSIS),
-						new ComparableStack(ModItems.upgrade_speed_3)},
-				new AStack[] {
-						new OreDictStack(PB.wireFine(), 24)}
-		));
+		if(no528) {
+			recipes.add(new SolderingRecipe(new ItemStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER.ordinal()), 400, 15_000,
+					new FluidStack(Fluids.PERFLUOROMETHYL, 1_000),
+					new AStack[] {
+							new ComparableStack(ModItems.circuit, lbsm ? 8 : 32, EnumCircuitType.CHIP),
+							new ComparableStack(ModItems.circuit, lbsm ? 8 : 32, EnumCircuitType.CAPACITOR),
+							new ComparableStack(ModItems.circuit, lbsm ? 8 : 16, EnumCircuitType.CAPACITOR_TANTALIUM)},
+					new AStack[] {
+							new ComparableStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER_CHASSIS),
+							new ComparableStack(ModItems.upgrade_speed_1)},
+					new AStack[] {
+							new OreDictStack(PB.wireFine(), 16)}
+			));
+			recipes.add(new SolderingRecipe(new ItemStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER_ADVANCED.ordinal()), 600, 25_000,
+					new FluidStack(Fluids.PERFLUOROMETHYL, 4_000),
+					new AStack[] {
+							new ComparableStack(ModItems.circuit, lbsm ? 8 : 16, EnumCircuitType.CHIP_BISMOID),
+							new ComparableStack(ModItems.circuit, lbsm ? 16 : 48, EnumCircuitType.CAPACITOR_TANTALIUM),
+							new ComparableStack(ModItems.circuit, lbsm ? 8 : 32, EnumCircuitType.CAPACITOR_LANTHANIUM)},
+					new AStack[] {
+							new ComparableStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER_CHASSIS),
+							new ComparableStack(ModItems.upgrade_speed_3)},
+					new AStack[] {
+							new OreDictStack(PB.wireFine(), 24)}
+			));
 
 		recipes.add(new SolderingRecipe(new ItemStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER_QUANTUM.ordinal()), 600, 250_000,
-				new FluidStack(Fluids.PERFLUOROMETHYL_COLD, 6_000),
-				new AStack[] {
-						new ComparableStack(ModItems.circuit, lbsm ? 8 : 16, EnumCircuitType.CHIP_QUANTUM),
-						new ComparableStack(ModItems.circuit, lbsm ? 16 : 48, EnumCircuitType.CHIP_BISMOID),
-						new ComparableStack(ModItems.circuit, lbsm ? 1 : 8, EnumCircuitType.ATOMIC_CLOCK)},
-				new AStack[] {
-						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.CONTROLLER_ADVANCED),
-						new ComparableStack(ModItems.upgrade_overdrive_1)},
-				new AStack[] {
-						new OreDictStack(PB.wireFine(), 32)}
-		));
+					new FluidStack(Fluids.PERFLUOROMETHYL_COLD, 6_000),
+					new AStack[] {
+							new ComparableStack(ModItems.circuit, lbsm ? 8 : 16, EnumCircuitType.CHIP_QUANTUM),
+							new ComparableStack(ModItems.circuit, lbsm ? 16 : 48, EnumCircuitType.CHIP_BISMOID),
+							new ComparableStack(ModItems.circuit, lbsm ? 1 : 8, EnumCircuitType.ATOMIC_CLOCK)},
+					new AStack[] {
+							new ComparableStack(ModItems.circuit, 2, EnumCircuitType.CONTROLLER_ADVANCED),
+							new ComparableStack(ModItems.upgrade_overdrive_1)},
+					new AStack[] {
+							new OreDictStack(PB.wireFine(), 32)}
+			));
+		}
 
 		/*
 		 * SPACE
@@ -236,16 +238,18 @@ public class SolderingRecipes extends SerializableRecipe {
 
 
 
-		addFirstUpgrade(ModItems.upgrade_speed_1, ModItems.upgrade_speed_2);
-		addSecondUpgrade(ModItems.upgrade_speed_2, ModItems.upgrade_speed_3);
-		addFirstUpgrade(ModItems.upgrade_effect_1, ModItems.upgrade_effect_2);
-		addSecondUpgrade(ModItems.upgrade_effect_2, ModItems.upgrade_effect_3);
-		addFirstUpgrade(ModItems.upgrade_power_1, ModItems.upgrade_power_2);
-		addSecondUpgrade(ModItems.upgrade_power_2, ModItems.upgrade_power_3);
-		addFirstUpgrade(ModItems.upgrade_fortune_1, ModItems.upgrade_fortune_2);
-		addSecondUpgrade(ModItems.upgrade_fortune_2, ModItems.upgrade_fortune_3);
-		addFirstUpgrade(ModItems.upgrade_afterburn_1, ModItems.upgrade_afterburn_2);
-		addSecondUpgrade(ModItems.upgrade_afterburn_2, ModItems.upgrade_afterburn_3);
+		if(no528) {
+			addFirstUpgrade(ModItems.upgrade_speed_1, ModItems.upgrade_speed_2);
+			addSecondUpgrade(ModItems.upgrade_speed_2, ModItems.upgrade_speed_3);
+			addFirstUpgrade(ModItems.upgrade_effect_1, ModItems.upgrade_effect_2);
+			addSecondUpgrade(ModItems.upgrade_effect_2, ModItems.upgrade_effect_3);
+			addFirstUpgrade(ModItems.upgrade_power_1, ModItems.upgrade_power_2);
+			addSecondUpgrade(ModItems.upgrade_power_2, ModItems.upgrade_power_3);
+			addFirstUpgrade(ModItems.upgrade_fortune_1, ModItems.upgrade_fortune_2);
+			addSecondUpgrade(ModItems.upgrade_fortune_2, ModItems.upgrade_fortune_3);
+			addFirstUpgrade(ModItems.upgrade_afterburn_1, ModItems.upgrade_afterburn_2);
+			addSecondUpgrade(ModItems.upgrade_afterburn_2, ModItems.upgrade_afterburn_3);
+		}
 	}
 
 	public static void addFirstUpgrade(Item lower, Item higher) {

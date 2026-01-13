@@ -40,17 +40,24 @@ public class ItemFluidIcon extends Item {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		if(stack.hasTagCompound()) {
-			if(getQuantity(stack) > 0) list.add(getQuantity(stack) + "mB");
+			if(getQuantity(stack) > 0) {
+				list.add(getQuantity(stack) + "mB");
+			} else if(getAtmospheres(stack) > 0) {
+				double pressure = BobMathUtil.roundDecimal(getAtmospheres(stack), 3);
+				list.add(pressure + "atm");
+			}
+
 			if(getPressure(stack) > 0) {
 				list.add(EnumChatFormatting.RED + "" + getPressure(stack) + "PU");
 				list.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_RED) + "Pressurized, use compressor!");
 			}
 		}
-		
+
 		Fluids.fromID(stack.getItemDamage()).addInfo(list);
 	}
 
 	public static ItemStack addQuantity(ItemStack stack, int i) {
+		if(i <= 0) return stack;
 		if(!stack.hasTagCompound()) stack.stackTagCompound = new NBTTagCompound();
 		stack.getTagCompound().setInteger("fill", i);
 		return stack;
@@ -59,6 +66,12 @@ public class ItemFluidIcon extends Item {
 	public static ItemStack addPressure(ItemStack stack, int i) {
 		if(!stack.hasTagCompound()) stack.stackTagCompound = new NBTTagCompound();
 		stack.getTagCompound().setInteger("pressure", i);
+		return stack;
+	}
+
+	public static ItemStack addAtmospheres(ItemStack stack, double atm) {
+		if(!stack.hasTagCompound()) stack.stackTagCompound = new NBTTagCompound();
+		stack.getTagCompound().setDouble("atm", atm);
 		return stack;
 	}
 
@@ -74,6 +87,10 @@ public class ItemFluidIcon extends Item {
 		return addPressure(addQuantity(new ItemStack(ModItems.fluid_icon, 1, fluid.ordinal()), i), pressure);
 	}
 
+	public static ItemStack make(FluidType fluid, double atm) {
+		return addAtmospheres(new ItemStack(ModItems.fluid_icon, 1, fluid.getID()), atm);
+	}
+
 	public static int getQuantity(ItemStack stack) {
 		if(!stack.hasTagCompound()) return 0;
 		return stack.getTagCompound().getInteger("fill");
@@ -82,6 +99,11 @@ public class ItemFluidIcon extends Item {
 	public static int getPressure(ItemStack stack) {
 		if(!stack.hasTagCompound()) return 0;
 		return stack.getTagCompound().getInteger("pressure");
+	}
+
+	public static double getAtmospheres(ItemStack stack) {
+		if(!stack.hasTagCompound()) return 0;
+		return stack.getTagCompound().getDouble("atm");
 	}
 
 	@Override

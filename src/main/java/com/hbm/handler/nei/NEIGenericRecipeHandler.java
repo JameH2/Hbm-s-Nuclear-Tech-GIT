@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.hbm.config.ClientConfig;
 import com.hbm.handler.imc.ICompatNHNEI;
+import com.hbm.interfaces.NotableComments;
 import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
@@ -27,6 +28,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 
+@NotableComments
 public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler implements ICompatNHNEI {
 
 	public LinkedList<RecipeTransferRect> transferRectsRec = new LinkedList<RecipeTransferRect>();
@@ -110,12 +112,12 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 		}
 
 		@Override public List<PositionedStack> getIngredients() { return getCycledIngredients(cycleticks / 20, Arrays.asList(this.input)); }
-		@Override public PositionedStack getResult() { return this.output[0]; }
+		@Override public PositionedStack getResult() { return null; }
 
 		@Override
 		public List<PositionedStack> getOtherStacks() {
 			List<PositionedStack> other = new ArrayList();
-			for(int i = 1; i < this.output.length; i++) other.add(this.output[i]);
+			for(int i = 0; i < this.output.length; i++) other.add(this.output[i]);
 			other.add(this.machine);
 			if(this.template != null) other.add(this.template);
 			return getCycledIngredients(cycleticks / 20, other);

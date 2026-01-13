@@ -61,7 +61,7 @@ public class HydrotreatingRecipes extends SerializableRecipe {
 		
 		recipes.put(Fluids.CCL, new Triplet(
 				new FluidStack(Fluids.HYDROGEN, 10, 1),
-				new FluidStack(Fluids.CHLOROETHANE, 80),
+				new FluidStack(Fluids.CHLOROMETHANE, 80),
 				new FluidStack(Fluids.HCL, 20)
 			));
 		

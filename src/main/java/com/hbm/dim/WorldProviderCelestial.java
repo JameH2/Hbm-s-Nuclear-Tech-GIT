@@ -63,7 +63,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 
 	// Should we generate bedrock ice
 	public boolean hasIce() {
-		return false;
+		return CelestialBody.getBody(worldObj).hasIce;
 	}
 
 	public boolean hasLife() {

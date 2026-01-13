@@ -34,11 +34,6 @@ public class WorldProviderIke extends WorldProviderCelestial {
 	}
 
 	@Override
-	public boolean hasIce() {
-		return true;
-	}
-
-	@Override
 	public boolean updateLightmap(int[] lightmap) {
 		float sun = getSunBrightness(1.0F) - 0.1F;
 		for(int i = 0; i < 256; i++) {

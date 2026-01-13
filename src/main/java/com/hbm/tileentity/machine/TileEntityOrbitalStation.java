@@ -215,6 +215,10 @@ public class TileEntityOrbitalStation extends TileEntityMachineBase implements I
 		dockRocket(rocket);
 	}
 
+	public EntityRideableRocket getDocked() {
+		return docked;
+	}
+
 	public boolean hasStoredItems() {
 		for(ItemStack stack : slots) {
 			if(stack != null) return true;

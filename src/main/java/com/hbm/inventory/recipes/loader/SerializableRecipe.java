@@ -13,6 +13,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.dim.AtmosphereRecipes;
 import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
@@ -59,6 +60,8 @@ public abstract class SerializableRecipe {
 		recipeHandlers.add(new CrucibleRecipes());
 		recipeHandlers.add(new CentrifugeRecipes());
 		recipeHandlers.add(new CrystallizerRecipes());
+		recipeHandlers.add(new RefineryRecipes());
+		recipeHandlers.add(new VacuumRefineryRecipes());
 		recipeHandlers.add(new FractionRecipes());
 		recipeHandlers.add(new CrackingRecipes());
 		recipeHandlers.add(new ReformingRecipes());
@@ -88,12 +91,15 @@ public abstract class SerializableRecipe {
 		recipeHandlers.add(new AlkylationRecipes());
 		recipeHandlers.add(new VacuumCircuitRecipes());
 		recipeHandlers.add(new PedestalRecipes());
+		recipeHandlers.add(new AnnihilatorRecipes());
+		recipeHandlers.add(new AtmosphereRecipes());
 
 		//GENERIC
 		recipeHandlers.add(AssemblyMachineRecipes.INSTANCE);
 		recipeHandlers.add(ChemicalPlantRecipes.INSTANCE);
 		recipeHandlers.add(PUREXRecipes.INSTANCE);
 		recipeHandlers.add(FusionRecipes.INSTANCE);
+		recipeHandlers.add(PrecAssRecipes.INSTANCE);
 
 		recipeHandlers.add(new MatDistribution());
 		recipeHandlers.add(new CryoRecipes());
@@ -118,7 +124,7 @@ public abstract class SerializableRecipe {
 		MainRegistry.logger.info("Starting recipe init!");
 
 		GenericRecipes.clearPools();
-		
+
 		for(SerializableRecipe recipe : recipeHandlers) {
 
 			recipe.deleteRecipes();

@@ -40,11 +40,6 @@ public class WorldProviderMinmus extends WorldProviderCelestial {
 		return ModBlocks.minmus_stone;
 	}
 
-	@Override
-	public boolean hasIce() {
-		return true;
-	}
-
 	private static BiomeGenLayers createBiomeGenerators(long seed) {
 		GenLayer biomes = new GenLayerMinmusBiomes(seed);
 

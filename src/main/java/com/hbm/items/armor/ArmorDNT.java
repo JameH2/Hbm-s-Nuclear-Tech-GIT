@@ -6,9 +6,11 @@ import java.util.UUID;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.Multimap;
+import com.hbm.dim.CelestialBody;
 import com.hbm.extprop.HbmPlayerProps;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
+import com.hbm.lib.ModDamageSource;
 import com.hbm.main.ResourceManager;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.item.ItemRenderBase;
@@ -71,6 +73,7 @@ public class ArmorDNT extends ArmorFSBPowered implements IItemRendererProvider {
 			return;
 
 		HbmPlayerProps props = HbmPlayerProps.getData(player);
+		float gravity = CelestialBody.getGravity(player);
 
 		/// SPEED ///
 		Multimap multimap = super.getAttributeModifiers(stack);
@@ -81,19 +84,8 @@ public class ArmorDNT extends ArmorFSBPowered implements IItemRendererProvider {
 			player.getAttributeMap().applyAttributeModifiers(multimap);
 		}
 
-		if(!world.isRemote) {
-
-			/// JET ///
-			if(this.hasFSBArmor(player) && (props.isJetpackActive() || (!player.onGround && !player.isSneaking() && props.enableBackpack))) {
-
-				NBTTagCompound data = new NBTTagCompound();
-				data.setString("type", "jetpack_dns");
-				data.setInteger("player", player.getEntityId());
-				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, player.posX, player.posY, player.posZ), new TargetPoint(world.provider.dimensionId, player.posX, player.posY, player.posZ, 100));
-			}
-		}
-
 		if(this.hasFSBArmor(player)) {
+			boolean playEffect = false;
 
 			ArmorUtil.resetFlightTime(player);
 
@@ -104,7 +96,7 @@ public class ArmorDNT extends ArmorFSBPowered implements IItemRendererProvider {
 
 				player.fallDistance = 0;
 
-				world.playSoundEffect(player.posX, player.posY, player.posZ, "hbm:weapon.immolatorShoot", 0.125F, 1.5F);
+				playEffect = true;
 
 			} else if(!player.isSneaking() && !player.onGround && props.enableBackpack) {
 				player.fallDistance = 0;
@@ -124,19 +116,35 @@ public class ArmorDNT extends ArmorFSBPowered implements IItemRendererProvider {
 				if(player.moveForward != 0 || player.moveStrafing != 0) {
 					player.motionX *= 1.05D;
 					player.motionZ *= 1.05D;
+
+					playEffect = true;
 				}
+
+				if(gravity > 0 || player.isSprinting()) playEffect = true;
 
 				// Only apply flight boost when holding sprint key
 				if(player.moveForward != 0 && player.isSprinting()) {
 					player.motionX += player.getLookVec().xCoord * 0.25 * player.moveForward;
 					player.motionZ += player.getLookVec().zCoord * 0.25 * player.moveForward;
 				}
-
-				world.playSoundEffect(player.posX, player.posY, player.posZ, "hbm:weapon.immolatorShoot", 0.125F, 1.5F);
 			}
 
-			if(player.isSneaking() && !player.onGround) {
+			if(player.isSneaking() && !player.onGround && (gravity > 0 || props.enableBackpack)) {
 				player.motionY -= 0.1D;
+
+				if(gravity == 0 && props.enableBackpack) playEffect = true;
+			}
+
+			/// JET ///
+			if(playEffect) {
+				if(!world.isRemote) {
+					NBTTagCompound data = new NBTTagCompound();
+					data.setString("type", "jetpack_dns");
+					data.setInteger("player", player.getEntityId());
+					PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, player.posX, player.posY, player.posZ), new TargetPoint(world.provider.dimensionId, player.posX, player.posY, player.posZ, 100));
+				}
+
+				world.playSoundEffect(player.posX, player.posY, player.posZ, "hbm:weapon.immolatorShoot", 0.125F, 1.5F);
 			}
 		}
 	}
@@ -155,8 +163,9 @@ public class ArmorDNT extends ArmorFSBPowered implements IItemRendererProvider {
 					return;
 				}
 
-				//e.worldObj.playSoundAtEntity(e, "random.break", 5F, 1.0F + e.getRNG().nextFloat() * 0.5F);
-				HbmPlayerProps.plink(player, "random.break", 0.5F, 1.0F + e.getRNG().nextFloat() * 0.5F);
+				if(event.source != ModDamageSource.oxyprime) {
+					HbmPlayerProps.plink(player, "random.break", 0.5F, 1.0F + e.getRNG().nextFloat() * 0.5F);
+				}
 
 				event.setCanceled(true);
 			}
@@ -189,9 +198,7 @@ public class ArmorDNT extends ArmorFSBPowered implements IItemRendererProvider {
 
 		list.add("Charge: " + BobMathUtil.getShortNumber(getCharge(stack)) + " / " + BobMathUtil.getShortNumber(this.getMaxCharge(stack)));
 
-		if(canSeal) {
-			list.add(EnumChatFormatting.BLUE + "" + I18nUtil.format("armor.canSeal"));
-		}
+		list.add(EnumChatFormatting.BLUE + "" + I18nUtil.format("armor.canBreathe"));
 
 		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("armor.fullSetBonus"));
 

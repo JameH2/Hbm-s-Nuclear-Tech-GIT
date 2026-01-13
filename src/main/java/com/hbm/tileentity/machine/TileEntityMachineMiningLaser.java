@@ -36,8 +36,6 @@ import com.hbm.util.fauxpointtwelve.BlockPos;
 import com.hbm.util.fauxpointtwelve.DirPos;
 import com.hbm.util.i18n.I18nUtil;
 
-import api.hbm.block.IDrillInteraction;
-import api.hbm.block.IMiningDrill;
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidStandardSender;
 import cpw.mods.fml.relauncher.Side;
@@ -62,7 +60,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityMachineMiningLaser extends TileEntityMachineBase implements IEnergyReceiverMK2, IMiningDrill, IFluidStandardSender, IGUIProvider, IUpgradeInfoProvider {
+public class TileEntityMachineMiningLaser extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardSender, IGUIProvider, IUpgradeInfoProvider {
 
 	public long power;
 	public int age = 0;
@@ -334,17 +332,6 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 			}
 		}
 
-		if(normal && b instanceof IDrillInteraction) {
-			IDrillInteraction in = (IDrillInteraction) b;
-			ItemStack drop = in.extractResource(worldObj, targetX, targetY, targetZ, meta, this);
-
-			if(drop != null) {
-				worldObj.spawnEntityInWorld(new EntityItem(worldObj, targetX + 0.5, targetY + 0.5, targetZ + 0.5, drop.copy()));
-			}
-
-			doesBreak = in.canBreak(worldObj, targetX, targetY, targetZ, meta, this);
-		}
-
 		if(doesBreak) {
 			if(normal) b.dropBlockAsItem(worldObj, targetX, targetY, targetZ, meta, fortune);
 			worldObj.func_147480_a(targetX, targetY, targetZ, false);
@@ -403,6 +390,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 
 			if(nullifier && isBad(entityItem.getEntityItem())) {
 				entityItem.setDead();
+				entityItem.delayBeforeCanPickup = 60;
 				continue;
 			}
 
@@ -423,16 +411,19 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 					}
 
 					entityItem.setDead();
+					entityItem.delayBeforeCanPickup = 60;
 					continue;
 				}
 			}
 
 			ItemStack stack = InventoryUtil.tryAddItemToInventory(slots, 9, 29, entityItem.getEntityItem().copy());
 
-			if(stack == null)
+			if(stack == null) {
 				entityItem.setDead();
-			else
+				entityItem.delayBeforeCanPickup = 60;
+			} else {
 				entityItem.setEntityItemStack(stack.copy()); //copy is not necessary but i'm paranoid due to the kerfuffle of the old drill
+			}
 		}
 
 		List<EntityLivingBase> mobs = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(
@@ -486,106 +477,68 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	}
 
 	public int getRange() {
-
 		int range = 1;
-
 		for(int i = 1; i < 9; i++) {
-
 			if(slots[i] != null) {
-
-				if(slots[i].getItem() == ModItems.upgrade_effect_1)
-					range += 2;
-				else if(slots[i].getItem() == ModItems.upgrade_effect_2)
-					range += 4;
-				else if(slots[i].getItem() == ModItems.upgrade_effect_3)
-					range += 6;
+				if(slots[i].getItem() == ModItems.upgrade_effect_1) range += 2;
+				else if(slots[i].getItem() == ModItems.upgrade_effect_2) range += 4;
+				else if(slots[i].getItem() == ModItems.upgrade_effect_3) range += 6;
 			}
 		}
-
 		return Math.min(range, 25);
 	}
 
 	public boolean hasNullifier() {
-
 		for(int i = 1; i < 9; i++) {
-
 			if(slots[i] != null) {
-
-				if(slots[i].getItem() == ModItems.upgrade_nullifier)
-					return true;
+				if(slots[i].getItem() == ModItems.upgrade_nullifier) return true;
 			}
 		}
-
 		return false;
 	}
 
 	public boolean hasSmelter() {
-
 		for(int i = 1; i < 9; i++) {
-
 			if(slots[i] != null) {
-
-				if(slots[i].getItem() == ModItems.upgrade_smelter)
-					return true;
+				if(slots[i].getItem() == ModItems.upgrade_smelter) return true;
 			}
 		}
-
 		return false;
 	}
 
 	public boolean hasShredder() {
-
 		for(int i = 1; i < 9; i++) {
-
 			if(slots[i] != null) {
-
-				if(slots[i].getItem() == ModItems.upgrade_shredder)
-					return true;
+				if(slots[i].getItem() == ModItems.upgrade_shredder) return true;
 			}
 		}
-
 		return false;
 	}
 
 	public boolean hasCentrifuge() {
-
 		for(int i = 1; i < 9; i++) {
-
 			if(slots[i] != null) {
-
-				if(slots[i].getItem() == ModItems.upgrade_centrifuge)
-					return true;
+				if(slots[i].getItem() == ModItems.upgrade_centrifuge) return true;
 			}
 		}
-
 		return false;
 	}
 
 	public boolean hasCrystallizer() {
-
 		for(int i = 1; i < 9; i++) {
-
 			if(slots[i] != null) {
-
-				if(slots[i].getItem() == ModItems.upgrade_crystallizer)
-					return true;
+				if(slots[i].getItem() == ModItems.upgrade_crystallizer) return true;
 			}
 		}
-
 		return false;
 	}
 
 	public boolean doesScream() {
-
 		for(int i = 1; i < 9; i++) {
-
 			if(slots[i] != null) {
-
-				if(slots[i].getItem() == ModItems.upgrade_screm)
-					return true;
+				if(slots[i].getItem() == ModItems.upgrade_screm) return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -666,8 +619,8 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		this.power = nbt.getLong("power");
 		tank.readFromNBT(nbt, "oil");
+		power = nbt.getLong("power");
 		isOn = nbt.getBoolean("isOn");
 		redstonePowered = false;
 	}
@@ -675,19 +628,9 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setLong("power", power);
 		tank.writeToNBT(nbt, "oil");
+		nbt.setLong("power", power);
 		nbt.setBoolean("isOn", isOn);
-	}
-
-	@Override
-	public DrillType getDrillTier() {
-		return DrillType.HITECH;
-	}
-
-	@Override
-	public int getDrillRating() {
-		return 100;
 	}
 
 	@Override

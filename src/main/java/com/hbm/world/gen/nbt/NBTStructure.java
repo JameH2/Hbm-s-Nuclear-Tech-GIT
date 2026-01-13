@@ -18,6 +18,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.config.SpaceConfig;
 import com.hbm.config.StructureConfig;
 import com.hbm.handler.ThreeInts;
+import com.hbm.interfaces.Untested;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.Tuple.Pair;
 import com.hbm.util.Tuple.Quartet;
@@ -80,6 +81,12 @@ public class NBTStructure {
 	private Map<String, List<JigsawConnection>> toTopConnections;
 	private Map<String, List<JigsawConnection>> toBottomConnections;
 	private Map<String, List<JigsawConnection>> toHorizontalConnections;
+	
+	// incredibly shitty system for translating legacy block definitions to new ones
+	@Untested // i can't find a god damn factory
+	private static Map<String, String> substitutions = new HashMap() {{
+		put("hbm:tile.ore_coal_oil", "coal_ore");
+	}};
 
 	public NBTStructure(ResourceLocation resource) {
 		// Can't use regular resource loading, servers don't know how!
@@ -326,6 +333,10 @@ public class NBTStructure {
 
 				String blockName = p.getString("Name");
 				NBTTagCompound prop = p.getCompoundTag("Properties");
+				
+				/// BOB PATCH ///
+				if(substitutions.containsKey(blockName)) blockName = substitutions.get(blockName);
+				/// BOB PATCH ///
 
 				int meta = 0;
 				try {

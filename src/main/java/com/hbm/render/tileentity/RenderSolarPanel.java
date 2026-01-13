@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.lib.Library;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntitySolarBoiler;
@@ -38,9 +39,37 @@ public class RenderSolarPanel extends TileEntitySpecialRenderer implements IItem
 		bindTexture(ResourceManager.solarp_tex);
 
 		GL11.glShadeModel(GL11.GL_SMOOTH);
-		ResourceManager.solarp.renderAll();
+		ResourceManager.solarp.renderPart("solar_panel");
 		GL11.glShadeModel(GL11.GL_FLAT);
 		GL11.glPopMatrix();
+
+		int ix = te.xCoord;
+        int iy = te.yCoord;
+        int iz = te.zCoord;
+
+        if(Library.canConnect(te.getWorldObj(), ix, iy, iz + 1, Library.POS_Z))
+            ResourceManager.solarp.renderPart("connector_front");
+        
+        if(Library.canConnect(te.getWorldObj(), ix, iy, iz - 1, Library.NEG_Z))
+            ResourceManager.solarp.renderPart("connector_side");
+
+        if(Library.canConnect(te.getWorldObj(), ix + 1, iy, iz, Library.POS_X)) {
+        	GL11.glRotatef(90, 0F, 1F, 0F);
+            ResourceManager.solarp.renderPart("connector_front");
+            GL11.glRotatef(-90, 0F, 1F, 0F);
+        }
+
+        if(Library.canConnect(te.getWorldObj(), ix - 1, iy, iz, Library.NEG_X)) {
+        	GL11.glRotatef(90, 0F, 1F, 0F);
+            ResourceManager.solarp.renderPart("connector_side");
+            GL11.glRotatef(-90, 0F, 1F, 0F);
+        }
+        
+        if(Library.canConnect(te.getWorldObj(), ix, iy + 1, iz, Library.POS_Y))
+            ResourceManager.solarp.renderPart("connector_top");
+
+        if(Library.canConnect(te.getWorldObj(), ix, iy - 1, iz, Library.NEG_Y))
+            ResourceManager.solarp.renderPart("connector_bottom");
 
 		GL11.glPopMatrix();
 	}
@@ -48,8 +77,8 @@ public class RenderSolarPanel extends TileEntitySpecialRenderer implements IItem
 	public IItemRenderer getRenderer() {
 		return new ItemRenderBase() {
 			public void renderInventory() {
-				GL11.glTranslated(0, -3, 0);
-				GL11.glScaled(2.75, 2.75, 2.75);
+				GL11.glTranslated(0, 0, 0);
+				GL11.glScaled(3.75, 3.75, 3.75);
 			}
 			public void renderCommon() {
 				GL11.glScaled(1, 1, 1);

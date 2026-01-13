@@ -21,25 +21,25 @@ public class ContainerMachineCryoDistill extends Container {
 		
 		cryo = tedf;
 		
-		this.addSlotToContainer(new Slot(tedf, 0, 145,  71));
-		this.addSlotToContainer(new Slot(tedf, 1, 57,  71));
-		this.addSlotToContainer(new SlotTakeOnly(tedf, 2, 57,  89));
-		this.addSlotToContainer(new Slot(tedf, 3, 79,  71));
-		this.addSlotToContainer(new SlotTakeOnly(tedf, 4,  79,  89));
-		this.addSlotToContainer(new Slot(tedf, 5,  101, 71));
-		this.addSlotToContainer(new SlotTakeOnly(tedf, 6, 101,  89));
-		this.addSlotToContainer(new Slot(tedf, 7, 19, 71));
-		this.addSlotToContainer(new Slot(tedf, 8, 123,  71));
-		this.addSlotToContainer(new SlotTakeOnly(tedf, 9, 123, 89));
-		int offset = 6;
+		this.addSlotToContainer(new Slot(tedf, 0, 26,  90));
+		this.addSlotToContainer(new Slot(tedf, 1, 80,  90));
+		this.addSlotToContainer(new SlotTakeOnly(tedf, 2, 80,  108));
+		this.addSlotToContainer(new Slot(tedf, 3, 98,  90));
+		this.addSlotToContainer(new SlotTakeOnly(tedf, 4,  98,  108));
+		this.addSlotToContainer(new Slot(tedf, 5,  116, 90));
+		this.addSlotToContainer(new SlotTakeOnly(tedf, 6, 116,  108));
+		this.addSlotToContainer(new Slot(tedf, 7, 26, 108));
+		this.addSlotToContainer(new Slot(tedf, 8, 134,  90));
+		this.addSlotToContainer(new SlotTakeOnly(tedf, 9, 134, 108));
+
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 156 + i * 18 - offset));
+				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 156 + i * 18));
 			}
 		}
 
 		for(int i = 0; i < 9; i++) {
-			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 214 - offset));
+			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 214));
 		}
 	}
 	

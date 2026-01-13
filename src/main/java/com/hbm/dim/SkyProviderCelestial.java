@@ -7,6 +7,7 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.dim.SolarSystem.AstroMetric;
+import com.hbm.dim.orbit.OrbitalStation;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Dyson;
 import com.hbm.dim.trait.CelestialBodyTrait.CBT_COMPROMISED;
@@ -49,6 +50,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 	private static final ResourceLocation flareTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/sunspike.png");
 	private static final ResourceLocation digammaStar = new ResourceLocation(RefStrings.MODID, "textures/misc/space/star_digamma.png");
 	private static final ResourceLocation lodeStar = new ResourceLocation(RefStrings.MODID, "textures/misc/star_lode.png");
+	private static final ResourceLocation stationTexture = new ResourceLocation(RefStrings.MODID, "textures/misc/space/station.png");
 
 	public static final ResourceLocation nightTextureKerbol = new ResourceLocation(RefStrings.MODID, "textures/misc/space/night.png");
 	public static final ResourceLocation nightTextureDemeter = new ResourceLocation(RefStrings.MODID, "textures/misc/space/night_2.png");
@@ -63,8 +65,8 @@ public class SkyProviderCelestial extends IRenderHandler {
 	private static final ResourceLocation thatmoShield = new ResourceLocation(RefStrings.MODID, "textures/particle/cens.png");
 
 	private static final Shader fleshShader = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/fle.frag"));
-	private static final Shader angel = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/angel.frag"));
-	private static final ResourceLocation eye = new ResourceLocation(RefStrings.MODID, "textures/misc/space/eyeball.png");
+	// private static final Shader angel = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/angel.frag"));
+	// private static final ResourceLocation eye = new ResourceLocation(RefStrings.MODID, "textures/misc/space/eyeball.png");
 
 	private static final ResourceLocation noise = new ResourceLocation(RefStrings.MODID, "shaders/iChannel1.png");
 
@@ -206,7 +208,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 		float siderealAngle = (float)SolarSystem.calculateSiderealAngle(world, partialTicks, body);
 
 		// Handle any special per-body sunset rendering
-		renderSunset(partialTicks, world, mc);
+		renderSunset(partialTicks, world, mc, solarAngle, pressure, body.surfaceTexture);
 
 		renderStars(partialTicks, world, mc, starBrightness, solarAngle + siderealAngle, body.axialTilt);
 
@@ -246,6 +248,11 @@ public class SkyProviderCelestial extends IRenderHandler {
 				// Light up the sky
 				for(Map.Entry<Integer, Satellite> satelliteEntry : SatelliteSavedData.getClientSats().entrySet()) {
 					satelliteEntry.getValue().render(partialTicks, world, mc, solarAngle, satelliteEntry.getKey());
+				}
+
+				// Stations, too
+				for(OrbitalStation station : OrbitalStation.orbitingStations) {
+					renderStation(partialTicks, world, mc, station, solarAngle);
 				}
 			}
 
@@ -450,13 +457,14 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 	}
 
-	protected void renderSunset(float partialTicks, WorldClient world, Minecraft mc) {
+	protected void renderSunset(float partialTicks, WorldClient world, Minecraft mc, float solarAngle, float pressure, ResourceLocation surfaceTexture) {
 		Tessellator tessellator = Tessellator.instance;
 
-		float[] sunsetColor = world.provider.calcSunriseSunsetColors(world.getCelestialAngle(partialTicks), partialTicks);
+		float[] sunsetColor = calcSunriseSunsetColors(partialTicks, world, mc, solarAngle, pressure);
 
 		if(sunsetColor != null) {
 			float[] anaglyphColor = mc.gameSettings.anaglyph ? applyAnaglyph(sunsetColor) : sunsetColor;
+			float sunsetDirection = MathHelper.sin(world.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F;
 
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -465,7 +473,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 			{
 
 				GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
-				GL11.glRotatef(MathHelper.sin(world.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
+				GL11.glRotatef(sunsetDirection, 0.0F, 0.0F, 1.0F);
 				GL11.glRotatef(90.0F, 0.0F, 0.0F, 1.0F);
 
 				tessellator.startDrawing(6);
@@ -487,7 +495,52 @@ public class SkyProviderCelestial extends IRenderHandler {
 			GL11.glPopMatrix();
 			GL11.glShadeModel(GL11.GL_FLAT);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
+
+			// charged dust
+			if(pressure < 0.05F) {
+				Random rand = new Random(0);
+
+				GL11.glPushMatrix();
+				{
+
+					double time = ((double)world.provider.getWorldTime() + partialTicks) * 0.002;
+
+					GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
+					GL11.glRotatef(sunsetDirection, 0.0F, 0.0F, 1.0F);
+					GL11.glRotatef(90.0F, 0.0F, 0.0F, 1.0F);
+
+					mc.renderEngine.bindTexture(surfaceTexture);
+					GL11.glColor4f(0.5F + rand.nextFloat() * 0.5F, 0.5F + rand.nextFloat() * 0.5F, 0.5F + rand.nextFloat() * 0.5F, rand.nextFloat() * sunsetColor[3] * 4.0F);
+
+					OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_CONSTANT_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+
+					tessellator.startDrawing(GL11.GL_POINTS);
+					for(int i = 0; i < 1024; i++) {
+						tessellator.addVertex(rand.nextGaussian() * 50, 100, -((Math.abs(rand.nextGaussian() * 20) + time) % Math.abs(rand.nextGaussian()) * 20));
+					}
+					tessellator.draw();
+
+				}
+				GL11.glPopMatrix();
+			}
 		}
+	}
+
+	// We don't want certain sunrise/sunset effects to change the fog colour, so we do them here
+	protected float[] calcSunriseSunsetColors(float partialTicks, WorldClient world, Minecraft mc, float solarAngle, float pressure) {
+		if(pressure < 0.05F) {
+			float cutoff = 0.4F;
+			float angle = MathHelper.cos(solarAngle * (float)Math.PI * 2.0F) - 0.0F;
+
+			if(angle < -cutoff || angle > cutoff) return null;
+
+			float colorIntensity = angle / cutoff * 0.5F + 0.5F;
+			float alpha = 1.0F - (1.0F - MathHelper.sin(colorIntensity * (float)Math.PI)) * 0.99F;
+			alpha *= alpha;
+			return new float[] { 0.9F, 1.0F, 1.0F, alpha * 0.2F };
+		}
+
+		return world.provider.calcSunriseSunsetColors(world.getCelestialAngle(partialTicks), partialTicks);
 	}
 
 	protected ResourceLocation getNightTexture() {
@@ -1168,9 +1221,42 @@ public class SkyProviderCelestial extends IRenderHandler {
 	protected void renderSpecialEffects(float partialTicks, WorldClient world, Minecraft mc) {
 
 	}
-	
+
 	protected void render3DModel(float partialTicks, WorldClient world, Minecraft mc) {
 
+	}
+
+	protected void renderStation(float partialTicks, WorldClient world, Minecraft mc, OrbitalStation station, float solarAngle) {
+		Tessellator tessellator = Tessellator.instance;
+
+		long seed = station.dX * 1024 + station.dZ;
+
+		double ticks = (double)(System.currentTimeMillis() % (1600 * 50)) / 50;
+
+		GL11.glPushMatrix();
+		{
+
+			GL11.glRotatef(solarAngle * -360.0F, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(-40.0F + (float)(seed % 800) * 0.1F - 5.0F, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef((float)(seed % 50) * 0.1F - 20.0F, 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef((float)(seed % 80) * 0.1F - 2.5F, 0.0F, 0.0F, 1.0F);
+			GL11.glRotated((ticks / 1600.0D) * -360.0D, 1.0F, 0.0F, 0.0F);
+
+			GL11.glColor4f(0.8F, 1, 1, 1);
+
+			mc.renderEngine.bindTexture(stationTexture);
+
+			float size = 0.8F;
+
+			tessellator.startDrawingQuads();
+			tessellator.addVertexWithUV(-size, 100.0, -size, 0.0D, 0.0D);
+			tessellator.addVertexWithUV(size, 100.0, -size, 0.0D, 1.0D);
+			tessellator.addVertexWithUV(size, 100.0, size, 1.0D, 1.0D);
+			tessellator.addVertexWithUV(-size, 100.0, size, 1.0D, 0.0D);
+			tessellator.draw();
+
+		}
+		GL11.glPopMatrix();
 	}
 
 	// i dont know where to properly put this yet plus its 4 am so take that as you will (SEVEN)

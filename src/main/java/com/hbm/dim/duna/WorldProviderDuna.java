@@ -133,11 +133,6 @@ public class WorldProviderDuna extends WorldProviderCelestial {
 	}
 
 	@Override
-	public boolean hasIce() {
-		return true;
-	}
-
-	@Override
 	public double getHorizon() {
 		return 52;
 	}

@@ -36,13 +36,11 @@ public abstract class BiomeGenBaseCelestial extends BiomeGenBase {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public List getSpawnableList(EnumCreatureType type) {
-		switch(type) {
-		case monster: return (List)monsters.clone();
-		case creature: return (List)creatures.clone();
-		case waterCreature: return (List)waterCreatures.clone();
-		case ambient: return (List)caveCreatures.clone();
-		default: return new ArrayList<SpawnListEntry>();
-		}
+		if(type == EnumCreatureType.monster) return (List)monsters.clone();
+		if(type == EnumCreatureType.creature) return (List)creatures.clone();
+		if(type == EnumCreatureType.waterCreature) return (List)waterCreatures.clone();
+		if(type == EnumCreatureType.ambient) return (List)caveCreatures.clone();
+		return new ArrayList<SpawnListEntry>();
 	}
 
 }
