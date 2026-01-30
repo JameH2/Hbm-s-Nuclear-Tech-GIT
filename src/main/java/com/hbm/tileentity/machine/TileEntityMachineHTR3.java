@@ -15,7 +15,7 @@ import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.i18n.I18nUtil;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
-import api.hbm.fluid.IFluidStandardReceiver;
+import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import api.hbm.tile.IPropulsion;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,7 +26,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityMachineHTR3 extends TileEntityMachineBase implements IPropulsion, IFluidStandardReceiver {
+public class TileEntityMachineHTR3 extends TileEntityMachineBase implements IPropulsion, IFluidStandardReceiverMK2 {
 
 	public FluidTank[] tanks;
 
@@ -60,7 +60,7 @@ public class TileEntityMachineHTR3 extends TileEntityMachineBase implements IPro
 
 			for(DirPos pos : getConPos()) {
 				for(FluidTank tank : tanks) {
-					trySubscribe(tank.getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
+					trySubscribe(tank.getTankType(), worldObj, pos);
 				}
 			}
 

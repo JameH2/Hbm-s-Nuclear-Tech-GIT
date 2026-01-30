@@ -1,20 +1,11 @@
 package com.hbm.dim.trait;
 
-import com.hbm.blocks.ModBlocks;
-import com.hbm.config.GeneralConfig;
-import com.hbm.config.MobConfig;
-import com.hbm.entity.mob.EntityMaskMan;
 import com.hbm.entity.mob.siege.EntitySiegeCraft;
-import com.hbm.util.ContaminationUtil;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatBase;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
@@ -44,7 +35,7 @@ public class CBT_Invasion extends CelestialBodyTrait{
 		this.isInvading = isInvading;
 	}
 	
-	public void Prepare() {
+	public void prepare() {
 
 		if (!isInvading && waveTime > 100) {
 			waveTime--;
@@ -55,7 +46,7 @@ public class CBT_Invasion extends CelestialBodyTrait{
 
 	}
 	
-	public void Invade(int killReq, double wavetimerbase) {
+	public void invade(int killReq, double wavetimerbase) {
 		if(!isInvading) return;
 		
 		waveTime--;
@@ -67,7 +58,7 @@ public class CBT_Invasion extends CelestialBodyTrait{
 		
 	}
 	
-	public void Spawn() {
+	public void spawn() {
 		
 		if(lastSpawns > 10) return; //10 total mobs
 		
@@ -88,7 +79,7 @@ public class CBT_Invasion extends CelestialBodyTrait{
 		
 	}
 	
-	public static void SpawnAttempt(World world) {
+	public static void spawnAttempt(World world) {
 
 
 
@@ -101,7 +92,7 @@ public class CBT_Invasion extends CelestialBodyTrait{
 
 		
 					if(!(player instanceof EntityPlayerMP)) return;
-					EntityPlayerMP playerMP = (EntityPlayerMP) player;
+						EntityPlayerMP playerMP = (EntityPlayerMP) player;
 
 
 						player.addChatComponentMessage(new ChatComponentText("Incoming!").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));

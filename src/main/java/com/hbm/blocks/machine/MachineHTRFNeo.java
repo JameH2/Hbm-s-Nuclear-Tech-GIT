@@ -5,13 +5,10 @@ import java.util.List;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ILookOverlay;
-import com.hbm.blocks.ModBlocks;
 import com.hbm.dim.CelestialBody;
-import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntityMachineHTRNeo;
 import com.hbm.util.BobMathUtil;
-import com.hbm.util.fauxpointtwelve.DirPos;
 import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.block.material.Material;
@@ -64,13 +61,10 @@ public class MachineHTRFNeo extends BlockDummyable implements ILookOverlay {
 		z += dir.offsetZ * o;
 
 		this.makeExtra(world, x - rot.offsetX * 9, y, z - rot.offsetZ * 9);
-		//this.makeExtra(world, x - rot.offsetX * 9 + dir.offsetX, y, z - rot.offsetZ * 9 + dir.offsetZ);
-		//this.makeExtra(world, x - rot.offsetX * 9 - dir.offsetX, y, z - rot.offsetZ * 9 - dir.offsetZ);
 		this.makeExtra(world, x - rot.offsetX * 5 - dir.offsetX * 3, y - 2, z - rot.offsetZ * 5 - dir.offsetZ * 2);
 		this.makeExtra(world, x + rot.offsetX * 1 - dir.offsetX * 3, y - 2, z + rot.offsetZ * 1 - dir.offsetZ * 2);
 		this.makeExtra(world, x - rot.offsetX * 5 - dir.offsetX * 3, y - 2, z - rot.offsetZ * 5 + dir.offsetZ * 2);
 		this.makeExtra(world, x + rot.offsetX * 1 - dir.offsetX * 3, y - 2, z + rot.offsetZ * 1 + dir.offsetZ * 2);
-
 	}
 
 	@Override
@@ -93,17 +87,22 @@ public class MachineHTRFNeo extends BlockDummyable implements ILookOverlay {
 		if(!thruster.isFacingPrograde()) {
 			text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! " + I18nUtil.resolveKey("atmosphere.engineFacing") + " ! ! !");
 		} else {
-			text.add((thruster.plasmaEnergy == 0 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + BobMathUtil.getShortNumber(thruster.plasmaEnergy) + "HE");
-			for(int i = 0; i < thruster.tanks.length; i++) {
-				FluidTank tank = thruster.tanks[i];
-				text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + tank.getTankType().getLocalizedName() + ": " + tank.getFill() + "/" + tank.getMaxFill() + "mB");
-			}
+			text.add("Plasma Energy: " + (thruster.plasmaEnergy == 0 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + BobMathUtil.getShortNumber(thruster.plasmaEnergy) + "TU");
+
+			text.add("Power: " + (thruster.power < thruster.getMaxPower() ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + BobMathUtil.getShortNumber(thruster.power) + "HE");
+
+			int heat = (int) Math.ceil(thruster.temperature);
+			String label = (heat > 123 ? EnumChatFormatting.RED : EnumChatFormatting.AQUA) + "" + heat + "K";
+			text.add("Temperature: " + label);
+
+			text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + thruster.coolantTanks[0].getTankType().getLocalizedName() + ": " + thruster.coolantTanks[0].getFill() + "/" + thruster.coolantTanks[0].getMaxFill() + "mB");
+			text.add(EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + thruster.coolantTanks[1].getTankType().getLocalizedName() + ": " + thruster.coolantTanks[1].getFill() + "/" + thruster.coolantTanks[1].getMaxFill() + "mB");
+
+			if(!thruster.isCool()) text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! INSUFFICIENT COOLING ! ! !");
 
 			if(world.getTileEntity(x, y, z) instanceof TileEntityProxyCombo) {
 				if(pos[0] == x || pos[2] == z) {
-					text.add("Connect to Fusion reactor from here");
-				} else {
-					text.add("Connect to PFM from here");
+					text.add("Connect to Fusion Reactor from here");
 				}
 			}
 		}

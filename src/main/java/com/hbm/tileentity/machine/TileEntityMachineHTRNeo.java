@@ -1,87 +1,63 @@
 package com.hbm.tileentity.machine;
 
-
 import java.util.List;
-import java.util.Map.Entry;
 
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.blocks.ModBlocks;
-import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
-import com.hbm.inventory.fluid.trait.FT_Rocket;
+import com.hbm.dim.SolarSystem;
+import com.hbm.handler.atmosphere.IBlockSealable;
+import com.hbm.inventory.recipes.FusionRecipe;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
-import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.machine.albion.TileEntityCooledBase;
 import com.hbm.tileentity.machine.fusion.IFusionPowerReceiver;
-import com.hbm.tileentity.machine.fusion.TileEntityFusionTorus;
 import com.hbm.uninos.GenNode;
 import com.hbm.uninos.UniNodespace;
-import com.hbm.uninos.networkproviders.KlystronNetwork;
-import com.hbm.uninos.networkproviders.KlystronNetworkProvider;
-import com.hbm.uninos.networkproviders.PlasmaNetwork;
 import com.hbm.uninos.networkproviders.PlasmaNetworkProvider;
 import com.hbm.util.BobMathUtil;
-import com.hbm.util.ParticleUtil;
 import com.hbm.util.fauxpointtwelve.BlockPos;
 import com.hbm.util.fauxpointtwelve.DirPos;
-import com.hbm.util.i18n.I18nUtil;
 
-import api.hbm.energymk2.IEnergyReceiverMK2;
-import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
-import api.hbm.fluid.IFluidStandardReceiver;
 import api.hbm.tile.IPropulsion;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import io.netty.buffer.ByteBuf;
 
-public class TileEntityMachineHTRNeo extends TileEntityMachineBase
-implements IPropulsion, IFluidStandardTransceiverMK2, IFluidStandardReceiver, IEnergyReceiverMK2, IFusionPowerReceiver {
+public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPropulsion, IFusionPowerReceiver, IBlockSealable {
 
-	//i smushed these together because i need you so bad
+	// i smushed these together because i need you so bad
 	protected GenNode plasmaNode;
 
 	public long plasmaEnergy;
 	public long plasmaEnergySync;
-	public long power;
-	private boolean hasRegistered;
 
-	public static long maxPower = 1_000_000_000L;
+	public static long maxPower = 200_000_000L;
 
 	public static final int COOLANT_USE = 50;
-	public static final double PLASMA_EFFICIENCY = 1.35D;
-	public static long MINIMUM_PLASMA = 5_000_000L;
-	private float speed;
-	public double lastTime;
-	public double time;
+	
+	public float rotor;
+	public float prevRotor;
+	public float rotorSpeed;
 	private float soundtime;
 	private AudioWrapper audio;
 
-	public FluidTank[] tanks = new FluidTank[]{
-		new FluidTank(Fluids.PERFLUOROMETHYL_COLD, 4_000),
-		new FluidTank(Fluids.PERFLUOROMETHYL, 4_000)
-	};
-
-
-
+	private boolean hasRegistered;
 	public boolean isOn;
 	public int fuelCost;
+	public float thrustAmount;
+
+	public FusionRecipe recipe;
+	public float plasmaR;
+	public float plasmaG;
+	public float plasmaB;
 
 	public TileEntityMachineHTRNeo() {
 		super(0);
 	}
-
-	public boolean hasMinimumPlasma() { //is this even needed?
-		return plasmaEnergy >= MINIMUM_PLASMA;
-	}
-
-	public boolean isCool() {
-		return tanks[0].getFill() >= COOLANT_USE &&
-			   tanks[1].getFill() + COOLANT_USE <= tanks[1].getMaxFill();
-	}
-
 
 	@Override
 	public void updateEntity() {
@@ -92,45 +68,86 @@ implements IPropulsion, IFluidStandardTransceiverMK2, IFluidStandardReceiver, IE
 				hasRegistered = true;
 				isOn = false;
 			}
-			for(DirPos pos : getConPos()) {
-				this.trySubscribe(tanks[0].getTankType(), worldObj, pos);
+
+			for(DirPos pos : this.getConPos()) {
+				this.trySubscribe(worldObj, pos);
+				this.trySubscribe(coolantTanks[0].getTankType(), worldObj, pos);
+				this.tryProvide(coolantTanks[1], worldObj, pos);
 			}
+
 			plasmaEnergySync = plasmaEnergy;
 
-			
+			this.temperature += this.temp_passive_heating;
+			if(this.temperature > KELVIN + 20) this.temperature = KELVIN + 20;
+
+			if(this.temperature > this.temperature_target) {
+				int cyclesTemp = (int) Math.ceil((Math.min(this.temperature - temperature_target, temp_change_max)) / temp_change_per_mb);
+				int cyclesCool = coolantTanks[0].getFill();
+				int cyclesHot = coolantTanks[1].getMaxFill() - coolantTanks[1].getFill();
+				int cycles = BobMathUtil.min(cyclesTemp, cyclesCool, cyclesHot);
+
+				coolantTanks[0].setFill(coolantTanks[0].getFill() - cycles);
+				coolantTanks[1].setFill(coolantTanks[1].getFill() + cycles);
+				this.temperature -= this.temp_change_per_mb * cycles;
+			}
+
+			if(isOn) {
+				System.out.println(soundtime);
+				soundtime++;
+
+				if(soundtime == 1) {
+					this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord, "hbm:misc.htrfstart", 1.5F, 1F);
+				} else if(soundtime > 30) {
+					soundtime = 30;
+				}
+			} else {
+				soundtime--;
+
+				if(soundtime == 29) {
+					this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord, "hbm:misc.htrstop", 2.0F, 1F);
+				} else if(soundtime <= 0) {
+					soundtime = 0;
+				}
+			}
+
+
+			// nodespace setup
 			if(plasmaNode == null || plasmaNode.expired) {
 				ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getRotation(ForgeDirection.UP);
-				plasmaNode = UniNodespace.getNode(worldObj, xCoord + dir.offsetX * -10, yCoord , zCoord + dir.offsetZ * -10, PlasmaNetworkProvider.THE_PROVIDER);
-				if(plasmaNode == null) {
+				plasmaNode = UniNodespace.getNode(worldObj, xCoord + dir.offsetX * -10, yCoord, zCoord + dir.offsetZ * -10, PlasmaNetworkProvider.THE_PROVIDER);
 
-					plasmaNode = new GenNode(PlasmaNetworkProvider.THE_PROVIDER, 
-							new BlockPos(xCoord + dir.offsetX * -10, yCoord , zCoord + dir.offsetZ * -10))
-							.setConnections(new DirPos(xCoord + dir.offsetX * -11, yCoord , zCoord + dir.offsetZ * -11,dir));
-					
+				if(plasmaNode == null) {
+					plasmaNode = new GenNode(PlasmaNetworkProvider.THE_PROVIDER,
+							new BlockPos(xCoord + dir.offsetX * -10, yCoord, zCoord + dir.offsetZ * -10))
+							.setConnections(new DirPos(xCoord + dir.offsetX * -11, yCoord, zCoord + dir.offsetZ * -11, dir));
 
 					UniNodespace.createNode(worldObj, plasmaNode);
 				}
-				
-
-
 			}
+
 			if(plasmaNode != null && plasmaNode.hasValidNet()) plasmaNode.net.addReceiver(this);
-			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-			//worldObj.setBlock(xCoord - rot.offsetX * 5 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 0 - dir.offsetZ * 3,ModBlocks.absorber);
-			//worldObj.setBlock(xCoord - rot.offsetX * -1 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 0 - dir.offsetZ * 3,ModBlocks.absorber);
-			//worldObj.setBlock(xCoord - rot.offsetX * 5 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 0 - dir.offsetZ * -3,ModBlocks.absorber);
-			//worldObj.setBlock(xCoord - rot.offsetX * -1 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 0 - dir.offsetZ * -3,ModBlocks.absorber);
+
 
 
 			this.networkPackNT(200);
 			this.plasmaEnergy = 0;
-		}		 else {
-			if(isOn) {
-				speed += 0.05D;
-				if(speed > 1) speed = 1;
+		} else {
+			
+			if(power >= maxPower || isOn) this.rotorSpeed += 0.125F;
+			else this.rotorSpeed -= 0.125F;
 
-				if(soundtime > 18) {
+			this.rotorSpeed = MathHelper.clamp_float(this.rotorSpeed, 0F, 15F);
+
+			this.prevRotor = this.rotor;
+			this.rotor += this.rotorSpeed;
+
+			if(this.rotor >= 360F) {
+				this.rotor -= 360F;
+				this.prevRotor -= 360F;
+			}
+
+			if(isOn) {
+				if(soundtime > 28) {
 					if(audio == null) {
 						audio = createAudioLoop();
 						audio.startSound();
@@ -140,39 +157,26 @@ implements IPropulsion, IFluidStandardTransceiverMK2, IFluidStandardReceiver, IE
 
 					audio.updateVolume(getVolume(1F));
 					audio.keepAlive();
-
-					ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getRotation(ForgeDirection.UP);
-
-					NBTTagCompound data = new NBTTagCompound();
-					data.setDouble("posX", xCoord + dir.offsetX * 12);
-					data.setDouble("posY", yCoord + 1);
-					data.setDouble("posZ", zCoord + dir.offsetZ * 12);
-					data.setString("type", tanks[0].getTankType() == Fluids.PLASMA_BF ? "missileContrailbf" :"missileContrailf");
-					data.setFloat("scale", 3);
-					data.setDouble("moX", dir.offsetX * 10);
-					data.setDouble("moY", 0);
-					data.setDouble("moZ", dir.offsetZ * 10);
-					data.setInteger("maxAge", 40 + worldObj.rand.nextInt(40));
-					MainRegistry.proxy.effectNT(data);
 				}
+				
+				thrustAmount += 0.01D;
+				if(thrustAmount > 1) thrustAmount = 1;
 			} else {
-				speed -= 0.05D;
-				if(speed < 0) speed = 0;
-
 				if(audio != null) {
 					audio.stopSound();
 					audio = null;
 				}
+				
+				thrustAmount -= 0.01D;
+				if(thrustAmount < 0) thrustAmount = 0;
 			}
 		}
-
-		lastTime = time;
-		time += speed;
 	}
-		
-	
 
-
+	@Override
+	public AudioWrapper createAudioLoop() {
+		return MainRegistry.proxy.getLoopedSound("hbm:misc.htrloop", xCoord, yCoord, zCoord, 0.25F, 27.5F, 1.0F, 20);
+	}
 
 	@Override
 	public void onChunkUnload() {
@@ -182,24 +186,22 @@ implements IPropulsion, IFluidStandardTransceiverMK2, IFluidStandardReceiver, IE
 			unregisterPropulsion();
 			hasRegistered = false;
 		}
-
-		//if(audio != null) {
-			//audio.stopSound();
-			//audio = null;
-		//}
 	}
+
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		
+
 		if(hasRegistered) {
 			unregisterPropulsion();
 			hasRegistered = false;
 		}
+
 		if(!worldObj.isRemote) {
 			if(this.plasmaNode != null) UniNodespace.destroyNode(worldObj, plasmaNode);
 		}
 	}
+
 	@Override
 	public boolean receivesFusionPower() {
 		return true;
@@ -208,49 +210,40 @@ implements IPropulsion, IFluidStandardTransceiverMK2, IFluidStandardReceiver, IE
 	@Override
 	public void receiveFusionPower(long fusionPower, double neutronPower) {
 		plasmaEnergy = fusionPower;
-		
 	}
 
-	private DirPos[] getConPos() {
+	@Override
+	public DirPos[] getConPos() {
 		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
 		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		//worldObj.setBlock(xCoord - rot.offsetX * 5 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 0 - dir.offsetZ * 3,ModBlocks.absorber);
-		//worldObj.setBlock(xCoord - rot.offsetX * -1 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 0 - dir.offsetZ * 3,ModBlocks.absorber);
-		//worldObj.setBlock(xCoord - rot.offsetX * 5 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 0 - dir.offsetZ * -3,ModBlocks.absorber);
-		//worldObj.setBlock(xCoord - rot.offsetX * -1 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 0 - dir.offsetZ * -3,ModBlocks.absorber);
-
 
 		return new DirPos[] {
-			new DirPos(xCoord - rot.offsetX * 5 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 0 - dir.offsetZ * 3, rot),
-			new DirPos(xCoord - rot.offsetX * -1 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 0 - dir.offsetZ * 3, rot), 
-			new DirPos(xCoord - rot.offsetX * 5 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 0 - dir.offsetZ * -3, rot),
-			new DirPos(xCoord - rot.offsetX * -1 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 0 - dir.offsetZ * -3, rot), //this is ass but since it only faces one direction its "excusable"
-
+			new DirPos(xCoord - rot.offsetX * 5 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 5 - dir.offsetZ * 3, dir.getOpposite()),
+			new DirPos(xCoord - rot.offsetX * -1 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * -1 - dir.offsetZ * 3, dir.getOpposite()),
+			new DirPos(xCoord - rot.offsetX * 5 - dir.offsetX * -3, yCoord - 2, zCoord - rot.offsetZ * 5 - dir.offsetZ * -3, dir),
+			new DirPos(xCoord - rot.offsetX * -1 - dir.offsetX * -3, yCoord - 2, zCoord - rot.offsetZ * -1 - dir.offsetZ * -3, dir),
 		};
 	}
 
 	@Override
 	public boolean canPerformBurn(int shipMass, double deltaV) {
+		fuelCost = SolarSystem.getFuelCost(deltaV, shipMass, 250); // i think this engine *itself* would have a base ISP..?
 
-
-		fuelCost = com.hbm.dim.SolarSystem.getFuelCost(deltaV, shipMass, 250); //i think this engine *itself* would have a base ISP..?
-
-		if(plasmaEnergySync < fuelCost) {
-			System.out.println("false");
-			System.out.println(plasmaEnergySync);
-			System.out.println(fuelCost);
-
-			return false;	
-		} 
+		if(plasmaEnergySync < fuelCost) return false;
+		if(power < maxPower) return false;
+		if(!isCool()) return false;
 
 		return true;
 	}
 
 	@Override
 	public void addErrors(List<String> errors) {
-
 		if(plasmaEnergySync < fuelCost) {
-			errors.add(EnumChatFormatting.RED + "Insufficient power: needs " + BobMathUtil.getShortNumber(fuelCost) + " HE");
+			errors.add(EnumChatFormatting.RED + "Insufficient plasma energy: needs " + BobMathUtil.getShortNumber(fuelCost) + " TU");
+		}
+
+		if(power < maxPower) {
+			errors.add(EnumChatFormatting.RED + "Insufficient power");
 		}
 
 		if(!isCool()) {
@@ -260,17 +253,13 @@ implements IPropulsion, IFluidStandardTransceiverMK2, IFluidStandardReceiver, IE
 
 	@Override
 	public float getThrust() {
-		return 1_600_000_000.0F; 
+		return 1_600_000_000.0F;
 	}
 
 	@Override
 	public int startBurn() {
 		isOn = true;
-		plasmaEnergy -= fuelCost;
-		if(isCool()) {
-			tanks[0].setFill(-COOLANT_USE);
-			tanks[1].setFill(+COOLANT_USE);
-		}
+		power = 0;
 
 		return 180;
 	}
@@ -281,39 +270,50 @@ implements IPropulsion, IFluidStandardTransceiverMK2, IFluidStandardReceiver, IE
 		return 180;
 	}
 
+	@Override
+	public long getMaxPower() {
+		return maxPower;
+	}
 
-
-	@Override public FluidTank[] getAllTanks() { return tanks; }
-	@Override public FluidTank[] getReceivingTanks() { return new FluidTank[]{ tanks[0] }; }
-	@Override public FluidTank[] getSendingTanks() { return new FluidTank[]{ tanks[1] }; }
-
-	@Override public long getPower() { return power; }
-	@Override public void setPower(long p) { power = p; }
-	@Override public long getMaxPower() { return maxPower; }
-
-	/* -------------------------
-	 *   NBT / Sync
-	 * ------------------------- */
+	/*
+	 * -------------------------
+	 * NBT / Sync
+	 * -------------------------
+	 */
 
 	@Override
 	public void serialize(ByteBuf buf) {
 		super.serialize(buf);
+
 		buf.writeLong(plasmaEnergySync);
 		buf.writeBoolean(isOn);
 		buf.writeInt(fuelCost);
-		tanks[0].serialize(buf);
-		tanks[1].serialize(buf);
-		
+		buf.writeFloat(soundtime);
+
+		if(recipe != null) {
+			buf.writeBoolean(true);
+			buf.writeFloat(recipe.r);
+			buf.writeFloat(recipe.g);
+			buf.writeFloat(recipe.b);
+		} else {
+			buf.writeBoolean(false);
+		}
 	}
 
 	@Override
 	public void deserialize(ByteBuf buf) {
 		super.deserialize(buf);
+
 		plasmaEnergy = buf.readLong();
 		isOn = buf.readBoolean();
 		fuelCost = buf.readInt();
-		tanks[0].deserialize(buf);
-		tanks[1].deserialize(buf);
+		soundtime = buf.readFloat();
+
+		if(buf.readBoolean()) {
+			plasmaR = buf.readFloat();
+			plasmaG = buf.readFloat();
+			plasmaB = buf.readFloat();
+		}
 	}
 
 	@Override
@@ -322,9 +322,6 @@ implements IPropulsion, IFluidStandardTransceiverMK2, IFluidStandardReceiver, IE
 
 		nbt.setLong("plasma", plasmaEnergy);
 		nbt.setBoolean("on", isOn);
-
-		tanks[0].writeToNBT(nbt, "t0");
-		tanks[1].writeToNBT(nbt, "t1");
 	}
 
 	@Override
@@ -333,21 +330,27 @@ implements IPropulsion, IFluidStandardTransceiverMK2, IFluidStandardReceiver, IE
 
 		plasmaEnergy = nbt.getLong("plasma");
 		isOn = nbt.getBoolean("on");
-
-		tanks[0].readFromNBT(nbt, "t0");
-		tanks[1].readFromNBT(nbt, "t1");
 	}
 
 	@Override
 	public TileEntity getTileEntity() {
 		return this;
 	}
-	
+
 	AxisAlignedBB bb = null;
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		if(bb == null) bb = AxisAlignedBB.getBoundingBox(xCoord - 11, yCoord - 2, zCoord - 11, xCoord + 12, yCoord + 3, zCoord + 12);
+		if(bb == null)
+			bb = AxisAlignedBB.getBoundingBox(
+				xCoord - 11,
+				yCoord - 2,
+				zCoord - 11,
+				xCoord + 12,
+				yCoord + 3,
+				zCoord + 12
+			);
+
 		return bb;
 	}
 
@@ -363,6 +366,9 @@ implements IPropulsion, IFluidStandardTransceiverMK2, IFluidStandardReceiver, IE
 	@Override
 	public boolean isFtlCapable() {
 		return false; //true actually
+	}
+	public boolean isSealed(World world, int x, int y, int z) {
+		return true;
 	}
 
 }

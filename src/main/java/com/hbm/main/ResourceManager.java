@@ -809,7 +809,10 @@ public class ResourceManager {
 	public static final ResourceLocation lpw2_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/lpw2.png");
 	public static final ResourceLocation lpw2_term_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/lpw2_term.png");
 	public static final ResourceLocation lpw2_error_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/lpw2_term_error.png");
-	public static final ResourceLocation htrtex = new ResourceLocation(RefStrings.MODID, "textures/models/fusion/htfr4.png");
+
+	// HTRF4
+	public static final ResourceLocation htrf4_neo_tex = new ResourceLocation(RefStrings.MODID, "textures/models/fusion/htrf4.png");
+	public static final ResourceLocation htrf4_exhaust_tex = new ResourceLocation(RefStrings.MODID, "textures/models/fusion/htrf4_trail.png");
 
 	//Xenon
 	public static final ResourceLocation xenon_thruster_tex = new ResourceLocation(RefStrings.MODID, "textures/models/xenon_thruster.png");

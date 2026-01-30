@@ -10,6 +10,7 @@
 	"misc.lpwloop": {"category": "block", "sounds": [{"name": "misc/lpwloop", "stream": false}]},
 	"misc.htrstart": {"category": "block", "sounds": [{"name": "misc/htr3start", "stream": false}]},
 	"misc.htrstop": {"category": "block", "sounds": [{"name": "misc/htrstop", "stream": false}]},
+	"misc.htrfstart": {"category": "block", "sounds": [{"name": "misc/htrstart", "stream": false}]},
 	"misc.htrloop": {"category": "block", "sounds": [{"name": "misc/htrloop", "stream": false}]},
 	"misc.fireflash": {"category": "player", "sounds": [{"name": "misc/flashfire", "stream": false}]},
 	"misc.stationhum": {"category": "ambient", "sounds": [{"name": "misc/stationhum", "stream": false}]},
