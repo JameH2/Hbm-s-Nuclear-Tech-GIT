@@ -358,6 +358,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		new ComparableStack(Items.flint),
 		new ComparableStack(Items.snowball),
 		new ComparableStack(Items.wheat_seeds),
+		new ComparableStack(ModBlocks.tektite),
 	});
 
 	private boolean isBad(ItemStack stack) {

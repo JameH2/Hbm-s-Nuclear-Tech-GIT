@@ -1,0 +1,11 @@
+{
+	"name": "Rocket Launch Pad",
+	"icon": ["hbm:tile.launch_pad_rocket", 1, 0],
+	"trigger": [["hbm:tile.launch_pad_rocket"]],
+	"title": {
+		"en_US": "Rocket Launch Pad"
+	},
+	"content": {
+        "en_US": "Used for launching rockets built in the [[VAB|Vehicle Assembly Base]]. Accepts electricity and fuels for the currently inserted rocket.<br><br>Once a rocket has been fueled and provided with a target [[destination drive|Drive]], you can commit the rocket to launch, which will make the rocket ready to enter if it has a player capsule, or immediately launch it if it has a satellite.<br><br>Note that satellite launches require regular drives, not station drives."
+	}
+}

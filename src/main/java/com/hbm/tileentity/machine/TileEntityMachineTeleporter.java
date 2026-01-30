@@ -3,27 +3,26 @@ package com.hbm.tileentity.machine;
 import java.util.Iterator;
 import java.util.List;
 
-import com.hbm.config.GeneralConfig;
-import com.hbm.config.WorldConfig;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
-
-import api.hbm.fluid.IFluidStandardReceiver;
-import api.hbm.energymk2.IEnergyReceiverMK2;
 import com.hbm.util.BufferUtil;
+
+import api.hbm.energymk2.IEnergyReceiverMK2;
+import api.hbm.fluid.IFluidStandardReceiver;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.EntityTrackerEntry;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.play.server.S07PacketRespawn;
@@ -54,7 +53,6 @@ public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements
 
 	public TileEntityMachineTeleporter() {
 		tank = new FluidTank(Fluids.NMASS, 16000);
-		
 	}
 
 	@Override
@@ -169,6 +167,18 @@ public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements
 				} catch(Exception ex) { }
 			} else {
 				teleportEntityInterdimensionally(entity, this.targetX + 0.5D, this.targetY + 1.5D + entity.getYOffset(), this.targetZ + 0.5D, this.targetDim);
+			}
+
+			// I have done nothing but teleport bread for three days
+			if(entity instanceof EntityItem) {
+				EntityItem entityItem = (EntityItem) entity;
+				if(entityItem.getEntityItem().getItem() == Items.bread) {
+					WorldServer newWorld = MinecraftServer.getServer().worldServerForDimension(this.targetDim);
+					EntityLiving slime = new EntitySlime(newWorld);
+					slime.setLocationAndAngles(this.targetX + 0.5D, this.targetY + 1.5D + slime.getYOffset(), this.targetZ + 0.5D, entity.rotationYaw, entity.rotationPitch);
+					slime.onSpawnWithEgg(null);
+					newWorld.spawnEntityInWorld(slime);
+				}
 			}
 		}
 

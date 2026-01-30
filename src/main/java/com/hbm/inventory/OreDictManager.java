@@ -534,8 +534,8 @@ public class OreDictManager {
 		 * RARE METALS
 		 */
 		AUSTRALIUM	.nugget(nugget_australium)			.billet(billet_australium)			.ingot(ingot_australium)	.dust(powder_australium)	.block(block_australium)	.oreAll(ore_australium);
-		TASMANITE	.nugget(nugget_australium_lesser)	.billet(billet_australium_lesser);
-		AYERITE		.nugget(nugget_australium_greater)	.billet(billet_australium_greater);
+		TASMANITE	.nugget(nugget_australium_lesser)	.billet(billet_australium_lesser)	.ingot(ingot_australium_lesser);
+		AYERITE		.nugget(nugget_australium_greater)	.billet(billet_australium_greater)	.ingot(ingot_australium_greater);
 
 
 		/*

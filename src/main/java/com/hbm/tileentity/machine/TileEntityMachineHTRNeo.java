@@ -73,7 +73,7 @@ implements IPropulsion, IFluidStandardTransceiverMK2, IFluidStandardReceiver, IE
 		super(0);
 	}
 
-	public boolean hasMinimumPlasma() {
+	public boolean hasMinimumPlasma() { //is this even needed?
 		return plasmaEnergy >= MINIMUM_PLASMA;
 	}
 
@@ -233,7 +233,7 @@ implements IPropulsion, IFluidStandardTransceiverMK2, IFluidStandardReceiver, IE
 	public boolean canPerformBurn(int shipMass, double deltaV) {
 
 
-		fuelCost = com.hbm.dim.SolarSystem.getFuelCost(deltaV, shipMass, 100); //static temporary lolegaloge 
+		fuelCost = com.hbm.dim.SolarSystem.getFuelCost(deltaV, shipMass, 250); //i think this engine *itself* would have a base ISP..?
 
 		if(plasmaEnergySync < fuelCost) {
 			System.out.println("false");

@@ -39,6 +39,8 @@ public abstract class CelestialBodyTrait {
 		registerTrait("dyson", CBT_Dyson.class);
 		registerTrait("impact", CBT_Impact.class);
 		registerTrait("lights", CBT_Lights.class);
+		registerTrait("invasion", CBT_Invasion.class);
+
 	};
 
 	private static void registerTrait(String name, Class<? extends CelestialBodyTrait> clazz) {

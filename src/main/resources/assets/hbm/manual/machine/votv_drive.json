@@ -1,0 +1,11 @@
+{
+	"name": "Drive",
+	"icon": ["hbm:item.hard_drive", 1, 0],
+	"trigger": [["hbm:item.hard_drive"]],
+	"title": {
+		"en_US": "Drive"
+	},
+	"content": {
+        "en_US": "Stores information about a given celestial destination, either a planet, moon, or space station.<br><br>Must be initially programmed in a [[StarDar|StarDar]] to provide a destination and valid landing coordinates, and then processed in a [[drive processor|Drive Processor]] to calculate a valid targeting solution."
+	}
+}

@@ -101,9 +101,9 @@ public class MachineHTRFNeo extends BlockDummyable implements ILookOverlay {
 
 			if(world.getTileEntity(x, y, z) instanceof TileEntityProxyCombo) {
 				if(pos[0] == x || pos[2] == z) {
-					text.add("Connect to Plasma Heater from here");
+					text.add("Connect to Fusion reactor from here");
 				} else {
-					text.add("Connect to power from here");
+					text.add("Connect to PFM from here");
 				}
 			}
 		}

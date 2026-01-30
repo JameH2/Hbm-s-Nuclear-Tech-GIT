@@ -127,9 +127,9 @@ public class CranePartitioner extends BlockContainer implements IConveyorBelt, I
 		ItemStack stack = entity.getItemStack();
 		ItemStack remainder = null;
 		if(CrystallizerRecipes.getAmount(stack) > 0) {
-			remainder = InventoryUtil.tryAddItemToInventory(partitioner, 0, TileEntityCranePartitioner.SLOT_COUNT - 1, stack);
+			remainder = InventoryUtil.tryAddItemToInventory(partitioner, 0, TileEntityCranePartitioner.INPUT_COUNT - 1, stack);
 		} else {
-			remainder = InventoryUtil.tryAddItemToInventory(partitioner, TileEntityCranePartitioner.SLOT_COUNT, TileEntityCranePartitioner.SLOT_COUNT * 2 - 1, stack);
+			remainder = InventoryUtil.tryAddItemToInventory(partitioner, TileEntityCranePartitioner.INPUT_COUNT, TileEntityCranePartitioner.INPUT_COUNT + TileEntityCranePartitioner.OUTPUT_COUNT - 1, stack);
 		}
 		if(remainder != null) {
 			EntityItem item = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, remainder.copy());
@@ -139,10 +139,13 @@ public class CranePartitioner extends BlockContainer implements IConveyorBelt, I
 
 	public static class TileEntityCranePartitioner extends TileEntityMachineBase {
 
-		public static final int SLOT_COUNT = 45;
+		// 104 total, since it's the highest I've seen in the codebase
+		// and desh crates haven't exploderoonied as far as I know
+		public static final int INPUT_COUNT = 96;
+		public static final int OUTPUT_COUNT = 8;
 		
 		public TileEntityCranePartitioner() {
-			super(SLOT_COUNT * 2);
+			super(INPUT_COUNT + OUTPUT_COUNT);
 		}
 
 		@Override public String getName() { return "container.partitioner"; }
@@ -152,8 +155,8 @@ public class CranePartitioner extends BlockContainer implements IConveyorBelt, I
 
 			if(!worldObj.isRemote) {
 
-				List<ItemStack> stacks = new ArrayList();
-				for(int i = 0; i < SLOT_COUNT; i++) if(slots[i] != null) stacks.add(slots[i]);
+				List<ItemStack> stacks = new ArrayList<>();
+				for(int i = 0; i < INPUT_COUNT; i++) if(slots[i] != null) stacks.add(slots[i]);
 				stacks.sort(stackSizeComparator);
 				boolean markDirty = false;
 
@@ -172,7 +175,7 @@ public class CranePartitioner extends BlockContainer implements IConveyorBelt, I
 					}
 				}
 
-				for(int i = 0; i < SLOT_COUNT; i++) if(slots[i] != null && slots[i].stackSize <= 0) slots[i] = null;
+				for(int i = 0; i < INPUT_COUNT; i++) if(slots[i] != null && slots[i].stackSize <= 0) slots[i] = null;
 				if(markDirty) this.markDirty();
 			}
 		}
@@ -187,12 +190,12 @@ public class CranePartitioner extends BlockContainer implements IConveyorBelt, I
 
 		@Override
 		public boolean canExtractItem(int slot, ItemStack stack, int side) {
-			return slot >= SLOT_COUNT; // declog
+			return slot >= INPUT_COUNT; // declog
 		}
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack stack) {
-			return i <= (SLOT_COUNT - 1) && CrystallizerRecipes.getAmount(stack) >= 1;
+			return i <= (INPUT_COUNT - 1) && CrystallizerRecipes.getAmount(stack) >= 1;
 		}
 
 		protected int[] access;
@@ -201,8 +204,8 @@ public class CranePartitioner extends BlockContainer implements IConveyorBelt, I
 		public int[] getAccessibleSlotsFromSide(int side) {
 			
 			if(access == null) {
-				access = new int[SLOT_COUNT * 2]; // writing this by hand is for chumps
-				for(int i = 0; i < SLOT_COUNT * 2; i++) access[i] = i;
+				access = new int[INPUT_COUNT + OUTPUT_COUNT]; // writing this by hand is for chumps
+				for(int i = 0; i < INPUT_COUNT + OUTPUT_COUNT; i++) access[i] = i;
 			}
 			
 			return access;
