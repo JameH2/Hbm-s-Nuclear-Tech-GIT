@@ -28,6 +28,7 @@ public class CBT_DEMETER extends CelestialBodyTrait {
 
 	public void transitionPhase(float target, float spinTarget) {
 		wingPhase += (target - wingPhase) * 0.06f;
+		spinSpeed += (spinTarget - spinSpeed) * 0.06f;
 	}
 
 	public void selectAttackType() {
@@ -36,11 +37,18 @@ public class CBT_DEMETER extends CelestialBodyTrait {
 		currentAttack = attacks[random.nextInt(attacks.length)]; // store it
 	}
 
-	public void awake() {
+	public void Awake() {
+		if(!awakened) {
+			transitionPhase(0,0);
+		}
 		if(awakenedTimer == 100) {
 			awakened = true;
 			selectAttackType();
 		}
+	}
+	
+	public void Transition() { //no not like that
+		
 	}
 
 	@Override
@@ -56,7 +64,7 @@ public class CBT_DEMETER extends CelestialBodyTrait {
 				transitionPhase(currentAttack.phase, currentAttack.spinSpeed);
 			} else {
 				awakenedTimer++;
-				awake();
+				Awake();
 			}
 		} else {
 			if(currentAttack != null) {
@@ -110,9 +118,9 @@ public class CBT_DEMETER extends CelestialBodyTrait {
 	}
 
 	public enum AttackType {
-		METEORS(5, 0.5f),
+		METEORS(5, 0.1f),
 		ANGELIC(4, 0.5f),
-		BEAM(9, 0.5f),
+		BEAM(9, 0.2f),
 		DEATH(11, 0.5f);
 
 		float spinSpeed;

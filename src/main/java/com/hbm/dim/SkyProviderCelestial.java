@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import com.hbm.dim.SolarSystem.AstroMetric;
 import com.hbm.dim.orbit.OrbitalStation;
 import com.hbm.dim.trait.CBT_Atmosphere;
+import com.hbm.dim.trait.CBT_DEMETER;
 import com.hbm.dim.trait.CBT_Dyson;
 import com.hbm.dim.trait.CelestialBodyTrait.CBT_COMPROMISED;
 import com.hbm.dim.trait.CBT_War;
@@ -65,8 +66,8 @@ public class SkyProviderCelestial extends IRenderHandler {
 	private static final ResourceLocation thatmoShield = new ResourceLocation(RefStrings.MODID, "textures/particle/cens.png");
 
 	private static final Shader fleshShader = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/fle.frag"));
-	// private static final Shader angel = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/angel.frag"));
-	// private static final ResourceLocation eye = new ResourceLocation(RefStrings.MODID, "textures/misc/space/eyeball.png");
+	private static final Shader angel = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/angel.frag"));
+	private static final ResourceLocation eye = new ResourceLocation(RefStrings.MODID, "textures/misc/space/eyeball.png");
 
 	private static final ResourceLocation noise = new ResourceLocation(RefStrings.MODID, "shaders/iChannel1.png");
 
@@ -608,36 +609,43 @@ public class SkyProviderCelestial extends IRenderHandler {
 			// BLACK HOLE SUN
 			// WON'T YOU COME
 			// AND WASH AWAY THE RAIN
-
+			CBT_DEMETER d = sun.getTrait(CBT_DEMETER.class);
 			Shader shader = sun.shader;
 			double shaderSize = sunSize * sun.shaderScale;
+			if(d != null) {
+				RenderIt(world, partialTicks, shaderSize, mc, sun);
+			}else {
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				shader.use();
 
-			shader.use();
+				float time = ((float)world.getWorldTime() + partialTicks) / 20.0F;
 
-			float time = ((float)world.getWorldTime() + partialTicks) / 20.0F;
+				mc.renderEngine.bindTexture(noise);
+				GL11.glPushMatrix();
 
-			mc.renderEngine.bindTexture(noise);
-			GL11.glPushMatrix();
+				// Fix orbital plane
+				GL11.glRotatef(-90.0F, 0, 1, 0);
+				shader.setUniform1f("iTime", time);
+				shader.setUniform1i("iChannel1", 0);
 
-			// Fix orbital plane
-			GL11.glRotatef(-90.0F, 0, 1, 0);
-			shader.setUniform1f("iTime", time);
-			shader.setUniform1i("iChannel1", 0);
+				tessellator.startDrawingQuads();
+				tessellator.addVertexWithUV(-shaderSize, 100.0D, -shaderSize, 0.0D, 0.0D);
+				tessellator.addVertexWithUV(shaderSize, 100.0D, -shaderSize, 1.0D, 0.0D);
+				tessellator.addVertexWithUV(shaderSize, 100.0D, shaderSize, 1.0D, 1.0D);
+				tessellator.addVertexWithUV(-shaderSize, 100.0D, shaderSize, 0.0D, 1.0D);
+				tessellator.draw();
 
-			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV(-shaderSize, 100.0D, -shaderSize, 0.0D, 0.0D);
-			tessellator.addVertexWithUV(shaderSize, 100.0D, -shaderSize, 1.0D, 0.0D);
-			tessellator.addVertexWithUV(shaderSize, 100.0D, shaderSize, 1.0D, 1.0D);
-			tessellator.addVertexWithUV(-shaderSize, 100.0D, shaderSize, 0.0D, 1.0D);
-			tessellator.draw();
+				shader.stop();
 
-			shader.stop();
+				GL11.glPopMatrix();
 
-			GL11.glPopMatrix();
+				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
+			}
 
-			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
+
+
+			
 		} else {
 			// Some blanking to conceal the stars
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -1259,56 +1267,59 @@ public class SkyProviderCelestial extends IRenderHandler {
 		GL11.glPopMatrix();
 	}
 
-	// i dont know where to properly put this yet plus its 4 am so take that as you will (SEVEN)
-	/*
+	
+	public void RenderIt(WorldClient world, float partialTicks, double shaderSize, Minecraft mc, CelestialBody sun) {
+		// i dont know where to properly put this yet plus its 4 am so take that as you
+		// will (SEVEN)
+		CBT_DEMETER d = sun.getTrait(CBT_DEMETER.class);
 
-			Shader shader = angel;
-			double shaderSize = sunSize * sun.shaderScale;
+		Tessellator tessellator = Tessellator.instance;
+		Shader shader = angel;
 
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-			shader.use();
+		shader.use();
 
-			float time = ((float)world.getWorldTime() + partialTicks) / 20.0F;
+		float time = ((float) world.getWorldTime() + partialTicks) / 20.0F;
+		mc.renderEngine.bindTexture(noise);
+		GL11.glPushMatrix();
+		// Fix orbital plane
+		GL11.glRotatef(-90.0F, 0, 1, 0);
+		shader.setUniform1f("time", time + 0.2F* d.spinSpeed * 0.1F);
+		shader.setUniform1f("divergence", 1);
+		shader.setUniform1f("colorR", 1f);
+		shader.setUniform1f("colorG", 0.1f);
+		shader.setUniform1f("colorB", 0.3f);
+		shader.setUniform1f("interp", d.wingPhase);
 
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV(-shaderSize *2, 100.0D, -shaderSize*2, 0.0D, 0.0D);
+		tessellator.addVertexWithUV(shaderSize*2, 100.0D, -shaderSize*2, 1.0D, 0.0D);
+		tessellator.addVertexWithUV(shaderSize*2, 100.0D, shaderSize*2, 1.0D, 1.0D);
+		tessellator.addVertexWithUV(-shaderSize*2, 100.0D, shaderSize*2, 0.0D, 1.0D);
+		tessellator.draw();
 
-			mc.renderEngine.bindTexture(noise);
-			GL11.glPushMatrix();
-			// Fix orbital plane
-			GL11.glRotatef(-90.0F, 0, 1, 0);
-			shader.setUniform1f("time", time * 1.2f);
-			shader.setUniform1f("divergence", 1f);
-			shader.setUniform1f("colorR", 1f);
-			shader.setUniform1f("colorG", 0.1f);
-			shader.setUniform1f("colorB", 0.3f);
-			shader.setUniform1f("interp", 4);
+		shader.stop();
 
-			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV(-shaderSize, 100.0D, -shaderSize, 0.0D, 0.0D);
-			tessellator.addVertexWithUV(shaderSize, 100.0D, -shaderSize, 1.0D, 0.0D);
-			tessellator.addVertexWithUV(shaderSize, 100.0D, shaderSize, 1.0D, 1.0D);
-			tessellator.addVertexWithUV(-shaderSize, 100.0D, shaderSize, 0.0D, 1.0D);
-			tessellator.draw();
+		GL11.glPushMatrix();
+		GL11.glColor4f(1, 0.2f, 0.2f, 1);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glRotatef(180, 0, 1, 0);
+		GL11.glTranslatef(0, 0, -1);
+		mc.renderEngine.bindTexture(eye);
+		float size = 7;
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV(-size*2, 100.0D, -size*2, 0.0D, 0.0D);
+		tessellator.addVertexWithUV(size*2, 100.0D, -size*2, 1.0D, 0.0D);
+		tessellator.addVertexWithUV(size*2, 100.0D, size*2, 1.0D, 1.0D);
+		tessellator.addVertexWithUV(-size*2, 100.0D, size*2, 0.0D, 1.0D);
+		tessellator.draw();
+		GL11.glPopMatrix();
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
-			shader.stop();
+		GL11.glPopMatrix();
+		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
 
-			GL11.glPushMatrix();
-			GL11.glColor4f(1, 0.2f, 0.2f, 1);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glRotatef(180, 0, 1, 0);
-			GL11.glTranslatef(0, 0, -1);
-			mc.renderEngine.bindTexture(eyes);
-			float size = 7;
-			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV(-size, 100.0D, -size, 0.0D, 0.0D);
-			tessellator.addVertexWithUV(size, 100.0D, -size, 1.0D, 0.0D);
-			tessellator.addVertexWithUV(size, 100.0D, size, 1.0D, 1.0D);
-			tessellator.addVertexWithUV(-size, 100.0D, size, 0.0D, 1.0D);
-			tessellator.draw();
-			GL11.glPopMatrix();
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-
-			GL11.glPopMatrix();
-	 */
+	}
 
 }
