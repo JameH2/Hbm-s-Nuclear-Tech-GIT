@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 public class EntityBrineSlime extends EntitySlime implements IRadiationImmune, ISuffocationImmune {
 
     public EntityBrineSlime(World world) {
-        this(world, 1 + world.rand.nextInt(3)); // Default constructor with random size 1-3
+        this(world, 1 + world.rand.nextInt(3));
     }
 
     public EntityBrineSlime(World world, int size) {
@@ -38,7 +38,6 @@ public class EntityBrineSlime extends EntitySlime implements IRadiationImmune, I
     @Override
     protected void setSlimeSize(int size) {
         super.setSlimeSize(size);
-        // Update health when size changes
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(size * size * 2.0D);
         this.setHealth(this.getMaxHealth());
         this.experienceValue = size;
@@ -46,7 +45,6 @@ public class EntityBrineSlime extends EntitySlime implements IRadiationImmune, I
 
     @Override
     public boolean getCanSpawnHere() {
-    // Skip the parent's getCanSpawnHere() check since it's too restrictive
         boolean canSpawn = this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && 
                           MobConfig.enableBrineSlime &&
                           this.worldObj.checkNoEntityCollision(this.boundingBox) &&
@@ -57,7 +55,7 @@ public class EntityBrineSlime extends EntitySlime implements IRadiationImmune, I
 
     @Override
     protected int getJumpDelay() {
-        return this.rand.nextInt(20) + 10; // Slower jumping than normal slimes
+        return this.rand.nextInt(20) + 10;
     }
 
     @Override
