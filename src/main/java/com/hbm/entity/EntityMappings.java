@@ -239,6 +239,7 @@ public class EntityMappings {
 		addMob(EntityPigeon.class, "entity_pigeon", 0xC8C9CD, 0x858894);
 
 		addMob(EntityMoonCow.class, "entity_moon_cow", 0xECD376, 0x262A44);
+		addMob(EntityBrineSlime.class, "entity_brine_slime", 0xECD375, 0xD4A017);
 		addMob(EntityScutterfish.class, "entity_scutterfish", 0xC8C9CD, 0x858894);
 		addMob(EntityScuttlecrab.class, "entity_scuttlecrab", 0xF17951, 0xEDDABB);
 		addMob(EntityDepthSquid.class, "entity_depthsquid", 0x00B4Df, 0x016085);
