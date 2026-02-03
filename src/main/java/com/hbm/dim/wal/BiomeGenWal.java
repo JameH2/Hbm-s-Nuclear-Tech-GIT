@@ -29,9 +29,9 @@ public class BiomeGenWal extends BiomeGenBaseCelestial {
 		}
 
 		BiomeDecoratorCelestial decorator = new BiomeDecoratorCelestial(ModBlocks.wal_rock);
-		decorator.lakeChancePerChunk = 4; // Slightly more common than Ike's craters
+		decorator.lakeChancePerChunk = 4;
 		decorator.lakeBlock = ModBlocks.brine_block;
-		decorator.lavaCount = 0; // Prevent hardcoded lava springs
+		decorator.lavaCount = 0;
 		this.theBiomeDecorator = decorator;
 		this.theBiomeDecorator.generateLakes = true;
 
@@ -48,7 +48,6 @@ public class BiomeGenWal extends BiomeGenBaseCelestial {
 
 	@Override
 	public void genTerrainBlocks(World world, Random rand, Block[] blocks, byte[] meta, int x, int z, double noise) {
-		// boolean flag = true;
 		Block block = this.topBlock;
 		byte b0 = (byte) (this.field_150604_aj & 255);
 		Block block1 = this.fillerBlock;
