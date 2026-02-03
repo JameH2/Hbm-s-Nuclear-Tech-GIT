@@ -216,6 +216,43 @@ public class SolarSystem {
 
 				),
 
+				new CelestialBody("urlum")
+					.withMassRadius(1.789e23F, 2_177)
+					.withOrbitalParameters(254_317_012, 0.0455F, 0.0F, 2.02F, 184.0F)
+					.withRotationalPeriod(41_000)
+					.withColor(0.9f, 0.95f, 1.0f)
+					.withRings(2.8F, 3, 0.1F, 0.5F, 0.6F)
+					.withGas(Fluids.UGAS)
+					.withSatellites(
+
+					new CelestialBody("polta")
+						.withMassRadius(1.3512e21F, 220)
+						.withOrbitalParameters(11_727, 0, 0.0F, 0.0F, 55.0F)  // 0° argument of periapsis
+						.withRotationalPeriod(73_017),
+
+					new CelestialBody("priax")
+						.withMassRadius(5.0691e19F, 74)
+						.withOrbitalParameters(11_727, 0, 0.0F, 180.0F, 55.0F)  // 180° opposite to polta
+						.withRotationalPeriod(73_017)
+						.withTexture(new ResourceLocation(RefStrings.MODID, "textures/misc/space/planet.png")),
+
+					new CelestialBody("wal", SpaceConfig.walDimension, Body.WAL)
+						.withMassRadius(7.442e21F, 370)
+						.withOrbitalParameters(67_553, 0.028F, 0.0F, 9.4F, 55.0F)
+						.withRotationalPeriod(1_009_410)
+						.withMinProcessingLevel(3)
+						.withColor(0.7f, 0.6f, 0.5f)
+						.withTraits(new CBT_Atmosphere(Fluids.STEAM, 0.01F), new CBT_Water(Fluids.BRINE))
+						.withBlockTextures(RefStrings.MODID + ":textures/blocks/wal_rock.png", RefStrings.MODID + ":textures/blocks/wal_rock.png")
+						.withSatellites(
+
+						new CelestialBody("tal")
+						    .withMassRadius(3.200e18F, 22)
+						    .withOrbitalParameters(3_109, 0, 0.0F, 1.0F, 55.0F)
+						    .withRotationalPeriod(48_874)
+					)
+				),
+
 				new CelestialBody("neidon")
 					.withMassRadius(2.1228e23F, 2_145)
 					.withOrbitalParameters(409_355_192, 0.0534F, 0.0F, 2.02F, 184.0F)
@@ -253,7 +290,8 @@ public class SolarSystem {
 		EVE("eve"),
 		IKE("ike"),
 		LAYTHE("laythe"),
-		TEKTO("tekto");
+		TEKTO("tekto"),
+		WAL("wal");
 		//THATMO("thatmo"); sit this one out buddy :)
 
 		public String name;
