@@ -441,6 +441,11 @@ public class ModBlocks {
 	public static Block moon_turf;
 	public static Block moon_rock;
 
+	public static Block wal_turf;
+	public static Block wal_rock;
+	public static Block wal_basalt;
+	public static Block ice_slush;
+
 	public static Block tumor;
 
 
@@ -1354,6 +1359,9 @@ public class ModBlocks {
 	public static Block bromine_block;
 	public static Fluid bromine_fluid;
 
+	public static Block brine_block;
+	public static Fluid brine_fluid;
+
 	public static Block concrete_liquid;
 
 	public static Block ccl_block;
@@ -1809,6 +1817,11 @@ public class ModBlocks {
 
 		moon_turf = new BlockFalling(Material.sand).setBlockName("moon_turf").setStepSound(Block.soundTypeSand).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":moon_turf");
 		moon_rock = new BlockGeneric(Material.rock).setBlockName("moon_rock").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":moon_rock");
+
+		wal_turf = new BlockFalling(Material.sand).setBlockName("wal_turf").setStepSound(Block.soundTypeSand).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":wal_turf");
+		wal_rock = new BlockGeneric(Material.rock).setBlockName("wal_rock").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":wal_rock");
+		wal_basalt = new BlockGeneric(Material.rock).setBlockName("wal_basalt").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":wal_basalt");
+		ice_slush = new BlockGeneric(Material.ice).setBlockName("ice_slush").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":ice_slush");
 
 		tumor = new BlockTint(Material.clay, "tumor_base2", "tumor_base3", "fleshv2").setBlockName("tumor").setStepSound(Block.soundTypeSnow).setCreativeTab(MainRegistry.blockTab).setHardness(1.0F).setBlockTextureName(RefStrings.MODID + ":tumor_base");
 
@@ -2681,6 +2694,10 @@ public class ModBlocks {
 		FluidRegistry.registerFluid(bromine_fluid);
 		bromine_block = new GenericFluidBlock(bromine_fluid, Material.water, "bromine_still", "bromine_flowing").setDamage(ModDamageSource.acid, 5F).setBlockName("bromine_block").setResistance(500F);
 
+		brine_fluid = new GenericFluid("brine_fluid").setDensity(1840).setViscosity(1000).setTemperature(273);
+		FluidRegistry.registerFluid(brine_fluid);
+		brine_block = new GenericFluidBlock(brine_fluid, Material.water, "brine_still", "brine_flowing").setDamage(ModDamageSource.acid, 5F).setBlockName("brine_block").setResistance(500F);
+
 		Fluid liquidConcrete = new GenericFluid("concrete_liquid").setViscosity(2000);
 		concrete_liquid = new GenericFiniteFluid(liquidConcrete, Material.rock, "concrete_liquid", "concrete_liquid_flowing").setQuantaPerBlock(4).setBlockName("concrete_liquid").setResistance(500F);
 
@@ -3257,6 +3274,11 @@ public class ModBlocks {
 		GameRegistry.registerBlock(moon_turf, moon_turf.getUnlocalizedName());
 
 		GameRegistry.registerBlock(moon_rock, moon_rock.getUnlocalizedName());
+		
+		GameRegistry.registerBlock(wal_turf, wal_turf.getUnlocalizedName());
+        GameRegistry.registerBlock(wal_basalt, wal_basalt.getUnlocalizedName());
+		GameRegistry.registerBlock(wal_rock, wal_rock.getUnlocalizedName());
+		GameRegistry.registerBlock(ice_slush, ice_slush.getUnlocalizedName());
 		register(sapling_pvc);
 
 		GameRegistry.registerBlock(duna_sands, duna_sands.getUnlocalizedName());
@@ -3988,6 +4010,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(sulfuric_acid_block, sulfuric_acid_block.getUnlocalizedName());
 		GameRegistry.registerBlock(mercury_block, mercury_block.getUnlocalizedName());
 		GameRegistry.registerBlock(bromine_block, bromine_block.getUnlocalizedName());
+		GameRegistry.registerBlock(brine_block, brine_block.getUnlocalizedName());
 		GameRegistry.registerBlock(flesh_block, flesh_block.getUnlocalizedName());
 		GameRegistry.registerBlock(charred_flesh_block, charred_flesh_block.getUnlocalizedName());
 		GameRegistry.registerBlock(carbonized_flesh_block, carbonized_flesh_block.getUnlocalizedName());
