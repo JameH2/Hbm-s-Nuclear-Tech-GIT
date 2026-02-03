@@ -1,4 +1,3 @@
-// Create this file at: src/main/java/com/hbm/render/entity/mob/RenderBrineSlime.java
 package com.hbm.render.entity.mob;
 
 import com.hbm.entity.mob.EntityBrineSlime;
