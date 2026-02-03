@@ -26,8 +26,7 @@ import net.minecraft.world.chunk.IChunkProvider;
 public class WorldGeneratorWal implements IWorldGenerator {
 
 	public WorldGeneratorWal() {
-
-		// Use maximum safe weight for guaranteed structure removal
+		
 		NBTStructure.registerNullWeight(SpaceConfig.walDimension, 1000);
 
 		BlockOre.addValidBody(ModBlocks.ore_cadmium, SolarSystem.Body.WAL);
@@ -47,14 +46,12 @@ public class WorldGeneratorWal implements IWorldGenerator {
 		int meta = CelestialBody.getMeta(world);
 		Block stone = ((WorldProviderCelestial) world.provider).getStone();
 
-		// Generate ores
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.aluminiumSpawn,  6, 5, 40, ModBlocks.ore_aluminium, meta, stone);
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.fluoriteSpawn, 4, 5, 45, ModBlocks.ore_fluorite, meta, stone);
 		DungeonToolbox.generateOre(world, rand, i, j, 10, 13, 5, 64, ModBlocks.ore_arsenic, meta, stone);
         DungeonToolbox.generateOre(world, rand, i, j, 10, 6, 4, 8, ModBlocks.ore_cadmium, meta, stone);
 		DungeonToolbox.generateOre(world, rand, i, j, 1, 12, 8, 32, ModBlocks.ore_shale, meta, stone);
 
-		// Scan for and update any existing water geysers in this chunk
 		for(int x = 0; x < 16; x++) {
 			for(int z = 0; z < 16; z++) {
 				for(int y = 32; y < 128; y++) {
