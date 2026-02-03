@@ -842,6 +842,7 @@ public class ClientProxy extends ServerProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityPigeon.class, new RenderPigeon(new ModelPigeon(), 0.3F));
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityMoonCow.class, new RenderMoonCow(new ModelMoonCow(), 0.7F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBrineSlime.class, new RenderBrineSlime());
 		RenderingRegistry.registerEntityRenderingHandler(EntityScutterfish.class, new RenderScutter(new ModelScutter(), 0.3F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTankbot.class, new RenderTankbot());
 		RenderingRegistry.registerEntityRenderingHandler(EntityWarBehemoth.class, new RenderBehemoth());
@@ -2332,3 +2333,4 @@ public class ClientProxy extends ServerProxy {
 		return color;
 	}
 }
+
