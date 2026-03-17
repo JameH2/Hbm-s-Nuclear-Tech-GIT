@@ -18,6 +18,10 @@ import com.hbm.tileentity.machine.TileEntityDysonReceiver;
 import com.hbm.util.AstronomyUtil;
 import com.hbm.util.BobMathUtil;
 
+import api.hbm.item.IItemMass;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -948,6 +952,22 @@ public class SolarSystem {
 
 		// The first half of the required dV to get to our destination!
 		return escapeHyperVelocity - parkingOrbitVelocity;
+	}
+
+	public static float getInventoryMass(IInventory inventory) {
+		float massKg = 0F;
+		
+		for(int i = 0; i < inventory.getSizeInventory(); ++i) {
+			ItemStack itemStack = inventory.getStackInSlot(i);
+			if(itemStack == null) continue;
+
+			Item item = itemStack.getItem();
+			if(!(item instanceof IItemMass)) continue;
+
+			massKg += ((IItemMass) item).getMass(itemStack);
+		}
+
+		return massKg;
 	}
 
 	public static void runTests() {
