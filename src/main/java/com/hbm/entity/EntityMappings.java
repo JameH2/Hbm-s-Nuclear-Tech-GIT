@@ -160,6 +160,7 @@ public class EntityMappings {
 		addEntity(EntityBuilding.class, "entity_falling_building", 1000);
 		addEntity(EntitySoyuz.class, "entity_soyuz", 1000);
 		addEntity(EntitySoyuzCapsule.class, "entity_soyuz_capsule", 1000);
+		addEntity(EntityCombatDropPod.class, "entity_combat_pod", 1000);
 		addEntity(EntityParachuteCrate.class, "entity_parachute_crate", 1000);
 		addEntity(EntityMovingItem.class, "entity_c_item", 1000);
 		addEntity(EntityMovingPackage.class, "entity_c_package", 1000);
@@ -224,6 +225,7 @@ public class EntityMappings {
 
 		addMob(EntityWarBehemoth.class, "entity_war_behemoth", 0x204131, 0x75CE00);
 		addMob(EntityTankbot.class, "entity_tankbot", 0x204131, 0x75CE00);
+		addMob(EntityBFAngel.class, "entity_ntm_bfa", 0x204131, 0x75CE00);
 
 		addMob(EntityCreeperNuclear.class, "entity_mob_nuclear_creeper", 0x204131, 0x75CE00);
 		addMob(EntityCreeperTainted.class, "entity_mob_tainted_creeper", 0x813b9b, 0xd71fdd);

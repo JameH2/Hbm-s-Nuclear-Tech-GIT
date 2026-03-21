@@ -7,6 +7,7 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.tank.FluidTank;
 
 import api.hbm.energymk2.IEnergyConductorMK2;
+import api.hbm.energymk2.IEnergyConnectorMK2;
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluidmk2.IFluidConnectorMK2;
 import api.hbm.fluidmk2.IFluidReceiverMK2;
@@ -15,6 +16,7 @@ import api.hbm.redstoneoverradio.IRORInteractive;
 import api.hbm.redstoneoverradio.IRORValueProvider;
 import api.hbm.tile.IHeatSource;
 import com.hbm.inventory.material.Mats;
+import com.hbm.util.Compat;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import li.cil.oc.api.machine.Arguments;
@@ -147,15 +149,15 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 	@Override
 	public boolean canConnect(ForgeDirection dir) {
 
-		if(power && getCoreObject() instanceof IEnergyReceiverMK2) {
-			return ((IEnergyReceiverMK2)getCoreObject()).canConnect(dir);
+		if(power && getCoreObject() instanceof IEnergyConnectorMK2) {
+			return ((IEnergyConnectorMK2)getCoreObject()).canConnect(dir);
 		}
 
 		if(conductor && getCoreObject() instanceof IEnergyConductorMK2) {
 			return ((IEnergyConductorMK2)getCoreObject()).canConnect(dir);
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
@@ -512,10 +514,22 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 	@Override
 	@Optional.Method(modid = "OpenComputers")
 	public boolean canConnectNode(ForgeDirection side) {
-		if(this.getCoreObject() instanceof OCComponent)
+		if(this.getCoreObject() instanceof OCComponent) {
+			boolean isComponent = false;
+			if (this.worldObj != null) {
+				Object nodeTE = Compat.getTileStandard(this.worldObj, this.xCoord + side.offsetX, this.yCoord + side.offsetY, this.zCoord + side.offsetZ);
+				if (nodeTE instanceof TileEntityProxyCombo) {
+					TileEntityProxyCombo proxy = (TileEntityProxyCombo)nodeTE;
+					if (proxy.getCoreObject() == this.getCoreObject()) isComponent = true;
+				} else if (nodeTE == this.getCoreObject()) {
+					isComponent = true;
+				}
+			}
 			return (this.getBlockMetadata() >= 6 && this.getBlockMetadata() <= 11)
 					&& (power || fluid) &&
-					((OCComponent) this.getCoreObject()).canConnectNode(side);
+					((OCComponent) this.getCoreObject()).canConnectNode(side) &&
+					!isComponent;
+		}
 		return OCComponent.super.canConnectNode(null);
 	}
 

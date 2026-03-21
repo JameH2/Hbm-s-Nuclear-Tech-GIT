@@ -27,6 +27,7 @@ public class ParticleRBMKFlame extends EntityFX {
 		this.particleScale = rand.nextFloat() + 1F;
 	}
 
+	@Override
 	public int getFXLayer() {
 		return 3;
 	}

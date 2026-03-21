@@ -1,5 +1,8 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5572 - i have contracted rabies](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5572)
+Includes all changes and bugfixes from the latest upstream NTMain update - [X5634 - the RBMK console is so last year](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5634)
 
-## Changed
-* Station drives can now be used to recall docked & fueled drop pods to your current location
-* Stations now show up in the sky of the orbited planet
+## Added
+* Astroturf
+  * Looks like the classic pre-biome grass and doesn't die from fracking or radiation
+
+## Fixed
+* Rocket launch pads (regular + orbital) don't accept inserted rocket fuel

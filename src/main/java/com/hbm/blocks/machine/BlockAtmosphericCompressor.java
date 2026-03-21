@@ -7,6 +7,8 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.trait.CBT_Atmosphere;
+import com.hbm.inventory.fluid.FluidType;
+import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntityAtmosphericCompressor;
 import com.hbm.util.BobMathUtil;
@@ -16,6 +18,9 @@ import api.hbm.block.IToolable;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
@@ -106,4 +111,31 @@ public class BlockAtmosphericCompressor extends BlockDummyable implements ILookO
 
 		return true;
 	}
+	
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+		if(player.isSneaking()) {
+			return false;
+		} else if(player.getHeldItem() == null || !(player.getHeldItem().getItem() instanceof IItemFluidIdentifier)) {
+			return false;
+		} else if(world.isRemote) {
+			return true;
+		} else {
+			int[] pos = this.findCore(world, x, y, z);
+			if(pos == null) return true;
+
+			TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
+			if(!(te instanceof TileEntityAtmosphericCompressor)) return true;
+			
+			TileEntityAtmosphericCompressor compressor = (TileEntityAtmosphericCompressor) te;
+			FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, x, y, z, player.getHeldItem());
+			if(compressor.switchGas(type)) {
+				compressor.markDirty();
+				player.addChatComponentMessage(new ChatComponentText("Changed type to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+			}
+			
+			return true;
+		}
+	}
+
 }

@@ -91,16 +91,7 @@ public class ItemDrop extends Item {
 						new ExplosionVNT(entityItem.worldObj, entityItem.posX, entityItem.posY, entityItem.posZ, 5F).makeAmat().explode();
 					}
 				}
-				if (stack.getItem() != null && stack.getItem() == ModItems.particle_aelectron && WeaponConfig.dropCell) {
-					if (!entityItem.worldObj.isRemote) {
-						new ExplosionVNT(entityItem.worldObj, entityItem.posX, entityItem.posY, entityItem.posZ, 1F).makeAmat().explode();
-					}
-				}
-				if (stack.getItem() != null && stack.getItem() == ModItems.particle_aproton && WeaponConfig.dropCell) {
-					if (!entityItem.worldObj.isRemote) {
-						new ExplosionVNT(entityItem.worldObj, entityItem.posX, entityItem.posY, entityItem.posZ, 4F).makeAmat().explode();
-					}
-				}
+
 				if (stack.getItem() != null && stack.getItem() == ModItems.pellet_antimatter && WeaponConfig.dropCell) {
 					if (!entityItem.worldObj.isRemote) {
 						new ExplosionVNT(entityItem.worldObj, entityItem.posX, entityItem.posY, entityItem.posZ, 20F).makeAmat().explode();
@@ -186,7 +177,7 @@ public class ItemDrop extends Item {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool)
 	{
-		if (this == ModItems.cell_antimatter || this == ModItems.particle_aelectron || this == ModItems.particle_aproton) {
+		if (this == ModItems.cell_antimatter) {
 			list.add("Warning: Exposure to matter will");
 			list.add("lead to violent annihilation!");
 		}

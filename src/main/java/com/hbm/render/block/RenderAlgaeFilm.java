@@ -32,7 +32,7 @@ public class RenderAlgaeFilm implements ISimpleBlockRenderingHandler {
 			GL11.glTranslated(0, -0.5, 0);
 			// GL11.glScaled(3.0D, 3.0D, 3.0D);
 			tessellator.startDrawingQuads();
-			ObjUtil.renderWithIcon((WavefrontObject) ResourceManager.algae_film, iicon, tessellator, 0, false);
+			ObjUtil.renderWithIcon(ResourceManager.algae_film, iicon, tessellator, 0, false);
 			tessellator.draw();
 			
 		}
@@ -58,7 +58,7 @@ public class RenderAlgaeFilm implements ISimpleBlockRenderingHandler {
 		if(meta == 3) rotation = 180F / 180F * (float)Math.PI;
 
 		tessellator.addTranslation(x + 0.5F, y, z + 0.5F);
-		ObjUtil.renderWithIcon((WavefrontObject) ResourceManager.algae_film, iicon, tessellator, rotation, true);
+		ObjUtil.renderWithIcon(ResourceManager.algae_film, iicon, tessellator, rotation, true);
 		tessellator.addTranslation(-x - 0.5F, -y, -z - 0.5F);
 
 		return true;

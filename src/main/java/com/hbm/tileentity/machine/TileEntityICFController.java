@@ -1,10 +1,14 @@
 package com.hbm.tileentity.machine;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.TileEntityTickingBase;
 import com.hbm.util.fauxpointtwelve.BlockPos;
 
@@ -18,7 +22,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityICFController extends TileEntityTickingBase implements IEnergyReceiverMK2 {
+public class TileEntityICFController extends TileEntityTickingBase implements IEnergyReceiverMK2, IConfigurableMachine {
 	
 	public long power;
 	public int laserLength;
@@ -27,10 +31,30 @@ public class TileEntityICFController extends TileEntityTickingBase implements IE
 	public int emitterCount;
 	public int capacitorCount;
 	public int turbochargerCount;
+	
+	public static int capacitorPower = 2_500_000;
+	public static int turboPower = 5_000_000;
 
 	protected List<BlockPos> ports = new ArrayList();
 	
 	public boolean assembled;
+
+	@Override
+	public String getConfigName() {
+		return "icfLaser";
+	}
+
+	@Override
+	public void readIfPresent(JsonObject obj) {
+		capacitorPower = IConfigurableMachine.grab(obj, "I:capacitorPower", capacitorPower);
+		turboPower = IConfigurableMachine.grab(obj, "I:turboPower", turboPower);
+	}
+
+	@Override
+	public void writeConfig(JsonWriter writer) throws IOException {
+		writer.name("I:capacitorPower").value(capacitorPower);
+		writer.name("I:turboPower").value(turboPower);
+	}
 	
 	public void setup(HashSet<BlockPos> ports, HashSet<BlockPos> cells, HashSet<BlockPos> emitters, HashSet<BlockPos> capacitors, HashSet<BlockPos> turbochargers) {
 
@@ -225,7 +249,7 @@ public class TileEntityICFController extends TileEntityTickingBase implements IE
 
 	@Override
 	public long getMaxPower() {
-		return (long) (Math.sqrt(capacitorCount) * 2_500_000 + Math.sqrt(Math.min(turbochargerCount, capacitorCount)) * 5_000_000);
+		return (long) (Math.sqrt(capacitorCount) * capacitorPower + Math.sqrt(Math.min(turbochargerCount, capacitorCount)) * turboPower);
 	}
 	
 	AxisAlignedBB bb = null;

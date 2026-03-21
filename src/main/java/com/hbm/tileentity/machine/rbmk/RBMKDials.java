@@ -16,7 +16,8 @@ public class RBMKDials {
 
 	public enum RBMKKeys {
 		KEY_SAVE_DIALS("dialSaveDials", true),
-		KEY_PASSIVE_COOLING("dialPassiveCooling", 1.0),
+		KEY_PASSIVE_COOLING("dialPassiveCooling", 2.5),
+		KEY_PASSIVE_COOLING_INNER("dialPassiveCoolingInner", 0.1),
 		KEY_COLUMN_HEAT_FLOW("dialColumnHeatFlow", 0.2),
 		KEY_FUEL_DIFFUSION_MOD("dialDiffusionMod", 1.0),
 		KEY_HEAT_PROVISION("dialHeatProvision", 0.2),
@@ -29,8 +30,6 @@ public class RBMKDials {
 		KEY_SURGE_MOD("dialControlSurgeMod", 1.0),
 		KEY_FLUX_RANGE("dialFluxRange", 5),
 		KEY_REASIM_RANGE("dialReasimRange", 10),
-		KEY_REASIM_COUNT("dialReasimCount", 6),
-		KEY_REASIM_MOD("dialReasimOutputMod", 1.0),
 		KEY_REASIM_BOILERS("dialReasimBoilers", false),
 		KEY_REASIM_BOILER_SPEED("dialReasimBoilerSpeed", 0.05),
 		KEY_DISABLE_MELTDOWNS("dialDisableMeltdowns", false),
@@ -39,7 +38,8 @@ public class RBMKDials {
 		KEY_ABSORBER_EFFICIENCY("dialAbsorberEfficiency", 1.0),
 		KEY_REFLECTOR_EFFICIENCY("dialReflectorEfficiency", 1.0),
 		KEY_DISABLE_DEPLETION("dialDisableDepletion", false),
-		KEY_DISABLE_XENON("dialDisableXenon", false);
+		KEY_DISABLE_XENON("dialDisableXenon", false),
+		KEY_ABSORBER_HEAT_CONVERSION("dialAbsorberHeatConversion", 0.05);
 
 		public final String keyString;
 		public final Object defValue;
@@ -89,6 +89,7 @@ public class RBMKDials {
 		}
 
 		gameRules.get(RBMKKeys.KEY_PASSIVE_COOLING).add(new Tuple.Pair<>(world, GameRuleHelper.getDoubleMinimum(world, RBMKKeys.KEY_PASSIVE_COOLING, 0.0D)));
+		gameRules.get(RBMKKeys.KEY_PASSIVE_COOLING_INNER).add(new Tuple.Pair<>(world, GameRuleHelper.getDoubleMinimum(world, RBMKKeys.KEY_PASSIVE_COOLING_INNER, 0.0D)));
 		gameRules.get(RBMKKeys.KEY_COLUMN_HEAT_FLOW).add(new Tuple.Pair<>(world, GameRuleHelper.getClampedDouble(world, RBMKKeys.KEY_COLUMN_HEAT_FLOW, 0.0D, 1.0D)));
 		gameRules.get(RBMKKeys.KEY_FUEL_DIFFUSION_MOD).add(new Tuple.Pair<>(world, GameRuleHelper.getDoubleMinimum(world, RBMKKeys.KEY_FUEL_DIFFUSION_MOD, 0.0D)));
 		gameRules.get(RBMKKeys.KEY_HEAT_PROVISION).add(new Tuple.Pair<>(world, GameRuleHelper.getClampedDouble(world, RBMKKeys.KEY_HEAT_PROVISION, 0.0D, 1.0D)));
@@ -101,14 +102,13 @@ public class RBMKDials {
 		gameRules.get(RBMKKeys.KEY_SURGE_MOD).add(new Tuple.Pair<>(world, GameRuleHelper.getDoubleMinimum(world, RBMKKeys.KEY_SURGE_MOD, 0.0D)));
 		gameRules.get(RBMKKeys.KEY_FLUX_RANGE).add(new Tuple.Pair<>(world, GameRuleHelper.getClampedInt(world, RBMKKeys.KEY_FLUX_RANGE, 1, 100)));
 		gameRules.get(RBMKKeys.KEY_REASIM_RANGE).add(new Tuple.Pair<>(world, GameRuleHelper.getClampedInt(world, RBMKKeys.KEY_REASIM_RANGE, 1, 100)));
-		gameRules.get(RBMKKeys.KEY_REASIM_COUNT).add(new Tuple.Pair<>(world, GameRuleHelper.getClampedInt(world, RBMKKeys.KEY_REASIM_COUNT, 1, 24)));
-		gameRules.get(RBMKKeys.KEY_REASIM_MOD).add(new Tuple.Pair<>(world, GameRuleHelper.getDoubleMinimum(world, RBMKKeys.KEY_REASIM_MOD, 0.0D)));
 		gameRules.get(RBMKKeys.KEY_REASIM_BOILERS).add(new Tuple.Pair<>(world, world.getGameRules().getGameRuleBooleanValue(RBMKKeys.KEY_REASIM_BOILERS.keyString) || GeneralConfig.enable528ReasimBoilers));
 		gameRules.get(RBMKKeys.KEY_REASIM_BOILER_SPEED).add(new Tuple.Pair<>(world, GameRuleHelper.getClampedDouble(world, RBMKKeys.KEY_REASIM_BOILER_SPEED, 0.0D, 1.0D)));
 		gameRules.get(RBMKKeys.KEY_DISABLE_MELTDOWNS).add(new Tuple.Pair<>(world, world.getGameRules().getGameRuleBooleanValue(RBMKKeys.KEY_DISABLE_MELTDOWNS.keyString)));
 		gameRules.get(RBMKKeys.KEY_ENABLE_MELTDOWN_OVERPRESSURE).add(new Tuple.Pair<>(world, world.getGameRules().getGameRuleBooleanValue(RBMKKeys.KEY_ENABLE_MELTDOWN_OVERPRESSURE.keyString)));
 		gameRules.get(RBMKKeys.KEY_MODERATOR_EFFICIENCY).add(new Tuple.Pair<>(world, GameRuleHelper.getClampedDouble(world, RBMKKeys.KEY_MODERATOR_EFFICIENCY, 0.0D, 1.0D)));
 		gameRules.get(RBMKKeys.KEY_ABSORBER_EFFICIENCY).add(new Tuple.Pair<>(world, GameRuleHelper.getClampedDouble(world, RBMKKeys.KEY_ABSORBER_EFFICIENCY, 0.0D, 1.0D)));
+		gameRules.get(RBMKKeys.KEY_ABSORBER_HEAT_CONVERSION).add(new Tuple.Pair<>(world, GameRuleHelper.getClampedDouble(world, RBMKKeys.KEY_ABSORBER_HEAT_CONVERSION, 0.0D, 1.0D)));
 		gameRules.get(RBMKKeys.KEY_REFLECTOR_EFFICIENCY).add(new Tuple.Pair<>(world, GameRuleHelper.getClampedDouble(world, RBMKKeys.KEY_REFLECTOR_EFFICIENCY, 0.0D, 1.0D)));
 		gameRules.get(RBMKKeys.KEY_DISABLE_DEPLETION).add(new Tuple.Pair<>(world, world.getGameRules().getGameRuleBooleanValue(RBMKKeys.KEY_DISABLE_DEPLETION.keyString)));
 		gameRules.get(RBMKKeys.KEY_DISABLE_XENON).add(new Tuple.Pair<>(world, world.getGameRules().getGameRuleBooleanValue(RBMKKeys.KEY_DISABLE_XENON.keyString)));
@@ -155,12 +155,21 @@ public class RBMKDials {
 	}
 
 	/**
-	 * Returns the amount of heat per tick removed from components passively
+	 * Returns the amount of heat per tick removed from components passively, when at an edge
 	 * @param world
 	 * @return >0
 	 */
 	public static double getPassiveCooling(World world) {
 		return (double) getGameRule(world, RBMKKeys.KEY_PASSIVE_COOLING);
+	}
+
+	/**
+	 * Returns the amount of heat per tick removed from components passively, when surrounded by other components
+	 * @param world
+	 * @return >0
+	 */
+	public static double getPassiveCoolingInner(World world) {
+		return (double) getGameRule(world, RBMKKeys.KEY_PASSIVE_COOLING_INNER);
 	}
 
 	/**
@@ -275,24 +284,6 @@ public class RBMKDials {
 	}
 
 	/**
-	 * Simple integer that decides how many neutrons are created from ReaSim fuel rods.
-	 * @param world
-	 * @return [1;24]
-	 */
-	public static int getReaSimCount(World world) {
-		return (int) getGameRule(world, RBMKKeys.KEY_REASIM_COUNT);
-	}
-
-	/**
-	 * Returns a modifier for the outgoing flux of individual streams from the ReaSim fuel rod to compensate for the potentially increased stream count.
-	 * @param world
-	 * @return >0
-	 */
-	public static double getReaSimOutputMod(World world) {
-		return (double) getGameRule(world, RBMKKeys.KEY_REASIM_MOD);
-	}
-
-	/**
 	 * Whether or not all components should act like boilers with dedicated in/outlet blocks
 	 * @param world
 	 * @return
@@ -345,6 +336,15 @@ public class RBMKDials {
 	 */
 	public static double getAbsorberEfficiency(World world) {
 		return (double) getGameRule(world, RBMKKeys.KEY_ABSORBER_EFFICIENCY);
+	}
+
+	/**
+	 * How many °C are generated per one flux that hits an absorber.
+	 * @param world
+	 * @return
+	 */
+	public static double getAbsorberHeatConversion(World world) {
+		return (double) getGameRule(world, RBMKKeys.KEY_ABSORBER_HEAT_CONVERSION);
 	}
 
 	/**

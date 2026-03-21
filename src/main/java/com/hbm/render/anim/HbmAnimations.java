@@ -1,5 +1,6 @@
 package com.hbm.render.anim;
 
+import com.hbm.interfaces.NotableComments;
 import com.hbm.util.Clock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,6 +8,7 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
+@NotableComments
 public class HbmAnimations {
 
 	//in flans mod and afaik also MW, there's an issue that there is only one
@@ -18,6 +20,7 @@ public class HbmAnimations {
 	//animation is playing, though this will cancel the animation entirely.
 	public static final Animation[][] hotbar = new Animation[9][8]; //now with 8 parallel rails per slot! time to get railed!
 
+	/** Keyframe-based animation system primarily used for guns, not to be confused with Drillgon's animloader system. */
 	public static class Animation {
 
 		//the "name" of the animation slot. if the item has a different key than

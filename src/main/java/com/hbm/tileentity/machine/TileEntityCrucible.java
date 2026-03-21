@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.config.ServerConfig;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
 import com.hbm.handler.threading.PacketThreading;
@@ -383,9 +384,9 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
 			CrucibleRecipe recipe = getLoadedRecipe();
 
 			for(MaterialStack material : materials) {
-				boolean mainStack = recipe != null && (getQuantaFromType(recipe.input, material.material) > 0 || getQuantaFromType(recipe.output, material.material) > 0);
+				boolean recipeMaterial = recipe != null && (getQuantaFromType(recipe.input, material.material) > 0 || getQuantaFromType(recipe.output, material.material) > 0);
 
-				if(mainStack) {
+				if((recipe == null && !ServerConfig.LEGACY_CRUCIBLE_RULES.get()) || recipeMaterial) {
 					this.addToStack(this.recipeStack, material);
 				} else {
 					this.addToStack(this.wasteStack, material);
@@ -455,8 +456,7 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
 		List<MaterialStack> materials = Mats.getSmeltingMaterialsFromItem(stack);
 
 		//if there's no materials in there at all, don't smelt
-		if(materials.isEmpty())
-			return false;
+		if(materials.isEmpty()) return false;
 		CrucibleRecipe recipe = getLoadedRecipe();
 
 		//needs to be true, will always be true if there's no recipe loaded
@@ -472,7 +472,7 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
 			//if no recipe is loaded, everything will land in the waste stack
 			int recipeInputRequired = recipe != null ? getQuantaFromType(recipe.input, mat.material) : 0;
 
-			//this allows pouring the ouput material back into the crucible
+			//this allows pouring the output material back into the crucible
 			if(recipe != null && getQuantaFromType(recipe.output, mat.material) > 0) {
 				recipeAmount += mat.amount;
 				matchesRecipe = true;
@@ -480,8 +480,13 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
 			}
 
 			if(recipeInputRequired == 0) {
-				//if this type isn't required by the recipe, add it to the waste stack
-				wasteAmount += mat.amount;
+				// if no recipe is set and legacy support is turned off, throw everything into the recipe stack
+				if(recipe == null && !ServerConfig.LEGACY_CRUCIBLE_RULES.get()) {
+					recipeAmount += mat.amount;
+				} else {
+					//if this type isn't required by the recipe, add it to the waste stack
+					wasteAmount += mat.amount;
+				}
 			} else {
 
 				//the maximum is the recipe's ratio scaled up to the recipe stack's capacity
@@ -489,7 +494,6 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
 				int amountStored = getQuantaFromType(recipeStack, mat.material);
 
 				matchesRecipe = true;
-
 				recipeAmount += mat.amount;
 
 				//if the amount of that input would exceed the amount dictated by the recipe, return false

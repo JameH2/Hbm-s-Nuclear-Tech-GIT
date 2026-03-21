@@ -283,6 +283,7 @@ public class TileEntityMachineTurbineGas extends TileEntityMachineBase implement
 		}
 
 		if(counter == 580) {
+			counter = 225; // ensures it shuts down properly when done immediately after startup
 			state = 1;
 		}
 	}
@@ -646,14 +647,14 @@ public class TileEntityMachineTurbineGas extends TileEntityMachineBase implement
 	@Callback(direct = true, limit = 4)
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] start(Context context, Arguments args) {
-		state = -1;
+		if (state == 0) state = -1;
 		return new Object[] {};
 	}
 
 	@Callback(direct = true, limit = 4)
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] stop(Context context, Arguments args) {
-		state = 0;
+		if (state == 1) state = 0;
 		return new Object[] {};
 	}
 

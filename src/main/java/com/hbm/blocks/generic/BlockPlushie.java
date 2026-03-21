@@ -160,10 +160,11 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 		NONE(		"NONE",				null, null),
 		YOMI(		"Yomi",				"Hi! Can I be your rabbit friend?", "hbm:block.squeakyToy"),
 		NUMBERNINE(	"Number Nine",		"None of y'all deserve coal.", "hbm:block.squeakyToy"),
-		HUNDUN(		"Hundun",				"混沌", "hbm:block.hunduns_magnificent_howl"),
+		HUNDUN(		"Hundun",			"混沌", "hbm:block.hunduns_magnificent_howl"),
 		TETO(		"Kasane Teto",		"please help I've been trapped in her basement for da-", "hbm:block.teto"),
 		MIKU(		"Hatsune Miku",		"In your wifi, and your heart.", "hbm:block.miku"),
-		NERU(		"Akita Neru",			"Careful, she might electrocute you.", "hbm:block.akita");
+		NERU(		"Akita Neru",		"Careful, she might electrocute you.", "hbm:block.akita"),
+		DERG(		"Dragon",			"Squeeze him.", "hbm:block.squeakyToy");
 
 		public String label;
 		public String inscription;

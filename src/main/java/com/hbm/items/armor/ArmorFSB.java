@@ -9,12 +9,16 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.extprop.HbmLivingProps;
+import com.hbm.handler.HazmatRegistry;
 import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.NotableComments;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
+import com.hbm.util.ArmorRegistry.HazardClass;
+import com.hbm.util.ArmorUtil;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ShadyUtil;
+import com.hbm.util.Tuple.Pair;
 import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -64,6 +68,7 @@ public class ArmorFSB extends ItemArmor implements IArmorDisableModel {
 	public String jump;
 	public String fall;
 	public boolean canSeal;
+	public double radResist = 0;
 
 	public ArmorFSB(ArmorMaterial material, int slot, String texture) {
 		super(material, 0, slot);
@@ -141,6 +146,22 @@ public class ArmorFSB extends ItemArmor implements IArmorDisableModel {
 		return this;
 	}
 
+	public ArmorFSB setHazardClass(HazardClass... classes) {
+		ArmorUtil.external.add(new Pair(this, classes));
+		return this;
+	}
+
+	public ArmorFSB setRadResist(double fullSet) {
+		this.radResist = fullSet;
+		if(fullSet > 0) {
+			double mult = armorType == 0 ? HazmatRegistry.helmet :
+				armorType == 1 ? HazmatRegistry.chest : 
+				armorType == 2 ? HazmatRegistry.legs : HazmatRegistry.boots;
+			HazmatRegistry.external.add(new Pair(this, fullSet * mult));
+		}
+		return this;
+	}
+
 	public ArmorFSB cloneStats(ArmorFSB original) {
 
 		//lists aren't being modified after instantiation, so there's no need to dereference
@@ -157,6 +178,7 @@ public class ArmorFSB extends ItemArmor implements IArmorDisableModel {
 		this.jump = original.jump;
 		this.fall = original.fall;
 		this.canSeal = original.canSeal;
+		this.setRadResist(original.radResist);
 		//overlay doesn't need to be copied because it's helmet exclusive
 		return this;
 	}
@@ -339,7 +361,7 @@ public class ArmorFSB extends ItemArmor implements IArmorDisableModel {
 			Block block = player.worldObj.getBlock(px, py, pz);
 
 			if(block.getMaterial() != Material.air && player.getEntityData().getFloat("hfr_nextStepDistance") <= distanceWalkedOnStepModified.getFloat(player))
-				player.playSound(sound, 1.0F, 1.0F);
+				player.playSound(sound, 0.25F, 1.0F);
 
 			player.getEntityData().setFloat("hfr_nextStepDistance", nextStepDistance.getFloat(player));
 
@@ -354,7 +376,7 @@ public class ArmorFSB extends ItemArmor implements IArmorDisableModel {
 			ArmorFSB chestplate = (ArmorFSB) player.inventory.armorInventory[2].getItem();
 
 			if(chestplate.jump != null)
-				player.playSound(chestplate.jump, 1.0F, 1.0F);
+				player.playSound(chestplate.jump, 0.5F, 1.0F);
 		}
 	}
 
@@ -365,9 +387,6 @@ public class ArmorFSB extends ItemArmor implements IArmorDisableModel {
 			ArmorFSB chestplate = (ArmorFSB) player.inventory.armorInventory[2].getItem();
 
 			if(chestplate.hardLanding && fallDistance > 10) {
-
-				// player.playSound(Block.soundTypeAnvil.func_150496_b(), 2.0F,
-				// 0.5F);
 
 				List<Entity> entities = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(3, 0, 3));
 
@@ -388,11 +407,10 @@ public class ArmorFSB extends ItemArmor implements IArmorDisableModel {
 						e.attackEntityFrom(DamageSource.causePlayerDamage(player).setDamageBypassesArmor(), (float) (intensity * 10));
 					}
 				}
-				// return;
 			}
 
 			if(chestplate.fall != null)
-				player.playSound(chestplate.fall, 1.0F, 1.0F);
+				player.playSound(chestplate.fall, 0.5F, 1.0F);
 		}
 	}
 

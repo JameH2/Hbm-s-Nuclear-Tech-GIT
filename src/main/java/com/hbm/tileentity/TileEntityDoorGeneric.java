@@ -9,6 +9,7 @@ import com.hbm.blocks.generic.BlockDoorGeneric;
 import com.hbm.handler.atmosphere.IBlockSealable;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
+import com.hbm.render.anim.HbmAnimations.Animation;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.machine.TileEntityLockableBase;
 import com.hbm.util.fauxpointtwelve.BlockPos;
@@ -22,10 +23,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityDoorGeneric extends TileEntityLockableBase   {
+public class TileEntityDoorGeneric extends TileEntityLockableBase {
+
+	public static final byte STATE_CLOSED =		0;
+	public static final byte STATE_OPEN =		1;
+	public static final byte STATE_CLOSING =	2;
+	public static final byte STATE_OPENING =	3;
 
 	//0: closed, 1: open, 2: closing, 3: opening
-	public byte state = 0;
+	public byte state = STATE_CLOSED;
 	protected DoorDecl doorType;
 	public int openTicks = 0;
 	public long animStartTime = 0;
@@ -37,19 +43,23 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase   {
 
 	private AudioWrapper audio;
 	private AudioWrapper audio2;
+	
+	public Animation currentAnimation;
 
 	@Override
 	public void updateEntity() {
-		if(state == 3) {
+		
+		if(getDoorType().onDoorUpdate() != null) {
+			getDoorType().onDoorUpdate().accept(this);
+		}
+		
+		if(state == STATE_OPENING) {
 			openTicks++;
-			if(openTicks >= getDoorType().timeToOpen()) {
-				openTicks = getDoorType().timeToOpen();
-			}
-		} else if(state == 2) {
+			if(openTicks >= getDoorType().timeToOpen()) openTicks = getDoorType().timeToOpen();
+			
+		} else if(state == STATE_CLOSING) {
 			openTicks--;
-			if(openTicks <= 0) {
-				openTicks = 0;
-			}
+			if(openTicks <= 0) openTicks = 0;
 		}
 
 		if(!worldObj.isRemote) {
@@ -59,7 +69,7 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase   {
 			int[][] ranges = getDoorType().getDoorOpenRanges();
 			ForgeDirection dir = ForgeDirection.getOrientation(getBlockMetadata() - BlockDummyable.offset);
 
-			if(state == 3) {
+			if(state == STATE_OPENING) {
 
 				for(int i = 0; i < ranges.length; i++) {
 
@@ -95,7 +105,7 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase   {
 					}
 				}
 
-			} else if(state == 2) {
+			} else if(state == STATE_CLOSING) {
 
 				for(int i = 0; i < ranges.length; i++) {
 
@@ -132,20 +142,20 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase   {
 					}
 				}
 			}
-			if(state == 3 && openTicks == getDoorType().timeToOpen()) {
-				state = 1;
+			if(state == STATE_OPENING && openTicks == getDoorType().timeToOpen()) {
+				state = STATE_OPEN;
 				((IBlockSealable)blockType).updateSealedState(worldObj, xCoord, yCoord, zCoord);
 			}
-			if(state == 2 && openTicks == 0) {
-				state = 0;
+			if(state == STATE_CLOSING && openTicks == 0) {
+				state = STATE_CLOSED;
 				((IBlockSealable)blockType).updateSealedState(worldObj, xCoord, yCoord, zCoord);
 			}
 
 			this.networkPackNT(100);
 
-			if(redstonePower == -1 && state == 1) {
+			if(redstonePower == -1 && state == STATE_OPEN) {
 				tryToggle(-1);
-			} else if(redstonePower > 0 && state == 0) {
+			} else if(redstonePower > 0 && state == STATE_CLOSED) {
 				tryToggle(-1);
 			}
 			if(redstonePower == -1) {
@@ -164,7 +174,7 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase   {
 	@Override
 	public void deserialize(ByteBuf buf) {
 		handleNewState(buf.readByte());
-		setSkinIndex(buf.readByte());
+		skinIndex = buf.readByte();
 		shouldUseBB = buf.readBoolean();
 	}
 
@@ -192,36 +202,31 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase   {
 
 		if(this.isLocked() && player == null) return false;
 
-		if(state == 0 && redstonePower > 0) {
+		if(state == STATE_CLOSED && redstonePower > 0) {
 			//Redstone "power locks" doors, just like minecraft iron doors
 			return false;
 		}
-		if(this.state == 0) {
-			if(!worldObj.isRemote && canAccess(player)) {
-				this.state = 3;
-			}
+		
+		if(this.state == STATE_CLOSED) {
+			if(!worldObj.isRemote && canAccess(player)) this.state = STATE_OPENING;
 			return true;
-		} else if(this.state == 1) {
-			if(!worldObj.isRemote && canAccess(player)) {
-				this.state = 2;
-			}
+			
+		} else if(this.state == STATE_OPEN) {
+			if(!worldObj.isRemote && canAccess(player)) this.state = STATE_CLOSING;
 			return true;
 		}
 		return false;
 	}
 
 	public boolean tryToggle(int passcode) {
-		if(this.isLocked() && passcode != this.lock)
-			return false;
-		if(this.state == 0) {
-			if(!worldObj.isRemote) {
-				this.state = 3;
-			}
+		if(this.isLocked() && passcode != this.lock) return false;
+		
+		if(this.state == STATE_CLOSED) {
+			if(!worldObj.isRemote) this.state = STATE_OPENING;
 			return true;
-		} else if(this.state == 1) {
-			if(!worldObj.isRemote) {
-				this.state = 2;
-			}
+			
+		} else if(this.state == STATE_OPEN) {
+			if(!worldObj.isRemote) this.state = STATE_CLOSING;
 			return true;
 		}
 		return false;
@@ -233,7 +238,7 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase   {
 		if(this.state != state) {
 			DoorDecl doorType = getDoorType();
 
-			if(this.state == 0 && state == 3) { // Door transitioning to open
+			if(this.state == STATE_CLOSED && state == STATE_OPENING) { // Door transitioning to open
 				if(audio != null) {
 					audio.stopSound();
 					audio.setKeepAlive(0);
@@ -256,7 +261,7 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase   {
 				}
 			}
 
-			if(this.state == 1 && state == 2) { // Door transitioning to closed
+			if(this.state == STATE_OPEN && state == STATE_CLOSING) { // Door transitioning to closed
 				if(audio != null) {
 					audio.stopSound();
 				}
@@ -278,7 +283,7 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase   {
 				}
 			}
 
-			if(state == 1 || state == 0) { // Door finished any transition
+			if(state == STATE_OPEN || state == STATE_CLOSED) { // Door finished any transition
 				if(audio != null) {
 					audio.stopSound();
 					audio = null;
@@ -289,13 +294,13 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase   {
 				}
 			}
 
-			if(this.state == 3 && state == 1) { // Door finished transitioning to open
+			if(this.state == STATE_OPENING && state == STATE_OPEN) { // Door finished transitioning to open
 				if(doorType.getOpenSoundEnd() != null) {
 					worldObj.playSound(xCoord, yCoord, zCoord, doorType.getOpenSoundEnd(), doorType.getSoundVolume(), 1F, false);
 				}
 			}
 
-			if(this.state == 2 && state == 0) { // Door finished transitioning to closed
+			if(this.state == STATE_CLOSING && state == STATE_CLOSED) { // Door finished transitioning to closed
 				if(doorType.getCloseSoundEnd() != null) {
 					worldObj.playSound(xCoord, yCoord, zCoord, doorType.getCloseSoundEnd(), doorType.getSoundVolume(), 1F, false);
 				}
@@ -303,7 +308,11 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase   {
 
 
 			this.state = state;
-			if(state > 1) animStartTime = System.currentTimeMillis();
+			
+			if(state == STATE_OPENING || state == STATE_CLOSING) {
+				animStartTime = System.currentTimeMillis();
+				currentAnimation = this.doorType.getSEDNAAnim(state, this.skinIndex);
+			}
 		}
 	}
 
@@ -311,23 +320,21 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase   {
 		return skinIndex;
 	}
 
-	public boolean setSkinIndex(byte skinIndex) {
-		if(!getDoorType().hasSkins())
-			return false;
-		if(getDoorType().getSkinCount() < skinIndex) {
-			return false;
-		}
-		this.skinIndex = skinIndex;
+	public boolean cycleSkinIndex() {
+		if(!getDoorType().hasSkins()) return false;
+		this.skinIndex++;
+		this.skinIndex %= getDoorType().getSkinCount();
+		this.markDirty();
 		return true;
 	}
 
 	/**Useful for logic block interactions, as a way to close/open doors**/
 	public void open(){
-		if(state == 0) state = 3;
+		if(state == STATE_CLOSED) state = STATE_OPENING;
 	}
 
 	public void close() {
-		if(state == 1) state = 2;
+		if(state == STATE_OPEN) state = STATE_CLOSING;
 	}
 
 	@Override

@@ -473,6 +473,7 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 		if(index == 0 && !(stack.getItem() instanceof ItemCustomRocket)) return false;
 		if(index == 1 && !(stack.getItem() instanceof ItemVOTVdrive)) return false;
 		if(index == 2 && !(stack.getItem() instanceof IBatteryItem) && stack.getItem() != ModItems.battery_creative) return false;
+		if(index == 3 && stack.getItem() != ModItems.rocket_fuel) return false;
 		return true;
 	}
 

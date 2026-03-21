@@ -2,12 +2,16 @@ package com.hbm.render.tileentity;
 
 import org.lwjgl.opengl.GL11;
 
+import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.network.TileEntityConnector;
 
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.client.IItemRenderer;
 
-public class RenderConnector extends RenderPylonBase {
+public class RenderConnector extends RenderPylonBase implements IItemRendererProvider {
 
 	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float interp) {
@@ -36,5 +40,27 @@ public class RenderConnector extends RenderPylonBase {
 		GL11.glPushMatrix();
 		this.renderLinesGeneric(con, x, y, z);
 		GL11.glPopMatrix();
+	}
+
+	@Override
+	public Item getItemForRenderer() {
+		return Item.getItemFromBlock(ModBlocks.red_connector);
+	}
+
+	@Override
+	public IItemRenderer getRenderer() {
+		return new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(0, -3.5, 0);
+				double scale = 7;
+				GL11.glScaled(scale, scale, scale);
+			}
+			public void renderCommon() {
+				GL11.glScaled(2, 2, 2);
+				GL11.glShadeModel(GL11.GL_SMOOTH);
+				bindTexture(ResourceManager.connector_tex);
+				ResourceManager.connector.renderAll();
+				GL11.glShadeModel(GL11.GL_FLAT);
+			}};
 	}
 }

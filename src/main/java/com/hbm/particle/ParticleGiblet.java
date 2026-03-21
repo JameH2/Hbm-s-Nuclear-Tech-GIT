@@ -21,14 +21,17 @@ import net.minecraft.world.World;
 @SideOnly(Side.CLIENT)
 public class ParticleGiblet extends EntityFX {
 
-	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/particle/meat.png");
+	private static final ResourceLocation textureMeat = new ResourceLocation(RefStrings.MODID + ":textures/particle/meat.png");
+	private static final ResourceLocation textureSlime = new ResourceLocation(RefStrings.MODID + ":textures/particle/slime.png");
+	private static final ResourceLocation textureMetal = new ResourceLocation(RefStrings.MODID + ":textures/particle/metal.png");
 	
 	private TextureManager theRenderEngine;
 	
 	private float momentumYaw;
 	private float momentumPitch;
+	private int gibType;
 
-	public ParticleGiblet(TextureManager texman, World world, double x, double y, double z, double mX, double mY, double mZ) {
+	public ParticleGiblet(TextureManager texman, World world, double x, double y, double z, double mX, double mY, double mZ, int gibType) {
 		super(world, x, y, z);
 		this.motionX = mX;
 		this.motionY = mY;
@@ -36,6 +39,9 @@ public class ParticleGiblet extends EntityFX {
 		this.theRenderEngine = texman;
 		this.particleMaxAge = 140 + rand.nextInt(20);
 		this.particleGravity = 2F;
+		this.gibType = gibType;
+		
+		if(gibType == 2) this.particleGravity *= 2;
 
 		this.momentumYaw = (float) rand.nextGaussian() * 15F;
 		this.momentumPitch = (float) rand.nextGaussian() * 15F;
@@ -57,7 +63,9 @@ public class ParticleGiblet extends EntityFX {
 			this.rotationPitch += this.momentumPitch;
 			this.rotationYaw += this.momentumYaw;
 			
-			EntityFX fx = new net.minecraft.client.particle.EntityBlockDustFX(worldObj, posX, posY, posZ, 0, 0, 0, Blocks.redstone_block, 0);
+			if(gibType == 2) return;
+			
+			EntityFX fx = new net.minecraft.client.particle.EntityBlockDustFX(worldObj, posX, posY, posZ, 0, 0, 0, gibType == 1 ? Blocks.melon_block : Blocks.redstone_block, 0);
 			ReflectionHelper.setPrivateValue(EntityFX.class, fx, 20 + rand.nextInt(20), "particleMaxAge", "field_70547_e");
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 		}
@@ -69,7 +77,8 @@ public class ParticleGiblet extends EntityFX {
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
-		this.theRenderEngine.bindTexture(texture);
+		
+		this.theRenderEngine.bindTexture(gibType == 2 ? textureMetal : gibType == 1 ? textureSlime : textureMeat);
 		
 		/* use this instead of EntityFX.interpPosN since interpPosN isn't set up correctly for the current tick for layer 3 particles */
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;

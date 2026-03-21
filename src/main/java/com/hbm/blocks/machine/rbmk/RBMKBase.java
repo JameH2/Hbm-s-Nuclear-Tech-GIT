@@ -2,12 +2,12 @@ package com.hbm.blocks.machine.rbmk;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ILookOverlay;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.handler.neutron.NeutronNodeWorld;
 import com.hbm.handler.neutron.RBMKNeutronHandler.RBMKNeutronNode;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemRBMKLid;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKBase;
@@ -20,12 +20,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -34,7 +36,18 @@ public abstract class RBMKBase extends BlockDummyable implements IToolable, ILoo
 
 	public static boolean dropLids = true;
 	public static boolean digamma = false;
-	public ResourceLocation coverTexture;
+
+	public static final int LID_NONE = 0;
+	public static final int LID_STANDARD = 1;
+	public static final int LID_GLASS = 2;
+	public static int renderLid = LID_NONE;
+	public static boolean overrideOnlyRenderSides = false;
+
+	public IIcon coverTextureTop;
+	public IIcon coverTextureSide;
+	public IIcon glassTextureTop;
+	public IIcon glassTextureSide;
+	public IIcon textureTop;
 
 	protected RBMKBase() {
 		super(Material.iron);
@@ -42,11 +55,41 @@ public abstract class RBMKBase extends BlockDummyable implements IToolable, ILoo
 		this.setResistance(30F);
 	}
 
+	@Override public boolean isOpaqueCube() { return true; }
+	@Override public boolean renderAsNormalBlock() { return true; }
+	
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
+		if(overrideOnlyRenderSides && side < 2) return false;
+		if(renderLid != LID_NONE && side > 1) return true;
+		return super.shouldSideBeRendered(world, x, y, z, side);
+	}
+	
+	public boolean hasOwnLid() {
+		return this == ModBlocks.rbmk_control || this == ModBlocks.rbmk_control_auto || this == ModBlocks.rbmk_control_mod ||
+				this == ModBlocks.rbmk_control_reasim || this == ModBlocks.rbmk_control_reasim_auto;
+	}
+
 	@Override
-	public Block setBlockTextureName(String texture) {
-		this.textureName = texture;
-		this.coverTexture = new ResourceLocation(RefStrings.MODID + ":textures/blocks/" + (texture.split(":")[1]) + ".png");
-		return this;
+	@SideOnly(Side.CLIENT)
+	public void registerBlockIcons(IIconRegister reg) {
+		this.blockIcon = reg.registerIcon(this.getTextureName() + "_side");
+		this.textureTop = reg.registerIcon(this.getTextureName() + "_top");
+		if(hasOwnLid()) return;
+		this.coverTextureTop = reg.registerIcon(this.getTextureName() + "_cover_top");
+		this.coverTextureSide = reg.registerIcon(this.getTextureName() + "_cover_side");
+		this.glassTextureTop = reg.registerIcon(this.getTextureName() + "_glass_top");
+		this.glassTextureSide = reg.registerIcon(this.getTextureName() + "_glass_side");
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(int side, int meta) {
+		if(!hasOwnLid()) {
+			if(renderLid == LID_STANDARD) return side == 0 || side == 1 ? coverTextureTop : coverTextureSide;
+			if(renderLid == LID_GLASS) return side == 0 || side == 1 ? glassTextureTop : glassTextureSide;
+		}
+		return side == 0 || side == 1 ? textureTop : blockIcon;
 	}
 
 	@Override
@@ -61,34 +104,24 @@ public abstract class RBMKBase extends BlockDummyable implements IToolable, ILoo
 
 	public boolean openInv(World world, int x, int y, int z, EntityPlayer player) {
 
-		if(world.isRemote) {
-			return true;
-		}
+		if(world.isRemote) return true;
 
 		int[] pos = this.findCore(world, x, y, z);
-
-		if(pos == null)
-			return false;
+		if(pos == null) return false;
 
 		TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
-
-		if(!(te instanceof TileEntityRBMKBase))
-			return false;
+		if(!(te instanceof TileEntityRBMKBase)) return false;
 
 		TileEntityRBMKBase rbmk = (TileEntityRBMKBase) te;
 
 		if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemRBMKLid) {
-
-			if(!rbmk.hasLid())
-				return false;
+			if(!rbmk.hasLid()) return false;
 		}
 
-		if(!player.isSneaking()) {
+		if(!player.isSneaking())
 			FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, pos[0], pos[1], pos[2]);
-			return true;
-		} else {
-			return true;
-		}
+		
+		return true;
 	}
 
 	@Override
@@ -124,6 +157,12 @@ public abstract class RBMKBase extends BlockDummyable implements IToolable, ILoo
 	public static final ForgeDirection DIR_NO_LID = ForgeDirection.NORTH;
 	public static final ForgeDirection DIR_NORMAL_LID = ForgeDirection.EAST;
 	public static final ForgeDirection DIR_GLASS_LID = ForgeDirection.SOUTH;
+	
+	public static int metaToLid(int meta) {
+		if(meta - 10 == DIR_NORMAL_LID.ordinal()) return LID_STANDARD;
+		if(meta - 10 == DIR_GLASS_LID.ordinal()) return LID_GLASS;
+		return LID_NONE;
+	}
 
 	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
@@ -186,7 +225,9 @@ public abstract class RBMKBase extends BlockDummyable implements IToolable, ILoo
 							world.spawnEntityInWorld(new EntityItem(world, pos[0] + 0.5, pos[1] + 0.5 + RBMKDials.getColumnHeight(world), pos[2] + 0.5, new ItemStack(ModItems.rbmk_lid_glass)));
 						}
 
+						rbmk.explodeOnBroken = false;
 						world.setBlockMetadataWithNotify(pos[0], pos[1], pos[2], DIR_NO_LID.ordinal() + offset, 3);
+						rbmk.explodeOnBroken = true;
 					}
 
 					return true;

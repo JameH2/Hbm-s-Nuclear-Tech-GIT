@@ -1,10 +1,14 @@
 package com.hbm.tileentity.machine;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.util.fauxpointtwelve.BlockPos;
 import com.hbm.blocks.generic.BlockTallPlant.EnumTallFlower;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.fluid.FluidType;
@@ -38,6 +42,22 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityMachineAutosaw extends TileEntityLoadedBase implements IBufPacketReceiver, IFluidStandardReceiver, IFluidCopiable {
+
+	private static final int MIN_DIST = 2;
+	private static final int MAX_DIST = 9;
+
+	private static final int FELL_HORIZONTAL_RANGE = 10;
+	private static final int FELL_BFS_RADIUS = MAX_DIST + FELL_HORIZONTAL_RANGE;
+	private static final int FELL_VERTICAL_RANGE = 32;
+	private static final int FELL_MAX_BASE_DEPTH = FELL_VERTICAL_RANGE / 2;
+
+	// 18-connectivity: 6 face-adjacent + 12 edge-adjacent (exactly one coord diff is 0)
+	private static final int[][] EIGHTEEN_DIRS = {
+		{1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1},
+		{1, 1, 0}, {1, -1, 0}, {-1, 1, 0}, {-1, -1, 0},
+		{1, 0, 1}, {1, 0, -1}, {-1, 0, 1}, {-1, 0, -1},
+		{0, 1, 1}, {0, 1, -1}, {0, -1, 1}, {0, -1, -1}
+	};
 
 	public static final HashSet<FluidType> acceptedFuels = new HashSet();
 
@@ -134,11 +154,11 @@ public class TileEntityMachineAutosaw extends TileEntityLoadedBase implements IB
 						double rotationYawRads = Math.toRadians((rotationYaw + 270) % 360);
 
 						outer:
-						for(int dx = -9; dx <= 9; dx++) {
-							for(int dz = -9; dz <= 9; dz++) {
+						for(int dx = -MAX_DIST; dx <= MAX_DIST; dx++) {
+							for(int dz = -MAX_DIST; dz <= MAX_DIST; dz++) {
 								int sqrDst = dx * dx + dz * dz;
 
-								if(sqrDst <= 4 || sqrDst > 81)
+								if(sqrDst <= MIN_DIST * MIN_DIST || sqrDst > MAX_DIST * MAX_DIST)
 									continue;
 								
 								double angle = Math.atan2(dz, dx);
@@ -316,39 +336,165 @@ public class TileEntityMachineAutosaw extends TileEntityLoadedBase implements IB
 		worldObj.setBlock(x, y, z, replacementBlock, replacementMeta, 3);
 	}
 
-	protected void fellTree(int x, int y, int z) {
+	protected void fellTree(int hitX, int hitY, int hitZ) {
 
-		if(worldObj.getBlock(x, y - 1, z).getMaterial() == Material.wood) {
-			y--;
-			if(worldObj.getBlock(x, y - 2, z).getMaterial() == Material.wood) {
-				y--;
+		int sawY = hitY;
+		BlockPos hitCol = new BlockPos(hitX, -1, hitZ);
+
+		// Step A: Scan working area for trunks (column -> trunk base pos)
+		HashMap<BlockPos, BlockPos> trunks = new HashMap<BlockPos, BlockPos>();
+
+		for(int dx = -MAX_DIST; dx <= MAX_DIST; dx++) {
+			for(int dz = -MAX_DIST; dz <= MAX_DIST; dz++) {
+				if(dx * dx + dz * dz > MAX_DIST * MAX_DIST) {
+					continue;
+				}
+
+				int colX = xCoord + dx;
+				int colZ = zCoord + dz;
+
+				if(worldObj.getBlock(colX, sawY, colZ).getMaterial() != Material.wood) {
+					continue;
+				}
+
+				int baseY = sawY;
+				while(sawY - baseY < FELL_MAX_BASE_DEPTH && worldObj.getBlock(colX, baseY - 1, colZ).getMaterial() == Material.wood) {
+					baseY--;
+				}
+
+				if(!canSupportSapling(worldObj, colX, baseY - 1, colZ)) {
+					continue;
+				}
+
+				trunks.put(new BlockPos(colX, -1, colZ), new BlockPos(colX, baseY, colZ));
 			}
 		}
 
-		int meta = -1;
+		// Always include the hit position's trunk
+		if(!trunks.containsKey(hitCol)) {
+			int baseY = hitY;
+			while(sawY - baseY < FELL_MAX_BASE_DEPTH && worldObj.getBlock(hitX, baseY - 1, hitZ).getMaterial() == Material.wood) {
+				baseY--;
+			}
+			trunks.put(hitCol, new BlockPos(hitX, baseY, hitZ));
+		}
 
-		for(int i = y; i < y + 10; i++) {
+		// Step B: 0-1 BFS from all trunks
+		// Vertical neighbors (same column) have distance 0, horizontal neighbors have distance 1
+		// blockOwner: block pos -> column of owning trunk
+		HashMap<BlockPos, BlockPos> blockOwner = new HashMap<BlockPos, BlockPos>();
+		ArrayDeque<BlockPos[]> deque = new ArrayDeque<BlockPos[]>();
+		int hitColCount = 1;
 
-			int[][] dir = new int[][] {{0, 0}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+		int minY = Math.max(0, sawY - FELL_MAX_BASE_DEPTH);
+		int maxY = Math.min(255, sawY + FELL_VERTICAL_RANGE);
 
-			for(int[] d : dir) {
-				Block b = worldObj.getBlock(x + d[0], i, z + d[1]);
+		for(Map.Entry<BlockPos, BlockPos> trunk : trunks.entrySet()) {
+			deque.addFirst(new BlockPos[] {trunk.getValue(), trunk.getKey()});
+		}
 
-				if(b.getMaterial() == Material.wood) {
-					worldObj.func_147480_a(x + d[0], i, z + d[1], true);
-				} else if(b instanceof BlockLeaves) {
-					meta = worldObj.getBlockMetadata(x + d[0], i, z + d[1]) & 3;
-					if(b == Blocks.leaves2) meta += 4;
-					worldObj.func_147480_a(x + d[0], i, z + d[1], true);
+		while(!deque.isEmpty()) {
+			BlockPos[] pair = deque.pollFirst();
+			BlockPos current = pair[0];
+			BlockPos currentCol = pair[1];
+
+			if(blockOwner.containsKey(current)) {
+				if(currentCol.equals(hitCol)) {
+					hitColCount--;
+					if(hitColCount == 0) {
+						break;
+					}
+				}
+				continue;
+			}
+			blockOwner.put(current, currentCol);
+
+			for(int[] dir : EIGHTEEN_DIRS) {
+				int neighborX = current.getX() + dir[0];
+				int neighborY = current.getY() + dir[1];
+				int neighborZ = current.getZ() + dir[2];
+
+				// Bounds check: radius FELL_BFS_RADIUS horizontal, minY to maxY vertical
+				int neighborDx = neighborX - xCoord;
+				int neighborDz = neighborZ - zCoord;
+				if(neighborDx * neighborDx + neighborDz * neighborDz > FELL_BFS_RADIUS * FELL_BFS_RADIUS) {
+					continue;
+				}
+				if(neighborY < minY || neighborY > maxY) {
+					continue;
+				}
+
+				BlockPos neighborPos = new BlockPos(neighborX, neighborY, neighborZ);
+				if(blockOwner.containsKey(neighborPos)) {
+					continue;
+				}
+
+				Block b = worldObj.getBlock(neighborX, neighborY, neighborZ);
+				Material mat = b.getMaterial();
+				if(mat != Material.wood && mat != Material.leaves && !(b instanceof BlockLeaves)) {
+					continue;
+				}
+
+				boolean hasHorizontal = dir[0] != 0 || dir[2] != 0;
+				BlockPos[] entry = new BlockPos[] {neighborPos, currentCol};
+				if(!hasHorizontal) {
+					deque.addFirst(entry);
+				} else {
+					deque.addLast(entry);
+				}
+				if(currentCol.equals(hitCol)) {
+					hitColCount++;
+				}
+			}
+
+			if(currentCol.equals(hitCol)) {
+				hitColCount--;
+				if(hitColCount == 0) {
+					break; // Early exit: all hit-tree blocks processed
 				}
 			}
 		}
 
-		if(meta >= 0) {
-			if(Blocks.sapling.canPlaceBlockAt(worldObj, x, y, z)) {
-				worldObj.setBlock(x, y, z, Blocks.sapling, meta, 3);
+		// Step C: Cut blocks assigned to the hit trunk
+		for(Map.Entry<BlockPos, BlockPos> entry : blockOwner.entrySet()) {
+			if(!entry.getValue().equals(hitCol)) {
+				continue;
+			}
+
+			BlockPos pos = entry.getKey();
+			int bx = pos.getX();
+			int by = pos.getY();
+			int bz = pos.getZ();
+
+			Block b = worldObj.getBlock(bx, by, bz);
+
+			// Replant sapling at positions within working area
+			if(b.getMaterial() == Material.wood && isWithinWorkingArea(bx, bz) && canSupportSapling(worldObj, bx, by - 1, bz)) {
+				int bmeta = worldObj.getBlockMetadata(bx, by, bz);
+				int sapMeta = 0;
+				if(b == Blocks.log) {
+					sapMeta = bmeta & 3;
+				} else if(b == Blocks.log2) {
+					sapMeta = (bmeta & 3) + 4;
+				}
+				worldObj.func_147480_a(bx, by, bz, true);
+				worldObj.setBlock(bx, by, bz, Blocks.sapling, sapMeta, 3);
+			} else {
+				worldObj.func_147480_a(bx, by, bz, true);
 			}
 		}
+	}
+
+	private boolean isWithinWorkingArea(int x, int z) {
+		int dx = x - xCoord;
+		int dz = z - zCoord;
+		int distSq = dx * dx + dz * dz;
+		return distSq > MIN_DIST * MIN_DIST && distSq <= MAX_DIST * MAX_DIST;
+	}
+
+	private static boolean canSupportSapling(World world, int x, int y, int z) {
+		Block block = world.getBlock(x, y, z);
+		return block.canSustainPlant(world, x, y, z, ForgeDirection.UP, (IPlantable) Blocks.sapling);
 	}
 
 	@Override

@@ -92,7 +92,6 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 			}
 
 			if(isOn) {
-				System.out.println(soundtime);
 				soundtime++;
 
 				if(soundtime == 1) {
@@ -126,7 +125,6 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 			}
 
 			if(plasmaNode != null && plasmaNode.hasValidNet()) plasmaNode.net.addReceiver(this);
-
 
 
 			this.networkPackNT(200);

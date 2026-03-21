@@ -10,7 +10,6 @@ import com.hbm.render.util.BeamPronter;
 import com.hbm.render.util.BeamPronter.EnumBeamType;
 import com.hbm.render.util.BeamPronter.EnumWaveType;
 import com.hbm.tileentity.deco.TileEntityGeysir;
-import com.hbm.tileentity.machine.TileEntityHadron.Particle;
 import com.hbm.util.ParticleUtil;
 
 import cpw.mods.fml.relauncher.Side;

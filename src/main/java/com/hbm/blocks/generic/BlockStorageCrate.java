@@ -163,6 +163,7 @@ public class BlockStorageCrate extends BlockContainer implements IBlockMulti, IL
 			}
 
 			if(!nbt.hasNoTags()) {
+				nbt.setLong("stacklock", world.rand.nextLong());
 				drop.stackTagCompound = nbt;
 			}
 
@@ -173,7 +174,7 @@ public class BlockStorageCrate extends BlockContainer implements IBlockMulti, IL
 				}
 			}
 
-			if (drop.hasTagCompound()) {
+			if(drop.hasTagCompound()) {
 				try {
 					byte[] abyte = CompressedStreamTools.compress(drop.stackTagCompound);
 

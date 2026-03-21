@@ -3,6 +3,7 @@ package com.hbm.items.weapon.sedna.factory;
 import java.util.Locale;
 
 import com.hbm.entity.mob.*;
+import com.hbm.entity.mob.botprime.EntityBOTPrimeBase;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.AshesCreator;
@@ -11,8 +12,14 @@ import com.hbm.util.DamageResistanceHandler.DamageClass;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityBlaze;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntityGolem;
+import net.minecraft.entity.monster.EntityIronGolem;
+import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -42,10 +49,22 @@ public class ConfettiUtil {
 	}
 
 	public static void gib(EntityLivingBase entity) {
-		if(entity instanceof EntityCyberCrab) return;
-		if(entity instanceof EntityTeslaCrab) return;
-		if(entity instanceof EntityTaintCrab) return;
-		if(entity instanceof EntitySlime) return;
+		if(entity instanceof EntityOcelot) return;
+		
+		int type = 0;
+		if(entity instanceof EntitySlime) type = 1;
+		if(entity instanceof EntityMagmaCube) type = 1;
+		if(entity instanceof EntityCreeper) type = 1;
+		if(entity instanceof EntityGolem) type = 2;
+		if(entity instanceof EntityIronGolem) type = 2;
+		if(entity instanceof EntityCyberCrab) type = 2;
+		if(entity instanceof EntityTeslaCrab) type = 2;
+		if(entity instanceof EntityTaintCrab) type = 2;
+		if(entity instanceof EntityBlaze) type = 2;
+		if(entity instanceof EntityFBIDrone) type = 2;
+		if(entity instanceof EntityRADBeast) type = 2;
+		if(entity instanceof EntityUFO) type = 2;
+		if(entity instanceof EntityBOTPrimeBase) type = 2;
 
 		SkeletonCreator.composeEffectGib(entity.worldObj, entity, 0.25F);
 		
@@ -54,6 +73,7 @@ public class ConfettiUtil {
 		NBTTagCompound vdat = new NBTTagCompound();
 		vdat.setString("type", "giblets");
 		vdat.setInteger("ent", entity.getEntityId());
+		vdat.setInteger("gibType", type);
 		PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(vdat, entity.posX, entity.posY + entity.height * 0.5, entity.posZ), new TargetPoint(entity.dimension, entity.posX, entity.posY + entity.height * 0.5, entity.posZ, 150));
 		entity.worldObj.playSoundEffect(entity.posX, entity.posY, entity.posZ, "mob.zombie.woodbreak", 2.0F, 0.95F + entity.getRNG().nextFloat() * 0.2F);
 	}

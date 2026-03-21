@@ -27,11 +27,11 @@ public class BlockRubberCacti extends BlockEnumMulti {
 		FLOWER
 	}
 
-	public static int renderIDcact = RenderingRegistry.getNextAvailableRenderId();
+	public static int renderID = RenderingRegistry.getNextAvailableRenderId();
 
 	@Override
 	public int getRenderType(){
-		return renderIDcact;
+		return renderID;
 	}
 
 	@Override

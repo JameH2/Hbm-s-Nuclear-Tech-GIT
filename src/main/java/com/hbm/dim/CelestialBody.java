@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.hbm.config.SpaceConfig;
 import com.hbm.dim.orbit.OrbitalStation;
@@ -15,14 +16,16 @@ import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
 import com.hbm.dim.trait.CBT_Water;
 import com.hbm.dim.trait.CelestialBodyTrait;
 import com.hbm.extprop.HbmLivingProps;
+import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.FT_Gaseous;
+import com.hbm.inventory.recipes.AtmosphereRecipes;
+import com.hbm.inventory.recipes.AtmosphereRecipes.AtmosphereRecipe;
 import com.hbm.items.ItemVOTVdrive.Target;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.shader.Shader;
 import com.hbm.util.AstronomyUtil;
-import com.hbm.util.Tuple.Triplet;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -395,30 +398,30 @@ public class CelestialBody {
 		setTraits(world, currentTraits);
 	}
 
-	public static void reactAtmosphere(World world, FluidType product) {
+	public static boolean reactAtmosphere(World world, Entry<FluidStack, AtmosphereRecipe> recipe) {
 		HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> currentTraits = getTraits(world);
 		CBT_Atmosphere atmosphere = (CBT_Atmosphere) currentTraits.get(CBT_Atmosphere.class);
 
-		Triplet<AtmoStack, AtmoStack, AtmoStack> recipe = AtmosphereRecipes.getOutput(product);
+		int scale = 64;
 
-		AtmoStack reactA = recipe.getY();
-		AtmoStack reactB = recipe.getZ();
+		// because atmochem runs infrequently, we will automatically scale this to react all it can immediately
+		for(FluidStack recipeFluid : recipe.getValue().inputFluids) {
+			boolean hasInput = false;
+			
+			for(CBT_Atmosphere.FluidEntry entry : atmosphere.fluids) {
+				if(entry.fluid == recipeFluid.type && entry.pressure * AstronomyUtil.MB_PER_ATM >= recipeFluid.fill * scale) hasInput = true;
+			}
 
-		boolean hasA = false, hasB = false;
-		for(CBT_Atmosphere.FluidEntry entry : atmosphere.fluids) {
-			if(entry.fluid == reactA.type && entry.pressure >= reactA.pressure / AstronomyUtil.MB_PER_ATM) hasA = true;
-			if(entry.fluid == reactB.type && entry.pressure >= reactB.pressure / AstronomyUtil.MB_PER_ATM) hasB = true;
+			if(!hasInput) return false;
 		}
 
-		if(!hasA || !hasB) return;
+		for(FluidStack recipeFluid : recipe.getValue().inputFluids) {
+			FT_Gaseous.capture(world, recipeFluid.type, recipeFluid.fill * scale);
+		}
 
-		FT_Gaseous.capture(world, reactA.type, reactA.pressure);
-		FT_Gaseous.capture(world, reactB.type, reactB.pressure);
+		FT_Gaseous.release(world, recipe.getKey().type, recipe.getKey().fill * scale);
 
-
-		FT_Gaseous.release(world, product, 80000); //80000mb baseline
-
-		//System.out.println("Reaction complete: produced " + product.getName() + " (" + 80000 + " mB)");
+		return true;
 	}
 
 	public static void updateChemistry(World world) {
@@ -449,9 +452,10 @@ public class CelestialBody {
 		}
 
 		if(atmosphere != null) {
-			for(FluidType product : AtmosphereRecipes.getRecipesMap().keySet()) {
-				reactAtmosphere(world, product);
-				hasUpdated = true;
+			for(Entry<FluidStack, AtmosphereRecipe> recipe : AtmosphereRecipes.getRecipesMap().entrySet()) {
+				if(reactAtmosphere(world, recipe)) {
+					hasUpdated = true;
+				}
 			}
 
 		}

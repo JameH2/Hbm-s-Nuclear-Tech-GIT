@@ -205,10 +205,18 @@ public class BlockKeyhole extends BlockStone {
 		if(rand == 0) {
 	 		world.setBlock(x, y + 1, z, ModBlocks.deco_loot);
 			TileEntityLoot loot = (TileEntityLoot) world.getTileEntity(x, y + 1, z);
-			loot.addItem(new ItemStack(ModItems.trenchmaster_helmet), 0, 0, 0);
-			loot.addItem(new ItemStack(ModItems.trenchmaster_plate), 0, 0, 0);
-			loot.addItem(new ItemStack(ModItems.trenchmaster_legs), 0, 0, 0);
-			loot.addItem(new ItemStack(ModItems.trenchmaster_boots), 0, 0, 0);
+			
+			if(world.rand.nextInt(5) == 0) {
+				loot.addItem(new ItemStack(ModItems.ncrpa_helmet), 0, 0, 0);
+				loot.addItem(new ItemStack(ModItems.ncrpa_plate), 0, 0, 0);
+				loot.addItem(new ItemStack(ModItems.ncrpa_legs), 0, 0, 0);
+				loot.addItem(new ItemStack(ModItems.ncrpa_boots), 0, 0, 0);
+			} else {
+				loot.addItem(new ItemStack(ModItems.trenchmaster_helmet), 0, 0, 0);
+				loot.addItem(new ItemStack(ModItems.trenchmaster_plate), 0, 0, 0);
+				loot.addItem(new ItemStack(ModItems.trenchmaster_legs), 0, 0, 0);
+				loot.addItem(new ItemStack(ModItems.trenchmaster_boots), 0, 0, 0);
+			}
 		} else {
 			spawnPedestalItem(world, x, y + 1, z);
 		}

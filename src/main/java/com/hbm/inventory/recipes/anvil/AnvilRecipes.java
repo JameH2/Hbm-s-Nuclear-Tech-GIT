@@ -20,8 +20,6 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
-import com.hbm.inventory.recipes.AssemblerRecipes;
-import com.hbm.inventory.recipes.AssemblerRecipes.AssemblerRecipe;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ItemEnums.EnumChunkType;
 import com.hbm.items.ItemEnums.EnumCokeType;
@@ -491,6 +489,14 @@ public class AnvilRecipes extends SerializableRecipe {
 						new ComparableStack(ModItems.turbine_titanium, 1),
 				},
 				new AnvilOutput(new ItemStack(ModBlocks.machine_atmo_vent))).setTier(2));
+		constructionRecipes.add(new AnvilConstructionRecipe(
+				new AStack[] {
+						new OreDictStack(STEEL.pipe(), 6),
+						new OreDictStack(STAINLESS.plateCast(), 8),
+						new OreDictStack(ANY_PLASTIC.ingot(), 4),
+						new ComparableStack(ModItems.turbine_titanium, 1),
+				},
+				new AnvilOutput(new ItemStack(ModBlocks.machine_atmo_emitter))).setTier(2));
 
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
@@ -1033,15 +1039,6 @@ public class AnvilRecipes extends SerializableRecipe {
 						new AnvilOutput(new ItemStack(Items.bone, 1), 0.75F),
 						new AnvilOutput(new ItemStack(Items.experience_bottle, 1), 0.5F)
 				}).setTier(1));
-	}
-
-	public static void pullFromAssembler(ComparableStack result, int tier) {
-
-		AssemblerRecipe recipe = AssemblerRecipes.recipes.get(result);
-
-		if(recipe != null) {
-			constructionRecipes.add(new AnvilConstructionRecipe(recipe.ingredients, new AnvilOutput(result.toStack())).setTier(tier));
-		}
 	}
 
 	public static List<AnvilSmithingRecipe> getSmithing() {

@@ -52,7 +52,7 @@ public class RenderHTRNeo extends TileEntitySpecialRenderer implements IItemRend
 		
 
 		float trailStretch = tile.getWorldObj().rand.nextFloat();
-		trailStretch = 1.2F - (trailStretch * trailStretch * 0.2F);
+		trailStretch = 1.2F - (trailStretch * trailStretch * 0.1F);
 		trailStretch *= rocket.thrustAmount;
 		
 		if(trailStretch > 0) {

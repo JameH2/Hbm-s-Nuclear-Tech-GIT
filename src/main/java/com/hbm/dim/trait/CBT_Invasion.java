@@ -3,9 +3,24 @@ package com.hbm.dim.trait;
 import com.hbm.entity.mob.siege.EntitySiegeCraft;
 
 import io.netty.buffer.ByteBuf;
+import com.hbm.blocks.ModBlocks;
+import com.hbm.config.GeneralConfig;
+import com.hbm.config.MobConfig;
+import com.hbm.dim.CelestialBody;
+import com.hbm.entity.mob.EntityMaskMan;
+import com.hbm.entity.mob.siege.EntitySiegeCraft;
+import com.hbm.main.MainRegistry;
+import com.hbm.util.ContaminationUtil;
+
+import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
@@ -23,6 +38,8 @@ public class CBT_Invasion extends CelestialBodyTrait{
 	public int lastSpawns; //prevent over-lagging the server
 	public int spawndelay;
 	
+	public boolean warningPlayed;
+	
 	public CBT_Invasion() {
 		
 	}
@@ -35,30 +52,62 @@ public class CBT_Invasion extends CelestialBodyTrait{
 		this.isInvading = isInvading;
 	}
 	
-	public void prepare() {
+	public void Prepare() {
+		System.out.println(waveTime);
 
-		if (!isInvading && waveTime > 100) {
+		if (!isInvading && waveTime >= 0) {
 			waveTime--;
-			if (waveTime <= 0) {
-				isInvading = true;
+			warningPlayed = true;
+			if (waveTime <= 5) {
+				warningPlayed = false;
+
 			}
+			if (waveTime <= 0) {
+
+				isInvading = true;
+
+			}
+
 		}
 
 	}
 	
-	public void invade(int killReq, double wavetimerbase) {
+	public void Invade(int killReq, double wavetimerbase) {
 		if(!isInvading) return;
-		
 		waveTime--;
-		
-		if(waveTime <= 0) {
+		if(waveTime <= 0 || kills % 10 == 0) {
 			wave++;
 			waveTime = wavetimerbase;
 		}
 		
 	}
 	
-	public void spawn() {
+	@Override
+	public void update(boolean isRemote) {
+		if(!isRemote) {
+			Prepare();
+			Invade(30, 60*60);
+		}else {
+			if (!isInvading && !warningPlayed) {
+				warningPlayed = true;
+				System.out.println(isInvading);
+				MainRegistry.proxy.me().playSound("hbm:alarm.ping", 10F, 1F);
+				MainRegistry.proxy.me().addChatComponentMessage(new ChatComponentText("Incoming Invasion!").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+			}
+	
+		}
+
+	}
+	
+	
+	
+	public void Increment() {
+		kills++;
+		lastSpawns--;
+		System.out.println(kills);
+	}
+	
+	public void Spawn() {
 		
 		if(lastSpawns > 10) return; //10 total mobs
 		
@@ -79,12 +128,9 @@ public class CBT_Invasion extends CelestialBodyTrait{
 		
 	}
 	
-	public static void spawnAttempt(World world) {
-
-
-
-
-			if(world.getTotalWorldTime() % 60 == 0) {
+	public void SpawnAttempt(World world) {
+		if(lastSpawns > 10 || !isInvading) return;
+			if(world.getTotalWorldTime() % 260 == 0) {
 
 				if(!world.playerEntities.isEmpty()) {	
 
@@ -105,52 +151,54 @@ public class CBT_Invasion extends CelestialBodyTrait{
 						EntitySiegeCraft invaderCraft = new EntitySiegeCraft(world);
 						invaderCraft.setLocationAndAngles(spawnX, spawnY, spawnZ, world.rand.nextFloat() * 360.0F, 0.0F);
 						world.spawnEntityInWorld(invaderCraft);
+						lastSpawns++;
 					}
 				}
 			
 		}
 	
 	
-	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setInteger("wave", wave);
-		nbt.setInteger("kills", kills);
-		nbt.setDouble("waveTime", waveTime);
-		nbt.setBoolean("isInvading", isInvading);
-		nbt.setInteger("lastSpawns", lastSpawns);
-		nbt.setInteger("spawnDelay", spawndelay);
+	    @Override
+	    public void writeToNBT(NBTTagCompound nbt) {
+	        nbt.setInteger("wave", wave);
+	        nbt.setInteger("kills", kills);
+	        nbt.setDouble("waveTime", waveTime);
+	        nbt.setBoolean("isInvading", isInvading);
+	        nbt.setInteger("lastSpawns", lastSpawns);
+	        nbt.setInteger("spawnDelay", spawndelay);
+	        nbt.setBoolean("warningPlayed", warningPlayed);
+	    }
 
-	}
+	    @Override
+	    public void readFromNBT(NBTTagCompound nbt) {
+	        wave = nbt.getInteger("wave");
+	        kills = nbt.getInteger("kills");
+	        isInvading = nbt.getBoolean("isInvading");
+	        waveTime = nbt.getDouble("waveTime");
+	        lastSpawns = nbt.getInteger("lastSpawns");
+	        spawndelay = nbt.getInteger("spawnDelay");
+	        warningPlayed = nbt.getBoolean("warningPlayed");
+	    }
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		wave = nbt.getInteger("wave");
-		kills = nbt.getInteger("kills");
-		isInvading = nbt.getBoolean("isInvading");
-		waveTime = nbt.getDouble("waveTime");
-		lastSpawns = nbt.getInteger("lastSpawns");
-		spawndelay = nbt.getInteger("spawnDelay");
-	}
+	    @Override
+	    public void writeToBytes(ByteBuf buf) {
+	        buf.writeInt(kills);
+	        buf.writeInt(wave);
+	        buf.writeDouble(waveTime);
+	        buf.writeBoolean(isInvading);
+	        buf.writeInt(lastSpawns);
+	        buf.writeInt(spawndelay);
+	        buf.writeBoolean(warningPlayed);
+	    }
 
-	@Override
-	public void writeToBytes(ByteBuf buf) {
-		buf.writeInt(kills);
-		buf.writeInt(wave);
-		buf.writeDouble(waveTime);
-		buf.writeBoolean(isInvading);
-		buf.writeInt(lastSpawns);
-		buf.writeInt(spawndelay);
-
-	}
-
-	@Override
-	public void readFromBytes(ByteBuf buf) {
-		kills = buf.readInt();
-		wave = buf.readInt();
-		waveTime = buf.readDouble();
-		isInvading = buf.readBoolean();
-		lastSpawns = buf.readInt();
-		spawndelay = buf.readInt();
-	}
-
+	    @Override
+	    public void readFromBytes(ByteBuf buf) {
+	        kills = buf.readInt();
+	        wave = buf.readInt();
+	        waveTime = buf.readDouble();
+	        isInvading = buf.readBoolean();
+	        lastSpawns = buf.readInt();
+	        spawndelay = buf.readInt();
+	        warningPlayed = buf.readBoolean();
+	    }
 }

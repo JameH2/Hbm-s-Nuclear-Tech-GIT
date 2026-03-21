@@ -155,5 +155,24 @@ public class BlockLoot extends BlockContainer {
 				nbt.setDouble("z" + i, item.getZ());
 			}
 		}
+		
+		AxisAlignedBB bb = null;
+		
+		@Override
+		public AxisAlignedBB getRenderBoundingBox() {
+			
+			if(bb == null) {
+				bb = AxisAlignedBB.getBoundingBox(
+						xCoord - 1,
+						yCoord,
+						zCoord - 1,
+						xCoord + 2,
+						yCoord + 3,
+						zCoord + 2
+						);
+			}
+			
+			return bb;
+		}
 	}
 }

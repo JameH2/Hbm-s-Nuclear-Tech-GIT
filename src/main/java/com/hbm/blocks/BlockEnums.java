@@ -83,4 +83,5 @@ public class BlockEnums {
 		FLUORESCENT,
 		HALOGEN
 	}
+
 }

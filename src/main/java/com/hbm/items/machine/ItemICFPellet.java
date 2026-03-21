@@ -43,8 +43,8 @@ public class ItemICFPellet extends Item {
 		OXYGEN(		0xB4E2FF,	1.25D,	1.50D,	7.50D),
 		SODIUM(		0xDFE4E7,	3.00D,	0.75D,	8.75D),
 		//aluminium, silicon, phosphorus
-		CHLORINE(	0xDAE598,	2.50D,	1.00D,	10.0D),
-		CALCIUM(	0xD2C7A9,	3.00D,	1.00D,	12.5D),
+		CHLORINE(	0xDAE598,	2.50D,	1.00D,	9.25D),
+		CALCIUM(	0xD2C7A9,	3.00D,	1.00D,	9.75D),
 		//titanium
 		;
 		

@@ -12,6 +12,7 @@ import com.hbm.entity.projectile.rocketbehavior.RocketTargetingPredictive;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
 import com.hbm.items.weapon.ItemAmmoHIMARS.HIMARSRocket;
 import com.hbm.main.MainRegistry;
+import com.hbm.util.Vec3NT;
 
 import api.hbm.entity.IRadarDetectable;
 import cpw.mods.fml.relauncher.Side;
@@ -97,21 +98,22 @@ public class EntityArtilleryRocket extends EntityThrowableInterp implements IChu
 		super.onUpdate();
 
 		if(!worldObj.isRemote) {
-
-			//shitty hack, figure out what's happening here
-			if(this.targeting == null) this.targeting = new RocketTargetingPredictive();
-			if(this.steering == null) this.steering = new RocketSteeringBallisticArc();
 			
-			if(this.targetEntity == null) {
-				Vec3 delta = Vec3.createVectorHelper(this.lastTargetPos.xCoord - this.posX, this.lastTargetPos.yCoord - this.posY, this.lastTargetPos.zCoord - this.posZ);
-				if(delta.lengthVector() <= 15D) {
+			Vec3NT delta = new Vec3NT(this.lastTargetPos.xCoord - this.posX, this.lastTargetPos.yCoord - this.posY, this.lastTargetPos.zCoord - this.posZ);
+			double momentum = Math.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ) * motionMult();
+			if(delta.lengthVector() <= momentum * 1.5) {
+				if(this.targetEntity == null || !this.targetEntity.isEntityAlive()) {
 					this.targeting = null;
 					this.steering = null;
 				}
+				delta.normalizeSelf();
+				motionX = delta.xCoord * momentum / motionMult();
+				motionY = delta.yCoord * momentum / motionMult();
+				motionZ = delta.zCoord * momentum / motionMult();
+			} else {
+				if(this.targeting != null && this.targetEntity != null) this.targeting.recalculateTargetPosition(this, this.targetEntity);
+				if(this.steering != null) this.steering.adjustCourse(this, 25D, 15D);
 			}
-			
-			if(this.targeting != null && this.targetEntity != null) this.targeting.recalculateTargetPosition(this, this.targetEntity);
-			if(this.steering != null) this.steering.adjustCourse(this, 25D, 15D);
 
 			loadNeighboringChunks((int)Math.floor(posX / 16D), (int)Math.floor(posZ / 16D));
 			this.getType().onUpdate(this);

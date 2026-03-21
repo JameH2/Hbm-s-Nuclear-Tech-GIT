@@ -18,6 +18,7 @@ import com.hbm.packet.PermaSyncHandler;
 import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
 import com.hbm.render.model.ModelMan;
 import com.hbm.util.ArmorUtil;
+import com.hbm.render.util.RenderScreenOverlay;
 import com.hbm.util.Clock;
 import com.hbm.world.biome.BiomeGenCraterBase;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -109,7 +110,7 @@ public class ModEventHandlerRenderer {
 			IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(held, IItemRenderer.ItemRenderType.EQUIPPED);
 			if(customRenderer instanceof ItemRenderWeaponBase) {
 				ItemRenderWeaponBase renderGun = (ItemRenderWeaponBase) customRenderer;
-				if(renderGun.isAkimbo()) {
+				if(renderGun.isAkimbo(player)) {
 					partsHidden[EnumPlayerPart.LEFT_ARM.ordinal()] = true;
 					ModelRenderer box = getBoxFromType(renderer, EnumPlayerPart.LEFT_ARM);
 					box.isHidden = true;
@@ -160,7 +161,7 @@ public class ModEventHandlerRenderer {
 			IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(held, IItemRenderer.ItemRenderType.EQUIPPED);
 			if(customRenderer instanceof ItemRenderWeaponBase) {
 				ItemRenderWeaponBase renderGun = (ItemRenderWeaponBase) customRenderer;
-				if(renderGun.isAkimbo()) akimbo = true;
+				if(renderGun.isAkimbo(player)) akimbo = true;
 				if(renderGun.isLeftHanded()) leftHand = true;
 			}
 		}
@@ -273,7 +274,7 @@ public class ModEventHandlerRenderer {
 			IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(held, IItemRenderer.ItemRenderType.EQUIPPED);
 			if(customRenderer instanceof ItemRenderWeaponBase) {
 				ItemRenderWeaponBase renderGun = (ItemRenderWeaponBase) customRenderer;
-				if(renderGun.isAkimbo()) {
+				if(renderGun.isAkimbo(player)) {
 					ModelBiped biped = renderer.modelBipedMain;
 					renderer.modelArmorChestplate.bipedLeftArm.rotateAngleY = renderer.modelArmor.bipedLeftArm.rotateAngleY = biped.bipedLeftArm.rotateAngleY = 0.1F + biped.bipedHead.rotateAngleY;
 				}
@@ -298,7 +299,7 @@ public class ModEventHandlerRenderer {
 
 		if(customRenderer instanceof ItemRenderWeaponBase) {
 			ItemRenderWeaponBase renderWeapon = (ItemRenderWeaponBase) customRenderer;
-			if(renderWeapon.isAkimbo() || renderWeapon.isLeftHanded()) {
+			if(renderWeapon.isAkimbo(player) || renderWeapon.isLeftHanded()) {
 				GL11.glPushMatrix();
 				renderer.modelBipedMain.bipedLeftArm.isHidden = false;
 				renderer.modelBipedMain.bipedLeftArm.postRender(0.0625F);
@@ -320,10 +321,10 @@ public class ModEventHandlerRenderer {
 				if(renderWeapon.isLeftHanded()) {
 					GL11.glTranslatef(0.1875F, 0F, 0.0F);
 					renderWeapon.setupThirdPerson(held);
-					renderWeapon.renderEquippedAkimbo(held);
+					renderWeapon.renderEquippedAkimbo(held, player);
 				} else {
 					renderWeapon.setupThirdPersonAkimbo(held);
-					renderWeapon.renderEquippedAkimbo(held);
+					renderWeapon.renderEquippedAkimbo(held, player);
 				}
 				GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 				GL11.glPopMatrix();
@@ -560,7 +561,7 @@ public class ModEventHandlerRenderer {
 	@SubscribeEvent
 	public void onRenderHand(RenderHandEvent event) {
 
-		//can't use plaxer.getHeldItem() here because the item rendering persists for a few frames after hitting the switch key
+		//can't use player.getHeldItem() here because the item rendering persists for a few frames after hitting the switch key
 		ItemStack toRender = Minecraft.getMinecraft().entityRenderer.itemRenderer.itemToRender;
 
 		if(toRender != null) {
@@ -576,6 +577,11 @@ public class ModEventHandlerRenderer {
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onRenderHUD(RenderGameOverlayEvent.Pre event) {
 		Tessellator tess = Tessellator.instance;
+		
+		//TODO: using ALL doesn't work as anticipated - still hides in F1. need a different event for this
+		if(event.type == ElementType.ALL) {
+			if(ClientConfig.BADGES_HUD.get()) RenderScreenOverlay.renderBadges(event.resolution, Minecraft.getMinecraft().ingameGUI);
+		}
 
 		if(event.type == ElementType.HOTBAR && (ModEventHandlerClient.shakeTimestamp + ModEventHandlerClient.shakeDuration - System.currentTimeMillis()) > 0 && ClientConfig.NUKE_HUD_SHAKE.get()) {
 			double mult = (ModEventHandlerClient.shakeTimestamp + ModEventHandlerClient.shakeDuration - System.currentTimeMillis()) / (double) ModEventHandlerClient.shakeDuration * 2;

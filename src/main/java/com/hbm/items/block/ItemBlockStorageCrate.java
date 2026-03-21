@@ -101,6 +101,7 @@ public class ItemBlockStorageCrate extends ItemBlockBase implements IGUIProvider
 			this.slots = new ItemStack[this.getSizeInventory()];
 			if(target.stackTagCompound == null) {
 				target.stackTagCompound = new NBTTagCompound();
+				target.stackTagCompound.setLong("stacklock", rand.nextLong());
 			}
 
 			for(int i = 0; i < slots.length; i++)

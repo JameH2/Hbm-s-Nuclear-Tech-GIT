@@ -234,6 +234,7 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
 		if(stack == null) return true;
 		if(index == 0 && !(stack.getItem() instanceof ItemVOTVdrive)) return false;
+		if(index == 1 && stack.getItem() != ModItems.rocket_fuel) return false;
 		return true;
 	}
 
@@ -374,6 +375,11 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 	@Override
 	public FluidTank[] getReceivingTanks() {
 		return tanks;
+	}
+
+	@Override
+	public int getInventoryStackLimit() {
+		return 8;
 	}
 
 }

@@ -66,9 +66,9 @@ public class TileEntityMachineOrbus extends TileEntityBarrel implements IOverpre
 					xCoord - 2,
 					yCoord,
 					zCoord - 2,
-					xCoord + 2,
+					xCoord + 3,
 					yCoord + 5,
-					zCoord + 2
+					zCoord + 3
 					);
 		}
 		

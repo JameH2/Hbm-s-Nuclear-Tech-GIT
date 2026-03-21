@@ -76,9 +76,9 @@ public class CBT_Atmosphere extends CelestialBodyTrait {
 		}
 	}
 
-	// Fluid must be above at least 1 millbar to be "present"
+	// Fluid must be above at least .1 millbar to be "present"
 	public boolean hasFluid(FluidType fluid) {
-		return hasFluid(fluid, 0.001);
+		return hasFluid(fluid, 0.0001);
 	}
 
 	public boolean hasFluid(FluidType fluid, double abovePressure) {
@@ -92,7 +92,7 @@ public class CBT_Atmosphere extends CelestialBodyTrait {
 	}
 
 	public boolean hasTrait(Class<? extends FluidTrait> trait) {
-		return hasTrait(trait, 0.001);
+		return hasTrait(trait, 0.0001);
 	}
 
 	public boolean hasTrait(Class<? extends FluidTrait> trait, double abovePressure) {

@@ -153,9 +153,12 @@ public class EntityFBI extends EntityMob implements IRangedAttackMob, ISuffocati
 		canDestroy.add(ModBlocks.machine_press);
 		canDestroy.add(ModBlocks.machine_epress);
 		canDestroy.add(ModBlocks.machine_chemical_plant);
+		canDestroy.add(ModBlocks.machine_chemical_factory);
 		canDestroy.add(ModBlocks.machine_crystallizer);
 		canDestroy.add(ModBlocks.machine_turbine);
-		canDestroy.add(ModBlocks.machine_large_turbine);
+		canDestroy.add(ModBlocks.machine_industrial_turbine);
+		canDestroy.add(ModBlocks.machine_chungus);
+		canDestroy.add(ModBlocks.machine_purex);
 		canDestroy.add(ModBlocks.crate_iron);
 		canDestroy.add(ModBlocks.crate_steel);
 		canDestroy.add(ModBlocks.machine_diesel);

@@ -27,12 +27,11 @@ import com.hbm.tileentity.IRepairable;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.CompatEnergyControl;
-import com.hbm.util.fauxpointtwelve.BlockPos;
 import com.hbm.util.fauxpointtwelve.DirPos;
 import com.hbm.world.gen.nbt.INBTTileEntityTransformable;
 
 import api.hbm.energymk2.IEnergyProviderMK2;
-import api.hbm.fluid.IFluidStandardTransceiver;
+import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
 import api.hbm.tile.IInfoProviderEC;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
@@ -50,9 +49,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
-public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyProviderMK2, IFluidStandardTransceiver, SimpleComponent, IInfoProviderEC, CompatHandler.OCComponent, IConfigurableMachine, IFluidCopiable, IRepairable, INBTTileEntityTransformable, IPersistentNBT {
+public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyProviderMK2, IFluidStandardTransceiverMK2, SimpleComponent, IInfoProviderEC, CompatHandler.OCComponent, IConfigurableMachine, IFluidCopiable, IRepairable, INBTTileEntityTransformable, IPersistentNBT {
 
-	public long power;
+	public long powerBuffer;
 	private int turnTimer;
 	public float rotor;
 	public float lastRotor;
@@ -65,7 +64,6 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 	private float audioDesync;
 
 	//Configurable values
-	public static long maxPower = 100000000000L;
 	public static int inputTankSize = 1_000_000_000;
 	public static int outputTankSize = 1_000_000_000;
 	public static double efficiency = 0.85D;
@@ -89,7 +87,6 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 
 	@Override
 	public void readIfPresent(JsonObject obj) {
-		maxPower = IConfigurableMachine.grab(obj, "L:maxPower", maxPower);
 		inputTankSize = IConfigurableMachine.grab(obj, "I:inputTankSize", inputTankSize);
 		outputTankSize = IConfigurableMachine.grab(obj, "I:outputTankSize", outputTankSize);
 		efficiency = IConfigurableMachine.grab(obj, "D:efficiency", efficiency);
@@ -97,7 +94,6 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 
 	@Override
 	public void writeConfig(JsonWriter writer) throws IOException {
-		writer.name("L:maxPower").value(maxPower);
 		writer.name("INFO").value("leviathan steam turbine consumes all availible steam per tick");
 		writer.name("I:inputTankSize").value(inputTankSize);
 		writer.name("I:outputTankSize").value(outputTankSize);
@@ -111,8 +107,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 
 		if(!worldObj.isRemote) {
 			
-			this.power *= 0.95;
-
+			this.powerBuffer = 0;
 			this.info = new double[3];
 
 			if(damaged) {
@@ -133,7 +128,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 					int ops = Math.min(inputOps, outputOps);
 					tanks[0].setFill(tanks[0].getFill() - ops * trait.amountReq);
 					tanks[1].setFill(tanks[1].getFill() + ops * trait.amountProduced);
-					this.power += (ops * trait.heatEnergy * eff);
+					this.powerBuffer += (ops * trait.heatEnergy * eff);
 					info[0] = ops * trait.amountReq;
 					info[1] = ops * trait.amountProduced;
 					info[2] = ops * trait.heatEnergy * eff;
@@ -143,18 +138,14 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 			}
 
 			if(!valid) tanks[1].setTankType(Fluids.NONE);
-			if(power > maxPower) power = maxPower;
 
 			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
 			this.tryProvide(worldObj, xCoord - dir.offsetX * 11, yCoord, zCoord - dir.offsetZ * 11, dir.getOpposite());
 
 			for(DirPos pos : this.getConPos()) {
-				this.sendFluid(tanks[1], worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-				this.trySubscribe(tanks[0].getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
+				this.tryProvide(tanks[1], worldObj, pos);
+				this.trySubscribe(tanks[0].getTankType(), worldObj, pos);
 			}
-
-			if(power > maxPower)
-				power = maxPower;
 
 			turnTimer--;
 
@@ -213,12 +204,6 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 		}
 	}
 
-	public void onLeverPull(FluidType previous) {
-		for(BlockPos pos : getConPos()) {
-			this.tryUnsubscribe(previous, worldObj, pos.getX(), pos.getY(), pos.getZ());
-		}
-	}
-
 	public DirPos[] getConPos() {
 		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
 		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
@@ -231,7 +216,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 
 	@Override
 	public void serialize(ByteBuf buf) {
-		buf.writeLong(this.power);
+		buf.writeLong(this.powerBuffer);
 		buf.writeInt(this.turnTimer);
 
 		this.tanks[0].serialize(buf);
@@ -242,7 +227,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 
 	@Override
 	public void deserialize(ByteBuf buf) {
-		this.power = buf.readLong();
+		this.powerBuffer = buf.readLong();
 		this.turnTimer = buf.readInt();
 
 		this.tanks[0].deserialize(buf);
@@ -256,7 +241,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 		super.readFromNBT(nbt);
 		tanks[0].readFromNBT(nbt, "water");
 		tanks[1].readFromNBT(nbt, "steam");
-		power = nbt.getLong("power");
+		powerBuffer = nbt.getLong("power");
 		damaged = nbt.getBoolean("damaged");
 	}
 
@@ -265,7 +250,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 		super.writeToNBT(nbt);
 		tanks[0].writeToNBT(nbt, "water");
 		tanks[1].writeToNBT(nbt, "steam");
-		nbt.setLong("power", power);
+		nbt.setLong("power", powerBuffer);
 		nbt.setBoolean("damaged", damaged);
 	}
 
@@ -287,17 +272,17 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 
 	@Override
 	public long getPower() {
-		return power;
+		return powerBuffer;
 	}
 
 	@Override
 	public long getMaxPower() {
-		return maxPower;
+		return powerBuffer;
 	}
 
 	@Override
 	public void setPower(long power) {
-		this.power = power;
+		this.powerBuffer = power;
 	}
 
 	@Override
@@ -348,13 +333,13 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 	@Callback(direct = true, doc = "function():number -- Gets the power buffer of the turbine.")
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] getPower(Context context, Arguments args) {
-		return new Object[] {power};
+		return new Object[] {powerBuffer};
 	}
 
 	@Callback(direct = true, doc = "function():table -- Gets information about this turbine. The format is the following: <input tank amount>, <input tank capacity>, <output tank amount>, <output tank capacity>, <input tank fluid type>, <power>")
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] getInfo(Context context, Arguments args) {
-		return new Object[] {tanks[0].getFill(), tanks[0].getMaxFill(), tanks[1].getFill(), tanks[1].getMaxFill(), CompatHandler.steamTypeToInt(tanks[0].getTankType())[0], power};
+		return new Object[] {tanks[0].getFill(), tanks[0].getMaxFill(), tanks[1].getFill(), tanks[1].getMaxFill(), CompatHandler.steamTypeToInt(tanks[0].getTankType())[0], powerBuffer};
 	}
 
 	@Override

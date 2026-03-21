@@ -23,7 +23,6 @@ import com.hbm.inventory.recipes.PedestalRecipes.PedestalExtraCondition;
 import com.hbm.inventory.recipes.PedestalRecipes.PedestalRecipe;
 import com.hbm.inventory.recipes.PyroOvenRecipes.PyroOvenRecipe;
 import com.hbm.inventory.recipes.RotaryFurnaceRecipes.RotaryFurnaceRecipe;
-import com.hbm.inventory.recipes.ChemplantRecipes.ChemRecipe;
 import com.hbm.inventory.recipes.CompressorRecipes.CompressorRecipe;
 import com.hbm.inventory.recipes.SolderingRecipes.SolderingRecipe;
 import com.hbm.inventory.recipes.anvil.AnvilRecipes;
@@ -72,14 +71,17 @@ public class CompatRecipeRegistry {
 	public static void registerSoldering(ItemStack output, int time, long power, FluidStack fluid, AStack[] toppings, AStack[] pcb, AStack[] solder) {
 		SolderingRecipes.recipes.add(new SolderingRecipe(output, time, power, fluid, copyFirst(toppings, 3), copyFirst(pcb, 2), copyFirst(solder, 1)));
 	}
-
-	@Deprecated public static void registerChemplant(int id, String name, int duration, AStack[] inputItems, FluidStack[] inputFluids, ItemStack[] outputItems, FluidStack[] outputFluids) {
-		ChemRecipe recipe = new ChemRecipe(id, name, duration);
-		if(inputItems != null) recipe.inputItems(copyFirst(inputItems, 4));
-		if(inputFluids != null) recipe.inputFluids(copyFirst(inputFluids, 2));
-		if(outputItems != null) recipe.outputItems(copyFirst(outputItems, 4));
-		if(outputFluids != null) recipe.outputFluids(copyFirst(outputFluids, 2));
-		ChemplantRecipes.recipes.add(recipe);
+	
+	/** Assembly machine recipe needs a unique name for the registry. Zero length arrays should stay null*/
+	public static void registerAssembler(String name, boolean named, ItemStack icon, int duration, long power, AStack[] inputItems, FluidStack inputFluids, IOutput[] outputItems, FluidStack outputFluids) {
+		GenericRecipe recipe = new GenericRecipe(name).setDuration(duration).setPower(power);
+		if(named) recipe.setNamed();
+		if(icon != null) recipe.setIcon(icon);
+		if(inputItems != null && inputItems.length > 0) recipe.inputItems(inputItems);
+		if(inputFluids != null) recipe.inputFluids(inputFluids);
+		if(outputItems != null && outputItems.length > 0) recipe.outputItems(outputItems);
+		if(outputFluids != null) recipe.outputFluids(outputFluids);
+		AssemblyMachineRecipes.INSTANCE.register(recipe);
 	}
 	
 	/** Chemical plant recipe needs a unique name for the registry. Zero length arrays should stay null*/
@@ -251,16 +253,6 @@ public class CompatRecipeRegistry {
 		AmmoPressRecipes.recipes.add(new AmmoPressRecipe(output, input));
 	}
 
-	/** Assembler recipes are identified by the output as a ComparableStack, so no two recipes can share output. */
-	public static void registerAssembler(ItemStack output, AStack[] input, int time) {
-		AssemblerRecipes.makeRecipe(new ComparableStack(output), copyFirst(input, 12), time);
-	}
-
-	/** Registers an assembler recipe but with the template only being obtainable via the specified folders */
-	public static void registerAssembler(ItemStack output, AStack[] input, int time, Item... folder) {
-		AssemblerRecipes.makeRecipe(new ComparableStack(output), copyFirst(input, 12), time, folder);
-	}
-
 	public static void registerAnvilConstruction(AStack[] input, AnvilOutput[] output, int tier, int overlayIndex) {
 		AnvilRecipes.constructionRecipes.add(new AnvilConstructionRecipe(input, output).setTier(tier).setOverlay(EnumUtil.grabEnumSafely(OverlayType.class, overlayIndex)));
 	}
@@ -292,4 +284,11 @@ public class CompatRecipeRegistry {
 		if(array.length <= amount) return array;
 		return Arrays.copyOf(array, amount);
 	}
+
+	/** NOP */
+	@Deprecated public static void registerAssembler(ItemStack output, AStack[] input, int time) { }
+	/** NOP */
+	@Deprecated public static void registerAssembler(ItemStack output, AStack[] input, int time, Item... folder) { }
+	/** NOP */
+	@Deprecated public static void registerChemplant(int id, String name, int duration, AStack[] inputItems, FluidStack[] inputFluids, ItemStack[] outputItems, FluidStack[] outputFluids) { }
 }

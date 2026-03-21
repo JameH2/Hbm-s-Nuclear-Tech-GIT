@@ -8,10 +8,13 @@ import java.util.List;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import static com.hbm.inventory.OreDictManager.*;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
+import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ModItems;
+import com.hbm.items.ItemEnums.EnumExpensiveType;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -84,6 +87,13 @@ public class ParticleAcceleratorRecipes extends SerializableRecipe {
 				new ComparableStack(ModItems.particle_higgs),
 				70_000,
 				new ItemStack(ModItems.particle_digamma),
+				null
+				));
+		recipes.add(new ParticleAcceleratorRecipe(
+				new ComparableStack(ModItems.item_expensive, 1, EnumExpensiveType.GOLD_DUST),
+				new OreDictStack(SBD.ingot()),
+				10_000,
+				new ItemStack(ModItems.item_expensive, 1, EnumExpensiveType.DEGENERATE_MATTER.ordinal()),
 				null
 				));
 		recipes.add(new ParticleAcceleratorRecipe(

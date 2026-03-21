@@ -9,6 +9,7 @@ import com.hbm.inventory.gui.GUIFusionBreeder;
 import com.hbm.inventory.recipes.FluidBreederRecipes;
 import com.hbm.inventory.recipes.OutgasserRecipes;
 import com.hbm.inventory.recipes.OutgasserRecipes.OutgasserRecipe;
+import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -104,6 +105,8 @@ public class TileEntityFusionBreeder extends TileEntityMachineBase implements IF
 
 	public boolean canProcessSolid() {
 		if(slots[1] == null) return false;
+		
+		if(slots[1].getItem() == ModItems.meteorite_sword_bred && slots[2] == null) return true;
 
 		OutgasserRecipe output = OutgasserRecipes.getOutput(slots[1]);
 		if(output == null) return false;
@@ -138,6 +141,13 @@ public class TileEntityFusionBreeder extends TileEntityMachineBase implements IF
 	}
 
 	private void processSolid() {
+		
+		if(slots[1].getItem() == ModItems.meteorite_sword_bred) {
+			this.decrStackSize(1, 1);
+			slots[2] = new ItemStack(ModItems.meteorite_sword_fused);
+			this.progress = 0;
+			return;
+		}
 
 		OutgasserRecipe output = OutgasserRecipes.getOutput(slots[1]);
 		this.decrStackSize(1, 1);

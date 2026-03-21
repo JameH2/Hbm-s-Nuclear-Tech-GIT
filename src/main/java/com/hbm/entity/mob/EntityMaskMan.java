@@ -67,17 +67,13 @@ public class EntityMaskMan extends EntityMob implements IBossDisplayData, IRadia
 			return true;
 		}
 
-		if(source.isFireDamage())
-			amount = 0;
-		if(source.isMagicDamage())
-			amount = 0;
-		if(source.isProjectile())
-			amount *= 0.25F;
-		if(source.isExplosion())
-			amount *= 0.5F;
+		if(source.isFireDamage()) amount = 0;
+		if(source.isMagicDamage()) amount = 0;
+		if(source.isProjectile()) amount *= 0.5F;
+		if(source.isExplosion()) amount *= 0.5F;
 
 		if(amount > 50) {
-			amount = 50 + (amount - 50) * 0.25F;
+			amount = 50 + (amount - 50) * 0.5F;
 		}
 
 		return super.attackEntityFrom(source, amount);

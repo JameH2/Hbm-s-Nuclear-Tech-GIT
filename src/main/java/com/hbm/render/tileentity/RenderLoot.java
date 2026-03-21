@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL12;
 
 import com.hbm.blocks.generic.BlockLoot.TileEntityLoot;
 import com.hbm.items.ModItems;
+import com.hbm.items.armor.ArmorNCRPA;
 import com.hbm.items.armor.ArmorTrenchmaster;
 import com.hbm.items.weapon.sedna.factory.GunFactory.EnumAmmo;
 import com.hbm.main.ResourceManager;
@@ -47,6 +48,8 @@ public class RenderLoot extends TileEntitySpecialRenderer {
 				
 			} else if(stack.getItem() instanceof ArmorTrenchmaster) {
 				renderTrenchmaster(stack);
+			} else if(stack.getItem() instanceof ArmorNCRPA) {
+				renderNCR(stack);
 			} else {
 				renderStandardItem(item.getW());
 			}
@@ -103,6 +106,57 @@ public class RenderLoot extends TileEntitySpecialRenderer {
 			GL11.glPushMatrix();
 			GL11.glRotated(-0.1, 1, 0, 0);
 			ResourceManager.armor_trenchmaster.renderPart("RightBoot");
+			GL11.glPopMatrix();
+		}
+		GL11.glPopMatrix();
+	}
+	
+	private void renderNCR(ItemStack stack) {
+		GL11.glPushMatrix();
+		GL11.glTranslated(0.5, 1.5, 0.5);
+		GL11.glScaled(0.0625, 0.0625, 0.0625);
+		GL11.glRotated(180, 1, 0, 0);
+		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+		if(stack.getItem() == ModItems.ncrpa_helmet) {
+			bindTexture(ResourceManager.ncrpa_helmet);
+			GL11.glEnable(GL11.GL_BLEND);
+			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+			ResourceManager.armor_ncr.renderPart("Helmet");
+			GL11.glDisable(GL11.GL_BLEND);
+			float lastX = OpenGlHelper.lastBrightnessX;
+			float lastY = OpenGlHelper.lastBrightnessY;
+			GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+			GL11.glDisable(GL11.GL_LIGHTING);
+			ResourceManager.armor_ncr.renderPart("Eyes");
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glPopAttrib();
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastX, lastY);
+		}
+		if(stack.getItem() == ModItems.ncrpa_plate) {
+			bindTexture(ResourceManager.ncrpa_chest);
+			ResourceManager.armor_ncr.renderPart("Chest");
+			bindTexture(ResourceManager.ncrpa_arm);
+			GL11.glPushMatrix();
+			GL11.glRotated(-3, 1, 0, 0);
+			ResourceManager.armor_ncr.renderPart("LeftArm");
+			ResourceManager.armor_ncr.renderPart("RightArm");
+			GL11.glPopMatrix();
+		}
+		if(stack.getItem() == ModItems.ncrpa_legs) {
+			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.ncrpa_leg);
+			ResourceManager.armor_ncr.renderPart("LeftLeg");
+			GL11.glPushMatrix();
+			GL11.glRotated(-0.1, 1, 0, 0);
+			ResourceManager.armor_ncr.renderPart("RightLeg");
+			GL11.glPopMatrix();
+		}
+		if(stack.getItem() == ModItems.ncrpa_boots) {
+			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.ncrpa_leg);
+			ResourceManager.armor_ncr.renderPart("LeftBoot");
+			GL11.glPushMatrix();
+			GL11.glRotated(-0.1, 1, 0, 0);
+			ResourceManager.armor_ncr.renderPart("RightBoot");
 			GL11.glPopMatrix();
 		}
 		GL11.glPopMatrix();

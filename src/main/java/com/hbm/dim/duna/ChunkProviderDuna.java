@@ -25,7 +25,7 @@ public class ChunkProviderDuna extends ChunkProviderCelestial {
 		stoneBlock = ModBlocks.duna_rock;
 
 		caveGenV2.lavaBlock = ModBlocks.basalt;
-		caveGenV2.stoneBlock = ModBlocks.duna_rock;
+		caveGenV2.stoneBlock = ModBlocks.duna_cobble;
 		caveGenSmall.lavaBlock = ModBlocks.duna_sands;
 		caveGenSmall.stoneBlock = ModBlocks.duna_rock;
 

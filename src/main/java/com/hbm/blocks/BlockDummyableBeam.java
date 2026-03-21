@@ -37,7 +37,6 @@ public class BlockDummyableBeam extends BlockDummyable implements ILookOverlay {
 		return 0;
 	}
 
-	@Override
 	public int[] findCore(World world, int x, int y, int z) {
 		int metadata = world.getBlockMetadata(x, y, z);
 

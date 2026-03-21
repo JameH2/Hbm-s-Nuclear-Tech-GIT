@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import com.google.gson.Gson;
@@ -18,6 +20,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.Compat;
 import com.hbm.util.ShadyUtil;
+import com.hbm.util.Tuple.Pair;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -26,16 +29,22 @@ import net.minecraft.item.ItemStack;
 
 public class HazmatRegistry {
 	
+	public static List<Pair<Item, Double>> external = new ArrayList();
+	
+	public static double helmet = 0.2D;
+	public static double chest = 0.4D;
+	public static double legs = 0.3D;
+	public static double boots = 0.1D;
+	
 	public static void initDefault() {
+		
+		for(Pair<Item, Double> pair : external) {
+			HazmatRegistry.registerHazmat(pair.getKey(), pair.getValue());
+		}
 
 		//assuming coefficient of 10
 		//real coefficient turned out to be 5
 		//oops
-		
-		double helmet = 0.2D;
-		double chest = 0.4D;
-		double legs = 0.3D;
-		double boots = 0.1D;
 
 		double iron = 0.0225D; // 5%
 		double gold = 0.0225D; // 5%
@@ -50,15 +59,6 @@ public class HazmatRegistry {
 		double paa = 1.7D; // 97%
 		double liquidator = 2.4D; // 99.6%
 
-		double t51 = 1D; // 90%
-		double ajr = 1.3D; // 95%
-		double bj = 1D; // 90%
-		double env = 1.0D; // 99%
-		double hev = 2.3D; // 99.5%
-		double rpa = 2D; // 99%
-		double trench = 1D; // 90%
-		double fau = 4D; // 99.99%
-		double dns = 5D; // 99.999%
 		double security = 0.825D; // 85%
 		double star = 1D; // 90%
 		double cmb = 1.3D; // 95%
@@ -84,66 +84,6 @@ public class HazmatRegistry {
 		HazmatRegistry.registerHazmat(ModItems.liquidator_plate, liquidator * chest);
 		HazmatRegistry.registerHazmat(ModItems.liquidator_legs, liquidator * legs);
 		HazmatRegistry.registerHazmat(ModItems.liquidator_boots, liquidator * boots);
-
-		HazmatRegistry.registerHazmat(ModItems.t45_helmet, t51 * helmet);
-		HazmatRegistry.registerHazmat(ModItems.t45_plate, t51 * chest);
-		HazmatRegistry.registerHazmat(ModItems.t45_legs, t51 * legs);
-		HazmatRegistry.registerHazmat(ModItems.t45_boots, t51 * boots);
-
-		HazmatRegistry.registerHazmat(ModItems.t51_helmet, t51 * helmet);
-		HazmatRegistry.registerHazmat(ModItems.t51_plate, t51 * chest);
-		HazmatRegistry.registerHazmat(ModItems.t51_legs, t51 * legs);
-		HazmatRegistry.registerHazmat(ModItems.t51_boots, t51 * boots);
-
-		HazmatRegistry.registerHazmat(ModItems.ajr_helmet, ajr * helmet);
-		HazmatRegistry.registerHazmat(ModItems.ajr_plate, ajr * chest);
-		HazmatRegistry.registerHazmat(ModItems.ajr_legs, ajr * legs);
-		HazmatRegistry.registerHazmat(ModItems.ajr_boots, ajr * boots);
-		HazmatRegistry.registerHazmat(ModItems.ajro_helmet, ajr * helmet);
-		HazmatRegistry.registerHazmat(ModItems.ajro_plate, ajr * chest);
-		HazmatRegistry.registerHazmat(ModItems.ajro_legs, ajr * legs);
-		HazmatRegistry.registerHazmat(ModItems.ajro_boots, ajr * boots);
-
-		HazmatRegistry.registerHazmat(ModItems.bj_helmet, bj * helmet);
-		HazmatRegistry.registerHazmat(ModItems.bj_plate, bj * chest);
-		HazmatRegistry.registerHazmat(ModItems.bj_plate_jetpack, bj * chest);
-		HazmatRegistry.registerHazmat(ModItems.bj_legs, bj * legs);
-		HazmatRegistry.registerHazmat(ModItems.bj_boots, bj * boots);
-
-		HazmatRegistry.registerHazmat(ModItems.steamsuit_helmet, 1.3 * helmet);
-		HazmatRegistry.registerHazmat(ModItems.steamsuit_plate, 1.3 * chest);
-		HazmatRegistry.registerHazmat(ModItems.steamsuit_legs, 1.3 * legs);
-		HazmatRegistry.registerHazmat(ModItems.steamsuit_boots, 1.3 * boots);
-
-		HazmatRegistry.registerHazmat(ModItems.envsuit_helmet, env * helmet);
-		HazmatRegistry.registerHazmat(ModItems.envsuit_plate, env * chest);
-		HazmatRegistry.registerHazmat(ModItems.envsuit_legs, env * legs);
-		HazmatRegistry.registerHazmat(ModItems.envsuit_boots, env * boots);
-
-		HazmatRegistry.registerHazmat(ModItems.hev_helmet, hev * helmet);
-		HazmatRegistry.registerHazmat(ModItems.hev_plate, hev * chest);
-		HazmatRegistry.registerHazmat(ModItems.hev_legs, hev * legs);
-		HazmatRegistry.registerHazmat(ModItems.hev_boots, hev * boots);
-
-		HazmatRegistry.registerHazmat(ModItems.rpa_helmet, rpa * helmet);
-		HazmatRegistry.registerHazmat(ModItems.rpa_plate, rpa * chest);
-		HazmatRegistry.registerHazmat(ModItems.rpa_legs, rpa * legs);
-		HazmatRegistry.registerHazmat(ModItems.rpa_boots, rpa * boots);
-
-		HazmatRegistry.registerHazmat(ModItems.trenchmaster_helmet, trench * helmet);
-		HazmatRegistry.registerHazmat(ModItems.trenchmaster_plate, trench * chest);
-		HazmatRegistry.registerHazmat(ModItems.trenchmaster_legs, trench * legs);
-		HazmatRegistry.registerHazmat(ModItems.trenchmaster_boots, trench * boots);
-
-		HazmatRegistry.registerHazmat(ModItems.fau_helmet, fau * helmet);
-		HazmatRegistry.registerHazmat(ModItems.fau_plate, fau * chest);
-		HazmatRegistry.registerHazmat(ModItems.fau_legs, fau * legs);
-		HazmatRegistry.registerHazmat(ModItems.fau_boots, fau * boots);
-
-		HazmatRegistry.registerHazmat(ModItems.dns_helmet, dns * helmet);
-		HazmatRegistry.registerHazmat(ModItems.dns_plate, dns * chest);
-		HazmatRegistry.registerHazmat(ModItems.dns_legs, dns * legs);
-		HazmatRegistry.registerHazmat(ModItems.dns_boots, dns * boots);
 
 		HazmatRegistry.registerHazmat(ModItems.paa_plate, paa * chest);
 		HazmatRegistry.registerHazmat(ModItems.paa_legs, paa * legs);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ILookOverlay;
+import com.hbm.blocks.ITooltipProvider;
 import com.hbm.dim.CelestialBody;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntityMachineHTRNeo;
@@ -12,13 +13,15 @@ import com.hbm.util.BobMathUtil;
 import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class MachineHTRFNeo extends BlockDummyable implements ILookOverlay {
+public class MachineHTRFNeo extends BlockDummyable implements ILookOverlay, ITooltipProvider {
 
 	public MachineHTRFNeo() {
 		super(Material.iron);
@@ -108,6 +111,11 @@ public class MachineHTRFNeo extends BlockDummyable implements ILookOverlay {
 		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
+		this.addStandardInfo(stack, player, list, ext);
 	}
 
 }

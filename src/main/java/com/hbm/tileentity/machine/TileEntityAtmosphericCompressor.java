@@ -1,12 +1,10 @@
 package com.hbm.tileentity.machine;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.trait.CBT_Atmosphere;
+import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
 import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -16,8 +14,7 @@ import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
-import api.hbm.fluid.IFluidStandardReceiver;
-import api.hbm.fluid.IFluidStandardSender;
+import api.hbm.fluidmk2.IFluidStandardSenderMK2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -25,7 +22,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityAtmosphericCompressor extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardSender {
+public class TileEntityAtmosphericCompressor extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardSenderMK2 {
 
 	int consumption = 200;
 	public float rot;
@@ -33,7 +30,6 @@ public class TileEntityAtmosphericCompressor extends TileEntityMachineBase imple
 	private float rotSpeed;
 	public long power = 0;
 	public FluidTank tank;
-	public List<IFluidStandardReceiver> list = new ArrayList<>();
 
 	public TileEntityAtmosphericCompressor() {
 		super(0);
@@ -66,11 +62,11 @@ public class TileEntityAtmosphericCompressor extends TileEntityMachineBase imple
 				tank.setTankType(Fluids.NONE);
 			}
 
-			if(hasPower() && tank.getTankType() != Fluids.NONE && tank.getFill() + 100 <= tank.getMaxFill()) {
-				tank.setFill(tank.getFill() + 100);
-				power -= this.getMaxPower() / 100;
+			if(hasPower() && tank.getTankType() != Fluids.NONE && tank.getFill() + 200 <= tank.getMaxFill()) {
+				tank.setFill(tank.getFill() + 200);
+				power -= this.getMaxPower() / 50;
 
-				FT_Gaseous.capture(worldObj, tank.getTankType(), 100);
+				FT_Gaseous.capture(worldObj, tank.getTankType(), 200);
 			}
 
 			markDirty();
@@ -105,12 +101,15 @@ public class TileEntityAtmosphericCompressor extends TileEntityMachineBase imple
 
 		if(atmosphere == null) return;
 
+		atmosphere.sortDescending();
+
 		FluidType currentFluid = tank.getTankType();
 
 		for(int i = 0; i < atmosphere.fluids.size(); i++) {
 			if(atmosphere.fluids.get(i).fluid == currentFluid) {
 				int targetIndex = i + 1;
 				if(targetIndex >= atmosphere.fluids.size()) targetIndex = 0;
+				if(atmosphere.fluids.get(targetIndex).pressure <= 0.0001) targetIndex = 0;
 
 				tank.setTankType(atmosphere.fluids.get(targetIndex).fluid);
 				break;
@@ -118,10 +117,29 @@ public class TileEntityAtmosphericCompressor extends TileEntityMachineBase imple
 		}
 	}
 
+	public boolean switchGas(FluidType targetFluid) {
+		if(targetFluid == tank.getTankType()) return false;
+
+		CBT_Atmosphere atmosphere = !ChunkAtmosphereManager.proxy.hasAtmosphere(worldObj, xCoord, yCoord, zCoord)
+			? CelestialBody.getTrait(worldObj, CBT_Atmosphere.class)
+			: null;
+
+		if(atmosphere == null) return false;
+		
+		for(FluidEntry entry : atmosphere.fluids) {
+			if(entry.fluid == targetFluid) {
+				tank.setTankType(targetFluid);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	protected void updateConnections() {
 		for(DirPos pos : getConPos()) {
-			trySubscribe(worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-			sendFluid(tank, worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
+			trySubscribe(worldObj, pos);
+			tryProvide(tank, worldObj, pos);
 		}
 	}
 
@@ -140,7 +158,7 @@ public class TileEntityAtmosphericCompressor extends TileEntityMachineBase imple
 	}
 
 	public boolean hasPower() {
-		return power >= this.getMaxPower() / 100;
+		return power >= this.getMaxPower() / 50;
 	}
 
 	@Override

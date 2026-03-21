@@ -125,7 +125,8 @@ public class MixerRecipes extends SerializableRecipe {
 				new MixerRecipe(500, 20).setStack1(new FluidStack(Fluids.RADIOSOLVENT, 125)).setSolid(new ComparableStack(ModItems.powder_pvc)),
 				new MixerRecipe(500, 20).setStack1(new FluidStack(Fluids.HGAS, 500)).setStack2(new FluidStack(Fluids.UNSATURATEDS, 250)).setSolid(new ComparableStack(ModItems.powder_cadmium)));
 		register(Fluids.CBENZ, new MixerRecipe(250, 20).setStack1(new FluidStack(Fluids.RADIOSOLVENT, 500)).setSolid(new ComparableStack(ModItems.leaf_pet, 32)));
-		register(Fluids.LITHYDRO, new MixerRecipe(1000, 100).setStack1(new FluidStack(Fluids.BRINE, 500)).setSolid(new ComparableStack(ModItems.powder_lithium, 4)));
+
+		register(Fluids.LITHYDRO, new MixerRecipe(1000, 100).setStack1(new FluidStack(Fluids.BRINE, 125)).setSolid(new ComparableStack(ModItems.powder_lithium, 3)));
 
 	}
 

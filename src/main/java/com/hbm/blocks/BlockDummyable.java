@@ -125,7 +125,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		// cannot be done accidentally, and is definitely preferable to multiblocks
 		// just vanishing when their chunks are unloaded in an unlucky way.
 		if(b != this && world.checkChunksExist(x - 1, y - 1, z - 1, x + 1, y + 1, z + 1)) {
-			if (isLegacyMonoblock(world, x, y, z)) {
+			if(isLegacyMonoblock(world, x, y, z)) {
 				fixLegacyMonoblock(world, x, y, z);
 			} else {
 				world.setBlockToAir(x, y, z);
@@ -147,14 +147,14 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		world.setBlockMetadataWithNotify(x, y, z, offset + world.getBlockMetadata(x, y, z), 3);
 	}
 
-	public int[] findCore(World world, int x, int y, int z) {
+	public int[] findCore(IBlockAccess world, int x, int y, int z) {
 		positions.clear();
 		return findCoreRec(world, x, y, z);
 	}
 
 	List<ThreeInts> positions = new ArrayList<>();
 
-	public int[] findCoreRec(World world, int x, int y, int z) {
+	public int[] findCoreRec(IBlockAccess world, int x, int y, int z) {
 
 		ThreeInts pos = new ThreeInts(x, y, z);
 

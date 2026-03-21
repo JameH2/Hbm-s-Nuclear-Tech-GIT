@@ -1,0 +1,15 @@
+{
+	"name": "Flechettes",
+	"icon": ["hbm:item.ammo_standard", 1, 46],
+	"trigger": [
+		["hbm:item.ammo_standard", 1, 46]
+	],
+	"title": {
+		"en_US": "Flechettes",
+		"zh_CN": "箭形弹"
+	},
+	"content": {
+		"en_US": "Flechettes are small fin-stabilized projectiles, contrary to buckshot's round pellets. Flechette shells have less spread and better armor-piercing compared to standard buckshot.",
+		"zh_CN": "箭形弹是小型的鳍形弹药，而非普通鹿弹的圆形弹丸。箭形弹散布更小，且具 有比普通鹿弹更好的穿甲效果。"
+	}
+}
