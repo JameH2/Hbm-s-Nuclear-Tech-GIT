@@ -11,6 +11,8 @@ import com.hbm.dim.SolarSystem;
 import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
+import com.hbm.entity.missile.EntityCombatDropPod;
+import com.hbm.entity.mob.glyphid.EntityGlyphid;
 import com.hbm.lib.Library;
 
 import net.minecraft.entity.EntityList;
