@@ -62,10 +62,11 @@ public class CBT_War extends CelestialBodyTrait {
 
 	//todo: rework this to be less jank
 	@Override
-	public void update(boolean isRemote) {
-		if(!isRemote) {
-			for(int i = 0; i < projectiles.size(); i++) {
-				Projectile projectile = projectiles.get(i);
+	public void update(boolean isremote, CelestialBody body) {
+		if(!isremote) {
+			if(this != null) {
+				for(int i = 0; i < this.getProjectiles().size(); i++) {
+					Projectile projectile = this.getProjectiles().get(i);
 
 				projectile.update();
 
@@ -89,8 +90,30 @@ public class CBT_War extends CelestialBodyTrait {
 
 				if(projectile.getType() == ProjectileType.SPLITSHOT) {
 					if(projectile.getTravel() <= 0) {
-						this.split(4, projectile, ProjectileType.SMALL);
-						projectiles.remove(i--);
+						projectile.impact();
+					}
+
+					if(projectile.getAnimtime() >= 100) {
+						this.destroyProjectile(projectile);
+						World targetWorld = MinecraftServer.getServer().worldServerForDimension(projectile.getTarget());
+						i--;
+						//System.out.println("damaged: " + targetWorld + " health left: " + this.health);
+
+						if(this.health > 0) {
+							CelestialBody.damage(projectile.getDamage(), targetWorld);
+						} else if(this.health <= 0) {
+							CelestialBody target = CelestialBody.getPlanet(targetWorld);
+							target.modifyTraits(new CBT_Destroyed());
+							this.health = 0;
+						}
+					}
+
+					if(projectile.getType() == ProjectileType.SPLITSHOT) {
+						if(projectile.getTravel() <= 0) {
+							this.split(4, projectile, ProjectileType.SMALL);
+							this.destroyProjectile(projectile);
+							i--;
+						}
 					}
 				}
 			}

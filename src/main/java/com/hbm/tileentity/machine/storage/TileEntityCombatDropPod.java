@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine.storage;
 
+import com.hbm.config.SpaceConfig;
 import com.hbm.inventory.container.ContainerSoyuzCapsule;
 import com.hbm.inventory.gui.GUISoyuzCapsule;
 import com.hbm.tileentity.IBufPacketReceiver;
@@ -86,6 +87,12 @@ public class TileEntityCombatDropPod extends TileEntity implements IBufPacketRec
 			this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord, "hbm:block.hatchOpen", 10.0F, 0.9F);
 			return;
 
+		}
+		
+		if(SpaceConfig.combatPodDespawn == true) {
+			if(this.worldObj.getTotalWorldTime() % 1000 == 0) {
+				worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+			}
 		}
 	}
 	

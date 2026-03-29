@@ -20,6 +20,7 @@ import com.hbm.entity.mob.*;
 import com.hbm.entity.mob.botprime.*;
 import com.hbm.entity.mob.glyphid.*;
 import com.hbm.entity.mob.siege.EntitySiegeCraft;
+import com.hbm.entity.mob.siege.EntitySiegeUFO;
 import com.hbm.entity.particle.*;
 import com.hbm.entity.projectile.*;
 import com.hbm.entity.train.EntityRailCarBase.BoundingBoxDummyEntity;
@@ -175,6 +176,7 @@ public class EntityMappings {
 		addEntity(EntityBlockSpider.class, "entity_taintcrawler", 1000);
 		addEntity(EntityRBMKDebris.class, "entity_rbmk_debris", 1000);
 		addEntity(EntityUFO.class, "entity_ntm_ufo", 1000);
+		addMob(EntitySiegeUFO.class, "entity_meme_ufo", 0x303030, 0x800000);
 		addEntity(EntityQuasar.class, "entity_digamma_quasar", 250);
 		addEntity(EntitySpear.class, "entity_digamma_spear", 1000);
 		addEntity(EntityMissileVolcano.class, "entity_missile_volcano", 1000);

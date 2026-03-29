@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.HashBiMap;
+import com.hbm.dim.CelestialBody;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -55,6 +56,6 @@ public abstract class CelestialBodyTrait {
 	public void readFromBytes(ByteBuf buf) { }
 	public void writeToBytes(ByteBuf buf) { }
 
-	public void update(boolean isRemote) { }
+	public void update(boolean isremote, CelestialBody body) { }
 
 }

@@ -81,7 +81,26 @@ public class RenderBatterySocket extends TileEntitySpecialRenderer implements II
 					BeamPronter.prontBeam(Vec3.createVectorHelper(0.4375 * i, 1.1875, 0.4375 * j), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x404040, 0x002040, (int)(System.currentTimeMillis() % 1000) / 50, 1, 0, 3, 0.025F);
 					GL11.glPopMatrix();
 				}
+			} else if(render.getItem() == ModItems.core_angel) {
+				GL11.glPushMatrix();
+				GL11.glScaled(2, 2, 2);
+				GL11.glRotated((socket.getWorldObj().getTotalWorldTime() % 360 + interp) * 5D, 0, -1, 0);
+				this.bindTexture(ResourceManager.bfangel_tex);
+				ResourceManager.bfangel.renderOnly("body");
+				GL11.glPopMatrix();
+				
+				Random rand = new Random(tile.getWorldObj().getTotalWorldTime() / 5);
+				rand.nextBoolean();
+
+				for(int i = -1; i <= 1; i += 2) for(int j = -1; j <= 1; j += 2) if(rand.nextInt(4) == 0) {
+					GL11.glPushMatrix();
+					GL11.glTranslated(0, 0.75, 0);
+					BeamPronter.prontBeam(Vec3.createVectorHelper(0.4375 * i, 1.1875, 0.4375 * j), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x404040, 0x002040, (int)(System.currentTimeMillis() % 1000) / 50, 15, 0.0625F, 3, 0.025F);
+					BeamPronter.prontBeam(Vec3.createVectorHelper(0.4375 * i, 1.1875, 0.4375 * j), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x404040, 0x002040, (int)(System.currentTimeMillis() % 1000) / 50, 1, 0, 3, 0.025F);
+					GL11.glPopMatrix();
+				}
 			}
+			
 		}
 		
 		GL11.glShadeModel(GL11.GL_FLAT);

@@ -108,7 +108,7 @@ public class EntityBFAngel extends EntityFlying implements IMob, IBossDisplayDat
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20000.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10000.0D);
 	}
 
 	@Override
@@ -448,21 +448,30 @@ public class EntityBFAngel extends EntityFlying implements IMob, IBossDisplayDat
 		}
 
 		if(this.deathTime == 19 && !worldObj.isRemote) {
-			worldObj.newExplosion(this, posX, posY, posZ, 10F, true, true);
-			ExplosionNukeSmall.explode(worldObj, posX, posY, posZ, ExplosionNukeSmall.PARAMS_MEDIUM);
+			NBTTagCompound data = new NBTTagCompound();
+			data.setString("type", "tinytot");
+			PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, posX, posY + 0.5, posZ), new TargetPoint(this.dimension, posX, posY, posZ, 250));
+			worldObj.playSoundEffect(posX, posY, posZ, "hbm:weapon.mukeExplosion", 15.0F, 1.0F);
+			
+			this.entityDropItem(new ItemStack(ModItems.core_angel, 1, 0), 1);
 
 			List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.boundingBox.expand(200, 200, 200));
 
 			
 			for(EntityPlayer player : players) {
 				player.addChatComponentMessage(new ChatComponentText("Stars are starting to flicker...").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-				player.triggerAchievement(MainRegistry.bossUFO);
-				player.inventory.addItemStackToInventory(new ItemStack(ModItems.coin_ufo));
 			}
-			if(!worldObj.isRemote) {
-				CelestialBody body = CelestialBody.getBody(worldObj);
-				body.modifyTraits(new CBT_Invasion(0, 1500, false));
+			
+			CelestialBody body = CelestialBody.getBody(worldObj);
+
+			CBT_Invasion invasion = body.getTrait(CBT_Invasion.class);
+
+			if (invasion == null) {
+				body.modifyTraits(new CBT_Invasion(0, 122, false));
+
 			}
+
+			
 		}
 
 		super.onDeathUpdate();

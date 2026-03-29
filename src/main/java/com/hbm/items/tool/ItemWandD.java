@@ -81,24 +81,7 @@ public class ItemWandD extends Item {
 				}
 
 			} else {
-				Random rand = world.rand;
-				EntityCombatDropPod pod = new EntityCombatDropPod(world);
-				pod.posX = player.posX + rand.nextGaussian() * 10;
-				pod.posY = 300;
-				pod.posZ = player.posZ + rand.nextGaussian() * 10;
-				
 
-				pod.motionY = -0.5;
-
-				EntityGlyphid zombie = new EntityGlyphid(world);
-				NBTTagCompound nbt = new NBTTagCompound();
-
-				nbt.setString("id", EntityList.getEntityString(zombie));
-				zombie.writeToNBT(nbt);
-				pod.setColor(2);
-				pod.setPayload(nbt, 3, 2);
-
-				world.spawnEntityInWorld(pod);
 				
 				int targetId = stack.stackTagCompound.getInteger("dim");
 				targetId++;

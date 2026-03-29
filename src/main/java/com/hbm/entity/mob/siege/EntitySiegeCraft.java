@@ -31,6 +31,10 @@ public class EntitySiegeCraft extends EntityUFOBase implements IBossDisplayData 
 	private int attackCooldown;
 	private int beamCountdown;
 
+	private int lifetime = 0;
+	private boolean isRetreating = false;
+	private static final int MAX_LIFETIME = 60 * 4 * 20;
+	
 	public EntitySiegeCraft(World world) {
 		super(world);
 		this.setSize(7F, 1F);
@@ -158,6 +162,23 @@ public class EntitySiegeCraft extends EntityUFOBase implements IBossDisplayData 
 		}
 
 		if(!worldObj.isRemote) {
+			
+			lifetime++;
+			if(lifetime > MAX_LIFETIME) {
+				isRetreating = true;
+			}
+
+			if(isRetreating) {
+				this.target = null;
+				this.setWaypoint((int)posX, 255, (int)posZ);
+				approachPosition(20);
+				if(this.posY > 250 || lifetime > MAX_LIFETIME + 300) {
+					this.setDead();
+					return;
+				}
+			}
+		
+			
 			if(this.attackCooldown > 0) {
 				this.attackCooldown--;
 			}
@@ -172,7 +193,7 @@ public class EntitySiegeCraft extends EntityUFOBase implements IBossDisplayData 
 				dPart.setByte("count", (byte)(2 + rand.nextInt(3)));
 				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(dPart, posX + rand.nextGaussian() * 2, posY + rand.nextGaussian(), posZ + rand.nextGaussian() * 2), new TargetPoint(worldObj.provider.dimensionId, posX, posY, posZ, 50));
 			}
-
+			
 			boolean beam = false;
 
 			if(this.target == null || this.beamCountdown <= 0) {
@@ -275,8 +296,12 @@ public class EntitySiegeCraft extends EntityUFOBase implements IBossDisplayData 
 		}
 
 		if(this.courseChangeCooldown > 0) {
-			approachPosition(this.target == null ? 0.25D : 0.5D + this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue() * 1);
-		}
+			    double speed = this.target == null ? 0.5D : 1.0D + (this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue() * 3.0D);
+			    
+			    if(isRetreating) speed *= 2.0D; 
+			    
+			    approachPosition(speed);
+			    }
 	}
 
 	@Override

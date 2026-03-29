@@ -4,11 +4,16 @@ import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockOre;
+import com.hbm.blocks.generic.BlockPedestal.TileEntityPedestal;
 import com.hbm.config.SpaceConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
 import com.hbm.dim.WorldProviderCelestial;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsComponent;
+import com.hbm.itempool.ItemPoolsRedRoom;
+import com.hbm.items.ModItems;
 import com.hbm.main.StructureManager;
 import com.hbm.world.dungeon.AncientTomb;
 import com.hbm.world.gen.nbt.NBTStructure;
@@ -18,6 +23,10 @@ import com.hbm.world.generator.DungeonToolbox;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 
@@ -59,6 +68,29 @@ public class WorldGeneratorIke implements IWorldGenerator {
 		//okay okay okay, lets say on duna you DO make solvent, this is now awesome because you can now make gallium arsenide to then head to
 		//dres and the likes :)
 
+	
+		// the HACKIEST hack i ever hacked.
+		for (int x = 0; x < 16; x++) {
+			for (int z = 0; z < 16; z++) {
+				int ox = i + x;
+				int oz = j + z;
+
+				for (int y = 0; y < world.getHeight(); y++) {
+					Block b = world.getBlock(ox, y, oz);
+
+					if (b == ModBlocks.pedestal) {
+
+						TileEntity te = world.getTileEntity(ox, y, oz);
+
+						if (te instanceof TileEntityPedestal) {
+							TileEntityPedestal pedestal = (TileEntityPedestal) te;
+							pedestal.item = new ItemStack(ModItems.divine_shard, 1);
+							world.markBlockForUpdate(ox, y, oz);
+						}
+					}
+				}
+			}
+		}
 
 		DungeonToolbox.generateOre(world, rand, i, j, WorldConfig.mineralSpawn, 10, 12, 32, ModBlocks.ore_mineral, meta, stone);
 

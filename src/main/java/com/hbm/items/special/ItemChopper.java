@@ -2,6 +2,7 @@ package com.hbm.items.special;
 
 import java.util.List;
 
+import com.hbm.entity.mob.EntityBFAngel;
 import com.hbm.entity.mob.EntityDuck;
 import com.hbm.entity.mob.EntityHunterChopper;
 import com.hbm.entity.mob.EntityUFO;
@@ -116,7 +117,10 @@ public class ItemChopper extends Item {
 			((EntityUFO)entity).scanCooldown = 100;
 			y += 35;
 		}
-		
+		if(this == ModItems.spawn_angel) {
+			entity = new EntityBFAngel(world);
+			y += 25;
+		}
 		if(this == ModItems.spawn_duck)
 			entity = new EntityDuck(world);
 		

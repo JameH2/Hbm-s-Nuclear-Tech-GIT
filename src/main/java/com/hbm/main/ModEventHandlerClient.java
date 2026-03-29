@@ -11,6 +11,7 @@ import com.hbm.config.SpaceConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystemWorldSavedData;
 import com.hbm.dim.WorldProviderCelestial;
+import com.hbm.dim.trait.CBT_Invasion;
 import com.hbm.dim.trait.CBT_War;
 import com.hbm.dim.trait.CelestialBodyTrait;
 import com.hbm.dim.orbit.WorldProviderOrbit;
@@ -1039,6 +1040,16 @@ public class ModEventHandlerClient {
 				//dead entities may have later insertion order than actively firing ones, so we be safe
 				ItemRenderWeaponBase.flashMap.values().removeIf(entry -> millis - entry.longValue() >= 150);
 			}
+			
+			CelestialBody body = CelestialBody.getBody(mc.theWorld);
+			CBT_Invasion invasion = body.getTrait(Minecraft.getMinecraft().thePlayer.worldObj, CBT_Invasion.class);
+			
+			if(invasion != null) {
+				if (invasion.isInvading && invasion.wave < 4 && body.hasTrait(Minecraft.getMinecraft().thePlayer.worldObj, CBT_Invasion.class)) {
+					MainRegistry.proxy.displayTooltip(EnumChatFormatting.GREEN + "Kills Left: " + (invasion.killreq - invasion.kills), 14);
+				}	
+			}
+
 		}
 
 		if(Keyboard.isKeyDown(HbmKeybinds.qmaw.getKeyCode()) && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Minecraft.getMinecraft().currentScreen != null) {
@@ -1150,7 +1161,7 @@ public class ModEventHandlerClient {
 			for(CelestialBody body : CelestialBody.getAllBodies()) {
 				if(SolarSystemWorldSavedData.getClientTraits(body.name) != null) {
 					for(CelestialBodyTrait trait : SolarSystemWorldSavedData.getClientTraits(body.name).values()) {
-						trait.update(true);
+						trait.update(true, body);
 					}
 				}
 			}

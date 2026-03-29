@@ -13,7 +13,7 @@ public class GeneralConfig {
 	public static int packetThreadingMaxCount = 1;
 	public static boolean packetThreadingErrorBypass = false;
 
-	public static boolean enableDebugMode = true;
+	public static boolean enableDebugMode = false;
 	public static boolean enableMycelium = false;
 	public static boolean enablePlutoniumOre = false;
 	public static int enableDungeons = 2;

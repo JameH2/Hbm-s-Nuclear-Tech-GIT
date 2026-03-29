@@ -455,7 +455,7 @@ public class LegoClient {
 		RenderArcFurnace.fullbright(true);
 		
 		GL11.glPushMatrix();
-		renderFlareSprite(bullet, interp, 1F, 1F, 1F, (1 - age) * 7.5 + 1.5, 0.5F * (float) age, 0.75F * (float) age);
+		renderFlareSprite(bullet, interp, 1F, 1F, 1F, (4 - age) * 7.5 + 1.5, 0.5F * (float) age, 0.75F * (float) age);
 		GL11.glPopMatrix();
 		
 		GL11.glPushMatrix();

@@ -21,5 +21,10 @@ public class WorldProviderEarth extends WorldProviderCelestial {
 	public boolean canRespawnHere() {
 		return true;
 	}
+	
+	@Override
+	public void updateWeather() {
+		super.updateWeather();
+	}
 
 }

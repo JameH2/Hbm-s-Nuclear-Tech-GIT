@@ -2,6 +2,7 @@ package com.hbm.dim;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
 import java.util.List;
 
 import com.hbm.config.GeneralConfig;
@@ -11,10 +12,12 @@ import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
 import com.hbm.dim.trait.CBT_War;
 import com.hbm.dim.trait.CBT_Destroyed;
+import com.hbm.dim.trait.CBT_Invasion;
 import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
 import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.SatelliteSavedData;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.saveddata.satellites.SatelliteWar;
@@ -27,6 +30,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -47,6 +51,8 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 
 	private double eclipseAmount;
 	private long localTime = -1;
+	
+	public static ArrayList<Meteor> meteors = new ArrayList<>();
 
 	@Override
 	public abstract void registerWorldChunkManager();
@@ -83,6 +89,31 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		// Will prevent water from existing, will be unset immediately before using a bucket if inside a pressurized room
 		isHellWorld = !worldObj.isRemote && pressure <= 0.2F && !Loader.isModLoaded(Compat.MOD_COFH);
 
+
+		
+		Random rand = new Random();
+		CBT_Invasion invasion = CelestialBody.getTrait(worldObj, CBT_Invasion.class);
+
+		if (worldObj.isRemote) {
+			EntityPlayer player = MainRegistry.proxy.me();
+
+			if (invasion != null) {
+
+				for (int i = 0; i < meteors.size(); i++) {
+					meteors.get(i).update();
+				}
+				
+				if (rand.nextInt(Math.max(1, 5 - invasion.wave)) == 0 && invasion.isInvading) {
+					Meteor meteor = new Meteor((player.posX + rand.nextInt(16000)) - 8000, 2017,(player.posZ + rand.nextInt(16000)) - 8000);
+					meteors.add(meteor);
+				}
+
+				meteors.removeIf(x -> x.isDead);
+			} else {
+				meteors.removeAll(meteors);
+			}
+
+		}
 		if(pressure > 0.5F || worldObj.provider.dimensionId == SpaceConfig.dimaDimension) {
 			super.updateWeather();
 			return;
@@ -92,7 +123,11 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		worldObj.rainingStrength = 0.0F;
 		worldObj.prevThunderingStrength = 0.0F;
 		worldObj.thunderingStrength = 0.0F;
+
+		
+		
 	}
+	
 
 	// Can be overridden to provide fog changing events based on weather
 	public float fogDensity(FogDensity event) {
@@ -793,5 +828,67 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		return null;
 	}
 	/// FISH ///
+
+	public class Meteor {
+
+		public double posX;
+		public double posY;
+		public double posZ;
+		public double prevPosX;
+		public double prevPosY;
+		public double prevPosZ;
+		public double motionX;
+		public double motionY;
+		public double motionZ;
+		public boolean isDead = false;
+		public long age;
+		public MeteorType type;
+
+		public Meteor(double posX, double posY, double posZ) {
+			this(posX, posY, posZ, MeteorType.STANDARD, -31.2, -20.8, 20);
+		}
+
+		public Meteor(double posX, double posY, double posZ, MeteorType type, double motionX, double motionY, double motionZ) {
+			this.posX = posX;
+			this.posY = posY;
+			this.posZ = posZ;
+			this.type = type;
+			this.motionX = motionX;
+			this.motionY = motionY;
+			this.motionZ = motionZ;
+		}
+
+		private void update() {
+			Random rand = new Random();
+
+			if(this.type != MeteorType.SMOKE && this.type != MeteorType.FRAGMENT) {
+				Meteor meteor = new Meteor((this.posX + rand.nextInt(16)) - 8, (this.posY + rand.nextInt(16)), (this.posZ + rand.nextInt(16)) - 8, MeteorType.SMOKE, 0, 0, 0);
+				meteors.add(meteor);
+			}
+
+			if(this.posY <= 500 && this.type != MeteorType.SMOKE) {
+				this.isDead = true;
+			}
+
+			if(this.type == MeteorType.SMOKE) {
+				this.age++;
+				if(this.age >= 60)
+					this.isDead = true;
+			}
+
+			this.prevPosX = this.posX;
+			this.prevPosY = this.posY;
+			this.prevPosZ = this.posZ;
+			this.posX += this.motionX;
+			this.posY += this.motionY;
+			this.posZ += this.motionZ;
+		}
+	}
+
+	public static enum MeteorType {
+		STANDARD,
+		FRAGMENT,
+		SMOKE
+	}
 
 }
