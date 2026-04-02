@@ -399,13 +399,15 @@ public class ModEventHandler {
 
 				body.modifyTraits(alien);
 			}else if (event.entity instanceof EntitySiegeCraft) {
-				alien.kills += 3;
+				alien.kills += 10;
 				
 				body.modifyTraits(alien);
 			}
 			
 			if(alien.wave >= 4 && event.entity instanceof EntityUFO) {
 				HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> currentTraits = body.getTraits(event.entity.worldObj);
+
+				MusicManager.stop();
 
 				currentTraits.remove(CBT_Invasion.class);
 

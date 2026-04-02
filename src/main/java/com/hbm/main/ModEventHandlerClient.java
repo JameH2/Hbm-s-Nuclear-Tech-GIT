@@ -665,13 +665,21 @@ public class ModEventHandlerClient {
 	}
 
 	private static final ResourceLocation MUSIC_LOCATION = new ResourceLocation("hbm:music.game.space");
-	private ISound currentSong;
+	public static ISound currentSong;
 
 	@SubscribeEvent
 	public void onPlayMusic(PlaySoundEvent17 event) {
-		ResourceLocation r = event.sound.getPositionedSoundLocation();
 		if(Minecraft.getMinecraft().theWorld == null) return;
+
+		ResourceLocation r = event.sound.getPositionedSoundLocation();
 		if(!r.toString().equals("minecraft:music.game.creative") && !r.toString().equals("minecraft:music.game")) return;
+
+		// Managed music is playing
+		if(MusicManager.isPlaying()) {
+			event.setResult(Result.DENY);
+			event.result = null;
+			return;
+		}
 
 		// Prevent songs playing over the top of each other
 		if(Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(currentSong)) {
@@ -684,6 +692,8 @@ public class ModEventHandlerClient {
 		WorldProvider provider = Minecraft.getMinecraft().theWorld.provider;
 		if((provider instanceof WorldProviderCelestial || provider instanceof WorldProviderOrbit) && provider.dimensionId != 0) {
 			event.result = currentSong = PositionedSoundRecord.func_147673_a(MUSIC_LOCATION);
+		} else {
+			currentSong = event.sound; // track vanilla songs
 		}
 	}
 
@@ -1450,6 +1460,8 @@ public class ModEventHandlerClient {
 		}
 
 		RenderOverhead.renderActionPreview(event.partialTicks);
+
+		MusicManager.update();
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)

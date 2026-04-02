@@ -158,6 +158,22 @@
 		{"name": "music/spaceKoyaanis", "stream": true}
 	]},
 
+	"music.venum.intro": {"category": "music", "sounds": [{"name": "music/venum/intro", "stream": true}]},
+	"music.venum.intro_loop": {"category": "music", "sounds": [{"name": "music/venum/intro_loop", "stream": true}]},
+	"music.venum.intro_verse": {"category": "music", "sounds": [{"name": "music/venum/intro_verse", "stream": true}]},
+	"music.venum.intro_drums": {"category": "music", "sounds": [{"name": "music/venum/intro_drums", "stream": true}]},
+	"music.venum.intro_chorus": {"category": "music", "sounds": [{"name": "music/venum/intro_chorus", "stream": true}]},
+	"music.venum.break_one": {"category": "music", "sounds": [{"name": "music/venum/break_one", "stream": true}]},
+	"music.venum.break_two": {"category": "music", "sounds": [{"name": "music/venum/break_two", "stream": true}]},
+	"music.venum.break_three": {"category": "music", "sounds": [{"name": "music/venum/break_three", "stream": true}]},
+	"music.venum.break_four": {"category": "music", "sounds": [{"name": "music/venum/break_four", "stream": true}]},
+	"music.venum.reprise": {"category": "music", "sounds": [{"name": "music/venum/reprise", "stream": true}]},
+	"music.venum.final_one": {"category": "music", "sounds": [{"name": "music/venum/final_one", "stream": true}]},
+	"music.venum.final_two": {"category": "music", "sounds": [{"name": "music/venum/final_two", "stream": true}]},
+	"music.venum.final_three": {"category": "music", "sounds": [{"name": "music/venum/final_three", "stream": true}]},
+	"music.venum.final_four": {"category": "music", "sounds": [{"name": "music/venum/final_four", "stream": true}]},
+	"music.venum.end": {"category": "music", "sounds": [{"name": "music/venum/end", "stream": true}]},
+
 	"weapon.tauShoot": {"category": "player", "sounds": [{"name": "weapon/tauShoot", "stream": false}]},
 	"weapon.tauChargeLoop": {"category": "player", "sounds": [{"name": "weapon/tauChargeLoop", "stream": true}]},
 	"weapon.tauChargeLoop2": {"category": "player", "sounds": [{"name": "weapon/tauChargeLoop2", "stream": true}]},

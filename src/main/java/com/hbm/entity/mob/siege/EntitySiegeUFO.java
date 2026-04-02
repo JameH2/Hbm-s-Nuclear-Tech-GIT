@@ -151,7 +151,7 @@ public class EntitySiegeUFO extends EntityUFOBase implements IRadiationImmune {
 					bullet.performHitscanExternal(250D);
 
 					this.worldObj.spawnEntityInWorld(bullet);
-					this.playSound("hbm:entity.bfashoot", 2.0F, 1.0F);
+					this.playSound("hbm:entity.bfashoot", 1.0F, 1.0F);
 				}
 			}
 		}

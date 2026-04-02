@@ -13,7 +13,10 @@ import com.hbm.entity.mob.glyphid.EntityGlyphidDigger;
 import com.hbm.entity.mob.siege.EntitySiegeCraft;
 import com.hbm.entity.mob.siege.EntitySiegeUFO;
 import com.hbm.entity.mob.siege.SiegeTier;
+import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
+import com.hbm.main.MusicManager;
+import com.hbm.sound.SSmartSong;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityList;
@@ -26,6 +29,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraftforge.common.DimensionManager;
@@ -49,6 +53,8 @@ public class CBT_Invasion extends CelestialBodyTrait {
 	public int podCooldown = 0;
 	public boolean bossSpawned = false;
 	public boolean warningPlayed;
+
+	private SSmartSong weis;
 
 	public CBT_Invasion() {
 		
@@ -92,6 +98,35 @@ public class CBT_Invasion extends CelestialBodyTrait {
 				warningPlayed = true;
 				MainRegistry.proxy.me().playSound("hbm:alarm.ping", 10F, 1F);
 				MainRegistry.proxy.me().addChatComponentMessage(new ChatComponentText("Incoming Invasion!").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+			}
+			
+			if(!MusicManager.isPlaying()) {
+				weis = new SSmartSong(80);
+				weis.addTransitionWithBeats(0, new ResourceLocation(RefStrings.MODID, "music.venum.intro"), 24 * 4);
+				weis.addSegmentWithBeats(0, new ResourceLocation(RefStrings.MODID, "music.venum.intro_loop"), 4 * 4);
+				weis.addSegmentWithBeats(1, new ResourceLocation(RefStrings.MODID, "music.venum.intro_verse"), 8 * 4);
+				weis.addSegmentWithBeats(2, new ResourceLocation(RefStrings.MODID, "music.venum.intro_drums"), 8 * 4);
+				weis.addSegmentWithBeats(3, new ResourceLocation(RefStrings.MODID, "music.venum.intro_chorus"), 8 * 4);
+				weis.addSegmentWithBeats(4, new ResourceLocation(RefStrings.MODID, "music.venum.break_one"), 4 * 4);
+				weis.addSegmentWithBeats(4, new ResourceLocation(RefStrings.MODID, "music.venum.break_two"), 4 * 4);
+				weis.addSegmentWithBeats(5, new ResourceLocation(RefStrings.MODID, "music.venum.break_three"), 4 * 4);
+				weis.addSegmentWithBeats(5, new ResourceLocation(RefStrings.MODID, "music.venum.break_four"), 4 * 4);
+				weis.addTransitionWithBeats(6, new ResourceLocation(RefStrings.MODID, "music.venum.reprise"), 16 * 4);
+				weis.addSegmentWithBeats(6, new ResourceLocation(RefStrings.MODID, "music.venum.final_one"), 12 * 4);
+				weis.addSegmentWithBeats(6, new ResourceLocation(RefStrings.MODID, "music.venum.final_two"), 4 * 4);
+				weis.addSegmentWithBeats(6, new ResourceLocation(RefStrings.MODID, "music.venum.final_three"), 4 * 4);
+				weis.addSegmentWithBeats(6, new ResourceLocation(RefStrings.MODID, "music.venum.final_four"), 8 * 4);
+				weis.addEnding(new ResourceLocation(RefStrings.MODID, "music.venum.end"));
+
+				MusicManager.start(weis);
+			} else if(weis != null) {
+				switch(wave) {
+					case 0: weis.setState(0); break;
+					case 1: weis.setState(kills < 10 ? 0 : 1); break;
+					case 2: weis.setState(kills < 25 ? 2 : 3); break;
+					case 3: weis.setState(kills < 50 ? 4 : 5); break;
+					default: weis.setState(6); break;
+				}
 			}
 		}
 	}
@@ -193,17 +228,17 @@ public class CBT_Invasion extends CelestialBodyTrait {
 			advanceWave(world);
 			break;
 		case 1:
-			killreq = 80;
+			killreq = 20;
 			if(kills >= killreq)
 				advanceWave(world);
 			break;
 		case 2:
-			killreq = 100;
+			killreq = 50;
 			if(kills >= killreq)
 				advanceWave(world);
 			break;
 		case 3:
-			killreq = 150;
+			killreq = 100;
 			if(kills >= killreq)
 				advanceWave(world);
 			break;
