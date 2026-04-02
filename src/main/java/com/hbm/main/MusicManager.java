@@ -34,7 +34,7 @@ public class MusicManager {
 
 	// call as often as possible probably iunno
 	public static void update() {
-		if(!isPlaying()) return;
+		if(currentSong == null) return;
 
 		int expectedLengthMs = currentSong.getCurrentSegmentLengthMs();
 
