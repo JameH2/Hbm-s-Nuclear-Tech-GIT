@@ -48,10 +48,6 @@ public class SSmartSong { // yes it's a pun
 		return (int) (currentSegment.length * 1000);
 	}
 
-	public boolean isStarting() {
-		return state == 0 && lastState == -1;
-	}
-
 	public boolean isEnding() {
 		return state == -1;
 	}

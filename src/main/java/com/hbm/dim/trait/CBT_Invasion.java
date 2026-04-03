@@ -93,7 +93,7 @@ public class CBT_Invasion extends CelestialBodyTrait {
 				handleBurstSpawning(world);
 				spawnAttempt(world);
 			}
-		} else {
+		} else if(MainRegistry.proxy.me().dimension == body.dimensionId) { // only run if client player is in the same dimension as the invasion
 			if(!isInvading && !warningPlayed) {
 				warningPlayed = true;
 				MainRegistry.proxy.me().playSound("hbm:alarm.ping", 10F, 1F);
@@ -118,16 +118,26 @@ public class CBT_Invasion extends CelestialBodyTrait {
 				weis.addSegmentWithBeats(6, new ResourceLocation(RefStrings.MODID, "music.venum.final_four"), 8 * 4);
 				weis.addEnding(new ResourceLocation(RefStrings.MODID, "music.venum.end"));
 
+				setMusicState();
+
 				MusicManager.start(weis);
-			} else if(weis != null) {
-				switch(wave) {
-					case 0: weis.setState(0); break;
-					case 1: weis.setState(kills < 10 ? 0 : 1); break;
-					case 2: weis.setState(kills < 25 ? 2 : 3); break;
-					case 3: weis.setState(kills < 50 ? 4 : 5); break;
-					default: weis.setState(6); break;
-				}
+			} else {
+				setMusicState();
 			}
+		} else if(weis != null) {
+			MusicManager.stop(true);
+			weis = null;
+		}
+	}
+
+	public void setMusicState() {
+		if(weis == null) return;
+		switch(wave) {
+			case 0: weis.setState(0); break;
+			case 1: weis.setState(kills < 10 ? 0 : 1); break;
+			case 2: weis.setState(kills < 25 ? 2 : 3); break;
+			case 3: weis.setState(kills < 50 ? 4 : 5); break;
+			default: weis.setState(6); break;
 		}
 	}
 

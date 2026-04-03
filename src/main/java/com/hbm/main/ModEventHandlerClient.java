@@ -1460,8 +1460,6 @@ public class ModEventHandlerClient {
 		}
 
 		RenderOverhead.renderActionPreview(event.partialTicks);
-
-		MusicManager.update();
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)

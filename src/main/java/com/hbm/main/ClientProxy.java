@@ -175,6 +175,8 @@ public class ClientProxy extends ServerProxy {
 
 		Jars.initJars();
 
+		MusicManager.init();
+
 		IReloadableResourceManager resourceMan = (IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager();
 		resourceMan.registerReloadListener(new QMAWLoader());
 		resourceMan.registerReloadListener(new HFRModelReloader());
