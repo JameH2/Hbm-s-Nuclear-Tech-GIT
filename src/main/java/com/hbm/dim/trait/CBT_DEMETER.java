@@ -2,6 +2,8 @@ package com.hbm.dim.trait;
 
 import java.util.Random;
 
+import com.hbm.dim.CelestialBody;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -52,7 +54,7 @@ public class CBT_DEMETER extends CelestialBodyTrait {
 	}
 
 	@Override
-	public void update(boolean isRemote) {
+	public void update(boolean isRemote, CelestialBody body) {
 		if(!isRemote) {
 			if(awakened) {
 				attackTime++;

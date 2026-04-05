@@ -1576,7 +1576,7 @@ public class ModEventHandler {
 			TileEntityMachineRadarNT.updateSystem();
 			// Networks! All of them!
 			UniNodespace.updateNodespace();
-		}
+		
 
 
 		// There is an issue here somewhere...

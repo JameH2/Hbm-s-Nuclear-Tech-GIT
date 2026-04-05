@@ -913,7 +913,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 					if(d != null) {
 						// Stop calling things "interp", that's a verb not a noun
-						double interpr = d.effectTimer + size * 0.5;
+						double destroyedProgressClientInterpolation = d.effectTimer + size * 0.5;
 
 						float alpha = (float) (1.0F - Math.min(1.0F, destroyedProgressClientInterpolation / 100));
 						Random random = new Random(12);

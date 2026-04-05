@@ -1,5 +1,7 @@
 package com.hbm.dim.trait;
 
+import com.hbm.dim.CelestialBody;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -34,7 +36,7 @@ public class CBT_Destroyed extends CelestialBodyTrait {
 	}
 
 	@Override
-	public void update(boolean isRemote) {
+	public void update(boolean isRemote, CelestialBody body) {
 		if(isRemote) {
 			effectTimer = Math.min(201.0f, effectTimer + 0.0025f * (201.0f - effectTimer) * 0.15f);
 			if(effectTimer >= 200) {

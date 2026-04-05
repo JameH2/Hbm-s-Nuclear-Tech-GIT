@@ -7,7 +7,6 @@ import java.util.Random;
 import com.hbm.dim.CelestialBody;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -47,20 +46,23 @@ public class CBT_War extends CelestialBodyTrait {
 		projectiles.add(projectile);
 	}
 
-	public void split(int amount, Projectile projectile, ProjectileType type) {
+	public void split( int amount, Projectile projectile, ProjectileType type) {
 
 		//currently kind of temp, there might be a better way to generalize this
-		for(int j = 0; j < amount; j++) {
-			Random rand = new Random();
-			float randX = rand.nextFloat() * 160 - 80;
-			float randY = rand.nextFloat() * 90 - 80;
+		if(projectile.getTravel() <= 0) {
+			for(int j = 0; j < amount; j++) {
+				Random rand = new Random();
+				float randX = rand.nextFloat() * 160 - 80;
+				float randY = rand.nextFloat() * 90 - 80;
 
-			this.launchProjectile(Math.abs(20 + j * 10), projectile.getSize(), projectile.getDamage(), (float) (projectile.getTranslateX()), projectile.getTranslateY() - randY * j, projectile.getTranslateZ() + randX * j, type, projectile.getTarget());
-			projectile.GUIangle = projectile.GUIangle;
+				this.launchProjectile(Math.abs(20 + j * 10), projectile.getSize(), projectile.getDamage(), (float) (projectile.getTranslateX()), projectile.getTranslateY() - randY * j, projectile.getTranslateZ() + randX * j, type, projectile.getTarget());
+				projectile.GUIangle = projectile.GUIangle;
+			}
+
+			this.destroyProjectile(projectile);
 		}
 	}
 
-	//todo: rework this to be less jank
 	@Override
 	public void update(boolean isremote, CelestialBody body) {
 		if(!isremote) {
@@ -68,27 +70,8 @@ public class CBT_War extends CelestialBodyTrait {
 				for(int i = 0; i < this.getProjectiles().size(); i++) {
 					Projectile projectile = this.getProjectiles().get(i);
 
-				projectile.update();
+					projectile.update();
 
-				if(projectile.getTravel() <= 0) {
-					projectile.impact();
-				}
-
-				if(projectile.getAnimtime() >= 100) {
-					World targetWorld = MinecraftServer.getServer().worldServerForDimension(projectile.getTarget());
-
-					if(this.health > 0) {
-						CelestialBody.damage(projectile.getDamage(), targetWorld);
-					} else if(this.health <= 0) {
-						CelestialBody target = CelestialBody.getPlanet(targetWorld);
-						target.modifyTraits(new CBT_Destroyed());
-						this.health = 0;
-					}
-
-					projectiles.remove(i--);
-				}
-
-				if(projectile.getType() == ProjectileType.SPLITSHOT) {
 					if(projectile.getTravel() <= 0) {
 						projectile.impact();
 					}
@@ -117,14 +100,16 @@ public class CBT_War extends CelestialBodyTrait {
 					}
 				}
 			}
-		} else {
-			for(int i = 0; i < projectiles.size(); i++) {
-				Projectile projectile = projectiles.get(i);
-				if(projectile != null && projectile.getTravel() >= 18 && projectile.getTravel() <= 18) {
-					Minecraft.getMinecraft().thePlayer.playSound("hbm:misc.impact", 10F, 1F);
-				}
-			}
 		}
+	}
+
+
+	public void destroyProjectile(Projectile proj) {
+		projectiles.remove(proj);
+	}
+
+	public List<Projectile> getProjectiles() {
+		return projectiles;
 	}
 
 	@Override
@@ -193,7 +178,9 @@ public class CBT_War extends CelestialBodyTrait {
 		private int target;
 
 		public Projectile() {
-
+			this.animtime = 0;
+			this.flashtime = 0;
+			this.type = ProjectileType.MEDIUM; // Default type
 		}
 
 		public Projectile(float traveltime, int size, int damage, double posX, double posY, double posZ, ProjectileType type, int target) {
@@ -236,7 +223,6 @@ public class CBT_War extends CelestialBodyTrait {
 
 		public void writeToBytes(ByteBuf buf) {
 			buf.writeInt(damage);
-			buf.writeFloat(flashtime);
 			buf.writeFloat(traveltime);
 			buf.writeInt(size);
 			buf.writeDouble(translateX);
@@ -250,7 +236,6 @@ public class CBT_War extends CelestialBodyTrait {
 
 		public void readFromBytes(ByteBuf buf) {
 			damage = buf.readInt();
-			flashtime = buf.readFloat();
 			traveltime = buf.readFloat();
 			size = buf.readInt();
 			translateX = buf.readDouble();
@@ -360,8 +345,7 @@ public class CBT_War extends CelestialBodyTrait {
 		HUGE,
 		INCENDIARY,
 		NUCLEAR,
-		SPLITSHOT,
-		INFECTION
+		SPLITSHOT
 		// Add more types as needed
 	}
 

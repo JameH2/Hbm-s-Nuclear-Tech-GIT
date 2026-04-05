@@ -82,7 +82,7 @@ public class CBT_Dyson extends CelestialBodyTrait {
 	}
 
 	@Override
-	public void update(boolean isRemote) {
+	public void update(boolean isRemote, CelestialBody body) {
 		if(!isRemote) {
 			attenuate();
 		}
