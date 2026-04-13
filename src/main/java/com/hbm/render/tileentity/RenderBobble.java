@@ -10,6 +10,8 @@ import com.hbm.items.weapon.sedna.factory.GunFactory.EnumModSpecial;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 
+import java.util.Random;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -57,13 +59,19 @@ public class RenderBobble extends TileEntitySpecialRenderer {
 	public static final ResourceLocation bobble_mrkimkimora = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/MrKimkimora.png");
 	public static final ResourceLocation bobble_abel = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/abel.png");
 	public static final ResourceLocation bobble_abel_glow = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/abel_glow.png");
+	public static final ResourceLocation bobble_vitya = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/vitya.png");
 
+	private Random random = new Random();
+	private long glitchTimer = 0;
+	private boolean isGlitching = false;
+	private long lastGlitchTime = 0;
+	
 	private long time;
 
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float intero) {
 		time = System.currentTimeMillis();
-
+		
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y, z + 0.5);
 
@@ -118,6 +126,7 @@ public class RenderBobble extends TileEntitySpecialRenderer {
 		case MELLOW:	bindTexture(bobble_mellow); break;
 		case MRKIMKIMORA:bindTexture(bobble_mrkimkimora); break;
 		case ABEL:		bindTexture(bobble_abel); break;
+		case VITYA2127:	bindTexture(bobble_vitya); break;
 		default:		bindTexture(ResourceManager.universal);
 		}
 
@@ -244,6 +253,9 @@ public class RenderBobble extends TileEntitySpecialRenderer {
 
 	public void renderGuy(BobbleType type) {
 
+		// Update glitch state for Vitya2127
+		updateGlitchState(type);
+
 		resetFigurineRotation();
 		setupFigurineRotation(type);
 
@@ -252,6 +264,9 @@ public class RenderBobble extends TileEntitySpecialRenderer {
 
 		if(type == BobbleType.PEEP) bobble.renderPart("PeepTail");
 
+		// Apply glitch effects for Vitya2127
+		if (type == BobbleType.VITYA2127) {applyGlitchEffects();}
+
 		GL11.glDisable(GL11.GL_CULL_FACE);
 
 		String suffix = type.skinLayers ? "" : "17";
@@ -259,7 +274,13 @@ public class RenderBobble extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		
+		// Set color with potential glitch effect
+		if (type == BobbleType.VITYA2127 && isGlitching) {
+			// Color already applied in applyGlitchEffects()
+		} else {
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		}
 
 		//LEFT LEG//
 		GL11.glPushMatrix();
@@ -595,6 +616,69 @@ public class RenderBobble extends TileEntitySpecialRenderer {
 		font.drawString(type.label, 0, 0, type == BobbleType.VT ? 0xff0000 : 0xffffff);
 		GL11.glDepthMask(true);
 		GL11.glEnable(GL11.GL_LIGHTING);
+	}
+
+	/*
+	 * Glitch effect for Vitya2127's bobblehead
+	 */
+	private void updateGlitchState(BobbleType type) {
+		if (type != BobbleType.VITYA2127) return;
+		
+		long currentTime = System.currentTimeMillis();
+		
+		// Check if we should start a new glitch (0.5% chance each frame)
+		if (!isGlitching && (currentTime - lastGlitchTime) > 1000) {
+			if (random.nextInt(200) == 0) {
+				isGlitching = true;
+				glitchTimer = currentTime + 500 + random.nextInt(1500); // 0.5-2 seconds of glitching
+				lastGlitchTime = currentTime;
+			}
+		}
+		
+		// Check if glitch should end
+		if (isGlitching && currentTime > glitchTimer) {
+			isGlitching = false;
+		}
+	}
+	
+	private void applyGlitchEffects() {
+		if (!isGlitching) return;
+		
+		// Random color distortion
+		float r = 0.8f + random.nextFloat() * 0.4f;
+		float g = 0.8f + random.nextFloat() * 0.4f;
+		float b = 0.8f + random.nextFloat() * 0.4f;
+		float a = 0.9f + random.nextFloat() * 0.2f;
+		
+		// Occasionally go to extremes for more dramatic effect
+		if (random.nextInt(10) == 0) {
+			r = random.nextFloat();
+			g = random.nextFloat();
+			b = random.nextFloat();
+		}
+		
+		GL11.glColor4f(r, g, b, a);
+		
+		// Random scale distortion
+		if (random.nextInt(5) == 0) {
+			float scale = 0.95f + random.nextFloat() * 0.1f;
+			GL11.glScalef(scale, scale, scale);
+		}
+		
+		// Random translation distortion
+		if (random.nextInt(8) == 0) {
+			float tx = (random.nextFloat() - 0.5f) * 0.1f;
+			float ty = (random.nextFloat() - 0.5f) * 0.1f;
+			float tz = (random.nextFloat() - 0.5f) * 0.1f;
+			GL11.glTranslatef(tx, ty, tz);
+		}
+	}
+	
+	private void applyRandomVertexDistortion() {
+		if (!isGlitching || random.nextInt(3) != 0) return;
+		
+		// This would affect vertex rendering, but we'll just apply matrix transformations
+		// for a similar effect in the simpler model rendering system
 	}
 
 	/*
