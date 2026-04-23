@@ -8,6 +8,8 @@ import java.util.ListIterator;
 
 import com.hbm.config.GeneralConfig;
 import com.hbm.dim.SolarSystem.AstroMetric;
+import com.hbm.dim.orbit.OrbitalStation;
+import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
 import com.hbm.dim.trait.CBT_War;
@@ -21,6 +23,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.SatelliteSavedData;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.saveddata.satellites.SatelliteWar;
+import com.hbm.util.AstronomyUtil;
 import com.hbm.util.Compat;
 
 import cpw.mods.fml.common.Loader;
@@ -40,6 +43,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.WeightedRandomFishable;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.IRenderHandler;
@@ -212,6 +216,45 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		}
 
 		return factor;
+	}
+
+	// Shared server-safe eclipse factor for machine logic.
+	public static float getSolarEclipseFactor(World world, int x, int z) {
+		if(world == null || world.provider == null) {
+			return 0F;
+		}
+
+		CelestialBody body = CelestialBody.getBody(world);
+		double sunSize = SolarSystem.calculateSunSize(body);
+
+		if(world.provider instanceof WorldProviderOrbit) {
+			OrbitalStation station = OrbitalStation.getStationFromPosition(x, z);
+			double progress = station.getTransferProgress(0);
+			double fromAltitude = getOrbitAltitude(station.orbiting.massKg);
+			List<AstroMetric> metrics;
+
+			if(progress > 0) {
+				double toAltitude = getOrbitAltitude(station.target.massKg);
+				metrics = SolarSystem.calculateMetricsBetweenSatelliteOrbits(world, 0, station.orbiting, station.target, fromAltitude, toAltitude, progress);
+			} else {
+				metrics = SolarSystem.calculateMetricsFromSatellite(world, 0, station.orbiting, fromAltitude);
+			}
+
+			return MathHelper.clamp_float((float)getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_ORBIT), 0F, 1F);
+		}
+
+		if(!(world.provider instanceof WorldProviderCelestial)) {
+			return 0F;
+		}
+
+		float solarAngle = world.getCelestialAngle(0);
+		List<AstroMetric> metrics = SolarSystem.calculateMetricsFromBody(world, 0, body, solarAngle);
+		return MathHelper.clamp_float((float)getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_SURFACE), 0F, 1F);
+	}
+
+	private static double getOrbitAltitude(float massKg) {
+		float orbitalPeriod = 7200;
+		return Math.cbrt((AstronomyUtil.GRAVITATIONAL_CONSTANT * massKg * (orbitalPeriod * orbitalPeriod)) / (4 * Math.PI * Math.PI));
 	}
 
 	// due to rendering, the arc is not exactly 1deg = 1deg, this converts from apparentSize to 0-1

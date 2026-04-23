@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.tileentity.TileEntityTickingBase;
 
 import cpw.mods.fml.relauncher.Side;
@@ -9,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 
 public class TileEntitySolarMirror extends TileEntityTickingBase {
@@ -36,21 +38,23 @@ public class TileEntitySolarMirror extends TileEntityTickingBase {
 				return;
 			}
 			
-			int sun = worldObj.getSavedLightValue(EnumSkyBlock.Sky, xCoord, yCoord, zCoord) - worldObj.skylightSubtracted - 11;
-			
-			if(sun <= 0 || !worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord)) {
-				isOn = false;
-				return;
-			}
-			
-			isOn = true;
-			
-			TileEntity te = worldObj.getTileEntity(tX, tY - 1, tZ);
-			
-			if(te instanceof TileEntitySolarBoiler) {
-				TileEntitySolarBoiler boiler = (TileEntitySolarBoiler)te;
-				boiler.heat += sun;
-			}
+				int sun = worldObj.getSavedLightValue(EnumSkyBlock.Sky, xCoord, yCoord, zCoord) - worldObj.skylightSubtracted - 11;
+				float eclipseFactor = WorldProviderCelestial.getSolarEclipseFactor(worldObj, xCoord, zCoord);
+				int effectiveSun = MathHelper.ceiling_float_int(sun * (1.0F - eclipseFactor));
+				
+				if(effectiveSun <= 0 || !worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord)) {
+					isOn = false;
+					return;
+				}
+				
+				isOn = true;
+				
+				TileEntity te = worldObj.getTileEntity(tX, tY - 1, tZ);
+				
+				if(te instanceof TileEntitySolarBoiler) {
+					TileEntitySolarBoiler boiler = (TileEntitySolarBoiler)te;
+					boiler.heat += effectiveSun;
+				}
 		} else {
 			
 			TileEntity te = worldObj.getTileEntity(tX, tY - 1, tZ);
