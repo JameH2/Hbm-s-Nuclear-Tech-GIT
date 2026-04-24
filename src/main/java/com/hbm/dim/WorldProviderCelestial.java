@@ -1,6 +1,7 @@
 package com.hbm.dim;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.List;
@@ -57,6 +58,14 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	private long localTime = -1;
 	
 	public static ArrayList<Meteor> meteors = new ArrayList<>();
+
+	private static final Map<Integer, SolarEclipseCache> surfaceEclipseCache = new HashMap<>();
+	private static final Map<Long, SolarEclipseCache> orbitEclipseCache = new HashMap<>();
+
+	private static class SolarEclipseCache {
+		long tick = Long.MIN_VALUE;
+		float factor = 0F;
+	}
 
 	@Override
 	public abstract void registerWorldChunkManager();
@@ -224,10 +233,19 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 			return 0F;
 		}
 
-		CelestialBody body = CelestialBody.getBody(world);
-		double sunSize = SolarSystem.calculateSunSize(body);
+		long tick = world.getTotalWorldTime();
 
 		if(world.provider instanceof WorldProviderOrbit) {
+			int stationX = MathHelper.floor_double((double)x / OrbitalStation.STATION_SIZE);
+			int stationZ = MathHelper.floor_double((double)z / OrbitalStation.STATION_SIZE);
+			long key = ((long)stationX << 32) | ((long)stationZ & 0xFFFF_FFFFL);
+			SolarEclipseCache cached = orbitEclipseCache.get(key);
+			if(cached != null && cached.tick == tick) {
+				return cached.factor;
+			}
+
+			CelestialBody body = CelestialBody.getBody(world);
+			double sunSize = SolarSystem.calculateSunSize(body);
 			OrbitalStation station = OrbitalStation.getStationFromPosition(x, z);
 			double progress = station.getTransferProgress(0);
 			double fromAltitude = getOrbitAltitude(station.orbiting.massKg);
@@ -240,16 +258,38 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 				metrics = SolarSystem.calculateMetricsFromSatellite(world, 0, station.orbiting, fromAltitude);
 			}
 
-			return MathHelper.clamp_float((float)getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_ORBIT), 0F, 1F);
+			float factor = MathHelper.clamp_float((float)getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_ORBIT), 0F, 1F);
+			if(cached == null) {
+				cached = new SolarEclipseCache();
+				orbitEclipseCache.put(key, cached);
+			}
+			cached.tick = tick;
+			cached.factor = factor;
+			return factor;
 		}
 
 		if(!(world.provider instanceof WorldProviderCelestial)) {
 			return 0F;
 		}
 
+		int dimension = world.provider.dimensionId;
+		SolarEclipseCache cached = surfaceEclipseCache.get(dimension);
+		if(cached != null && cached.tick == tick) {
+			return cached.factor;
+		}
+
+		CelestialBody body = CelestialBody.getBody(world);
+		double sunSize = SolarSystem.calculateSunSize(body);
 		float solarAngle = world.getCelestialAngle(0);
 		List<AstroMetric> metrics = SolarSystem.calculateMetricsFromBody(world, 0, body, solarAngle);
-		return MathHelper.clamp_float((float)getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_SURFACE), 0F, 1F);
+		float factor = MathHelper.clamp_float((float)getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_SURFACE), 0F, 1F);
+		if(cached == null) {
+			cached = new SolarEclipseCache();
+			surfaceEclipseCache.put(dimension, cached);
+		}
+		cached.tick = tick;
+		cached.factor = factor;
+		return factor;
 	}
 
 	private static double getOrbitAltitude(float massKg) {
