@@ -1559,12 +1559,10 @@ public class ModEventHandler {
 	public void onServerTick(TickEvent.ServerTickEvent event) {
 
 		if(event.phase == Phase.START) {
-				for(CelestialBody body : CelestialBody.getAllBodies()) {
-					List<CelestialBodyTrait> traits = new ArrayList<>(body.getTraits().values());
-					for (CelestialBodyTrait trait : traits) {
-						trait.update(false, body);
-					
-					}
+			for(CelestialBody body : CelestialBody.getAllBodies()) {
+				List<CelestialBodyTrait> traits = new ArrayList<>(body.getTraits().values());
+				for (CelestialBodyTrait trait : traits) {
+					trait.update(false, body);
 				}
 			}
 
@@ -1576,7 +1574,7 @@ public class ModEventHandler {
 			TileEntityMachineRadarNT.updateSystem();
 			// Networks! All of them!
 			UniNodespace.updateNodespace();
-		
+		}
 
 
 		// There is an issue here somewhere...
