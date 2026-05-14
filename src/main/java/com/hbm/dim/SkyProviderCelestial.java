@@ -612,43 +612,6 @@ public class SkyProviderCelestial extends IRenderHandler {
 			GL11.glPushMatrix();
 			{
 
-				mc.renderEngine.bindTexture(getNightTexture());
-
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-
-				float starBrightnessAlpha = starBrightness * 0.6f;
-				GL11.glColor4f(1.0F, 1.0F, 1.0F, starBrightnessAlpha);
-
-				GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-
-				GL11.glRotatef(siderealAngle * 360.0F, 1.0F, 0.0F, 0.0F);
-				GL11.glRotatef(-90.0F, 1.0F, 0.0F, 0.0F);
-				GL11.glColor4f(1.0F, 1.0F, 1.0F, starBrightnessAlpha);
-
-				GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
-				GL11.glRotatef(-90.0F, 0.0F, 0.0F, 1.0F);
-				renderSkyboxSide(tessellator, 4);
-
-				GL11.glPushMatrix();
-				GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
-				renderSkyboxSide(tessellator, 1);
-				GL11.glPopMatrix();
-
-				GL11.glPushMatrix();
-				GL11.glRotatef(-90.0F, 1.0F, 0.0F, 0.0F);
-				renderSkyboxSide(tessellator, 0);
-				GL11.glPopMatrix();
-
-				GL11.glRotatef(90.0F, 0.0F, 0.0F, 1.0F);
-				renderSkyboxSide(tessellator, 5);
-
-				GL11.glRotatef(90.0F, 0.0F, 0.0F, 1.0F);
-				renderSkyboxSide(tessellator, 2);
-
-				GL11.glRotatef(90.0F, 0.0F, 0.0F, 1.0F);
-				renderSkyboxSide(tessellator, 3);
-
-				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
 				GL11.glRotatef(-75.0F, 1.0F, 0.0F, 0.0F);
 				GL11.glRotatef(10.0F, 0.0F, 1.0F, 0.0F);
 				GL11.glColor4f(1F, 1F, 1F, 1.0F);
