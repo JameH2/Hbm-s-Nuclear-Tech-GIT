@@ -715,9 +715,6 @@ public class MainRegistry {
 		MinecraftForge.EVENT_BUS.register(dimaDome);
 		FMLCommonHandler.instance().bus().register(dimaDome);
 
-		NeutronHandler neutronHandler = new NeutronHandler();
-		MinecraftForge.EVENT_BUS.register(neutronHandler);
-		FMLCommonHandler.instance().bus().register(neutronHandler);
 
 		
 		BlockMigrations migrations = new BlockMigrations();

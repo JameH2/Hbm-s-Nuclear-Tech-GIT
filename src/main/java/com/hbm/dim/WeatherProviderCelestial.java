@@ -212,7 +212,7 @@ public class WeatherProviderCelestial extends IRenderHandler {
 		}
 	}
 
-	private Vec3 getRainColor(WorldClient world) {
+	public Vec3 getRainColor(WorldClient world) {
 		if(world.provider instanceof WorldProviderCelestial) {
 			return ((WorldProviderCelestial)world.provider).getWeatherColor();
 		}
@@ -220,7 +220,7 @@ public class WeatherProviderCelestial extends IRenderHandler {
 		return Vec3.createVectorHelper(1.0D, 1.0D, 1.0D);
 	}
 
-	private Vec3 getSnowColor(WorldClient world) {
+	public Vec3 getSnowColor(WorldClient world) {
 		if(world.provider instanceof WorldProviderCelestial) {
 			return ((WorldProviderCelestial)world.provider).getSnowColor();
 		}

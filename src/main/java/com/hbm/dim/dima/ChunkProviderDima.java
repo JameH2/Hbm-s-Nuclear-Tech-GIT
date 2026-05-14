@@ -14,7 +14,7 @@ public class ChunkProviderDima extends ChunkProviderCelestial {
 	private MapGenTiltedSpires spires = new MapGenTiltedSpires(6, 6, 0F);
 
 	public ChunkProviderDima(World world, long seed, boolean hasMapFeatures) {
-		super(world, seed, hasMapFeatures);
+		super(world, seed);
 
 		spires.rock = ModBlocks.dima_regolith;
 		spires.regolith = ModBlocks.dima_stone; // inverted, because it falls up

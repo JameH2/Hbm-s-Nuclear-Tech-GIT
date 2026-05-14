@@ -46,6 +46,7 @@ import com.hbm.items.ISatChip;
 import com.hbm.main.ModEventHandlerClient;
 import com.hbm.main.ModEventHandlerRenderer;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.item.ItemStack;
 
@@ -682,7 +683,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 	
-					mc.renderEngine.bindTexture(nightTexture);
+					mc.renderEngine.bindTexture(nightTextureKerbol);
 					float starBrightnessAlpha = starBrightness * 0.6f;
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, starBrightnessAlpha);
 	
@@ -771,7 +772,6 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 				mc.renderEngine.bindTexture(noise);
 				GL11.glPushMatrix();
-			float time = ((float) world.getWorldTime() + partialTicks) / 20.0F;
 
 				// Fix orbital plane
 				GL11.glRotatef(-90.0F, 0, 1, 0);
@@ -1459,6 +1459,61 @@ public class SkyProviderCelestial extends IRenderHandler {
 		nightLightsShader.stop();
 	}
 
+
+	protected void renderDigamma(float partialTicks, WorldClient world, Minecraft mc, float solarAngle) {
+		Tessellator tessellator = Tessellator.instance;
+
+		GL11.glPushMatrix();
+		{
+
+			float var12 = 1F + world.rand.nextFloat() * 0.5F;
+			double dist = 100D;
+
+			if(ModEventHandlerClient.renderLodeStar) {
+				GL11.glPushMatrix();
+				GL11.glRotatef(-75.0F, 1.0F, 0.0F, 0.0F);
+				GL11.glRotatef(10.0F, 0.0F, 1.0F, 0.0F);
+				FMLClientHandler.instance().getClient().renderEngine.bindTexture(lodeStar); // genu-ine bona-fide ass whooping
+
+				tessellator.startDrawingQuads();
+				tessellator.addVertexWithUV(-var12, dist, -var12, 0.0D, 0.0D);
+				tessellator.addVertexWithUV(var12, dist, -var12, 0.0D, 1.0D);
+				tessellator.addVertexWithUV(var12, dist, var12, 1.0D, 1.0D);
+				tessellator.addVertexWithUV(-var12, dist, var12, 1.0D, 0.0D);
+				tessellator.draw();
+
+				GL11.glPopMatrix();
+			}
+
+			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
+
+			float brightness = (float) Math.sin(solarAngle * Math.PI);
+			brightness *= brightness;
+			GL11.glColor4f(brightness, brightness, brightness, brightness);
+			GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef(solarAngle * 360.0F, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(140.0F, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(-40.0F, 0.0F, 0.0F, 1.0F);
+
+			mc.renderEngine.bindTexture(digammaStar);
+
+			float digamma = HbmLivingProps.getDigamma(Minecraft.getMinecraft().thePlayer);
+			var12 = 1F * (1 + digamma * 0.25F);
+			dist = 100D - digamma * 2.5;
+
+			tessellator.startDrawingQuads();
+			tessellator.addVertexWithUV(-var12, dist, -var12, 0.0D, 0.0D);
+			tessellator.addVertexWithUV(var12, dist, -var12, 0.0D, 1.0D);
+			tessellator.addVertexWithUV(var12, dist, var12, 1.0D, 1.0D);
+			tessellator.addVertexWithUV(-var12, dist, var12, 1.0D, 0.0D);
+			tessellator.draw();
+
+		}
+		GL11.glPopMatrix();
+	}
+
+
+	
 	private void renderAtmosphereGlow(Tessellator tessellator, Minecraft mc, CelestialBody body, double size, float visibility, double phase) {
 		float glowAlpha = AtmosphereRenderUtil.getAtmosphereGlowAlpha(body) * visibility;
 		if(glowAlpha <= 0.001F) {

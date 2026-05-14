@@ -512,4 +512,6 @@ public abstract class Satellite {
 		return color;
 	}
 
+
+
 }

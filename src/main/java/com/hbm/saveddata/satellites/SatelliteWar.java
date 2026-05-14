@@ -24,10 +24,6 @@ public abstract class SatelliteWar extends Satellite {
 		}
 	}
 
-	@Override
-	protected float[] getColor() {
-		return new float[] { 0.0F, 0.0F, 0.0F, 0.0F };
-	}
 
 	/**
 	 * When a war satellite fires, this will brighten the atmosphere, and control timing of effects

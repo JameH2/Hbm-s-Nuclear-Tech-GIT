@@ -13,6 +13,7 @@ import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
 import com.hbm.dim.trait.CBT_Destroyed;
+import com.hbm.dim.trait.CBT_Invasion;
 import com.hbm.dim.trait.CBT_Weather;
 import com.hbm.dim.trait.CBT_War;
 import com.hbm.dim.trait.CBT_Water;
@@ -106,7 +107,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 			if (invasion != null) {
 
 				for (int i = 0; i < meteors.size(); i++) {
-					meteors.get(i).update();
+					meteors.get(i).update(rand);
 				}
 				
 				if (rand.nextInt(Math.max(1, 5 - invasion.wave)) == 0 && invasion.isInvading) {
@@ -117,6 +118,9 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 				meteors.removeIf(x -> x.isDead);
 			} else {
 				meteors.removeAll(meteors);
+			}
+		}
+	
 		if(worldObj.isRemote) {
 			ListIterator<Meteor> iterator = meteors.listIterator();
 			while(iterator.hasNext()) {
@@ -131,6 +135,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		}
 		if(pressure > 0.5F || worldObj.provider.dimensionId == SpaceConfig.dimaDimension) {
 			super.updateWeather();
+		}
 
 		if(!hasWeatherCycle()) {
 			worldObj.prevRainingStrength = 0.0F;
@@ -154,7 +159,6 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 			}
 		}
 	}
-
 
 	// Can be overridden to provide fog changing events based on weather
 	public float fogDensity(FogDensity event) {
@@ -624,14 +628,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		return hasWeatherCycle();
 	}
 
-	private IRenderHandler weatherProvider;
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IRenderHandler getWeatherRenderer() {
-		if(weatherProvider == null) weatherProvider = new WeatherProviderCelestial();
-		return weatherProvider;
-	}
 
 	// Stars do not show up during the day in a vacuum, common misconception:
 	// The reason stars aren't visible during the day on Earth isn't because of the sky,
