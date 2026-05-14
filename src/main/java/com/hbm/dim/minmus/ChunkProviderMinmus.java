@@ -8,6 +8,8 @@ import com.hbm.dim.mapgen.MapGenCrater;
 import com.hbm.dim.mapgen.MapGenVanillaCaves;
 import com.hbm.world.gen.terrain.MapGenBubble;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.MapGenBase;
 
@@ -20,8 +22,8 @@ public class ChunkProviderMinmus extends ChunkProviderCelestial {
 
 	private MapGenBubble brine = new MapGenBubble(WorldConfig.minmusBrineSpawn);
 
-	public ChunkProviderMinmus(World world, long seed, boolean hasMapFeatures) {
-		super(world, seed, hasMapFeatures);
+	public ChunkProviderMinmus(World world, long seed) {
+		super(world, seed);
 
 		smallCrater.setSize(6, 24);
 		largeCrater.setSize(64, 128);
@@ -37,6 +39,15 @@ public class ChunkProviderMinmus extends ChunkProviderCelestial {
 		stoneBlock = ModBlocks.minmus_stone;
 		seaBlock = ModBlocks.minmus_smooth;
 		seaLevel = 63;
+	}
+
+	@Override
+	protected Block getFlatWorldBlock(Block block) {
+		if(block == Blocks.water || block == Blocks.flowing_water) return ModBlocks.minmus_smooth;
+		if(block == Blocks.grass || block == Blocks.sand) return ModBlocks.minmus_regolith;
+		if(block == Blocks.dirt || block == Blocks.stone || block == Blocks.sandstone) return ModBlocks.minmus_stone;
+		if(block == Blocks.snow_layer) return Blocks.air;
+		return block;
 	}
 
 	@Override

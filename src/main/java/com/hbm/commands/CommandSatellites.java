@@ -53,7 +53,8 @@ public class CommandSatellites extends CommandBase {
 						player.worldObj,
 						Satellite.getIDFromItem(player.getHeldItem().getItem()),
 						freq,
-						player.posX, player.posY, player.posZ
+						player.posX, player.posY, player.posZ,
+						player.getHeldItem()
 					);
 					player.getHeldItem().stackSize -= 1;
 					sender.addChatMessage(new ChatComponentTranslation("commands.satellite.satellite_orbited").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));

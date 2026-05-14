@@ -6,10 +6,4 @@ public class SatelliteScanner extends Satellite {
 		this.ifaceAcs.add(InterfaceActions.HAS_ORES);
 		this.satIface = Interfaces.SAT_PANEL;
 	}
-
-	@Override
-	protected float[] getColor() {
-		return new float[] { 0.544F, 0.680F, 1.0F, 1.0F };
-	}
-
 }

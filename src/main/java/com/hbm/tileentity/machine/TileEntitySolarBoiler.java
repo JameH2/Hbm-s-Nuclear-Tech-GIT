@@ -2,12 +2,10 @@ package com.hbm.tileentity.machine;
 
 import java.util.HashSet;
 
-import com.hbm.dim.CelestialBody;
-import com.hbm.dim.orbit.WorldProviderOrbit;
+import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.lib.Library;
-import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.TileEntityLoadedBase;
 
@@ -19,7 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 
-public class TileEntitySolarBoiler extends TileEntityLoadedBase implements IFluidStandardTransceiverMK2, IBufPacketReceiver, IFluidCopiable {
+public class TileEntitySolarBoiler extends TileEntityLoadedBase implements IFluidStandardTransceiverMK2, IFluidCopiable {
 
 	private FluidTank water;
 	private FluidTank steam;
@@ -42,9 +40,7 @@ public class TileEntitySolarBoiler extends TileEntityLoadedBase implements IFlui
 			this.trySubscribe(water.getTankType(), worldObj, xCoord, yCoord + 3, zCoord, Library.POS_Y);
 			this.trySubscribe(water.getTankType(), worldObj, xCoord, yCoord - 1, zCoord, Library.NEG_Y);
 
-			float sunPower = worldObj.provider instanceof WorldProviderOrbit
-				? ((WorldProviderOrbit)worldObj.provider).getSunPower()
-				: CelestialBody.getBody(worldObj).getSunPower();
+			float sunPower = WorldProviderCelestial.getSunPower(worldObj.provider, xCoord, zCoord);
 
 			int process = (int)(heat * sunPower) / 50;
 			this.display = process;

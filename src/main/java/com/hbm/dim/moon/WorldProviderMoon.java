@@ -21,7 +21,7 @@ public class WorldProviderMoon extends WorldProviderCelestial {
 
 	@Override
 	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderMoon(this.worldObj, this.getSeed(), false);
+		return new ChunkProviderMoon(this.worldObj, this.getSeed());
 	}
 
 	@Override

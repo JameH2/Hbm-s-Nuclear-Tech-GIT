@@ -10,6 +10,7 @@ import com.hbm.dim.mapgen.MapgenRavineButBased;
 import com.hbm.dim.moho.biome.BiomeGenBaseMoho;
 import com.hbm.dim.noise.MapGenVNoise;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
@@ -24,8 +25,8 @@ public class ChunkProviderMoho extends ChunkProviderCelestial {
 	private MapGenVolcano volcano = new MapGenVolcano(72);
 	private MapGenPlateau plateau = new MapGenPlateau(worldObj);
 
-	public ChunkProviderMoho(World world, long seed, boolean hasMapFeatures) {
-		super(world, seed, hasMapFeatures);
+	public ChunkProviderMoho(World world, long seed) {
+		super(world, seed);
 
 		smallCrater.setSize(8, 32);
 		largeCrater.setSize(96, 128);
@@ -57,6 +58,15 @@ public class ChunkProviderMoho extends ChunkProviderCelestial {
 		plateau.stepHeight = 2;
 		plateau.noiseScale = 0.03;
 		plateau.applyToBiome = BiomeGenBaseMoho.mohoPlateau;
+	}
+
+	@Override
+	protected Block getFlatWorldBlock(Block block) {
+		if(block == Blocks.water || block == Blocks.flowing_water) return Blocks.lava;
+		if(block == Blocks.grass || block == Blocks.sand) return ModBlocks.moho_regolith;
+		if(block == Blocks.dirt || block == Blocks.stone || block == Blocks.sandstone) return ModBlocks.moho_stone;
+		if(block == Blocks.snow_layer) return Blocks.air;
+		return block;
 	}
 
 	@Override

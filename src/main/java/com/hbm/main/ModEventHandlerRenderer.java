@@ -1,5 +1,6 @@
 package com.hbm.main;
 
+import java.util.List;
 import com.hbm.blocks.ICustomBlockHighlight;
 import com.hbm.config.ClientConfig;
 import com.hbm.config.RadiationConfig;
@@ -26,10 +27,15 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.particle.EffectRenderer;
+import net.minecraft.client.particle.EntityDropParticleFX;
+import net.minecraft.client.particle.EntityRainFX;
+import net.minecraft.client.particle.EntitySplashFX;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.model.ModelRenderer;
@@ -67,8 +73,13 @@ import org.lwjgl.opengl.GLContext;
 
 public class ModEventHandlerRenderer {
 
+	private float previousZoom = 4.0F;
+	private boolean previousZoomActive = false;
+
 	private static ModelMan manlyModel;
 	private static boolean[] partsHidden = new boolean[7];
+	private static final String[] FX_LAYER_FIELDS = new String[] { "fxLayers", "field_78876_b" };
+	private static final String[] DROP_PARTICLE_MATERIAL_FIELDS = new String[] { "materialType", "field_70563_a" };
 
 	@SubscribeEvent
 	public void onRenderTickPre(TickEvent.RenderTickEvent event) {
@@ -78,11 +89,81 @@ public class ModEventHandlerRenderer {
 		if(event.phase == Phase.START) {
 			// Zoom out third person view when inside a rocket
 			if(player != null && player.ridingEntity != null && player.ridingEntity instanceof EntityRideableRocket) {
+				if(previousZoomActive == false) {
+					previousZoom = mc.entityRenderer.thirdPersonDistance;
+					previousZoomActive = true;
+				}
 				mc.entityRenderer.thirdPersonDistance = 12.0F;
 			} else {
-				mc.entityRenderer.thirdPersonDistance = 4.0F;
+				if(previousZoomActive == true) {
+					previousZoomActive = false;
+					mc.entityRenderer.thirdPersonDistance = previousZoom;
+				}
+			}
+
+			tintWeatherParticles(mc);
+		}
+	}
+
+	private void tintWeatherParticles(Minecraft mc) {
+		if(mc == null || mc.theWorld == null || !(mc.theWorld.provider instanceof WorldProviderCelestial) || mc.effectRenderer == null) {
+			return;
+		}
+
+		WorldProviderCelestial provider = (WorldProviderCelestial)mc.theWorld.provider;
+		if(!provider.hasWeatherCycle() || mc.theWorld.getRainStrength(1.0F) <= 0.0F) {
+			return;
+		}
+
+		Vec3 weatherColor = provider.getWeatherColor();
+
+		List[] fxLayers = ReflectionHelper.getPrivateValue(EffectRenderer.class, mc.effectRenderer, FX_LAYER_FIELDS);
+		if(fxLayers == null) {
+			return;
+		}
+
+		for(List layer : fxLayers) {
+			if(layer == null || layer.isEmpty()) {
+				continue;
+			}
+
+				for(int i = 0; i < layer.size(); i++) {
+					Object particle = layer.get(i);
+					if(particle instanceof EntityRainFX) {
+						EntityRainFX rainParticle = (EntityRainFX)particle;
+						if(!(rainParticle instanceof EntitySplashFX)) {
+							rainParticle.setParticleTextureIndex(Math.abs(rainParticle.getEntityId()) % 3);
+						}
+						rainParticle.setRBGColorF((float)weatherColor.xCoord, (float)weatherColor.yCoord, (float)weatherColor.zCoord);
+					} else if(shouldTintWaterDropParticle(particle)) {
+						((EntityDropParticleFX)particle).setRBGColorF((float)weatherColor.xCoord, (float)weatherColor.yCoord, (float)weatherColor.zCoord);
+				}
 			}
 		}
+	}
+
+	private boolean shouldTintWaterDropParticle(Object particle) {
+		if(!(particle instanceof EntityDropParticleFX)) {
+			return false;
+		}
+
+		EntityDropParticleFX dropParticle = (EntityDropParticleFX)particle;
+		Material material = ReflectionHelper.getPrivateValue(EntityDropParticleFX.class, dropParticle, DROP_PARTICLE_MATERIAL_FIELDS);
+		return material == Material.water && !hasWaterSourceAbove(dropParticle);
+	}
+
+	private boolean hasWaterSourceAbove(EntityDropParticleFX dropParticle) {
+		World world = dropParticle.worldObj;
+		if(world == null) {
+			return false;
+		}
+
+		int particleX = MathHelper.floor_double(dropParticle.posX);
+		int particleY = MathHelper.floor_double(dropParticle.posY);
+		int particleZ = MathHelper.floor_double(dropParticle.posZ);
+
+		return World.doesBlockHaveSolidTopSurface(world, particleX, particleY + 1, particleZ)
+			&& world.getBlock(particleX, particleY + 2, particleZ).getMaterial() == Material.water;
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)

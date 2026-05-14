@@ -22,6 +22,7 @@ import com.hbm.items.special.ItemBedrockOreNew.CelestialBedrockOreType;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
+import com.hbm.main.NTMSounds;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
@@ -157,7 +158,7 @@ public class TileEntityMachineOreSlopper extends TileEntityMachineBase implement
 						vdat.setInteger("cDiv", 5);
 						PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(vdat, e.posX, e.posY + e.height * 0.5, e.posZ), new TargetPoint(e.dimension, e.posX, e.posY + e.height * 0.5, e.posZ, 150));
 
-						worldObj.playSoundEffect(e.posX, e.posY, e.posZ, "mob.zombie.woodbreak", 2.0F, 0.95F + worldObj.rand.nextFloat() * 0.2F);
+						worldObj.playSoundEffect(e.posX, e.posY, e.posZ, NTMSounds.VANILLA_GIB, 2.0F, 0.95F + worldObj.rand.nextFloat() * 0.2F);
 					}
 				}
 

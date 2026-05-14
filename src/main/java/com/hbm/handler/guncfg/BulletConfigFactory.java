@@ -2,7 +2,6 @@ package com.hbm.handler.guncfg;
 
 import java.util.List;
 
-import com.hbm.entity.grenade.EntityGrenadeFlare;
 import com.hbm.entity.projectile.EntityBulletBaseNT;
 import com.hbm.entity.projectile.EntityBulletBaseNT.*;
 import com.hbm.handler.BulletConfiguration;
@@ -10,7 +9,6 @@ import com.hbm.util.BobMathUtil;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.util.Vec3;
 
 public class BulletConfigFactory {

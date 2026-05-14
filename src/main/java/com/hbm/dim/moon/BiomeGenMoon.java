@@ -22,6 +22,7 @@ public class BiomeGenMoon extends BiomeGenBaseCelestial {
 		super(id);
 		this.setBiomeName("Mun");
 		this.setDisableRain();
+		this.setTemperatureRainfall(-1.0F, 0.0F);
 
 		if(MobConfig.enableMunCows) {
 			this.creatures.add(new BiomeGenBase.SpawnListEntry(EntityMoonCow.class, 10, 4, 4));

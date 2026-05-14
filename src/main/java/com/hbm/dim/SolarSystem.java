@@ -71,7 +71,7 @@ public class SolarSystem {
 							.withMassRadius(1.242e17F, 13)
 							.withOrbitalParameters(31_500, 0.55F, 10.0F, 12.0F, 80.0F)
 							.withRotationalPeriod(28_255)
-							.withTexture(new ResourceLocation(RefStrings.MODID, "textures/misc/space/planet.png"))
+							.withColor(0.612F, 0.494F, 0.439F)
 
 					),
 
@@ -90,6 +90,7 @@ public class SolarSystem {
 							.withMassRadius(9.76e20F, 200)
 							.withOrbitalParameters(12_000, 0.054F, 0.0F, 5.15F, 17.0F)
 							.withRotationalPeriod(138_984)
+							.withColor(0.51F, 0.51F, 0.51F)
 							.withTidalLockingTo("kerbin")
 							.withBlockTextures(RefStrings.MODID + ":textures/blocks/moon_rock.png", RefStrings.MODID + ":textures/blocks/moon_turf.png")
 							.withIce(true),
@@ -98,6 +99,7 @@ public class SolarSystem {
 							.withMassRadius(2.646e19F, 60)
 							.withOrbitalParameters(47_000, 0, 38.0F, 6.0F, 78.0F)
 							.withRotationalPeriod(40_400)
+							.withColor(0.6F, 0.882F, 0.764F)
 							.withBlockTextures(RefStrings.MODID + ":textures/blocks/minmus_stone.png", RefStrings.MODID + ":textures/blocks/minmus_regolith.png")
 							.withTraits(new CBT_Water(Fluids.MILK))
 							.withIce(true)
@@ -109,7 +111,7 @@ public class SolarSystem {
 					.withOrbitalParameters(20_726_155, 0.05F, 0.0F, 0.06F, 135.5F)
 					.withRotationalPeriod(65_518)
 					.withTidalLockingTo("ike")
-					.withColor(0.6471f, 0.2824f, 0.1608f)
+					.withColor(0.6471F, 0.2824F, 0.1608F)
 					.withBlockTextures(RefStrings.MODID + ":textures/blocks/duna_rock.png", RefStrings.MODID + ":textures/blocks/duna_sands.png")
 					.withTraits(new CBT_Atmosphere(Fluids.DUNAAIR, 0.1D))
 					.withCityMask(new ResourceLocation(RefStrings.MODID, "textures/misc/space/duna_mask.png"))
@@ -122,6 +124,7 @@ public class SolarSystem {
 							.withBlockTextures(RefStrings.MODID + ":textures/blocks/ike_stone.png", RefStrings.MODID + ":textures/blocks/ike_regolith.png")
 							.withRotationalPeriod(65_518)
 							.withTidalLockingTo("duna")
+							.withColor(0.533F, 0.502F, 0.526F)
 							.withTraits(new CBT_Water(Fluids.BROMINE))
 							.withIce(true)
 
@@ -131,6 +134,7 @@ public class SolarSystem {
 					.withMassRadius(3.219e20F, 138)
 					.withOrbitalParameters(40_839_348, 0.145F, 90.0F, 5.0F, 280.0F)
 					.withRotationalPeriod(34_800)
+					.withColor(0.318F, 0.306F, 0.318F)
 					.withBlockTextures(RefStrings.MODID + ":textures/blocks/dresbase.png", RefStrings.MODID + ":textures/blocks/sellafield_slaked.png")
 					.withRings(10.0F, 3, 0.4F, 0.4F, 0.4F)
 					.withMinProcessingLevel(2)
@@ -141,7 +145,7 @@ public class SolarSystem {
 					.withMassRadius(4.233e24F, 6_000)
 					.withOrbitalParameters(68_773_560, 0.05F, 0.0F, 1.304F, 52.0F)
 					.withRotationalPeriod(36_000)
-					.withColor(0.4588f, 0.6784f, 0.3059f)
+					.withColor(0.4588F, 0.6784F, 0.3059F)
 					.withGas(Fluids.JOOLGAS)
 					.withSatellites(
 
@@ -150,6 +154,7 @@ public class SolarSystem {
 							.withOrbitalParameters(27_184, 0.0288F, 0.0F, 0.348F, 0.0F)
 							.withRotationalPeriod(52_981)
 							.withTidalLockingTo("jool")
+							.withColor(0.388F, 0.384F, 0.851F)
 							.withMinProcessingLevel(3)
 							.withTraits(new CBT_Atmosphere(Fluids.EARTHAIR, 0.45D).and(Fluids.XENON, 0.15D), new CBT_Water())
 							.withBlockTextures("textures/blocks/stone.png", RefStrings.MODID + ":textures/blocks/laythe_silt.png")
@@ -158,22 +163,26 @@ public class SolarSystem {
 						new CelestialBody("vall") //probably
 							.withMassRadius(3.109e21F, 300)
 							.withOrbitalParameters(43_152, 0.111F, 342.9F, 7.48F, 128.0F)
-							.withRotationalPeriod(105_962),
+							.withRotationalPeriod(105_962)
+							.withColor(0.773F, 0.843F, 0.855F),
 
 						new CelestialBody("tylo") // what value is this planet gonna add???
 							.withMassRadius(4.233e22F, 600)
 							.withOrbitalParameters(68_500, 0.002F, 0.0F, 0.3F, 0.0F)
-							.withRotationalPeriod(211_926),
+							.withRotationalPeriod(211_926)
+							.withColor(0.875F, 0.863F, 0.851F),
 
 						new CelestialBody("bop")
 							.withMassRadius(3.726e19F, 65)
 							.withOrbitalParameters(128_500, 0.235F, 25.0F, 15F, 10.0F)
-							.withRotationalPeriod(544_507),
+							.withRotationalPeriod(544_507)
+							.withColor(0.329F, 0.302F, 0.263F),
 
 						new CelestialBody("pol")
 							.withMassRadius(1.081e19F, 44)
 							.withOrbitalParameters(179_890, 0.171F, 15.0F, 4.25F, 2.0F)
 							.withRotationalPeriod(901_902)
+							.withColor(0.541F, 0.478F, 0.373F)
 
 					),
 
@@ -189,27 +198,32 @@ public class SolarSystem {
 					new CelestialBody("hale") //no
 						.withMassRadius(1.2166e16F, 6)
 						.withOrbitalParameters(10_488, 0, 0.0F, 1.0F, 55.0F)
-						.withRotationalPeriod(23_555),
+						.withRotationalPeriod(23_555)
+						.withColor(0.306F, 0.259F, 0.235F),
 
 					new CelestialBody("ovok") //nah
 						.withMassRadius(4.233e17F, 26)
 						.withOrbitalParameters(12_169, 0.01F, 0.0F, 1.5F, 55.0F)
-						.withRotationalPeriod(29_440),
+						.withRotationalPeriod(29_440)
+						.withColor(0.361F, 0.361F, 0.361F),
 
 					new CelestialBody("eeloo") //will add
 						.withMassRadius(1.115e21F, 210)
 						.withOrbitalParameters(19_106, 0.0034F, 0.0F, 2.3F, 55.0F)
-						.withRotationalPeriod(57_915),
+						.withRotationalPeriod(57_915)
+						.withColor(0.62F, 0.647F, 0.655F),
 
 					new CelestialBody("slate") //not you tho
 						.withMassRadius(2.965e22F, 540)
 						.withOrbitalParameters(42_593, 0.04F, 0.0F, 2.3F, 55.0F)
-						.withRotationalPeriod(192_771),
+						.withRotationalPeriod(192_771)
+						.withColor(0.81F, 0.62F, 0.483F),
 
 					new CelestialBody("tekto", SpaceConfig.tektoDimension, Body.TEKTO)
 						.withMassRadius(2.883e21F, 480)
 						.withOrbitalParameters(67_355, 0.028F, 0.0F, 9.4F, 55.0F)
 						.withRotationalPeriod(57_915)
+						.withColor(0.357F, 0.47F, 0.313F)
 						.withAxialTilt(25F)
 						.withMinProcessingLevel(3)
 						.withTraits(new CBT_Atmosphere(Fluids.TEKTOAIR, 1.5F), new CBT_Water(Fluids.CCL)) // :)
@@ -217,17 +231,53 @@ public class SolarSystem {
 
 				),
 
+				new CelestialBody("urlum")
+					.withMassRadius(1.7896e23F, 2_177)
+					.withOrbitalParameters(254_317_012, 0.045F, 0.0F, 0.64F, 61.0F)
+					.withRotationalPeriod(41_000)
+					.withColor(0.67F, 0.86F, 0.922F)
+					.withRings(6.0F, 3, 0.6F, 0.8F, 0.9F)
+					.withGas(Fluids.UGAS)
+					.withSatellites(
+						new CelestialBody("polta")
+							.withMassRadius(1.3512e21F, 220)
+							.withOrbitalParameters(11_728, 0.002F, 0.60F, 2.45F, 40.0F)
+							.withRotationalPeriod(73_017)
+							.withColor(0.31F, 0.377F, 0.33F),
+
+						new CelestialBody("priax")
+							.withMassRadius(5.0691e19F, 74)
+							.withOrbitalParameters(11_728, 0.002F, 0.0F, 15.5F, 40.0F)
+							.withRotationalPeriod(73_017)
+							.withColor(0.251F, 0.24F, 0.212F),
+
+						new CelestialBody("wal")
+							.withMassRadius(7.4427e21F, 370)
+							.withOrbitalParameters(67_553, 0.023F, 0.0F, 1.9F, 40.0F)
+							.withRotationalPeriod(1_009_410)
+							.withColor(0.502F, 0.42F, 0.224F)
+							.withSatellites(
+								new CelestialBody("tal")
+									.withMassRadius(3.2e18F, 22)
+									.withOrbitalParameters(3_109, 0.0F, 0.0F, 1.9F, 40.0F)
+									.withRotationalPeriod(48_874)
+									.withColor(0.596F, 0.51F, 0.416F)
+							)
+					),
+
 				new CelestialBody("neidon")
 					.withMassRadius(2.1228e23F, 2_145)
 					.withOrbitalParameters(409_355_192, 0.0534F, 0.0F, 2.02F, 184.0F)
 					.withRotationalPeriod(40_250)
-					.withColor(1f, 0.6862f, 0.5882f)
+					.withColor(0.424F, 0.298F, 0.659F)
+					.withGas(Fluids.NGAS)
 					.withSatellites(
 
 					new CelestialBody("thatmo", SpaceConfig.thatmoDimension, Body.THATMO)
 						.withMassRadius(2.788e21F, 286)
 						.withOrbitalParameters(32_301, 0.0534F, 0.0F, 4.02F, 284.0F)
 						.withRotationalPeriod(306_443)
+						.withColor(0.757F, 0.765F, 0.773F)
 						.withTraits(new CBT_Atmosphere(Fluids.NITROGEN, 0.005F), new CBT_BATTLEFIELD())
 						.withBlockTextures("textures/blocks/snow.png", "textures/blocks/snow.png")
 						.withIce(true),
@@ -236,7 +286,21 @@ public class SolarSystem {
 						.withMassRadius(5.951e18F, 30)
 						.withOrbitalParameters(487_744, 0.0534F, 0.0F, 45.02F, 84.0F)
 						.withRotationalPeriod(27_924)
+						.withColor(0.173F, 0.149F, 0.118F)
 						.withMinProcessingLevel(3)
+					),
+
+				new CelestialBody("plock")
+					.withMassRadius(7.768e20F, 189)
+					.withOrbitalParameters(535_833_706, 0.26F, 0.50F, 6.15F, 260.0F)
+					.withRotationalPeriod(106_309)
+					.withColor(0.737F, 0.592F, 0.443F)
+					.withSatellites(
+						new CelestialBody("karen")
+							.withMassRadius(7.014e19F, 85)
+							.withOrbitalParameters(2_458, 0.0F, 50.0F, 0.0F, 260.0F)
+							.withRotationalPeriod(106_327)
+							.withColor(0.483F, 0.392F, 0.341F)
 					)
 			);
 

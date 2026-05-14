@@ -47,7 +47,7 @@ public class TileEntityMachineStardar extends TileEntityMachineBase implements I
 	public float prevDishPitch = 0;
 
 	public boolean radarMode;
-	
+
 	// Sent by the server for the client to smoothly lerp to
 	public static float targetYaw = 0;
 	public static float targetPitch = 0;
@@ -165,7 +165,7 @@ public class TileEntityMachineStardar extends TileEntityMachineBase implements I
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		//timeUntilPoint = nbt.getInteger("time");
-		
+
 		radarMode = nbt.getBoolean("radarmode");
 		targetYaw = nbt.getFloat("yaw");
 		targetPitch = nbt.getFloat("pitch");
@@ -177,7 +177,7 @@ public class TileEntityMachineStardar extends TileEntityMachineBase implements I
 		buf.writeFloat(targetYaw);
 		buf.writeFloat(targetPitch);
 
-		
+
 		buf.writeBoolean(radarMode);
 		buf.writeBoolean(updateHeightmap);
 		if(updateHeightmap) {
@@ -270,12 +270,18 @@ public class TileEntityMachineStardar extends TileEntityMachineBase implements I
 	@Callback(direct = true)
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] getPlanetStats(Context context, Arguments args) {
-		CelestialBody body = CelestialBody.getBody(args.checkString(0));
+		CelestialBody body = CelestialBody.getBodyOrNull(args.checkString(0));
 		if (body != null) {
+			String parentName = null;
+			double orbitalPeriod = 0.0;
+			if (body.parent != null) {
+				parentName = body.parent.name;
+				orbitalPeriod = body.getOrbitalPeriod(); // function needs parent's mass in kilograms for this to work
+			}
 			return new Object[]{
 					// wow, that's a lot (basically give a bunch of info about the planet/body specified)
 					body.name,
-					body.parent.name,
+					parentName,
 					body.getStar().name,
 					body.tidallyLockedTo,
 					body.axialTilt,
@@ -287,7 +293,7 @@ public class TileEntityMachineStardar extends TileEntityMachineBase implements I
 					body.getSunPower(),
 					body.getSurfaceGravity(),
 					body.getRotationalPeriod(),
-					body.getOrbitalPeriod()
+					orbitalPeriod
 			};
 		}
 		return new Object[] {null, "No body with that name found."};
@@ -305,13 +311,13 @@ public class TileEntityMachineStardar extends TileEntityMachineBase implements I
 	@Callback(direct = true)
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] getSatellites(Context context, Arguments args) {
-		CelestialBody body = CelestialBody.getBody(args.checkString(0));
+		CelestialBody body = CelestialBody.getBodyOrNull(args.checkString(0));
 		if (body != null) {
 			List<String> returnValues = new ArrayList<>();
 			for (CelestialBody planet : body.satellites) {
 				returnValues.add(planet.name);
-				return returnValues.toArray();
 			}
+			return returnValues.toArray();
 		}
 		return new Object[]{null, "No body with that name found."};
 	}

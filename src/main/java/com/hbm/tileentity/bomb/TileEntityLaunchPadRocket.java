@@ -637,15 +637,6 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 
 	@Override
 	@Optional.Method(modid = "OpenComputers")
-	public boolean canConnectNode(ForgeDirection side) {
-		// Get direction of ports.
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		// Only connect if port is facing outwards, mainly to prevent component clutter with the ports connecting to eachother.
-		return side == dir;
-	}
-
-	@Override
-	@Optional.Method(modid = "OpenComputers")
 	public String[] methods() {
 		return new String[] {
 				"getEnergyInfo",

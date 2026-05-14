@@ -16,7 +16,7 @@ public abstract class BiomeGenBaseMinmus extends BiomeGenBaseCelestial {
 
 	public BiomeGenBaseMinmus(int id) {
 		super(id);
-		this.setDisableRain();
+		this.setEnableSnow();
 		this.setTemperatureRainfall(-1.0F, 0.0F);
 
 		this.theBiomeDecorator = new BiomeDecoratorCelestial(ModBlocks.minmus_regolith);

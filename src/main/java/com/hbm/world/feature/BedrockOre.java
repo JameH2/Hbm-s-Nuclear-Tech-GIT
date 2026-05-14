@@ -8,15 +8,18 @@ import java.util.Map;
 import com.hbm.blocks.BlockEnums.EnumStoneType;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockBedrockOreTE.TileEntityBedrockOre;
-import com.hbm.config.GeneralConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.OreDictManager.DictFrame;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemEnums.EnumChunkType;
 import com.hbm.items.ModItems;
+import com.hbm.items.special.ItemBedrockOreBase;
+import com.hbm.items.special.ItemBedrockOreNew.CelestialBedrockOre;
+import com.hbm.items.special.ItemBedrockOreNew.CelestialBedrockOreType;
 import com.hbm.items.special.ItemBedrockOre.EnumBedrockOre;
 import com.hbm.util.WeightedRandomGeneric;
+import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
 import com.hbm.dim.SolarSystem.Body;
 
@@ -175,8 +178,45 @@ public class BedrockOre {
 		generate(world, x, z, stack, acid, color, tier, ModBlocks.stone_depth, Blocks.stone);
 	}
 
-	public static void generate(World world, int x, int z, ItemStack stack, FluidStack acid, int color, int tier, Block depthRock, Block targetBlock) {
+	public static void generateAuto(World world, int x, int z) {
+		generateAuto(world, x, z, Blocks.stone, null);
+	}
 
+	public static void generateAuto(World world, int x, int z, Block targetBlock, FluidStack acidOverride) {
+		SolarSystem.Body body = CelestialBody.getEnum(world);
+
+		double totalLevel = 0;
+		for(CelestialBedrockOreType type : CelestialBedrockOre.get(body).types) {
+			totalLevel += ItemBedrockOreBase.getOreLevel(world, x, z, type);
+		}
+		
+		totalLevel /= CelestialBedrockOre.get(body).types.length;
+		FluidStack acid = acidOverride != null ? acidOverride : getBoreFluid(totalLevel);
+		int tier = getTier(totalLevel);
+		
+		generate(world, x, z, new ItemStack(ModItems.bedrock_ore_base), acid, 0xD78A16, tier, ModBlocks.stone_depth, targetBlock);
+	}
+
+	public static final FluidStack BORE_TIER_1 = null;
+	public static final FluidStack BORE_TIER_2 = new FluidStack(Fluids.WATER, 1_000);
+	public static final FluidStack BORE_TIER_3 = new FluidStack(Fluids.SULFURIC_ACID, 1_000);
+	public static final FluidStack BORE_TIER_4 = new FluidStack(Fluids.SOLVENT, 2_000);
+
+	public static FluidStack getBoreFluid(double density) {
+		if(density > 1.5) return BORE_TIER_4;
+		if(density > 1) return BORE_TIER_3;
+		if(density > 0.75) return BORE_TIER_2;
+		return BORE_TIER_1;
+	}
+	public static int getTier(double density) {
+		if(density > 1.5) return 4;
+		if(density > 1) return 3;
+		if(density > 0.75) return 2;
+		return 1;
+	}
+
+	public static void generate(World world, int x, int z, ItemStack stack, FluidStack acid, int color, int tier, Block depthRock, Block targetBlock) {
+		
 		for(int ix = x - 1; ix <= x + 1; ix++) {
 			for(int iz = z - 1; iz <= z + 1; iz++) {
 

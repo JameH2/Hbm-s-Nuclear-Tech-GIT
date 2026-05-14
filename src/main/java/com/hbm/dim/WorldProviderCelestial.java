@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 import java.util.List;
+import java.util.ListIterator;
 
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.SpaceConfig;
 import com.hbm.dim.SolarSystem.AstroMetric;
+import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
-import com.hbm.dim.trait.CBT_War;
 import com.hbm.dim.trait.CBT_Destroyed;
-import com.hbm.dim.trait.CBT_Invasion;
+import com.hbm.dim.trait.CBT_Weather;
+import com.hbm.dim.trait.CBT_War;
+import com.hbm.dim.trait.CBT_Water;
 import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
 import com.hbm.inventory.FluidStack;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.SatelliteSavedData;
@@ -36,10 +40,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.WeightedRandomFishable;
+import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.IRenderHandler;
@@ -51,7 +57,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 
 	private double eclipseAmount;
 	private long localTime = -1;
-	
+
 	public static ArrayList<Meteor> meteors = new ArrayList<>();
 
 	@Override
@@ -82,8 +88,8 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 
 	@Override
 	public void updateWeather() {
+		CelestialBody body = CelestialBody.getBody(worldObj);
 		CBT_Atmosphere atmosphere = CelestialBody.getTrait(worldObj, CBT_Atmosphere.class);
-
 		double pressure = atmosphere != null ? atmosphere.getPressure() : 0;
 
 		// Will prevent water from existing, will be unset immediately before using a bucket if inside a pressurized room
@@ -111,23 +117,44 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 				meteors.removeIf(x -> x.isDead);
 			} else {
 				meteors.removeAll(meteors);
+		if(worldObj.isRemote) {
+			ListIterator<Meteor> iterator = meteors.listIterator();
+			while(iterator.hasNext()) {
+				Meteor meteor = iterator.next();
+				Meteor fragment = meteor.update(worldObj.rand);
+				if(meteor.isDead) iterator.remove();
+				if(fragment != null) iterator.add(fragment);
 			}
-
+		} else {
+			// Reset eclipse amount for this tick to uncache
+			eclipseAmount = -1;
 		}
 		if(pressure > 0.5F || worldObj.provider.dimensionId == SpaceConfig.dimaDimension) {
 			super.updateWeather();
+
+		if(!hasWeatherCycle()) {
+			worldObj.prevRainingStrength = 0.0F;
+			worldObj.rainingStrength = 0.0F;
+			worldObj.prevThunderingStrength = 0.0F;
+			worldObj.thunderingStrength = 0.0F;
 			return;
 		}
 
-		worldObj.prevRainingStrength = 0.0F;
-		worldObj.rainingStrength = 0.0F;
-		worldObj.prevThunderingStrength = 0.0F;
-		worldObj.thunderingStrength = 0.0F;
-
-		
-		
+		if(!worldObj.isRemote) {
+			CBT_Weather weather = CBT_Weather.ensureTrait(body);
+			if(weather != null && weather.updateForTick(MinecraftServer.getServer().getTickCounter(), worldObj.rand, body)) {
+				SolarSystemWorldSavedData.get(worldObj).markDirty();
+			}
+			weather = body.getTrait(CBT_Weather.class);
+			if(weather != null) {
+				worldObj.prevRainingStrength = weather.prevRainStrength;
+				worldObj.rainingStrength = weather.rainStrength;
+				worldObj.prevThunderingStrength = weather.prevThunderStrength;
+				worldObj.thunderingStrength = weather.thunderStrength;
+			}
+		}
 	}
-	
+
 
 	// Can be overridden to provide fog changing events based on weather
 	public float fogDensity(FogDensity event) {
@@ -236,6 +263,42 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	// note that we are rendering flat quads, so the arc size is warped more the larger you get!
 	private static double getArc(double apparentSize) {
 		return apparentSize * 0.0017D + Math.sqrt(apparentSize * 0.00003D);
+	}
+
+	// Might refactor all the separate fluid color calcs into using just this one (but they all vary slightly so not yet)
+	// For now, it'll go here, next to the other fluid color stuff, so we don't forget about it
+	// also, lightning sky tinting doesn't actually work outside of earth air/oxygen/nitrogen so uh yeah we should fix that lmao
+	public static Vec3 getAtmosphereFluidColor(FluidType fluid) {
+		if(fluid == null) {
+			return Vec3.createVectorHelper(1.0D, 1.0D, 1.0D);
+		}
+
+		if(fluid == Fluids.EVEAIR) {
+			return Vec3.createVectorHelper(53F / 255F, 32F / 255F, 74F / 255F);
+		}
+
+		// Slightly redder "red sand" tint for Duna-like atmospheres.
+		if(fluid == Fluids.DUNAAIR) {
+			return Vec3.createVectorHelper(198F / 255F, 96F / 255F, 64F / 255F);
+		}
+
+		// Neutral/desaturated CO2 tint.
+		if(fluid == Fluids.CARBONDIOXIDE) {
+			return Vec3.createVectorHelper(188F / 255F, 192F / 255F, 198F / 255F);
+		}
+
+		if(fluid == Fluids.EARTHAIR || fluid == Fluids.OXYGEN || fluid == Fluids.NITROGEN) {
+			return Vec3.createVectorHelper(0.7529412F, 0.84705883F, 1.0F);
+		}
+
+		return getColorFromHex(fluid.getColor());
+	}
+
+	private static Vec3 getColorFromHex(int hexColor) {
+		float red = ((hexColor >> 16) & 0xFF) / 255.0F;
+		float green = ((hexColor >> 8) & 0xFF) / 255.0F;
+		float blue = (hexColor & 0xFF) / 255.0F;
+		return Vec3.createVectorHelper(red, green, blue);
 	}
 
 	@Override
@@ -455,13 +518,6 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		return color;
 	}
 
-	private Vec3 getColorFromHex(int hexColor) {
-		float red = ((hexColor >> 16) & 0xFF) / 255.0F;
-		float green = ((hexColor >> 8) & 0xFF) / 255.0F;
-		float blue = (hexColor & 0xFF) / 255.0F;
-		return Vec3.createVectorHelper(red, green, blue);
-	}
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float[] calcSunriseSunsetColors(float solarAngle, float partialTicks) {
@@ -483,7 +539,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 			float f3 = MathHelper.cos((solarAngle) * (float)Math.PI * 2.0F) - 0.0F;
 			float f4 = -0.0F;
 
-			if (f3 >= f4 - f2 && f3 <= f4 + f2) {
+			if(f3 >= f4 - f2 && f3 <= f4 + f2) {
 				float f5 = (f3 - f4) / f2 * 0.5F + 0.5F;
 				float f6 = 1.0F - (1.0F - MathHelper.sin(f5 * (float)Math.PI)) * 0.99F;
 				f6 *= f6;
@@ -507,23 +563,74 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		return colors;
 	}
 
-	// this function should be called `getCloudColor`, please slap the next MCP dev you see lmao
-	@Override
+	public static int getCloudLayerCount(CBT_Atmosphere atmosphere) {
+		if(atmosphere == null || atmosphere.getPressure() < 0.5F) {
+			return 0;
+		}
+
+		if(atmosphere.getPressure() >= 5.0F) {
+			return 3;
+		}
+
+		if(atmosphere.getPressure() >= 2.5F) {
+			return 2;
+		}
+
+		return 1;
+	}
+	public boolean hasWeatherCycle() {
+		return CBT_Weather.supportsWeather(CelestialBody.getBody(worldObj));
+	}
+
 	@SideOnly(Side.CLIENT)
-	public Vec3 drawClouds(float partialTicks) {
-		return super.drawClouds(partialTicks);
+	public Vec3 getWeatherColor() {
+		CBT_Water water = CelestialBody.getTrait(worldObj, CBT_Water.class);
+		if(water == null || water.fluid == null) {
+			return Vec3.createVectorHelper(1.0D, 1.0D, 1.0D);
+		}
+
+		Vec3 base = getColorFromHex(water.fluid.getColor());
+		double luminance = base.xCoord * 0.299D + base.yCoord * 0.587D + base.zCoord * 0.114D;
+		double saturation = 0.35D;
+
+		double desaturatedR = luminance + (base.xCoord - luminance) * saturation;
+		double desaturatedG = luminance + (base.yCoord - luminance) * saturation;
+		double desaturatedB = luminance + (base.zCoord - luminance) * saturation;
+
+		return Vec3.createVectorHelper(
+			MathHelper.clamp_double(desaturatedR, 0.0D, 1.0D),
+			MathHelper.clamp_double(desaturatedG, 0.0D, 1.0D),
+			MathHelper.clamp_double(desaturatedB, 0.0D, 1.0D)
+		);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public Vec3 getSnowColor() {
+		CBT_Water water = CelestialBody.getTrait(worldObj, CBT_Water.class);
+		if(water == null || water.fluid == null || water.fluid == Fluids.WATER) {
+			return Vec3.createVectorHelper(1.0D, 1.0D, 1.0D);
+		}
+
+		return getWeatherColor();
 	}
 
 	@Override
 	public boolean canDoLightning(Chunk chunk) {
-		CBT_Atmosphere atmosphere = CelestialBody.getTrait(worldObj, CBT_Atmosphere.class);
-		return atmosphere != null && atmosphere.getPressure() > 0.5;
+		return hasWeatherCycle();
 	}
 
 	@Override
 	public boolean canDoRainSnowIce(Chunk chunk) {
-		CBT_Atmosphere atmosphere = CelestialBody.getTrait(worldObj, CBT_Atmosphere.class);
-		return atmosphere != null && atmosphere.getPressure() > 0.5;
+		return hasWeatherCycle();
+	}
+
+	private IRenderHandler weatherProvider;
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IRenderHandler getWeatherRenderer() {
+		if(weatherProvider == null) weatherProvider = new WeatherProviderCelestial();
+		return weatherProvider;
 	}
 
 	// Stars do not show up during the day in a vacuum, common misconception:
@@ -649,7 +756,16 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	// which means we can set the time of day to local morning safely here!
 	@Override
 	public void resetRainAndThunder() {
-		super.resetRainAndThunder();
+		CBT_Weather weather = CBT_Weather.ensureTrait(CelestialBody.getBody(worldObj));
+		if(weather != null) {
+			weather.forceClear(worldObj.rand, worldObj.rand.nextInt(168000) + 12000);
+			SolarSystemWorldSavedData.get(worldObj).markDirty();
+		}
+
+		worldObj.prevRainingStrength = 0.0F;
+		worldObj.rainingStrength = 0.0F;
+		worldObj.prevThunderingStrength = 0.0F;
+		worldObj.thunderingStrength = 0.0F;
 
 		if(dimensionId == 0) return;
 		if(!worldObj.getGameRules().getGameRuleBooleanValue("doDaylightCycle")) return;
@@ -691,12 +807,26 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	public float getCloudHeight() {
 		CBT_Atmosphere atmosphere = CelestialBody.getTrait(worldObj, CBT_Atmosphere.class);
 
-		if(atmosphere == null || atmosphere.getPressure() < 0.5F) return -99999;
+		if(getCloudLayerCount(atmosphere) <= 0) return -99999;
 
 		return super.getCloudHeight();
 	}
 
-	protected IRenderHandler skyRenderer;
+	@SideOnly(Side.CLIENT)
+	public int getCloudLayerCount() {
+		return getCloudLayerCount(CelestialBody.getTrait(worldObj, CBT_Atmosphere.class));
+	}
+
+	private IRenderHandler cloudProvider;
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IRenderHandler getCloudRenderer() {
+		if(cloudProvider == null) cloudProvider = new CloudProviderCelestial();
+		return cloudProvider;
+	}
+
+	private IRenderHandler skyProvider;
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -774,18 +904,42 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		return phase;
 	}
 
-	public boolean isEclipse() {
+	// Because I'm a big dumb idiot, the providers don't inherit a single base (and, well, can't, because `WorldProviderSurface` vs `WorldProvider` :c)
+	// I have to make this thing to help you get sun power without having to do a shit ton of silly casting. yayyy!
+	public static float getSunPower(WorldProvider provider, int x, int z) {
+		if(provider instanceof WorldProviderCelestial) return ((WorldProviderCelestial) provider).getSunPower();
+		if(provider instanceof WorldProviderOrbit) return ((WorldProviderOrbit) provider).getSunPower(x, z);
+
+		return CelestialBody.getBody(provider.worldObj).getSunPower();
+	}
+
+	// Specifically for the server, and caches per tick
+	public double getEclipseAmount() {
+		if(eclipseAmount > -1) return eclipseAmount;
+
 		CelestialBody body = CelestialBody.getBody(worldObj);
 
 		// First fetch the suns true size
 		double sunSize = SolarSystem.calculateSunSize(body);
 		float solarAngle = worldObj.getCelestialAngle(0);
 
-		// Get our orrery of bodies, this is cached for reuse in sky rendering
+		// Get our orrery of bodies
 		metrics = SolarSystem.calculateMetricsFromBody(worldObj, 0, body, solarAngle);
 
+		eclipseAmount = getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_SURFACE);
+
 		// Get our eclipse amount
-		return getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_SURFACE) > 0.0;
+		return eclipseAmount;
+	}
+
+	public boolean isEclipse() {
+		return getEclipseAmount() > 0.0;
+	}
+
+	public float getSunPower() {
+		CelestialBody body = CelestialBody.getBody(worldObj);
+
+		return body.getSunPower() * (1 - (float)getEclipseAmount());
 	}
 
 	@Override
@@ -829,7 +983,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	}
 	/// FISH ///
 
-	public class Meteor {
+	public static class Meteor {
 
 		public double posX;
 		public double posY;
@@ -858,14 +1012,14 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 			this.motionZ = motionZ;
 		}
 
-		private void update() {
-			Random rand = new Random();
+		public static void addMeteor() {
+			EntityPlayer player = MainRegistry.proxy.me();
+			if(player == null) return;
 
-			if(this.type != MeteorType.SMOKE && this.type != MeteorType.FRAGMENT) {
-				Meteor meteor = new Meteor((this.posX + rand.nextInt(16)) - 8, (this.posY + rand.nextInt(16)), (this.posZ + rand.nextInt(16)) - 8, MeteorType.SMOKE, 0, 0, 0);
-				meteors.add(meteor);
-			}
+			meteors.add(new Meteor(player.posX + player.worldObj.rand.nextInt(16000) - 8000, 2017, player.posZ + player.worldObj.rand.nextInt(16000) - 8000));
+		}
 
+		private Meteor update(Random rand) {
 			if(this.posY <= 500 && this.type != MeteorType.SMOKE) {
 				this.isDead = true;
 			}
@@ -882,6 +1036,12 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 			this.posX += this.motionX;
 			this.posY += this.motionY;
 			this.posZ += this.motionZ;
+
+			if(this.type != MeteorType.SMOKE && this.type != MeteorType.FRAGMENT) {
+				return new Meteor((this.posX + rand.nextInt(16)) - 8, (this.posY + rand.nextInt(16)), (this.posZ + rand.nextInt(16)) - 8, MeteorType.SMOKE, 0, 0, 0);
+			}
+
+			return null;
 		}
 	}
 

@@ -15,7 +15,10 @@ public class NEIRegistry {
 
 		if(!handlers.isEmpty()) return handlers;
 
+		handlers.add(new ToolingHandler());
+		handlers.add(new ConstructionHandler());
 		handlers.add(new AnnihilatorHandler());
+		handlers.add(new SolderingStationHandler());
 		handlers.add(new AnvilRecipeHandler());
 		handlers.add(new SmithingRecipeHandler());
 		handlers.add(new PressRecipeHandler());
@@ -44,13 +47,13 @@ public class NEIRegistry {
 		handlers.add(new CrystallizerRecipeHandler());
 		handlers.add(new BookRecipeHandler());
 		handlers.add(new FusionRecipeHandler());
+		handlers.add(new PlasmaForgeRecipeHandler());
 		handlers.add(new SILEXRecipeHandler());
 		handlers.add(new FuelPoolHandler());
 		handlers.add(new RBMKRodDisassemblyHandler());
 		handlers.add(new RBMKWasteDecayHandler());
-		handlers.add(new ToolingHandler());
-		handlers.add(new ConstructionHandler());
 		handlers.add(new SatelliteHandler());
+		handlers.add(new GrenadeRecipeHandler());
 		handlers.add(new DairyHandler());
 		handlers.add(new AtmosphericCompressorHandler());
 		handlers.add(new AtmosphereRecipeHandler());
@@ -78,7 +81,6 @@ public class NEIRegistry {
 		handlers.add(new ElectrolyserMetalHandler());
 		handlers.add(new AshpitHandler());
 		handlers.add(new ArcWelderHandler());
-		handlers.add(new SolderingStationHandler());
 		handlers.add(new VacuumCircuitHandler());
 		handlers.add(new ExposureChamberHandler());
 		handlers.add(new ArcFurnaceSolidHandler());

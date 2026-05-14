@@ -36,7 +36,7 @@ public class WorldProviderLaythe extends WorldProviderCelestial {
 
 	@Override
 	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderLaythe(this.worldObj, this.getSeed(), false);
+		return new ChunkProviderLaythe(this.worldObj, this.getSeed());
 	}
 
 	@Override

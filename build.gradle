@@ -93,9 +93,9 @@ repositories {
 		url = "https://cursemaven.com"
 	}
 	maven {
-        name = "OpenComputers"
-        url = "https://maven.cil.li/"
-    }
+		name = "OpenComputers"
+		url = "https://maven.cil.li/"
+	}
 }
 
 dependencies {

@@ -473,10 +473,10 @@ public class Fluids {
 		SMOKE =					new FluidType("SMOKE",				0x808080, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS, NOID, NOCON);
 		SMOKE_LEADED =			new FluidType( "SMOKE_LEADED",		0x808080, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS, NOID, NOCON);
 		SMOKE_POISON =			new FluidType("SMOKE_POISON",		0x808080, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS, NOID, NOCON);
-		JOOLGAS =				new FluidType("JOOLGAS",			0x829F82, 0, 0, 0, EnumSymbol.ASPHYXIANT).addContainers(new CD_Gastank(0x68A368, 0xFF8400)).addTraits(GASEOUS);
+		JOOLGAS =				new FluidType("JOOLGAS",			0x96B596, 0, 0, 0, EnumSymbol.ASPHYXIANT).addContainers(new CD_Gastank(0x78B878, 0xFF8400)).addTraits(GASEOUS);
 		SARNUSGAS =				new FluidType("SARNUSGAS",			0xE47D5C, 0, 0, 0, EnumSymbol.ASPHYXIANT).addContainers(new CD_Gastank(0xB56847, 0xFF8400)).addTraits(GASEOUS);
 		UGAS =					new FluidType("UGAS",				0x718C9A, 0, 0, 0, EnumSymbol.ASPHYXIANT).addContainers(new CD_Gastank(0x5099BF, 0xFF8400)).addTraits(GASEOUS);
-		NGAS =					new FluidType("NGAS",				0x8A668A, 0, 0, 0, EnumSymbol.ASPHYXIANT).addContainers(new CD_Gastank(0xAC82D1, 0xFF8400)).addTraits(GASEOUS);
+		NGAS =					new FluidType("NGAS",				0xA37BA3, 0, 0, 0, EnumSymbol.ASPHYXIANT).addContainers(new CD_Gastank(0xBE92E0, 0xFF8400)).addTraits(GASEOUS);
 		EMILK =					new FluidType("EMILK",				0xCFCFCF, 0, 0, 0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);//F5DEE4
 		CMILK =					new FluidType("CMILK",				0xCFCFCF, 0, 0, 0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);//F5DEE4
 		CREAM =					new FluidType("CREAM",				0xCFCFCF, 0, 0, 0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);//F5DEE4

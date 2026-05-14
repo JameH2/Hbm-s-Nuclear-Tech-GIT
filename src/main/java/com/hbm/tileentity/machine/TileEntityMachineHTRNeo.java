@@ -5,7 +5,6 @@ import java.util.List;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.dim.SolarSystem;
 import com.hbm.handler.atmosphere.IBlockSealable;
-import com.hbm.inventory.recipes.FusionRecipe;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.machine.albion.TileEntityCooledBase;
@@ -50,7 +49,6 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 	public int fuelCost;
 	public float thrustAmount;
 
-	public FusionRecipe recipe;
 	public float plasmaR;
 	public float plasmaG;
 	public float plasmaB;
@@ -206,8 +204,12 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 	}
 
 	@Override
-	public void receiveFusionPower(long fusionPower, double neutronPower) {
+	public void receiveFusionPower(long fusionPower, double neutronPower, float r, float g, float b) {
 		plasmaEnergy = fusionPower;
+		// genuinely useful method refactor
+		plasmaR = r;
+		plasmaG = g;
+		plasmaB = b;
 	}
 
 	@Override
@@ -288,14 +290,9 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 		buf.writeInt(fuelCost);
 		buf.writeFloat(soundtime);
 
-		if(recipe != null) {
-			buf.writeBoolean(true);
-			buf.writeFloat(recipe.r);
-			buf.writeFloat(recipe.g);
-			buf.writeFloat(recipe.b);
-		} else {
-			buf.writeBoolean(false);
-		}
+		buf.writeFloat(plasmaR);
+		buf.writeFloat(plasmaG);
+		buf.writeFloat(plasmaB);
 	}
 
 	@Override
@@ -307,11 +304,9 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 		fuelCost = buf.readInt();
 		soundtime = buf.readFloat();
 
-		if(buf.readBoolean()) {
-			plasmaR = buf.readFloat();
-			plasmaG = buf.readFloat();
-			plasmaB = buf.readFloat();
-		}
+		plasmaR = buf.readFloat();
+		plasmaG = buf.readFloat();
+		plasmaB = buf.readFloat();
 	}
 
 	@Override

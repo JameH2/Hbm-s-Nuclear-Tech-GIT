@@ -33,7 +33,7 @@ public class WorldProviderMoho extends WorldProviderCelestial {
 
 	@Override
 	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderMoho(this.worldObj, this.getSeed(), false);
+		return new ChunkProviderMoho(this.worldObj, this.getSeed());
 	}
 
 	@Override

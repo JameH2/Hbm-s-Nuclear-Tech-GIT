@@ -8,6 +8,7 @@ import com.hbm.dim.eve.biome.BiomeGenBaseEve;
 import com.hbm.dim.noise.MapGenVNoise;
 import com.hbm.world.gen.terrain.MapGenBubble;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
@@ -19,8 +20,8 @@ public class ChunkProviderEve extends ChunkProviderCelestial {
 
 	private MapGenBubble oil = new MapGenBubble(WorldConfig.eveGasSpawn);
 
-	public ChunkProviderEve(World world, long seed, boolean hasMapFeatures) {
-		super(world, seed, hasMapFeatures);
+	public ChunkProviderEve(World world, long seed) {
+		super(world, seed);
 		reclamp = false;
 		stoneBlock = ModBlocks.eve_rock;
 		seaBlock = ModBlocks.mercury_block;
@@ -41,6 +42,15 @@ public class ChunkProviderEve extends ChunkProviderCelestial {
 		oil.meta = (byte)CelestialBody.getMeta(world);
 		oil.replace = ModBlocks.eve_rock;
 		oil.setSize(8, 16);
+	}
+
+	@Override
+	protected Block getFlatWorldBlock(Block block) {
+		if(block == Blocks.water || block == Blocks.flowing_water) return ModBlocks.mercury_block;
+		if(block == Blocks.grass || block == Blocks.sand) return ModBlocks.eve_silt;
+		if(block == Blocks.dirt || block == Blocks.stone || block == Blocks.sandstone) return ModBlocks.eve_rock;
+		if(block == Blocks.snow_layer) return Blocks.air;
+		return block;
 	}
 
 	@Override

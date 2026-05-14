@@ -11,8 +11,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.DimensionManager;
 
-import java.security.InvalidParameterException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 public class SatelliteSavedData extends WorldSavedData {
@@ -49,10 +49,10 @@ public class SatelliteSavedData extends WorldSavedData {
 
 		for(int i = 0; i < satCount; i++) {
 			Satellite sat = Satellite.create(nbt.getInteger("sat_id_" + i));
-			sat.readFromNBT((NBTTagCompound) nbt.getTag("sat_data_" + i));
+			NBTTagCompound satNbt = (NBTTagCompound) nbt.getTag("sat_data_" + i);
+			sat.readFromNBT(satNbt);
 
 			int freq = nbt.getInteger("sat_freq_" + i);
-
 			sats.put(freq, sat);
 		}
 	}
@@ -109,7 +109,30 @@ public class SatelliteSavedData extends WorldSavedData {
 		return getDataForWorld(worldObj);
 	}
 
+	public static SatelliteSavedData getDataFromFreq(World worldObj, int x, int z, int freq) {
+		SatelliteSavedData data = getData(worldObj, x, z);
+		if(data.getSatFromFreq(freq) != null) {
+			return data;
+		}
+		if(worldObj.provider.dimensionId == -1 || worldObj.provider.dimensionId == 1) {
+			return data;
+		}
+
+		for(CelestialBody body : CelestialBody.getLandableBodies()) {
+			World bodyWorld = DimensionManager.getWorld(body.dimensionId);
+			if(bodyWorld == null) continue;
+
+			SatelliteSavedData bodyData = getData(bodyWorld);
+			if(bodyData.getSatFromFreq(freq) != null) {
+				return bodyData;
+			}
+		}
+
+		return data;
+	}
+
 	public static HashMap<Integer, Satellite> clientSats = new HashMap<>();
+	public static HashMap<Integer, HashMap<Integer, Satellite>> clientSatsByDimension = new HashMap<Integer, HashMap<Integer, Satellite>>();
 
 	@SideOnly(Side.CLIENT)
 	public static void setClientSats(HashMap<Integer, Satellite> sats) {
@@ -119,6 +142,17 @@ public class SatelliteSavedData extends WorldSavedData {
 	@SideOnly(Side.CLIENT)
 	public static HashMap<Integer, Satellite> getClientSats() {
 		return clientSats;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void setClientSatsByDimension(HashMap<Integer, HashMap<Integer, Satellite>> satsByDimension) {
+		clientSatsByDimension = satsByDimension != null ? satsByDimension : new HashMap<Integer, HashMap<Integer, Satellite>>();
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static Map<Integer, Satellite> getClientSats(int dimensionId) {
+		HashMap<Integer, Satellite> sats = clientSatsByDimension.get(dimensionId);
+		return sats != null ? sats : Collections.<Integer, Satellite>emptyMap();
 	}
 
 }

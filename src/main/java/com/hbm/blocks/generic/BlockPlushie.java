@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.hbm.blocks.IBlockMulti;
 import com.hbm.blocks.ITooltipProvider;
+import com.hbm.main.NTMSounds;
 import com.hbm.world.gen.nbt.INBTTileEntityTransformable;
 import com.hbm.world.gen.nbt.INBTBlockTransformable;
 
@@ -164,7 +165,7 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 		TETO(		"Kasane Teto",		"please help I've been trapped in her basement for da-", "hbm:block.teto"),
 		MIKU(		"Hatsune Miku",		"In your wifi, and your heart.", "hbm:block.miku"),
 		NERU(		"Akita Neru",		"Careful, she might electrocute you.", "hbm:block.akita"),
-		DERG(		"Dragon",			"Squeeze him.", "hbm:block.squeakyToy");
+		DERG(		"Dragon",			"Squeeze him.", "hbm:block.squeakyToy"); // blerg
 
 		public String label;
 		public String inscription;

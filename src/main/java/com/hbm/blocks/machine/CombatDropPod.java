@@ -2,19 +2,13 @@ package com.hbm.blocks.machine;
 
 import java.util.Random;
 
-import com.hbm.main.MainRegistry;
+import com.hbm.items.ModItems;
 import com.hbm.tileentity.machine.storage.TileEntityCombatDropPod;
-import com.hbm.tileentity.machine.storage.TileEntitySoyuzCapsule;
 
-import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -30,7 +24,7 @@ public class CombatDropPod extends BlockContainer {
 	}
 	
 	@Override
-	public int getRenderType(){
+	public int getRenderType() {
 		return -1;
 	}
 	
@@ -43,13 +37,14 @@ public class CombatDropPod extends BlockContainer {
 	public boolean renderAsNormalBlock() {
 		return false;
 	}
-	
 
-	
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int meta)
-    {
-		super.breakBlock(world, x, y, z, block, meta);
-    }
+	public Item getItemDropped(int meta, Random rand, int fortune) {
+		return ModItems.ingot_steel;
+	}
+
+	@Override public int quantityDropped(Random rand) {
+		return 16;
+	}
 
 }

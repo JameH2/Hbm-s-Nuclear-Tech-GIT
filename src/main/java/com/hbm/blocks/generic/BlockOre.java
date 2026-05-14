@@ -73,6 +73,15 @@ public class BlockOre extends Block implements IBlockMultiPass, IBlockMulti, ITo
 		this(mat);
 		vanillaMap.put(vanillaBlock, this);
 	}
+	
+	@Override
+	public boolean canSilkHarvest(World world, EntityPlayer player, int x, int y, int z, int meta) {
+		if(this == ModBlocks.ore_oil) return false;
+		if(this == ModBlocks.ore_gas) return false;
+		if(this == ModBlocks.ore_brine) return false;
+		if(this == ModBlocks.ore_tekto) return false;
+		return super.canSilkHarvest(world, player, x, y, z, meta);
+	}
 
 	@Override
 	public Item getItemDropped(int i, Random rand, int j) {
@@ -126,32 +135,28 @@ public class BlockOre extends Block implements IBlockMultiPass, IBlockMulti, ITo
 			return Items.diamond;
 		}
 
+		if(this == ModBlocks.ore_oil) return ModItems.oil_tar;
+		if(this == ModBlocks.ore_gas) return Item.getItemFromBlock(ModBlocks.ore_gas_empty);
+		if(this == ModBlocks.ore_brine) return Item.getItemFromBlock(ModBlocks.ore_brine_empty);
+		if(this == ModBlocks.ore_tekto) return Item.getItemFromBlock(ModBlocks.ore_tekto_empty);
+
 		return Item.getItemFromBlock(this);
 	}
 
 	@Override
 	public int quantityDropped(Random rand) {
-		if(this == ModBlocks.ore_fluorite) {
-			return 2 + rand.nextInt(3);
-		}
-		if(this == ModBlocks.ore_niter) {
-			return 2 + rand.nextInt(3);
-		}
-		if(this == ModBlocks.ore_sulfur) {
-			return 2 + rand.nextInt(3);
-		}
-		if(this == ModBlocks.ore_glowstone) {
-			return 1 + rand.nextInt(3);
-		}
-		if(this == ModBlocks.ore_cobalt) {
-			return 4 + rand.nextInt(6);
-		}
-		if(this == ModBlocks.ore_redstone) {
-			return 4 + rand.nextInt(2);
-		}
-		if(this == ModBlocks.ore_lapis) {
-			return 4 + rand.nextInt(5);
-		}
+		if(this == ModBlocks.ore_fluorite) return 2 + rand.nextInt(3);
+		if(this == ModBlocks.ore_niter) return 2 + rand.nextInt(3);
+		if(this == ModBlocks.ore_sulfur ||
+				this == ModBlocks.ore_nether_sulfur) return 2 + rand.nextInt(3);
+		if(this == ModBlocks.block_meteor_broken) return 1 + rand.nextInt(3);
+		if(this == ModBlocks.block_meteor_treasure) return 1 + rand.nextInt(3);
+		if(this == ModBlocks.ore_cobalt) return 4 + rand.nextInt(6);
+		if(this == ModBlocks.ore_nether_cobalt) return 5 + rand.nextInt(8);
+
+		if(this == ModBlocks.ore_glowstone) return 1 + rand.nextInt(3);
+		if(this == ModBlocks.ore_redstone) return 4 + rand.nextInt(2);
+		if(this == ModBlocks.ore_lapis) return 4 + rand.nextInt(5);
 		return 1;
 	}
 
@@ -167,12 +172,7 @@ public class BlockOre extends Block implements IBlockMultiPass, IBlockMulti, ITo
 
 		if(fortune > 0 && Item.getItemFromBlock(this) != this.getItemDropped(0, rand, fortune) && allowFortune) {
 			int mult = rand.nextInt(fortune + 2) - 1;
-
-			if(mult < 0) {
-				mult = 0;
-			}
-
-			return this.quantityDropped(rand) * (mult + 1);
+			return this.quantityDropped(rand) * (Math.max(mult, 0) + 1);
 		} else {
 			return this.quantityDropped(rand);
 		}

@@ -11,6 +11,8 @@ import com.hbm.dim.tekto.biome.BiomeGenBaseTekto;
 import com.hbm.world.gen.terrain.MapGenBedrockOil;
 import com.hbm.world.gen.terrain.MapGenBubble;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
 public class ChunkProviderTekto extends ChunkProviderCelestial {
@@ -21,8 +23,8 @@ public class ChunkProviderTekto extends ChunkProviderCelestial {
 	private MapGenBubble tektonic = new MapGenBubble(WorldConfig.tektoOilSpawn);
 	private MapGenBedrockOil bedtonic = new MapGenBedrockOil(WorldConfig.tektoBedrockOilSpawn);
 
-	public ChunkProviderTekto(World world, long seed, boolean hasMapFeatures) {
-		super(world, seed, hasMapFeatures);
+	public ChunkProviderTekto(World world, long seed) {
+		super(world, seed);
 		reclamp = false; // please kill this, we spend more time calculating perlin noise than anything then skip two whole octaves of it!
 		caveGenV3.stoneBlock = ModBlocks.basalt;
 
@@ -39,6 +41,17 @@ public class ChunkProviderTekto extends ChunkProviderCelestial {
 
 		stoneBlock = ModBlocks.basalt;
 		seaBlock = ModBlocks.ccl_block;
+	}
+
+	@Override
+	protected Block getFlatWorldBlock(Block block) {
+		if(block == Blocks.water || block == Blocks.flowing_water) return ModBlocks.ccl_block;
+		if(block == Blocks.grass) return ModBlocks.rubber_grass;
+		if(block == Blocks.sand) return ModBlocks.vinyl_sand;
+		if(block == Blocks.dirt) return ModBlocks.rubber_silt;
+		if(block == Blocks.stone || block == Blocks.sandstone) return ModBlocks.basalt;
+		if(block == Blocks.snow_layer) return Blocks.air;
+		return block;
 	}
 
 	@Override

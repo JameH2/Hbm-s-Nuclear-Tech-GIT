@@ -304,7 +304,10 @@ public class TileEntityBarrel extends TileEntityMachineBase implements SimpleCom
 		tank.writeToNBT(nbt, "tank");
 	}
 
-	@Override public boolean canConnect(FluidType fluid, ForgeDirection dir) { return true; }
+	@Override
+	public boolean canConnect(FluidType fluid, ForgeDirection dir) {
+		return fluid == tank.getTankType();
+	}
 
 	@Override
 	public FluidTank[] getSendingTanks() {
@@ -458,8 +461,8 @@ public class TileEntityBarrel extends TileEntityMachineBase implements SimpleCom
 				PREFIX_VALUE + "type",
 				PREFIX_VALUE + "fill",
 				PREFIX_VALUE + "fillpercent",
-				PREFIX_FUNCTION + "setmode" + NAME_SEPARATOR + "mode",
-				PREFIX_FUNCTION + "setmode" + NAME_SEPARATOR + "mode" + PARAM_SEPARATOR + "fallback",
+				PREFIX_FUNCTION + "setmode" + NAME_SEPARATOR + "mode (0-3)",
+				PREFIX_FUNCTION + "setmode" + NAME_SEPARATOR + "mode" + PARAM_SEPARATOR + "fallback (0-3)",
 		};
 	}
 

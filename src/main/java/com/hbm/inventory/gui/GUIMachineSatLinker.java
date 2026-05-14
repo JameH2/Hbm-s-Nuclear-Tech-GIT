@@ -29,7 +29,9 @@ public class GUIMachineSatLinker extends GuiInfoContainer {
 		super.drawScreen(mouseX, mouseY, f);
 
 		String[] text = new String[] { "The first slot will copy the satellite/chip's",
-				"frequency and paste it to the second slot." };
+				"frequency to the second slot.",
+				"If both items are satellites, it also copies",
+				"satellite settings." };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36, 16, 16, guiLeft - 8, guiTop + 36 + 16, text);
 		
 		String[] text1 = new String[] { "The third slot will randomize the",

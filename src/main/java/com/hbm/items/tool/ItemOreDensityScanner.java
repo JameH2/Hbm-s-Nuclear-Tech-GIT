@@ -1,12 +1,15 @@
 package com.hbm.items.tool;
 
 import com.hbm.dim.CelestialBody;
+import com.hbm.dim.WorldProviderCelestial;
+import com.hbm.inventory.FluidStack;
 import com.hbm.items.special.ItemBedrockOreBase;
 import com.hbm.items.special.ItemBedrockOreNew.CelestialBedrockOre;
 import com.hbm.items.special.ItemBedrockOreNew.CelestialBedrockOreType;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.PlayerInformPacket;
 import com.hbm.util.ChatBuilder;
+import com.hbm.world.feature.BedrockOre;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,6 +26,8 @@ public class ItemOreDensityScanner extends Item {
 		if(!(entity instanceof EntityPlayerMP) || world.getTotalWorldTime() % 5 != 0) return;
 		
 		EntityPlayerMP player = (EntityPlayerMP) entity;
+		
+		double totalLevel = 0D;
 
 		CelestialBody body = CelestialBody.getBody(world);
 		
@@ -34,7 +39,24 @@ public class ItemOreDensityScanner extends Item {
 					.nextTranslation(translateDensity(level)).color(getColor(level))
 					.next(")").color(EnumChatFormatting.RESET).flush(),
 			777 + type.index, 4000), player);
+			totalLevel += level;
 		}
+		totalLevel /= CelestialBedrockOre.get(body.getEnum()).types.length;
+		
+		int tier = BedrockOre.getTier(totalLevel);
+		FluidStack boreFluid = BedrockOre.getBoreFluid(totalLevel);
+
+		if(world.provider instanceof WorldProviderCelestial && ((WorldProviderCelestial) world.provider).getBedrockAcid() != null) {
+			boreFluid = ((WorldProviderCelestial) world.provider).getBedrockAcid();
+		}
+		
+		ChatBuilder builder = ChatBuilder.start("Tier " + tier).color(EnumChatFormatting.YELLOW);
+		if(boreFluid != null) {
+			builder.next(" - " + boreFluid.fill + "mB ")
+			.nextTranslation(boreFluid.type.getUnlocalizedName());
+		}
+		
+		PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(builder.flush(), 777 + CelestialBedrockOre.get(body.getEnum()).types.length, 4000), player);
 	}
 	
 	public static String translateDensity(double density) {

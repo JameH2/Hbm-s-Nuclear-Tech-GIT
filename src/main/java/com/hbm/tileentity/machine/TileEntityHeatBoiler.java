@@ -16,6 +16,7 @@ import com.hbm.inventory.fluid.trait.FT_Heatable.HeatingStep;
 import com.hbm.inventory.fluid.trait.FT_Heatable.HeatingType;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
+import com.hbm.main.NTMSounds;
 import com.hbm.saveddata.TomSaveData;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IBufPacketReceiver;
@@ -25,6 +26,7 @@ import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
+import api.hbm.redstoneoverradio.IRORValueProvider;
 import api.hbm.tile.IHeatSource;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -36,7 +38,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityHeatBoiler extends TileEntityLoadedBase implements IBufPacketReceiver, IFluidStandardTransceiverMK2, IConfigurableMachine, IFluidCopiable {
+public class TileEntityHeatBoiler extends TileEntityLoadedBase implements IBufPacketReceiver, IFluidStandardTransceiverMK2, IConfigurableMachine, IFluidCopiable, IRORValueProvider {
 
 	public int heat;
 	public FluidTank[] tanks;
@@ -127,7 +129,7 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements IBufPa
 
 	@Override
 	public AudioWrapper createAudioLoop() {
-		return MainRegistry.proxy.getLoopedSound("hbm:block.boiler", xCoord, yCoord, zCoord, 0.125F, 10F, 1.0F, 20);
+		return MainRegistry.proxy.getLoopedSound(NTMSounds.BOILER_LOOP, xCoord, yCoord, zCoord, 0.125F, 10F, 1.0F, 20);
 	}
 
 	@Override
@@ -227,7 +229,7 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements IBufPa
 				this.heat -= heatReq * ops;
 
 				if(ops > 0 && worldObj.rand.nextInt(400) == 0) {
-					worldObj.playSoundEffect(xCoord + 0.5, yCoord + 2, zCoord + 0.5, "hbm:block.boilerGroan", 0.5F, 1.0F);
+					worldObj.playSoundEffect(xCoord + 0.5, yCoord + 2, zCoord + 0.5, NTMSounds.BOILER_GROAN, 0.5F, 1.0F);
 				}
 
 				if(ops > 0) {
@@ -356,5 +358,25 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements IBufPa
 		writer.name("I:maxHeat").value(maxHeat);
 		writer.name("D:diffusion").value(diffusion);
 		writer.name("B:canExplode").value(canExplode);
+	}
+
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+				PREFIX_VALUE + "input",
+				PREFIX_VALUE + "output"
+		};
+	}
+
+	@Override
+	public String provideRORValue(String name) {
+		if (hasExploded) {
+			if ((PREFIX_VALUE + "input").equals(name))		return "0";
+			if ((PREFIX_VALUE + "output").equals(name))		return "0";
+			return null;
+		}
+		if ((PREFIX_VALUE + "input").equals(name))		return "" + tanks[0].getFill();
+		if ((PREFIX_VALUE + "output").equals(name))		return "" + tanks[1].getFill();
+		return null;
 	}
 }

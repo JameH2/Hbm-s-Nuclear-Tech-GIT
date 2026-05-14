@@ -35,6 +35,7 @@ public abstract class CelestialBodyTrait {
 		registerTrait("war", CBT_War.class);
 		registerTrait("destroyed", CBT_Destroyed.class);
 		registerTrait("water", CBT_Water.class);
+		registerTrait("weather", CBT_Weather.class);
 		registerTrait("battle", CBT_BATTLEFIELD.class);
 		registerTrait("infected", CBT_COMPROMISED.class);
 		registerTrait("dyson", CBT_Dyson.class);

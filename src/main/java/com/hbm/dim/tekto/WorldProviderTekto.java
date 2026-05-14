@@ -31,7 +31,7 @@ public class WorldProviderTekto extends WorldProviderCelestial {
 
 	@Override
 	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderTekto(this.worldObj, this.getSeed(), false);
+		return new ChunkProviderTekto(this.worldObj, this.getSeed());
 	}
 
 	@Override

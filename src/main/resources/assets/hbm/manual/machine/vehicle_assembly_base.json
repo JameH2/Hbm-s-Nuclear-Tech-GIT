@@ -3,9 +3,11 @@
 	"icon": ["hbm:tile.machine_rocket_assembly", 1, 0],
 	"trigger": [["hbm:tile.machine_rocket_assembly"]],
 	"title": {
-		"en_US": "Vehicle Assembly Base (VAB)"
+		"en_US": "Vehicle Assembly Base (VAB)",
+		"ru_RU": "Станция сборки многоступенчатых ракет"
 	},
 	"content": {
-        "en_US": "Used to construct rockets to be used in the [[rocket launch pad|Rocket Launch Pad]]. Rockets are constructed by first selecting a payload and placing it into the top-most slot. Payloads can be either a capsule or any satellite.<br><br>Each stage in the rocket can perform one single journey, say from Earth -> Mun. These stages can use stacked fuel tanks and thrusters to increase fuel capacity and thrust (up to 8 fuselages and/or thrusters per stage).<br><br>The flight planner on the right hand side is critical for ensuring a given rocket design can perform a given journey. Place the [[drive|Drive]] for the body/station you're launching from in the top slot, and the target destination in the bottom slot."
+        "en_US": "Used to construct rockets to be used in the [[rocket launch pad|Rocket Launch Pad]]. Rockets are constructed by first selecting a payload and placing it into the top-most slot. Payloads can be either a capsule or any satellite.<br><br>Each stage in the rocket can perform one single journey, say from Earth -> Mun. These stages can use stacked fuel tanks and thrusters to increase fuel capacity and thrust (up to 8 fuselages and/or thrusters per stage).<br><br>The flight planner on the right hand side is critical for ensuring a given rocket design can perform a given journey. Place the [[drive|Drive]] for the body/station you're launching from in the top slot, and the target destination in the bottom slot.",
+        "ru_RU": "Используется для конструирования ракет, предназначенных для запуска со [[стартовой площадки|Rocket Launch Pad]]. Ракеты создаются путём выбора полезной нагрузки и последующим её размещением в самом верхнем слоте. Полезной нагрузкой может быть как посадочная капсула, так и любой спутник.<br><br>Каждая ступень ракеты может обеспечить один единственный перелёт, например, с Земли на Луну. Эти ступени могут состоять из нескольких топливных баков и двигателей для увеличения запаса топлива и тяги (вплоть до 8 фюзеляжей и двигателей на ступень).<br><br>Планировщик в правой части экрана имеет решающее значение для выполнения полёта: [[жёсткий диск|Drive]] точки старта (будь то станция или планета) располагается в верхнем слоте, а целевое место назначения - в нижнем."
 	}
 }

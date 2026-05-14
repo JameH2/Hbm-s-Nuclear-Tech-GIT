@@ -1,7 +1,10 @@
 package com.hbm.blocks.machine.rbmk;
 
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
 
+import com.hbm.blocks.ITooltipProvider;
 import com.hbm.lib.Library;
 import com.hbm.render.block.ISBRHUniversal;
 import com.hbm.render.util.RenderBlocksNT;
@@ -14,15 +17,24 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public abstract class RBMKMiniPanelBase extends BlockContainer implements ISBRHUniversal {
+public class RBMKMiniPanelBase extends BlockContainer implements ISBRHUniversal, ITooltipProvider {
 
 	public RBMKMiniPanelBase() {
 		super(Material.iron);
+		this.setHardness(3F);
+		this.setResistance(30F);
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta) {
+		return null;
 	}
 
 	@Override public int getRenderType() { return renderID; }
@@ -83,5 +95,10 @@ public abstract class RBMKMiniPanelBase extends BlockContainer implements ISBRHU
 		renderer.renderStandardBlock(block, x, y, z);
 		
 		return true;
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
+		this.addStandardInfo(stack, player, list, ext);
 	}
 }

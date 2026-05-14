@@ -2,6 +2,7 @@ package com.hbm.explosion;
 
 import com.hbm.config.BombConfig;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
+import com.hbm.handler.CelestialNukeShockHandler;
 import com.hbm.explosion.ExplosionNT.ExAttrib;
 import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.handler.threading.PacketThreading;
@@ -35,6 +36,7 @@ import net.minecraft.world.World;
 		if(params.miniNuke && !params.safe) new ExplosionNT(world, null, posX, posY, posZ, params.blastRadius).addAllAttrib(params.explosionAttribs).overrideResolution(params.resolution).explode();
 		if(params.killRadius > 0) ExplosionNukeGeneric.dealDamage(world, posX, posY, posZ, params.killRadius);
 		if(!params.miniNuke) WorldUtil.loadAndSpawnEntityInWorld(EntityNukeExplosionMK5.statFac(world, (int) params.blastRadius, posX, posY, posZ));
+		if(params.miniNuke) CelestialNukeShockHandler.trigger(world, posX, posZ, params.blastRadius);
 
 		if(params.miniNuke) {
 			float radMod = params.radiationLevel / 3F;

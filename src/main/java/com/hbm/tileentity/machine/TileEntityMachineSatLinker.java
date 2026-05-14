@@ -4,6 +4,7 @@ import com.hbm.inventory.container.ContainerMachineSatLinker;
 import com.hbm.inventory.gui.GUIMachineSatLinker;
 import com.hbm.items.ISatChip;
 import com.hbm.saveddata.SatelliteSavedData;
+import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.tileentity.IGUIProvider;
 
 import cpw.mods.fml.relauncher.Side;
@@ -177,6 +178,9 @@ public class TileEntityMachineSatLinker extends TileEntity implements ISidedInve
 		if(!worldObj.isRemote) {
 			if(slots[0] != null && slots[1] != null && slots[0].getItem() instanceof ISatChip && slots[1].getItem() instanceof ISatChip) {
 				ISatChip.setFreqS(slots[1], ISatChip.getFreqS(slots[0]));
+				if(Satellite.isSatelliteItem(slots[0].getItem()) && Satellite.isSatelliteItem(slots[1].getItem())) {
+					Satellite.copyItemData(slots[0], slots[1]);
+				}
 			}
 
 			if(slots[2] != null && slots[2].getItem() instanceof ISatChip) {

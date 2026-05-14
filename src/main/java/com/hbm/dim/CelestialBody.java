@@ -407,7 +407,7 @@ public class CelestialBody {
 		// because atmochem runs infrequently, we will automatically scale this to react all it can immediately
 		for(FluidStack recipeFluid : recipe.getValue().inputFluids) {
 			boolean hasInput = false;
-			
+
 			for(CBT_Atmosphere.FluidEntry entry : atmosphere.fluids) {
 				if(entry.fluid == recipeFluid.type && entry.pressure * AstronomyUtil.MB_PER_ATM >= recipeFluid.fill * scale) hasInput = true;
 			}
@@ -513,6 +513,9 @@ public class CelestialBody {
 	}
 
 	// bit of a dumb one but the other function is already used widely
+	public static CelestialBody getBodyOrNull(String name) {
+		return nameToBodyMap.get(name);
+	}
 	public static CelestialBody getBodyOrNull(int id) {
 		return dimToBodyMap.get(id);
 	}

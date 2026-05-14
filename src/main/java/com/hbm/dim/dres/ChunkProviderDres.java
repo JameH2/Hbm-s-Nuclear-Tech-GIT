@@ -5,6 +5,8 @@ import com.hbm.dim.ChunkProviderCelestial;
 import com.hbm.dim.mapgen.MapGenCrater;
 import com.hbm.dim.mapgen.MapGenVanillaCaves;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.MapGenBase;
 
@@ -15,8 +17,8 @@ public class ChunkProviderDres extends ChunkProviderCelestial {
 	private MapGenCrater smallCrater = new MapGenCrater(6);
 	private MapGenCrater largeCrater = new MapGenCrater(64);
 
-	public ChunkProviderDres(World world, long seed, boolean hasMapFeatures) {
-		super(world, seed, hasMapFeatures);
+	public ChunkProviderDres(World world, long seed) {
+		super(world, seed);
 
 		smallCrater.setSize(8, 32);
 		largeCrater.setSize(96, 128);
@@ -25,6 +27,14 @@ public class ChunkProviderDres extends ChunkProviderCelestial {
 		smallCrater.rock = largeCrater.rock = ModBlocks.dres_rock;
 
 		stoneBlock = ModBlocks.dres_rock;
+	}
+
+	@Override
+	protected Block getFlatWorldBlock(Block block) {
+		if(block == Blocks.grass || block == Blocks.sand || block == Blocks.water || block == Blocks.flowing_water) return ModBlocks.sellafield_slaked;
+		if(block == Blocks.dirt || block == Blocks.stone || block == Blocks.sandstone) return ModBlocks.dres_rock;
+		if(block == Blocks.snow_layer) return Blocks.air;
+		return block;
 	}
 	
 	@Override

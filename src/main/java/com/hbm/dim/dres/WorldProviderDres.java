@@ -33,7 +33,7 @@ public class WorldProviderDres extends WorldProviderCelestial {
 
 	@Override
 	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderDres(this.worldObj, this.getSeed(), false);
+		return new ChunkProviderDres(this.worldObj, this.getSeed());
 	}
 
 	// sorry mellow...

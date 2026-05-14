@@ -10,7 +10,6 @@ import com.hbm.blocks.generic.BlockOre;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.WorldConfig;
 import com.hbm.inventory.FluidStack;
-import com.hbm.items.ModItems;
 import com.hbm.main.StructureManager;
 import com.hbm.util.WeightedRandomGeneric;
 import com.hbm.world.PlanetGen;
@@ -251,7 +250,7 @@ public class WorldGeneratorCelestial implements IWorldGenerator {
 				int randPosX = x + rand.nextInt(2) + 8;
 				int randPosZ = z + rand.nextInt(2) + 8;
 
-				BedrockOre.generate(world, randPosX, randPosZ, new ItemStack(ModItems.bedrock_ore_base), drillAcid, 0xD78A16, 1, ModBlocks.stone_depth, planetStone);
+				BedrockOre.generateAuto(world, randPosX, randPosZ, planetStone, drillAcid);
 			} else if(hasIce && rand.nextInt(3) == 0) {
 				int randPosX = x + rand.nextInt(2) + 8;
 				int randPosZ = z + rand.nextInt(2) + 8;

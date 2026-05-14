@@ -9,10 +9,13 @@ import com.hbm.dim.CelestialBody;
 import com.hbm.dim.ChunkProviderCelestial;
 import com.hbm.dim.laythe.biome.BiomeGenBaseLaythe;
 import com.hbm.dim.mapgen.MapGenGreg;
+import com.hbm.dim.mapgen.MapGenRoots;
 import com.hbm.dim.mapgen.MapGenTiltedSpires;
+import com.hbm.dim.mapgen.MapgenRavineButBased;
 import com.hbm.entity.mob.EntityCreeperFlesh;
 import com.hbm.world.gen.terrain.MapGenBubble;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -21,6 +24,8 @@ import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 public class ChunkProviderLaythe extends ChunkProviderCelestial {
 
 	private MapGenGreg caveGenV3 = new MapGenGreg();
+	private MapgenRavineButBased rgen = new MapgenRavineButBased();
+	private MapGenRoots roots = new MapGenRoots();
 
 	private MapGenTiltedSpires spires = new MapGenTiltedSpires(2, 14, 0.75F);
 	private MapGenTiltedSpires snowires = new MapGenTiltedSpires(2, 14, 0.75F);
@@ -29,8 +34,17 @@ public class ChunkProviderLaythe extends ChunkProviderCelestial {
 
 	private List<SpawnListEntry> spawnedOfFlesh = new ArrayList<SpawnListEntry>();
 
-	public ChunkProviderLaythe(World world, long seed, boolean hasMapFeatures) {
-		super(world, seed, hasMapFeatures);
+	public ChunkProviderLaythe(World world, long seed) {
+		super(world, seed);
+
+		rgen.yMin = 32;
+		rgen.frequency = 20;
+		rgen.strataFreq = 3;
+		rgen.strataScale = 8.0F;
+		rgen.width = 16.0D;
+		rgen.taper = 8.0D;
+		rgen.allowUnderwater = true;
+		rgen.height = 5.0D;
 
 		snowires.rock = Blocks.packed_ice;
 		snowires.regolith = Blocks.snow;
@@ -53,6 +67,14 @@ public class ChunkProviderLaythe extends ChunkProviderCelestial {
 	}
 
 	@Override
+	protected Block getFlatWorldBlock(Block block) {
+		if(block == Blocks.grass || block == Blocks.sand || block == Blocks.water || block == Blocks.flowing_water) return Blocks.water;
+		if(block == Blocks.dirt || block == Blocks.stone || block == Blocks.sandstone) return ModBlocks.laythe_silt;
+		if(block == Blocks.snow_layer) return Blocks.snow_layer;
+		return block;
+	}
+
+	@Override
 	public BlockMetaBuffer getChunkPrimer(int x, int z) {
 		BlockMetaBuffer buffer = super.getChunkPrimer(x, z);
 		oil.setMetas(buffer.metas);
@@ -62,7 +84,9 @@ public class ChunkProviderLaythe extends ChunkProviderCelestial {
 		} else {
 			spires.func_151539_a(this, worldObj, x, z, buffer.blocks);
 		}
+		roots.func_151539_a(this, worldObj, x, z, buffer.blocks);
 		caveGenV3.func_151539_a(this, worldObj, x, z, buffer.blocks);
+		rgen.func_151539_a(this, worldObj, x, z, buffer.blocks);
 		oil.func_151539_a(this, worldObj, x, z, buffer.blocks);
 
 		return buffer;

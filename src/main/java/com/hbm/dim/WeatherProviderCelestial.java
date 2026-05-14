@@ -3,7 +3,10 @@ package com.hbm.dim;
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -15,182 +18,213 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.IRenderHandler;
 
+@SideOnly(Side.CLIENT)
 public class WeatherProviderCelestial extends IRenderHandler {
 
-	private static final ResourceLocation locationRainPng = new ResourceLocation("textures/environment/rain.png");
-	private static final ResourceLocation locationSnowPng = new ResourceLocation("textures/environment/snow.png");
+	private static final ResourceLocation RAIN_TEXTURE = new ResourceLocation("textures/environment/rain.png");
+	private static final ResourceLocation SNOW_TEXTURE = new ResourceLocation("textures/environment/snow.png");
 
-	private Random random = new Random();
-
-	float[] rainXCoords;
-	float[] rainYCoords;
-
-	protected Vec3 getRainColor() {
-		return Vec3.createVectorHelper(1, 1, 1);
-	}
-
-	protected boolean canSnow() {
-		return true;
-	}
-
-	protected Vec3 getSnowColor() {
-		return Vec3.createVectorHelper(1, 1, 1);
-	}
-
-	public void addRainParticles(Minecraft mc) {
-
-	}
+	private final Random random = new Random();
+	private float[] rainXCoords;
+	private float[] rainYCoords;
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
-		int rendererUpdateCount = (int)world.getTotalWorldTime();
+		float intensity = world.getRainStrength(partialTicks);
 
-		float rain = world.getRainStrength(partialTicks);
+		if(intensity <= 0.0F) {
+			return;
+		}
 
-		if(rain > 0.0F) {
-			mc.entityRenderer.enableLightmap((double) partialTicks);
+		EntityLivingBase camera = mc.renderViewEntity;
+		if(camera == null) {
+			return;
+		}
 
-			if(this.rainXCoords == null) {
-				this.rainXCoords = new float[1024];
-				this.rainYCoords = new float[1024];
+		if(world.provider instanceof WorldProviderCelestial && !((WorldProviderCelestial)world.provider).hasWeatherCycle()) {
+			return;
+		}
 
-				for(int i = 0; i < 32; ++i) {
-					for(int j = 0; j < 32; ++j) {
-						float f2 = (float) (j - 16);
-						float f3 = (float) (i - 16);
-						float f4 = MathHelper.sqrt_float(f2 * f2 + f3 * f3);
-						this.rainXCoords[i << 5 | j] = -f3 / f4;
-						this.rainYCoords[i << 5 | j] = f2 / f4;
+		mc.entityRenderer.enableLightmap(partialTicks);
+		initRainCoords();
+
+		int timer = mc.thePlayer != null ? mc.thePlayer.ticksExisted : (int)(world.getTotalWorldTime() & Integer.MAX_VALUE);
+		int playerX = MathHelper.floor_double(camera.posX);
+		int playerY = MathHelper.floor_double(camera.posY);
+		int playerZ = MathHelper.floor_double(camera.posZ);
+		double interpX = camera.lastTickPosX + (camera.posX - camera.lastTickPosX) * partialTicks;
+		double interpY = camera.lastTickPosY + (camera.posY - camera.lastTickPosY) * partialTicks;
+		double interpZ = camera.lastTickPosZ + (camera.posZ - camera.lastTickPosZ) * partialTicks;
+		int playerHeight = MathHelper.floor_double(interpY);
+		int renderLayerCount = mc.gameSettings.fancyGraphics ? 10 : 5;
+		Vec3 rainColor = getRainColor(world);
+		Vec3 snowColor = getSnowColor(world);
+
+		Tessellator tessellator = Tessellator.instance;
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+		GL11.glEnable(GL11.GL_BLEND);
+		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		enableTextureAlphaTint();
+
+		int layer = -1;
+
+		for(int layerZ = playerZ - renderLayerCount; layerZ <= playerZ + renderLayerCount; ++layerZ) {
+			for(int layerX = playerX - renderLayerCount; layerX <= playerX + renderLayerCount; ++layerX) {
+				int rainCoord = (layerZ - playerZ + 16) * 32 + layerX - playerX + 16;
+				float rainCoordX = this.rainXCoords[rainCoord] * 0.5F;
+				float rainCoordY = this.rainYCoords[rainCoord] * 0.5F;
+				BiomeGenBase biome = world.getBiomeGenForCoords(layerX, layerZ);
+
+				if(!biome.canSpawnLightningBolt() && !biome.getEnableSnow()) {
+					continue;
+				}
+
+				int precipitationHeight = world.getPrecipitationHeight(layerX, layerZ);
+				int minHeight = playerY - renderLayerCount;
+				int maxHeight = playerY + renderLayerCount;
+
+				if(minHeight < precipitationHeight) minHeight = precipitationHeight;
+				if(maxHeight < precipitationHeight) maxHeight = precipitationHeight;
+
+				int layerY = precipitationHeight;
+				if(precipitationHeight < playerHeight) layerY = playerHeight;
+
+				if(minHeight == maxHeight) {
+					continue;
+				}
+
+				this.random.setSeed(layerX * layerX * 3121 + layerX * 45238971 ^ layerZ * layerZ * 418711 + layerZ * 13761);
+				float temperature = biome.getFloatTemperature(layerX, minHeight, layerZ);
+				boolean renderRain = world.getWorldChunkManager().getTemperatureAtHeight(temperature, precipitationHeight) >= 0.15F;
+
+				if(renderRain) {
+					if(layer != 0) {
+						if(layer >= 0) {
+							tessellator.draw();
+						}
+
+						layer = 0;
+						mc.getTextureManager().bindTexture(RAIN_TEXTURE);
+						tessellator.startDrawingQuads();
 					}
+
+					int rainSeed = layerX * layerX * 3121 + layerX * 45238971 + layerZ * layerZ * 418711 + layerZ * 13761;
+					float rainOffset = ((timer + (rainSeed & 31)) + partialTicks) / 32.0F * (3.0F + this.random.nextFloat());
+					double distX = layerX + 0.5D - camera.posX;
+					double distZ = layerZ + 0.5D - camera.posZ;
+					float intensityMod = MathHelper.sqrt_double(distX * distX + distZ * distZ) / renderLayerCount;
+
+					tessellator.setBrightness(world.getLightBrightnessForSkyBlocks(layerX, layerY, layerZ, 0));
+					tessellator.setColorRGBA_F(
+						(float)rainColor.xCoord,
+						(float)rainColor.yCoord,
+						(float)rainColor.zCoord,
+						((1.0F - intensityMod * intensityMod) * 0.5F + 0.5F) * intensity
+					);
+					tessellator.setTranslation(-interpX, -interpY, -interpZ);
+					tessellator.addVertexWithUV(layerX - rainCoordX + 0.5D, minHeight, layerZ - rainCoordY + 0.5D, 0.0F, minHeight / 4.0F + rainOffset);
+					tessellator.addVertexWithUV(layerX + rainCoordX + 0.5D, minHeight, layerZ + rainCoordY + 0.5D, 1.0F, minHeight / 4.0F + rainOffset);
+					tessellator.addVertexWithUV(layerX + rainCoordX + 0.5D, maxHeight, layerZ + rainCoordY + 0.5D, 1.0F, maxHeight / 4.0F + rainOffset);
+					tessellator.addVertexWithUV(layerX - rainCoordX + 0.5D, maxHeight, layerZ - rainCoordY + 0.5D, 0.0F, maxHeight / 4.0F + rainOffset);
+					tessellator.setTranslation(0.0D, 0.0D, 0.0D);
+				} else {
+					if(layer != 1) {
+						if(layer >= 0) {
+							tessellator.draw();
+						}
+
+						layer = 1;
+						mc.getTextureManager().bindTexture(SNOW_TEXTURE);
+						tessellator.startDrawingQuads();
+					}
+
+					float swayLoop = ((timer & 511) + partialTicks) / 512.0F;
+					float fallVariation = this.random.nextFloat() + timer * 0.01F * (float)this.random.nextGaussian();
+					float swayVariation = this.random.nextFloat() + timer * (float)this.random.nextGaussian() * 0.001F;
+					double distX = layerX + 0.5D - camera.posX;
+					double distZ = layerZ + 0.5D - camera.posZ;
+					float intensityMod = MathHelper.sqrt_double(distX * distX + distZ * distZ) / renderLayerCount;
+
+					tessellator.setBrightness((world.getLightBrightnessForSkyBlocks(layerX, layerY, layerZ, 0) * 3 + 15728880) / 4);
+					tessellator.setColorRGBA_F(
+						(float)snowColor.xCoord,
+						(float)snowColor.yCoord,
+						(float)snowColor.zCoord,
+						((1.0F - intensityMod * intensityMod) * 0.3F + 0.5F) * intensity
+					);
+					tessellator.setTranslation(-interpX, -interpY, -interpZ);
+					tessellator.addVertexWithUV(layerX - rainCoordX + 0.5D, minHeight, layerZ - rainCoordY + 0.5D, 0.0F + fallVariation, minHeight / 4.0F + swayLoop + swayVariation);
+					tessellator.addVertexWithUV(layerX + rainCoordX + 0.5D, minHeight, layerZ + rainCoordY + 0.5D, 1.0F + fallVariation, minHeight / 4.0F + swayLoop + swayVariation);
+					tessellator.addVertexWithUV(layerX + rainCoordX + 0.5D, maxHeight, layerZ + rainCoordY + 0.5D, 1.0F + fallVariation, maxHeight / 4.0F + swayLoop + swayVariation);
+					tessellator.addVertexWithUV(layerX - rainCoordX + 0.5D, maxHeight, layerZ - rainCoordY + 0.5D, 0.0F + fallVariation, maxHeight / 4.0F + swayLoop + swayVariation);
+					tessellator.setTranslation(0.0D, 0.0D, 0.0D);
 				}
 			}
+		}
 
-			EntityLivingBase entitylivingbase = mc.renderViewEntity;
-			int ix = MathHelper.floor_double(entitylivingbase.posX);
-			int iy = MathHelper.floor_double(entitylivingbase.posY);
-			int iz = MathHelper.floor_double(entitylivingbase.posZ);
-			Tessellator tessellator = Tessellator.instance;
-			GL11.glDisable(GL11.GL_CULL_FACE);
-			GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-			GL11.glEnable(GL11.GL_BLEND);
-			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-			GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
-			double posX = entitylivingbase.lastTickPosX + (entitylivingbase.posX - entitylivingbase.lastTickPosX) * (double) partialTicks;
-			double posY = entitylivingbase.lastTickPosY + (entitylivingbase.posY - entitylivingbase.lastTickPosY) * (double) partialTicks;
-			double posZ = entitylivingbase.lastTickPosZ + (entitylivingbase.posZ - entitylivingbase.lastTickPosZ) * (double) partialTicks;
-			int level = MathHelper.floor_double(posY);
-			byte dist = 5;
+		if(layer >= 0) {
+			tessellator.draw();
+		}
 
-			if(mc.gameSettings.fancyGraphics) {
-				dist = 10;
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		disableTextureAlphaTint();
+		mc.entityRenderer.disableLightmap(partialTicks);
+	}
+
+	private void enableTextureAlphaTint() {
+		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL13.GL_COMBINE);
+		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_COMBINE_RGB, GL11.GL_REPLACE);
+		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE0_RGB, GL13.GL_PRIMARY_COLOR);
+		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_OPERAND0_RGB, GL11.GL_SRC_COLOR);
+		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_COMBINE_ALPHA, GL11.GL_MODULATE);
+		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE0_ALPHA, GL11.GL_TEXTURE);
+		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_OPERAND0_ALPHA, GL11.GL_SRC_ALPHA);
+		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE1_ALPHA, GL13.GL_PRIMARY_COLOR);
+		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_OPERAND1_ALPHA, GL11.GL_SRC_ALPHA);
+	}
+
+	private void disableTextureAlphaTint() {
+		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
+	}
+
+	private void initRainCoords() {
+		if(this.rainXCoords != null) {
+			return;
+		}
+
+		this.rainXCoords = new float[1024];
+		this.rainYCoords = new float[1024];
+
+		for(int i = 0; i < 32; ++i) {
+			for(int j = 0; j < 32; ++j) {
+				float coordX = j - 16;
+				float coordY = i - 16;
+				float coordLength = MathHelper.sqrt_float(coordX * coordX + coordY * coordY);
+				this.rainXCoords[i << 5 | j] = -coordY / coordLength;
+				this.rainYCoords[i << 5 | j] = coordX / coordLength;
 			}
-
-			byte drawFlag = -1;
-
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-			for(int z = iz - dist; z <= iz + dist; ++z) {
-				for(int x = ix - dist; x <= ix + dist; ++x) {
-					int index = (z - iz + 16) * 32 + x - ix + 16;
-					float f6 = this.rainXCoords[index] * 0.5F;
-					float f7 = this.rainYCoords[index] * 0.5F;
-					BiomeGenBase biomegenbase = world.getBiomeGenForCoords(x, z);
-
-					if(biomegenbase.canSpawnLightningBolt() || biomegenbase.getEnableSnow()) {
-						int height = world.getPrecipitationHeight(x, z);
-						int min = iy - dist;
-						int max = iy + dist;
-
-						if(min < height) {
-							min = height;
-						}
-
-						if(max < height) {
-							max = height;
-						}
-
-						float f8 = 1.0F;
-						int j2 = height;
-
-						if(height < level) {
-							j2 = level;
-						}
-
-						if(min != max) {
-							this.random.setSeed((long) (x * x * 3121 + x * 45238971 ^ z * z * 418711 + z * 13761));
-							float temperature = biomegenbase.getFloatTemperature(x, min, z);
-							float salt;
-
-							if(!canSnow() || world.getWorldChunkManager().getTemperatureAtHeight(temperature, height) >= 0.15F) {
-								if(drawFlag != 0) {
-									if(drawFlag >= 0) {
-										tessellator.draw();
-									}
-
-									drawFlag = 0;
-									mc.getTextureManager().bindTexture(locationRainPng);
-									tessellator.startDrawingQuads();
-								}
-
-								salt = ((float) (rendererUpdateCount + x * x * 3121 + x * 45238971 + z * z * 418711 + z * 13761 & 31) + partialTicks) / 32.0F * (3.0F + this.random.nextFloat());
-								double rainX = (double) ((float) x + 0.5F) - entitylivingbase.posX;
-								double rainZ = (double) ((float) z + 0.5F) - entitylivingbase.posZ;
-								float unitDistance = MathHelper.sqrt_double(rainX * rainX + rainZ * rainZ) / (float) dist;
-
-								Vec3 rainColor = getRainColor();
-
-								tessellator.setBrightness(world.getLightBrightnessForSkyBlocks(x, j2, z, 0));
-								tessellator.setColorRGBA_F((float)rainColor.xCoord, (float)rainColor.yCoord, (float)rainColor.zCoord, ((1.0F - unitDistance * unitDistance) * 0.5F + 0.5F) * rain);
-								tessellator.setTranslation(-posX * 1.0D, -posY * 1.0D, -posZ * 1.0D);
-								tessellator.addVertexWithUV((double) ((float) x - f6) + 0.5D, (double) min, (double) ((float) z - f7) + 0.5D, (double) (0.0F * f8), (double) ((float) min * f8 / 4.0F + salt * f8));
-								tessellator.addVertexWithUV((double) ((float) x + f6) + 0.5D, (double) min, (double) ((float) z + f7) + 0.5D, (double) (1.0F * f8), (double) ((float) min * f8 / 4.0F + salt * f8));
-								tessellator.addVertexWithUV((double) ((float) x + f6) + 0.5D, (double) max, (double) ((float) z + f7) + 0.5D, (double) (1.0F * f8), (double) ((float) max * f8 / 4.0F + salt * f8));
-								tessellator.addVertexWithUV((double) ((float) x - f6) + 0.5D, (double) max, (double) ((float) z - f7) + 0.5D, (double) (0.0F * f8), (double) ((float) max * f8 / 4.0F + salt * f8));
-								tessellator.setTranslation(0.0D, 0.0D, 0.0D);
-							} else {
-								float totalTime = (float)rendererUpdateCount + partialTicks;
-								if(drawFlag != 1) {
-									if(drawFlag >= 0) {
-										tessellator.draw();
-									}
-
-									drawFlag = 1;
-									mc.getTextureManager().bindTexture(locationSnowPng);
-									tessellator.startDrawingQuads();
-								}
-
-								salt = ((float)(rendererUpdateCount & 511) + partialTicks) / 512.0F;
-								float f16 = this.random.nextFloat() + totalTime * 0.01F * (float)this.random.nextGaussian();
-								float f11 = this.random.nextFloat() + totalTime * (float)this.random.nextGaussian() * 0.001F;
-								double d4 = (double)((float)x + 0.5F) - entitylivingbase.posX;
-								double d5 = (double)((float)z + 0.5F) - entitylivingbase.posZ;
-								float f14 = MathHelper.sqrt_double(d4 * d4 + d5 * d5) / (float)dist;
-
-								Vec3 snowColor = getSnowColor();
-
-								tessellator.setBrightness((world.getLightBrightnessForSkyBlocks(x, j2, z, 0) * 3 + 15728880) / 4);
-								tessellator.setColorRGBA_F((float)snowColor.xCoord, (float)snowColor.yCoord, (float)snowColor.zCoord, ((1.0F - f14 * f14) * 0.3F + 0.5F) * rain);
-								tessellator.setTranslation(-posX * 1.0D, -posY * 1.0D, -posZ * 1.0D);
-								tessellator.addVertexWithUV((double)((float) x - f6) + 0.5D, (double)min, (double)((float) z - f7) + 0.5D, (double)(0.0F * f8 + f16), (double)((float) min * f8 / 4.0F + salt * f8 + f11));
-								tessellator.addVertexWithUV((double)((float) x + f6) + 0.5D, (double)min, (double)((float) z + f7) + 0.5D, (double)(1.0F * f8 + f16), (double)((float) min * f8 / 4.0F + salt * f8 + f11));
-								tessellator.addVertexWithUV((double)((float) x + f6) + 0.5D, (double)max, (double)((float) z + f7) + 0.5D, (double)(1.0F * f8 + f16), (double)((float) max * f8 / 4.0F + salt * f8 + f11));
-								tessellator.addVertexWithUV((double)((float) x - f6) + 0.5D, (double)max, (double)((float) z - f7) + 0.5D, (double)(0.0F * f8 + f16), (double)((float) max * f8 / 4.0F + salt * f8 + f11));
-								tessellator.setTranslation(0.0D, 0.0D, 0.0D);
-							}
-						}
-					}
-				}
-			}
-
-			if(drawFlag >= 0) {
-				tessellator.draw();
-			}
-
-			GL11.glEnable(GL11.GL_CULL_FACE);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
-			mc.entityRenderer.disableLightmap((double) partialTicks);
 		}
 	}
 
+	private Vec3 getRainColor(WorldClient world) {
+		if(world.provider instanceof WorldProviderCelestial) {
+			return ((WorldProviderCelestial)world.provider).getWeatherColor();
+		}
+
+		return Vec3.createVectorHelper(1.0D, 1.0D, 1.0D);
+	}
+
+	private Vec3 getSnowColor(WorldClient world) {
+		if(world.provider instanceof WorldProviderCelestial) {
+			return ((WorldProviderCelestial)world.provider).getSnowColor();
+		}
+
+		return Vec3.createVectorHelper(1.0D, 1.0D, 1.0D);
+	}
 }

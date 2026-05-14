@@ -1,6 +1,7 @@
 package com.hbm.dim;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -19,10 +20,14 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.SpawnerAnimals;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraft.world.gen.FlatGeneratorInfo;
+import net.minecraft.world.gen.FlatLayerInfo;
 import net.minecraft.world.gen.NoiseGenerator;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
@@ -55,8 +60,9 @@ public abstract class ChunkProviderCelestial implements IChunkProvider {
 
 	// Now for the regular stuff, changing these won't change gen, just break things
 	protected World worldObj;
-	protected final boolean mapFeaturesEnabled;
 	protected Random rand;
+	protected WorldType worldType;
+	protected String generatorOptions; // for flat worlds
 
 	// Generation buffers and the like, no need to modify or have visibility to these
 	private NoiseGeneratorOctaves firstOrder;
@@ -66,8 +72,8 @@ public abstract class ChunkProviderCelestial implements IChunkProvider {
 	private NoiseGeneratorOctaves heightOrder;
 
 	protected BiomeGenBase[] biomesForGeneration;
-	private final double[] terrainBuffer;
-	private final float[] parabolicField;
+	private final double[] terrainBuffer = new double[825];
+	private final float[] parabolicField = new float[25];
 	private double[] stoneNoise = new double[256];
 
 	private double[] firstOrderBuffer;
@@ -75,38 +81,61 @@ public abstract class ChunkProviderCelestial implements IChunkProvider {
 	private double[] thirdOrderBuffer;
 	private double[] heightOrderBuffer;
 
-	public ChunkProviderCelestial(World world, long seed, boolean hasMapFeatures) {
+	// Flat world buffers
+	private final Block[] cachedBlockIDs = new Block[256];
+	private final byte[] cachedBlockMetadata = new byte[256];
+
+	public ChunkProviderCelestial(World world, long seed) {
 		this.worldObj = world;
-		this.mapFeaturesEnabled = hasMapFeatures;
+		this.worldType = world.getWorldInfo().getTerrainType();
+		this.generatorOptions = world.getWorldInfo().getGeneratorOptions();
 
 		this.rand = new Random(seed);
-		this.firstOrder = new NoiseGeneratorOctaves(this.rand, 16);
-		this.secondOrder = new NoiseGeneratorOctaves(this.rand, 16);
-		this.thirdOrder = new NoiseGeneratorOctaves(this.rand, 8);
-		this.perlin = new NoiseGeneratorPerlin(this.rand, 4);
-		this.heightOrder = new NoiseGeneratorOctaves(this.rand, 16);
 
-		this.terrainBuffer = new double[825];
-		this.parabolicField = new float[25];
+		this.stoneBlock = Blocks.stone;
+		this.seaBlock = Blocks.air;
+		this.seaLevel = 63;
 
-		for(int j = -2; j <= 2; ++j) {
-			for(int k = -2; k <= 2; ++k) {
-				float f = 10.0F / MathHelper.sqrt_float((float) (j * j + k * k) + 0.2F);
-				this.parabolicField[j + 2 + (k + 2) * 5] = f;
+		if(this.worldType != WorldType.FLAT) {
+			this.firstOrder = new NoiseGeneratorOctaves(this.rand, 16);
+			this.secondOrder = new NoiseGeneratorOctaves(this.rand, 16);
+			this.thirdOrder = new NoiseGeneratorOctaves(this.rand, 8);
+			this.perlin = new NoiseGeneratorPerlin(this.rand, 4);
+			this.heightOrder = new NoiseGeneratorOctaves(this.rand, 16);
+	
+			for(int j = -2; j <= 2; ++j) {
+				for(int k = -2; k <= 2; ++k) {
+					float f = 10.0F / MathHelper.sqrt_float((float) (j * j + k * k) + 0.2F);
+					this.parabolicField[j + 2 + (k + 2) * 5] = f;
+				}
+			}
+
+			NoiseGenerator[] noiseGens = { firstOrder, secondOrder, thirdOrder, perlin, heightOrder };
+			noiseGens = TerrainGen.getModdedNoiseGenerators(world, this.rand, noiseGens);
+			this.firstOrder = (NoiseGeneratorOctaves) noiseGens[0];
+			this.secondOrder = (NoiseGeneratorOctaves) noiseGens[1];
+			this.thirdOrder = (NoiseGeneratorOctaves) noiseGens[2];
+			this.perlin = (NoiseGeneratorPerlin) noiseGens[3];
+			this.heightOrder = (NoiseGeneratorOctaves) noiseGens[4];
+		} else {
+			FlatGeneratorInfo flatInfo = FlatGeneratorInfo.createFlatGeneratorFromString(generatorOptions);
+			
+			@SuppressWarnings("rawtypes")
+			Iterator iterator = flatInfo.getFlatLayers().iterator();
+
+			while(iterator.hasNext()) {
+				FlatLayerInfo flatlayerinfo = (FlatLayerInfo)iterator.next();
+
+				for(int i = flatlayerinfo.getMinY(); i < flatlayerinfo.getMinY() + flatlayerinfo.getLayerCount(); ++i) {
+					this.cachedBlockIDs[i] = getFlatWorldBlock(flatlayerinfo.func_151536_b());
+					this.cachedBlockMetadata[i] = (byte)flatlayerinfo.getFillBlockMeta();
+				}
 			}
 		}
+	}
 
-		stoneBlock = Blocks.stone;
-		seaBlock = Blocks.air;
-		seaLevel = 63;
-
-		NoiseGenerator[] noiseGens = { firstOrder, secondOrder, thirdOrder, perlin, heightOrder };
-		noiseGens = TerrainGen.getModdedNoiseGenerators(world, this.rand, noiseGens);
-		this.firstOrder = (NoiseGeneratorOctaves) noiseGens[0];
-		this.secondOrder = (NoiseGeneratorOctaves) noiseGens[1];
-		this.thirdOrder = (NoiseGeneratorOctaves) noiseGens[2];
-		this.perlin = (NoiseGeneratorPerlin) noiseGens[3];
-		this.heightOrder = (NoiseGeneratorOctaves) noiseGens[4];
+	protected Block getFlatWorldBlock(Block block) {
+		return block;
 	}
 
 	/**
@@ -310,30 +339,63 @@ public abstract class ChunkProviderCelestial implements IChunkProvider {
 
 	@Override
 	public Chunk provideChunk(int x, int z) {
-		BlockFalling.fallInstantly = true;
+		if(this.worldType != WorldType.FLAT) {
+			BlockFalling.fallInstantly = true;
 
-		rand.setSeed((long) x * 341873128712L + (long) z * 132897987541L);
+			rand.setSeed((long) x * 341873128712L + (long) z * 132897987541L);
 
-		BlockMetaBuffer ablock = getChunkPrimer(x, z);
-		Chunk chunk = new Chunk(worldObj, ablock.blocks, ablock.metas, x, z);
+			BlockMetaBuffer ablock = getChunkPrimer(x, z);
+			Chunk chunk = new Chunk(worldObj, ablock.blocks, ablock.metas, x, z);
 
-		if(Loader.isModLoaded(Compat.MOD_EIDS)) {
-			short[] biomes = WorldUtil.getBiomeShortArray(chunk);
-			for(int k = 0; k < biomes.length; ++k) {
-				biomes[k] = (short) biomesForGeneration[k].biomeID;
+			if(Loader.isModLoaded(Compat.MOD_EIDS)) {
+				short[] biomes = WorldUtil.getBiomeShortArray(chunk);
+				for(int k = 0; k < biomes.length; ++k) {
+					biomes[k] = (short) biomesForGeneration[k].biomeID;
+				}
+			} else {
+				byte[] biomes = chunk.getBiomeArray();
+				for(int k = 0; k < biomes.length; ++k) {
+					biomes[k] = (byte) biomesForGeneration[k].biomeID;
+				}
 			}
+
+			chunk.generateSkylightMap();
+
+			BlockFalling.fallInstantly = false;
+
+			return chunk;
 		} else {
-			byte[] biomes = chunk.getBiomeArray();
-			for(int k = 0; k < biomes.length; ++k) {
-				biomes[k] = (byte) biomesForGeneration[k].biomeID;
+			BlockFalling.fallInstantly = true;
+
+			Chunk chunk = new Chunk(this.worldObj, x, z);
+
+			for(int y = 0; y < this.cachedBlockIDs.length; ++y) {
+				Block block = this.cachedBlockIDs[y];
+
+				if(block != null) {
+					int index = y >> 4;
+					ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[index];
+
+					if(extendedblockstorage == null) {
+						extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
+						chunk.getBlockStorageArray()[index] = extendedblockstorage;
+					}
+
+					for(int bx = 0; bx < 16; ++bx) {
+						for(int bz = 0; bz < 16; ++bz) {
+							extendedblockstorage.func_150818_a(bx, y & 15, bz, block);
+							extendedblockstorage.setExtBlockMetadata(bx, y & 15, bz, this.cachedBlockMetadata[y]);
+						}
+					}
+				}
 			}
+
+			chunk.generateSkylightMap();
+
+			BlockFalling.fallInstantly = false;
+
+			return chunk;
 		}
-
-		chunk.generateSkylightMap();
-
-		BlockFalling.fallInstantly = false;
-
-		return chunk;
 	}
 
 	/**

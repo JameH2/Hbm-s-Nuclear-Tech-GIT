@@ -2,9 +2,9 @@ package com.hbm.items.tool;
 
 import java.util.List;
 
-import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockOreFluid;
 import com.hbm.main.ServerProxy;
+import com.hbm.main.NTMSounds;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.PlayerInformPacket;
 import com.hbm.util.ChatBuilder;
@@ -57,7 +57,7 @@ public class ItemOilDetector extends Item {
 			}
 		}
 
-		world.playSoundAtEntity(player, "hbm:item.techBleep", 1.0F, 1.0F);
+		world.playSoundAtEntity(player, NTMSounds.TECH_BLEEP, 1.0F, 1.0F);
 
 		player.swingItem();
 

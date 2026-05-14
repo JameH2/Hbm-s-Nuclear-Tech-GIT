@@ -3,9 +3,11 @@
 	"icon": ["hbm:item.hard_drive", 1, 0],
 	"trigger": [["hbm:item.hard_drive"]],
 	"title": {
-		"en_US": "Drive"
+		"en_US": "Drive",
+		"ru_RU": "Жёсткий диск"
 	},
 	"content": {
-        "en_US": "Stores information about a given celestial destination, either a planet, moon, or space station.<br><br>Must be initially programmed in a [[StarDar|StarDar]] to provide a destination and valid landing coordinates, and then processed in a [[drive processor|Drive Processor]] to calculate a valid targeting solution."
+        "en_US": "Stores information about a given celestial destination, either a planet, moon, or space station.<br><br>Must be initially programmed in a [[StarDar|StarDar]] to provide a destination and valid landing coordinates, and then processed in a [[drive processor|Drive Processor]] to calculate a valid targeting solution.",
+        "ru_RU": "Хранит информацию о заданном небесном объекте, будь то планета, луна или орбитальная станция.<br><br>Первоначально должен быть запрограммирован в [[радиотелескопе StarDar|StarDar]] для указания пункта назначения и допустимых координат посадки. После чего его необходимо обработать в [[станции обработки сигналов|Drive Processor]] для расчёта решения по наведению."
 	}
 }

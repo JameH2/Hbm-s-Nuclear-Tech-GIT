@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.hbm.entity.grenade.EntityGrenadeUniversal;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.interfaces.ICustomDamageHandler;
 import com.hbm.explosion.vanillant.interfaces.IEntityProcessor;
 import com.hbm.explosion.vanillant.interfaces.IEntityRangeMutator;
+import com.hbm.interfaces.NotableComments;
 
 import net.minecraft.enchantment.EnchantmentProtection;
 import net.minecraft.entity.Entity;
@@ -22,6 +24,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.ForgeEventFactory;
 
+@NotableComments
 /** The amount of good decisions in NTM is few and far between, but the VNT explosion surely is one of them. */
 public class EntityProcessorCross implements IEntityProcessor {
 
@@ -30,6 +33,10 @@ public class EntityProcessorCross implements IEntityProcessor {
 	protected ICustomDamageHandler damage;
 	protected double knockbackMult = 1D;
 	protected boolean allowSelfDamage = false;
+	
+	public EntityProcessorCross() {
+		this(0);
+	}
 	
 	public EntityProcessorCross(double nodeDist) {
 		this.nodeDist = nodeDist;
@@ -67,11 +74,17 @@ public class EntityProcessorCross implements IEntityProcessor {
 		
 		ForgeEventFactory.onExplosionDetonate(world, explosion.compat, list, size);
 		
-		Vec3[] nodes = new Vec3[7];
+		Vec3[] nodes;
 		
-		for(int i = 0; i < 7; i++) {
-			ForgeDirection dir = ForgeDirection.getOrientation(i);
-			nodes[i] = Vec3.createVectorHelper(x + dir.offsetX * nodeDist, y + dir.offsetY * nodeDist, z + dir.offsetZ * nodeDist);
+		if(this.nodeDist > 0) {
+			nodes = new Vec3[7];
+			for(int i = 0; i < 7; i++) {
+				ForgeDirection dir = ForgeDirection.getOrientation(i);
+				nodes[i] = Vec3.createVectorHelper(x + dir.offsetX * nodeDist, y + dir.offsetY * nodeDist, z + dir.offsetZ * nodeDist);
+			}
+		} else {
+			nodes = new Vec3[1];
+			nodes[0] = Vec3.createVectorHelper(x, y, z);
 		}
 		
 		HashMap<Entity, Float> damageMap = new HashMap();
@@ -114,7 +127,7 @@ public class EntityProcessorCross implements IEntityProcessor {
 					if(!damageMap.containsKey(entity) || damageMap.get(entity) < dmg) damageMap.put(entity, dmg);
 					double enchKnockback = EnchantmentProtection.func_92092_a(entity, knockback);
 					
-					if(!(entity instanceof EntityBulletBaseMK4)) {
+					if(shouldDealKnockback(entity)) {
 						entity.motionX += deltaX * enchKnockback * knockbackMult;
 						entity.motionY += deltaY * enchKnockback * knockbackMult;
 						entity.motionZ += deltaZ * enchKnockback * knockbackMult;
@@ -143,6 +156,12 @@ public class EntityProcessorCross implements IEntityProcessor {
 		}
 		
 		return affectedPlayers;
+	}
+	
+	public static boolean shouldDealKnockback(Entity entity) {
+		if(entity instanceof EntityBulletBaseMK4) return false;
+		if(entity instanceof EntityGrenadeUniversal) return false;
+		return true;
 	}
 	
 	public void attackEntity(Entity entity, ExplosionVNT source, float amount) {

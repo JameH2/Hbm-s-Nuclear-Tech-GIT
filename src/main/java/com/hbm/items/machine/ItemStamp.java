@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -34,11 +33,7 @@ public class ItemStamp extends Item {
 		stamps.put(type, list);
 	}
 	
-	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		if(this.type == StampType.PLATE || this.type == StampType.WIRE || this.type == StampType.CIRCUIT)
-			list.add("[CREATED USING TEMPLATE FOLDER]");
-	}
+
 	
 	/** Params can't take an ItemStack, for some reason it crashes during init */
 	public StampType getStampType(Item item, int meta) {

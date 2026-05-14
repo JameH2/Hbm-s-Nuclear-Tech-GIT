@@ -32,7 +32,7 @@ public class WorldProviderMinmus extends WorldProviderCelestial {
 
 	@Override
 	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderMinmus(this.worldObj, this.getSeed(), false);
+		return new ChunkProviderMinmus(this.worldObj, this.getSeed());
 	}
 
 	@Override

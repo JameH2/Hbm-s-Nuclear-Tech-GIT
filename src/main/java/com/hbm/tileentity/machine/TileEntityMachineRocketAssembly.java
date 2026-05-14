@@ -14,6 +14,7 @@ import com.hbm.inventory.gui.GUIMachineRocketAssembly;
 import com.hbm.items.ISatChip;
 import com.hbm.items.ItemVOTVdrive;
 import com.hbm.items.weapon.ItemCustomRocket;
+import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BobMathUtil;
@@ -239,7 +240,11 @@ public class TileEntityMachineRocketAssembly extends TileEntityMachineBase imple
 	public void construct() {
 		if(!rocket.validate()) return;
 
-		slots[slots.length - RocketStruct.MAX_STAGES * 2 - 1] = ItemCustomRocket.build(rocket);
+		ItemStack stack = ItemCustomRocket.build(rocket);
+		if(slots[0] != null && Satellite.isSatelliteItem(slots[0].getItem())) {
+			Satellite.copyItemData(slots[0], stack);
+		}
+		slots[slots.length - RocketStruct.MAX_STAGES * 2 - 1] = stack;
 
 		for(int i = 0; i < slots.length - RocketStruct.MAX_STAGES * 2 - 1; i++) {
 			slots[i] = null;
@@ -260,10 +265,12 @@ public class TileEntityMachineRocketAssembly extends TileEntityMachineBase imple
 		if(!canDeconstruct()) return;
 		int satFreq = ISatChip.getFreqS(slots[slots.length - RocketStruct.MAX_STAGES * 2 - 1]);
 		RocketStruct rocket = ItemCustomRocket.get(slots[slots.length - RocketStruct.MAX_STAGES * 2 - 1]);
+		ItemStack source = slots[slots.length - RocketStruct.MAX_STAGES * 2 - 1];
 
 		slots[0] = new ItemStack(rocket.capsule.part);
 		if(slots[0].getItem() instanceof ISatChip) {
 			ISatChip.setFreqS(slots[0], satFreq);
+			Satellite.copyItemData(source, slots[0]);
 		}
 		for(int i = 0; i < rocket.stages.size(); i++) {
 			int o = i * 3;

@@ -42,7 +42,7 @@ public class WorldProviderDuna extends WorldProviderCelestial {
 
 	@Override
 	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderDuna(this.worldObj, this.getSeed(), false);
+		return new ChunkProviderDuna(this.worldObj, this.getSeed());
 	}
 
 

@@ -20,7 +20,6 @@ public class BiomeGenIke extends BiomeGenBaseCelestial {
 	public BiomeGenIke(int id) {
 		super(id);
 		this.setBiomeName("Ike");
-		this.setDisableRain();
 
 		BiomeDecoratorCelestial decorator = new BiomeDecoratorCelestial(ModBlocks.ike_stone);
 		decorator.lakeChancePerChunk = 8;

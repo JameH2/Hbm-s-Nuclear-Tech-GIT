@@ -9,6 +9,8 @@ import com.hbm.dim.mapgen.ExperimentalCaveGenerator;
 import com.hbm.dim.mapgen.MapGenPlateau;
 import com.hbm.world.gen.terrain.MapGenBubble;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
 public class ChunkProviderDuna extends ChunkProviderCelestial {
@@ -20,8 +22,8 @@ public class ChunkProviderDuna extends ChunkProviderCelestial {
 
 	private MapGenBubble oil = new MapGenBubble(WorldConfig.dunaOilSpawn);
 
-	public ChunkProviderDuna(World world, long seed, boolean hasMapFeatures) {
-		super(world, seed, hasMapFeatures);
+	public ChunkProviderDuna(World world, long seed) {
+		super(world, seed);
 		stoneBlock = ModBlocks.duna_rock;
 
 		caveGenV2.lavaBlock = ModBlocks.basalt;
@@ -43,6 +45,14 @@ public class ChunkProviderDuna extends ChunkProviderCelestial {
 		oil.meta = (byte)CelestialBody.getMeta(world);
 		oil.replace = ModBlocks.duna_rock;
 		oil.setSize(8, 16);
+	}
+
+	@Override
+	protected Block getFlatWorldBlock(Block block) {
+		if(block == Blocks.grass || block == Blocks.sand || block == Blocks.water || block == Blocks.flowing_water) return ModBlocks.duna_sands;
+		if(block == Blocks.dirt || block == Blocks.stone || block == Blocks.sandstone) return ModBlocks.duna_rock;
+		if(block == Blocks.snow_layer) return Blocks.snow_layer;
+		return block;
 	}
 
 	@Override

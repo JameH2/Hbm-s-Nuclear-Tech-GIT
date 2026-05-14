@@ -17,6 +17,7 @@ public class BlockRubberLeaves extends BlockLeaves {
 
 	public BlockRubberLeaves() {
 		super();
+		this.field_150121_P = true;
 	}
 
 	@Override
@@ -88,12 +89,6 @@ public class BlockRubberLeaves extends BlockLeaves {
 	public String[] func_150125_e() {
 		// we don't use `ItemLeaves` so just give nothing
 		return null;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
-		return side == 0 && this.minY > 0.0D ? true : (side == 1 && this.maxY < 1.0D ? true : (side == 2 && this.minZ > 0.0D ? true : (side == 3 && this.maxZ < 1.0D ? true : (side == 4 && this.minX > 0.0D ? true : (side == 5 && this.maxX < 1.0D ? true : !world.getBlock(x, y, z).isOpaqueCube())))));
 	}
 
 }

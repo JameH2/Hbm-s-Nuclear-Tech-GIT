@@ -10,7 +10,9 @@ import com.hbm.dim.mapgen.MapGenTiltedSpires;
 import com.hbm.world.gen.terrain.MapGenBubble;
 import com.hbm.world.gen.terrain.MapGenCrater;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.MapGenCaves;
@@ -23,8 +25,8 @@ public class ChunkProviderIke extends ChunkProviderCelestial {
 	private MapGenBubble brine = new MapGenBubble(WorldConfig.ikeBrineSpawn);
 	private MapGenCrater sellafield = new MapGenCrater(WorldConfig.radfreq / 10);
 
-	public ChunkProviderIke(World world, long seed, boolean hasMapFeatures) {
-		super(world, seed, hasMapFeatures);
+	public ChunkProviderIke(World world, long seed) {
+		super(world, seed);
 
 		spires.rock = ModBlocks.ike_stone;
 		spires.regolith = ModBlocks.ike_regolith;
@@ -39,6 +41,15 @@ public class ChunkProviderIke extends ChunkProviderCelestial {
 		sellafield.rock = ModBlocks.sellafield_slaked;
 
 		stoneBlock = ModBlocks.ike_stone;
+	}
+
+	@Override
+	protected Block getFlatWorldBlock(Block block) {
+		if(block == Blocks.water || block == Blocks.flowing_water) return ModBlocks.bromine_block;
+		if(block == Blocks.grass || block == Blocks.sand) return ModBlocks.ike_regolith;
+		if(block == Blocks.dirt || block == Blocks.stone || block == Blocks.sandstone) return ModBlocks.ike_stone;
+		if(block == Blocks.snow_layer) return Blocks.air;
+		return block;
 	}
 
 	@Override

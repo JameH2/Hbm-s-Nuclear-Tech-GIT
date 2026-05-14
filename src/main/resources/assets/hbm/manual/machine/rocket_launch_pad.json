@@ -3,9 +3,11 @@
 	"icon": ["hbm:tile.launch_pad_rocket", 1, 0],
 	"trigger": [["hbm:tile.launch_pad_rocket"]],
 	"title": {
-		"en_US": "Rocket Launch Pad"
+		"en_US": "Rocket Launch Pad",
+		"ru_RU": "Стартовая ракетная площадка"
 	},
 	"content": {
-        "en_US": "Used for launching rockets built in the [[VAB|Vehicle Assembly Base]]. Accepts electricity and fuels for the currently inserted rocket.<br><br>Once a rocket has been fueled and provided with a target [[destination drive|Drive]], you can commit the rocket to launch, which will make the rocket ready to enter if it has a player capsule, or immediately launch it if it has a satellite.<br><br>Note that satellite launches require regular drives, not station drives."
+        "en_US": "Used for launching rockets built in the [[VAB|Vehicle Assembly Base]]. Accepts electricity and fuels for the currently inserted rocket.<br><br>Once a rocket has been fueled and provided with a target [[destination drive|Drive]], you can commit the rocket to launch, which will make the rocket ready to enter if it has a player capsule, or immediately launch it if it has a satellite.<br><br>Note that satellite launches require regular drives, not station drives.",
+        "ru_RU": "Используется для запуска ракет, вышедших из [[станции сборки многоступенчатых ракет|Vehicle Assembly Base]]. Принимает энергию и топливо для установленной ракеты.<br><br>Как только ракета заправлена, а [[диск|Drive]] места назначения вставлен, вы можете нажать кнопку запуска, что отправит ракету с нагрузкой или приведёт её в предполётное состояние, если она предназначена для полёта игрока.<br><br>Обратите внимание, что для запуска спутников требуется диск именно планеты, а не орбитальной станции."
 	}
 }

@@ -97,6 +97,9 @@
 	"block.assemblerCut": {"category": "block", "sounds": [{"name": "block/assemblerCut", "stream": false}]},
 	"block.hatchOpen": {"category": "block", "sounds": [{"name": "misc/bomb_open", "stream": false}]},
 	"block.hatchImpact": {"category": "block", "sounds": [{"name": "misc/bombimpact", "stream": false}]},
+    "block.leverStart": {"category": "block", "sounds": [{"name": "block/leverStart", "stream": false}]},
+    "block.leverStop": {"category": "block", "sounds": [{"name": "block/leverStop", "stream": false}]},
+    "block.spark": {"category": "block", "sounds": ["block/spark1", "block/spark2", "block/spark3", "block/spark4", "block/spark5", "block/spar6"]},
 
 	"door.TransitionSealOpen": {"category": "block", "sounds": [{"name": "block/door/transition_seal_open", "stream": true}]},
 	"door.wghStart": {"category": "block", "sounds": [{"name": "block/door/wgh_start", "stream": true}]},
@@ -132,6 +135,8 @@
 	"item.gasmaskScrew": {"category": "player", "sounds": [{"name": "tool/gasmaskScrew", "stream": false}]},
 	"item.jetpackTank": {"category": "player", "sounds": [{"name": "tool/jetpackTank", "stream": false}]},
 	"item.unpack": {"category": "player", "sounds": ["tool/extract1", "tool/extract2"]},
+	"item.unpackRemove": {"category": "player", "sounds": [{"name": "tool/extract1", "stream": false}]},
+	"item.unpackInsert": {"category": "player", "sounds": [{"name": "tool/extract2", "stream": false}]},
 	"item.syringe": {"category": "player", "sounds": [{"name": "tool/stim", "stream": false}]},
 	"item.radaway": {"category": "player", "sounds": [{"name": "tool/radaway", "stream": false}]},
 	"item.spray": {"category": "player", "sounds": [{"name": "tool/spray", "stream": false}]},
@@ -263,6 +268,7 @@
 	"weapon.explosionSmallFar": {"category": "block", "sounds": ["weapon/explosionSmallFar1", "weapon/explosionSmallFar2"]},
 	"weapon.explosionTiny": {"category": "block", "sounds": ["weapon/explosionTiny1", "weapon/explosionTiny2"]},
 	"weapon.hkShoot": {"category": "player", "sounds": [{"name": "weapon/hkShoot", "stream": false}]},
+    "weapon.grenadeBounce": {"category": "block", "sounds": ["weapon/grenadeBounce1", "weapon/grenadeBounce2", "weapon/grenadeBounce3"]},
 
 	"weapon.dFlash": {"category": "player", "sounds": [{"name": "weapon/dFlash", "stream": false}]},
 
@@ -330,6 +336,8 @@
 	"weapon.reload.impact": {"category": "player", "sounds": ["weapon/reload/impact1", "weapon/reload/impact2", "weapon/reload/impact3"]},
 	"weapon.reload.fatmanFull": {"category": "player", "sounds": ["weapon/reload/fatmanFull"]},
 	"weapon.reload.screw": {"category": "player", "sounds": ["weapon/reload/screw"]},
+    "weapon.reload.grenadeTech": {"category": "player", "sounds": ["weapon/reload/grenadeTech"]},
+    "weapon.reload.grenadeNuka": {"category": "player", "sounds": ["weapon/reload/grenadeNuka"]},
 
 	"weapon.foley.gunWhack": {"category": "player", "sounds": ["weapon/foley/gunWhack", "weapon/foley/gunWhack2"]},
 	

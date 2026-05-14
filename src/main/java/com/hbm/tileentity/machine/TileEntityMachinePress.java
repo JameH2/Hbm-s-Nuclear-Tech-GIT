@@ -48,7 +48,7 @@ public class TileEntityMachinePress extends TileEntityMachineBase implements IGU
 	public ItemStack syncStack;
 
 	public TileEntityMachinePress() {
-		super(4);
+		super(13);
 	}
 
 	@Override
@@ -266,10 +266,7 @@ public class TileEntityMachinePress extends TileEntityMachineBase implements IGU
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-
-		if(aabb != null)
-			return aabb;
-
+		if(aabb != null) return aabb;
 		aabb = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 3, zCoord + 1);
 		return aabb;
 	}

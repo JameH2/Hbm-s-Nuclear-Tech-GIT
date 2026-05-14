@@ -6,6 +6,8 @@ import com.hbm.dim.mapgen.MapGenCrater;
 import com.hbm.dim.mapgen.MapGenGreg;
 import com.hbm.dim.mapgen.MapgenRavineButBased;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
 public class ChunkProviderThatmo extends ChunkProviderCelestial {
@@ -16,8 +18,8 @@ public class ChunkProviderThatmo extends ChunkProviderCelestial {
 	private MapGenCrater smallCrater = new MapGenCrater(6);
 
 
-	public ChunkProviderThatmo(World world, long seed, boolean hasMapFeatures) {
-		super(world, seed, hasMapFeatures);
+	public ChunkProviderThatmo(World world, long seed) {
+		super(world, seed);
 		caveGenV3.stoneBlock = ModBlocks.sellafield_slaked;
 		rgen.stoneBlock = ModBlocks.sellafield_slaked;
 
@@ -29,6 +31,14 @@ public class ChunkProviderThatmo extends ChunkProviderCelestial {
 		stoneBlock = ModBlocks.basalt;
 		seaBlock = ModBlocks.basalt;
 		seaLevel = 64;
+	}
+
+	@Override
+	protected Block getFlatWorldBlock(Block block) {
+		if(block == Blocks.grass || block == Blocks.sand || block == Blocks.water || block == Blocks.flowing_water) return Blocks.snow;
+		if(block == Blocks.dirt || block == Blocks.stone || block == Blocks.sandstone) return ModBlocks.basalt;
+		if(block == Blocks.snow_layer) return Blocks.snow_layer;
+		return block;
 	}
 
 	@Override

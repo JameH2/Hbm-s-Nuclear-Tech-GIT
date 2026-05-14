@@ -22,6 +22,7 @@ public class BiomeGenThatmo extends BiomeGenBaseCelestial {
 		super(id);
 		this.setBiomeName("Thatmo");
 		this.setDisableRain();
+		this.setTemperatureRainfall(-1.0F, 0.0F);
 		this.creatures.add(new BiomeGenBase.SpawnListEntry(EntityTankbot.class, 6, 1, 1));
 		this.creatures.add(new BiomeGenBase.SpawnListEntry(EntityWarBehemoth.class, 2, 1, 1));
 		this.creatures.add(new BiomeGenBase.SpawnListEntry(EntityMoonCow.class, 10, 1, 1));

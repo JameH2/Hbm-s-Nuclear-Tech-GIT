@@ -39,22 +39,27 @@ public class WorldProviderOrbit extends WorldProvider {
 	private double eclipseAmount;
 	private float celestialAngle;
 
-	protected float getOrbitalAltitude(CelestialBody body) {
+	public static float getOrbitalAltitude(CelestialBody body) {
 		return getAltitudeForPeriod(body.massKg, ORBITAL_PERIOD);
 	}
 
 	// r = ∛[(G x Me x T2) / (4π2)]
-	private float getAltitudeForPeriod(float massKg, float period) {
+	private static float getAltitudeForPeriod(float massKg, float period) {
 		return (float)Math.cbrt((AstronomyUtil.GRAVITATIONAL_CONSTANT * massKg * (period * period)) / (4 * Math.PI * Math.PI));
 	}
 
-	public float getSunPower() {
-		double progress = OrbitalStation.clientStation.getTransferProgress(0);
-		float sunPower = OrbitalStation.clientStation.orbiting.getSunPower();
+	public float getSunPower(int x, int z) {
+		OrbitalStation station = OrbitalStation.getStationFromPosition(x, z);
+
+		double progress = station.getTransferProgress(0);
+		float sunPower = station.orbiting.getSunPower();
 		if(progress > 0) {
-			return (float)BobMathUtil.lerp(progress, sunPower, OrbitalStation.clientStation.target.getSunPower());
+			return (float)BobMathUtil.lerp(progress, sunPower, station.target.getSunPower());
 		}
-		return sunPower;
+
+		double eclipseAmount = station.getEclipseAmount(worldObj);
+
+		return sunPower * (1 - (float)eclipseAmount);
 	}
 
 	@Override
@@ -86,11 +91,10 @@ public class WorldProviderOrbit extends WorldProvider {
 	// so we use this to memoise expensive calcs
 	@SideOnly(Side.CLIENT)
 	protected void updateSky(float partialTicks) {
-		CelestialBody body = CelestialBody.getBody(worldObj);
 		OrbitalStation station = OrbitalStation.clientStation;
 
 		// First fetch the suns true size
-		double sunSize = SolarSystem.calculateSunSize(body);
+		double sunSize = SolarSystem.calculateSunSize(station.orbiting);
 
 		double progress = station.getTransferProgress(partialTicks);
 
@@ -102,6 +106,9 @@ public class WorldProviderOrbit extends WorldProvider {
 			double fromAlt = getOrbitalAltitude(station.orbiting);
 			double toAlt = getOrbitalAltitude(station.target);
 			metrics = SolarSystem.calculateMetricsBetweenSatelliteOrbits(worldObj, partialTicks, station.orbiting, station.target, fromAlt, toAlt, progress);
+
+			double sunTargetSize = SolarSystem.calculateSunSize(station.target);
+			sunSize = BobMathUtil.lerp(progress, sunSize, sunTargetSize);
 		}
 
 		// Get our sun angle

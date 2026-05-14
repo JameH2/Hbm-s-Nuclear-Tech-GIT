@@ -144,7 +144,7 @@ public class GUIWarController extends GuiInfoContainer {
 			if(sat == null) {
 				addCommandHistory("Satellite not in orbit!", EnumChatFormatting.RED);
 			} else {
-				addCommandHistory("Satellite does not have health");
+				addCommandHistory("health: " + sat.getHealth());
 			}
 
 			break;
