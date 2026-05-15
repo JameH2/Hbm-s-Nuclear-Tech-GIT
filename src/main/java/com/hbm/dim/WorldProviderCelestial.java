@@ -823,7 +823,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		return cloudProvider;
 	}
 
-	private IRenderHandler skyProvider;
+	protected IRenderHandler skyRenderer;
 
 	@Override
 	@SideOnly(Side.CLIENT)
