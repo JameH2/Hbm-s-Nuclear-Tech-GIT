@@ -867,6 +867,7 @@ public class ResourceManager {
 
 	//SatDock
 	public static final ResourceLocation satdock_tex = new ResourceLocation(RefStrings.MODID, "textures/models/sat_dock.png");
+	public static final ResourceLocation gasdock_tex = new ResourceLocation(RefStrings.MODID, "textures/models/gas_dock.png");
 
 	//Elevator
 	public static final ResourceLocation cargo_elevator_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/elevator.png");
@@ -1496,6 +1497,7 @@ public class ResourceManager {
 	public static final ResourceLocation missileMicroTest_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile/missile_test.png");
 	public static final ResourceLocation missileShuttle_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile/missile_shuttle.png");
 	public static final ResourceLocation minerRocket_tex = new ResourceLocation(RefStrings.MODID, "textures/models/minerRocket.png");
+	public static final ResourceLocation gasRocket_tex = new ResourceLocation(RefStrings.MODID, "textures/models/gasRocket.png");
 	public static final ResourceLocation bobmazon_tex = new ResourceLocation(RefStrings.MODID, "textures/models/bobmazon.png");
 
 	public static final ResourceLocation soyuz_engineblock = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz/engineblock.png");

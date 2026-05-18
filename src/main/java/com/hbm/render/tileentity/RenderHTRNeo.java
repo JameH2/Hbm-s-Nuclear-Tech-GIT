@@ -125,7 +125,7 @@ public class RenderHTRNeo extends TileEntitySpecialRenderer implements IItemRend
 				GL11.glScaled(0.5, 0.5, 0.5);
 				GL11.glShadeModel(GL11.GL_SMOOTH);
 				bindTexture(ResourceManager.htrf4_neo_tex);
-				ResourceManager.htrf4_neo.renderAll();
+				ResourceManager.htrf4_neo.renderAllExcept("Exhaust");
 				GL11.glShadeModel(GL11.GL_FLAT);
 			}
 		};

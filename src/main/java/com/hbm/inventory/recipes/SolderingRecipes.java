@@ -172,6 +172,16 @@ public class SolderingRecipes extends SerializableRecipe {
 				new AStack[] {
 						new OreDictStack(MINGRADE.wireFine(), 4)}
 		));
+		// for Martian Mode
+		recipes.add(new SolderingRecipe(new ItemStack(ModItems.circuit, 1, EnumCircuitType.CAPACITOR_BOARD.ordinal()), 200, 300,
+				new FluidStack(Fluids.PEROXIDE, 500),
+				new AStack[] {
+						new ComparableStack(ModItems.circuit, 3, EnumCircuitType.CAPACITOR_LANTHANIUM)},
+				new AStack[] {
+						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.PCB)},
+				new AStack[] {
+						new OreDictStack(PB.wireFine(), 3)}
+		));
 
 		recipes.add(new SolderingRecipe(new ItemStack(ModItems.circuit, 1, EnumCircuitType.BISMOID.ordinal()), 400, 10_000,
 				new FluidStack(Fluids.POLYTHYLENE, 1_000),

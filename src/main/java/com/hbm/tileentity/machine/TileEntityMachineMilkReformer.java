@@ -28,7 +28,7 @@ public class TileEntityMachineMilkReformer extends TileEntityMachineBase impleme
 
 	public FluidTank tanks[];
 	public long power;
-	public static final long maxPower = 100_000_000;
+	public static final long maxPower = 1_000_000;
 	
 	public TileEntityMachineMilkReformer() {
 		super(11);

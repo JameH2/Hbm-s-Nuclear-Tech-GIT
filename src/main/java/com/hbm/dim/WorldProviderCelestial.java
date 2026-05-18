@@ -96,32 +96,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		// Will prevent water from existing, will be unset immediately before using a bucket if inside a pressurized room
 		isHellWorld = !worldObj.isRemote && pressure <= 0.2F && !Loader.isModLoaded(Compat.MOD_COFH);
 
-
-		
-		Random rand = new Random();
-		CBT_Invasion invasion = CelestialBody.getTrait(worldObj, CBT_Invasion.class);
-
-		if (worldObj.isRemote) {
-			EntityPlayer player = MainRegistry.proxy.me();
-
-			if (invasion != null) {
-
-				for (int i = 0; i < meteors.size(); i++) {
-					meteors.get(i).update(rand);
-				}
-				
-				if (rand.nextInt(Math.max(1, 5 - invasion.wave)) == 0 && invasion.isInvading) {
-					Meteor meteor = new Meteor((player.posX + rand.nextInt(16000)) - 8000, 2017,(player.posZ + rand.nextInt(16000)) - 8000);
-					meteors.add(meteor);
-				}
-
-				meteors.removeIf(x -> x.isDead);
-			} else {
-				meteors.removeAll(meteors);
-			}
-		}
-	
-		if(worldObj.isRemote) {
+		if(worldObj.isRemote && Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().thePlayer.dimension == dimensionId) {
 			ListIterator<Meteor> iterator = meteors.listIterator();
 			while(iterator.hasNext()) {
 				Meteor meteor = iterator.next();

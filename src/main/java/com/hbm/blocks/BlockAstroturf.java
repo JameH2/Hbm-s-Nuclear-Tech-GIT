@@ -7,8 +7,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 
 public class BlockAstroturf extends Block {
 
@@ -29,6 +31,11 @@ public class BlockAstroturf extends Block {
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
 		return side == 1 ? this.iconTop : (side == 0 ? Blocks.dirt.getBlockTextureFromSide(side) : this.blockIcon);
+	}
+
+	@Override
+	public boolean canCreatureSpawn(EnumCreatureType type, IBlockAccess world, int x, int y, int z) {
+		return false;
 	}
 	
 }

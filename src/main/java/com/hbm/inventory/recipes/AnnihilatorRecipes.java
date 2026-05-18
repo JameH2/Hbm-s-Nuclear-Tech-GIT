@@ -78,6 +78,11 @@ public class AnnihilatorRecipes extends SerializableRecipe {
 			recipes.put(new ComparableStack(ModItems.ammo_standard, 1, EnumAmmo.BMG50_FMJ),		new AnnihilatorRecipe(new Pair(new BigInteger("256"), ItemBlueprints.make(GenericRecipes.POOL_PREFIX_528 + "bmg"))));
 			recipes.put(new ComparableStack(ModItems.ammo_arty, 1, 0),							new AnnihilatorRecipe(new Pair(new BigInteger("128"), ItemBlueprints.make(GenericRecipes.POOL_PREFIX_528 + "arty"))));
 			recipes.put(new ComparableStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER),	new AnnihilatorRecipe(new Pair(new BigInteger("128"), ItemBlueprints.make(GenericRecipes.POOL_PREFIX_528 + "controller"))));
+
+			// space fork
+			recipes.put(AL.ingot(),						new AnnihilatorRecipe(new Pair(new BigInteger("512"), ItemBlueprints.make(GenericRecipes.POOL_PREFIX_528 + "aluminium"))));
+			recipes.put(STAINLESS.ingot(),				new AnnihilatorRecipe(new Pair(new BigInteger("1024"), ItemBlueprints.make(GenericRecipes.POOL_PREFIX_528 + "stainless"))));
+			recipes.put(new ComparableStack(ModItems.circuit, 1, EnumCircuitType.GASCHIP),	new AnnihilatorRecipe(new Pair(new BigInteger("512"), ItemBlueprints.make(GenericRecipes.POOL_PREFIX_528 + "gaschip"))));
 		}
 	}
 

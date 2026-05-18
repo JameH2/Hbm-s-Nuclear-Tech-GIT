@@ -788,7 +788,7 @@ public class CraftingManager {
 
 		addRecipeAuto(new ItemStack(ModItems.mech_key, 1), new Object[] { "MCM", "MKM", "MMM", 'M', ModItems.ingot_meteorite_forged, 'C', ModItems.coin_maskman, 'K', ModItems.key });
 		addRecipeAuto(new ItemStack(ModItems.spawn_ufo, 1), new Object[] { "MMM", "DCD", "MMM", 'M', ModItems.ingot_meteorite, 'D', DNT.ingot(), 'C', ModItems.coin_worm });
-		addRecipeAuto(new ItemStack(ModItems.spawn_angel, 1), new Object[] { "MSM", "S S", "MSM", 'M', ModItems.ingot_meteorite, 'S', ModItems.divine_shard});
+		addRecipeAuto(new ItemStack(ModItems.spawn_angel, 1), new Object[] { "MSM", "SBS", "MSM", 'M', ModItems.ingot_meteorite, 'S', ModItems.divine_shard, 'B', ModItems.egg_balefire});
 
 		addShapelessAuto(new ItemStack(ModItems.wire_dense, 4, Mats.MAT_GOLD.id), new Object[] { ModBlocks.hadron_coil_gold });
 		addShapelessAuto(new ItemStack(ModItems.wire_dense, 4, Mats.MAT_NEODYMIUM.id), new Object[] { ModBlocks.hadron_coil_neodymium });

@@ -98,6 +98,9 @@ public class PlasmaForgeRecipes extends GenericRecipes<PlasmaForgeRecipe> {
 				.outputItems(new ItemStack(ModItems.plate_welded, 1, Mats.MAT_OSMIRIDIUM.id))
 				.inputItems(new OreDictStack(OSMIRIDIUM.plateCast(), 2))
 				.inputFluids(new FluidStack(Fluids.REFORMGAS, 16_000)).setGroup(autoPlate, this));
+		this.register((PlasmaForgeRecipe) new PlasmaForgeRecipe("plsm.weldstainless").setInputEnergy(500_000).setup(125, 20_000L)
+				.outputItems(new ItemStack(ModItems.plate_welded, 1, Mats.MAT_STAINLESS.id))
+				.inputItems(new OreDictStack(STAINLESS.plateCast(), 2)).setGroup(autoPlate, this));
 		
 		// Fusion
 		this.register((PlasmaForgeRecipe) new PlasmaForgeRecipe("plsm.fusionvessel").setInputEnergy(3_000_000).setup(1_200, 2_000_000).outputItems(new ItemStack(ModBlocks.fusion_torus))
@@ -242,6 +245,51 @@ public class PlasmaForgeRecipes extends GenericRecipes<PlasmaForgeRecipe> {
 				.inputItems(new OreDictStack(OSMIRIDIUM.plateWelded(), 16), new OreDictStack(BIGMT.plateCast(), 16), new ComparableStack(ModItems.circuit, 4, EnumCircuitType.CONTROLLER_ADVANCED)));
 		this.register((PlasmaForgeRecipe) new PlasmaForgeRecipe("plsm.dfcstabilizer").setInputEnergy(50_000_000).setup(1_200, 10_000_000).outputItems(new ItemStack(ModBlocks.dfc_stabilizer)).inputFluids(new FluidStack(Fluids.STELLAR_FLUX, 4_000))
 				.inputItems(new OreDictStack(OSMIRIDIUM.plateWelded(), 16), new OreDictStack(SBD.wireDense(), 16), new ComparableStack(ModItems.circuit, 8, EnumCircuitType.CONTROLLER_QUANTUM)));
+
+		// Dyson
+		this.register((PlasmaForgeRecipe) new PlasmaForgeRecipe("plsm.dysonlauncher").setInputEnergy(50_000_000).setup(1_200, 10_000_000).outputItems(new ItemStack(ModBlocks.dyson_launcher))
+				.inputFluids(new FluidStack(Fluids.STELLAR_FLUX, 8_000))
+				.inputItems(
+						new OreDictStack(OSMIRIDIUM.plateWelded(), 16),
+						new OreDictStack(CMB.plateWelded(), 16),
+						new OreDictStack(STAINLESS.plateWelded(), 16),
+						new ComparableStack(ModItems.circuit, 8, EnumCircuitType.CONTROLLER_ADVANCED)));
+
+		this.register((PlasmaForgeRecipe) new PlasmaForgeRecipe("plsm.dysonreceiver").setInputEnergy(50_000_000).setup(1_200, 10_000_000).outputItems(new ItemStack(ModBlocks.dyson_receiver))
+				.inputFluids(new FluidStack(Fluids.STELLAR_FLUX, 8_000))
+				.inputItems(
+						new OreDictStack(OSMIRIDIUM.plateWelded(), 16),
+						new OreDictStack(CMB.plateWelded(), 16),
+						new ComparableStack(ModItems.crystal_xen),
+						new OreDictStack(BSCCO.wireDense(), 64),
+						new OreDictStack(BSCCO.wireDense(), 64),
+						new ComparableStack(ModItems.circuit, 16, EnumCircuitType.CONTROLLER_QUANTUM)));
+
+		this.register((PlasmaForgeRecipe) new PlasmaForgeRecipe("plsm.dysonconverterhe").setInputEnergy(50_000_000).setup(1_200, 10_000_000).outputItems(new ItemStack(ModBlocks.dyson_converter_he))
+				.inputFluids(new FluidStack(Fluids.STELLAR_FLUX, 8_000))
+				.inputItems(
+						new OreDictStack(OSMIRIDIUM.plateWelded(), 16),
+						new OreDictStack(CMB.plateWelded(), 16),
+						new OreDictStack(STAR.plateCast(), 16),
+						new OreDictStack(BSCCO.wireDense(), 64),
+						new ComparableStack(ModItems.circuit, 4, EnumCircuitType.CONTROLLER_QUANTUM)));
+
+		this.register((PlasmaForgeRecipe) new PlasmaForgeRecipe("plsm.dysonconvertertu").setInputEnergy(50_000_000).setup(1_200, 10_000_000).outputItems(new ItemStack(ModBlocks.dyson_converter_tu))
+				.inputFluids(new FluidStack(Fluids.STELLAR_FLUX, 8_000))
+				.inputItems(
+						new OreDictStack(OSMIRIDIUM.plateWelded(), 16),
+						new OreDictStack(CMB.plateWelded(), 16),
+						new OreDictStack(STAR.plateCast(), 16),
+						new ComparableStack(ModItems.circuit, 4, EnumCircuitType.CONTROLLER_ADVANCED)));
+
+		this.register((PlasmaForgeRecipe) new PlasmaForgeRecipe("plsm.dysonconverteranatmo").setInputEnergy(50_000_000).setup(1_200, 10_000_000).outputItems(new ItemStack(ModBlocks.dyson_converter_anatmogenesis))
+				.inputFluids(new FluidStack(Fluids.STELLAR_FLUX, 16_000))
+				.inputItems(
+						new OreDictStack(OSMIRIDIUM.plateWelded(), 16),
+						new OreDictStack(CMB.plateWelded(), 16),
+						new OreDictStack(DNT.wireDense(), 16),
+						new ComparableStack(ModItems.singularity_spark),
+						new ComparableStack(ModItems.circuit, 16, EnumCircuitType.CONTROLLER_QUANTUM)));
 	}
 
 	@Override

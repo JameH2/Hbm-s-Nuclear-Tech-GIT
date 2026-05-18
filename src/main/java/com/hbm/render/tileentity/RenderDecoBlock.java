@@ -125,7 +125,11 @@ public class RenderDecoBlock extends TileEntitySpecialRenderer {
 			GL11.glRotatef(180, 0F, 0F, 1F);
 			GL11.glTranslatef(0, -1.5F, 0);
 
-			bindTexture(ResourceManager.satdock_tex);
+			if(b == ModBlocks.gas_dock) {
+				bindTexture(ResourceManager.gasdock_tex);
+			} else {
+				bindTexture(ResourceManager.satdock_tex);
+			}
 			ResourceManager.satDock.renderAll();
 
 			if(b == ModBlocks.gas_dock) {
@@ -137,7 +141,7 @@ public class RenderDecoBlock extends TileEntitySpecialRenderer {
 						GL11.glTranslatef(0.0F, 0.75F + MathHelper.clamp_float(transporter.launchTicks + (transporter.hasRocket ? -f : f), 0, 200), 0.0F);
 						GL11.glDisable(GL11.GL_CULL_FACE);
 
-						bindTexture(ResourceManager.minerRocket_tex);
+						bindTexture(ResourceManager.gasRocket_tex);
 
 						ResourceManager.minerRocket.renderAll();
 
