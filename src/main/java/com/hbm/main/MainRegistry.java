@@ -92,6 +92,8 @@ import java.util.Random;
 import com.hbm.dim.SolarSystem;
 import com.hbm.dim.WorldTypeTeleport;
 import com.hbm.dim.dima.EventHandlerDima;
+import com.hbm.dim.projectile.Projectile;
+import com.hbm.dim.projectile.ProjectileManager;
 import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 
@@ -293,6 +295,7 @@ public class MainRegistry {
 		XWeaponModManager.init();
 
 		SolarSystem.init();
+		Projectile.register();
 
 		OreDictManager oreMan = new OreDictManager();
 		MinecraftForge.EVENT_BUS.register(oreMan); //OreRegisterEvent

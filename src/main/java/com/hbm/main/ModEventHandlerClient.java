@@ -1163,6 +1163,7 @@ public class ModEventHandlerClient {
 					}
 				}
 			}
+			SolarSystemWorldSavedData.clientManager.update(true);
 
 			for(Satellite sat : SatelliteSavedData.getClientSats().values()) {
 				sat.onUpdate(mc.theWorld);

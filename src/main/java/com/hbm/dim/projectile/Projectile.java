@@ -89,7 +89,7 @@ public class Projectile {
 
 	}
 	
-	protected Projectile(String sourceName, String targetName, int travelTime, int damage, int size, double worldX, double worldZ, double worldY) {
+	protected Projectile(String sourceName, String targetName, int travelTime, int damage, int size, double worldX, double worldY, double worldZ) {
 		this.sourceName = sourceName;
 		this.targetName = targetName;
 		this.travelTime = travelTime;
@@ -211,6 +211,7 @@ public class Projectile {
 		nbt.setString("source", sourceName != null ? sourceName : "");
 		nbt.setString("target", targetName != null ? targetName : "");
 		nbt.setDouble("worldX", worldX);
+		nbt.setDouble("worldY", worldY);
 		nbt.setDouble("worldZ", worldZ);
 		nbt.setInteger("impactTimer", impactTimer);
 		nbt.setFloat("angleOffset", angle);
@@ -226,6 +227,7 @@ public class Projectile {
 		sourceName = nbt.getString("source");
 		targetName = nbt.getString("target");
 		worldX = nbt.getDouble("worldX");
+		worldY = nbt.getDouble("worldY");
 		worldZ = nbt.getDouble("worldZ");
 		impactTimer = nbt.getInteger("impactTimer");
 		angle = nbt.getFloat("angleOffset");
@@ -242,6 +244,7 @@ public class Projectile {
 		writeString(buf, sourceName);
 		writeString(buf, targetName);
 		buf.writeDouble(worldX);
+		buf.writeDouble(worldY);
 		buf.writeDouble(worldZ);
 		buf.writeInt(impactTimer);
 		buf.writeFloat(angle);
@@ -259,6 +262,7 @@ public class Projectile {
 		sourceName = readString(buf);
 		targetName = readString(buf);
 		worldX = buf.readDouble();
+		worldY = buf.readDouble();
 		worldZ = buf.readDouble();
 		impactTimer = buf.readInt();
 		angle = buf.readFloat();

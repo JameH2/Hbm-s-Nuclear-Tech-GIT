@@ -220,6 +220,9 @@ public class PermaSyncHandler {
 			for(int i = 0; i < count; i++) {
 				OrbitalStation.orbitingStations.add(new OrbitalStation(null, buf.readInt(), buf.readInt()));
 			}
+		// PROJECTILES//
+		SolarSystemWorldSavedData.clientManager.readFromBytes(buf);
+		//
 		} catch (Exception ex) {
 			// If any exception occurs, stop parsing any more bytes, they'll be unaligned
 			// We'll unset the client trait set to prevent any issues
@@ -231,9 +234,7 @@ public class PermaSyncHandler {
 		}
 		/// CBT ///
 
-		//PROJECTILES//
-		SolarSystemWorldSavedData.clientManager.readFromBytes(buf);
-		//
+
 		
 		/// SATELLITES ///
 		int satDimSize = buf.readInt();

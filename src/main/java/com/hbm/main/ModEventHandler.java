@@ -1543,6 +1543,7 @@ public class ModEventHandler {
 					trait.update(false, body);
 				}
 			}
+			SolarSystemWorldSavedData.get().getProjectileManager().update(false);
 
 			// do other shit I guess?
 			RTTYSystem.updateBroadcastQueue();
