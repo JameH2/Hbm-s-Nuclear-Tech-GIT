@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import com.hbm.config.SpaceConfig;
 import com.hbm.dim.orbit.OrbitalStation;
 import com.hbm.dim.orbit.OrbitalStation.StationState;
+import com.hbm.dim.projectile.ProjectileManager;
 import com.hbm.dim.trait.CelestialBodyTrait;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -36,8 +37,16 @@ public class SolarSystemWorldSavedData extends WorldSavedData {
 	private HashMap<String, HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait>> traitMap = new HashMap<String, HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait>>();
 	private HashMap<ChunkCoordIntPair, OrbitalStation> stations = new HashMap<>();
 
+	private ProjectileManager projectileManager = new ProjectileManager();
+	
+	public static ProjectileManager clientManager = new ProjectileManager();
+	
 	public static SolarSystemWorldSavedData get() {
 		return get(DimensionManager.getWorlds()[0]);
+	}
+	
+	public ProjectileManager getProjectileManager() {
+		return projectileManager;
 	}
 
 	public static SolarSystemWorldSavedData get(World world) {
@@ -98,6 +107,10 @@ public class SolarSystemWorldSavedData extends WorldSavedData {
 
 			stations.put(pos, station);
 		}
+		
+		if(nbt.hasKey("projectileManager")) {
+			projectileManager.readFromNBT(nbt.getCompoundTag("projectileManager"));
+		}
 	}
 
 	@Override
@@ -132,6 +145,10 @@ public class SolarSystemWorldSavedData extends WorldSavedData {
 			stationList.appendTag(stationTag);
 		}
 		nbt.setTag("stations", stationList);
+		
+		NBTTagCompound projTag = new NBTTagCompound();
+		projectileManager.writeToNBT(projTag);
+		nbt.setTag("projectileManager", projTag);
 	}
 
 	public void setTraits(String bodyName, CelestialBodyTrait... traits) {

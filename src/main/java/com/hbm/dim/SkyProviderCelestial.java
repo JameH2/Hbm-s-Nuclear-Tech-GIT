@@ -280,6 +280,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 		// TODO: fix EVERYTHING
 		// k lmao
 
+		/*
 		CBT_War war = body.getTrait(CBT_War.class);
 		if(war != null) {
 			for(CBT_War.Projectile projectile : war.projectiles) {
@@ -323,7 +324,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 				}
 			}
 		}
-
+	*/
 		Vec3 pos = mc.thePlayer.getPosition(partialTicks);
 
 		float rainStrength = world.getRainStrength(partialTicks);

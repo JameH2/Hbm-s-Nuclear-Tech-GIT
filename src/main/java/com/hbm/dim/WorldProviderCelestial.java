@@ -438,6 +438,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 			);
 		}
 
+		/*
 		CBT_War war = CelestialBody.getTrait(worldObj, CBT_War.class);
 		if(war != null) {
 			for(CBT_War.Projectile projectile : war.projectiles) {
@@ -450,6 +451,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 				}
 			}
 		}
+		*/
 
 
 		for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
@@ -654,6 +656,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 			}
 		}
 
+		/*
 		CBT_War war = CelestialBody.getTrait(worldObj, CBT_War.class);
 		if(war != null) {
 			for(CBT_War.Projectile projectile : war.projectiles) {
@@ -662,6 +665,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 				}
 			}
 		}
+		*/
 
 		if(atmosphere == null) {
 			return sunBrightness + insideBrightness;

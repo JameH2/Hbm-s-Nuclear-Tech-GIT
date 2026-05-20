@@ -5,9 +5,8 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.dim.CelestialBody;
+import com.hbm.dim.projectile.ProjectileManager;
 import com.hbm.dim.trait.CBT_War;
-import com.hbm.dim.trait.CBT_War.Projectile;
-import com.hbm.dim.trait.CBT_War.ProjectileType;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
@@ -15,6 +14,7 @@ import com.hbm.render.util.BeamPronter;
 import com.hbm.render.util.BeamPronter.EnumBeamType;
 import com.hbm.render.util.BeamPronter.EnumWaveType;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,87 +23,127 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class SatelliteRailgun extends SatelliteWar {
-
-	//time to clean up this shit and make it PROPER.
+	 
 	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/particle/shockwave.png");
 	private static final ResourceLocation flash = new ResourceLocation("hbm:textures/misc/space/flare.png");
-
-	public SatelliteRailgun() {
-
-	}
-
-	private boolean canFire = false;
-	private boolean hasTarget = false;
-
-	public long lastOp;
-	public float interp;
-	public int cooldown;
+ 
 	private CelestialBody target;
-
+	private boolean hasTarget = false;
+ 
+	private String orbitingBodyName;
+ 
 	private Random rand = new Random();
-
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setLong("lastOp", lastOp);
+ 
+	public SatelliteRailgun() {
+		super();
 	}
 
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		lastOp = nbt.getLong("lastOp");
-	}
-
-	@Override
-	public void onClick(World world, int x, int z) {
-		fireAtTarget(target);
-
-		if(!hasTarget) {
-			canFire = false;
-		} else {
-			canFire = true;
-		}
-	}
-
-	@Override
-	public void fire() {
-		if(canFire) {
-			interp += 0.5f;
-			interp = Math.min(100.0f, interp + 0.3f * (100.0f - interp) * 0.15f);
-
-			if(interp >= 100) {
-				interp = 0;
-				canFire = false;
-			}
-		}
-	}
 
 	@Override
 	public void setTarget(CelestialBody body) {
-		target = body;
-		hasTarget = body.canLand;
+		this.target = body;
+		this.hasTarget = body != null && body.canLand;
 	}
 
-	public void fireAtTarget(CelestialBody body) {
-		if(hasTarget) {
-			CBT_War war = body.getTrait(CBT_War.class);
-			if(war == null) war = new CBT_War();
-
-			//TODO: be able to choose projectile types
-			float r = rand.nextFloat();
-			Projectile projectile = new Projectile(100, 20, 50, 28 * r * 5, 55, 20, ProjectileType.SMALL, body.dimensionId);
-			projectile.GUIangle = (int) (r * 360);
-			war.launchProjectile(projectile);
-			System.out.println(war.health);
-
-			body.modifyTraits(war);
+	
+	public void setOrbitingBody(CelestialBody body) {
+		this.orbitingBodyName = body != null ? body.name : null;
+	}
+ 
+ 
+	@Override
+	public void onClick(World world, int x, int z) {
+		if(!world.isRemote && hasTarget && target != null) {
+			fireAtTarget(world);
+		}
+ 
+		if(world.isRemote) {
+			triggerFireEffect();
+			MainRegistry.proxy.me().playSound("hbm:misc.fireflash", 10F, 1F);
 		}
 	}
+ 
 
+	private void fireAtTarget(World world) {
+		if(target == null || !hasTarget) return;
+ 
+		String sourceName = orbitingBodyName != null ? orbitingBodyName : CelestialBody.getBody(world).name;
+ 
+		double impactX = (rand.nextDouble() - 0.5) * 1000;
+		double impactY = (rand.nextDouble() - 0.5) * 1000;
+		double impactZ = (rand.nextDouble() - 0.5) * 1000;
+ 
+		ProjectileManager.launchSmall(
+			sourceName,
+			target.name,
+			600,    
+			50,    
+			impactX,
+			impactY,
+			impactZ
+		);
+ 
+		triggerFireEffect();
+	}
+ 
+ 
+	@Override
+	public void onOrbit(World world, double x, double y, double z) {
+		// Set the orbiting body when the satellite reaches orbit
+		this.orbitingBodyName = CelestialBody.getBody(world).name;
+	}
+ 
 	@Override
 	public void onUpdate(World world) {
 		super.onUpdate(world);
+	}
 
-		if(world.isRemote) {
-			MainRegistry.proxy.me().playSound("hbm:misc.fireflash", 10F, 1F);
+	
+ 
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		if(target != null) nbt.setString("target", target.name);
+		if(orbitingBodyName != null) nbt.setString("orbiting", orbitingBodyName);
+		nbt.setBoolean("hasTarget", hasTarget);
+	}
+ 
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		if(nbt.hasKey("target")) {
+			target = CelestialBody.getBody(nbt.getString("target"));
+			hasTarget = nbt.getBoolean("hasTarget");
+		}
+		if(nbt.hasKey("orbiting")) {
+			orbitingBodyName = nbt.getString("orbiting");
+		}
+	}
+ 
+	@Override
+	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
+		boolean hasTargetName = target != null;
+		buf.writeBoolean(hasTargetName);
+		if(hasTargetName) {
+			byte[] nameBytes = target.name.getBytes();
+			buf.writeShort(nameBytes.length);
+			buf.writeBytes(nameBytes);
+		}
+	}
+ 
+	@Override
+	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
+		if(buf.readBoolean()) {
+			int len = buf.readShort();
+			byte[] nameBytes = new byte[len];
+			buf.readBytes(nameBytes);
+			target = CelestialBody.getBody(new String(nameBytes));
+			hasTarget = target != null;
+		} else {
+			target = null;
+			hasTarget = false;
 		}
 	}
 
@@ -172,6 +212,13 @@ public class SatelliteRailgun extends SatelliteWar {
 
 		}
 		GL11.glPopMatrix();
+	}
+
+
+	@Override
+	public void fire() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

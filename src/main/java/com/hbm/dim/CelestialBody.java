@@ -467,23 +467,32 @@ public class CelestialBody {
 	// /Terraforming
 
 
-
 	public static void damage(int dmg, World world) {
 		HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> currentTraits = getTraits(world);
-
+ 
 		CBT_War war = (CBT_War) currentTraits.get(CBT_War.class);
 		if(war == null) {
 			war = new CBT_War();
 			currentTraits.put(CBT_War.class, war);
 		}
-
-		if(war.shield > 0) {
-			war.shield -= dmg;
-		} else {
-			war.health -= dmg;
-		}
-
+ 
+		war.applyDamage(dmg);
+ 
 		setTraits(world, currentTraits);
+	}
+
+	public void applyDamage(int dmg) {
+		HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> currentTraits = getTraits();
+ 
+		CBT_War war = (CBT_War) currentTraits.get(CBT_War.class);
+		if(war == null) {
+			war = new CBT_War();
+			currentTraits.put(CBT_War.class, war);
+		}
+ 
+		war.applyDamage(dmg);
+ 
+		setTraits(currentTraits);
 	}
 
 

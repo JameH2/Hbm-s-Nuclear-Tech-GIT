@@ -105,6 +105,10 @@ public class PermaSyncHandler {
 		}
 		/// CBT ///
 
+		//PROJECTILES//
+		solarSystemData.getProjectileManager().writeToBytes(buf);
+		//PROJECTILES//
+		
 		/// SATELLITES ///
 		HashMap<Integer, HashMap<Integer, Satellite>> satsByDimension = new HashMap<Integer, HashMap<Integer, Satellite>>();
 		int currentSatelliteDimensionId = world.provider.dimensionId;
@@ -227,6 +231,10 @@ public class PermaSyncHandler {
 		}
 		/// CBT ///
 
+		//PROJECTILES//
+		SolarSystemWorldSavedData.clientManager.readFromBytes(buf);
+		//
+		
 		/// SATELLITES ///
 		int satDimSize = buf.readInt();
 		HashMap<Integer, HashMap<Integer, Satellite>> satsByDimension = new HashMap<Integer, HashMap<Integer, Satellite>>();
