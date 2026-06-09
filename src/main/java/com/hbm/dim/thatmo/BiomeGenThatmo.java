@@ -5,7 +5,9 @@ import java.util.Random;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.dim.BiomeGenBaseCelestial;
 import com.hbm.entity.mob.EntityMoonCow;
+import com.hbm.entity.mob.EntitySamBot;
 import com.hbm.entity.mob.EntityTankbot;
+import com.hbm.entity.mob.EntityTurretBot;
 import com.hbm.entity.mob.EntityWarBehemoth;
 
 import net.minecraft.block.Block;
@@ -26,6 +28,8 @@ public class BiomeGenThatmo extends BiomeGenBaseCelestial {
 		this.creatures.add(new BiomeGenBase.SpawnListEntry(EntityTankbot.class, 6, 1, 1));
 		this.creatures.add(new BiomeGenBase.SpawnListEntry(EntityWarBehemoth.class, 2, 1, 1));
 		this.creatures.add(new BiomeGenBase.SpawnListEntry(EntityMoonCow.class, 10, 1, 1));
+		this.creatures.add(new BiomeGenBase.SpawnListEntry(EntitySamBot.class, 2, 1, 1));
+		this.creatures.add(new BiomeGenBase.SpawnListEntry(EntityTurretBot.class, 2, 1, 1));
 
 		this.theBiomeDecorator.generateLakes = false;
 

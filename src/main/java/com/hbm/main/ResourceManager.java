@@ -432,7 +432,10 @@ public class ResourceManager {
 	public static final IModelCustom liquidator = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/liquidator.obj"));
 	public static final IModelCustom behemoth = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/war_machine.obj"));
 	public static final IModelCustom bfangel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/balefire_angel.obj"));
+	public static final IModelCustom turretBot = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/turret_bot.obj")).asVBO();
+	public static final IModelCustom sambot = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/sambot.obj")).asVBO();
 
+	
 	//Laythies
 	public static final IModelCustom scutterfish = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/scutterfish.obj")).asVBO();
 	public static final IModelCustom scuttlecrab = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/scuttlecrab.obj")).asVBO();
@@ -936,6 +939,16 @@ public class ResourceManager {
 	public static final ResourceLocation eel_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/shifterEel_1.png");
 	public static final ResourceLocation bfangel_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/bfa_body.png");
 
+	
+	//Turret bot texture
+	public static final ResourceLocation turretbot_leg = new ResourceLocation(RefStrings.MODID, "textures/entity/tb_leg.png");
+	public static final ResourceLocation turretbot_body = new ResourceLocation(RefStrings.MODID, "textures/entity/tb_body.png");
+	public static final ResourceLocation turretbot_gun = new ResourceLocation(RefStrings.MODID, "textures/entity/tb_gun.png");
+	public static final ResourceLocation turretbot_head = new ResourceLocation(RefStrings.MODID, "textures/entity/tb_head.png");
+
+	public static final ResourceLocation sambottex = new ResourceLocation(RefStrings.MODID, "textures/entity/sambot.png");
+
+	
 	public static final ResourceLocation glyphid_digger_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/glyphid_digger.png");
 
 	//ZIRNOX

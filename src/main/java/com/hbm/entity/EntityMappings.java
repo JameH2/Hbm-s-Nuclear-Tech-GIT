@@ -181,6 +181,8 @@ public class EntityMappings {
 		addMob(EntityWarBehemoth.class, "entity_war_behemoth", 0x204131, 0x75CE00);
 		addMob(EntityTankbot.class, "entity_tankbot", 0x204131, 0x75CE00);
 		addMob(EntityBFAngel.class, "entity_ntm_bfa", 0x204131, 0x75CE00);
+		addMob(EntityTurretBot.class, "entity_turretbot", 0x204131, 0x75CE00);
+		addMob(EntitySamBot.class, "entity_sambot", 0x204131, 0x75CE00);
 
 		addMob(EntityCreeperNuclear.class, "entity_mob_nuclear_creeper", 0x204131, 0x75CE00);
 		addMob(EntityCreeperTainted.class, "entity_mob_tainted_creeper", 0x813b9b, 0xd71fdd);

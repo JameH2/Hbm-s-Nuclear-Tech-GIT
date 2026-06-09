@@ -798,6 +798,8 @@ public class ClientProxy extends ServerProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityScutterfish.class, new RenderScutter(new ModelScutter(), 0.3F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTankbot.class, new RenderTankbot());
 		RenderingRegistry.registerEntityRenderingHandler(EntityWarBehemoth.class, new RenderBehemoth());
+		RenderingRegistry.registerEntityRenderingHandler(EntityTurretBot.class, new RenderTurretBot());
+		RenderingRegistry.registerEntityRenderingHandler(EntitySamBot.class, new RenderSamBot());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityScuttlecrab.class, new RenderEntityMulti(new ModelScuttlecrab(), EntityScuttlecrab.Scuttlecrab.class, 0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityDepthSquid.class, new RenderEntityMulti(new ModelDepthSquid(), EntityDepthSquid.DepthSquid.class, 0.5F));

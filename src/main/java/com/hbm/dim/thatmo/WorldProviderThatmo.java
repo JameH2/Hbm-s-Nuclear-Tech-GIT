@@ -60,7 +60,7 @@ public class WorldProviderThatmo extends WorldProviderCelestial {
 			if(!worldObj.isRemote) {
 				for(Object p : worldObj.playerEntities) {
 					long currentTime = System.currentTimeMillis();
-					if(currentTime % 8000 < 50) {
+					if(currentTime % 28000 < 50) {
 
 						BlockPos playerPos = new BlockPos(((EntityPlayer) p).posX, ((EntityPlayer) p).posY, ((EntityPlayer) p).posZ);
 						int radius = 40;
@@ -74,6 +74,7 @@ public class WorldProviderThatmo extends WorldProviderCelestial {
 						bomber.posY = targetPos.getY() + 20;
 						WorldUtil.loadAndSpawnEntityInWorld(bomber);
 					}
+					
 				}
 			}
 
