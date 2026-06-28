@@ -18,7 +18,6 @@ import com.hbm.entity.mob.siege.SiegeTier;
 import com.hbm.main.MainRegistry;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -55,6 +54,8 @@ public class CBT_Invasion extends CelestialBodyTrait implements IBossDisplayData
 	public int podCooldown = 0;
 	public boolean bossSpawned = false;
 	public boolean warningPlayed;
+
+	private Random rand = new Random();
 
 	public CBT_Invasion() {
 		
@@ -102,10 +103,8 @@ public class CBT_Invasion extends CelestialBodyTrait implements IBossDisplayData
 				MainRegistry.proxy.me().playSound("hbm:alarm.ping", 10F, 1F);
 				MainRegistry.proxy.me().addChatComponentMessage(new ChatComponentText("Incoming Invasion!").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 			}
-			
-			World world = Minecraft.getMinecraft().theWorld;
 				
-			if(world != null && world.rand.nextInt(Math.max(1, 5 - wave)) == 0 && isInvading) {
+			if(rand.nextInt(Math.max(1, 5 - wave)) == 0 && isInvading) {
 				WorldProviderCelestial.Meteor.addMeteor();
 			}
 		}

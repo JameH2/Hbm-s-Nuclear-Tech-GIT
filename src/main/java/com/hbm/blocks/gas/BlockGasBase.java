@@ -139,9 +139,8 @@ public abstract class BlockGasBase extends Block {
 		super.randomDisplayTick(world, x, y, z, rand);
 		
 		EntityPlayer p = MainRegistry.proxy.me();
-		if(ArmorUtil.checkArmorPiece(p, ModItems.ashglasses, 3) && this != ModBlocks.vacuum) {
-			if(rand.nextInt(9)==1)
-			{
+		if(ArmorUtil.checkArmorPiece(p, ModItems.ashglasses, 3)) {
+			if(rand.nextInt(9)==1) {
 				NBTTagCompound data = new NBTTagCompound();
 				data.setString("type", "vanillaExt");
 				data.setString("mode", "cloud");

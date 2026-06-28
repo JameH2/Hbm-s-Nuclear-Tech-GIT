@@ -108,8 +108,7 @@ public class AnvilRecipes extends SerializableRecipe {
 				}));
 		smithingRecipes.add(new AnvilSmithingMold(6, new ComparableStack(ModItems.blades_steel), new ItemStack[] {
 				new ItemStack(ModItems.blades_steel),
-				new ItemStack(ModItems.blades_titanium),
-				new ItemStack(ModItems.blades_advanced_alloy)
+				new ItemStack(ModItems.blades_titanium)
 				}));
 		smithingRecipes.add(new AnvilSmithingMold(7, new ComparableStack(ModItems.stamp_iron_flat), new ItemStack[] {
 				new ItemStack(ModItems.stamp_stone_flat),
@@ -123,8 +122,8 @@ public class AnvilRecipes extends SerializableRecipe {
 		smithingRecipes.add(new AnvilSmithingMold(10, new OreDictStack(IRON.ingot(), 9), new OreDictStack("ingot", 9)));
 		smithingRecipes.add(new AnvilSmithingMold(11, new OreDictStack(IRON.plate(), 9), new OreDictStack("plate", 9)));
 		smithingRecipes.add(new AnvilSmithingMold(12, new OreDictStack(IRON.block()), new OreDictStack("block")));
-		smithingRecipes.add(new AnvilSmithingMold(20, new OreDictStack(ALLOY.wireDense(), 1),  new OreDictStack("wireDense", 1)));
-		smithingRecipes.add(new AnvilSmithingMold(21, new OreDictStack(ALLOY.wireDense(), 9),  new OreDictStack("wireDense", 9)));
+		smithingRecipes.add(new AnvilSmithingMold(20, new OreDictStack(MINGRADE.wireDense(), 1),  new OreDictStack("wireDense", 1)));
+		smithingRecipes.add(new AnvilSmithingMold(21, new OreDictStack(MINGRADE.wireDense(), 9),  new OreDictStack("wireDense", 9)));
 
 		smithingRecipes.add(new AnvilSmithingCyanideRecipe());
 		smithingRecipes.add(new AnvilSmithingRenameRecipe());
@@ -148,7 +147,6 @@ public class AnvilRecipes extends SerializableRecipe {
 		constructionRecipes.add(new AnvilConstructionRecipe(new OreDictStack(STAINLESS.ingot()), new AnvilOutput(new ItemStack(ModItems.plate_stainless))).setTier(3));
 		constructionRecipes.add(new AnvilConstructionRecipe(new OreDictStack(PB.ingot()), new AnvilOutput(new ItemStack(ModItems.plate_lead))).setTier(3));
 		constructionRecipes.add(new AnvilConstructionRecipe(new OreDictStack(CU.ingot()), new AnvilOutput(new ItemStack(ModItems.plate_copper))).setTier(3));
-		constructionRecipes.add(new AnvilConstructionRecipe(new OreDictStack(ALLOY.ingot()), new AnvilOutput(new ItemStack(ModItems.plate_advanced_alloy))).setTier(3));
 		constructionRecipes.add(new AnvilConstructionRecipe(new OreDictStack(GUNMETAL.ingot()), new AnvilOutput(new ItemStack(ModItems.plate_gunmetal))).setTier(3));
 		constructionRecipes.add(new AnvilConstructionRecipe(new OreDictStack(WEAPONSTEEL.ingot()), new AnvilOutput(new ItemStack(ModItems.plate_weaponsteel))).setTier(3));
 		constructionRecipes.add(new AnvilConstructionRecipe(new OreDictStack(BIGMT.ingot()), new AnvilOutput(new ItemStack(ModItems.plate_saturnite))).setTier(3));
@@ -213,9 +211,6 @@ public class AnvilRecipes extends SerializableRecipe {
 				new ComparableStack(ModItems.coil_copper, 2),
 				new AnvilOutput(new ItemStack(ModItems.coil_copper_torus))).setTier(1).setOverlay(OverlayType.CONSTRUCTION));
 		constructionRecipes.add(new AnvilConstructionRecipe(
-				new ComparableStack(ModItems.coil_advanced_alloy, 2),
-				new AnvilOutput(new ItemStack(ModItems.coil_advanced_torus))).setTier(1).setOverlay(OverlayType.CONSTRUCTION));
-		constructionRecipes.add(new AnvilConstructionRecipe(
 				new ComparableStack(ModItems.coil_gold, 2),
 				new AnvilOutput(new ItemStack(ModItems.coil_gold_torus))).setTier(1).setOverlay(OverlayType.CONSTRUCTION));
 
@@ -229,10 +224,10 @@ public class AnvilRecipes extends SerializableRecipe {
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
 						new ComparableStack(Blocks.stonebrick, 4),
-						new ComparableStack(ModItems.ingot_firebrick, 4),
-						new OreDictStack(CU.plate(), 4)
+						new ComparableStack(ModItems.ingot_firebrick, 32),
+						new OreDictStack(CU.plate(), 8)
 				},
-				new AnvilOutput(new ItemStack(ModBlocks.machine_difurnace_off))).setTier(1));
+				new AnvilOutput(new ItemStack(ModBlocks.machine_blast_furnace))).setTier(1));
 
 		boolean exp = GeneralConfig.enableExpensiveMode;
 
@@ -423,6 +418,14 @@ public class AnvilRecipes extends SerializableRecipe {
 						new ComparableStack(ModItems.sawblade)
 				}, new AnvilOutput(new ItemStack(ModBlocks.machine_autosaw))).setTier(2));
 
+		constructionRecipes.add(new AnvilConstructionRecipe(
+				new AStack[] {
+						new OreDictStack(STEEL.plate(), 8),
+						new OreDictStack(IRON.ingot(), 12),
+						new OreDictStack(CU.ingot(), 2),
+						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.VACUUM_TUBE.ordinal()),
+				}, new AnvilOutput(new ItemStack(ModBlocks.machine_thresher))).setTier(2));
+
 		/*constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
 						new OreDictStack(STEEL.ingot(), 6),
@@ -477,16 +480,15 @@ public class AnvilRecipes extends SerializableRecipe {
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
 						new OreDictStack(STEEL.shell(), 6),
-						new ComparableStack(ModItems.plate_stainless, 8),
+						new OreDictStack(STAINLESS.plate(), 8),
 						new ComparableStack(ModBlocks.concrete_smooth, 4),
 						new ComparableStack(ModBlocks.heater_heatex),
-						new ComparableStack(ModBlocks.deco_pipe_quad, 10),
 				},
 				new AnvilOutput(new ItemStack(ModBlocks.machine_atmo_tower))).setTier(2));
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
 						new OreDictStack(STEEL.shell(), 4),
-						new ComparableStack(ModItems.plate_stainless, 4),
+						new OreDictStack(STAINLESS.plate(), 4),
 						new ComparableStack(ModBlocks.concrete_smooth, 4),
 						new ComparableStack(ModItems.turbine_titanium, 1),
 				},
@@ -569,7 +571,7 @@ public class AnvilRecipes extends SerializableRecipe {
 				new AStack[] {new OreDictStack(IRON.plate(), 6), new OreDictStack(NB.ingot(), 1), new ComparableStack(ModItems.plate_armor_titanium, 1)},
 				new AnvilOutput(new ItemStack(ModItems.plate_armor_ajr, 2))).setTier(3));
 		constructionRecipes.add(new AnvilConstructionRecipe(
-				new AStack[] {new OreDictStack(ALLOY.plate(), 4), new ComparableStack(ModItems.plate_armor_titanium, 1), new OreDictStack(W.wireFine(), 8)},
+				new AStack[] {new OreDictStack(DURA.plate(), 4), new ComparableStack(ModItems.plate_armor_titanium, 1), new OreDictStack(W.wireFine(), 8)},
 				new AnvilOutput(new ItemStack(ModItems.plate_armor_hev))).setTier(4));
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {new OreDictStack(WEAPONSTEEL.plate(), 4), new OreDictStack(STAR.ingot(), 1), new OreDictStack(MAGTUNG.wireFine(), 8)},
@@ -668,10 +670,8 @@ public class AnvilRecipes extends SerializableRecipe {
 
 	public static void registerConstructionSirens() {
 		for(int i = 1; i < 21; i++) {
-		constructionRecipes.add(new AnvilConstructionRecipe(new AStack[] {new OreDictStack(STEEL.plate()), new ComparableStack(ModItems.plate_polymer)}, new AnvilOutput(new ItemStack(ModItems.siren_track, 1, i))).setTier(2).setOverlay(OverlayType.CONSTRUCTION));
+			constructionRecipes.add(new AnvilConstructionRecipe(new AStack[] {new OreDictStack(STEEL.plate()), new ComparableStack(ModItems.plate_polymer)}, new AnvilOutput(new ItemStack(ModItems.siren_track, 1, i))).setTier(2).setOverlay(OverlayType.CONSTRUCTION));
 		}
-		
-		
 	}
 	
 	public static void registerConstructionUpgrades() { }
@@ -776,12 +776,10 @@ public class AnvilRecipes extends SerializableRecipe {
 				}
 		).setTier(2));
 		constructionRecipes.add(new AnvilConstructionRecipe(
-				new ComparableStack(ModBlocks.barrel_tcalloy),
+				new ComparableStack(ModBlocks.machine_bat9000, 1, 1),
 				new AnvilOutput[] {
-						new AnvilOutput(new ItemStack(ModItems.ingot_titanium, 2)),
-						new AnvilOutput(new ItemStack(ModItems.ingot_tcalloy, 4)),
-						new AnvilOutput(new ItemStack(ModItems.ingot_tcalloy, 1), 0.50F),
-						new AnvilOutput(new ItemStack(ModItems.ingot_tcalloy, 1), 0.25F)
+						new AnvilOutput(new ItemStack(ModItems.plate_welded, 4, Mats.MAT_TCALLOY.id)),
+						new AnvilOutput(new ItemStack(ModItems.plate_steel, 16))
 				}
 		).setTier(3));
 

@@ -66,8 +66,8 @@ public class EntityBFAngel extends EntityFlying implements IMob, IBossDisplayDat
 	public int gatlingCharge;
 	public boolean isChargingGatling;
 
-	public EntityBFAngel(World p_i1587_1_) {
-		super(p_i1587_1_);
+	public EntityBFAngel(World world) {
+		super(world);
 		this.setSize(5F, 4F);
 		this.isImmuneToFire = true;
 		this.experienceValue = 500;

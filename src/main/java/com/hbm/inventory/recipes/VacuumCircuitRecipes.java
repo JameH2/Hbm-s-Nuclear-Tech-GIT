@@ -27,27 +27,27 @@ public class VacuumCircuitRecipes extends SerializableRecipe {
 		//t0 you can go to the mun when you got all the shit. :)
 		recipes.add(new VacuumCircuitRecipe(new ItemStack(ModItems.circuit, 1, EnumCircuitType.PROCESST1.ordinal()), 200, 250,
 				new AStack[] {
-						new ComparableStack(ModItems.circuit, 4, EnumCircuitType.CHIP)},
+						new ComparableStack(ModItems.circuit, 8, EnumCircuitType.CHIP)},
 				new AStack[] {
-						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.PCB),
-						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.CAPACITOR)}
+						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.PCB),
+						new ComparableStack(ModItems.circuit, 4, EnumCircuitType.CAPACITOR)}
 		));
 		
 		recipes.add(new VacuumCircuitRecipe(new ItemStack(ModItems.circuit, 1, EnumCircuitType.PROCESST2.ordinal()), 400, 1_000,
 				new AStack[] {
-						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.GASCHIP)},
+						new ComparableStack(ModItems.circuit, 16, EnumCircuitType.GASCHIP)},
 				new AStack[] {
-						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.BASIC),
-						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.CAPACITOR)}
+						new ComparableStack(ModItems.circuit, 4, EnumCircuitType.BASIC),
+						new ComparableStack(ModItems.circuit, 32, EnumCircuitType.CAPACITOR)}
 		));
 		
 		recipes.add(new VacuumCircuitRecipe(new ItemStack(ModItems.circuit, 1, EnumCircuitType.PROCESST3.ordinal()), 800, 25_000,
 				new AStack[] {
-						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.GASCHIP),
-						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.HFCHIP)},
+						new ComparableStack(ModItems.circuit, 48, EnumCircuitType.GASCHIP),
+						new ComparableStack(ModItems.circuit, 16, EnumCircuitType.HFCHIP)},
 				new AStack[] {
-						new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ADVANCED),
-						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.CAPACITOR_LANTHANIUM)}
+						new ComparableStack(ModItems.circuit, 8, EnumCircuitType.ADVANCED),
+						new ComparableStack(ModItems.circuit, 64, EnumCircuitType.CAPACITOR_LANTHANIUM)}
 		));
 		
 	}

@@ -183,7 +183,6 @@ public class OreDictManager {
 	/** COPPER */
 	public static final DictFrame CU = new DictFrame("Copper");
 	public static final DictFrame MINGRADE = new DictFrame("Mingrade");
-	public static final DictFrame ALLOY = new DictFrame("AdvancedAlloy");
 	/** NICKEL */
 	public static final DictFrame NI = new DictFrame("NickelPure");
 	public static final DictFrame NIM = new DictFrame("Nickel"); // Compat with "ferrous metal" so thermal isn't invalidated and neither is our intended progression!
@@ -442,7 +441,6 @@ public class OreDictManager {
 		TI																	.ingot(ingot_titanium)												.dust(powder_titanium)			.plate(plate_titanium)			.block(block_titanium)		.oreAll(ore_titanium);
 		CU																	.ingot(ingot_copper)												.dust(powder_copper)			.plate(plate_copper)			.block(block_copper)		.ore(ore_gneiss_copper) .oreAll(ore_copper);
 		MINGRADE															.ingot(ingot_red_copper)											.dust(powder_red_copper)		.billet(billet_red_copper)		.block(block_red_copper);
-		ALLOY																.ingot(ingot_advanced_alloy)										.dust(powder_advanced_alloy)	.plate(plate_advanced_alloy)	.block(block_advanced_alloy);
 		W																	.ingot(ingot_tungsten)												.dust(powder_tungsten)											.block(block_tungsten)		.ore(ore_nether_tungsten)	.oreNether(ore_nether_tungsten) .oreAll(ore_tungsten);
 		WC																	.ingot(ingot_tungsten_carbide);
 		AL																	.ingot(ingot_aluminium)												.dust(powder_aluminium)			.plate(plate_aluminium)			.block(block_aluminium)		.oreAll(ore_aluminium);

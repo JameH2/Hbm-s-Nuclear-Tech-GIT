@@ -371,4 +371,11 @@ public class BobMathUtil {
 		double s = Math.sin(x);
 		return Math.pow(Math.abs(s), 2 - squarination) / s;
 	}
+
+	/** randoms */
+	public static int randIntBetween(Random rand, int min, int max) {
+		if (min >= max) return min;
+		return min + rand.nextInt(max - min);
+	}
+
 }

@@ -73,6 +73,7 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 		case YOMI: GL11.glScaled(0.5, 0.5, 0.5); break;
 		case NUMBERNINE: GL11.glScaled(0.75, 0.75, 0.75); break;
 		case TETO: GL11.glScaled(0.5, 0.5, 0.5); break;
+		case FATO: GL11.glScaled(1.0, 0.5, 1.0); break;
 		case MIKU: GL11.glScaled(0.5, 0.5, 0.5); break;
 		case NERU: GL11.glScaled(0.5, 0.5, 0.5); break;
 		case HUNDUN: GL11.glScaled(1, 1, 1); break;
@@ -138,6 +139,7 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 			hundunModel.renderPart("goober_posed");
 			break;
 		case TETO:
+		case FATO:
 			Minecraft.getMinecraft().getTextureManager().bindTexture(squishTimer > 6 ? tetoBlush : tetoTex);
 			tetoModel.renderAll();
 			break;
@@ -180,6 +182,7 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 				case NUMBERNINE: GL11.glTranslated(0, 0.25, 0.25); GL11.glScaled(1.25, 1.25, 1.25); break;
 				case HUNDUN: GL11.glTranslated(0.5, 0.5, 0); GL11.glScaled(1.25, 1.25, 1.25); break;
 				case TETO: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
+				case FATO: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(3.0, 1.5, 3.0); break;
 				case MIKU: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				case NERU: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				case DERG: GL11.glScaled(1.5, 1.5, 1.5); break;

@@ -81,24 +81,27 @@ public class ModuleBurnTime {
 		writer.name("D:heatBalefie").value(modHeat[modBalefire]);
 	}
 
-	public int getBurnTime(ItemStack stack) {
-		//int fuel = TileEntityFurnace.getItemBurnTime(stack);
+	public int getBurnTime(ItemStack stack, double def) {
 		int fuel = FuelHandler.getBurnTimeFromCache(stack);
-
-		if(fuel == 0)
-			return 0;
-
-		return (int) (fuel * getMod(stack, modTime));
+		if(fuel == 0) return 0;
+		return (int) (fuel * getMod(stack, modTime, def));
 	}
 
-	public int getBurnHeat(int base, ItemStack stack) {
+	public int getBurnTime(ItemStack stack) {
+		return getBurnTime(stack, 1D);
+	}
+
+	public int getBurnHeat(int base, ItemStack stack, double def) {
+		if(base <= 0) return 0;
 		return (int) (base * getMod(stack, modHeat));
 	}
 
-	public double getMod(ItemStack stack, double[] mod) {
+	public int getBurnHeat(int base, ItemStack stack) {
+		return getBurnHeat(base, stack, 1D);
+	}
 
-		if(stack == null)
-			return 0;
+	public double getMod(ItemStack stack, double[] mod, double def) {
+		if(stack == null) return 0;
 
 		if(stack.getItem() == ModItems.solid_fuel)						return mod[modSolid];
 		if(stack.getItem() == ModItems.solid_fuel_presto) 				return mod[modSolid];
@@ -120,7 +123,11 @@ public class ModuleBurnTime {
 			if(name.contains("Wood"))		return mod[modWood];
 		}
 
-		return 1;
+		return def;
+	}
+
+	public double getMod(ItemStack stack, double[] mod) {
+		return getMod(stack, mod, 1D);
 	}
 
 	public List<String> getDesc() {

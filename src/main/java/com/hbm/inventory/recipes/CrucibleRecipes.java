@@ -60,19 +60,19 @@ public class CrucibleRecipes extends GenericRecipes<CrucibleRecipe> {
 		int n = MaterialShapes.NUGGET.q(1);
 		int i = MaterialShapes.INGOT.q(1);
 		
-		this.register(new CrucibleRecipe("crucible.steel").setup(2, new ItemStack(ModItems.ingot_steel))
-				.inputs(new MaterialStack(Mats.MAT_IRON, n * 2), new MaterialStack(Mats.MAT_CARBON, n))
+		this.register(new CrucibleRecipe("crucible.steel").setup(20, new ItemStack(ModItems.ingot_steel))
+				.inputs(new MaterialStack(Mats.MAT_IRON, n * 2), new MaterialStack(Mats.MAT_CARBON, n * 3), new MaterialStack(Mats.MAT_FLUX, n))
 				.outputs(new MaterialStack(Mats.MAT_STEEL, n * 2)));
 
 		if(Compat.isModLoaded(Compat.MOD_GT6)) {
-			this.register(new CrucibleRecipe("crucible.steelWrought").setup(2, new ItemStack(ModItems.ingot_steel))
-					.inputs(new MaterialStack(Mats.MAT_WROUGHTIRON, n * 2), new MaterialStack(Mats.MAT_CARBON, n))
+			this.register(new CrucibleRecipe("crucible.steelWrought").setup(20, new ItemStack(ModItems.ingot_steel))
+					.inputs(new MaterialStack(Mats.MAT_WROUGHTIRON, n * 2), new MaterialStack(Mats.MAT_CARBON, n * 3), new MaterialStack(Mats.MAT_FLUX, n))
 					.outputs(new MaterialStack(Mats.MAT_STEEL, n * 2)));
-			this.register(new CrucibleRecipe("crucible.steelPig").setup(2, new ItemStack(ModItems.ingot_steel))
-					.inputs(new MaterialStack(Mats.MAT_PIGIRON, n * 2), new MaterialStack(Mats.MAT_CARBON, n))
+			this.register(new CrucibleRecipe("crucible.steelPig").setup(20, new ItemStack(ModItems.ingot_steel))
+					.inputs(new MaterialStack(Mats.MAT_PIGIRON, n * 2), new MaterialStack(Mats.MAT_CARBON, n * 3), new MaterialStack(Mats.MAT_FLUX, n))
 					.outputs(new MaterialStack(Mats.MAT_STEEL, n * 2)));
-			this.register(new CrucibleRecipe("crucible.steelMeteoric").setup(2, new ItemStack(ModItems.ingot_steel))
-					.inputs(new MaterialStack(Mats.MAT_METEORICIRON, n * 2), new MaterialStack(Mats.MAT_CARBON, n))
+			this.register(new CrucibleRecipe("crucible.steelMeteoric").setup(20, new ItemStack(ModItems.ingot_steel))
+					.inputs(new MaterialStack(Mats.MAT_METEORICIRON, n * 2), new MaterialStack(Mats.MAT_CARBON, n * 3), new MaterialStack(Mats.MAT_FLUX, n))
 					.outputs(new MaterialStack(Mats.MAT_STEEL, n * 2)));
 		}
 		
@@ -87,10 +87,6 @@ public class CrucibleRecipes extends GenericRecipes<CrucibleRecipe> {
 		this.register(new CrucibleRecipe("crucible.redcopper").setup(2, new ItemStack(ModItems.ingot_red_copper))
 				.inputs(new MaterialStack(Mats.MAT_COPPER, n), new MaterialStack(Mats.MAT_REDSTONE, n))
 				.outputs(new MaterialStack(Mats.MAT_MINGRADE, n * 2)));
-		
-		this.register(new CrucibleRecipe("crucible.aa").setup(2, new ItemStack(ModItems.ingot_advanced_alloy))
-				.inputs(new MaterialStack(Mats.MAT_STEEL, n), new MaterialStack(Mats.MAT_MINGRADE, n))
-				.outputs(new MaterialStack(Mats.MAT_ALLOY, n * 2)));
 		
 		this.register(new CrucibleRecipe("crucible.hss").setup(9, new ItemStack(ModItems.ingot_dura_steel))
 				.inputs(new MaterialStack(Mats.MAT_STEEL, n * 5), new MaterialStack(Mats.MAT_TUNGSTEN, n * 3), new MaterialStack(Mats.MAT_COBALT, n * 1))

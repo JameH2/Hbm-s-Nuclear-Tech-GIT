@@ -1,7 +1,16 @@
 package com.hbm.tileentity.machine.storage;
 
+import com.hbm.blocks.ModBlocks;
+import com.hbm.explosion.vanillant.ExplosionVNT;
+import com.hbm.explosion.vanillant.standard.BlockAllocatorStandard;
+import com.hbm.explosion.vanillant.standard.BlockMutatorDebris;
+import com.hbm.explosion.vanillant.standard.BlockProcessorStandard;
+import com.hbm.explosion.vanillant.standard.EntityProcessorCross;
+import com.hbm.explosion.vanillant.standard.PlayerProcessorStandard;
 import com.hbm.inventory.container.ContainerFileCabinet;
 import com.hbm.inventory.gui.GUIFileCabinet;
+import com.hbm.items.ModItems;
+import com.hbm.particle.helper.ExplosionCreator;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.IGUIProvider;
 
@@ -62,6 +71,19 @@ public class TileEntityFileCabinet extends TileEntityCrateBase implements IGUIPr
 			if(this.playersUsing > 0) {
 				if(timer < 10) {
 					timer++;
+				}
+
+				for(ItemStack slot : slots) {
+					if(slot != null && slot.getItem() == ModItems.missile_soyuz) {
+						ExplosionVNT xnt = new ExplosionVNT(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 15);
+						xnt.setBlockAllocator(new BlockAllocatorStandard(48));
+						xnt.setBlockProcessor(new BlockProcessorStandard().setNoDrop().withBlockEffect(new BlockMutatorDebris(ModBlocks.block_slag, 1)));
+						xnt.setEntityProcessor(new EntityProcessorCross(7.5D).withRangeMod(3));
+						xnt.setPlayerProcessor(new PlayerProcessorStandard());
+						xnt.explode();
+
+						ExplosionCreator.composeEffect(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 15, 5F, 1F, 45F, 10, 16, 50, 1F, 3F, -2F, 200);
+					}
 				}
 			} else
 				timer = 0;

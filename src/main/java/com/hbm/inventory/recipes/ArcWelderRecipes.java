@@ -36,10 +36,6 @@ public class ArcWelderRecipes extends SerializableRecipe {
 	public void registerDefaults() {
 
 		//Parts
-		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.motor, 2), 100, 200L,
-				new OreDictStack(IRON.plate(), 2), new ComparableStack(ModItems.coil_copper), new ComparableStack(ModItems.coil_copper_torus)));
-		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.motor, 2), 100, 400L,
-				new OreDictStack(STEEL.plate(), 1), new ComparableStack(ModItems.coil_copper), new ComparableStack(ModItems.coil_copper_torus)));
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.motor, 2), 100, 400L,
 				new OreDictStack(STEEL.plate(), 2), new OreDictStack(MINGRADE.wireDense(), 2)));
 		recipes.add(new ArcWelderRecipe(DictFrame.fromOne(ModItems.part_generic, EnumPartType.LDE), 200, 5_000L,
@@ -54,8 +50,6 @@ public class ArcWelderRecipes extends SerializableRecipe {
 				new OreDictStack(CU.wireFine(), 8)));
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.wire_dense, 1, Mats.MAT_MINGRADE.id), 100, 10_000L,
 				new OreDictStack(MINGRADE.wireFine(), 8)));
-		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.wire_dense, 1, Mats.MAT_ALLOY.id), 100, 10_000L,
-				new OreDictStack(ALLOY.wireFine(), 8)));
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.wire_dense, 1, Mats.MAT_GOLD.id), 100, 10_000L,
 				new OreDictStack(GOLD.wireFine(), 8)));
 
@@ -130,7 +124,7 @@ public class ArcWelderRecipes extends SerializableRecipe {
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.sat_laser), 600, 50_000L, new ComparableStack(ModItems.sat_base), new ComparableStack(ModItems.sat_head_laser)));
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.sat_resonator), 600, 50_000L, new ComparableStack(ModItems.sat_base), new ComparableStack(ModItems.sat_head_resonator)));
 
-		recipes.add(new ArcWelderRecipe(new ItemStack(ModBlocks.machine_xenon_thruster), 200, 50_000L, new FluidStack(Fluids.ARGON, 1_000), new OreDictStack(W.plateWelded(), 2), new ComparableStack(ModItems.plate_stainless, 6), new ComparableStack(ModItems.arc_electrode, 1, EnumElectrodeType.GRAPHITE)));
+		recipes.add(new ArcWelderRecipe(new ItemStack(ModBlocks.machine_xenon_thruster), 200, 50_000L, new FluidStack(Fluids.ARGON, 1_000), new OreDictStack(W.plateWelded(), 2), new OreDictStack(STAINLESS.plate(), 6), new ComparableStack(ModItems.arc_electrode, 1, EnumElectrodeType.GRAPHITE)));
 
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.rp_fuselage_20_1), 100, 20_000L, new OreDictStack(STAINLESS.plateWelded(), 1), new ComparableStack(ModItems.seg_20, 2), new OreDictStack(TI.shell(), 1))); // 1 welded stainless, 1 titanium shell
 		recipes.add(new ArcWelderRecipe(new ItemStack(ModItems.rp_fuselage_20_3), 150, 30_000L, new OreDictStack(STAINLESS.plateWelded(), 1), new ComparableStack(ModItems.rp_fuselage_20_1), new OreDictStack(TI.shell(), 2))); // 2 weld stain, 3 tit shells

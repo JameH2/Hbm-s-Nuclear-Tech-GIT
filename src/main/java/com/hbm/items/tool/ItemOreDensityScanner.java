@@ -4,6 +4,7 @@ import com.hbm.dim.CelestialBody;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.inventory.FluidStack;
 import com.hbm.items.special.ItemBedrockOreBase;
+import com.hbm.items.special.ItemBedrockOreNew;
 import com.hbm.items.special.ItemBedrockOreNew.CelestialBedrockOre;
 import com.hbm.items.special.ItemBedrockOreNew.CelestialBedrockOreType;
 import com.hbm.packet.PacketDispatcher;
@@ -56,7 +57,7 @@ public class ItemOreDensityScanner extends Item {
 			.nextTranslation(boreFluid.type.getUnlocalizedName());
 		}
 		
-		PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(builder.flush(), 777 + CelestialBedrockOre.get(body.getEnum()).types.length, 4000), player);
+		PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(builder.flush(), 777 + ItemBedrockOreNew.CelestialBedrockOre.getTotalTypeCount(), 4000), player);
 	}
 	
 	public static String translateDensity(double density) {

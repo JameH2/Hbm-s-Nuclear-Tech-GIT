@@ -88,6 +88,7 @@ public class MachineFan extends BlockContainer implements IToolable, ITooltipPro
 
 		private boolean hasAtmosphere;
 		public boolean falloff = true;
+		public boolean suck = false;
 
 		@Override
 		public void updateEntity() {
@@ -135,6 +136,7 @@ public class MachineFan extends BlockContainer implements IToolable, ITooltipPro
 							double dist = e.getDistance(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
 							coeff *= 1.5 * (1 - dist / range / 2);
 						}
+						if(suck) coeff *= -1;
 
 						e.motionX += dir.offsetX * coeff;
 						e.motionY += dir.offsetY * coeff;
@@ -142,10 +144,11 @@ public class MachineFan extends BlockContainer implements IToolable, ITooltipPro
 					}
 
 					if(worldObj.isRemote && worldObj.rand.nextInt(30) == 0) {
-						double speed = 0.2;
+						double speed = suck ? -0.2 : 0.2;
 						worldObj.spawnParticle("cloud", xCoord + 0.5 + dir.offsetX * 0.5, yCoord + 0.5 + dir.offsetY * 0.5, zCoord + 0.5 + dir.offsetZ * 0.5, dir.offsetX * speed, dir.offsetY * speed, dir.offsetZ * speed);
 					}
 				}
+
 
 				this.spin += 30;
 			}
@@ -170,24 +173,28 @@ public class MachineFan extends BlockContainer implements IToolable, ITooltipPro
 		public void readFromNBT(NBTTagCompound nbt) {
 			super.readFromNBT(nbt);
 			this.falloff = nbt.getBoolean("falloff");
+			this.suck = nbt.getBoolean("suck");
 		}
 
 		@Override
 		public void writeToNBT(NBTTagCompound nbt) {
 			super.writeToNBT(nbt);
 			nbt.setBoolean("falloff", falloff);
+			nbt.setBoolean("suck", suck);
 		}
 
 		@Override
 		public void serialize(ByteBuf buf) {
 			buf.writeBoolean(falloff);
 			buf.writeBoolean(hasAtmosphere);
+			buf.writeBoolean(suck);
 		}
 
 		@Override
 		public void deserialize(ByteBuf buf) {
 			falloff = buf.readBoolean();
 			hasAtmosphere = buf.readBoolean();
+			suck = buf.readBoolean();
 		}
 	}
 
@@ -219,6 +226,24 @@ public class MachineFan extends BlockContainer implements IToolable, ITooltipPro
 					world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "random.click", 0.5F, 0.5F);
 				}
 			}
+
+			return true;
+		}
+		if(tool == ToolType.DEFUSER) {
+			TileEntityFan tile = (TileEntityFan) world.getTileEntity(x, y, z);
+
+			if(tile != null) {
+				tile.suck = !tile.suck;
+				tile.markDirty();
+
+				if(!world.isRemote) {
+					PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.start("").nextTranslation(this.getUnlocalizedName() + (tile.suck ? ".suckOn" : ".suckOff")).color(EnumChatFormatting.GOLD).flush(), MainRegistry.proxy.ID_FAN_MODE), (EntityPlayerMP) player);
+
+					world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "random.click", 0.5F, 0.5F);
+				}
+			}
+
+
 
 			return true;
 		}

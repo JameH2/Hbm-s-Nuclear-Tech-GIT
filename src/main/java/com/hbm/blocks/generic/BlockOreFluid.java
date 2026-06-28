@@ -7,6 +7,7 @@ import com.hbm.config.WorldConfig;
 import com.hbm.dim.SolarSystem;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.util.BobMathUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -92,15 +93,15 @@ public class BlockOreFluid extends BlockOre {
 
 	public int getSecondaryFluidAmount(int meta) {
 		if(empty == null) {
-			if(meta == SolarSystem.Body.TEKTO.ordinal()) return WorldConfig.tektoBedrockGasPerDepositMin + rand.nextInt(WorldConfig.tektoBedrockGasPerDepositMax - WorldConfig.tektoBedrockGasPerDepositMin);
-			return WorldConfig.bedrockGasPerDepositMin + rand.nextInt(WorldConfig.bedrockGasPerDepositMax - WorldConfig.bedrockGasPerDepositMin);
+			if(meta == SolarSystem.Body.TEKTO.ordinal()) return BobMathUtil.randIntBetween(rand, WorldConfig.tektoBedrockGasPerDepositMin, WorldConfig.tektoBedrockGasPerDepositMax);
+			return BobMathUtil.randIntBetween(rand, WorldConfig.bedrockGasPerDepositMin, WorldConfig.bedrockGasPerDepositMax);
 		}
 
-		if(meta == SolarSystem.Body.DUNA.ordinal()) return WorldConfig.dunaGasPerDepositMin + rand.nextInt(WorldConfig.dunaGasPerDepositMax - WorldConfig.dunaGasPerDepositMin);
-		if(meta == SolarSystem.Body.LAYTHE.ordinal()) return WorldConfig.laytheGasPerDepositMin + rand.nextInt(WorldConfig.laytheGasPerDepositMax - WorldConfig.laytheGasPerDepositMin);
-		if(meta == SolarSystem.Body.EVE.ordinal()) return WorldConfig.evePetPerDepositMin + rand.nextInt(WorldConfig.evePetPerDepositMax - WorldConfig.evePetPerDepositMin);
-		if(meta == SolarSystem.Body.TEKTO.ordinal()) return WorldConfig.tektoGasPerDepositMin + rand.nextInt(WorldConfig.tektoGasPerDepositMax - WorldConfig.tektoGasPerDepositMin);
-		return WorldConfig.earthGasPerDepositMin + rand.nextInt(WorldConfig.earthGasPerDepositMax - WorldConfig.earthGasPerDepositMin);
+		if(meta == SolarSystem.Body.DUNA.ordinal()) return BobMathUtil.randIntBetween(rand, WorldConfig.dunaGasPerDepositMin, WorldConfig.dunaGasPerDepositMax);
+		if(meta == SolarSystem.Body.LAYTHE.ordinal()) return BobMathUtil.randIntBetween(rand, WorldConfig.laytheGasPerDepositMin, WorldConfig.laytheGasPerDepositMax);
+		if(meta == SolarSystem.Body.EVE.ordinal()) return BobMathUtil.randIntBetween(rand, WorldConfig.evePetPerDepositMin, WorldConfig.evePetPerDepositMax);
+		if(meta == SolarSystem.Body.TEKTO.ordinal()) return BobMathUtil.randIntBetween(rand, WorldConfig.tektoGasPerDepositMin, WorldConfig.tektoGasPerDepositMax);
+		return BobMathUtil.randIntBetween(rand, WorldConfig.earthGasPerDepositMin, WorldConfig.earthGasPerDepositMax);
 	}
 
 	private double getDrainChance(int meta) {

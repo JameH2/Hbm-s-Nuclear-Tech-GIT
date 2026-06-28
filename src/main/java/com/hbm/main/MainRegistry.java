@@ -46,6 +46,9 @@ import com.hbm.world.feature.BedrockOre;
 import com.hbm.world.feature.OreCave;
 import com.hbm.world.feature.OreLayer3D;
 import com.hbm.world.feature.SchistStratum;
+import com.hbm.world.gen.util.LogicBlockActions;
+import com.hbm.world.gen.util.LogicBlockConditions;
+import com.hbm.world.gen.util.LogicBlockInteractions;
 import com.hbm.world.generator.CellularDungeonFactory;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -122,9 +125,9 @@ public class MainRegistry {
 	public static ToolMaterial tMatSchrab = EnumHelper.addToolMaterial("SCHRABIDIUM", 3, 10000, 50.0F, 100.0F, 200);
 	public static ToolMaterial tMatHammmer = EnumHelper.addToolMaterial("SCHRABIDIUMHAMMER", 3, 0, 50.0F, 999999996F, 200);
 	public static ToolMaterial tMatChainsaw = EnumHelper.addToolMaterial("CHAINSAW", 3, 1500, 50.0F, 22.0F, 0);
-	public static ToolMaterial tMatSteel = EnumHelper.addToolMaterial("HBM_STEEL", 2, 500, 7.5F, 2.0F, 10);
-	public static ToolMaterial tMatTitan = EnumHelper.addToolMaterial("HBM_TITANIUM", 3, 750, 9.0F, 2.5F, 15);
-	public static ToolMaterial tMatAlloy = EnumHelper.addToolMaterial("HBM_ALLOY", 3, 2000, 15.0F, 5.0F, 5);
+	public static ToolMaterial tMatSteel = EnumHelper.addToolMaterial("HBM_STEEL", 3, 750, 8.0F, 2.0F, 10);
+	public static ToolMaterial tMatTitan = EnumHelper.addToolMaterial("HBM_TITANIUM", 3, 1000, 9.0F, 2.5F, 15);
+	@Deprecated public static ToolMaterial tMatAlloy = EnumHelper.addToolMaterial("HBM_ALLOY", 3, 2000, 15.0F, 5.0F, 5);
 	public static ToolMaterial tMatCMB = EnumHelper.addToolMaterial("HBM_CMB", 3, 8500, 40.0F, 55F, 100);
 	public static ToolMaterial tMatElec = EnumHelper.addToolMaterial("HBM_ELEC", 3, 0, 30.0F, 12.0F, 2);
 	public static ToolMaterial tMatDesh = EnumHelper.addToolMaterial("HBM_DESH", 2, 0, 7.5F, 2.0F, 10);
@@ -143,10 +146,10 @@ public class MainRegistry {
 	public static ArmorMaterial aMatHaz = EnumHelper.addArmorMaterial("HBM_HAZMAT", 60, new int[] { 2, 5, 4, 1 }, 5);
 	public static ArmorMaterial aMatHaz2 = EnumHelper.addArmorMaterial("HBM_HAZMAT2", 60, new int[] { 2, 5, 4, 1 }, 5);
 	public static ArmorMaterial aMatHaz3 = EnumHelper.addArmorMaterial("HBM_HAZMAT3", 60, new int[] { 2, 5, 4, 1 }, 5);
-	public static ArmorMaterial aMatSteel = EnumHelper.addArmorMaterial("HBM_STEEL", 20, new int[] { 2, 6, 5, 2 }, 5);
+	public static ArmorMaterial aMatSteel = EnumHelper.addArmorMaterial("HBM_STEEL", 30, new int[] { 3, 8, 6, 3 }, 5);
+	@Deprecated public static ArmorMaterial aMatAlloy = EnumHelper.addArmorMaterial("HBM_ALLOY", 40, new int[] { 3, 8, 6, 3 }, 12);
 	public static ArmorMaterial aMatAsbestos = EnumHelper.addArmorMaterial("HBM_ASBESTOS", 20, new int[] { 1, 4, 3, 1 }, 5);
 	public static ArmorMaterial aMatTitan = EnumHelper.addArmorMaterial("HBM_TITANIUM", 25, new int[] { 3, 8, 6, 3 }, 9);
-	public static ArmorMaterial aMatAlloy = EnumHelper.addArmorMaterial("HBM_ALLOY", 40, new int[] { 3, 8, 6, 3 }, 12);
 	public static ArmorMaterial aMatPaa = EnumHelper.addArmorMaterial("HBM_PAA", 75, new int[] { 3, 8, 6, 3 }, 25);
 	public static ArmorMaterial aMatCMB = EnumHelper.addArmorMaterial("HBM_CMB", 60, new int[] { 3, 8, 6, 3 }, 50);
 	public static ArmorMaterial aMatAus3 = EnumHelper.addArmorMaterial("HBM_AUSIII", 375, new int[] { 2, 6, 5, 2 }, 0);
@@ -312,7 +315,6 @@ public class MainRegistry {
 		aMatTitan.customCraftingMaterial = ModItems.ingot_titanium;
 		aMatSteel.customCraftingMaterial = ModItems.ingot_steel;
 		aMatAsbestos.customCraftingMaterial = ModItems.asbestos_cloth;
-		aMatAlloy.customCraftingMaterial = ModItems.ingot_advanced_alloy;
 		aMatPaa.customCraftingMaterial = ModItems.plate_paa;
 		aMatCMB.customCraftingMaterial = ModItems.ingot_combine_steel;
 		aMatAus3.customCraftingMaterial = ModItems.ingot_australium;
@@ -325,7 +327,6 @@ public class MainRegistry {
 		tMatChainsaw.setRepairItem(new ItemStack(ModItems.ingot_steel));
 		tMatTitan.setRepairItem(new ItemStack(ModItems.ingot_titanium));
 		tMatSteel.setRepairItem(new ItemStack(ModItems.ingot_steel));
-		tMatAlloy.setRepairItem(new ItemStack(ModItems.ingot_advanced_alloy));
 		tMatCMB.setRepairItem(new ItemStack(ModItems.ingot_combine_steel));
 		enumToolMaterialBottleOpener.setRepairItem(new ItemStack(ModItems.plate_steel));
 		tMatDesh.setRepairItem(new ItemStack(ModItems.ingot_desh));
@@ -434,7 +435,7 @@ public class MainRegistry {
 
 		//progression achieves
 		achBurnerPress = new Achievement("achievement.burnerPress", "burnerPress", 0, 0, new ItemStack(ModBlocks.machine_press), null).initIndependentStat().registerStat();
-		achBlastFurnace = new Achievement("achievement.blastFurnace", "blastFurnace", 1, 3, new ItemStack(ModBlocks.machine_difurnace_off), achBurnerPress).initIndependentStat().registerStat();
+		achBlastFurnace = new Achievement("achievement.blastFurnace", "blastFurnace", 1, 3, new ItemStack(ModBlocks.machine_blast_furnace), achBurnerPress).initIndependentStat().registerStat();
 		achAssembly = new Achievement("achievement.assembly", "assembly", 3, -1, new ItemStack(ModBlocks.machine_assembly_machine), achBurnerPress).initIndependentStat().registerStat();
 		achSelenium = new Achievement("achievement.selenium", "selenium", 3, 2, ModItems.ingot_starmetal, achBurnerPress).initIndependentStat().setSpecial().registerStat();
 		achChemplant = new Achievement("achievement.chemplant", "chemplant", 6, -1, new ItemStack(ModBlocks.machine_chemical_plant), achAssembly).initIndependentStat().registerStat();
@@ -604,6 +605,10 @@ public class MainRegistry {
 		AchievementHandler.register();
 
 		MobUtil.intializeMobPools();
+
+		LogicBlockActions.initialize();
+		LogicBlockConditions.initialize();
+		LogicBlockInteractions.initialize();
 
 		proxy.registerMissileItems();
 
@@ -1696,6 +1701,25 @@ public class MainRegistry {
 		ignoreMappings.add("hbm:item.weapon_bat_nail");
 		ignoreMappings.add("hbm:item.weapon_golf_club");
 		ignoreMappings.add("hbm:item.weapon_pipe_rusty");
+		ignoreMappings.add("hbm:tile.crate_template");
+		ignoreMappings.add("hbm:tile.barrel_iron");
+		ignoreMappings.add("hbm:tile.factory_titanium_hull");
+		ignoreMappings.add("hbm:tile.factory_advanced_hull");
+		ignoreMappings.add("hbm:tile.vacuum");
+		ignoreMappings.add("hbm:tile.ladder_iron");
+		ignoreMappings.add("hbm:tile.ladder_aluminium");
+		ignoreMappings.add("hbm:tile.ladder_lead");
+		ignoreMappings.add("hbm:tile.ladder_cobalt");
+		ignoreMappings.add("hbm:tile.ladder_tungsten");
+		ignoreMappings.add("hbm:tile.geysir_water");
+		ignoreMappings.add("hbm:tile.geysir_vapor");
+		ignoreMappings.add("hbm:item.ingot_advanced_alloy");
+		ignoreMappings.add("hbm:item.powder_advanced_alloy");
+		ignoreMappings.add("hbm:item.plate_advanced_alloy");
+		ignoreMappings.add("hbm:tile.block_advanced_alloy");
+		ignoreMappings.add("hbm:item.coil_advanced_alloy");
+		ignoreMappings.add("hbm:item.coil_advanced_torus");
+		ignoreMappings.add("hbm:item.blades_advanced_alloy");
 		
 		/// REMAP ///
 		remapItems.put("hbm:item.gadget_explosive8", ModItems.early_explosive_lenses);
