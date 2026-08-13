@@ -404,7 +404,11 @@ public abstract class SatelliteBase {
 		if(wrapped < 0.0F) wrapped += 360.0F;
 		return wrapped;
 	}
+	
 
+	public void onUpdate(World world) {
+		
+	}
 
 
 }

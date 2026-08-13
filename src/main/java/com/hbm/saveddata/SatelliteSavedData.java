@@ -82,10 +82,7 @@ public class SatelliteSavedData extends WorldSavedData {
 		return data;
 	}
 
-	public static SatelliteSavedData getData(World worldObj) {
-		if(CelestialBody.inOrbit(worldObj)) throw new InvalidParameterException("Orbit dimensions MUST pass coordinates!");
-		return getDataForWorld(worldObj);
-	}
+
 
 	public static SatelliteSavedData getData(World worldObj, int x, int z) {
 		if(!worldObj.isRemote && CelestialBody.inOrbit(worldObj)) {
@@ -102,7 +99,7 @@ public class SatelliteSavedData extends WorldSavedData {
 			}
 		}
 
-		return getDataForWorld(worldObj);
+		return getData(worldObj);
 	}
 
 	public static SatelliteSavedData getDataFromFreq(World worldObj, int x, int z, int freq) {

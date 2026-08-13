@@ -388,6 +388,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		CBT_Atmosphere atmosphere = CelestialBody.getTrait(worldObj, CBT_Atmosphere.class);
 		Vec3 color = Vec3.createVectorHelper(0, 0, 0);
 
+		/*
 		for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
 			if(entry instanceof SatelliteWar) {
 				SatelliteWar war = (SatelliteWar) entry.getValue();
@@ -398,7 +399,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 				color.yCoord += alpd * 1.5;
 				color.zCoord += alpd * 1.5;
 			}
-		}
+		}*/
 
 		// The cold hard vacuum of space
 		if(atmosphere == null) {
@@ -450,6 +451,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		*/
 
 
+		/*
 		for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
 			if(entry instanceof SatelliteWar) {
 				SatelliteWar sat = (SatelliteWar) entry.getValue();
@@ -461,6 +463,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 				color.zCoord += alpd * 1.5;
 			}
 		}
+		*/
 
 		// Lower pressure sky renders thinner
 		float pressureFactor = MathHelper.clamp_float(totalPressure, 0.0F, 1.0F);
@@ -643,6 +646,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		// brightness _inside_ of the atmosphere, from effects like lightning or war weapons
 		float insideBrightness = 0;
 
+		/*
 		for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
 			if(entry instanceof SatelliteWar) {
 				SatelliteWar war = (SatelliteWar) entry.getValue();
@@ -651,6 +655,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 				insideBrightness += alpd;
 			}
 		}
+		*/
 
 		/*
 		CBT_War war = CelestialBody.getTrait(worldObj, CBT_War.class);

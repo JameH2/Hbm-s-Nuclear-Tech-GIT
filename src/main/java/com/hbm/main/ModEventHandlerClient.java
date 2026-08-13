@@ -61,7 +61,7 @@ import com.hbm.render.util.RenderOverhead;
 import com.hbm.render.util.RenderScreenOverlay;
 import com.hbm.render.util.SoyuzPronter;
 import com.hbm.saveddata.SatelliteSavedData;
-import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.SatelliteBase;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.sound.MovingSoundChopper;
 import com.hbm.sound.MovingSoundChopperMine;
@@ -1148,7 +1148,7 @@ public class ModEventHandlerClient {
 			}
 			SolarSystemWorldSavedData.clientManager.update(true);
 
-			for(Satellite sat : SatelliteSavedData.getClientSats().values()) {
+			for(SatelliteBase sat : SatelliteSavedData.getClientSats().values()) {
 				sat.onUpdate(mc.theWorld);
 			}
 		}

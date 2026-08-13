@@ -19,8 +19,10 @@ public class SatelliteWar extends SatelliteBase {
 
 	public float effectTimer;
 
-	public abstract void fire();
-	public abstract void setTarget(CelestialBody body);
+	public void fire() {
+	}
+	public void setTarget(CelestialBody body) {
+	}
 
 	
 	protected void triggerFireEffect() {

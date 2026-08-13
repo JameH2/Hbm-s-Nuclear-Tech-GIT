@@ -89,7 +89,7 @@ import com.hbm.packet.toclient.SerializableRecipePacket;
 import com.hbm.particle.helper.BlackPowderCreator;
 import com.hbm.potion.HbmPotion;
 import com.hbm.saveddata.SatelliteSavedData;
-import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.SatelliteBase;
 import com.hbm.saveddata.satellites.SatelliteDetector;
 import com.hbm.saveddata.satellites.SatelliteRayScan;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
@@ -918,7 +918,7 @@ public class ModEventHandler {
 				// And update all satellites server-side
 				if(!CelestialBody.inOrbit(event.world)) {
 					SatelliteSavedData data = SatelliteSavedData.getData(event.world);
-					for(Satellite sat : data.sats.values()) {
+					for(SatelliteBase sat : data.sats.values()) {
 						sat.onUpdate(event.world);
 					}
 				}

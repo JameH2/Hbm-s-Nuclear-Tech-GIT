@@ -17,6 +17,7 @@ import com.hbm.render.util.BeamPronter.EnumWaveType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -52,7 +53,7 @@ public class SatelliteRailgun extends SatelliteWar {
  
  
 	@Override
-	public void onClick(World world, int x, int z) {
+	public void onCoordAction(World world, EntityPlayer player, int x, int y, int z) {
 		if(!world.isRemote && hasTarget && target != null) {
 			fireAtTarget(world);
 		}
