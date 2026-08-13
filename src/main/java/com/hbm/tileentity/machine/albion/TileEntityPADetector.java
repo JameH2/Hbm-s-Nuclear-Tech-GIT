@@ -10,12 +10,17 @@ import com.hbm.inventory.recipes.ParticleAcceleratorRecipes.ParticleAcceleratorR
 import com.hbm.items.ModItems;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
+import com.hbm.saveddata.satellites.SatelliteDetector;
+import com.hbm.saveddata.satellites.SatelliteRayScan;
+import com.hbm.saveddata.satellites.SatelliteDetector.BurstIntensity;
+import com.hbm.saveddata.satellites.SatelliteRayScan.RayEvent;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.albion.TileEntityPASource.PAState;
 import com.hbm.tileentity.machine.albion.TileEntityPASource.Particle;
 import com.hbm.util.fauxpointtwelve.BlockPos;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
+import api.hbm.redstoneoverradio.IRORValueProvider;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,7 +36,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
-public class TileEntityPADetector extends TileEntityCooledBase implements IGUIProvider, IParticleUser, SimpleComponent, CompatHandler.OCComponent {
+public class TileEntityPADetector extends TileEntityCooledBase implements IGUIProvider, IParticleUser, SimpleComponent, CompatHandler.OCComponent, IRORValueProvider {
 
 	public static final long usage = 100_000;
 
@@ -159,6 +164,8 @@ public class TileEntityPADetector extends TileEntityCooledBase implements IGUIPr
 				for(EntityPlayer player : players) player.triggerAchievement(MainRegistry.achOmega12);
 			}
 
+			SatelliteDetector.reportEvent(worldObj, SatelliteDetector.DURATION_MEDIUM, BurstIntensity.MEDIUM, xCoord, zCoord);
+			SatelliteRayScan.reportEvent(worldObj, xCoord, yCoord, zCoord, RayEvent.INFO_PARTICLE, 600);
 			particle.crash(PAState.SUCCESS);
 			return;
 		}
@@ -184,6 +191,22 @@ public class TileEntityPADetector extends TileEntityCooledBase implements IGUIPr
 		}
 
 		return true;
+	}
+
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+			PREFIX_VALUE + "temperature",
+			PREFIX_VALUE + "pfmcold",
+			PREFIX_VALUE + "pfm"
+		};
+	}
+	@Override
+	public String provideRORValue(String name) {
+		if((PREFIX_VALUE + "temperature").equals(name))	return "" + (int) this.temperature;
+		if((PREFIX_VALUE + "pfmcold").equals(name))		return "" + coolantTanks[0].getFill();
+		if((PREFIX_VALUE + "pfm").equals(name))			return "" + coolantTanks[1].getFill();
+		return null;
 	}
 
 	@Override

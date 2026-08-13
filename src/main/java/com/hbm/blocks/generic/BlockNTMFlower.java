@@ -262,7 +262,7 @@ public class BlockNTMFlower extends BlockEnumMulti implements IPlantable, IGrowa
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		if(metadata == EnumFlowerType.STRAWBERRY.ordinal()) return ModBlocks.getDropsWithoutDamage(world, this, metadata, fortune);
+		if(metadata == EnumFlowerType.STRAWBERRY.ordinal() || metadata == EnumFlowerType.MINT.ordinal()) return ModBlocks.getDropsWithoutDamage(world, this, metadata, fortune);
 		return super.getDrops(world, x, y, z, metadata, fortune);
 	}
 

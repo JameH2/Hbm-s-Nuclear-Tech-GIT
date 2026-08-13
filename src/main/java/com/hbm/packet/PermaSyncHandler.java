@@ -21,7 +21,8 @@ import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
 import com.hbm.saveddata.SatelliteSavedData;
 import com.hbm.saveddata.TomSaveData;
-import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.SatelliteBase;
+import com.hbm.saveddata.satellites.XSatelliteRegistry;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -110,7 +111,7 @@ public class PermaSyncHandler {
 		//PROJECTILES//
 		
 		/// SATELLITES ///
-		HashMap<Integer, HashMap<Integer, Satellite>> satsByDimension = new HashMap<Integer, HashMap<Integer, Satellite>>();
+		HashMap<Integer, HashMap<Integer, SatelliteBase>> satsByDimension = new HashMap<Integer, HashMap<Integer, SatelliteBase>>();
 		int currentSatelliteDimensionId = world.provider.dimensionId;
 		if(CelestialBody.inOrbit(world)) {
 			currentSatelliteDimensionId = CelestialBody.getTarget(world, (int)player.posX, (int)player.posZ).body.dimensionId;
@@ -125,11 +126,11 @@ public class PermaSyncHandler {
 		}
 
 		buf.writeInt(satsByDimension.size());
-		for(Map.Entry<Integer, HashMap<Integer, Satellite>> dimEntry : satsByDimension.entrySet()) {
+		for(Map.Entry<Integer, HashMap<Integer, SatelliteBase>> dimEntry : satsByDimension.entrySet()) {
 			buf.writeInt(dimEntry.getKey());
-			HashMap<Integer, Satellite> sats = dimEntry.getValue();
+			HashMap<Integer, SatelliteBase> sats = dimEntry.getValue();
 			buf.writeInt(sats.size());
-			for(Map.Entry<Integer, Satellite> satEntry : sats.entrySet()) {
+			for(Map.Entry<Integer, SatelliteBase> satEntry : sats.entrySet()) {
 				buf.writeInt(satEntry.getKey());
 				buf.writeInt(satEntry.getValue().getID());
 				satEntry.getValue().serialize(buf);
@@ -238,14 +239,14 @@ public class PermaSyncHandler {
 		
 		/// SATELLITES ///
 		int satDimSize = buf.readInt();
-		HashMap<Integer, HashMap<Integer, Satellite>> satsByDimension = new HashMap<Integer, HashMap<Integer, Satellite>>();
+		HashMap<Integer, HashMap<Integer, SatelliteBase>> satsByDimension = new HashMap<Integer, HashMap<Integer, SatelliteBase>>();
 		for(int dimIndex = 0; dimIndex < satDimSize; dimIndex++) {
 			int dimensionId = buf.readInt();
 			int satSize = buf.readInt();
-			HashMap<Integer, Satellite> sats = new HashMap<Integer, Satellite>();
+			HashMap<Integer, SatelliteBase> sats = new HashMap<Integer, SatelliteBase>();
 			for(int i = 0; i < satSize; i++) {
 				int satelliteID = buf.readInt();
-				Satellite satellite = Satellite.create(buf.readInt());
+				SatelliteBase satellite = XSatelliteRegistry.createFromId(buf.readInt());
 				sats.put(satelliteID, satellite);
 				satellite.deserialize(buf);
 			}
@@ -257,8 +258,8 @@ public class PermaSyncHandler {
 		if(CelestialBody.inOrbit(world) && OrbitalStation.clientStation != null && OrbitalStation.clientStation.orbiting != null) {
 			currentSatelliteDimensionId = OrbitalStation.clientStation.orbiting.dimensionId;
 		}
-		HashMap<Integer, Satellite> currentSats = satsByDimension.get(currentSatelliteDimensionId);
-		SatelliteSavedData.setClientSats(currentSats != null ? currentSats : new HashMap<Integer, Satellite>());
+		HashMap<Integer, SatelliteBase> currentSats = satsByDimension.get(currentSatelliteDimensionId);
+		SatelliteSavedData.setClientSats(currentSats != null ? currentSats : new HashMap<Integer, SatelliteBase>());
 		/// SATELLITES ///
 
 		/// TIME OF DAY ///

@@ -36,7 +36,7 @@ public class RenderLPW2 extends TileEntitySpecialRenderer implements IItemRender
 		case 5: GL11.glRotatef(0, 0F, 1F, 0F); break;
 		}
 
-		long time = te.getWorldObj().getTotalWorldTime();
+		long time = te.getWorldObj().getTotalWorldTime() % 1000000;
 
 		double t = rocket.lastTime + (rocket.time - rocket.lastTime) * interp;
 		

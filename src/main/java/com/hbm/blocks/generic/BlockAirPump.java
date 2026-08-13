@@ -9,6 +9,7 @@ import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
 import com.hbm.handler.atmosphere.IBlockSealable;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.trait.FT_Gaseous;
+import com.hbm.inventory.fluid.trait.FluidTraitSimple.FT_Gaseous_ART;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityAirPump;
@@ -119,7 +120,7 @@ public class BlockAirPump extends BlockContainer implements ILookOverlay, IBlock
 
 		if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof IItemFluidIdentifier) {
 			FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, x, y, z, player.getHeldItem());
-			if(type.hasTrait(FT_Gaseous.class)) {
+			if(type.hasTrait(FT_Gaseous.class) || type.hasTrait(FT_Gaseous_ART.class)) {
 				pump.tank.setTankType(type);
 				pump.markDirty();
 				player.addChatComponentMessage(new ChatComponentText("Changed type to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));

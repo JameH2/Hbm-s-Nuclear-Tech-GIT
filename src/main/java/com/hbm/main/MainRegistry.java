@@ -35,7 +35,7 @@ import com.hbm.lib.HbmWorld;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.potion.HbmPotion;
-import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.XSatelliteRegistry;
 import com.hbm.tileentity.TileMappings;
 import com.hbm.tileentity.bomb.TileEntityLaunchPadBase;
 import com.hbm.tileentity.bomb.TileEntityNukeCustom;
@@ -289,7 +289,7 @@ public class MainRegistry {
 		GameRegistry.registerFuelHandler(new FuelHandler());
 		BulletConfigSyncingUtil.loadConfigsForSync();
 		CellularDungeonFactory.init();
-		Satellite.register();
+		XSatelliteRegistry.register();
 		HTTPHandler.loadStats();
 		CraftingManager.mainRegistry();
 		SiegeTier.registerTiers();
@@ -672,6 +672,7 @@ public class MainRegistry {
 		Compat.handleRailcraftNonsense();
 		SuicideThreadDump.register();
 		CommandReloadClient.register();
+		CommandWikiRender.register();
 
 		WorldTypeTeleport.init();
 
@@ -751,6 +752,7 @@ public class MainRegistry {
 		event.registerServerCommand(new CommandLocate());
 		event.registerServerCommand(new CommandTotalTime());
 		event.registerServerCommand(new CommandCustomize());
+		event.registerServerCommand(new CommandWikiRender()); // TODO: make this shitfuck be clientside
 		event.registerServerCommand(new CommandReapNetworks());
 		ArcFurnaceRecipes.registerFurnaceSmeltables(); // because we have to wait for other mods to take their merry ass time to register recipes
 	}
@@ -1720,6 +1722,19 @@ public class MainRegistry {
 		ignoreMappings.add("hbm:item.coil_advanced_alloy");
 		ignoreMappings.add("hbm:item.coil_advanced_torus");
 		ignoreMappings.add("hbm:item.blades_advanced_alloy");
+		ignoreMappings.add("hbm:tile.machine_minirtg");
+		ignoreMappings.add("hbm:tile.machine_powerrtg");
+		ignoreMappings.add("hbm:item.energy_core");
+		ignoreMappings.add("hbm:item.drax");
+		ignoreMappings.add("hbm:item.drax_mk2");
+		ignoreMappings.add("hbm:item.drax_mk3");
+		ignoreMappings.add("hbm:item.sat_base");
+		ignoreMappings.add("hbm:item.sat_head_mapper");
+		ignoreMappings.add("hbm:item.sat_head_scanner");
+		ignoreMappings.add("hbm:item.sat_head_radar");
+		ignoreMappings.add("hbm:item.sat_head_laser");
+		ignoreMappings.add("hbm:item.sat_head_resonator");
+		ignoreMappings.add("hbm:item.sat_interface");
 		
 		/// REMAP ///
 		remapItems.put("hbm:item.gadget_explosive8", ModItems.early_explosive_lenses);

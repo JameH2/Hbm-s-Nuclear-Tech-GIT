@@ -24,7 +24,8 @@ import com.hbm.items.weapon.ItemCustomMissilePart.WarheadType;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.EntityBufPacket;
-import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.SatelliteBase;
+import com.hbm.saveddata.satellites.XSatelliteRegistry;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.machine.TileEntityOrbitalStation;
@@ -89,11 +90,11 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 	private boolean willExplode = false;
 
 	private int satFreq = 0;
-	private float satInclination = Satellite.DEFAULT_INCLINATION;
-	private float satAltitude = Satellite.DEFAULT_ALTITUDE_KM;
-	private boolean satIsBlinking = Satellite.DEFAULT_IS_BLINKING;
-	private float satBlinkPeriod = Satellite.DEFAULT_BLINK_PERIOD;
-	private String satOwner = Satellite.DEFAULT_OWNER;
+	private float satInclination = SatelliteBase.DEFAULT_INCLINATION;
+	private float satAltitude = SatelliteBase.DEFAULT_ALTITUDE_KM;
+	private boolean satIsBlinking = SatelliteBase.DEFAULT_IS_BLINKING;
+	private float satBlinkPeriod = SatelliteBase.DEFAULT_BLINK_PERIOD;
+	private String satOwner = SatelliteBase.DEFAULT_OWNER;
 	private float satColorR = 0.0F;
 	private float satColorG = 0.0F;
 	private float satColorB = 0.0F;
@@ -126,14 +127,14 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 		super(world, x, y, z, (int)x + 10000, (int)z);
 		RocketStruct rocket = ItemCustomRocket.get(stack);
 		satFreq = ISatChip.getFreqS(stack);
-		satInclination = Satellite.getInclination(stack);
-		satAltitude = Satellite.getAltitude(stack);
-		satIsBlinking = Satellite.isBlinking(stack);
-		satBlinkPeriod = Satellite.getBlinkPeriod(stack);
-		satOwner = Satellite.getOwner(stack);
-		satColorR = Satellite.getColorR(stack);
-		satColorG = Satellite.getColorG(stack);
-		satColorB = Satellite.getColorB(stack);
+		satInclination = SatelliteBase.getInclination(stack);
+		satAltitude = SatelliteBase.getAltitude(stack);
+		satIsBlinking = SatelliteBase.isBlinking(stack);
+		satBlinkPeriod = SatelliteBase.getBlinkPeriod(stack);
+		satOwner = SatelliteBase.getOwner(stack);
+		satColorR = SatelliteBase.getColorR(stack);
+		satColorG = SatelliteBase.getColorG(stack);
+		satColorB = SatelliteBase.getColorB(stack);
 
 		setRocket(rocket);
 		setSize(2, (float)rocket.getHeight() + 1);
@@ -215,7 +216,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 					if(targetWorld != null) {
 						ItemStack stack = new ItemStack(rocket.capsule.part);
 						applySatData(stack);
-						Satellite.orbit(targetWorld, Satellite.getIDFromItem(rocket.capsule.part), satFreq, posX, posY, posZ, stack);
+						XSatelliteRegistry.orbit(targetWorld, stack, satFreq, posX, posY, posZ);
 					}
 				} else if(rocket.capsule.part == ModItems.rp_station_core_20) {
 					// We mark the station as travellable, but we don't actually add the station until the player travels to it
@@ -709,11 +710,11 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 		RocketStruct rocket = getRocket();
 		if(rocket.stages.size() == 0) {
 			ItemStack stack = new ItemStack(rocket.capsule.part);
-			if(Satellite.isSatelliteItem(stack.getItem())) applySatData(stack);
+			if(XSatelliteRegistry.isSatelliteItem(stack.getItem())) applySatData(stack);
 			entityDropItem(stack, 0.0F);
 		} else {
 			ItemStack stack = ItemCustomRocket.build(rocket, true);
-			if(Satellite.isSatelliteItem(rocket.capsule.part)) applySatData(stack);
+			if(XSatelliteRegistry.isSatelliteItem(rocket.capsule.part)) applySatData(stack);
 			entityDropItem(stack, 0.0F);
 		}
 
@@ -876,15 +877,15 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 		}
 
 		satFreq = nbt.getInteger("freq");
-		satInclination = nbt.hasKey("satInclination") ? nbt.getFloat("satInclination") : Satellite.DEFAULT_INCLINATION;
-		satAltitude = nbt.hasKey("satAltitude") ? nbt.getFloat("satAltitude") : Satellite.DEFAULT_ALTITUDE_KM;
-		satIsBlinking = nbt.hasKey("satIsBlinking") ? nbt.getBoolean("satIsBlinking") : Satellite.DEFAULT_IS_BLINKING;
-		satBlinkPeriod = nbt.hasKey("satBlink") ? Satellite.clampBlinkPeriod(nbt.getFloat("satBlink")) : Satellite.DEFAULT_BLINK_PERIOD;
-		satOwner = nbt.hasKey("satOwner") ? nbt.getString("satOwner") : Satellite.DEFAULT_OWNER;
+		satInclination = nbt.hasKey("satInclination") ? nbt.getFloat("satInclination") : SatelliteBase.DEFAULT_INCLINATION;
+		satAltitude = nbt.hasKey("satAltitude") ? nbt.getFloat("satAltitude") : SatelliteBase.DEFAULT_ALTITUDE_KM;
+		satIsBlinking = nbt.hasKey("satIsBlinking") ? nbt.getBoolean("satIsBlinking") : SatelliteBase.DEFAULT_IS_BLINKING;
+		satBlinkPeriod = nbt.hasKey("satBlink") ? SatelliteBase.clampBlinkPeriod(nbt.getFloat("satBlink")) : SatelliteBase.DEFAULT_BLINK_PERIOD;
+		satOwner = nbt.hasKey("satOwner") ? nbt.getString("satOwner") : SatelliteBase.DEFAULT_OWNER;
 		satColorR = nbt.getFloat("satColorR");
 		satColorG = nbt.getFloat("satColorG");
 		satColorB = nbt.getFloat("satColorB");
-		if(satOwner == null || satOwner.isEmpty()) satOwner = Satellite.DEFAULT_OWNER;
+		if(satOwner == null || satOwner.isEmpty()) satOwner = SatelliteBase.DEFAULT_OWNER;
 
 		if(nbt.getBoolean("hasOverride")) {
 			SolarSystem.Body body = CelestialBody.getBody(nbt.getInteger("overrideDim")).getEnum();
@@ -931,12 +932,12 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 	}
 
 	private void applySatData(ItemStack stack) {
-		Satellite.setInclination(stack, satInclination);
-		Satellite.setAltitude(stack, satAltitude);
-		Satellite.setBlinking(stack, satIsBlinking);
-		Satellite.setBlinkPeriod(stack, satBlinkPeriod);
-		Satellite.setOwner(stack, satOwner);
-		Satellite.setColor(stack, satColorR, satColorG, satColorB);
+		SatelliteBase.setInclination(stack, satInclination);
+		SatelliteBase.setAltitude(stack, satAltitude);
+		SatelliteBase.setBlinking(stack, satIsBlinking);
+		SatelliteBase.setBlinkPeriod(stack, satBlinkPeriod);
+		SatelliteBase.setOwner(stack, satOwner);
+		SatelliteBase.setColor(stack, satColorR, satColorG, satColorB);
 	}
 
 	@Override

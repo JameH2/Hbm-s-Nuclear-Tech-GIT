@@ -35,7 +35,7 @@ public class TileEntityDysonLauncher extends TileEntityMachineBase implements IE
 	private static final int MEMBERS_PER_LAUNCH = 4;
 
 	// SHAKE IT LIKE IT'S HEAT, OVERDRIVE
-	boolean sunsetOverdrive = false;
+	public boolean sunsetOverdrive = false;
 
 	public boolean isOperating;
 	public boolean isSpinningDown;

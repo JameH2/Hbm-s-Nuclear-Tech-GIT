@@ -10,7 +10,8 @@ import com.hbm.items.ISatChip;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemCustomMissilePart;
 import com.hbm.main.MainRegistry;
-import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.SatelliteBase;
+import com.hbm.saveddata.satellites.XSatelliteRegistry;
 import com.hbm.tileentity.IGUIProvider;
 
 import com.hbm.util.i18n.I18nUtil;
@@ -49,7 +50,7 @@ public class ItemSatellite extends ItemCustomMissilePart implements ISatChip, IG
 
 	@Override
 	public void onCreated(ItemStack stack, World world, EntityPlayer player) {
-		Satellite.ensureItemData(stack);
+		SatelliteBase.ensureItemData(stack);
 	}
 
 	@SuppressWarnings({ "rawtypes" })
@@ -59,7 +60,7 @@ public class ItemSatellite extends ItemCustomMissilePart implements ISatChip, IG
 		int start = list.size();
 		super.getSubItems(item, tab, list);
 		for(int i = start; i < list.size(); i++) {
-			Satellite.ensureItemData((ItemStack) list.get(i));
+			SatelliteBase.ensureItemData((ItemStack) list.get(i));
 		}
 	}
 
@@ -70,10 +71,10 @@ public class ItemSatellite extends ItemCustomMissilePart implements ISatChip, IG
 
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
 			list.add(formatTooltipEntry(I18nUtil.resolveKey("item.sat.desc.frequency"), Integer.toString(getFreq(itemstack))));
-			list.add(formatTooltipEntry(I18nUtil.resolveKey("item.sat.desc.owner"), Satellite.getOwner(itemstack)));
+			list.add(formatTooltipEntry(I18nUtil.resolveKey("item.sat.desc.owner"), SatelliteBase.getOwner(itemstack)));
 			list.add(formatTooltipEntry(I18nUtil.resolveKey("item.sat.desc.speed"), formatOrbitSpeed(itemstack) + "km/s"));
-			list.add(formatTooltipEntry(I18nUtil.resolveKey("item.sat.desc.altitude"), formatValue(Satellite.getAltitude(itemstack)) + "km"));
-			list.add(formatTooltipEntry(I18nUtil.resolveKey("item.sat.desc.inclination"), formatValue(Satellite.getInclination(itemstack)) + "°"));
+			list.add(formatTooltipEntry(I18nUtil.resolveKey("item.sat.desc.altitude"), formatValue(SatelliteBase.getAltitude(itemstack)) + "km"));
+			list.add(formatTooltipEntry(I18nUtil.resolveKey("item.sat.desc.inclination"), formatValue(SatelliteBase.getInclination(itemstack)) + "°"));
 			list.add(formatTooltipEntry(I18nUtil.resolveKey("item.sat.desc.phase"), formatPhaseOffset(itemstack) + "°"));
 			list.add(formatTooltipEntry(I18nUtil.resolveKey("item.sat.desc.color"), getHexColor(itemstack)));
 		} else {
@@ -145,7 +146,7 @@ public class ItemSatellite extends ItemCustomMissilePart implements ISatChip, IG
 				if(targetWorld == null) return stack;
 			}
 
-			Satellite.orbit(targetWorld, Satellite.getIDFromItem(stack.getItem()), getFreq(stack), player.posX, player.posY, player.posZ, stack);
+			XSatelliteRegistry.orbit(targetWorld, stack, getFreq(stack), player.posX, player.posY, player.posZ);
 
 			player.addChatMessage(new ChatComponentText("Satellite launched successfully!"));
 		}
@@ -167,17 +168,17 @@ public class ItemSatellite extends ItemCustomMissilePart implements ISatChip, IG
 	}
 
 	@Override
-	public void receiveControl(ItemStack stack, NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, ItemStack stack, NBTTagCompound data) {
 		int r = MathHelper.clamp_int(data.getInteger("satColorR"), 0, 255);
 		int g = MathHelper.clamp_int(data.getInteger("satColorG"), 0, 255);
 		int b = MathHelper.clamp_int(data.getInteger("satColorB"), 0, 255);
-		Satellite.setColor(stack, r / 255F, g / 255F, b / 255F);
-		Satellite.setAltitude(stack, MathHelper.clamp_float(data.getFloat("satAltitude"), Satellite.MIN_ALTITUDE_KM, Satellite.MAX_ALTITUDE_KM));
-		Satellite.setPhaseOffset(stack, data.getFloat("satPhaseOffset"));
-		Satellite.setInclination(stack, MathHelper.clamp_float(data.getFloat("satInclination"), Satellite.MIN_INCLINATION, Satellite.MAX_INCLINATION));
-		Satellite.setOwner(stack, data.getString("satOwner"));
-		Satellite.setBlinking(stack, data.getBoolean("satIsBlinking"));
-		Satellite.setBlinkPeriod(stack, data.getFloat("satBlink"));
+		SatelliteBase.setColor(stack, r / 255F, g / 255F, b / 255F);
+		SatelliteBase.setAltitude(stack, MathHelper.clamp_float(data.getFloat("satAltitude"), SatelliteBase.MIN_ALTITUDE_KM, SatelliteBase.MAX_ALTITUDE_KM));
+		SatelliteBase.setPhaseOffset(stack, data.getFloat("satPhaseOffset"));
+		SatelliteBase.setInclination(stack, MathHelper.clamp_float(data.getFloat("satInclination"), SatelliteBase.MIN_INCLINATION, SatelliteBase.MAX_INCLINATION));
+		SatelliteBase.setOwner(stack, data.getString("satOwner"));
+		SatelliteBase.setBlinking(stack, data.getBoolean("satIsBlinking"));
+		SatelliteBase.setBlinkPeriod(stack, data.getFloat("satBlink"));
 	}
 
 	private static String formatValue(float value) {
@@ -186,19 +187,19 @@ public class ItemSatellite extends ItemCustomMissilePart implements ISatChip, IG
 	}
 
 	private static String formatOrbitSpeed(ItemStack stack) {
-		float orbitSpeed = Satellite.getOrbitSpeedKmPerSecond(Satellite.getAltitude(stack));
+		float orbitSpeed = SatelliteBase.getOrbitSpeedKmPerSecond(SatelliteBase.getAltitude(stack));
 		return formatValue(Math.round(orbitSpeed * 10.0F) / 10.0F);
 	}
 
 	private static String formatPhaseOffset(ItemStack stack) {
-		float phaseOffset = Satellite.normalizePhaseOffset(Satellite.getPhaseOffset(stack));
+		float phaseOffset = SatelliteBase.normalizePhaseOffset(SatelliteBase.getPhaseOffset(stack));
 		return formatValue(Math.round(phaseOffset * 10.0F) / 10.0F);
 	}
 
 	private static String getHexColor(ItemStack stack) {
-		int r = MathHelper.clamp_int(Math.round(Satellite.getColorR(stack) * 255F), 0, 255);
-		int g = MathHelper.clamp_int(Math.round(Satellite.getColorG(stack) * 255F), 0, 255);
-		int b = MathHelper.clamp_int(Math.round(Satellite.getColorB(stack) * 255F), 0, 255);
+		int r = MathHelper.clamp_int(Math.round(SatelliteBase.getColorR(stack) * 255F), 0, 255);
+		int g = MathHelper.clamp_int(Math.round(SatelliteBase.getColorG(stack) * 255F), 0, 255);
+		int b = MathHelper.clamp_int(Math.round(SatelliteBase.getColorB(stack) * 255F), 0, 255);
 		return String.format(Locale.ROOT, "#%02X%02X%02X", r, g, b);
 	}
 

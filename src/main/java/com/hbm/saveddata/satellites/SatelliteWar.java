@@ -6,7 +6,9 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public abstract class SatelliteWar extends Satellite {
+public class SatelliteWar extends SatelliteBase {
+
+	//time to clean up this shit and make it PROPER.
 
 	protected boolean firing;
 	 
@@ -66,6 +68,11 @@ public abstract class SatelliteWar extends Satellite {
 	public void deserialize(ByteBuf buf) {
 		effectTimer = buf.readFloat();
 		firing = buf.readBoolean();
+	}
+
+	@Override
+	public String getType() {
+		return "WAR";
 	}
 
 }

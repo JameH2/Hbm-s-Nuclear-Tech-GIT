@@ -135,7 +135,14 @@ public class BlockOrbitalStationComputer extends BlockDummyable implements ILook
 			for(ThreeInts errorAt : station.errorsAt) {
 				TileEntity error = world.getTileEntity(errorAt.x, errorAt.y, errorAt.z);
 				if(error == null || !(error instanceof IPropulsion)) continue;
-				((IPropulsion) error).addErrors(text);
+
+				List<String> errors = new ArrayList<>();
+				((IPropulsion) error).addErrors(errors);
+
+				if(!errors.isEmpty()) {
+					text.add(EnumChatFormatting.RED + I18nUtil.resolveKey(error.getBlockType().getUnlocalizedName() + ".name"));
+					text.addAll(errors);
+				}
 			}
 		} else if(progress > 0) {
 			if(station.state == StationState.LEAVING) {

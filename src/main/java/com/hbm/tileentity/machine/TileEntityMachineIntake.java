@@ -41,32 +41,8 @@ public class TileEntityMachineIntake extends TileEntityLoadedBase implements IEn
 
 		if(!worldObj.isRemote) {
 
-			boolean isInPressurizedRoom = ChunkAtmosphereManager.proxy.hasAtmosphere(worldObj, xCoord, yCoord, zCoord);
-			CBT_Atmosphere atmosphere = ChunkAtmosphereManager.proxy.getAtmosphere(worldObj, xCoord, yCoord, zCoord);
-
 			if(this.power >= this.getMaxPower() / 20) {
-				if(atmosphere != null && atmosphere.getPressure() > 0.01D) {
-
-					// 1mB of any given air -> 100mB of compressed air
-					// reasoning being: this is the same conversion ratio of water -> steam
-					// bob intends for this to absolutely shit out air, but that is just not feasible with air prod in space
-					// with a single klystron this is still 25mB/t, which is still more oxygen consumption than the old fusion reactor
-					int consumption = (this.compair.getMaxFill() - this.compair.getFill()) / 100;
-
-					if(consumption > 0) {
-						if(!isInPressurizedRoom) {
-							FT_Gaseous.capture(worldObj, atmosphere.getMainFluid(), consumption);
-						} else {
-							List<AtmosphereBlob> blobs = ChunkAtmosphereManager.proxy.getBlobs(worldObj, xCoord, yCoord, zCoord);
-							for(AtmosphereBlob blob : blobs) {
-								if(blob.hasPressure(0.1)) {
-									blob.consume(consumption);
-									break;
-								}
-							}
-						}
-					}
-
+				if(canCompress()) {
 					this.compair.setFill(this.compair.getMaxFill());
 				}
 
@@ -110,6 +86,36 @@ public class TileEntityMachineIntake extends TileEntityLoadedBase implements IEn
 				}
 			}
 		}
+	}
+
+	private boolean canCompress() {
+		CBT_Atmosphere atmosphere = ChunkAtmosphereManager.proxy.getAtmosphere(worldObj, xCoord, yCoord, zCoord);
+		if(atmosphere == null || atmosphere.getPressure() <= 0.01D) return false;
+
+		boolean isInPressurizedRoom = ChunkAtmosphereManager.proxy.hasAtmosphere(worldObj, xCoord, yCoord, zCoord);
+
+		// 1mB of any given air -> 100mB of compressed air
+		// reasoning being: this is the same conversion ratio of water -> steam
+		// bob intends for this to absolutely shit out air, but that is just not feasible with air prod in space
+		// with a single klystron this is still 25mB/t, which is still more oxygen consumption than the old fusion reactor
+		int consumption = this.compair.getMaxFill() - this.compair.getFill();
+		if(consumption <= 0) return true;
+		consumption = Math.max(1, consumption / 100);
+
+		if(!isInPressurizedRoom) {
+			FT_Gaseous.capture(worldObj, atmosphere.getMainFluid(), consumption);
+			return true;
+		}
+
+		List<AtmosphereBlob> blobs = ChunkAtmosphereManager.proxy.getBlobs(worldObj, xCoord, yCoord, zCoord);
+		for(AtmosphereBlob blob : blobs) {
+			if(!blob.hasFluid(Fluids.AIR) && blob.hasPressure(0.1)) {
+				blob.consume(consumption);
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public DirPos[] getConPos() {

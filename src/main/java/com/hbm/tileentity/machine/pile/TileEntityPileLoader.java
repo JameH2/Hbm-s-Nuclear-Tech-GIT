@@ -1,0 +1,271 @@
+package com.hbm.tileentity.machine.pile;
+
+import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.machine.pile.BlockPile;
+import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemPileRodMK2;
+import com.hbm.items.machine.ItemPileRodMK2.EnumPileRod;
+import com.hbm.main.NTMSounds;
+import com.hbm.tileentity.machine.pile.TileEntityPileCore.PileChannel;
+import com.hbm.util.Compat;
+import com.hbm.util.EnumUtil;
+
+import api.hbm.redstoneoverradio.IRORValueProvider;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+
+public class TileEntityPileLoader extends TileEntityPileDeviceBase implements ISidedInventory, IRORValueProvider {
+	
+	public double syncLevel;
+	public double level;
+	public double lastLevel;
+	
+	public int turnProgress;
+	
+	public static final double SPEED = 1D / 7D;
+	
+	public boolean loading = false;
+	public int delay = 0;
+	public ItemStack syncStack;
+	public ItemStack stack;
+	public boolean wasRedstone;
+	
+	public ItemStack channelStack;
+	public double channelDepletion;
+	public double channelTemp;
+
+	@Override
+	public void updateEntity() {
+		
+		if(!worldObj.isRemote) {
+			
+			ForgeDirection dir = getOrientation();
+			PileChannel fuelChan = null;
+			this.channelStack = null;
+			this.channelDepletion = 0D;
+			this.channelTemp = 0D;
+			
+			int x = xCoord - dir.offsetX;
+			int y = yCoord;
+			int z = zCoord - dir.offsetZ;
+			
+			if(worldObj.getBlock(x, y, z) == ModBlocks.pile_block && worldObj.getBlockMetadata(x, y, z) == BlockPile.META_FUEL_IN) {
+				TileEntity tile = Compat.getTileStandard(worldObj, x, y, z);
+				
+				if(tile instanceof TileEntityPileBaseMK2) {
+					TileEntityPileBaseMK2 pile = (TileEntityPileBaseMK2) tile;
+					TileEntityPileCore core = pile.getCore();
+					
+					if(core != null) {
+						fuelChan = core.getFuelChannel(x, y, z);
+						
+						if(fuelChan != null) {
+							this.chanNum = core.getFuelChannelNum(fuelChan);
+							this.channelStack = fuelChan.rods[fuelChan.rods.length - 1];
+							this.channelDepletion = ItemPileRodMK2.getDepletionPercent(channelStack);
+							this.channelTemp = fuelChan.heat;
+						}
+					}
+				}
+			}
+			
+			boolean redstone = worldObj.getIndirectPowerOutput(xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ, dir.getOpposite().ordinal());
+			if(redstone && !wasRedstone && this.delay <= 0 && this.level <= 0) this.loading = true;
+			this.wasRedstone = redstone;
+			
+			if(this.delay > 0) {
+				this.delay--;
+			} else {
+				
+				if(loading) {
+					
+					if(this.level == 0) worldObj.playSoundEffect(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, NTMSounds.GUN_BOLT_OPEN, this.getVolume(1F), 1F);
+					
+					this.level += SPEED;
+					if(this.level >= 1D) {
+						this.level = 1D;
+						this.loading = false;
+						this.delay = 5;
+					}
+				} else {
+					
+					if(this.level == 1) {
+						worldObj.playSoundEffect(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, NTMSounds.GUN_BOLT_OPEN, this.getVolume(1F), 0.75F);
+						if(fuelChan != null) {
+							fuelChan.loadItem(stack);
+							this.setInventorySlotContents(0, null);
+						}
+					}
+					
+					if(this.level > 0D) {
+						this.level -= SPEED;
+						if(this.level < 0D) this.level = 0D;
+					}
+				}
+			}
+			
+			this.networkPackNT(35);
+			
+		} else {
+
+			this.lastLevel = this.level;
+
+			if(this.turnProgress > 0) {
+				this.level = this.level + ((this.syncLevel - this.level) / (double) this.turnProgress);
+				--this.turnProgress;
+			} else {
+				this.level = this.syncLevel;
+			}
+		}
+	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
+		buf.writeDouble(this.level);
+		
+		if(this.stack != null) {
+			buf.writeInt(Item.getIdFromItem(this.stack.getItem()));
+			buf.writeShort(this.stack.getItemDamage());
+		} else {
+			buf.writeInt(-1);
+		}
+		
+		if(this.channelStack != null) {
+			buf.writeInt(Item.getIdFromItem(this.channelStack.getItem()));
+			buf.writeShort(this.channelStack.getItemDamage());
+		} else {
+			buf.writeInt(-1);
+		}
+		
+		buf.writeDouble(this.channelDepletion);
+		buf.writeDouble(this.channelTemp);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
+		double lastSync = this.syncLevel;
+		this.syncLevel = buf.readDouble();
+		
+		int itemId = buf.readInt();
+		if(itemId != -1) this.syncStack = new ItemStack(Item.getItemById(itemId), 1, buf.readShort());
+		else this.syncStack = null;
+		
+		int chanId = buf.readInt();
+		if(chanId != -1) this.channelStack = new ItemStack(Item.getItemById(chanId), 1, buf.readShort());
+		else this.channelStack = null;
+		
+		this.channelDepletion = buf.readDouble();
+		this.channelTemp = buf.readDouble();
+
+		if(this.syncLevel != lastSync) this.turnProgress = 2;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		this.loading = nbt.getBoolean("loading");
+		this.level = nbt.getDouble("level");
+		this.delay = nbt.getInteger("delay");
+		this.wasRedstone = nbt.getBoolean("redstone");
+		
+		if(nbt.hasKey("stack")) {
+			this.stack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("stack"));
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+
+		nbt.setBoolean("loading", loading);
+		nbt.setDouble("level", level);
+		nbt.setInteger("delay", delay);
+		nbt.setBoolean("wasRedstone", wasRedstone);
+		
+		if(this.stack != null) {
+			NBTTagCompound stackTag = new NBTTagCompound();
+			this.stack.writeToNBT(stackTag);
+			nbt.setTag("stack", stackTag);
+		}
+	}
+	
+	public static boolean isItemLoadable(ItemStack stack) {
+		return stack.getItem() == ModItems.pile_rod;
+	}
+
+	@Override
+	public ItemStack decrStackSize(int slot, int amount) {
+		if(amount == 1 && this.stack != null) {
+			ItemStack ret = stack.copy();
+			this.setInventorySlotContents(0, null);
+			return ret;
+		}
+		return null;
+	}
+
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		this.stack = stack;
+		this.markDirty();
+	}
+
+	@Override public int getSizeInventory() { return 1; }
+	@Override public ItemStack getStackInSlot(int slot) { return stack; }
+	@Override public ItemStack getStackInSlotOnClosing(int slot) { return null; }
+	@Override public String getInventoryName() { return "NULL"; }
+	@Override public boolean hasCustomInventoryName() { return false; }
+	@Override public int getInventoryStackLimit() { return 1; }
+
+	@Override public boolean isUseableByPlayer(EntityPlayer player) { return false; }
+	@Override public void openInventory() { }
+	@Override public void closeInventory() { }
+
+	@Override public int[] getAccessibleSlotsFromSide(int side) { return new int[] {0}; }
+	@Override public boolean isItemValidForSlot(int slot, ItemStack stack) { return isItemLoadable(stack); }
+	@Override public boolean canInsertItem(int slot, ItemStack stack, int side) { return isItemLoadable(stack); }
+	@Override public boolean canExtractItem(int slot, ItemStack stack, int side) { return false; }
+
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+				PREFIX_VALUE + "meta",
+				PREFIX_VALUE + "depletion",
+				PREFIX_VALUE + "deppercent",
+				PREFIX_VALUE + "lifetime",
+				PREFIX_VALUE + "temp",
+		};
+	}
+
+	@Override
+	public String provideRORValue(String name) {
+		
+		if(name.equals(PREFIX_VALUE + "meta")) {
+			return this.channelStack == null ? "-1" : this.channelStack.getItemDamage() + "";
+		}
+		if(name.equals(PREFIX_VALUE + "deppercent")) {
+			return "" + (int) Math.round(this.channelDepletion);
+		}
+		if(name.equals(PREFIX_VALUE + "depletion")) {
+			if(this.channelStack == null) return "0";
+			return "" + (int) Math.round(ItemPileRodMK2.getDepletionPercent(this.channelStack));
+		}
+		if(name.equals(PREFIX_VALUE + "lifetime")) {
+			if(this.channelStack == null) return "0";
+			EnumPileRod rod = EnumUtil.grabEnumSafely(EnumPileRod.class, this.channelStack.getItemDamage());
+			return "" + (int) Math.round(rod.life);
+		}
+		if(name.equals(PREFIX_VALUE + "temp")) {
+			return "" + (int) Math.round(this.channelTemp);
+		}
+		
+		return null;
+	}
+}

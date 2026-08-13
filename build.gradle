@@ -97,10 +97,6 @@ repositories {
 		name = "CurseMaven"
 		url = "https://cursemaven.com"
 	}
-	maven {
-		name = "OpenComputers"
-		url = "https://maven.cil.li/"
-	}
 }
 
 dependencies {
@@ -115,7 +111,7 @@ dependencies {
 
 	compileOnly("inventorytweaks:InventoryTweaks:1.59-dev:deobf") { transitive = false }
 
-	compileOnly("li.cil.oc:OpenComputers:MC1.7.10-1.5.+:api") { transitive = false }
+	compileOnly("com.github.MightyPirates:OpenComputers:1.7.10-forge~1.8.9:api") { transitive = false }
 
 	compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta.56-GTNH:dev") { transitive = false }
 }
@@ -163,6 +159,9 @@ task sourceJar(type: Jar) {
 }
 
 task devJar(type: Jar) {
+	// hack: artificially depend on the reobf task here to get the normal jar to be overwritten before publishing
+	dependsOn reobf
+
 	from(sourceSets.main.output) {
 		include "**"
 	}
@@ -212,8 +211,6 @@ if(Files.exists(Paths.get("maven.properties"))) {
 				artifactId archivesBaseName
 				version version_name
 
-				from components.java
-
 				artifact sourceJar {
 					classifier "src"
 				}
@@ -222,13 +219,7 @@ if(Files.exists(Paths.get("maven.properties"))) {
 					classifier "dev"
 				}
 
-				pom.withXml {
-					// NTM doesn't really feature any special runtime dependencies anyone would need, so blast those away
-					def node = asNode()
-					def dependencies = node.get("dependencies")
-					node.remove(dependencies)
-					node
-				}
+				artifact jar
 			}
 		}
 		repositories {

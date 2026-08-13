@@ -1,7 +1,6 @@
 package com.hbm.dim;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Random;
 import java.util.List;
 import java.util.ListIterator;
@@ -23,9 +22,6 @@ import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.main.MainRegistry;
-import com.hbm.saveddata.SatelliteSavedData;
-import com.hbm.saveddata.satellites.Satellite;
-import com.hbm.saveddata.satellites.SatelliteWar;
 import com.hbm.util.Compat;
 
 import cpw.mods.fml.common.Loader;

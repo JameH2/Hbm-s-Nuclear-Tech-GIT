@@ -22,6 +22,8 @@ import com.hbm.items.machine.ItemPWRFuel.EnumPWRFuel;
 import com.hbm.items.machine.ItemPWRPrinter;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.NTMSounds;
+import com.hbm.saveddata.satellites.SatelliteRayScan;
+import com.hbm.saveddata.satellites.SatelliteRayScan.RayEvent;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -216,6 +218,12 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IG
 					if(this.rodTarget > this.rodLevel) this.rodLevel++;
 					if(this.rodTarget < this.rodLevel) this.rodLevel--;
 
+					double multiplier = 1D;
+
+					if(tanks[0].getTankType().hasTrait(FT_PWRModerator.class)) {
+						multiplier = tanks[0].getTankType().getTrait(FT_PWRModerator.class).getMultiplier();
+					}
+
 					int newFlux = this.sourceCount * 20;
 
 					if(typeLoaded != -1 && amountLoaded > 0) {
@@ -226,6 +234,10 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IG
 						double outputPerRod = fuel.function.effonix(fluxPerRod);
 						double totalOutput = outputPerRod * amountLoaded * usedRods;
 						double totalHeatOutput = totalOutput * fuel.heatEmission;
+
+						if(tanks[0].getFill() > 0) {
+							totalHeatOutput *= multiplier;
+						}
 
 						this.coreHeat += totalHeatOutput;
 						newFlux += totalOutput;
@@ -245,6 +257,9 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IG
 							this.amountLoaded--;
 							this.markChanged();
 						}
+						
+						if(worldObj.getTotalWorldTime() % 100 == 0)
+							SatelliteRayScan.reportEvent(worldObj, xCoord, yCoord, zCoord, RayEvent.INFO_NUCLEAR, 200);
 					}
 
 					if(this.amountLoaded <= 0) {
@@ -266,8 +281,8 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IG
 
 					this.flux = newFlux;
 
-					if(tanks[0].getTankType().hasTrait(FT_PWRModerator.class) && tanks[0].getFill() > 0) {
-						this.flux *= tanks[0].getTankType().getTrait(FT_PWRModerator.class).getMultiplier();
+					if(tanks[0].getFill() > 0) {
+						this.flux *= multiplier;
 					}
 
 					if(this.coreHeat > this.coreHeatCapacity) {
@@ -645,6 +660,8 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IG
 		PREFIX_VALUE + "rods",
 		PREFIX_VALUE + "coreheat",
 		PREFIX_VALUE + "hullheat",
+		PREFIX_VALUE + "coldbuf",
+		PREFIX_VALUE + "hotbuf",
 		PREFIX_VALUE + "flux",
 		PREFIX_VALUE + "depletion",
 		PREFIX_FUNCTION + "setrods" + NAME_SEPARATOR + "percent",
@@ -661,6 +678,8 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IG
 		if((PREFIX_VALUE + "rods").equals(name))		return "" + (int) (100 - this.rodLevel); // why the fuck did i invert this again?
 		if((PREFIX_VALUE + "coreheat").equals(name))	return "" + this.coreHeat;
 		if((PREFIX_VALUE + "hullheat").equals(name))	return "" + this.hullHeat;
+		if((PREFIX_VALUE + "coldbuf").equals(name))	return "" + this.tanks[0].getFill();
+		if((PREFIX_VALUE + "hotbuf").equals(name))	return "" + this.tanks[1].getFill();
 		if((PREFIX_VALUE + "flux").equals(name))		return "" + (int) this.flux;
 		if((PREFIX_VALUE + "depletion").equals(name))	return "" + (int) (this.progress * 100 / this.processTime);
 		return null;

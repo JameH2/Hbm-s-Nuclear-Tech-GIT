@@ -16,6 +16,7 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBreedingRod.BreedingRodType;
 import com.hbm.items.machine.ItemPWRFuel.EnumPWRFuel;
+import com.hbm.items.machine.ItemPileRodMK2.EnumPileRod;
 import com.hbm.items.machine.ItemRTGPelletDepleted.DepletedRTGMaterial;
 import com.hbm.items.machine.ItemWatzPellet.EnumWatzType;
 import com.hbm.items.machine.ItemZirnoxRod.EnumZirnoxType;
@@ -382,6 +383,14 @@ public class HazardRegistry {
 		registerRTGPellet(pellet_rtg_americium, am241 * rtg, 0);
 		HazardSystem.register(new ItemStack(pellet_rtg_depleted, 1, DepletedRTGMaterial.NEPTUNIUM.ordinal()), makeData(RADIATION, np237 * rtg));
 
+
+		HazardSystem.register(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.RA226BE.ordinal()), makeData(RADIATION, rabe * billet * 3));
+		HazardSystem.register(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.PO210BE.ordinal()), makeData(RADIATION, pobe * billet * 3));
+		HazardSystem.register(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.NU.ordinal()), makeData(RADIATION, u * billet * 3));
+		HazardSystem.register(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.PU239.ordinal()), makeData(RADIATION, pu239 * billet * 3));
+		HazardSystem.register(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.RGP.ordinal()), makeData(RADIATION, purg * billet * 3));
+		HazardSystem.register(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.WASTE.ordinal()), makeData(RADIATION, wst * billet * 3));
+		
 		HazardSystem.register(new ItemStack(pellet_rtg_depleted, 1, DepletedRTGMaterial.AMERICIUM.ordinal()), makeData(RADIATION, amrg * rtg));
 
 		HazardSystem.register(pile_rod_uranium, makeData(RADIATION, u * billet * 3));

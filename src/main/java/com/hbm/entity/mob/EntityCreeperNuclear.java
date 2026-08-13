@@ -16,6 +16,7 @@ import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
 
+import api.hbm.entity.IRadiationImmune;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,7 +31,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public class EntityCreeperNuclear extends EntityCreeper {
+public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImmune {
 
 	public EntityCreeperNuclear(World world) {
 		super(world);

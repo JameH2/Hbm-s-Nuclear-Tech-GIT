@@ -3,6 +3,7 @@ package com.hbm.inventory.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hbm.inventory.gui.element.GUIElements;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.inventory.container.ContainerMachineTurbineGas;
@@ -27,7 +28,6 @@ import net.minecraft.util.ResourceLocation;
 public class GUIMachineTurbineGas extends GuiInfoContainer {
 
 	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/generators/gui_turbinegas.png");
-	private static ResourceLocation gauge_tex = new ResourceLocation(RefStrings.MODID + ":textures/gui/gauges/button_big.png");
 	private TileEntityMachineTurbineGas turbinegas;
 
 	int yStart;
@@ -184,7 +184,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
 		int power = (int) (turbinegas.power * 142 / turbinegas.maxPower); //power storage
 		drawTexturedModalRect(guiLeft + 26, guiTop + 109, 0, 223, power, 16);
 
-		drawRPMGauge(turbinegas.rpm);
+		GUIElements.drawSmoothTextureModalCircle(guiLeft + 64, guiTop + 16, this.zLevel, 176, 64, 48, 48, (double) turbinegas.rpm / 100);
 		drawThermometer(turbinegas.temp);
 
 		this.drawInfoPanel(guiLeft - 16, guiTop + 34, 16, 16, 3); //info
@@ -285,33 +285,33 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 
-	protected void drawRPMGauge(int position) {
-
-		int xPos = guiLeft + 64;
-		int yPos = guiTop + 16;
-
-		int squareSideLenght = 48;
-
-		double uMin = (48D / 4848D) * position;
-		double uMax = (48D / 4848D) * (position + 1);
-		double vMin = 0D;
-		double vMax = 1D;
-
-		GL11.glEnable(GL11.GL_BLEND);
-
-		Minecraft.getMinecraft().getTextureManager().bindTexture(gauge_tex); //long boi
-
-		Tessellator tessellator = Tessellator.instance;
-
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(xPos, yPos + squareSideLenght, this.zLevel, uMin, vMax);
-		tessellator.addVertexWithUV(xPos + squareSideLenght, yPos + squareSideLenght, this.zLevel, uMax, vMax);
-		tessellator.addVertexWithUV(xPos + squareSideLenght, yPos, this.zLevel,uMax, vMin);
-		tessellator.addVertexWithUV(xPos, yPos, this.zLevel, uMin, vMin);
-		tessellator.draw();
-
-		GL11.glDisable(GL11.GL_BLEND);
-	}
+//	protected void drawRPMGauge(int position) {
+//
+//		int xPos = guiLeft + 64;
+//		int yPos = guiTop + 16;
+//
+//		int squareSideLenght = 48;
+//
+//		double uMin = (48D / 4848D) * position;
+//		double uMax = (48D / 4848D) * (position + 1);
+//		double vMin = 0D;
+//		double vMax = 1D;
+//
+//		GL11.glEnable(GL11.GL_BLEND);
+//
+//		Minecraft.getMinecraft().getTextureManager().bindTexture(gauge_tex); //long boi
+//
+//		Tessellator tessellator = Tessellator.instance;
+//
+//		tessellator.startDrawingQuads();
+//		tessellator.addVertexWithUV(xPos, yPos + squareSideLenght, this.zLevel, uMin, vMax);
+//		tessellator.addVertexWithUV(xPos + squareSideLenght, yPos + squareSideLenght, this.zLevel, uMax, vMax);
+//		tessellator.addVertexWithUV(xPos + squareSideLenght, yPos, this.zLevel,uMax, vMin);
+//		tessellator.addVertexWithUV(xPos, yPos, this.zLevel, uMin, vMin);
+//		tessellator.draw();
+//
+//		GL11.glDisable(GL11.GL_BLEND);
+//	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {

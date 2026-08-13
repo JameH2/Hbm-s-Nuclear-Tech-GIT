@@ -6,6 +6,7 @@ import java.util.List;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ITooltipProvider;
+import com.hbm.blocks.generic.BlockPlushie;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.items.ModItems;
 import com.hbm.tileentity.TileEntityProxyCombo;
@@ -13,8 +14,10 @@ import com.hbm.tileentity.machine.TileEntityDysonLauncher;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.i18n.I18nUtil;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
@@ -68,6 +71,14 @@ public class MachineDysonLauncher extends BlockDummyable implements ILookOverlay
 					launcher.slots[1] = null;
 					launcher.markChanged();
 					world.playSoundEffect(x, y, z, "hbm:item.upgradePlug", 1.0F, 1.0F);
+				}
+			}
+
+			if(!launcher.sunsetOverdrive && heldStack != null && heldStack.getItem() instanceof ItemBlock) {
+				Block block = ((ItemBlock) heldStack.getItem()).field_150939_a;
+				if(block instanceof BlockPlushie && heldStack.getItemDamage() == BlockPlushie.PlushieType.FATO.ordinal()) {
+					launcher.sunsetOverdrive = true;
+					heldStack.stackSize--;
 				}
 			}
 		}

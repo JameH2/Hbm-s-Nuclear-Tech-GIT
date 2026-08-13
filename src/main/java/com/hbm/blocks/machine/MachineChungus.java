@@ -112,7 +112,15 @@ public class MachineChungus extends BlockDummyable implements ITooltipProvider, 
 	public int getOffset() {
 		return 3;
 	}
-
+	@Override
+	public int[][] getAllDimensions() {
+		return new int[][] {
+			new int[] { 3, 0, 0, 3, 2, 2 },
+			new int[] { 4, -4, 0, 3, 1, 1 },
+			new int[] { 3, 0, 6, -1, 1, 1 },
+			new int[] { 2, 0, 10, -7, 1, 1 },
+		};
+	}
 	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		MultiblockHandlerXR.fillSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {3, 0, 0, 3, 2, 2}, this, dir);

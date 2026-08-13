@@ -1,1 +1,6 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5719 - farewell to a friend](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5719)
+## Changed
+* Machines no longer tilt at all when unsupported in orbit
+
+## Fixed
+* Can't launch the 2 new satellites with custom rockets
+* Satellites don't travel to the correct dimension on launch

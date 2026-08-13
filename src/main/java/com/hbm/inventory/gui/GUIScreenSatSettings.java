@@ -22,14 +22,8 @@ import com.hbm.packet.toserver.NBTItemControlPacket;
 import com.hbm.render.shader.Shader;
 import com.hbm.render.util.AtmosphereRenderUtil;
 import com.hbm.saveddata.SatelliteSavedData;
-import com.hbm.saveddata.satellites.Satellite;
-import com.hbm.saveddata.satellites.SatelliteFoeq;
-import com.hbm.saveddata.satellites.SatelliteLaser;
-import com.hbm.saveddata.satellites.SatelliteMapper;
-import com.hbm.saveddata.satellites.SatelliteMiner;
-import com.hbm.saveddata.satellites.SatelliteRadar;
-import com.hbm.saveddata.satellites.SatelliteResonator;
-import com.hbm.saveddata.satellites.SatelliteScanner;
+import com.hbm.saveddata.satellites.SatelliteBase;
+import com.hbm.saveddata.satellites.XSatelliteRegistry;
 import com.hbm.util.AstronomyUtil;
 import com.hbm.util.i18n.I18nUtil;
 
@@ -54,15 +48,15 @@ public class GUIScreenSatSettings extends GuiScreen {
 	private static final ResourceLocation ringTexture = new ResourceLocation(RefStrings.MODID + ":textures/misc/space/rings.png");
 	private static final ResourceLocation impactTexture = new ResourceLocation(RefStrings.MODID + ":textures/misc/space/impact.png");
 	private static final ResourceLocation defaultMask = new ResourceLocation(RefStrings.MODID, "textures/misc/space/default_mask.png");
-	private static final ResourceLocation satelliteTextureDefault = new ResourceLocation(RefStrings.MODID, "textures/items/sat_base.png");
-	private static final ResourceLocation satelliteTextureFoeq = new ResourceLocation(RefStrings.MODID, "textures/items/sat_foeq.png");
-	private static final ResourceLocation satelliteTextureLaser = new ResourceLocation(RefStrings.MODID, "textures/items/sat_laser.png");
-	private static final ResourceLocation satelliteTextureMapper = new ResourceLocation(RefStrings.MODID, "textures/items/sat_mapper.png");
-	private static final ResourceLocation satelliteTextureMiner = new ResourceLocation(RefStrings.MODID, "textures/items/sat_miner.png");
-	private static final ResourceLocation satelliteTextureRadar = new ResourceLocation(RefStrings.MODID, "textures/items/sat_radar.png");
-	private static final ResourceLocation satelliteTextureResonator = new ResourceLocation(RefStrings.MODID, "textures/items/sat_resonator.png");
-	private static final ResourceLocation satelliteTextureScanner = new ResourceLocation(RefStrings.MODID, "textures/items/sat_scanner.png");
-	private static final Map<Class<?>, ResourceLocation> satelliteTextureByClass = new HashMap<Class<?>, ResourceLocation>();
+	private static final ResourceLocation satelliteTextureDefault = new ResourceLocation(RefStrings.MODID, "textures/items/sat_scanner.png");
+	// private static final ResourceLocation satelliteTextureFoeq = new ResourceLocation(RefStrings.MODID, "textures/items/sat_foeq.png");
+	// private static final ResourceLocation satelliteTextureLaser = new ResourceLocation(RefStrings.MODID, "textures/items/sat_laser.png");
+	// private static final ResourceLocation satelliteTextureMapper = new ResourceLocation(RefStrings.MODID, "textures/items/sat_mapper.png");
+	// private static final ResourceLocation satelliteTextureMiner = new ResourceLocation(RefStrings.MODID, "textures/items/sat_miner.png");
+	// private static final ResourceLocation satelliteTextureRadar = new ResourceLocation(RefStrings.MODID, "textures/items/sat_radar.png");
+	// private static final ResourceLocation satelliteTextureResonator = new ResourceLocation(RefStrings.MODID, "textures/items/sat_resonator.png");
+	// private static final ResourceLocation satelliteTextureScanner = new ResourceLocation(RefStrings.MODID, "textures/items/sat_scanner.png");
+	// private static final Map<Class<?>, ResourceLocation> satelliteTextureByClass = new HashMap<Class<?>, ResourceLocation>();
 	private static final ResourceLocation[] citylights = new ResourceLocation[]{
 		new ResourceLocation(RefStrings.MODID, "textures/misc/space/citylights_0.png"),
 		new ResourceLocation(RefStrings.MODID, "textures/misc/space/citylights_1.png"),
@@ -76,15 +70,15 @@ public class GUIScreenSatSettings extends GuiScreen {
 	private static final Shader nukeShader = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/nuke.frag"));
 	private static final Shader nightLightsShader = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/nightlights.frag"));
 
-	static {
-		satelliteTextureByClass.put(SatelliteMapper.class, satelliteTextureMapper);
-		satelliteTextureByClass.put(SatelliteScanner.class, satelliteTextureScanner);
-		satelliteTextureByClass.put(SatelliteRadar.class, satelliteTextureRadar);
-		satelliteTextureByClass.put(SatelliteLaser.class, satelliteTextureLaser);
-		satelliteTextureByClass.put(SatelliteResonator.class, satelliteTextureResonator);
-		satelliteTextureByClass.put(SatelliteFoeq.class, satelliteTextureFoeq);
-		satelliteTextureByClass.put(SatelliteMiner.class, satelliteTextureMiner);
-	}
+	// static {
+	// 	satelliteTextureByClass.put(SatelliteMapper.class, satelliteTextureMapper);
+	// 	satelliteTextureByClass.put(SatelliteScanner.class, satelliteTextureScanner);
+	// 	satelliteTextureByClass.put(SatelliteRadar.class, satelliteTextureRadar);
+	// 	satelliteTextureByClass.put(SatelliteLaser.class, satelliteTextureLaser);
+	// 	satelliteTextureByClass.put(SatelliteResonator.class, satelliteTextureResonator);
+	// 	satelliteTextureByClass.put(SatelliteFoeq.class, satelliteTextureFoeq);
+	// 	satelliteTextureByClass.put(SatelliteMiner.class, satelliteTextureMiner);
+	// }
 
 	private final EntityPlayer player;
 	private final Map<ResourceLocation, Boolean> textureAlphaCache = new HashMap<ResourceLocation, Boolean>();
@@ -143,7 +137,7 @@ public class GUIScreenSatSettings extends GuiScreen {
 				drawLeftAligned(10, 160, 170, I18nUtil.resolveKey("item.sat.desc.inclination") + ": " + formatValue(editInclination) + "\u00B0", 0x00FF00);
 			} else {
 				drawLeftAligned(10, 130, 140, I18nUtil.resolveKey("gui.sat.settings.label.orbital_phase") + ": " + formatPhaseOffset(editPhaseOffset) + "\u00B0", 0x00FF00);
-				drawLeftAligned(10, 145, 155, I18nUtil.resolveKey("item.sat.desc.owner") + ": " + (editOwner != null ? editOwner : Satellite.DEFAULT_OWNER), 0x00FF00);
+				drawLeftAligned(10, 145, 155, I18nUtil.resolveKey("item.sat.desc.owner") + ": " + (editOwner != null ? editOwner : SatelliteBase.DEFAULT_OWNER), 0x00FF00);
 				drawLeftAligned(10, 160, 170, "", 0x00FF00);
 			}
 			drawRect(guiLeft + 81, guiTop + 177, guiLeft + 110, guiTop + 199, 0xFF000000 | (editColorR << 16) | (editColorG << 8) | editColorB);
@@ -371,7 +365,7 @@ public class GUIScreenSatSettings extends GuiScreen {
 	private void adjustAltitude(int delta) {
 		float oldValue = editAltitude;
 		float step = isShiftKeyDown() ? 5.0F : 1.0F;
-		float newValue = MathHelper.clamp_float(oldValue + (delta > 0 ? step : -step),Satellite.MIN_ALTITUDE_KM, Satellite.MAX_ALTITUDE_KM);
+		float newValue = MathHelper.clamp_float(oldValue + (delta > 0 ? step : -step), SatelliteBase.MIN_ALTITUDE_KM, SatelliteBase.MAX_ALTITUDE_KM);
 
 		if(newValue == oldValue) return;
 
@@ -382,7 +376,7 @@ public class GUIScreenSatSettings extends GuiScreen {
 	private void adjustInclination(int delta) {
 		float oldValue = editInclination;
 		float step = isShiftKeyDown() ? 15.0F : 1.0F;
-		float newValue = MathHelper.clamp_float(oldValue + (delta > 0 ? step : -step), Satellite.MIN_INCLINATION, Satellite.MAX_INCLINATION);
+		float newValue = MathHelper.clamp_float(oldValue + (delta > 0 ? step : -step), SatelliteBase.MIN_INCLINATION, SatelliteBase.MAX_INCLINATION);
 
 		if(newValue == oldValue) return;
 
@@ -398,7 +392,7 @@ public class GUIScreenSatSettings extends GuiScreen {
 	private void adjustPhaseOffset(int delta) {
 		float oldValue = editPhaseOffset;
 		float step = isShiftKeyDown() ? 15.0F : 1.0F;
-		float newValue = Satellite.normalizePhaseOffset(oldValue + (delta > 0 ? step : -step));
+		float newValue = SatelliteBase.normalizePhaseOffset(oldValue + (delta > 0 ? step : -step));
 		if(Math.abs(newValue - oldValue) < 0.0005F) return;
 
 		editPhaseOffset = newValue;
@@ -409,7 +403,7 @@ public class GUIScreenSatSettings extends GuiScreen {
 		float oldValue = editBlinkPeriod;
 		float newValue = Math.round((oldValue + (delta > 0 ? 0.1F : -0.1F)) * 10F) / 10F;
 
-		newValue = Satellite.clampBlinkPeriod(newValue);
+		newValue = SatelliteBase.clampBlinkPeriod(newValue);
 		if(newValue == oldValue) return;
 
 		editBlinkPeriod = newValue;
@@ -457,7 +451,7 @@ public class GUIScreenSatSettings extends GuiScreen {
 
 	private ItemStack getHeldSatellite() {
 		ItemStack held = player.getHeldItem();
-		return held != null && Satellite.isSatelliteItem(held.getItem()) ? held : null;
+		return held != null && XSatelliteRegistry.isSatelliteItem(held.getItem()) ? held : null;
 	}
 
 	private void loadEditableValues() {
@@ -465,15 +459,15 @@ public class GUIScreenSatSettings extends GuiScreen {
 		if(held == null) return;
 
 		hasPendingChanges = false;
-		editOwner = Satellite.getOwner(held);
-		editAltitude = Satellite.getAltitude(held);
-		editInclination = Satellite.getInclination(held);
-		editPhaseOffset = Satellite.getPhaseOffset(held);
-		editBlinking = Satellite.isBlinking(held);
-		editBlinkPeriod = Satellite.getBlinkPeriod(held);
-		editColorR = toColorChannel(Satellite.getColorR(held));
-		editColorG = toColorChannel(Satellite.getColorG(held));
-		editColorB = toColorChannel(Satellite.getColorB(held));
+		editOwner = SatelliteBase.getOwner(held);
+		editAltitude = SatelliteBase.getAltitude(held);
+		editInclination = SatelliteBase.getInclination(held);
+		editPhaseOffset = SatelliteBase.getPhaseOffset(held);
+		editBlinking = SatelliteBase.isBlinking(held);
+		editBlinkPeriod = SatelliteBase.getBlinkPeriod(held);
+		editColorR = toColorChannel(SatelliteBase.getColorR(held));
+		editColorG = toColorChannel(SatelliteBase.getColorG(held));
+		editColorB = toColorChannel(SatelliteBase.getColorB(held));
 	}
 
 	private void markDirty() {
@@ -481,13 +475,13 @@ public class GUIScreenSatSettings extends GuiScreen {
 	}
 
 	private void applyEditableValues(ItemStack held) {
-		Satellite.setOwner(held, editOwner);
-		Satellite.setAltitude(held, editAltitude);
-		Satellite.setInclination(held, editInclination);
-		Satellite.setPhaseOffset(held, editPhaseOffset);
-		Satellite.setBlinking(held, editBlinking);
-		Satellite.setBlinkPeriod(held, editBlinkPeriod);
-		Satellite.setColor(held, editColorR / 255F, editColorG / 255F, editColorB / 255F);
+		SatelliteBase.setOwner(held, editOwner);
+		SatelliteBase.setAltitude(held, editAltitude);
+		SatelliteBase.setInclination(held, editInclination);
+		SatelliteBase.setPhaseOffset(held, editPhaseOffset);
+		SatelliteBase.setBlinking(held, editBlinking);
+		SatelliteBase.setBlinkPeriod(held, editBlinkPeriod);
+		SatelliteBase.setColor(held, editColorR / 255F, editColorG / 255F, editColorB / 255F);
 	}
 
 	private NBTTagCompound buildControlData() {
@@ -520,11 +514,11 @@ public class GUIScreenSatSettings extends GuiScreen {
 		CelestialBody body = getPreviewBody(held);
 		float bodySizeAt1x = getBodySizePxAt1x(body);
 		float baseOrbitRadiusMapPx = bodySizeAt1x * 1.5F;
-		Map<Integer, Satellite> satellites = SatelliteSavedData.getClientSats(body.dimensionId);
+		Map<Integer, SatelliteBase> satellites = SatelliteSavedData.getClientSats(body.dimensionId);
 		String owner = editOwner;
 		float maxAltitude = editAltitude;
 
-		for(Satellite satellite : satellites.values()) {
+		for(SatelliteBase satellite : satellites.values()) {
 			if(owner.equals(satellite.owner)) {
 				maxAltitude = Math.max(maxAltitude, satellite.altitude);
 			}
@@ -543,7 +537,7 @@ public class GUIScreenSatSettings extends GuiScreen {
 		float heldR = editColorR / 255F;
 		float heldG = editColorG / 255F;
 		float heldB = editColorB / 255F;
-		ResourceLocation heldTexture = getSatelliteTextureByType(Satellite.itemToClass.get(held.getItem()));
+		ResourceLocation heldTexture = satelliteTextureDefault;
 
 		double dayTicks = mc.theWorld.getTotalWorldTime() + partialTicks;
 
@@ -595,19 +589,19 @@ public class GUIScreenSatSettings extends GuiScreen {
 		);
 	}
 
-	private void drawOwnedSatellites(Map<Integer, Satellite> satellites, String owner, float centerX, float centerY, float baseOrbitRadiusMapPx, float zoom, double angle, float iconSize, boolean frontHalf) {
-		for(Satellite satellite : satellites.values()) {
+	private void drawOwnedSatellites(Map<Integer, SatelliteBase> satellites, String owner, float centerX, float centerY, float baseOrbitRadiusMapPx, float zoom, double angle, float iconSize, boolean frontHalf) {
+		for(SatelliteBase satellite : satellites.values()) {
 			if(!owner.equals(satellite.owner)) continue;
 			float blinkAlpha = getBlinkAlpha(satellite.isBlinking, satellite.blinkPeriod);
 
 			drawSatelliteOrbitHalf(centerX, centerY, baseOrbitRadiusMapPx, zoom, satellite.altitude, satellite.inclination, satellite.colorR, satellite.colorG, satellite.colorB, frontHalf, 0.25F * blinkAlpha);
 		}
 
-		for(Map.Entry<Integer, Satellite> entry : satellites.entrySet()) {
-			Satellite satellite = entry.getValue();
+		for(Map.Entry<Integer, SatelliteBase> entry : satellites.entrySet()) {
+			SatelliteBase satellite = entry.getValue();
 			if(!owner.equals(satellite.owner)) continue;
 
-			drawSatelliteIcon(getSatelliteTextureByType(satellite.getClass()), centerX, centerY, baseOrbitRadiusMapPx, zoom, satellite.phaseOffset, satellite.altitude, satellite.inclination, angle, frontHalf, iconSize);
+			drawSatelliteIcon(satelliteTextureDefault, centerX, centerY, baseOrbitRadiusMapPx, zoom, satellite.phaseOffset, satellite.altitude, satellite.inclination, angle, frontHalf, iconSize);
 		}
 	}
 
@@ -693,7 +687,7 @@ public class GUIScreenSatSettings extends GuiScreen {
 	}
 
 	private void drawSatelliteIcon(ResourceLocation texture, float centerX, float centerY, float baseRadiusMapPx, float zoom, float phaseOffset, float altitude, float inclination, double angle, boolean frontHalf, float size) {
-		float satelliteAngle = Satellite.applyPhaseOffsetToOrbitAngle(phaseOffset, altitude, angle, (float) (2D * Math.PI));
+		float satelliteAngle = SatelliteBase.applyPhaseOffsetToOrbitAngle(phaseOffset, altitude, angle, (float) (2D * Math.PI));
 		SatelliteOrbitPoint orbitPoint = getArtificialSatelliteOrbitPoint(altitude, inclination, satelliteAngle, baseRadiusMapPx);
 		float screenX = mapToScreenX(centerX, orbitPoint.offsetU, orbitPoint.offsetV, zoom);
 		float screenY = mapToScreenY(centerY, orbitPoint.offsetU, orbitPoint.offsetV, zoom);
@@ -715,7 +709,7 @@ public class GUIScreenSatSettings extends GuiScreen {
 
 	private float getBlinkAlpha(boolean isBlinking, float blinkPeriod) {
 		if(!isBlinking) return 1.0F;
-		long cycleMillis = (long) (Satellite.clampBlinkPeriod(blinkPeriod) * 1000.0F);
+		long cycleMillis = (long) (SatelliteBase.clampBlinkPeriod(blinkPeriod) * 1000.0F);
 		if(cycleMillis <= 0L) return 1.0F;
 		return 1.0F - (float) (System.currentTimeMillis() % cycleMillis) / cycleMillis;
 	}
@@ -1128,8 +1122,8 @@ public class GUIScreenSatSettings extends GuiScreen {
 	}
 
 	private float getPreviewZoom(float bodySizeAt1x, float baseOrbitRadiusMapPx, float maxAltitude) {
-		float altitude = Math.max(Satellite.DEFAULT_ALTITUDE_KM, maxAltitude);
-		float altitudeFactor = altitude / Satellite.DEFAULT_ALTITUDE_KM;
+		float altitude = Math.max(SatelliteBase.DEFAULT_ALTITUDE_KM, maxAltitude);
+		float altitudeFactor = altitude / SatelliteBase.DEFAULT_ALTITUDE_KM;
 		float maxOrbitRadius = 116F * 0.46F;
 		float zoomForOrbit = maxOrbitRadius / Math.max(0.0001F, baseOrbitRadiusMapPx * altitudeFactor);
 		float zoomForBody = 16F / Math.max(0.0001F, bodySizeAt1x);
@@ -1147,7 +1141,7 @@ public class GUIScreenSatSettings extends GuiScreen {
 	private SatelliteOrbitPoint getArtificialSatelliteOrbitPoint(float altitude, float inclination, float angle, float baseRadiusMapPx) {
 		float satAltitude = altitude;
 		double satInclination = Math.toRadians(inclination);
-		double radiusMapPx = baseRadiusMapPx * (satAltitude / Satellite.DEFAULT_ALTITUDE_KM);
+		double radiusMapPx = baseRadiusMapPx * (satAltitude / SatelliteBase.DEFAULT_ALTITUDE_KM);
 
 		double x = radiusMapPx * MathHelper.cos(angle);
 		double orbitY = radiusMapPx * MathHelper.sin(angle);
@@ -1169,7 +1163,7 @@ public class GUIScreenSatSettings extends GuiScreen {
 	}
 
 	private CelestialBody getPreviewBody(ItemStack held) {
-		int previewDimensionId = Satellite.getTargetDimensionId(held, getCurrentBody().dimensionId);
+		int previewDimensionId = XSatelliteRegistry.getTargetDimensionId(held, getCurrentBody().dimensionId);
 		return CelestialBody.getBody(previewDimensionId);
 	}
 
@@ -1190,15 +1184,6 @@ public class GUIScreenSatSettings extends GuiScreen {
 		float t = (Math.max(0F, moon.radiusKm) - 65F) / (500F - 65F);
 		t = MathHelper.clamp_float(t, 0F, 1F);
 		return (0.2F + (0.5F - 0.2F) * t) * 0.45F * 0.82F;
-	}
-
-	private ResourceLocation getSatelliteTextureByType(Class<?> type) {
-		for(Class<?> current = type; current != null; current = current.getSuperclass()) {
-			ResourceLocation texture = satelliteTextureByClass.get(current);
-			if(texture != null) return texture;
-			if(current == Satellite.class) break;
-		}
-		return satelliteTextureDefault;
 	}
 
 	private boolean isMoon(CelestialBody body) {
@@ -1238,11 +1223,11 @@ public class GUIScreenSatSettings extends GuiScreen {
 	}
 
 	private static String formatOrbitSpeed(float altitude) {
-		return formatValue(Math.round(Satellite.getOrbitSpeedKmPerSecond(altitude) * 10.0F) / 10.0F);
+		return formatValue(Math.round(SatelliteBase.getOrbitSpeedKmPerSecond(altitude) * 10.0F) / 10.0F);
 	}
 
 	private static String formatPhaseOffset(float phaseOffset) {
-		float rounded = Math.round(Satellite.normalizePhaseOffset(phaseOffset) * 10.0F) / 10.0F;
+		float rounded = Math.round(SatelliteBase.normalizePhaseOffset(phaseOffset) * 10.0F) / 10.0F;
 		return formatValue(rounded);
 	}
 }

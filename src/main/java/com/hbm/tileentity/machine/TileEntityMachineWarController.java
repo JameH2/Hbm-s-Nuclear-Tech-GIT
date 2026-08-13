@@ -9,7 +9,7 @@ import com.hbm.items.ISatChip;
 import com.hbm.items.ItemVOTVdrive;
 import com.hbm.items.ModItems;
 import com.hbm.saveddata.SatelliteSavedData;
-import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.SatelliteBase;
 import com.hbm.saveddata.satellites.SatelliteWar;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -81,7 +81,7 @@ public class TileEntityMachineWarController extends TileEntityMachineBase implem
 			SolarSystem.Body target = ItemVOTVdrive.getDestination(slots[1]).body;
 			CelestialBody body = target.getBody();
 
-			Satellite sat = data.getSatFromFreq(id);
+			SatelliteBase sat = data.getSatFromFreq(id);
 
 			if(sat instanceof SatelliteWar) {
 				SatelliteWar satelliteWar = (SatelliteWar) sat;

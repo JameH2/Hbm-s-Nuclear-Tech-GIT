@@ -2,6 +2,7 @@ package com.hbm.tileentity;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
+import com.hbm.dim.CelestialBody;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.main.NTMSounds;
 import com.hbm.packet.toclient.BufPacket;
@@ -114,6 +115,7 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
 		if(cfg == TiltType.UNAVOIDABLE && GeneralConfig.enableUnavoidableGravity) doesTilt = true;
 		if(cfg == TiltType.CONFIG && GeneralConfig.enableMachineGravity) doesTilt = true;
 		if(cfg == TiltType.CONFIG && GeneralConfig.enable528MachineGravity) doesTilt = true;
+		if(CelestialBody.inOrbit(worldObj)) doesTilt = false;
 		
 		if(!doesTilt) { this.tilted = false; return; }
 		if(this.getFloorCount() <= 0) { this.tilted = false; return; }

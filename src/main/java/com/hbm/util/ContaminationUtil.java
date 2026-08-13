@@ -57,30 +57,20 @@ public class ContaminationUtil {
 		return HbmLivingProps.getRadiation(entity);
 	}
 
-	public static HashSet<Class> immuneEntities = new HashSet();
-
 	public static boolean isRadImmune(Entity e) {
 
 		if(e instanceof EntityLivingBase && ((EntityLivingBase)e).isPotionActive(HbmPotion.mutation))
 			return true;
 
-		if(immuneEntities.isEmpty()) {
-			immuneEntities.add(EntityCreeperNuclear.class);
-			immuneEntities.add(EntityMooshroom.class);
-			immuneEntities.add(EntityZombie.class);
-			immuneEntities.add(EntitySkeleton.class);
-			immuneEntities.add(EntityQuackos.class);
-			//immuneEntities.add(EntityOcelot.class);
-			immuneEntities.add(IRadiationImmune.class);
-		}
+		// interface for our stuff + any mods that wanna add that shit
+		if(e instanceof IRadiationImmune) return true;
 
-		Class entityClass = e.getClass();
+		// vabilla
+		if(e instanceof EntityMooshroom) return true;
+		if(e instanceof EntityZombie) return true;
+		if(e instanceof EntitySkeleton) return true;
 
-		for(Class clazz : immuneEntities) {
-			if(clazz.isAssignableFrom(entityClass)) return true;
-		}
-
-		if("cyano.lootable.entities.EntityLootableBody".equals(entityClass.getName())) return true;
+		if("cyano.lootable.entities.EntityLootableBody".equals(e.getClass().getName())) return true;
 
 		return false;
 	}

@@ -342,10 +342,21 @@ public abstract class GuiInfoContainer extends GuiContainer implements INEIGuiHa
 		mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 	}
 
+	public void clickSendFlag(TileEntity tile, int x, int y, int left, int top, int sizeX, int sizeY, String name) {
+		if(checkClick(x, y, left, top, sizeX, sizeY)) {
+			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+			NBTTagCompound data = new NBTTagCompound();
+			data.setBoolean(name, true);
+			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, tile.xCoord, tile.yCoord, tile.zCoord));
+		}
+	}
+
 	///NEI drag and drop support
 	@Override
 	@Optional.Method(modid = "NotEnoughItems")
 	public boolean handleDragNDrop(GuiContainer gui, int x, int y, ItemStack stack, int button) {
+		// BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD!
+
 		if(gui instanceof GuiInfoContainer && stack != null){
 			Slot slot = getSlotAtPosition(x,y);
 			if(slot instanceof SlotPattern){

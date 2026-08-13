@@ -5,7 +5,8 @@ import java.util.List;
 import com.hbm.handler.RocketStruct;
 import com.hbm.items.ISatChip;
 import com.hbm.items.ModItems;
-import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.SatelliteBase;
+import com.hbm.saveddata.satellites.XSatelliteRegistry;
 import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,8 +22,8 @@ public class ItemCustomRocket extends Item implements ISatChip {
 
 		stack.stackTagCompound = new NBTTagCompound();
 		rocket.writeToNBT(stack.stackTagCompound);
-		if(rocket != null && rocket.capsule != null && rocket.capsule.part != null && Satellite.isSatelliteItem(rocket.capsule.part)) {
-			Satellite.ensureItemData(stack);
+		if(rocket != null && rocket.capsule != null && rocket.capsule.part != null && XSatelliteRegistry.isSatelliteItem(rocket.capsule.part)) {
+			SatelliteBase.ensureItemData(stack);
 		}
 
 		return stack;

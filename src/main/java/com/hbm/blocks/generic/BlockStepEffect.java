@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 
 public class BlockStepEffect extends Block {
 
-    // Fucking BlockOre replacement because who needs good naming
+    // bobb please don't put every block with effects into the same class I am drowning in 16 identical titanium deco blocks
 
 	public BlockStepEffect(Material mat) {
         super(mat);
@@ -118,23 +118,24 @@ public class BlockStepEffect extends Block {
     @Override
 	public void onEntityWalking(World p_149724_1_, int p_149724_2_, int p_149724_3_, int p_149724_4_, Entity entity) {
 		if(entity instanceof EntityLivingBase) {
+			EntityLivingBase living = (EntityLivingBase) entity;
 			if(this == ModBlocks.frozen_dirt) {
-				((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 2 * 60 * 20, 2));
+				living.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 2 * 60 * 20, 2));
 			}
 			if(this == ModBlocks.block_trinitite) {
-				((EntityLivingBase) entity).addPotionEffect(new PotionEffect(HbmPotion.radiation.id, 30 * 20, 2));
+				living.addPotionEffect(new PotionEffect(HbmPotion.radiation.id, 30 * 20, 2));
 			}
 			if(this == ModBlocks.block_waste) {
-				((EntityLivingBase) entity).addPotionEffect(new PotionEffect(HbmPotion.radiation.id, 30 * 20, 2));
+				living.addPotionEffect(new PotionEffect(HbmPotion.radiation.id, 30 * 20, 2));
 			}
-			if((this == ModBlocks.waste_trinitite || this == ModBlocks.waste_trinitite_red)) {
-				((EntityLivingBase) entity).addPotionEffect(new PotionEffect(HbmPotion.radiation.id, 30 * 20, 0));
+			if(this == ModBlocks.waste_trinitite || this == ModBlocks.waste_trinitite_red) {
+				living.addPotionEffect(new PotionEffect(HbmPotion.radiation.id, 5 * 20, 2));
 			}
 			if(this == ModBlocks.brick_jungle_ooze) {
-				((EntityLivingBase) entity).addPotionEffect(new PotionEffect(HbmPotion.radiation.id, 15 * 20, 9));
+				living.addPotionEffect(new PotionEffect(HbmPotion.radiation.id, 15 * 20, 9));
 			}
 			if(this == ModBlocks.brick_jungle_mystic) {
-				((EntityLivingBase) entity).addPotionEffect(new PotionEffect(HbmPotion.taint.id, 15 * 20, 2));
+				living.addPotionEffect(new PotionEffect(HbmPotion.taint.id, 15 * 20, 2));
 			}
 		}
 
@@ -150,11 +151,15 @@ public class BlockStepEffect extends Block {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void randomDisplayTick(World p_149734_1_, int p_149734_2_, int p_149734_3_, int p_149734_4_, Random p_149734_5_) {
-		super.randomDisplayTick(p_149734_1_, p_149734_2_, p_149734_3_, p_149734_4_, p_149734_5_);
+	public void randomDisplayTick(World world, int x, int y, int z, Random rand) {
+		super.randomDisplayTick(world, x, y, z, rand);
 
-		if(this == ModBlocks.waste_trinitite || this == ModBlocks.waste_trinitite_red || this == ModBlocks.block_trinitite || this == ModBlocks.block_waste) {
-			p_149734_1_.spawnParticle("townaura", p_149734_2_ + p_149734_5_.nextFloat(), p_149734_3_ + 1.1F, p_149734_4_ + p_149734_5_.nextFloat(), 0.0D, 0.0D, 0.0D);
+		if(this == ModBlocks.block_trinitite || this == ModBlocks.block_waste) {
+			world.spawnParticle("townaura", x + rand.nextFloat(), y + 1.0625, z + rand.nextFloat(), 0, 0, 0);
+		}
+
+		if((this == ModBlocks.waste_trinitite || this == ModBlocks.waste_trinitite_red) && rand.nextInt(5) == 0) {
+			world.spawnParticle("townaura", x + rand.nextFloat(), y + 1.0625, z + rand.nextFloat(), 0, 0, 0);
 		}
 	}
 

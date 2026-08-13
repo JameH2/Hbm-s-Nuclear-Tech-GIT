@@ -19,14 +19,10 @@ public class PacketDispatcher {
 		wrapper.registerMessage(TESirenPacket.Handler.class, TESirenPacket.class, i++, Side.CLIENT);
 		//Signals server to change ItemStacks
 		wrapper.registerMessage(ItemDesignatorPacket.Handler.class, ItemDesignatorPacket.class, i++, Side.SERVER);
-		//Signals server to perform orbital strike, among other things
-		wrapper.registerMessage(SatLaserPacket.Handler.class, SatLaserPacket.class, i++, Side.SERVER);
 		//Universal package for sending small info packs back to server
 		wrapper.registerMessage(AuxButtonPacket.Handler.class, AuxButtonPacket.class, i++, Side.SERVER);
 		//Siren packet for looped sounds
 		wrapper.registerMessage(TEVaultPacket.Handler.class, TEVaultPacket.class, i++, Side.CLIENT);
-		//Packet to send sat info to players
-		wrapper.registerMessage(SatPanelPacket.Handler.class, SatPanelPacket.class, i++, Side.CLIENT);
 		//Packet to send block break particles
 		wrapper.registerMessage(ParticleBurstPacket.Handler.class, ParticleBurstPacket.class, i++, Side.CLIENT);
 		//Packet to send chunk radiation info to individual players
@@ -39,8 +35,6 @@ public class PacketDispatcher {
 		wrapper.registerMessage(TEMissileMultipartPacket.Handler.class, TEMissileMultipartPacket.class, i++, Side.CLIENT);
 		//Aux Particle Packet, New Technology: like the APP but with NBT
 		wrapper.registerMessage(AuxParticlePacketNT.Handler.class, AuxParticlePacketNT.class, i++, Side.CLIENT);
-		//Signals server to do coord based satellite stuff
-		wrapper.registerMessage(SatCoordPacket.Handler.class, SatCoordPacket.class, i++, Side.SERVER);
 		//Triggers gun animations of the client
 		wrapper.registerMessage(HbmAnimationPacket.Handler.class, HbmAnimationPacket.class, i++, Side.CLIENT);
 		//Sends a funi text to display like a music disc announcement
@@ -78,10 +72,11 @@ public class PacketDispatcher {
 		// Sync current GUI layer to server
 		wrapper.registerMessage(GuiLayerPacket.Handler.class, GuiLayerPacket.class, i++, Side.SERVER);
 
-		wrapper.registerMessage(SatActivatePacket.Handler.class, SatActivatePacket.class, i++, Side.SERVER);
-
 		//Syncs muzzle flashes of SEDNA guns for clients from other entities/players
 		wrapper.registerMessage(MuzzleFlashPacket.Handler.class, MuzzleFlashPacket.class, i++, Side.CLIENT);
+		//Sends custom container-bound payload between client and server, dual-use capable
+		wrapper.registerMessage(ContainerNBTCommsPacket.Handler.class, ContainerNBTCommsPacket.class, i++, Side.CLIENT);
+		wrapper.registerMessage(ContainerNBTCommsPacket.Handler.class, ContainerNBTCommsPacket.class, i++, Side.SERVER);
 	}
 
 }

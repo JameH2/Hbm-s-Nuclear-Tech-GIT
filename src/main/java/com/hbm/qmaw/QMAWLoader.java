@@ -169,8 +169,8 @@ public class QMAWLoader implements IResourceManagerReloadListener {
 					//FileReader reader = new FileReader(file);
 					InputStreamReader reader = new InputStreamReader(Files.newInputStream(file.toPath()), StandardCharsets.UTF_8);
 					JsonObject obj = (JsonObject) parser.parse(reader);
-					registerJson(name, obj);
 					logFoundManual(name);
+					registerJson(name, obj);
 				} catch(Exception ex) {
 					MainRegistry.logger.info("[QMAW] Error reading manual " + name + ": " + ex);
 				}
@@ -186,8 +186,7 @@ public class QMAWLoader implements IResourceManagerReloadListener {
 		String name = json.get("name").getAsString();
 
 		if(QMAWLoader.qmaw.containsKey(name)) {
-			MainRegistry.logger.info("[QMAW] Skipping existing entry " + file);
-			return;
+			MainRegistry.logger.info("[QMAW] Overriding existing entry " + file);
 		}
 
 		QuickManualAndWiki qmaw = new QuickManualAndWiki(name);
@@ -216,6 +215,10 @@ public class QMAWLoader implements IResourceManagerReloadListener {
 			} else {
 				QMAWLoader.triggers.put(new ComparableStack(trigger).makeSingular(), qmaw);
 			}
+		}
+		
+		if(json.has("noindex") && json.get("noindex").getAsBoolean()) {
+			qmaw.noIndex();
 		}
 
 		if(!qmaw.contents.isEmpty()) {

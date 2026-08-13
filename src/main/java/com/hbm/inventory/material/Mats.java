@@ -121,6 +121,7 @@ public class Mats {
 	public static final NTMMaterial MAT_BERYLLIUM		= makeSmeltable(400,		BE,				0xB2B2A6, 0x0F0F03, 0xAE9572).setAutogen(FRAGMENT, NUGGET, DUST, BLOCK).m();
 	public static final NTMMaterial MAT_EMERALD			= makeNonSmeltable(401,		EMERALD,		0xBAFFD4, 0x003900, 0x17DD62).setConversion(MAT_BERYLLIUM, 4, 3).setAutogen(FRAGMENT, DUST, GEM, BLOCK).n();
 	public static final NTMMaterial MAT_COBALT			= makeSmeltable(2700,		CO,				0xC2D1EE, 0x353554, 0x8F72AE).setAutogen(FRAGMENT, NUGGET, DUSTTINY, BILLET, DUST, BLOCK).m();
+	public static final NTMMaterial MAT_LAPIS			= makeNonSmeltable(2701,	LAPIS,			0x567DF9, 0x001793, 0x264DC9).setAutogen(FRAGMENT, DUST, GEM, BLOCK).m();
 	public static final NTMMaterial MAT_BORON			= makeSmeltable(500,		B,				0xBDC8D2, 0x29343E, 0xAD72AE).setAutogen(FRAGMENT, DUSTTINY, DUST, BLOCK).m();
 	public static final NTMMaterial MAT_BORAX			= makeSmeltable(501,		BORAX,			0xFFFFFF, 0x946E23, 0xFFECC6).setAutogen(FRAGMENT, INGOT, DUST).n();
 	public static final NTMMaterial MAT_LANTHANIUM		= makeSmeltable(5700,		LA,				0xC8E0E0, 0x3B5353, 0xA1B9B9).setAutogen(FRAGMENT, BLOCK).m();

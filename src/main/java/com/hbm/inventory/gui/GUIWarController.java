@@ -11,9 +11,8 @@ import com.hbm.items.ISatChip;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
-import com.hbm.packet.toserver.SatActivatePacket;
 import com.hbm.saveddata.SatelliteSavedData;
-import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.SatelliteBase;
 import com.hbm.saveddata.satellites.SatelliteWar;
 import com.hbm.tileentity.machine.TileEntityMachineWarController;
 
@@ -97,7 +96,7 @@ public class GUIWarController extends GuiInfoContainer {
 		if(command.isEmpty()) return;
 
 		int satId = ISatChip.getFreqS(sucker.slots[2]);
-		Satellite sat = SatelliteSavedData.getClientSats().get(satId);
+		SatelliteBase sat = SatelliteSavedData.getClientSats().get(satId);
 		String[] parts = command.split(" ");
 
 		String cmd = parts[0].toLowerCase();
@@ -144,7 +143,7 @@ public class GUIWarController extends GuiInfoContainer {
 			if(sat == null) {
 				addCommandHistory("Satellite not in orbit!", EnumChatFormatting.RED);
 			} else {
-				addCommandHistory("health: " + sat.getHealth());
+				addCommandHistory("health: " + sat.health);
 			}
 
 			break;
@@ -156,7 +155,7 @@ public class GUIWarController extends GuiInfoContainer {
 				if(sat instanceof SatelliteWar) {
 					addCommandHistory("Firing!");
 
-					PacketDispatcher.wrapper.sendToServer(new SatActivatePacket(satId));
+					// PacketDispatcher.wrapper.sendToServer(new SatActivatePacket(satId));
 				} else {
 					addCommandHistory("Wrong satellite" + EnumChatFormatting.RED);
 				}

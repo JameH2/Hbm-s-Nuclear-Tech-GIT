@@ -3,7 +3,7 @@ package com.hbm.commands;
 import com.hbm.items.ISatChip;
 import com.hbm.items.ModItems;
 import com.hbm.saveddata.SatelliteSavedData;
-import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.XSatelliteRegistry;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,52 +42,45 @@ public class CommandSatellites extends CommandBase {
 			sender.addChatMessage(new ChatComponentTranslation( "commands.satellite.should_be_run_as_player").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 			return;
 		}
-		EntityPlayer player = getCommandSenderAsPlayer(sender);
-
-		switch (args[0]) {
-			case "orbit":
-				if(player.getHeldItem().getItem() instanceof ISatChip && player.getHeldItem().getItem() != ModItems.sat_chip) {
-					int freq = ISatChip.getFreqS(player.getHeldItem());
-					if(args.length >= 2) freq = parseInt(sender, args[1]);
-					Satellite.orbit(
-						player.worldObj,
-						Satellite.getIDFromItem(player.getHeldItem().getItem()),
-						freq,
-						player.posX, player.posY, player.posZ,
-						player.getHeldItem()
-					);
-					player.getHeldItem().stackSize -= 1;
-					sender.addChatMessage(new ChatComponentTranslation("commands.satellite.satellite_orbited").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
-				} else {
-					sender.addChatMessage(new ChatComponentTranslation("commands.satellite.not_a_satellite").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-				}
-				break;
-			case "descend":
-				int freq = parseInt(sender, args[1]);
-				SatelliteSavedData data = SatelliteSavedData.getData(sender.getEntityWorld(), (int)player.posX, (int)player.posZ);
-				if(data.sats.containsKey(freq)) {
-					data.sats.remove(freq);
-					data.markDirty();
-					sender.addChatMessage(new ChatComponentTranslation( "commands.satellite.satellite_descended").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
-				} else {
-					sender.addChatMessage(new ChatComponentTranslation( "commands.satellite.no_satellite").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-				}
-				break;
-			case "list":
-				data = SatelliteSavedData.getData(sender.getEntityWorld(), (int)player.posX, (int)player.posZ);
-				if (data.sats.isEmpty()) {
-					ChatComponentTranslation message = new ChatComponentTranslation("commands.satellite.no_active_satellites");
-					message.getChatStyle().setColor(EnumChatFormatting.RED);
+		switch(args[0]) {
+		case "orbit":
+			EntityPlayer player = getCommandSenderAsPlayer(sender);
+			if(player.getHeldItem().getItem() instanceof ISatChip && player.getHeldItem().getItem() != ModItems.sat_chip) {
+				int freq = ISatChip.getFreqS(player.getHeldItem());
+				if(args.length >= 2) freq = parseInt(sender, args[1]);
+				XSatelliteRegistry.orbit(player.worldObj, player.getHeldItem(), freq, player.posX, player.posY, player.posZ);
+				player.getHeldItem().stackSize -= 1;
+				sender.addChatMessage(new ChatComponentTranslation("commands.satellite.satellite_orbited").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
+			} else {
+				sender.addChatMessage(new ChatComponentTranslation("commands.satellite.not_a_satellite").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+			}
+			break;
+		case "descend":
+			int freq = parseInt(sender, args[1]);
+			SatelliteSavedData data = SatelliteSavedData.getData(sender.getEntityWorld(), sender.getPlayerCoordinates().posX, sender.getPlayerCoordinates().posZ);
+			if(data.sats.containsKey(freq)) {
+				data.sats.remove(freq);
+				data.markDirty();
+				sender.addChatMessage(new ChatComponentTranslation("commands.satellite.satellite_descended").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
+			} else {
+				sender.addChatMessage(new ChatComponentTranslation("commands.satellite.no_satellite").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+			}
+			break;
+		case "list":
+			data = SatelliteSavedData.getData(sender.getEntityWorld(), sender.getPlayerCoordinates().posX, sender.getPlayerCoordinates().posZ);
+			if(data.sats.isEmpty()) {
+				ChatComponentTranslation message = new ChatComponentTranslation("commands.satellite.no_active_satellites");
+				message.getChatStyle().setColor(EnumChatFormatting.RED);
+				sender.addChatMessage(message);
+			} else {
+				data.sats.forEach((listFreq, sat) -> {
+					String messageText = String.valueOf(listFreq) + " - " + sat.getClass().getSimpleName();
+					ChatComponentText message = new ChatComponentText(messageText);
+					message.getChatStyle().setColor(EnumChatFormatting.GREEN);
 					sender.addChatMessage(message);
-				} else {
-					data.sats.forEach((listFreq, sat) -> {
-						String messageText = String.valueOf(listFreq) + " - " + sat.getClass().getSimpleName();
-						ChatComponentText message = new ChatComponentText(messageText);
-						message.getChatStyle().setColor(EnumChatFormatting.GREEN);
-						sender.addChatMessage(message);
-					});
-				}
-				break;
+				});
+			}
+			break;
 
 		}
 	}

@@ -64,7 +64,7 @@ public class MapGenBedrockOil extends MapGenBaseMeta {
 
 				if(rx >= 0 && rx < 16 && rz >= 0 && rz < 16) {
 					// find ground level
-					for(int y = 127; y >= 0; y--) {
+					for(int y = 127; y >= 4; y--) {
 						int index = (rx * 16 + rz) * 256 + y;
 
 						if(blocks[index] != null && blocks[index].isOpaqueCube()) {

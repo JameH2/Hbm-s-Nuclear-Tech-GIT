@@ -5,6 +5,7 @@ import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 
+import api.hbm.entity.IRadiationImmune;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -20,7 +21,7 @@ import net.minecraft.world.World;
 /**
  * BOW
  */
-public class EntityQuackos extends EntityDuck implements IBossDisplayData {
+public class EntityQuackos extends EntityDuck implements IBossDisplayData, IRadiationImmune {
 
 	/**
 	 * BOW

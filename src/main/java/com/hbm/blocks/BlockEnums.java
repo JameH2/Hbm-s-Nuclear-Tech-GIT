@@ -29,7 +29,12 @@ public class BlockEnums {
 	public static enum EnumStalagmiteType {
 		SULFUR,
 		ASBESTOS,
-		FLESH
+		FLESH,
+		ICE,
+		SNOW,
+		GLYPHID1,
+		GLYPHID2,
+		GLYPHID3
 	}
 
 	public static enum EnumCMMaterials {
@@ -52,15 +57,15 @@ public class BlockEnums {
 		GOLD,
 		SCHRABIDIUM
 	}
-	
+
 	/** DECO / STRUCTURE ENUMS */
 	//i apologize in advance
-	
+
 	public static enum TileType {
 		LARGE,
 		SMALL
 	}
-	
+
 	public static enum LightstoneType {
 		UNREFINED,
 		TILE,
@@ -68,11 +73,11 @@ public class BlockEnums {
 		BRICKS_CHISELED,
 		CHISELED
 	}
-	
+
 	public static enum DecoComputerEnum {
 		IBM_300PL
 	}
-	
+
 	public static enum DecoCabinetEnum {
 		GREEN,
 		STEEL
@@ -84,4 +89,21 @@ public class BlockEnums {
 		HALOGEN
 	}
 
+	public static enum PlatemetalType {
+		BASE,
+		BLACK,
+		WHITE,
+		RED,
+		GREEN,
+		LIGHT_GRAY,
+		BLUE,
+		PURPLE,
+		CYAN,
+		PINK,
+		LIME,
+		YELLOW,
+		LIGHT_BLUE,
+		MAGENTA,
+		ORANGE
+	}
 }

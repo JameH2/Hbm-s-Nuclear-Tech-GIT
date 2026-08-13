@@ -203,7 +203,7 @@ public class ItemBedrockOreNew extends Item {
 				T("heavy",		o(MAT_LEAD, 18),			o(MAT_ZINC, 9),				o(MAT_GOLD, 6),				o(MAT_BISMUTH, 3)),
 				T("rare",		o(MAT_COBALT, 18),			o(MAT_RAREEARTH, 9),		o(MAT_NEODYMIUM, 6),		o(MAT_STRONTIUM, 3)),
 				T("nonmetal",	o(MAT_SULFUR, 18),			o(MAT_FLUORITE, 9),			o(MAT_KNO, 6),				o(MAT_SILICON, 3)),
-				T("crystal",	o(MAT_QUARTZ, 18),			o(MAT_SODALITE, 9),			o(MAT_EMERALD, 6),			o(MAT_CINNABAR, 3))
+				T("crystal",	o(MAT_QUARTZ, 18),			o(MAT_LAPIS, 9),			o(MAT_EMERALD, 6),			o(MAT_CINNABAR, 3))
 			);
 
 			register(
@@ -212,7 +212,7 @@ public class ItemBedrockOreNew extends Item {
 				T("heavy",		o(MAT_LEAD, 18),			o(MAT_GOLD, 9),				o(MAT_TUNGSTEN, 6),			o(MAT_BISMUTH, 3)),
 				T("rare",		o(MAT_ZIRCONIUM, 18),		o(MAT_BORON, 9),			o(MAT_COBALT, 6),			o(MAT_STRONTIUM, 3)),
 				T("nonmetal",	o(MAT_SULFUR, 18),			o(MAT_KNO, 9),				o(MAT_FLUORITE, 6),			o(MAT_SILICON, 3)),
-				T("crystal",	o(MAT_EMERALD, 18),			o(MAT_SODALITE, 9),			o(MAT_DIAMOND, 6),			o(MAT_EMERALD, 3))
+				T("crystal",	o(MAT_EMERALD, 18),			o(MAT_LAPIS, 9),			o(MAT_DIAMOND, 6),			o(MAT_EMERALD, 3))
 			);
 
 			register(

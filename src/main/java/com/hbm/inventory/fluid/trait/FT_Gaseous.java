@@ -5,6 +5,7 @@ import java.util.List;
 import com.hbm.dim.CelestialBody;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.trait.FluidTraitSimple.FT_Gaseous_ART;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
@@ -13,7 +14,7 @@ public class FT_Gaseous extends FluidTrait {
 
     @Override
     public void addInfoHidden(List<String> info) {
-        info.add(EnumChatFormatting.BLUE + "[Gaseous]");
+        info.add(EnumChatFormatting.BLUE + "[" + I18nUtil.resolveKey("hbmfluid.trait.gaseous") + "]");
     }
 	
     // Venting gases into the atmosphere

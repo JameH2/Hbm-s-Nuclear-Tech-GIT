@@ -20,7 +20,8 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.shader.Shader;
 import com.hbm.render.util.AtmosphereRenderUtil;
 import com.hbm.saveddata.SatelliteSavedData;
-import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.SatelliteBase;
+import com.hbm.saveddata.satellites.XSatelliteRegistry;
 import com.hbm.util.BobMathUtil;
 
 import net.minecraft.client.Minecraft;
@@ -235,6 +236,12 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 			GL11.glRotatef(body.axialTilt, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+
+			// what the hell are you doing kotmatross (angelica un-fuckening)
+			if(body.axialTilt == 0) {
+				GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F); // ordinal 2 will execute ONLY if there is no defined tilt
+			}
+
 			GL11.glRotatef(solarAngle * 360.0F, 1.0F, 0.0F, 0.0F);
 
 			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
@@ -256,11 +263,11 @@ public class SkyProviderCelestial extends IRenderHandler {
 				// JEFF BOZOS WOULD LIKE TO KNOW YOUR LOCATION
 				// ... to send you a pakedge :)))
 				if(world.provider.dimensionId == 0) {
-					Satellite.renderDefault(partialTicks, world, mc, solarAngle, 1916169, 1.0F, 0.534F, 0.385F, Satellite.DEFAULT_INCLINATION, Satellite.DEFAULT_ALTITUDE_KM, Satellite.DEFAULT_IS_BLINKING, Satellite.DEFAULT_BLINK_PERIOD);
+					SatelliteBase.renderDefault(partialTicks, world, mc, solarAngle, 1916169, 1.0F, 0.534F, 0.385F, SatelliteBase.DEFAULT_INCLINATION, SatelliteBase.DEFAULT_ALTITUDE_KM, SatelliteBase.DEFAULT_IS_BLINKING, SatelliteBase.DEFAULT_BLINK_PERIOD);
 				}
 
 				// Light up the sky
-				for(Map.Entry<Integer, Satellite> satelliteEntry : SatelliteSavedData.getClientSats().entrySet()) {
+				for(Map.Entry<Integer, SatelliteBase> satelliteEntry : SatelliteSavedData.getClientSats().entrySet()) {
 					satelliteEntry.getValue().render(partialTicks, world, mc, solarAngle, satelliteEntry.getKey());
 				}
 
@@ -1623,21 +1630,21 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 	protected void renderHeldSatellitePreview(float partialTicks, WorldClient world, Minecraft mc, float solarAngle) {
 		ItemStack held = mc.thePlayer.getHeldItem();
-		if(held == null || !Satellite.isSatelliteItem(held.getItem())) return;
+		if(held == null || !XSatelliteRegistry.isSatelliteItem(held.getItem())) return;
 		int currentBodyDimensionId = CelestialBody.getTarget(world, (int) mc.thePlayer.posX, (int) mc.thePlayer.posZ).body.dimensionId;
-		if(Satellite.getTargetDimensionId(held, currentBodyDimensionId) != currentBodyDimensionId) return;
+		if(XSatelliteRegistry.getTargetDimensionId(held, currentBodyDimensionId) != currentBodyDimensionId) return;
 
-		float r = Satellite.getColorR(held);
-		float g = Satellite.getColorG(held);
-		float b = Satellite.getColorB(held);
-		float inclination = Satellite.getInclination(held);
-		float altitude = Satellite.getAltitude(held);
-		float phaseOffset = Satellite.getPhaseOffset(held);
-		boolean isBlinking = Satellite.isBlinking(held);
-		float blinkPeriod = Satellite.getBlinkPeriod(held);
+		float r = SatelliteBase.getColorR(held);
+		float g = SatelliteBase.getColorG(held);
+		float b = SatelliteBase.getColorB(held);
+		float inclination = SatelliteBase.getInclination(held);
+		float altitude = SatelliteBase.getAltitude(held);
+		float phaseOffset = SatelliteBase.getPhaseOffset(held);
+		boolean isBlinking = SatelliteBase.isBlinking(held);
+		float blinkPeriod = SatelliteBase.getBlinkPeriod(held);
 
-		Satellite.renderOrbitLine(solarAngle, r, g, b, inclination, altitude, isBlinking, blinkPeriod);
-		Satellite.renderDefault(partialTicks, world, mc, solarAngle, ISatChip.getFreqS(held), r, g, b, inclination, altitude, phaseOffset, isBlinking, blinkPeriod);
+		SatelliteBase.renderOrbitLine(solarAngle, r, g, b, inclination, altitude, isBlinking, blinkPeriod);
+		SatelliteBase.renderDefault(partialTicks, world, mc, solarAngle, ISatChip.getFreqS(held), r, g, b, inclination, altitude, phaseOffset, isBlinking, blinkPeriod);
 	}
 
 	protected void renderStation(float partialTicks, WorldClient world, Minecraft mc, OrbitalStation station, float solarAngle) {

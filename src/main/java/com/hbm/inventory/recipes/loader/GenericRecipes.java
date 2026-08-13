@@ -52,6 +52,8 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 	/** Name to recipe map for all recipes that are part of pools for lookup */
 	public static HashMap<String, GenericRecipe> pooledBlueprints = new HashMap();
 
+	public static HashMap<String, GenericRecipe> nameToRecipeGlobal = new HashMap();
+	
 	/** Groups for auto switch functionality (changes recipe automatically based on first solid input) */
 	public HashMap<String, List<GenericRecipe>> autoSwitchGroups = new HashMap();
 
@@ -70,7 +72,6 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 			blueprintPools.put(pool, list);
 		}
 		list.add(recipe.name);
-		pooledBlueprints.put(recipe.name, recipe);
 	}
 
 	/** Adds a recipe to an auto switch group (recipe can switch based on first solid input) */
@@ -83,7 +84,7 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 
 	public static void clearPools() {
 		blueprintPools.clear();
-		pooledBlueprints.clear();
+		nameToRecipeGlobal.clear();
 	}
 
 	@Override
@@ -102,6 +103,7 @@ public abstract class GenericRecipes<T extends GenericRecipe> extends Serializab
 		this.recipeOrderedList.add(recipe);
 		if(recipeNameMap.containsKey(recipe.name)) throw new IllegalStateException("Recipe " + recipe.name + " has been registered with a duplicate ID!");
 		this.recipeNameMap.put(recipe.name, recipe);
+		nameToRecipeGlobal.put(recipe.name, recipe);
 	}
 
 	@Override

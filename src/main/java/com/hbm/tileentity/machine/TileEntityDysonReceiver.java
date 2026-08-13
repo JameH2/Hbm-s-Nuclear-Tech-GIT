@@ -15,7 +15,7 @@ import com.hbm.explosion.vanillant.standard.PlayerProcessorStandard;
 import com.hbm.items.ISatChip;
 import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.SatelliteSavedData;
-import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.SatelliteBase;
 import com.hbm.saveddata.satellites.SatelliteDysonRelay;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IDysonConverter;
@@ -81,7 +81,7 @@ public class TileEntityDysonReceiver extends TileEntityMachineBase {
 			swarmId = ISatChip.getFreqS(slots[0]);
 
 			SatelliteSavedData data = SatelliteSavedData.getData(worldObj, xCoord, zCoord);
-			Satellite sat = data.getSatFromFreq(swarmId);
+			SatelliteBase sat = data.getSatFromFreq(swarmId);
 			int sun = worldObj.getSavedLightValue(EnumSkyBlock.Sky, xCoord, yCoord, zCoord) - worldObj.skylightSubtracted - 11;
 
 			boolean occluded = false;
