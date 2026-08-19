@@ -612,7 +612,7 @@ public class ModEventHandler {
 	@SubscribeEvent
 	public void onBlockPlaced(PlaceEvent event) {
 		if(event.world.isRemote) return;
-		boolean placeCancelled = ChunkAtmosphereManager.proxy.runEffectsOnBlock(event.world, event.block, event.x, event.y, event.z);
+		boolean placeCancelled = ChunkAtmosphereManager.proxy.runEffectsOnBlockImmediate(event.world, event.block, event.x, event.y, event.z);
 		if(placeCancelled) return;
 
 		if(event.block instanceof IGrowable) {

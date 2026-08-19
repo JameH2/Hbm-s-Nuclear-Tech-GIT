@@ -47,6 +47,7 @@ public class ChunkAtmosphereHandler {
 	// Breathe easy, bub
 
 	private HashMap<Integer, HashMap<IAtmosphereProvider, AtmosphereBlob>> worldBlobs = new HashMap<>();
+	private Queue<BlockEffectUpdateRequest> queuedEffectUpdates = new ArrayDeque<>();
 	private final int MAX_BLOB_RADIUS = 256;
 
 	// How much CO2 is converted into O2 from various growing
@@ -193,16 +194,14 @@ public class ChunkAtmosphereHandler {
 	/**
 	 * Actions to rectify world status based on atmosphere
 	 */
-	private boolean runEffectsOnBlock(CBT_Atmosphere atmosphere, World world, Block block, int x, int y, int z, boolean fetchAtmosphere) {
+	public boolean runEffectsOnBlockImmediate(World world, Block block, int x, int y, int z) {
 		boolean requiresPressure = block == Blocks.water || block == Blocks.flowing_water;
 		boolean requiresO2 = (block instanceof BlockTorch && !(block instanceof BlockRedstoneTorch)) || block instanceof BlockFire;
 		boolean requiresCO2 = block instanceof IPlantable;
 
 		if(!requiresO2 && !requiresCO2 && !requiresPressure) return false;
 
-		if(fetchAtmosphere) {
-			atmosphere = getAtmosphere(world, x, y, z);
-		}
+		CBT_Atmosphere atmosphere = getAtmosphere(world, x, y, z);
 
 		boolean canExist = true;
 
@@ -228,12 +227,8 @@ public class ChunkAtmosphereHandler {
 		return true;
 	}
 
-	public boolean runEffectsOnBlock(CBT_Atmosphere atmosphere, World world, Block block, int x, int y, int z) {
-		return runEffectsOnBlock(atmosphere, world, block, x, y, z, false);
-	}
-
-	public boolean runEffectsOnBlock(World world, Block block, int x, int y, int z) {
-		return runEffectsOnBlock(null, world, block, x, y, z, true);
+	public void runEffectsOnBlock(World world, Block block, int x, int y, int z) {
+		queuedEffectUpdates.add(new BlockEffectUpdateRequest(world, block, x, y, z));
 	}
 
 
@@ -327,7 +322,18 @@ public class ChunkAtmosphereHandler {
 
 		tickTerraforming(tick.world);
 
-		if(tick.world.getTotalWorldTime() % 20 != 0) return;
+		long currentWorldTime = tick.world.getTotalWorldTime();
+
+		while (
+			!queuedEffectUpdates.isEmpty() &&
+			queuedEffectUpdates.peek().world == tick.world &&  // If not, it will be resolved by a different WorldTickEvent on the same or next tick
+			currentWorldTime >= queuedEffectUpdates.peek().applyAtTick
+		) {
+			BlockEffectUpdateRequest request = queuedEffectUpdates.remove();
+			runEffectsOnBlockImmediate(request.world, request.block, request.x, request.y, request.z);
+		}
+
+		if(currentWorldTime % 20 != 0) return;
 
 		HashMap<IAtmosphereProvider, AtmosphereBlob> blobs = worldBlobs.get(tick.world.provider.dimensionId);
 		for(AtmosphereBlob blob : blobs.values()) {
@@ -494,5 +500,25 @@ public class ChunkAtmosphereHandler {
 		}
 
 	}
+
+	private static class BlockEffectUpdateRequest {
+		public final World world;
+		public final Block block;
+		public final int x;
+		public final int y;
+		public final int z;
+		public final long applyAtTick;
+
+		public static final long DELAY = 100;  // A solid 5 seconds of grace period for any atmospheric changes
+
+		public BlockEffectUpdateRequest(World world, Block block, int x, int y, int z) {
+			this.world = world;
+			this.block = block;
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.applyAtTick = world.getTotalWorldTime() + DELAY;
+		}
+	};
 
 }
