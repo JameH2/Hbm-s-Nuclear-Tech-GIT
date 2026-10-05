@@ -3,11 +3,16 @@ package com.hbm.saveddata.satellites;
 import java.util.Locale;
 
 import com.hbm.entity.logic.EntityOrbitalLaser;
+import com.hbm.items.ModItems;
+import com.hbm.items.special.ItemSatellite.EnumSatType;
 
 import api.hbm.redstoneoverradio.IRORInteractive;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
 public class SatellitePrecisionLaser extends SatelliteBase {
@@ -25,6 +30,18 @@ public class SatellitePrecisionLaser extends SatelliteBase {
 	public SatellitePrecisionLaser() { }
 
 	@Override public String getType() { return "ORBITAL_TATOO_REMOVER"; }
+	
+	@Override
+	public IChatComponent[] getInfo(World world) {
+		
+		boolean canFire = lastShot + CHARGE_TIME < world.getTotalWorldTime();
+		int cooldown = (int) ((lastShot + CHARGE_TIME) - world.getTotalWorldTime());
+		
+		return new IChatComponent[] {
+				new ChatComponentTranslation(ModItems.satellite.getUnlocalizedName(new ItemStack(ModItems.satellite, 1, EnumSatType.PRECISION_LASER.ordinal())) + ".name"),
+				canFire ? new ChatComponentTranslation("satellite.ready") : new ChatComponentTranslation("satellite.cooldown", cooldown / 20 + "s"),
+		};
+	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
@@ -59,7 +76,11 @@ public class SatellitePrecisionLaser extends SatelliteBase {
 				double dZ = z - targetZ;
 				
 				if(dX * dX + dZ * dZ <= MAX_TARGET_RANGE * MAX_TARGET_RANGE) {
-					this.deathBlast(world, e.posX, e.posY, e.posZ);
+					// minor offset for slight damage variation and for skirting around an issue with ExVNT
+					double offX = world.rand.nextDouble() * 0.05 - 0.025;
+					double offY = world.rand.nextDouble() * 0.05 - 0.025;
+					double offZ = world.rand.nextDouble() * 0.05 - 0.025;
+					this.deathBlast(world, e.posX + offX, e.posY + offY, e.posZ + offZ);
 					return;
 				}
 			}
@@ -74,7 +95,7 @@ public class SatellitePrecisionLaser extends SatelliteBase {
 			return;
 		}
 		
-		if(cmd[0].equals(CMD_SETENTITYTARGET)) {
+		if(cmd[0].equals(CMD_SETENTITYTARGET) && cmd.length == 2) {
 			this.targetedEntity = IRORInteractive.parseInt(cmd[1]);
 			return;
 		}
@@ -95,7 +116,9 @@ public class SatellitePrecisionLaser extends SatelliteBase {
 
 		if(lastShot + CHARGE_TIME < world.getTotalWorldTime()) {
 			lastShot = world.getTotalWorldTime();
+			this.markDirty();
 
+			// deals 1,000 fucking damage
 			EntityOrbitalLaser blast = new EntityOrbitalLaser(world);
 			blast.posX = x;
 			blast.posY = y;

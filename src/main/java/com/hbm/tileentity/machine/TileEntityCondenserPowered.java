@@ -9,21 +9,21 @@ import com.google.gson.stream.JsonWriter;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
-import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.IRepairable;
-import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.world.gen.nbt.INBTTileEntityTransformable;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -50,11 +50,14 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 		tanks[1] = new FluidTank(Fluids.WATER, outputTankSizeP);
 		vacuumOptimised = true;
 	}
-
+	
+	@Override public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.condenser(xCoord, yCoord, zCoord, this.getBlockMetadata()); return cachedPorts; }
+	
 	@Override
 	public String getConfigName() {
 		return "condenserPowered";
 	}
+	
 	@Override
 	public void readIfPresent(JsonObject obj) {
 		maxPower = IConfigurableMachine.grab(obj, "L:maxPower", maxPower);
@@ -108,7 +111,7 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 
 	@Override
 	public boolean extraCondition(int convert) {
-		return power >= convert * 10;
+		return power >= (convert * powerConsumption) * 0.95; // bit of tolerance
 	}
 
 	@Override
@@ -154,37 +157,7 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 		tanks[1].writeToNBT(nbt, "steam");
 		nbt.setBoolean("damaged", damaged);
 	}
-
-	@Override
-	public void subscribeToAllAround(FluidType type, TileEntity te) {
-		for(DirPos pos : getConPos()) {
-			this.trySubscribe(this.tanks[0].getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-			this.trySubscribe(worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-		}
-	}
-
-	@Override
-	public void sendFluidToAll(FluidTank tank, TileEntity te) {
-		for(DirPos pos : getConPos()) {
-			this.sendFluid(this.tanks[1], worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-		}
-	}
-
-	public DirPos[] getConPos() {
-
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-
-		return new DirPos[] {
-				new DirPos(xCoord + rot.offsetX * 4, yCoord + 1, zCoord + rot.offsetZ * 4, rot),
-				new DirPos(xCoord - rot.offsetX * 4, yCoord + 1, zCoord - rot.offsetZ * 4, rot.getOpposite()),
-				new DirPos(xCoord + dir.offsetX * 2 - rot.offsetX, yCoord + 1, zCoord + dir.offsetZ * 2 - rot.offsetZ, dir),
-				new DirPos(xCoord + dir.offsetX * 2 + rot.offsetX, yCoord + 1, zCoord + dir.offsetZ * 2 + rot.offsetZ, dir),
-				new DirPos(xCoord - dir.offsetX * 2 - rot.offsetX, yCoord + 1, zCoord - dir.offsetZ * 2 - rot.offsetZ, dir.getOpposite()),
-				new DirPos(xCoord - dir.offsetX * 2 + rot.offsetX, yCoord + 1, zCoord - dir.offsetZ * 2 + rot.offsetZ, dir.getOpposite())
-		};
-	}
-
+	
 	AxisAlignedBB bb = null;
 
 	@Override
@@ -241,7 +214,7 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 	}
 
 	@Override
-	public void repair() {
+	public void repair(EntityPlayer player) {
 		damaged = false;
 		markDirty();
 	}

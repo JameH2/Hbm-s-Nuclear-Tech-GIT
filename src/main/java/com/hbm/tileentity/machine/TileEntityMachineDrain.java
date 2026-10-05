@@ -5,7 +5,7 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.fluid.trait.FT_Flammable;
-import com.hbm.inventory.fluid.trait.FT_Polluting;
+import com.hbm.inventory.fluid.trait.FluidTrait;
 import com.hbm.inventory.fluid.trait.FT_Gaseous;
 import com.hbm.inventory.fluid.trait.FluidTrait.FluidReleaseType;
 import com.hbm.inventory.fluid.trait.FluidTraitSimple.FT_Amat;
@@ -14,10 +14,11 @@ import com.hbm.inventory.fluid.trait.FluidTraitSimple.FT_Viscous;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IEnergyReceiverMK2.ConnectionPriority;
-import api.hbm.fluid.IFluidStandardReceiver;
+import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -29,7 +30,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityMachineDrain extends TileEntityLoadedBase implements IFluidStandardReceiver, IFluidCopiable {
+public class TileEntityMachineDrain extends TileEntityLoadedBase implements IFluidStandardReceiverMK2, IBufPacketReceiver, IFluidCopiable {
 
 	public FluidTank tank;
 
@@ -41,10 +42,9 @@ public class TileEntityMachineDrain extends TileEntityLoadedBase implements IFlu
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
-
-			if(worldObj.getTotalWorldTime() % 20 == 0) {
-				for(DirPos pos : getConPos()) this.trySubscribe(tank.getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-			}
+			
+			this.setupFluidPorts(getPorts());
+			this.updatePortFIFO();
 
 			networkPackNT(50);
 
@@ -55,9 +55,7 @@ public class TileEntityMachineDrain extends TileEntityLoadedBase implements IFlu
 				}
 				int toSpill = Math.max(tank.getFill() / 2, 1);
 				tank.setFill(tank.getFill() - toSpill);
-
-				FT_Polluting.pollute(worldObj, xCoord, yCoord, zCoord, tank.getTankType(), FluidReleaseType.SPILL, toSpill);
-				FT_Gaseous.release(worldObj, tank.getTankType(), toSpill);
+				FluidTrait.onRelease(worldObj, xCoord, yCoord, zCoord, tank.getTankType(), tank, FluidReleaseType.SPILL, toSpill);
 
 				if(toSpill >= 100 && worldObj.rand.nextInt(20) == 0 && tank.getTankType().hasTrait(FT_Liquid.class) && tank.getTankType().hasTrait(FT_Viscous.class) && tank.getTankType().hasTrait(FT_Flammable.class)) {
 					ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
@@ -110,6 +108,21 @@ public class TileEntityMachineDrain extends TileEntityLoadedBase implements IFlu
 				new DirPos(xCoord + dir1.offsetX, yCoord, zCoord + dir1.offsetZ, dir1),
 				new DirPos(xCoord + dir2.offsetX, yCoord, zCoord + dir2.offsetZ, dir2)
 		};
+	}
+
+	protected PortDef[] cachedPorts;
+
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir0 = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+			ForgeDirection dir1 = dir0.getRotation(ForgeDirection.UP);
+			ForgeDirection dir2 = dir0.getRotation(ForgeDirection.DOWN);
+			
+			cachedPorts = new PortDef[] {
+					PortDef.make(xCoord, yCoord, zCoord, dir0, dir1, dir2),
+			};
+		}
+		return cachedPorts;
 	}
 
 	@Override

@@ -10,12 +10,11 @@ import com.hbm.dim.CelestialBody;
 import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.trait.CBT_Water;
 import com.hbm.inventory.fluid.tank.FluidTank;
-import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.*;
-import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.tileentity.TilePort.PortDef;
 
-import api.hbm.fluid.IFluidStandardTransceiver;
+import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -23,7 +22,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 
-public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase implements IFluidStandardTransceiver, IConfigurableMachine, IFluidCopiable {
+public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase implements IFluidStandardTransceiverMK2, IBufPacketReceiver, IConfigurableMachine, IFluidCopiable {
 
 	public static final HashSet<Block> validBlocks = new HashSet<>();
 
@@ -85,14 +84,16 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
 		writer.name("I:steamSpeed").value(steamSpeed);
 		writer.name("I:electricSpeed").value(electricSpeed);
 	}
+	
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.flare(xCoord, yCoord, zCoord); return cachedPorts; }
 
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
 
-			for(DirPos pos : getConPos()) {
-				if(water.getFill() > 0) this.sendFluid(water, worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-			}
+			this.setupAllPorts(getPorts());
+			this.updatePortPIFIFO();
 
 			if(groundCheckDelay > 0) {
 				groundCheckDelay--;
@@ -168,15 +169,6 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
 
 	protected abstract boolean canOperate();
 	protected abstract void operate();
-
-	protected DirPos[] getConPos() {
-		return new DirPos[] {
-				new DirPos(xCoord + 2, yCoord, zCoord, Library.POS_X),
-				new DirPos(xCoord - 2, yCoord, zCoord, Library.NEG_X),
-				new DirPos(xCoord, yCoord, zCoord + 2, Library.POS_Z),
-				new DirPos(xCoord, yCoord, zCoord - 2, Library.NEG_Z)
-		};
-	}
 
 	@Override
 	public FluidTank[] getAllTanks() {

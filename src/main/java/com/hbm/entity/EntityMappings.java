@@ -104,7 +104,7 @@ public class EntityMappings {
 		addEntity(EntityBulletBaseMK4CL.class, "entity_bullet_mk4_cl", 250, false);
 		addEntity(EntityBulletBeamBase.class, "entity_beam_mk4", 250, false);
 		addEntity(EntityGrenadeUniversal.class, "entity_grenade_universal", 250, false);
-		addEntity(EntityMinerRocket.class, "entity_miner_lander", 1000);
+		addEntity(EntitySatellitePod.class, "entity_miner_lander", 1000);
 		addEntity(EntityFogFX.class, "entity_nuclear_fog", 1000);
 		addEntity(EntityDuchessGambit.class, "entity_duchessgambit", 1000);
 		addEntity(EntityMissileEMPStrong.class, "entity_missile_emp_strong", 1000);
@@ -117,7 +117,8 @@ public class EntityMappings {
 		addEntity(EntityTom.class, "entity_tom_the_moonstone", 1000);
 		addEntity(EntityTomBlast.class, "entity_tom_bust", 1000);
 		addEntity(EntityBuilding.class, "entity_falling_building", 1000);
-		addEntity(EntitySoyuz.class, "entity_soyuz", 1000);
+		addEntity(EntityRocketSoyuz.class, "entity_soyuz", 1000);
+		addEntity(EntityRocketLambda.class, "entity_lambda_rocket", 1000);
 		addEntity(EntitySoyuzCapsule.class, "entity_soyuz_capsule", 1000);
 		addEntity(EntityCombatDropPod.class, "entity_combat_pod", 1000);
 		addEntity(EntityParachuteCrate.class, "entity_parachute_crate", 1000);

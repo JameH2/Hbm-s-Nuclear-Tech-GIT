@@ -78,6 +78,7 @@ import com.hbm.tileentity.machine.rbmk.IRBMKFluxReceiver.NType;
 import com.hbm.util.RTGUtil;
 
 import api.hbm.block.IToolable.ToolType;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -733,6 +734,7 @@ public class ModItems {
 	public static Item parts_legendary;
 
 	public static Item circuit;
+	public static Item drive;
 
 	public static Item crt_display;
 	public static ItemEnumMulti circuit_star_piece;
@@ -1345,7 +1347,9 @@ public class ModItems {
 	public static Item radar_linker;
 	public static Item settings_tool;
 	public static Item atmosphere_scanner;
+	public static Item rtty_card;
 	public static Item rtty_pager;
+	public static Item rtty_designator;
 
 	public static Item blueprints;
 	public static Item blueprint_folder;
@@ -1557,7 +1561,10 @@ public class ModItems {
 
 	public static Item missile_soyuz;
 	public static Item missile_soyuz_lander;
-	// public static Item satellite;
+	public static Item missile_lambda;
+	public static Item orbital_assembly;
+
+	public static Item satellite;
 	public static Item sat_chip;
 	public static Item sat_mapper;
 	public static Item sat_scanner;
@@ -1573,6 +1580,7 @@ public class ModItems {
 	public static Item sat_precision_laser;
 	public static Item sat_detector;
 	public static Item sat_ray_scan;
+	public static Item sat_science;
 
 	public static Item sat_coord;
 	public static Item sat_designator;
@@ -2185,11 +2193,6 @@ public class ModItems {
 	public static Item structure_custommachine;
 
 	public static Item rod_of_discord;
-
-	@Deprecated public static Item cape_radiation;
-	@Deprecated public static Item cape_gasmask;
-	@Deprecated public static Item cape_schrabidium;
-	@Deprecated public static Item cape_hidden;
 
 	public static Item nuke_starter_kit;
 	public static Item nuke_advanced_kit;
@@ -3002,6 +3005,7 @@ public class ModItems {
 		entanglement_kit = new ItemCustomLore().setUnlocalizedName("entanglement_kit").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":entanglement_kit");
 
 		circuit = new ItemCircuit().setUnlocalizedName("circuit").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":circuit");
+		drive = new ItemDrive().setUnlocalizedName("drive").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":drive");
 		crt_display = new Item().setUnlocalizedName("crt_display").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":crt_display");
 		circuit_star_piece = (ItemEnumMulti) new ItemEnumMulti(ScrapType.class, true, true).setUnlocalizedName("circuit_star_piece").setCreativeTab(null);
 		circuit_star_component = (ItemEnumMulti) new ItemCircuitStarComponent().setUnlocalizedName("circuit_star_component").setCreativeTab(null);
@@ -3386,13 +3390,13 @@ public class ModItems {
 		waste_schrabidium = new ItemDepletedFuel().setUnlocalizedName("waste_schrabidium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":waste_schrabidium");
 		waste_zfb_mox = new ItemDepletedFuel().setUnlocalizedName("waste_zfb_mox").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":waste_zfb_mox");
 
-		waste_plate_u233 = new ItemDepletedFuel().setUnlocalizedName("waste_plate_u233").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":waste_plate_uranium");
-		waste_plate_u235 = new ItemDepletedFuel().setUnlocalizedName("waste_plate_u235").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":waste_plate_uranium");
-		waste_plate_mox = new ItemDepletedFuel().setUnlocalizedName("waste_plate_mox").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":waste_plate_mox");
-		waste_plate_pu239 = new ItemDepletedFuel().setUnlocalizedName("waste_plate_pu239").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":waste_plate_mox");
-		waste_plate_sa326 = new ItemDepletedFuel().setUnlocalizedName("waste_plate_sa326").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":waste_plate_sa326");
-		waste_plate_ra226be = new ItemDepletedFuel().setUnlocalizedName("waste_plate_ra226be").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":waste_plate_ra226be");
-		waste_plate_pu238be = new ItemDepletedFuel().setUnlocalizedName("waste_plate_pu238be").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":waste_plate_pu238be");
+		waste_plate_u233 = new ItemDepletedFuel().setUnlocalizedName("waste_plate_u233").setCreativeTab(null).setTextureName(RefStrings.MODID + ":waste_plate_uranium");
+		waste_plate_u235 = new ItemDepletedFuel().setUnlocalizedName("waste_plate_u235").setCreativeTab(null).setTextureName(RefStrings.MODID + ":waste_plate_uranium");
+		waste_plate_mox = new ItemDepletedFuel().setUnlocalizedName("waste_plate_mox").setCreativeTab(null).setTextureName(RefStrings.MODID + ":waste_plate_mox");
+		waste_plate_pu239 = new ItemDepletedFuel().setUnlocalizedName("waste_plate_pu239").setCreativeTab(null).setTextureName(RefStrings.MODID + ":waste_plate_mox");
+		waste_plate_sa326 = new ItemDepletedFuel().setUnlocalizedName("waste_plate_sa326").setCreativeTab(null).setTextureName(RefStrings.MODID + ":waste_plate_sa326");
+		waste_plate_ra226be = new ItemDepletedFuel().setUnlocalizedName("waste_plate_ra226be").setCreativeTab(null).setTextureName(RefStrings.MODID + ":waste_plate_ra226be");
+		waste_plate_pu238be = new ItemDepletedFuel().setUnlocalizedName("waste_plate_pu238be").setCreativeTab(null).setTextureName(RefStrings.MODID + ":waste_plate_pu238be");
 
 		pile_rod_uranium = new ItemPileRod().setUnlocalizedName("pile_rod_uranium").setCreativeTab(null).setTextureName(RefStrings.MODID + ":pile_rod_uranium");
 		pile_rod_pu239 = new ItemPileRod().setUnlocalizedName("pile_rod_pu239").setCreativeTab(null).setTextureName(RefStrings.MODID + ":pile_rod_pu239");
@@ -3862,10 +3866,21 @@ public class ModItems {
 		missile_test = new ItemMissile(MissileFormFactor.MICRO, MissileTier.TIER0).setUnlocalizedName("missile_test").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":missile_micro");
 		missile_soyuz = new ItemSoyuz().setUnlocalizedName("missile_soyuz").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":soyuz");
 		missile_soyuz_lander = new ItemCustomLore().setUnlocalizedName("missile_soyuz_lander").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":soyuz_lander");
+		missile_lambda = new Item().setUnlocalizedName("missile_lambda").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":lambda_rocket");
 
 		missile_custom = new ItemCustomMissile().setUnlocalizedName("missile_custom").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":missile_custom");
 		rocket_custom = new ItemCustomRocket().setUnlocalizedName("rocket_custom").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":missile_custom");
-
+		satellite = new com.hbm.items.special.ItemSatellite().setUnlocalizedName("satellite").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":satellite");
+		orbital_assembly = new ItemOrbitalAssembly().setUnlocalizedName("orbital_assembly").setMaxStackSize(1).setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":orbital_assembly");
+		sat_mapper = new ItemSatChip().setUnlocalizedName("sat_mapper").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":sat_mapper");
+		sat_scanner = new ItemSatChip().setUnlocalizedName("sat_scanner").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":sat_scanner");
+		sat_radar = new ItemSatChip().setUnlocalizedName("sat_radar").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":sat_radar");
+		sat_laser = new ItemSatChip().setUnlocalizedName("sat_laser").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":sat_laser");
+		sat_foeq = new ItemSatChip().setUnlocalizedName("sat_foeq").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":sat_foeq");
+		sat_resonator = new ItemSatChip().setUnlocalizedName("sat_resonator").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":sat_resonator");
+		sat_miner = new ItemSatChip().setUnlocalizedName("sat_miner").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":sat_miner");
+		sat_lunar_miner = new ItemSatChip().setUnlocalizedName("sat_lunar_miner").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":sat_lunar_miner");
+		sat_gerald = new ItemSatChip().setUnlocalizedName("sat_gerald").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":sat_gerald");
 		sat_chip = new ItemSatChip().setUnlocalizedName("sat_chip").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":sat_chip");
 		sat_mapper = new ItemSatellite().setUnlocalizedName("sat_mapper").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":sat_mapper");
 		sat_scanner = new ItemSatellite().setUnlocalizedName("sat_scanner").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":sat_scanner");
@@ -3881,6 +3896,7 @@ public class ModItems {
 		sat_precision_laser = new ItemSatellite(42_000).setUnlocalizedName("sat_precision_laser").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":sat_precision_laser");
 		sat_detector = new ItemSatellite(24_000).setUnlocalizedName("sat_detector").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":sat_detector");
 		sat_ray_scan = new ItemSatellite(34_000).setUnlocalizedName("sat_ray_scan").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":sat_ray_scan");
+		sat_science = new ItemSatellite(28_000).setUnlocalizedName("sat_science").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":sat_science");
 
 		sat_coord = new ItemSatInterface().setUnlocalizedName("sat_coord").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":sat_coord");
 		sat_designator = new ItemSatDesignator().setUnlocalizedName("sat_designator").setFull3D().setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":sat_designator");
@@ -4045,7 +4061,7 @@ public class ModItems {
 		rp_pod_20 = new ItemCustomMissilePart().makeWarhead(WarheadType.APOLLO, 15F, 4_000, PartSize.SIZE_20).setUnlocalizedName("rp_pod_20").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":mp_warhead");
 
 		ammo_shell = (ItemEnumMulti) new ItemAmmo(Ammo240Shell.class).setCreativeTab(MainRegistry.weaponTab).setUnlocalizedName("ammo_shell");
-		ammo_dgk = new ItemCustomLore().setUnlocalizedName("ammo_dgk").setCreativeTab(MainRegistry.weaponTab);
+		ammo_dgk = new ItemCustomLore().setUnlocalizedName("ammo_dgk").setMaxStackSize(4).setCreativeTab(MainRegistry.weaponTab);
 		ammo_fireext = (ItemEnumMulti) new ItemAmmo(AmmoFireExt.class).setCreativeTab(MainRegistry.weaponTab).setUnlocalizedName("ammo_fireext");
 		ammo_misc = new ItemAmmo(AmmoMisc.class).setUnlocalizedName("ammo_misc");
 		ammo_arty = new ItemAmmoArty().setUnlocalizedName("ammo_arty");
@@ -4315,6 +4331,7 @@ public class ModItems {
 		settings_tool = new ItemSettingsTool().setUnlocalizedName("settings_tool").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":settings_tool");
 		atmosphere_scanner = new ItemAtmosphereScanner().setUnlocalizedName("atmosphere_scanner").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":atmosphere_scanner");
 		rtty_pager = new ItemRTTYPager().setUnlocalizedName("rtty_pager").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":rtty_pager");
+		rtty_designator = new ItemRTTYDesignator().setUnlocalizedName("rtty_designator").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":rtty_designator");
 
 		key = new ItemKey().setUnlocalizedName("key").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":key");
 		key_red = new ItemCustomLore().setUnlocalizedName("key_red").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":key_red");
@@ -4759,11 +4776,6 @@ public class ModItems {
 		wings_limp = new WingsMurk().setUnlocalizedName("wings_limp").setCreativeTab(CreativeTabs.tabCombat).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":wings_limp");
 		oxy_plss = new ItemModOxy(16000, 10, 1).setUnlocalizedName("oxy_plss").setCreativeTab(MainRegistry.consumableTab).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":oxy_plss");
 
-		cape_radiation = new ArmorModel(ArmorMaterial.CHAIN, 1).setUnlocalizedName("cape_radiation").setCreativeTab(null).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":cape_radiation");
-		cape_gasmask = new ArmorModel(ArmorMaterial.CHAIN, 1).setUnlocalizedName("cape_gasmask").setCreativeTab(null).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":cape_gasmask");
-		cape_schrabidium = new ArmorModel(MainRegistry.aMatSchrab, 1).setUnlocalizedName("cape_schrabidium").setCreativeTab(null).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":cape_schrabidium");
-		cape_hidden = new ArmorModel(ArmorMaterial.CHAIN, 1).setUnlocalizedName("cape_hidden").setCreativeTab(null).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":cape_unknown");
-
 		schrabidium_hammer = new WeaponSpecial(MainRegistry.tMatHammmer).setUnlocalizedName("schrabidium_hammer").setMaxStackSize(1).setTextureName(RefStrings.MODID + ":schrabidium_hammer");
 		shimmer_sledge = new WeaponSpecial(MainRegistry.enumToolMaterialSledge).setUnlocalizedName("shimmer_sledge").setMaxStackSize(1).setTextureName(RefStrings.MODID + ":shimmer_sledge_original");
 		shimmer_axe = new WeaponSpecial(MainRegistry.enumToolMaterialSledge).setUnlocalizedName("shimmer_axe").setMaxStackSize(1).setTextureName(RefStrings.MODID + ":shimmer_axe");
@@ -4878,6 +4890,10 @@ public class ModItems {
 
 		swarm_member = new Item().setUnlocalizedName("swarm_member").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":sat_scanner");
 
+		if (Loader.isModLoaded("OpenComputers")) {
+			rtty_card = new ItemRTTYCard().setUnlocalizedName("rtty_card").setMaxStackSize(1).setCreativeTab(MainRegistry.machineTab).setTextureName(RefStrings.MODID + ":rtty_card");
+		}
+		
 		GunFactory.init();
 
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(ModBlocks.mud_fluid, 1000), new ItemStack(ModItems.bucket_mud), new ItemStack(Items.bucket));
@@ -5615,6 +5631,7 @@ public class ModItems {
 
 		//Circuits
 		GameRegistry.registerItem(circuit, circuit.getUnlocalizedName());
+		GameRegistry.registerItem(drive, drive.getUnlocalizedName());
 		GameRegistry.registerItem(crt_display, crt_display.getUnlocalizedName());
 		GameRegistry.registerItem(circuit_star_piece, circuit_star_piece.getUnlocalizedName());
 		GameRegistry.registerItem(circuit_star_component, circuit_star_component.getUnlocalizedName());
@@ -6130,6 +6147,7 @@ public class ModItems {
 		GameRegistry.registerItem(coupling_tool, coupling_tool.getUnlocalizedName());
 		GameRegistry.registerItem(settings_tool, settings_tool.getUnlocalizedName());
 		GameRegistry.registerItem(rtty_pager, rtty_pager.getUnlocalizedName());
+		GameRegistry.registerItem(rtty_designator, rtty_designator.getUnlocalizedName());
 		GameRegistry.registerItem(dosimeter, dosimeter.getUnlocalizedName());
 		GameRegistry.registerItem(geiger_counter, geiger_counter.getUnlocalizedName());
 		GameRegistry.registerItem(digamma_diagnostic, digamma_diagnostic.getUnlocalizedName());
@@ -6195,6 +6213,7 @@ public class ModItems {
 		//Rockets
 		GameRegistry.registerItem(missile_soyuz, missile_soyuz.getUnlocalizedName());
 		GameRegistry.registerItem(missile_soyuz_lander, missile_soyuz_lander.getUnlocalizedName());
+		GameRegistry.registerItem(missile_lambda, missile_lambda.getUnlocalizedName());
 		GameRegistry.registerItem(missile_custom, missile_custom.getUnlocalizedName());
 		GameRegistry.registerItem(rocket_custom, rocket_custom.getUnlocalizedName());
 
@@ -6343,7 +6362,7 @@ public class ModItems {
 		GameRegistry.registerItem(rp_pod_20, rp_pod_20.getUnlocalizedName());
 
 		//Satellites
-		// GameRegistry.registerItem(satellite, satellite.getUnlocalizedName());
+		GameRegistry.registerItem(satellite, satellite.getUnlocalizedName());
 		GameRegistry.registerItem(sat_chip, sat_chip.getUnlocalizedName());
 		GameRegistry.registerItem(sat_mapper, sat_mapper.getUnlocalizedName());
 		GameRegistry.registerItem(sat_scanner, sat_scanner.getUnlocalizedName());
@@ -6357,6 +6376,7 @@ public class ModItems {
 		GameRegistry.registerItem(sat_precision_laser, sat_precision_laser.getUnlocalizedName());
 		GameRegistry.registerItem(sat_detector, sat_detector.getUnlocalizedName());
 		GameRegistry.registerItem(sat_ray_scan, sat_ray_scan.getUnlocalizedName());
+		GameRegistry.registerItem(sat_science, sat_science.getUnlocalizedName());
 
 		GameRegistry.registerItem(sat_dyson_relay, sat_dyson_relay.getUnlocalizedName());
 		GameRegistry.registerItem(sat_war, sat_war.getUnlocalizedName());
@@ -6364,6 +6384,7 @@ public class ModItems {
 		GameRegistry.registerItem(sat_coord, sat_coord.getUnlocalizedName());
 		GameRegistry.registerItem(sat_designator, sat_designator.getUnlocalizedName());
 		GameRegistry.registerItem(sat_relay, sat_relay.getUnlocalizedName());
+		GameRegistry.registerItem(orbital_assembly, orbital_assembly.getUnlocalizedName());
 
 		//Guns
 		GameRegistry.registerItem(gun_b92, gun_b92.getUnlocalizedName());
@@ -6483,12 +6504,6 @@ public class ModItems {
 
 		GameRegistry.registerItem(ullapool_caber, ullapool_caber.getUnlocalizedName());
 		GameRegistry.registerItem(weaponized_starblaster_cell, weaponized_starblaster_cell.getUnlocalizedName());
-
-		//Capes
-		GameRegistry.registerItem(cape_radiation, cape_radiation.getUnlocalizedName());
-		GameRegistry.registerItem(cape_gasmask, cape_gasmask.getUnlocalizedName());
-		GameRegistry.registerItem(cape_schrabidium, cape_schrabidium.getUnlocalizedName());
-		GameRegistry.registerItem(cape_hidden, cape_hidden.getUnlocalizedName());
 
 		//Tools
 		GameRegistry.registerItem(dwarven_pickaxe, dwarven_pickaxe.getUnlocalizedName());
@@ -7179,6 +7194,10 @@ public class ModItems {
 		GameRegistry.registerItem(template_folder, template_folder.getUnlocalizedName());
 		GameRegistry.registerItem(nothing, nothing.getUnlocalizedName());
 		GameRegistry.registerItem(broken_item, broken_item.getUnlocalizedName());
+
+		if (Loader.isModLoaded("OpenComputers")) {
+			GameRegistry.registerItem(rtty_card, rtty_card.getUnlocalizedName());
+		}
 	}
 
 	public static void addRemap(String unloc, Item item, Enum sub) {

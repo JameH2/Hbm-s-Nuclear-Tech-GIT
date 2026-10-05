@@ -2,7 +2,9 @@ package com.hbm.saveddata.satellites;
 
 import com.google.common.collect.HashBiMap;
 import com.hbm.dim.SolarSystem;
+import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.items.ModItems;
+import com.hbm.items.special.ItemSatellite.EnumSatType;
 import com.hbm.saveddata.SatelliteSavedData;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -37,6 +39,7 @@ public class XSatelliteRegistry {
 		registerSatellite(SatellitePrecisionLaser.class, ModItems.sat_precision_laser, 0.221F, 1.0F, 0.663F);
 		registerSatellite(SatelliteDetector.class, ModItems.sat_detector, 0.1F, 0.2F, 0.3F);
 		registerSatellite(SatelliteRayScan.class, ModItems.sat_ray_scan, 0.1F, 0.2F, 0.3F);
+		registerSatellite(SatelliteScience.class, ModItems.sat_science, 0.2F, 0.64F, 0.8F);
 
 	}
 

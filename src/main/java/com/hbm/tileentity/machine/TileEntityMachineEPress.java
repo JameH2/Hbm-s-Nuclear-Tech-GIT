@@ -20,6 +20,8 @@ import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BufferUtil;
 import com.hbm.util.CompatEnergyControl;
 import com.hbm.util.i18n.I18nUtil;
@@ -38,7 +40,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityMachineEPress extends TileEntityMachineBase implements IEnergyReceiverMK2, IGUIProvider, IUpgradeInfoProvider, IInfoProviderEC {
 
@@ -61,6 +62,9 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IE
 	public TileEntityMachineEPress() {
 		super(5);
 	}
+	
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.around(xCoord, yCoord, zCoord); return cachedPorts; }
 
 	@Override
 	public String getName() {
@@ -71,13 +75,16 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IE
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
+			
+			this.setupPowerPorts(getPorts());
+			this.updateAllPorts();
+			this.receivePower();
 
 			// Triggers the legacy monoblock fix
 			if (worldObj.getBlockMetadata(xCoord, yCoord, zCoord) < 12) {
 				worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 1);
 			}
 
-			this.updateConnections();
 			power = Library.chargeTEFromItems(slots, 0, power, maxPower);
 
 			boolean canProcess = this.canProcess();
@@ -200,12 +207,6 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IE
 		if(slots[3] == null) return true;
 		if(slots[3].stackSize + output.stackSize <= slots[3].getMaxStackSize() && slots[3].getItem() == output.getItem() && slots[3].getItemDamage() == output.getItemDamage()) return true;
 		return false;
-	}
-
-	private void updateConnections() {
-
-		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-			this.trySubscribe(worldObj, xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ, dir);
 	}
 
 	@Override

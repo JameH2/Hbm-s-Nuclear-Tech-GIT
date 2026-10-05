@@ -39,6 +39,7 @@ public class ItemCircuit extends ItemEnumMulti {
 		list.add(new ItemStack(item, 1, EnumCircuitType.AERO.ordinal()));
 		list.add(new ItemStack(item, 1, EnumCircuitType.GAAS.ordinal()));
 		list.add(new ItemStack(item, 1, EnumCircuitType.QUANTUM.ordinal()));
+		list.add(new ItemStack(item, 1, EnumCircuitType.CRYSTAL.ordinal()));
 		list.add(new ItemStack(item, 1, EnumCircuitType.CONTROLLER_CHASSIS.ordinal()));
 		list.add(new ItemStack(item, 1, EnumCircuitType.CONTROLLER.ordinal()));
 		list.add(new ItemStack(item, 1, EnumCircuitType.CONTROLLER_ADVANCED.ordinal()));
@@ -83,6 +84,7 @@ public class ItemCircuit extends ItemEnumMulti {
 		HFCHIP,
 		MOLYCHIP,
 		NUMITRON,
+		CRYSTAL,
 	}
 
 	@Override

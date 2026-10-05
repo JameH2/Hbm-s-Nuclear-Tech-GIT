@@ -15,12 +15,16 @@ import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.Library;
+import com.hbm.main.MainRegistry;
+import com.hbm.main.NTMSounds;
 import com.hbm.module.machine.ModuleMachinePUREX;
+import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BobMathUtil;
-import com.hbm.util.fauxpointtwelve.DirPos;
 import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
@@ -49,6 +53,8 @@ public class TileEntityMachinePUREX extends TileEntityMachineBase implements IEn
 	public boolean frame = false;
 	public int anim;
 	public int prevAnim;
+	
+	private AudioWrapper audio;
 
 	public ModuleMachinePUREX purexModule;
 	public UpgradeManagerNT upgradeManager = new UpgradeManagerNT(this);
@@ -67,6 +73,9 @@ public class TileEntityMachinePUREX extends TileEntityMachineBase implements IEn
 				.itemInput(4).itemOutput(7)
 				.fluidInput(inputTanks[0], inputTanks[1], inputTanks[2]).fluidOutput(outputTanks[0]);
 	}
+	
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.purex(xCoord, yCoord, zCoord); return cachedPorts; }
 
 	@Override
 	public String getName() {
@@ -79,6 +88,8 @@ public class TileEntityMachinePUREX extends TileEntityMachineBase implements IEn
 		if(maxPower <= 0) this.maxPower = 1_000_000;
 		
 		if(!worldObj.isRemote) {
+			this.setupAllPorts(getPorts());
+			this.updatePortPIFIFO();
 			
 			GenericRecipe recipe = purexModule.getRecipe();
 			if(recipe != null) {
@@ -88,12 +99,6 @@ public class TileEntityMachinePUREX extends TileEntityMachineBase implements IEn
 			
 			this.power = Library.chargeTEFromItems(slots, 0, power, maxPower);
 			upgradeManager.checkSlots(slots, 2, 3);
-			
-			for(DirPos pos : getConPos()) {
-				this.trySubscribe(worldObj, pos);
-				for(FluidTank tank : inputTanks) if(tank.getTankType() != Fluids.NONE) this.trySubscribe(tank.getTankType(), worldObj, pos);
-				for(FluidTank tank : outputTanks) if(tank.getFill() > 0) this.tryProvide(tank, worldObj, pos);
-			}
 
 			double speed = 1D;
 			double pow = 1D;
@@ -114,37 +119,53 @@ public class TileEntityMachinePUREX extends TileEntityMachineBase implements IEn
 		} else {
 			
 			this.prevAnim = this.anim;
-			if(this.didProcess) this.anim++;
 			
 			if(worldObj.getTotalWorldTime() % 20 == 0) {
 				frame = !worldObj.getBlock(xCoord, yCoord + 5, zCoord).isAir(worldObj, xCoord, yCoord + 5, zCoord);
 			}
+
+			if(didProcess) {
+				
+				this.anim++;
+
+				if(MainRegistry.proxy.me().getDistance(xCoord , yCoord, zCoord) < 25) {
+					if(audio == null) {
+						audio = createAudioLoop();
+						audio.startSound();
+					} else if(!audio.isPlaying()) {
+						audio = rebootAudio(audio);
+					}
+					audio.keepAlive();
+					audio.updateVolume(this.getVolume(1F));
+					audio.updatePitch(0.75F);
+					
+				} else {
+					if(audio != null) {
+						audio.stopSound();
+						audio = null;
+					}
+				}
+			} else {
+				if(audio != null) {
+					audio.stopSound();
+					audio = null;
+				}
+			}
 		}
 	}
-	
-	public DirPos[] getConPos() {
-		return new DirPos[] {
-				new DirPos(xCoord + 3, yCoord, zCoord - 2, Library.POS_X),
-				new DirPos(xCoord + 3, yCoord, zCoord - 1, Library.POS_X),
-				new DirPos(xCoord + 3, yCoord, zCoord + 0, Library.POS_X),
-				new DirPos(xCoord + 3, yCoord, zCoord + 1, Library.POS_X),
-				new DirPos(xCoord + 3, yCoord, zCoord + 2, Library.POS_X),
-				new DirPos(xCoord - 3, yCoord, zCoord - 1, Library.NEG_X),
-				new DirPos(xCoord - 3, yCoord, zCoord - 2, Library.NEG_X),
-				new DirPos(xCoord - 3, yCoord, zCoord + 0, Library.NEG_X),
-				new DirPos(xCoord - 3, yCoord, zCoord + 1, Library.NEG_X),
-				new DirPos(xCoord - 3, yCoord, zCoord + 2, Library.NEG_X),
-				new DirPos(xCoord - 2, yCoord, zCoord + 3, Library.POS_Z),
-				new DirPos(xCoord - 1, yCoord, zCoord + 3, Library.POS_Z),
-				new DirPos(xCoord + 0, yCoord, zCoord + 3, Library.POS_Z),
-				new DirPos(xCoord + 1, yCoord, zCoord + 3, Library.POS_Z),
-				new DirPos(xCoord + 2, yCoord, zCoord + 3, Library.POS_Z),
-				new DirPos(xCoord - 2, yCoord, zCoord - 3, Library.NEG_Z),
-				new DirPos(xCoord - 1, yCoord, zCoord - 3, Library.NEG_Z),
-				new DirPos(xCoord + 0, yCoord, zCoord - 3, Library.NEG_Z),
-				new DirPos(xCoord + 1, yCoord, zCoord - 3, Library.NEG_Z),
-				new DirPos(xCoord + 2, yCoord, zCoord - 3, Library.NEG_Z),
-		};
+
+	@Override public AudioWrapper createAudioLoop() {
+		return MainRegistry.proxy.getLoopedSound(NTMSounds.CHEMPLANT_LOOP, xCoord, yCoord, zCoord, 1F, 15F, 0.75F, 15);
+	}
+
+	@Override public void onChunkUnload() {
+		super.onChunkUnload();
+		if(audio != null) { audio.stopSound(); audio = null; }
+	}
+
+	@Override public void invalidate() {
+		super.invalidate();
+		if(audio != null) { audio.stopSound(); audio = null; }
 	}
 
 	@Override
@@ -230,7 +251,7 @@ public class TileEntityMachinePUREX extends TileEntityMachineBase implements IEn
 	@Override public boolean hasPermission(EntityPlayer player) { return this.isUseableByPlayer(player); }
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("index") && data.hasKey("selection")) {
 			int index = data.getInteger("index");
 			String selection = data.getString("selection");

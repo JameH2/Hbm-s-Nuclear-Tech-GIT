@@ -19,6 +19,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -37,6 +38,7 @@ public class EntityArtilleryRocket extends EntityThrowableInterp implements IChu
 
 	public IRocketTargetingBehavior targeting;
 	public IRocketSteeringBehavior steering;
+	public int health = 100;
 
 	public EntityArtilleryRocket(World world) {
 		super(world);
@@ -50,6 +52,22 @@ public class EntityArtilleryRocket extends EntityThrowableInterp implements IChu
 	protected void entityInit() {
 		init(ForgeChunkManager.requestTicket(MainRegistry.instance, worldObj, Type.ENTITY));
 		this.dataWatcher.addObject(10, new Integer(0));
+	}
+	
+	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		if(this.isEntityInvulnerable()) {
+			return false;
+		} else {
+			if(this.health > 0 && !this.worldObj.isRemote) {
+				this.health -= (int) amount;
+				
+				if(this.health <= 0) {
+					this.setDead();
+				}
+			}
+			return true;
+		}
 	}
 
 	@Override

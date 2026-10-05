@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -88,8 +89,12 @@ public class MachineSatLink extends BlockDummyable implements ILookOverlay {
 		TileEntityMachineSatLink link = (TileEntityMachineSatLink) te;
 		
 		List<String> text = new ArrayList();
-		text.add("Freq: " + link.freq);
-		text.add("Connected: " + (link.connected ? (EnumChatFormatting.GREEN + "Yes") : (EnumChatFormatting.RED + "No")));
+		text.add(I18nUtil.resolveKey("tile.machine_satlink.freq") + ": " + link.freq);
+		text.add(I18nUtil.resolveKey("tile.machine_satlink.connected") + ": " + (link.connected ? (EnumChatFormatting.GREEN + I18nUtil.resolveKey("tile.machine_satlink.yes")) : (EnumChatFormatting.RED + I18nUtil.resolveKey("tile.machine_satlink.no"))));
+		
+		for(IChatComponent comp : link.info) {
+			if(comp != null) text.add(comp.getFormattedText());
+		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}

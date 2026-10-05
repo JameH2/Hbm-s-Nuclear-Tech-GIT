@@ -222,7 +222,6 @@ public class MainRegistry {
 	public static Achievement achManhattan;
 	public static Achievement achGasCent;
 	public static Achievement achCentrifuge;
-	public static Achievement achFOEQ;
 	public static Achievement achSoyuz;
 	public static Achievement achSpace;
 	public static Achievement achSchrab;
@@ -444,7 +443,6 @@ public class MainRegistry {
 		achGasCent = new Achievement("achievement.gasCent", "gasCent", 13, 2, ModItems.ingot_uranium_fuel, achDesh).initIndependentStat().registerStat();
 		achCentrifuge = new Achievement("achievement.centrifuge", "centrifuge", 12, -2, new ItemStack(ModBlocks.machine_centrifuge), achPolymer).initIndependentStat().registerStat();
 		achDriveFail = new Achievement("achievement.driveFail", "driveFail", 8, -3, new ItemStack(ModItems.full_drive), achPolymer).initIndependentStat().setSpecial().registerStat();
-		achFOEQ = new Achievement("achievement.FOEQ", "FOEQ", 5, 5, ModItems.sat_foeq, achDesh).initIndependentStat().setSpecial().registerStat();
 		achSoyuz = new Achievement("achievement.soyuz", "soyuz", 7, 6, Items.baked_potato, achDesh).initIndependentStat().setSpecial().registerStat();
 		achSpace = new Achievement("achievement.space", "space", 9, 7, ModItems.missile_soyuz, achDesh).initIndependentStat().setSpecial().registerStat();
 		achSchrab = new Achievement("achievement.schrab", "schrab", 11, 3, ModItems.ingot_schrabidium, achDesh).initIndependentStat().registerStat();
@@ -510,7 +508,6 @@ public class MainRegistry {
 			achGasCent,
 			achCentrifuge,
 			achDriveFail,
-			achFOEQ,
 			achSoyuz,
 			achSpace,
 			achSchrab,
@@ -1727,6 +1724,13 @@ public class MainRegistry {
 		ignoreMappings.add("hbm:item.sat_head_laser");
 		ignoreMappings.add("hbm:item.sat_head_resonator");
 		ignoreMappings.add("hbm:item.sat_interface");
+		ignoreMappings.add("hbm:item.cape_radiation");
+		ignoreMappings.add("hbm:item.cape_gasmask");
+		ignoreMappings.add("hbm:item.cape_schrabidium");
+		ignoreMappings.add("hbm:item.cape_hidden");
+		ignoreMappings.add("hbm:tile.dummy_plate_cargo");
+		ignoreMappings.add("hbm:tile.machine_turbine");
+		ignoreMappings.add("hbm:tile.machine_fensu");
 		
 		/// REMAP ///
 		remapItems.put("hbm:item.gadget_explosive8", ModItems.early_explosive_lenses);

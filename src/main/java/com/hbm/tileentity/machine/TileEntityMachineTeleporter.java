@@ -7,6 +7,8 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BufferUtil;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
@@ -36,7 +38,6 @@ import net.minecraft.util.IntHashMap;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements IEnergyReceiverMK2, IFluidStandardReceiver, IBufPacketReceiver {
 
@@ -54,14 +55,20 @@ public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements
 	public TileEntityMachineTeleporter() {
 		tank = new FluidTank(Fluids.NMASS, 16000);
 	}
+	
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.around(xCoord, yCoord, zCoord); return cachedPorts; }
 
 	@Override
 	public void updateEntity() {
 
 		if(!this.worldObj.isRemote) {
-			this.subscribeToAllAround(tank.getTankType(), this);
-
-			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) this.trySubscribe(worldObj, xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ, dir);
+			
+			this.setupPowerPorts(getPorts());
+			this.setupFluidPorts(getPorts());
+			this.updateAllPorts();
+			this.receivePower();
+			this.updatePortFIFO(); // evil fucked up bad thing for now since this'll die anyway in the next
 
 			if(this.targetY != -1) {
 				List<Entity> entities = this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord + 0.25, this.yCoord, this.zCoord + 0.25, this.xCoord + 0.75, this.yCoord + 2, this.zCoord + 0.75));

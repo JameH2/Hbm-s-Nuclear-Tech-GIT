@@ -2,6 +2,7 @@ package com.hbm.tileentity.network;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -18,10 +19,10 @@ import net.minecraft.world.World;
 public class RTTYSystem {
 
 	/** Public frequency band for reading purposes, delayed by one tick */
-	public static HashMap<Pair<World, String>, RTTYChannel> broadcast = new HashMap();
+	public static ConcurrentHashMap<Pair<World, String>, RTTYChannel> broadcast = new ConcurrentHashMap();
 	/** New message queue for writing, gets written into readable Map later on */
-	public static HashMap<Pair<World, String>, Object> newMessages = new HashMap();
-	
+	public static ConcurrentHashMap<Pair<World, String>, Object> newMessages = new ConcurrentHashMap();
+
 	/** Pushes a new signal to be used next tick. Only the last signal pushed will be used. */
 	public static void broadcast(World world, String channelName, Object signal) {
 		Pair identifier = new Pair(world, channelName);
@@ -126,7 +127,7 @@ public class RTTYSystem {
 		if(time == tempo * 48) return NoteBuilder.start().add(accordion, Note.C, Octave.LOW).add(flute, Note.D, Octave.LOW).end();
 		if(time == tempo * 50) return NoteBuilder.start().add(flute, Note.F, Octave.LOW).end();
 		if(time == tempo * 52) return NoteBuilder.start().add(accordion, Note.D, Octave.LOW).add(accordion, Note.F, Octave.LOW).add(accordion, Note.A, Octave.LOW).add(flute, Note.D, Octave.MID).end();
-		if(time == tempo * 54) return NoteBuilder.start().add(accordion, Note.D, Octave.LOW).add(accordion, Note.F, Octave.LOW).add(accordion, Note.A, Octave.LOW);
+		if(time == tempo * 54) return NoteBuilder.start().add(accordion, Note.D, Octave.LOW).add(accordion, Note.F, Octave.LOW).add(accordion, Note.A, Octave.LOW).end();
 
 		if(time == tempo * 56) return NoteBuilder.start().add(accordion, Note.C, Octave.LOW).add(flute, Note.D, Octave.LOW).end();
 		if(time == tempo * 58) return NoteBuilder.start().add(flute, Note.F, Octave.LOW).end();
