@@ -9,7 +9,7 @@ import net.minecraft.util.EnumChatFormatting;
 public class FluidTraitSimple {
 
 	/** gaseous at room temperature, for cryogenic hydrogen for example */
-	public static class FT_Gaseous_ART extends FluidTrait {
+	public static class FT_Gaseous_ART extends FT_Gaseous {
 		@Override public void addInfoHidden(List<String> info) {
 			info.add(EnumChatFormatting.BLUE + "[" + I18nUtil.resolveKey("hbmfluid.trait.gaseousRoom") + "]");
 		}
