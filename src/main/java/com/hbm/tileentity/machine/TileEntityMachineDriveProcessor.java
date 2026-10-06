@@ -13,12 +13,15 @@ import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BufferUtil;
 import com.hbm.util.EnumUtil;
 
+import api.hbm.energymk2.IBatteryItem;
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
@@ -192,6 +195,23 @@ public class TileEntityMachineDriveProcessor extends TileEntityMachineBase imple
 		if(data.hasKey("clone")) {
 			cloneDrive();
 		}
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack) {
+		if (stack == null) return false;
+		Item item = stack.getItem();
+
+		if (index == 0) return item instanceof ItemVOTVdrive;
+		if (index == 1) return item == ModItems.hard_drive;
+		if (index == 2) {
+			if (item != ModItems.circuit) return false;
+			EnumCircuitType type = EnumUtil.grabEnumSafely(EnumCircuitType.class, stack.getItemDamage());
+			return type == EnumCircuitType.PROCESST1 || type == EnumCircuitType.PROCESST2 || type == EnumCircuitType.PROCESST3;
+		}
+		if (index == 3) return item instanceof IBatteryItem || item == ModItems.battery_creative;
+
+		return false;
 	}
 
 	@Override
