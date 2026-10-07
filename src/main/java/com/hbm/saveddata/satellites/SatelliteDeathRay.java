@@ -4,7 +4,6 @@ import java.util.Locale;
 
 import com.hbm.entity.logic.EntityDeathBlast;
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemSatellite.EnumSatType;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -33,7 +32,7 @@ public class SatelliteDeathRay extends SatelliteBase {
 		int cooldown = (int) ((lastShot + CHARGE_TIME) - world.getTotalWorldTime());
 		
 		return new IChatComponent[] {
-				new ChatComponentTranslation(ModItems.satellite.getUnlocalizedName(new ItemStack(ModItems.satellite, 1, EnumSatType.DEATH_RAY.ordinal())) + ".name"),
+				new ChatComponentTranslation(ModItems.sat_laser.getUnlocalizedName(new ItemStack(ModItems.sat_laser)) + ".name"),
 				canFire ? new ChatComponentTranslation("satellite.ready") : new ChatComponentTranslation("satellite.cooldown", cooldown / 20 + "s"),
 		};
 	}

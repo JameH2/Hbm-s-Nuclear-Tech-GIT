@@ -114,7 +114,7 @@ public class SatelliteScience extends SatelliteBase {
 		int seconds = cooldown / 20;
 		
 		return new IChatComponent[] {
-				new ChatComponentTranslation(ModItems.satellite.getUnlocalizedName(new ItemStack(ModItems.satellite, 1, EnumSatType.SCIENCE.ordinal())) + ".name"),
+				new ChatComponentTranslation(ModItems.sat_science.getUnlocalizedName(new ItemStack(ModItems.sat_science)) + ".name"),
 				cooldown <= 0 ? new ChatComponentTranslation("satellite.ready") : new ChatComponentTranslation("satellite.cooldown", (seconds / 60) + "m" + (seconds % 60) + "s"),
 						
 				this.sensorCount > 0 ? new ChatComponentTranslation("satellite.sensors", this.sensorCount) : null,

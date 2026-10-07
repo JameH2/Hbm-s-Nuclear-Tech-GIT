@@ -1,7 +1,6 @@
 package com.hbm.saveddata.satellites;
 
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemSatellite.EnumSatType;
 import com.hbm.tileentity.network.RTTYSystem;
 
 import api.hbm.redstoneoverradio.IRORInteractive;
@@ -30,7 +29,7 @@ public class SatelliteRelay extends SatelliteBase {
 	@Override
 	public IChatComponent[] getInfo(World world) {
 		return new IChatComponent[] {
-				new ChatComponentTranslation(ModItems.sat_relay.getUnlocalizedName(new ItemStack(ModItems.sat_relay)) + ".name")
+				new ChatComponentTranslation(ModItems.sat_foeq.getUnlocalizedName(new ItemStack(ModItems.sat_foeq)) + ".name")
 		};
 	}
 

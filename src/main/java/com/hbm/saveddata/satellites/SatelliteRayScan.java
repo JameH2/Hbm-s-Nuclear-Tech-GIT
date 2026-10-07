@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemSatellite.EnumSatType;
 import com.hbm.util.fauxpointtwelve.DimPos;
 
 import api.hbm.redstoneoverradio.IRORInteractive;
@@ -33,7 +32,7 @@ public class SatelliteRayScan extends SatelliteBase {
 	@Override
 	public IChatComponent[] getInfo(World world) {
 		return new IChatComponent[] {
-				new ChatComponentTranslation(ModItems.satellite.getUnlocalizedName(new ItemStack(ModItems.satellite, 1, EnumSatType.RAY_SCAN.ordinal())) + ".name")
+				new ChatComponentTranslation(ModItems.sat_ray_scan.getUnlocalizedName(new ItemStack(ModItems.sat_ray_scan)) + ".name")
 		};
 	}
 	

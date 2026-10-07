@@ -8,7 +8,6 @@ import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.pollution.PollutionHandler.PollutionData;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemSatellite.EnumSatType;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -31,7 +30,7 @@ public class SatelliteMapper extends SatelliteBase {
 	@Override
 	public IChatComponent[] getInfo(World world) {
 		return new IChatComponent[] {
-				new ChatComponentTranslation(ModItems.satellite.getUnlocalizedName(new ItemStack(ModItems.satellite, 1, EnumSatType.SPY.ordinal())) + ".name")
+				new ChatComponentTranslation(ModItems.sat_mapper.getUnlocalizedName(new ItemStack(ModItems.sat_mapper)) + ".name")
 		};
 	}
 	

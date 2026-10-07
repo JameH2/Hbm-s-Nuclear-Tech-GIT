@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Locale;
 
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemSatellite.EnumSatType;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 
 import api.hbm.entity.IRadarDetectableNT.RadarScanParams;
@@ -41,7 +40,7 @@ public class SatelliteRadar extends SatelliteBase {
 	@Override
 	public IChatComponent[] getInfo(World world) {
 		return new IChatComponent[] {
-				new ChatComponentTranslation(ModItems.satellite.getUnlocalizedName(new ItemStack(ModItems.satellite, 1, EnumSatType.RADAR.ordinal())) + ".name")
+				new ChatComponentTranslation(ModItems.sat_radar.getUnlocalizedName(new ItemStack(ModItems.sat_radar)) + ".name")
 		};
 	}
 	

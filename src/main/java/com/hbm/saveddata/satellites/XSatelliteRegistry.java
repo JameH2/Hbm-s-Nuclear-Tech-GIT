@@ -2,9 +2,7 @@ package com.hbm.saveddata.satellites;
 
 import com.google.common.collect.HashBiMap;
 import com.hbm.dim.SolarSystem;
-import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemSatellite.EnumSatType;
 import com.hbm.saveddata.SatelliteSavedData;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

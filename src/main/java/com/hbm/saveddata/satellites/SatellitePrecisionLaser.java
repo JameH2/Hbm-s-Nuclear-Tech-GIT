@@ -4,7 +4,6 @@ import java.util.Locale;
 
 import com.hbm.entity.logic.EntityOrbitalLaser;
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemSatellite.EnumSatType;
 
 import api.hbm.redstoneoverradio.IRORInteractive;
 import net.minecraft.entity.Entity;
@@ -38,7 +37,7 @@ public class SatellitePrecisionLaser extends SatelliteBase {
 		int cooldown = (int) ((lastShot + CHARGE_TIME) - world.getTotalWorldTime());
 		
 		return new IChatComponent[] {
-				new ChatComponentTranslation(ModItems.satellite.getUnlocalizedName(new ItemStack(ModItems.satellite, 1, EnumSatType.PRECISION_LASER.ordinal())) + ".name"),
+				new ChatComponentTranslation(ModItems.sat_precision_laser.getUnlocalizedName(new ItemStack(ModItems.sat_precision_laser)) + ".name"),
 				canFire ? new ChatComponentTranslation("satellite.ready") : new ChatComponentTranslation("satellite.cooldown", cooldown / 20 + "s"),
 		};
 	}

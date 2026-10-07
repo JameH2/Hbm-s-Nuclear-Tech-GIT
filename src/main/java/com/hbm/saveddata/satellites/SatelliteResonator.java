@@ -1,7 +1,6 @@
 package com.hbm.saveddata.satellites;
 
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemSatellite.EnumSatType;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -19,7 +18,7 @@ public class SatelliteResonator extends SatelliteBase {
 	@Override
 	public IChatComponent[] getInfo(World world) {
 		return new IChatComponent[] {
-				new ChatComponentTranslation(ModItems.satellite.getUnlocalizedName(new ItemStack(ModItems.satellite, 1, EnumSatType.XENIUM_RESONATOR.ordinal())) + ".name")
+				new ChatComponentTranslation(ModItems.sat_resonator.getUnlocalizedName(new ItemStack(ModItems.sat_resonator)) + ".name")
 		};
 	}
 	

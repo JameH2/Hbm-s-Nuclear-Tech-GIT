@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemSatellite.EnumSatType;
 
 import api.hbm.redstoneoverradio.IRORInteractive;
 import net.minecraft.item.ItemStack;
@@ -29,7 +28,7 @@ public class SatelliteDetector extends SatelliteBase {
 	@Override
 	public IChatComponent[] getInfo(World world) {
 		return new IChatComponent[] {
-				new ChatComponentTranslation(ModItems.satellite.getUnlocalizedName(new ItemStack(ModItems.satellite, 1, EnumSatType.DETECTOR.ordinal())) + ".name")
+				new ChatComponentTranslation(ModItems.sat_detector.getUnlocalizedName(new ItemStack(ModItems.sat_detector)) + ".name")
 		};
 	}
 	

@@ -4,7 +4,6 @@ import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsSatellite;
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemSatellite.EnumSatType;
 import com.hbm.util.WeightedRandomObject;
 
 import net.minecraft.item.ItemStack;
