@@ -12,7 +12,7 @@ import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BufferUtil;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
-import api.hbm.fluid.IFluidStandardReceiver;
+import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import io.netty.buffer.ByteBuf;
@@ -39,7 +39,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.IChunkProvider;
 
-public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements IEnergyReceiverMK2, IFluidStandardReceiver, IBufPacketReceiver {
+public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements IEnergyReceiverMK2, IFluidStandardReceiverMK2, IBufPacketReceiver {
 
 	public long power = 0;
 	public int targetX = -1;
@@ -48,7 +48,7 @@ public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements
 	public int targetDim = 0;
 	public static final int maxPower = 1_500_000;
 	public static final int consumption = 1_000_000;
-	public static final int flucu = 100;
+	public static final int fluidConsumption = 100;
 
 	public FluidTank tank;
 
@@ -68,7 +68,7 @@ public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements
 			this.setupFluidPorts(getPorts());
 			this.updateAllPorts();
 			this.receivePower();
-			this.updatePortFIFO(); // evil fucked up bad thing for now since this'll die anyway in the next
+			this.updatePortFIFO(); // evil fucked up bad thing for now since this'll die anyway in the next version
 
 			if(this.targetY != -1) {
 				List<Entity> entities = this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord + 0.25, this.yCoord, this.zCoord + 0.25, this.xCoord + 0.75, this.yCoord + 2, this.zCoord + 0.75));
@@ -84,7 +84,7 @@ public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements
 
 		} else {
 
-			if(this.targetY != -1 && power >= consumption && this.tank.getFill() >= flucu) {
+			if(this.targetY != -1 && power >= consumption && this.tank.getFill() >= fluidConsumption) {
 				double x = xCoord + 0.5 + worldObj.rand.nextGaussian() * 0.25D;
 				double y = yCoord + 1 + worldObj.rand.nextDouble() * 2D;
 				double z = zCoord + 0.5 + worldObj.rand.nextGaussian() * 0.25D;
@@ -140,11 +140,11 @@ public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements
 	public void teleport(Entity entity) {
 
 		if(this.power < consumption) return;
-		if(entity.dimension != this.targetDim && tank.getFill() < flucu) return; // N-MASS is required for cross-dimension teleporting
+		if(entity.dimension != this.targetDim && tank.getFill() < fluidConsumption) return; // N-MASS is required for cross-dimension teleporting
 		worldObj.playSoundEffect(xCoord + 0.5, yCoord + 1.5, zCoord + 0.5, "mob.endermen.portal", 1.0F, 1.0F);
 
 		if(entity.dimension != this.targetDim) {
-			this.tank.setFill(this.tank.getFill() - flucu);
+			this.tank.setFill(this.tank.getFill() - fluidConsumption);
 		}
 
 		if((entity instanceof EntityPlayerMP)) {

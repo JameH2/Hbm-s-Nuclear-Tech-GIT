@@ -14,10 +14,11 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.fluid.trait.FT_Rocket;
 import com.hbm.items.weapon.ItemCustomRocket;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
 import com.hbm.tileentity.TileEntityMachineBase;
-import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.tileentity.TilePort.PortDef;
 
-import api.hbm.fluid.IFluidStandardReceiver;
+import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -28,7 +29,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityOrbitalStation extends TileEntityMachineBase implements IFluidStandardReceiver {
+public class TileEntityOrbitalStation extends TileEntityMachineBase implements IFluidStandardReceiverMK2 {
 
 	private OrbitalStation station;
 	private EntityRideableRocket docked;
@@ -46,10 +47,14 @@ public class TileEntityOrbitalStation extends TileEntityMachineBase implements I
 	public float rot;
 	public float prevRot;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+
 	public TileEntityOrbitalStation() {
 		super(16);
 		tanks = new FluidTank[1];
 		tanks[0] = new FluidTank(Fluids.HYDRAZINE, 16_000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks());
 	}
 
 	@Override
@@ -62,6 +67,8 @@ public class TileEntityOrbitalStation extends TileEntityMachineBase implements I
 		if(!CelestialBody.inOrbit(worldObj)) return;
 
 		if(!worldObj.isRemote) {
+			moduleFluidPorts.update(getPorts());
+
 			// Station TEs handle syncing information about the current orbital parameters to players on the station
 			station = OrbitalStation.getStationFromPosition(xCoord, zCoord);
 
@@ -74,14 +81,6 @@ public class TileEntityOrbitalStation extends TileEntityMachineBase implements I
 				// Update tank sizes based on fuel requirement, preserving existing fills
 				for(FluidTank tank : tanks) {
 					tank.changeTankSize(Math.max(fillRequirement, tank.getFill()));
-				}
-
-				// Connections
-				for(DirPos pos : getConPos()) {
-					for(FluidTank tank : tanks) {
-						if(tank.getTankType() == Fluids.NONE) continue;
-						trySubscribe(tank.getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-					}
 				}
 			}
 
@@ -142,24 +141,30 @@ public class TileEntityOrbitalStation extends TileEntityMachineBase implements I
 		return getBlockType() == ModBlocks.orbital_station;
 	}
 
-	public DirPos[] getConPos() {
-		return new DirPos[] {
-			new DirPos(xCoord - 1, yCoord + 1, zCoord + 3, ForgeDirection.NORTH),
-			new DirPos(xCoord + 0, yCoord + 1, zCoord + 3, ForgeDirection.NORTH),
-			new DirPos(xCoord + 1, yCoord + 1, zCoord + 3, ForgeDirection.NORTH),
+	protected PortDef[] cachedPorts;
 
-			new DirPos(xCoord - 1, yCoord + 1, zCoord - 3, ForgeDirection.SOUTH),
-			new DirPos(xCoord + 0, yCoord + 1, zCoord - 3, ForgeDirection.SOUTH),
-			new DirPos(xCoord + 1, yCoord + 1, zCoord - 3, ForgeDirection.SOUTH),
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord - 1, yCoord + 1, zCoord + 2, ForgeDirection.NORTH),
+				PortDef.make(xCoord + 0, yCoord + 1, zCoord + 2, ForgeDirection.NORTH),
+				PortDef.make(xCoord + 1, yCoord + 1, zCoord + 2, ForgeDirection.NORTH),
+	
+				PortDef.make(xCoord - 1, yCoord + 1, zCoord - 2, ForgeDirection.SOUTH),
+				PortDef.make(xCoord + 0, yCoord + 1, zCoord - 2, ForgeDirection.SOUTH),
+				PortDef.make(xCoord + 1, yCoord + 1, zCoord - 2, ForgeDirection.SOUTH),
+	
+				PortDef.make(xCoord + 2, yCoord + 1, zCoord - 1, ForgeDirection.EAST),
+				PortDef.make(xCoord + 2, yCoord + 1, zCoord + 0, ForgeDirection.EAST),
+				PortDef.make(xCoord + 2, yCoord + 1, zCoord + 1, ForgeDirection.EAST),
+	
+				PortDef.make(xCoord - 2, yCoord + 1, zCoord - 1, ForgeDirection.WEST),
+				PortDef.make(xCoord - 2, yCoord + 1, zCoord + 0, ForgeDirection.WEST),
+				PortDef.make(xCoord - 2, yCoord + 1, zCoord + 1, ForgeDirection.WEST),
+			};
+		}
 
-			new DirPos(xCoord + 3, yCoord + 1, zCoord - 1, ForgeDirection.EAST),
-			new DirPos(xCoord + 3, yCoord + 1, zCoord + 0, ForgeDirection.EAST),
-			new DirPos(xCoord + 3, yCoord + 1, zCoord + 1, ForgeDirection.EAST),
-
-			new DirPos(xCoord - 3, yCoord + 1, zCoord - 1, ForgeDirection.WEST),
-			new DirPos(xCoord - 3, yCoord + 1, zCoord + 0, ForgeDirection.WEST),
-			new DirPos(xCoord - 3, yCoord + 1, zCoord + 1, ForgeDirection.WEST),
-		};
+		return cachedPorts;
 	}
 
 	public void enterCapsule(EntityPlayer player) {
