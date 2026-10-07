@@ -794,14 +794,14 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 				ExplosionLarge.spawnShock(worldObj, x, groundHeight + 0.5, z, 1 + worldObj.rand.nextInt(3), 1 + worldObj.rand.nextGaussian());
 			}
 		} else if(state == RocketState.LAUNCHING || getStateTimer() < 200) {
-			spawnContraolWithOffset(0, 0, 0);
+			spawnContrailWithOffset(0, 0, 0);
 
 			int cluster = stage.getCluster();
 			for(int c = 1; c < cluster; c++) {
 				float spin = (float)c / (float)(cluster - 1);
 				double ox = Math.cos(spin * Math.PI * 2) * stage.fuselage.part.bottom.radius;
 				double oz = Math.sin(spin * Math.PI * 2) * stage.fuselage.part.bottom.radius;
-				spawnContraolWithOffset(ox, 0, oz);
+				spawnContrailWithOffset(ox, 0, oz);
 			}
 		}
 	}

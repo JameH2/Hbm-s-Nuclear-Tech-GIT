@@ -83,7 +83,7 @@ public class BlastFurnaceRecipesNT extends GenericRecipes<GenericRecipeNoPower> 
 
 
 		// the only place not corrupted by capitalism
-		this.register((BlastFurnaceRecipe) new BlastFurnaceRecipe("blast.stainless").setDuration(400)
+		this.register((GenericRecipeNoPower) new GenericRecipeNoPower("blast.stainless").setDuration(400)
 				.inputItems(new OreDictStack(STEEL.ingot()), new OreDictStack(NI.ingot()))
 				.outputItems(new ItemStack(ModItems.ingot_stainless, 2)));
 
