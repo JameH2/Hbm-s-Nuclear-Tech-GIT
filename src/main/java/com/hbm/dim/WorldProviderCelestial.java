@@ -50,6 +50,8 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
 
 public abstract class WorldProviderCelestial extends WorldProviderSurface {
 
+	public CelestialBody body;
+
 	public List<AstroMetric> metrics;
 
 	private double eclipseAmount;
@@ -72,7 +74,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 
 	// Should we generate bedrock ice
 	public boolean hasIce() {
-		return CelestialBody.getBody(worldObj).hasIce;
+		return body.hasIce;
 	}
 
 	public boolean hasLife() {
@@ -83,10 +85,16 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		return 3;
 	}
 
+	// this is the stupidest possible method to override, but also our only reasonable option
+	@Override
+	protected void generateLightBrightnessTable() {
+		super.generateLightBrightnessTable();
+		body = CelestialBody.getBody(worldObj);
+	}
+
 	@Override
 	public void updateWeather() {
-		CelestialBody body = CelestialBody.getBody(worldObj);
-		CBT_Atmosphere atmosphere = CelestialBody.getTrait(worldObj, CBT_Atmosphere.class);
+		CBT_Atmosphere atmosphere = body.getTrait(CBT_Atmosphere.class);
 		double pressure = atmosphere != null ? atmosphere.getPressure() : 0;
 
 		// Will prevent water from existing, will be unset immediately before using a bucket if inside a pressurized room
@@ -200,8 +208,6 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	// so we use this to memoise expensive calcs
 	@SideOnly(Side.CLIENT)
 	protected void updateSky(float partialTicks) {
-		CelestialBody body = CelestialBody.getBody(worldObj);
-
 		// First fetch the suns true size
 		double sunSize = SolarSystem.calculateSunSize(body);
 		float solarAngle = worldObj.getCelestialAngle(partialTicks);
@@ -559,7 +565,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		return 1;
 	}
 	public boolean hasWeatherCycle() {
-		return CBT_Weather.supportsWeather(CelestialBody.getBody(worldObj));
+		return CBT_Weather.supportsWeather(body);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -733,7 +739,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	// which means we can set the time of day to local morning safely here!
 	@Override
 	public void resetRainAndThunder() {
-		CBT_Weather weather = CBT_Weather.ensureTrait(CelestialBody.getBody(worldObj));
+		CBT_Weather weather = CBT_Weather.ensureTrait(body);
 		if(weather != null) {
 			weather.forceClear(worldObj.rand, worldObj.rand.nextInt(168000) + 12000);
 			SolarSystemWorldSavedData.get(worldObj).markDirty();
@@ -840,7 +846,6 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	}
 
 	protected double getDayLength() {
-		CelestialBody body = CelestialBody.getBody(worldObj);
 		return body.getRotationalPeriod() / (1 - (1 / body.getPlanet().getOrbitalPeriod()));
 	}
 
@@ -870,8 +875,6 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		// Uncomment this line as well to return moon phase difficulty calcs to vanilla
 		// if(dimensionId == 0) return super.getMoonPhase(worldTime);
 
-		CelestialBody body = CelestialBody.getBody(worldObj);
-
 		// if no moons, default to half-moon difficulty
 		if(body.satellites.size() == 0) return 2;
 
@@ -894,8 +897,6 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	public double getEclipseAmount() {
 		if(eclipseAmount > -1) return eclipseAmount;
 
-		CelestialBody body = CelestialBody.getBody(worldObj);
-
 		// First fetch the suns true size
 		double sunSize = SolarSystem.calculateSunSize(body);
 		float solarAngle = worldObj.getCelestialAngle(0);
@@ -914,8 +915,6 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	}
 
 	public float getSunPower() {
-		CelestialBody body = CelestialBody.getBody(worldObj);
-
 		return body.getSunPower() * (1 - (float)getEclipseAmount());
 	}
 

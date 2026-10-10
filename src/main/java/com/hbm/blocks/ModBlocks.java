@@ -453,6 +453,7 @@ public class ModBlocks {
 	public static Block dres_rock;
 
 	public static Block laythe_silt;
+	public static Block laythe_root;
 
 	public static Block eve_silt;
 	public static Block eve_rock;
@@ -1821,7 +1822,7 @@ public class ModBlocks {
 		eve_rock = new BlockGeneric(Material.rock).setBlockName("eve_rock").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":eve_stone_2");
 
 		laythe_silt = new BlockFallingTint(Material.sand).setBlockName("laythe_silt").setStepSound(Block.soundTypeSand).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":laythe_silt");
-
+		laythe_root = new BlockDecoCT(Material.wood).noFortune().setBlockName("laythe_root").setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setBlockTextureName(RefStrings.MODID + ":laythe_root");
 
 		ike_regolith = new BlockTint(Material.rock, "ike_regolith2", "ike_regolith3", "ike_regolith4", "ike_regolith5").setBlockName("ike_regolith").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ike_regolith");
 		ike_stone = new BlockGeneric(Material.rock).setBlockName("ike_stone").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ike_stone");
@@ -3276,6 +3277,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(eve_rock, eve_rock.getUnlocalizedName());
 
 		GameRegistry.registerBlock(laythe_silt, laythe_silt.getUnlocalizedName());
+		GameRegistry.registerBlock(laythe_root, laythe_root.getUnlocalizedName());
 
 		GameRegistry.registerBlock(ike_regolith, ike_regolith.getUnlocalizedName());
 		GameRegistry.registerBlock(ike_stone, ike_stone.getUnlocalizedName());

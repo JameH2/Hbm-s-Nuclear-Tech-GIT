@@ -759,6 +759,7 @@ public class OreDictManager {
 
 		OreDictionary.registerOre(KEY_LOG, vinyl_log);
 		OreDictionary.registerOre(KEY_LOG, pvc_log);
+		OreDictionary.registerOre(KEY_LOG, laythe_root);
 
 		OreDictionary.registerOre(KEY_PLANKS, vinyl_planks);
 		OreDictionary.registerOre(KEY_PLANKS, pvc_planks);

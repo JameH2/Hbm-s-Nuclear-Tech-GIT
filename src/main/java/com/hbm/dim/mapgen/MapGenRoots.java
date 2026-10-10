@@ -2,6 +2,8 @@ package com.hbm.dim.mapgen;
 
 import java.util.Random;
 
+import com.hbm.blocks.ModBlocks;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
@@ -244,7 +246,7 @@ public class MapGenRoots extends MapGenBase {
 			if (y < 10) {
 				data[index] = Blocks.obsidian;
 			} else {
-				data[index] = Blocks.log;
+				data[index] = ModBlocks.laythe_root;
 
 				if (foundTop && data[index + 1] == filler) {
 					data[index + 1] = Blocks.grass;

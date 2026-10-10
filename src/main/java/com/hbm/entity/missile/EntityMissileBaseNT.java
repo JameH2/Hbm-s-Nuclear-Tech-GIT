@@ -324,22 +324,16 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 		}
 	}
 
-	List<ChunkCoordIntPair> loadedChunks = new ArrayList<ChunkCoordIntPair>();
-
 	public void loadNeighboringChunks(int newChunkX, int newChunkZ) {
 		if(!worldObj.isRemote && loaderTicket != null) {
+			ChunkCoordIntPair newChunk = new ChunkCoordIntPair(newChunkX, newChunkZ);
 
-			for(ChunkCoordIntPair chunk : ImmutableSet.copyOf(loaderTicket.getChunkList())) {
+			for(ChunkCoordIntPair chunk : loaderTicket.getChunkList()) {
+				if(chunk.equals(newChunk)) return; // cancel everything, we're already loaded
 				ForgeChunkManager.unforceChunk(loaderTicket, chunk);
 			}
 
-			loadedChunks.clear();
-			loadedChunks.add(new ChunkCoordIntPair(newChunkX, newChunkZ));
-			//loadedChunks.add(new ChunkCoordIntPair(newChunkX + (int) Math.floor((this.posX + this.motionX * this.motionMult()) / 16D), newChunkZ + (int) Math.floor((this.posZ + this.motionZ * this.motionMult()) / 16D)));
-
-			for(ChunkCoordIntPair chunk : loadedChunks) {
-				ForgeChunkManager.forceChunk(loaderTicket, chunk);
-			}
+			ForgeChunkManager.forceChunk(loaderTicket, newChunk);
 		}
 	}
 	
