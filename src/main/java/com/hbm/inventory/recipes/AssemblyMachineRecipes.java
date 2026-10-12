@@ -2038,7 +2038,9 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 			.setGroup(steelranger, this)
 		);
 
-
+		this.register(new GenericRecipe("ass.centrifuge_alt").setup(200, 100).outputItems(new ItemStack(ModBlocks.machine_centrifuge, 1))
+			.inputItems(new ComparableStack(ModItems.centrifuge_element, 1), new OreDictStack(ANY_PLASTIC.ingot(), 4), new OreDictStack(STEEL.plate(), 8), new ComparableStack(ModItems.circuit, 1, EnumCircuitType.CHIP))
+		);
 
 		if(Loader.isModLoaded("matter-manipulator")) {
 		// Matter Manipulator
