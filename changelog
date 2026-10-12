@@ -1,6 +1,2 @@
 ## Changed
-* Machines no longer tilt at all when unsupported in orbit
-
-## Fixed
-* Can't launch the 2 new satellites with custom rockets
-* Satellites don't travel to the correct dimension on launch
+* HTRF4 for the old fusion reactor has been removed

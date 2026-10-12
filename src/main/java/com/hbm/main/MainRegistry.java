@@ -1731,6 +1731,7 @@ public class MainRegistry {
 		ignoreMappings.add("hbm:tile.dummy_plate_cargo");
 		ignoreMappings.add("hbm:tile.machine_turbine");
 		ignoreMappings.add("hbm:tile.machine_fensu");
+		ignoreMappings.add("hbm:tile.machine_htrf4");
 		
 		/// REMAP ///
 		remapItems.put("hbm:item.gadget_explosive8", ModItems.early_explosive_lenses);
