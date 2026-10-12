@@ -10,15 +10,17 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.material.NTMMaterial;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.CrucibleUtil;
-import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
-import api.hbm.fluid.IFluidStandardTransceiver;
+import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -29,7 +31,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityMachineMagma extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiver {
+public class TileEntityMachineMagma extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiverMK2 {
 
 	public boolean operating;
 
@@ -56,17 +58,22 @@ public class TileEntityMachineMagma extends TileEntityMachineBase implements IEn
 		new MaterialStack(Mats.MAT_RICH_MAGMA, MaterialShapes.QUANTUM.q(4)),
 	};
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityMachineMagma() {
 		super(0);
 		tanks = new FluidTank[0];
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks()).setOutputTanks(getSendingTanks());
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote) {
-			for(DirPos pos : getConPos()) {
-				trySubscribe(worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-			}
+			moduleFluidPorts.update(getPorts());
+			modulePowerPorts.update(getPorts());
 
 			// baby drill, baby
 			operating = canOperate();
@@ -139,17 +146,24 @@ public class TileEntityMachineMagma extends TileEntityMachineBase implements IEn
 		}
 	}
 
-	private DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		return new DirPos[] {
-			new DirPos(xCoord - dir.offsetX * 4, yCoord - 1, zCoord - dir.offsetZ * 4, dir),
-			new DirPos(xCoord - dir.offsetX * 4, yCoord - 2, zCoord - dir.offsetZ * 4, dir),
-			new DirPos(xCoord - dir.offsetX * 4 + rot.offsetX, yCoord - 1, zCoord - dir.offsetZ * 4 + rot.offsetZ, dir),
-			new DirPos(xCoord - dir.offsetX * 4 + rot.offsetX, yCoord - 2, zCoord - dir.offsetZ * 4 + rot.offsetZ, dir),
-			new DirPos(xCoord - dir.offsetX * 4 - rot.offsetX, yCoord - 1, zCoord - dir.offsetZ * 4 - rot.offsetZ, dir),
-			new DirPos(xCoord - dir.offsetX * 4 - rot.offsetX, yCoord - 2, zCoord - dir.offsetZ * 4 - rot.offsetZ, dir),
-		};
+	protected PortDef[] cachedPorts;
+
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord - dir.offsetX * 3, yCoord - 1, zCoord - dir.offsetZ * 3, dir),
+				PortDef.make(xCoord - dir.offsetX * 3, yCoord - 2, zCoord - dir.offsetZ * 3, dir),
+				PortDef.make(xCoord - dir.offsetX * 3 + rot.offsetX, yCoord - 1, zCoord - dir.offsetZ * 3 + rot.offsetZ, dir),
+				PortDef.make(xCoord - dir.offsetX * 3 + rot.offsetX, yCoord - 2, zCoord - dir.offsetZ * 3 + rot.offsetZ, dir),
+				PortDef.make(xCoord - dir.offsetX * 3 - rot.offsetX, yCoord - 1, zCoord - dir.offsetZ * 3 - rot.offsetZ, dir),
+				PortDef.make(xCoord - dir.offsetX * 3 - rot.offsetX, yCoord - 2, zCoord - dir.offsetZ * 3 - rot.offsetZ, dir),
+			};
+		}
+
+		return cachedPorts;
 	}
 
 	private boolean canOperate() {
