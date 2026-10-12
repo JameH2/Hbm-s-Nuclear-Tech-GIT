@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import api.hbm.redstoneoverradio.IRORValueProvider;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.handler.CompatHandler;
 import com.hbm.handler.ThreeInts;
@@ -28,7 +29,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
-public class TileEntityAirPump extends TileEntityMachineBase implements IFluidStandardReceiver, IAtmosphereProvider, SimpleComponent, CompatHandler.OCComponent {
+public class TileEntityAirPump extends TileEntityMachineBase implements IFluidStandardReceiver, IAtmosphereProvider, SimpleComponent, CompatHandler.OCComponent, IRORValueProvider {
 
 	private int onTicks = 0;
 	private boolean registered = false;
@@ -249,7 +250,7 @@ public class TileEntityAirPump extends TileEntityMachineBase implements IFluidSt
 	@Callback(direct = true)
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] getFluid(Context context, Arguments args) {
-		return new Object[] {tank.getFill(), tank.getMaxFill()};
+		return new Object[] {tank.getFill(), tank.getMaxFill(), tank.getTankType().getUnlocalizedName()};
 	}
 
 	@Callback(direct = true)
@@ -352,4 +353,23 @@ public class TileEntityAirPump extends TileEntityMachineBase implements IFluidSt
 		return true;
 	}
 
+	// RoR!!
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+			PREFIX_VALUE + "type",
+			PREFIX_VALUE + "fill",
+			PREFIX_VALUE + "maxFill",
+			PREFIX_VALUE + "isSealed"
+		};
+	}
+
+	@Override
+	public String provideRORValue(String name) {
+		if((PREFIX_VALUE + "type").equals(name))		return	"" + tank.getTankType().getUnlocalizedName();
+		if((PREFIX_VALUE + "fill").equals(name))		return	"" + tank.getFill();
+		if((PREFIX_VALUE + "maxFill").equals(name))		return	"" + tank.getMaxFill();
+		if((PREFIX_VALUE + "isSealed").equals(name))	return	"" + (hasSeal() ? 1 : 0);
+		return null;
+	}
 }

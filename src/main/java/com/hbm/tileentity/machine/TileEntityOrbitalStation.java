@@ -1,5 +1,7 @@
 package com.hbm.tileentity.machine;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import java.util.stream.IntStream;
 
@@ -9,6 +11,7 @@ import com.hbm.dim.SolarSystem;
 import com.hbm.dim.orbit.OrbitalStation;
 import com.hbm.entity.missile.EntityRideableRocket;
 import com.hbm.entity.missile.EntityRideableRocket.RocketState;
+import com.hbm.handler.CompatHandler;
 import com.hbm.handler.RocketStruct;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
@@ -18,9 +21,14 @@ import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.fluid.IFluidStandardReceiver;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -28,7 +36,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityOrbitalStation extends TileEntityMachineBase implements IFluidStandardReceiver {
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
+public class TileEntityOrbitalStation extends TileEntityMachineBase implements IFluidStandardReceiver, SimpleComponent, CompatHandler.OCComponent {
 
 	private OrbitalStation station;
 	private EntityRideableRocket docked;
@@ -365,4 +374,59 @@ public class TileEntityOrbitalStation extends TileEntityMachineBase implements I
 		return tanks;
 	}
 
+	// opencomputers integratingation
+	@Override
+	@Optional.Method(modid = "OpenComputers")
+	public String getComponentName() {
+		return "ntm_station_port";
+	}
+
+	@Callback(direct = true, doc = "function():table -- Gets most port information.")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getInfo(Context context, Arguments args) {
+		if (station == null) return new Object[] {null};
+		return new Object[] {isCore(), hasDocked, hasRider, needsFuel, hasFuel, xCoord, yCoord, zCoord};
+	}
+
+	@Callback(direct = true, doc = "function():table -- Gets tank information.")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getTanks(Context context, Arguments args) {
+		if (station == null) return new Object[]{null};
+		List<Object[]> tanksInfo = new ArrayList<>();
+		for (int i = 0; i < tanks.length; i++) {
+			List<Object> tankInfo = new ArrayList<>();
+			tanksInfo.add(new Object[] {tanks[i].getFill(), tanks[i].getMaxFill(), tanks[i].getTankType().getUnlocalizedName()});
+		}
+		return new Object[] {tanks.length, tanksInfo.toArray()};
+	}
+
+	@Callback(direct = true, doc = "function():table -- Gets port coordinates.")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getCoordinates(Context context, Arguments args) {
+		return new Object[] {xCoord, yCoord, zCoord};
+	}
+
+	@Override
+	@Optional.Method(modid = "OpenComputers")
+	public String[] methods() {
+		return new String[] {
+			"getInfo",
+			"getTanks",
+			"getCoordinates",
+		};
+	}
+
+	@Override
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+		switch(method) {
+			case ("getInfo"):
+				return getInfo(context, args);
+			case ("getTanks"):
+				return getTanks(context, args);
+			case ("getCoordinates"):
+				return getCoordinates(context, args);
+		}
+		throw new NoSuchMethodException();
+	}
 }
