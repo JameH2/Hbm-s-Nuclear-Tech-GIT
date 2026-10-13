@@ -190,17 +190,22 @@ public class BlockRichOre extends BlockOre implements ILookOverlay {
 
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
-		if(world.isRemote) return super.removedByPlayer(world, player, x, y, z, willHarvest);
-
+		// creative and clearers remove freely; map entry goes with the block
 		if(player.capabilities.isCreativeMode) {
 			world.setBlockToAir(x, y, z);
 			return true;
 		}
-
-		// clearers remove without drops; map entry goes with the block
 		if(!willHarvest) return super.removedByPlayer(world, player, x, y, z, willHarvest);
 
-		if(!(player instanceof FakePlayer) && !allowVeinBreak(world, player)) return false;
+		// the server only sips one unit and keeps the block: stay put client-side too,
+		// or vein-mining ghosts the whole vein until the next block update
+		if(world.isRemote) return false;
+
+		if(!(player instanceof FakePlayer) && !allowVeinBreak(world, player)) {
+			// over the per-tick vein budget: keep the block and resync anyone who predicted a break
+			world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z), 3);
+			return false;
+		}
 
 		OreRichnessHelper.consumeOneUnit(world, x, y, z);
 		this.harvestBlock(world, player, x, y, z, world.getBlockMetadata(x, y, z));

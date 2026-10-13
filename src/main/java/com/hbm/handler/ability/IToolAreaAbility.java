@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.hbm.config.ToolConfig;
+import com.hbm.blocks.generic.BlockRichOre;
 import com.hbm.explosion.ExplosionNT;
 import com.hbm.explosion.ExplosionNT.ExAttrib;
 import com.hbm.handler.ThreeInts;
@@ -97,6 +98,9 @@ public interface IToolAreaAbility extends IBaseAbility {
 		public boolean onDig(int level, World world, int x, int y, int z, EntityPlayer player, ItemToolAbility tool) {
 			Block b = world.getBlock(x, y, z);
 
+			// depletable rich ores sip one unit per swing; veining the whole blob made machines pointless
+			if(b instanceof BlockRichOre) return false;
+
 			if(!ToolConfig.recursiveStone) {
 				Item item = Item.getItemFromBlock(b);
 				List<ItemStack> stone = OreDictionary.getOres(OreDictManager.KEY_STONE);
@@ -165,6 +169,10 @@ public interface IToolAreaAbility extends IBaseAbility {
 
 			Block b = world.getBlock(x, y, z);
 			Block ref = world.getBlock(refX, refY, refZ);
+
+			// belt and suspenders with the onDig guard above: rich extras never vein
+			if(b instanceof BlockRichOre || ref instanceof BlockRichOre) return;
+
 			int meta = world.getBlockMetadata(x, y, z);
 			int refMeta = world.getBlockMetadata(refX, refY, refZ);
 			TileEntity te1 = world.getTileEntity(refX, refY, refZ);
