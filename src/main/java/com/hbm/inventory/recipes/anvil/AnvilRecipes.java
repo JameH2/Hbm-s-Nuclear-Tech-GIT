@@ -235,6 +235,14 @@ public class AnvilRecipes extends SerializableRecipe {
 
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
+						new OreDictStack(KEY_STONE, 16),
+						new OreDictStack(STEEL.plate(), 4),
+						new OreDictStack(CU.pipe(), 1),
+						new ComparableStack(ModItems.motor, 1)
+				}, new AnvilOutput(new ItemStack(ModBlocks.machine_rockmill))).setTier(2));
+
+		constructionRecipes.add(new AnvilConstructionRecipe(
+				new AStack[] {
 						new OreDictStack(STEEL.ingot(), 8),
 						new OreDictStack(CU.plate(), 4),
 						new ComparableStack(ModItems.motor, 2),
@@ -999,13 +1007,6 @@ public class AnvilRecipes extends SerializableRecipe {
 					}).setTier(4));
 
 		}
-
-		constructionRecipes.add(new AnvilConstructionRecipe(
-				new ComparableStack(ModBlocks.machine_turbine), new AnvilOutput[] {
-						new AnvilOutput(new ItemStack(ModItems.turbine_titanium, 1)),
-						new AnvilOutput(new ItemStack(ModItems.coil_copper, 2)),
-						new AnvilOutput(new ItemStack(ModItems.ingot_steel, 4))
-						}).setTier(3));
 
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new ComparableStack(ModBlocks.yellow_barrel), new AnvilOutput[] {

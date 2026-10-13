@@ -80,7 +80,6 @@ public class BlockFluidBarrel extends BlockContainer implements ITooltipProvider
 
 	@Override
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-		if(this == ModBlocks.barrel_corroded) return null;
 		return new TileEntityBarrel(capacity);
 	}
 
@@ -236,11 +235,8 @@ public class BlockFluidBarrel extends BlockContainer implements ITooltipProvider
 		}
 
 		if(this == ModBlocks.barrel_corroded) {
-			list.add((EnumChatFormatting.AQUA) + I18nUtil.resolveKey("tile.fluid_barrel.capacity_6_000m_b"));
-			list.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("tile.store_hot_fluids"));
-			list.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("tile.store_highly_corrosive_fluids"));
-			list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.cannot_store_antimatter"));
-			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("tile.fluid_barrel.leaky"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("tile.fluid_barrel.leaky"));
+			list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("tile.fluid_barrel.capacity_16_000m_b"));
 		}
 
 		if(this == ModBlocks.barrel_steel) {

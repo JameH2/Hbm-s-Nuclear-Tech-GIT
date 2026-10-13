@@ -1,10 +1,14 @@
 package com.hbm.saveddata.satellites;
 
 import com.hbm.dim.CelestialBody;
+import com.hbm.items.ModItems;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModelCustom;
 
@@ -75,6 +79,13 @@ public class SatelliteWar extends SatelliteBase {
 	@Override
 	public String getType() {
 		return "WAR";
+	}
+
+	@Override
+	public IChatComponent[] getInfo(World world) {
+		return new IChatComponent[] {
+			new ChatComponentTranslation(ModItems.sat_war.getUnlocalizedName(new ItemStack(ModItems.sat_war)) + ".name")
+		};
 	}
 
 }

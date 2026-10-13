@@ -26,14 +26,14 @@ public class ItemSchraranium extends ItemCustomLore {
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int meta) {
 
-		if(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMFullSchrab)
+		if(GeneralConfig.enableLBSM)
 			return this.nikonium;
 		return this.itemIcon;
 	}
 
 	public String getItemStackDisplayName(ItemStack stack) {
 
-		if(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMFullSchrab)
+		if(GeneralConfig.enableLBSM)
 			return I18nUtil.resolveKey("item.schraranium.nikonium");
 		else
 			return super.getItemStackDisplayName(stack);
@@ -41,6 +41,6 @@ public class ItemSchraranium extends ItemCustomLore {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		if(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMFullSchrab) list.add(I18nUtil.resolveKey("item.schraranium.desc1"));
+		if(GeneralConfig.enableLBSM) list.add(I18nUtil.resolveKey("item.schraranium.desc1"));
 	}
 }

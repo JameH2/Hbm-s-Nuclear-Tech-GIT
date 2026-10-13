@@ -9,7 +9,6 @@ import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.items.ModItems;
-import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.NTMSounds;
@@ -19,6 +18,7 @@ import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.Compat;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.TrackerUtil;
 
 import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
@@ -27,6 +27,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockStem;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityTrackerEntry;
@@ -69,10 +70,27 @@ public class TileEntityMachineThresher extends TileEntityLoadedBase implements I
 		this.tank = new FluidTank(Fluids.WOODOIL, 100);
 	}
 
+	protected PortDef[] cachedPorts;
+
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite();
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+			
+			cachedPorts = new PortDef[] {
+					PortDef.make(xCoord, yCoord, zCoord, rot, rot.getOpposite())
+			};
+		}
+		return cachedPorts;
+	}
+
 	@Override
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
+			
+			this.setupFluidPorts(getPorts());
+			this.updatePortFIFO();
 			
 			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite();
 			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
@@ -84,10 +102,6 @@ public class TileEntityMachineThresher extends TileEntityLoadedBase implements I
 				} else {
 					this.isOn = false;
 				}
-
-				trySubscribe(tank.getTankType(), worldObj, xCoord + rot.offsetX, yCoord, zCoord + rot.offsetZ, rot);
-				trySubscribe(tank.getTankType(), worldObj, xCoord - rot.offsetX, yCoord, zCoord - rot.offsetZ, rot.getOpposite());
-				trySubscribe(tank.getTankType(), worldObj, xCoord, yCoord - 1, zCoord, Library.NEG_Y);
 			}
 
 			if(isOn && !isSuspended) {
@@ -140,7 +154,7 @@ public class TileEntityMachineThresher extends TileEntityLoadedBase implements I
 						Block b = worldObj.getBlock(hitX, yCoord, hitZ);
 						int meta = worldObj.getBlockMetadata(hitX, yCoord, hitZ);
 						
-						if(b.isNormalCube()) {
+						if(b.isNormalCube() && !this.canCut(b)) {
 							this.state = 2;
 							break;
 						}
@@ -181,7 +195,7 @@ public class TileEntityMachineThresher extends TileEntityLoadedBase implements I
 
 						// IGrowable also covers anything that accepts bone
 						// meal, so we have to handle actual crops last
-						if(b instanceof IGrowable && !this.shouldIgnore(worldObj, hitX, yCoord, hitZ, b, meta)) this.cutCrop(b, meta, hitX, yCoord, hitZ);
+						if(canCut(b) && !this.shouldIgnore(worldObj, hitX, yCoord, hitZ, b, meta)) this.cutCrop(b, meta, hitX, yCoord, hitZ);
 					}
 					
 					List<EntityLivingBase> affected = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(endX, yCoord + 0.5, endZ, endX, yCoord + 0.5, endZ).expand(Math.abs(dir.offsetX * 0.5) + Math.abs(rot.offsetX * 4.5), 0.5, Math.abs(dir.offsetZ * 0.5) + Math.abs(rot.offsetZ * 4.5)));
@@ -274,12 +288,23 @@ public class TileEntityMachineThresher extends TileEntityLoadedBase implements I
 			audio = null;
 		}
 	}
+	
+	public static boolean canCut(Block b) {
+		if(b instanceof IGrowable) return true;
+		if(b == Blocks.nether_wart) return true;
+		if(b == Blocks.melon_block || b == Blocks.pumpkin) return true;
+		return false;
+	}
 
 	public static boolean shouldIgnore(World world, int x, int y, int z, Block b, int meta) {
+		
+		if(b instanceof BlockStem) return true;
+		if(b == Blocks.nether_wart) return meta < 3;
 		
 		if((b instanceof IGrowable)) {
 			return ((IGrowable) b).func_149851_a(world, x, y, z, world.isRemote);
 		}
+		
 		return false;
 	}
 	

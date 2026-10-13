@@ -2,6 +2,7 @@ package com.hbm.entity.item;
 
 import java.util.List;
 
+import com.hbm.config.ServerConfig;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.ExplosionEffectTiny;
 import com.hbm.lib.Library;
@@ -161,11 +162,10 @@ public abstract class EntityMovingConveyorObject extends Entity {
 			}
 
 			final boolean firstUpdate = ticksExisted == 6;
-			
+
 			int blockX = (int) Math.floor(posX);
 			int blockY = (int) Math.floor(posY);
 			int blockZ = (int) Math.floor(posZ);
-
 			Block block = worldObj.getBlock(blockX, blockY, blockZ);
 
 			if((firstUpdate || ((ticksExisted + this.getEntityId()) % CRAM_CHECK_TICKS == 0)) && block instanceof IConveyorBelt) {
@@ -173,13 +173,29 @@ public abstract class EntityMovingConveyorObject extends Entity {
 				if(dir != ForgeDirection.UNKNOWN) {
 					boolean isForwardCrammed = isCrammed(worldObj, blockX + dir.offsetX, blockY + dir.offsetY, blockZ + dir.offsetZ);
 
-					if (blocked != isForwardCrammed) {
+					if(blocked != isForwardCrammed) {
 						List<EntityMovingConveyorObject> objsHere = getObjectsOnBlock(worldObj, blockX, blockY, blockZ);
-
-						for (EntityMovingConveyorObject obj : objsHere) {
+						for(EntityMovingConveyorObject obj : objsHere) {
 							obj.blocked = isForwardCrammed;
 						}
 					}
+				}
+			}
+			
+			// cram check every 20s
+			if((ticksExisted + this.getEntityId()) % 400 == 0) {
+				List<EntityMovingConveyorObject> objs = worldObj.getEntitiesWithinAABB(EntityMovingConveyorObject.class, this.boundingBox.expand(0.125, 0.125, 0.125));
+				if(objs.size() >= ServerConfig.CONVEYOR_CRAM_MAX.get()) {
+					for(EntityMovingConveyorObject obj : objs) obj.setDead();
+					ExplosionVNT vnt = new ExplosionVNT(worldObj, posX, posY + 0.125, posZ, 1, this);
+					vnt.setSFX(new ExplosionEffectTiny());
+					vnt.explode();
+					int x = (int) Math.floor(posX);
+					int y = (int) Math.floor(posY);
+					int z = (int) Math.floor(posZ);
+					
+					if(worldObj.getBlock(x, y, z) instanceof IConveyorBelt && this.ticksExisted > 400 && ServerConfig.CONVEYOR_CRAM_EXPLODE.get())
+						worldObj.func_147480_a(x, y, z, false);
 				}
 			}
 

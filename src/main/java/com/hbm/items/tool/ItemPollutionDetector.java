@@ -41,9 +41,31 @@ public class ItemPollutionDetector extends Item implements IBauble {
 		heavymetal = ((int) (heavymetal * 100)) / 100F;
 		//fallout = ((int) (fallout * 100)) / 100F;
 
-		PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.startTranslation("pollution.soot").color(EnumChatFormatting.YELLOW).next(": " + soot).flush(), 100, 4000), (EntityPlayerMP) entity);
-		PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.startTranslation("pollution.poison").color(EnumChatFormatting.YELLOW).next(": " + poison).flush(), 101, 4000), (EntityPlayerMP) entity);
-		PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.startTranslation("pollution.heavymetal").color(EnumChatFormatting.YELLOW).next(": " + heavymetal).flush(), 102, 4000), (EntityPlayerMP) entity);
+		PacketDispatcher.wrapper.sendTo(
+			new PlayerInformPacket(
+				ChatBuilder.startTranslation("pollution.soot")
+					.color(EnumChatFormatting.YELLOW)
+					.next(": " + soot)
+					.color(EnumChatFormatting.YELLOW)
+					.flush(), 100, 4000),
+				(EntityPlayerMP) entity);
+		PacketDispatcher.wrapper.sendTo(
+			new PlayerInformPacket(
+				ChatBuilder.startTranslation("pollution.poison")
+					.color(EnumChatFormatting.YELLOW)
+					.next(": " + poison)
+					.color(EnumChatFormatting.YELLOW)
+					.flush(), 101, 4000),
+			(EntityPlayerMP) entity);
+		PacketDispatcher.wrapper.sendTo(
+			new PlayerInformPacket(
+				ChatBuilder.startTranslation("pollution.heavymetal")
+					.color(EnumChatFormatting.YELLOW)
+					.next(": " + heavymetal)
+					.color(EnumChatFormatting.YELLOW)
+					.flush(), 102, 4000),
+			(EntityPlayerMP) entity);
+
 		//PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.start("Fallout: " + fallout).color(EnumChatFormatting.YELLOW).flush(), 103, 4000), (EntityPlayerMP) entity);
 	}
 

@@ -326,7 +326,7 @@ public class TileEntityMachineStardar extends TileEntityMachineBase implements I
 	// amazing
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("pid")) {
 			processDrive(data.getInteger("pid"), data.getInteger("ix"), data.getInteger("iz"));
 		}

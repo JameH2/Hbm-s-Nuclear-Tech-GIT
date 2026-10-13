@@ -46,9 +46,7 @@ public class ItemWrench extends ItemSword {
 
 			if(te != null && te instanceof TileEntityPipelineBase) {
 
-				if(stack.stackTagCompound == null) {
-					stack.stackTagCompound = new NBTTagCompound();
-
+				if(!stack.stackTagCompound.hasKey("x")) {
 					stack.stackTagCompound.setInteger("x", x);
 					stack.stackTagCompound.setInteger("y", y);
 					stack.stackTagCompound.setInteger("z", z);
@@ -129,7 +127,7 @@ public class ItemWrench extends ItemSword {
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean inhand) {
 
 		if(world.isRemote) {
-			if(stack.stackTagCompound != null) {
+			if(stack.hasTagCompound() && stack.stackTagCompound.hasKey("x")) {
 				Vec3 vec = Vec3.createVectorHelper(
 						entity.posX - stack.stackTagCompound.getInteger("x"),
 						entity.posY - stack.stackTagCompound.getInteger("y"),
