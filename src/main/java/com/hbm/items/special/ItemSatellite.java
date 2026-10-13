@@ -1,16 +1,22 @@
 package com.hbm.items.special;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.hbm.items.ISatChip;
 import com.hbm.items.ItemEnumMulti;
 import com.hbm.util.i18n.I18nUtil;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
 
 public class ItemSatellite extends ItemEnumMulti implements ISatChip {
 
@@ -46,4 +52,22 @@ public class ItemSatellite extends ItemEnumMulti implements ISatChip {
 		list.add(new ItemStack(item, 1, EnumSatType.SCIENCE_ASSEMBLER.ordinal()));
 		list.add(new ItemStack(item, 1, EnumSatType.SCIENCE_SENSOR.ordinal()));
 	}
+
+	// prevent missing texture errors
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister reg) {
+		Enum[] enums = theEnum.getEnumConstants();
+		this.icons = new IIcon[enums.length];
+
+		List<ItemStack> subItems = new ArrayList<>();
+		getSubItems(this, null, subItems);
+
+		for(ItemStack stack : subItems) {
+			int meta = stack.getItemDamage();
+			Enum num = enums[meta];
+			this.icons[meta] = reg.registerIcon(this.getIconString() + "." + num.name().toLowerCase(Locale.US));
+		}
+	}
+
 }

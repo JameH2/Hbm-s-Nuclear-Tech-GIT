@@ -1002,22 +1002,22 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 				double jZ = MathHelper.floor_double(originZ) + port[2] - dZ - facing.offsetZ * o;
 
 				double s = 0.3;
-				ForgeDirection dir = ForgeDirection.getOrientation(port[3]);
+				ForgeDirection portFace = ForgeDirection.getOrientation(port[3]);
 				//Yo wheres the port face
-				if(dir == ForgeDirection.UP || dir == ForgeDirection.DOWN) {
-					double fy = jY + (dir.offsetY > 0 ? 1 : 0);
+				if(portFace == ForgeDirection.UP || portFace == ForgeDirection.DOWN) {
+					double fy = jY + (portFace.offsetY > 0 ? 1 : 0);
 					tess.addVertex(jX + 0.5 - s, fy, jZ + 0.5 - s); tess.addVertex(jX + 0.5 + s, fy, jZ + 0.5 - s);
 					tess.addVertex(jX + 0.5 + s, fy, jZ + 0.5 - s); tess.addVertex(jX + 0.5 + s, fy, jZ + 0.5 + s);
 					tess.addVertex(jX + 0.5 + s, fy, jZ + 0.5 + s); tess.addVertex(jX + 0.5 - s, fy, jZ + 0.5 + s);
 					tess.addVertex(jX + 0.5 - s, fy, jZ + 0.5 + s); tess.addVertex(jX + 0.5 - s, fy, jZ + 0.5 - s);
-				} else if(dir == ForgeDirection.EAST || dir == ForgeDirection.WEST) {
-					double fx = jX + (dir.offsetX > 0 ? 1 : 0);
+				} else if(portFace == ForgeDirection.EAST || portFace == ForgeDirection.WEST) {
+					double fx = jX + (portFace.offsetX > 0 ? 1 : 0);
 					tess.addVertex(fx, jY + 0.5 - s, jZ + 0.5 - s); tess.addVertex(fx, jY + 0.5 + s, jZ + 0.5 - s);
 					tess.addVertex(fx, jY + 0.5 + s, jZ + 0.5 - s); tess.addVertex(fx, jY + 0.5 + s, jZ + 0.5 + s);
 					tess.addVertex(fx, jY + 0.5 + s, jZ + 0.5 + s); tess.addVertex(fx, jY + 0.5 - s, jZ + 0.5 + s);
 					tess.addVertex(fx, jY + 0.5 - s, jZ + 0.5 + s); tess.addVertex(fx, jY + 0.5 - s, jZ + 0.5 - s);
 				} else {
-					double fz = jZ + (dir.offsetZ > 0 ? 1 : 0);
+					double fz = jZ + (portFace.offsetZ > 0 ? 1 : 0);
 					tess.addVertex(jX + 0.5 - s, jY + 0.5 - s, fz); tess.addVertex(jX + 0.5 + s, jY + 0.5 - s, fz);
 					tess.addVertex(jX + 0.5 + s, jY + 0.5 - s, fz); tess.addVertex(jX + 0.5 + s, jY + 0.5 + s, fz);
 					tess.addVertex(jX + 0.5 + s, jY + 0.5 + s, fz); tess.addVertex(jX + 0.5 - s, jY + 0.5 + s, fz);
