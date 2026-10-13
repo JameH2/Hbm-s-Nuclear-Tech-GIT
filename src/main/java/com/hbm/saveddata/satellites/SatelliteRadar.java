@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.hbm.items.ModItems;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 
 import api.hbm.entity.IRadarDetectableNT.RadarScanParams;
 import api.hbm.redstoneoverradio.IRORInteractive;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
 /**
@@ -32,6 +36,13 @@ public class SatelliteRadar extends SatelliteBase {
 	public SatelliteRadar() { }
 
 	@Override public String getType() { return "LEO_RADAR"; }
+	
+	@Override
+	public IChatComponent[] getInfo(World world) {
+		return new IChatComponent[] {
+				new ChatComponentTranslation(ModItems.sat_radar.getUnlocalizedName(new ItemStack(ModItems.sat_radar)) + ".name")
+		};
+	}
 	
 	@Override
 	public void onCommandImpl(World world, String... cmd) {

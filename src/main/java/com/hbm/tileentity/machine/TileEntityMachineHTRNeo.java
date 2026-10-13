@@ -6,7 +6,10 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.dim.SolarSystem;
 import com.hbm.handler.atmosphere.IBlockSealable;
 import com.hbm.main.MainRegistry;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.sound.AudioWrapper;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.tileentity.machine.albion.TileEntityCooledBase;
 import com.hbm.tileentity.machine.fusion.IFusionPowerReceiver;
 import com.hbm.uninos.GenNode;
@@ -53,24 +56,27 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 	public float plasmaG;
 	public float plasmaB;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityMachineHTRNeo() {
 		super(0);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks()).setOutputTanks(getSendingTanks());
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 
 	@Override
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
+			moduleFluidPorts.update(getPorts());
+			modulePowerPorts.update(getPorts());
+
 			if(!hasRegistered) {
 				if(isFacingPrograde()) registerPropulsion();
 				hasRegistered = true;
 				isOn = false;
-			}
-
-			for(DirPos pos : this.getConPos()) {
-				this.trySubscribe(worldObj, pos);
-				this.trySubscribe(coolantTanks[0].getTankType(), worldObj, pos);
-				this.tryProvide(coolantTanks[1], worldObj, pos);
 			}
 
 			plasmaEnergySync = plasmaEnergy;
@@ -212,17 +218,22 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 		plasmaB = b;
 	}
 
-	@Override
-	public DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	protected PortDef[] cachedPorts;
 
-		return new DirPos[] {
-			new DirPos(xCoord - rot.offsetX * 5 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 5 - dir.offsetZ * 3, dir.getOpposite()),
-			new DirPos(xCoord - rot.offsetX * -1 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * -1 - dir.offsetZ * 3, dir.getOpposite()),
-			new DirPos(xCoord - rot.offsetX * 5 - dir.offsetX * -3, yCoord - 2, zCoord - rot.offsetZ * 5 - dir.offsetZ * -3, dir),
-			new DirPos(xCoord - rot.offsetX * -1 - dir.offsetX * -3, yCoord - 2, zCoord - rot.offsetZ * -1 - dir.offsetZ * -3, dir),
-		};
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord - rot.offsetX * 5 - dir.offsetX * 2, yCoord - 2, zCoord - rot.offsetZ * 5 - dir.offsetZ * 2, dir.getOpposite()),
+				PortDef.make(xCoord - rot.offsetX * -1 - dir.offsetX * 2, yCoord - 2, zCoord - rot.offsetZ * -1 - dir.offsetZ * 2, dir.getOpposite()),
+				PortDef.make(xCoord - rot.offsetX * 5 - dir.offsetX * -2, yCoord - 2, zCoord - rot.offsetZ * 5 - dir.offsetZ * -2, dir),
+				PortDef.make(xCoord - rot.offsetX * -1 - dir.offsetX * -2, yCoord - 2, zCoord - rot.offsetZ * -1 - dir.offsetZ * -2, dir),
+			};
+		}
+
+		return cachedPorts;
 	}
 
 	@Override

@@ -104,7 +104,7 @@ public class TileEntityOrbitalStationComputer extends TileEntityMachineBase impl
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if (station == null) return;
 
 		if(data.hasKey("name")) {

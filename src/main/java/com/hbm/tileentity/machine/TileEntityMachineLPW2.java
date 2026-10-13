@@ -9,11 +9,12 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.fluid.trait.FT_Rocket;
 import com.hbm.main.MainRegistry;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.TileEntityMachineBase;
-import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.tileentity.TilePort.PortDef;
 
-import api.hbm.fluid.IFluidStandardReceiver;
+import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import api.hbm.tile.IPropulsion;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -24,7 +25,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityMachineLPW2 extends TileEntityMachineBase implements IPropulsion, IFluidStandardReceiver {
+public class TileEntityMachineLPW2 extends TileEntityMachineBase implements IPropulsion, IFluidStandardReceiverMK2 {
 
 	public FluidTank[] tanks;
 
@@ -39,11 +40,15 @@ public class TileEntityMachineLPW2 extends TileEntityMachineBase implements IPro
 
 	private int fuelCost;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+
 	public TileEntityMachineLPW2() {
 		super(0);
 		tanks = new FluidTank[2];
 		tanks[0] = new FluidTank(Fluids.KEROSENE_REFORM, 256_000);
 		tanks[1] = new FluidTank(Fluids.OXYGEN, 256_000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks());
 	}
 
 	@Override
@@ -51,16 +56,12 @@ public class TileEntityMachineLPW2 extends TileEntityMachineBase implements IPro
 		if(!CelestialBody.inOrbit(worldObj)) return;
 
 		if(!worldObj.isRemote) {
+			moduleFluidPorts.update(getPorts());
+
 			if(!hasRegistered) {
 				if(isFacingPrograde()) registerPropulsion();
 				hasRegistered = true;
 				isOn = false;
-			}
-
-			for(DirPos pos : getConPos()) {
-				for(FluidTank tank : tanks) {
-					trySubscribe(tank.getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-				}
 			}
 
 			if(isOn) {
@@ -128,14 +129,20 @@ public class TileEntityMachineLPW2 extends TileEntityMachineBase implements IPro
 		time += speed;
 	}
 
-	private DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	protected PortDef[] cachedPorts;
 
-		return new DirPos[] {
-			new DirPos(xCoord + dir.offsetX * 4 - rot.offsetX, yCoord + 3, zCoord + dir.offsetZ * 4 - rot.offsetZ, rot),
-			new DirPos(xCoord - dir.offsetX * 4 - rot.offsetX, yCoord + 3, zCoord - dir.offsetZ * 4 - rot.offsetZ, rot.getOpposite())
-		};
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord + dir.offsetX * 3 - rot.offsetX, yCoord + 3, zCoord + dir.offsetZ * 3 - rot.offsetZ, dir),
+				PortDef.make(xCoord - dir.offsetX * 3 - rot.offsetX, yCoord + 3, zCoord - dir.offsetZ * 3 - rot.offsetZ, dir.getOpposite())
+			};
+		}
+
+		return cachedPorts;
 	}
 
 	@Override

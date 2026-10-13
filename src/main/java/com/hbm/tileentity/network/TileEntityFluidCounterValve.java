@@ -18,18 +18,34 @@ import net.minecraft.world.World;
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
 public class TileEntityFluidCounterValve extends TileEntityPipeBaseNT implements SimpleComponent, CompatHandler.OCComponent, IRORValueProvider, IRORInteractive {
 	private long counter;
+	private long lastCounterUpdate = -1;
 
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
 
 		if(!worldObj.isRemote) {
-			if(node != null && node.net != null && getType() != Fluids.NONE) {
-				counter += node.net.fluidTracker;
-			}
-
+			updateCounter();
 			networkPackNT(25);
 		}
+	}
+
+	private void updateCounter() {
+		if(hasPendingCounterUpdate()) {
+			counter += node.net.fluidTracker;
+			lastCounterUpdate = worldObj.getTotalWorldTime();
+		}
+	}
+
+	private long getCurrentCounter() {
+		if(hasPendingCounterUpdate()) {
+			return counter + node.net.fluidTracker;
+		}
+		return counter;
+	}
+
+	private boolean hasPendingCounterUpdate() {
+		return node != null && node.net != null && getType() != Fluids.NONE && lastCounterUpdate != worldObj.getTotalWorldTime();
 	}
 
 	@Override
@@ -41,6 +57,7 @@ public class TileEntityFluidCounterValve extends TileEntityPipeBaseNT implements
 		this.blockMetadata = -1; // delete cache
 
 		if(this.getBlockMetadata() == 0 && this.node != null) {
+			updateCounter();
 			UniNodespace.destroyNode(worldObj, xCoord, yCoord, zCoord, this.getType().getNetworkProvider());
 			this.node = null;
 		}
@@ -103,6 +120,7 @@ public class TileEntityFluidCounterValve extends TileEntityPipeBaseNT implements
 	@Callback(direct = true)
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] resetCounter(Context context, Arguments args) {
+		updateCounter();
 		counter = 0;
 		markDirty();
 		return new Object[] {};
@@ -128,7 +146,7 @@ public class TileEntityFluidCounterValve extends TileEntityPipeBaseNT implements
 	@Override
 	public String provideRORValue(String name) {
 		if((PREFIX_VALUE + "value").equals(name))
-			return String.valueOf(counter);
+			return String.valueOf(getCurrentCounter());
 		if((PREFIX_VALUE + "state").equals(name))
 			return String.valueOf(getBlockMetadata() == 1 ? 1 : 0);
 		return null;
@@ -147,9 +165,10 @@ public class TileEntityFluidCounterValve extends TileEntityPipeBaseNT implements
 	@Override
 	public String runRORFunction(String name, String[] params) {
 		if(name.equals(PREFIX_FUNCTION + "reset")) {
+			updateCounter();
 			counter = 0;
 			markDirty();
-		} else if(name.equals(PREFIX_FUNCTION + "setstate")) {
+		} else if(name.equals(PREFIX_FUNCTION + "setstate") && params.length > 0) {
 			setState(IRORInteractive.parseInt(params[0], 0, 1));
 		}
 		return null;

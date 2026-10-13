@@ -5,14 +5,14 @@ import java.io.IOException;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
 import com.hbm.tileentity.IConfigurableMachine;
+import com.hbm.tileentity.TilePort.PortDef;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -21,11 +21,15 @@ public class TileEntityRadiator extends TileEntityCondenser {
 	public static int inputTankSize = 500;
 	public static int outputTankSize = 500;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+
 	public TileEntityRadiator() {
 		tanks = new FluidTank[2];
 		tanks[0] = new FluidTank(Fluids.SPENTSTEAM, inputTankSize);
 		tanks[1] = new FluidTank(Fluids.WATER, outputTankSize);
 		vacuumOptimised = true;
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks()).setOutputTanks(getSendingTanks());
 	}
 
 	@Override
@@ -46,25 +50,20 @@ public class TileEntityRadiator extends TileEntityCondenser {
 	}
 
 	@Override
-	public void subscribeToAllAround(FluidType type, TileEntity te) {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 
-		this.trySubscribe(this.tanks[0].getTankType(), worldObj, xCoord - dir.offsetX + rot.offsetX, yCoord + 1, zCoord - dir.offsetZ + rot.offsetZ, dir);
-		this.trySubscribe(this.tanks[0].getTankType(), worldObj, xCoord - dir.offsetX + rot.offsetX, yCoord - 1, zCoord - dir.offsetZ + rot.offsetZ, dir);
-		this.trySubscribe(this.tanks[0].getTankType(), worldObj, xCoord - dir.offsetX - rot.offsetX, yCoord + 1, zCoord - dir.offsetZ - rot.offsetZ, dir);
-		this.trySubscribe(this.tanks[0].getTankType(), worldObj, xCoord - dir.offsetX - rot.offsetX, yCoord - 1, zCoord - dir.offsetZ - rot.offsetZ, dir);
-	}
-
-	@Override
-	public void sendFluidToAll(FluidTank tank, TileEntity te) {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-
-		this.sendFluid(this.tanks[1], worldObj, xCoord - dir.offsetX + rot.offsetX, yCoord + 1, zCoord - dir.offsetZ + rot.offsetZ, dir);
-		this.sendFluid(this.tanks[1], worldObj, xCoord - dir.offsetX + rot.offsetX, yCoord - 1, zCoord - dir.offsetZ + rot.offsetZ, dir);
-		this.sendFluid(this.tanks[1], worldObj, xCoord - dir.offsetX - rot.offsetX, yCoord + 1, zCoord - dir.offsetZ - rot.offsetZ, dir);
-		this.sendFluid(this.tanks[1], worldObj, xCoord - dir.offsetX - rot.offsetX, yCoord - 1, zCoord - dir.offsetZ - rot.offsetZ, dir);
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord + rot.offsetX, yCoord + 1, zCoord + rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord + rot.offsetX, yCoord - 1, zCoord + rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord - rot.offsetX, yCoord + 1, zCoord - rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord - rot.offsetX, yCoord - 1, zCoord - rot.offsetZ, dir.getOpposite()),
+			};
+		}
+		
+		return cachedPorts;
 	}
 	
 	AxisAlignedBB bb = null;

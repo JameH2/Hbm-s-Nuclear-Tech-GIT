@@ -1,6 +1,6 @@
 ## Changed
-* Machines no longer tilt at all when unsupported in orbit
+* HTRF4 for the old fusion reactor has been removed
+* Titanium bedrock ore on all planets changed to ilmenite, except for Tekto, which still provides pure titanium!
 
 ## Fixed
-* Can't launch the 2 new satellites with custom rockets
-* Satellites don't travel to the correct dimension on launch
+* Solar panel ports inconsistent and don't match model

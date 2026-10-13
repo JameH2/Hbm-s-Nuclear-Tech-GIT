@@ -10,11 +10,11 @@ import com.hbm.blocks.generic.BlockOreFluid;
 import com.hbm.inventory.container.ContainerMachineOilWell;
 import com.hbm.inventory.gui.GUIMachineOilWell;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
-import com.hbm.lib.Library;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IUpgradeInfoProvider;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BobMathUtil;
-import com.hbm.util.fauxpointtwelve.DirPos;
 import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
@@ -33,6 +33,8 @@ public class TileEntityMachineOilWell extends TileEntityOilDrillBase {
 	protected static int maxPower = 100_000;
 	protected static int consumption = 100;
 	protected static int delay = 50;
+	
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.horizontal(xCoord, yCoord, zCoord); return cachedPorts; }
 
 	@Override
 	public String getName() {
@@ -108,16 +110,6 @@ public class TileEntityMachineOilWell extends TileEntityOilDrillBase {
 		}
 
 		return bb;
-	}
-
-	@Override
-	public DirPos[] getConPos() {
-		return new DirPos[] {
-				new DirPos(xCoord + 1, yCoord, zCoord, Library.POS_X),
-				new DirPos(xCoord - 1, yCoord, zCoord, Library.NEG_X),
-				new DirPos(xCoord, yCoord, zCoord + 1, Library.POS_Z),
-				new DirPos(xCoord, yCoord, zCoord - 1, Library.NEG_Z)
-		};
 	}
 
 	@Override
