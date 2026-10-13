@@ -6,9 +6,11 @@ import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Dyson;
 import com.hbm.items.ISatChip;
 import com.hbm.items.ModItems;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
@@ -49,8 +51,12 @@ public class TileEntityDysonLauncher extends TileEntityMachineBase implements IE
 
 	public int satCount;
 
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityDysonLauncher() {
 		super(2);
+
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 
 	@Override
@@ -61,7 +67,8 @@ public class TileEntityDysonLauncher extends TileEntityMachineBase implements IE
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote) {
-			for(DirPos pos : getConPos()) trySubscribe(worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
+			modulePowerPorts.update(getPorts());
+
 			for(DirPos pos : getInvPos()) tryLoad(pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
 
 			swarmId = ISatChip.getFreqS(slots[1]);
@@ -167,17 +174,23 @@ public class TileEntityDysonLauncher extends TileEntityMachineBase implements IE
 	private int getSpinDownTime() { return sunsetOverdrive ? 12 : 68; }
 	private long getPowerPerTick() { return MAX_POWER / getSpinUpTime(); }
 
-	public DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	protected PortDef[] cachedPorts;
 
-		return new DirPos[] {
-			new DirPos(xCoord - dir.offsetX * 0 - rot.offsetX * 3, yCoord, zCoord - dir.offsetZ * 0 - rot.offsetZ * 3, rot.getOpposite()),
-			new DirPos(xCoord - dir.offsetX * 1 - rot.offsetX * 3, yCoord, zCoord - dir.offsetZ * 1 - rot.offsetZ * 3, rot.getOpposite()),
-			new DirPos(xCoord - dir.offsetX * 2 - rot.offsetX * 3, yCoord, zCoord - dir.offsetZ * 2 - rot.offsetZ * 3, rot.getOpposite()),
-			new DirPos(xCoord - dir.offsetX * 3 - rot.offsetX * 3, yCoord, zCoord - dir.offsetZ * 3 - rot.offsetZ * 3, rot.getOpposite()),
-			new DirPos(xCoord - dir.offsetX * 4 - rot.offsetX * 3, yCoord, zCoord - dir.offsetZ * 4 - rot.offsetZ * 3, rot.getOpposite()),
-		};
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord - dir.offsetX * 0 - rot.offsetX * 2, yCoord, zCoord - dir.offsetZ * 0 - rot.offsetZ * 2, rot.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX * 1 - rot.offsetX * 2, yCoord, zCoord - dir.offsetZ * 1 - rot.offsetZ * 2, rot.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX * 2 - rot.offsetX * 2, yCoord, zCoord - dir.offsetZ * 2 - rot.offsetZ * 2, rot.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX * 3 - rot.offsetX * 2, yCoord, zCoord - dir.offsetZ * 3 - rot.offsetZ * 2, rot.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX * 4 - rot.offsetX * 2, yCoord, zCoord - dir.offsetZ * 4 - rot.offsetZ * 2, rot.getOpposite()),
+			};
+		}
+
+		return cachedPorts;
 	}
 
 	public DirPos[] getInvPos() {

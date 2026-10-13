@@ -1,2 +1,5 @@
 ## Changed
 * HTRF4 for the old fusion reactor has been removed
+
+## Fixed
+* Solar panel ports inconsistent and don't match model

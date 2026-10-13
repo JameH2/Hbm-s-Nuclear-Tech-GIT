@@ -9,6 +9,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.FT_Rocket;
 import com.hbm.inventory.gui.GUITransporterRocket;
 import com.hbm.items.ItemVOTVdrive.Target;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.ParticleUtil;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
@@ -160,32 +161,40 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
 	}
 
 	@Override
-	protected DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	protected PortDef[] getFluidPorts() {
+		if(cachedFluidPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	
+			cachedFluidPorts = new PortDef[] {
+				PortDef.make(xCoord + dir.offsetX - rot.offsetX, yCoord, zCoord + dir.offsetZ - rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord + dir.offsetX + rot.offsetX, yCoord, zCoord + dir.offsetZ + rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX - rot.offsetX, yCoord, zCoord - dir.offsetZ - rot.offsetZ, dir),
+				PortDef.make(xCoord - dir.offsetX + rot.offsetX, yCoord, zCoord - dir.offsetZ + rot.offsetZ, dir),
+	
+				PortDef.make(xCoord + dir.offsetX - rot.offsetX, yCoord, zCoord + dir.offsetZ - rot.offsetZ, ForgeDirection.UP),
+				PortDef.make(xCoord + dir.offsetX + rot.offsetX, yCoord, zCoord + dir.offsetZ + rot.offsetZ, ForgeDirection.UP),
+				PortDef.make(xCoord - dir.offsetX - rot.offsetX, yCoord, zCoord - dir.offsetZ - rot.offsetZ, ForgeDirection.UP),
+				PortDef.make(xCoord - dir.offsetX + rot.offsetX, yCoord, zCoord - dir.offsetZ + rot.offsetZ, ForgeDirection.UP),
+			};
+		}
 
-		return new DirPos[] {
-			new DirPos(xCoord + dir.offsetX * 2 - rot.offsetX, yCoord, zCoord + dir.offsetZ * 2 - rot.offsetZ, dir.getOpposite()),
-			new DirPos(xCoord + dir.offsetX * 2 + rot.offsetX, yCoord, zCoord + dir.offsetZ * 2 + rot.offsetZ, dir.getOpposite()),
-			new DirPos(xCoord - dir.offsetX * 2 - rot.offsetX, yCoord, zCoord - dir.offsetZ * 2 - rot.offsetZ, dir),
-			new DirPos(xCoord - dir.offsetX * 2 + rot.offsetX, yCoord, zCoord - dir.offsetZ * 2 + rot.offsetZ, dir),
-
-			new DirPos(xCoord + dir.offsetX - rot.offsetX, yCoord + 1, zCoord + dir.offsetZ - rot.offsetZ, ForgeDirection.UP),
-			new DirPos(xCoord + dir.offsetX + rot.offsetX, yCoord + 1, zCoord + dir.offsetZ + rot.offsetZ, ForgeDirection.UP),
-			new DirPos(xCoord - dir.offsetX - rot.offsetX, yCoord + 1, zCoord - dir.offsetZ - rot.offsetZ, ForgeDirection.UP),
-			new DirPos(xCoord - dir.offsetX + rot.offsetX, yCoord + 1, zCoord - dir.offsetZ + rot.offsetZ, ForgeDirection.UP),
-		};
+		return cachedFluidPorts;
 	}
 
 	@Override
-	protected DirPos[] getTankPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	protected PortDef[] getFuelPorts() {
+		if(cachedFuelPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	
+			cachedFuelPorts = new PortDef[] {
+				PortDef.make(xCoord + dir.offsetX - rot.offsetX * 2, yCoord, zCoord + dir.offsetZ - rot.offsetZ * 2, rot),
+				PortDef.make(xCoord - dir.offsetX - rot.offsetX * 2, yCoord, zCoord - dir.offsetZ - rot.offsetZ * 2, rot),
+			};
+		}
 
-		return new DirPos[] {
-			new DirPos(xCoord + dir.offsetX - rot.offsetX * 3, yCoord, zCoord + dir.offsetZ - rot.offsetZ * 3, rot),
-			new DirPos(xCoord - dir.offsetX - rot.offsetX * 3, yCoord, zCoord - dir.offsetZ - rot.offsetZ * 3, rot),
-		};
+		return cachedFuelPorts;
 	}
 
 	@Override
@@ -207,8 +216,8 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound nbt) {
-		super.receiveControl(nbt);
+	public void receiveControl(EntityPlayer player, NBTTagCompound nbt) {
+		super.receiveControl(player, nbt);
 		if(nbt.hasKey("threshold"))
 			threshold = nbt.getInteger("threshold");
 	}
