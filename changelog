@@ -1,5 +1,6 @@
 ## Changed
 * HTRF4 for the old fusion reactor has been removed
+* Titanium bedrock ore on all planets changed to ilmenite, except for Tekto, which still provides pure titanium!
 
 ## Fixed
 * Solar panel ports inconsistent and don't match model

@@ -24,6 +24,7 @@ import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.OreDictManager.DictFrame;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.recipes.*;
 import com.hbm.inventory.recipes.anvil.AnvilRecipes;
@@ -277,7 +278,9 @@ public class MainRegistry {
 		/* For whichever fucking reason, replacing the bolt items with a bolt autogen broke all autogen items, most likely due to the load order.
 		 * This "fix" just makes sure that the material system is loaded first no matter what. */
 		Mats.MAT_STONE.getUnlocalizedName();
+		Mats.customMatsInit();
 		Fluids.init();
+		MaterialShapes.customShapesInit();
 		proxy.registerPreRenderInfo();
 		ModBlocks.mainRegistry();
 		ModItems.mainRegistry();
@@ -542,6 +545,9 @@ public class MainRegistry {
 				proxy.handleNHNEICompat();
 			}
 		}
+
+		// Load compatibility for OC.
+		CompatHandler.init();
 	}
 
 	@EventHandler
@@ -608,7 +614,7 @@ public class MainRegistry {
 		proxy.registerMissileItems();
 
 		// Load compatibility for OC.
-		CompatHandler.init();
+		CompatHandler.postInit();
 
 		// Load compatibility for AE2.
 		AE2CompatHandler.init();

@@ -173,7 +173,7 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting i
 				if(output.amount <= 0) this.output = null;
 			}
 
-			RotaryFurnaceRecipe recipe = RotaryFurnaceRecipes.getRecipe(slots[0], slots[1], slots[2]);
+			RotaryFurnaceRecipe recipe = RotaryFurnaceRecipes.getRecipe(tanks[0].getTankType(), slots[0], slots[1], slots[2]);
 			this.isProgressing = false;
 			this.canBreathe = false;
 
@@ -373,18 +373,8 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting i
 	}
 
 	@Override
-	public void pollute(PollutionType type, float amount) {
-		FluidTank tank = type == PollutionType.SOOT ? smoke : type == PollutionType.HEAVYMETAL ? smoke_leaded : smoke_poison;
-
-		int fluidAmount = (int) Math.ceil(amount * 100);
-		tank.setFill(tank.getFill() + fluidAmount);
-
-		if(tank.getFill() > tank.getMaxFill()) {
-			int overflow = tank.getFill() - tank.getMaxFill();
-			tank.setFill(tank.getMaxFill());
-			PollutionHandler.incrementPollution(worldObj, xCoord, yCoord, zCoord, type, overflow / 100F);
-			this.isVenting = true;
-		}
+	protected void vent() {
+		this.isVenting = true;
 	}
 
 	@Override public int[] getAccessibleSlotsFromSide(int side) { return new int[0]; }

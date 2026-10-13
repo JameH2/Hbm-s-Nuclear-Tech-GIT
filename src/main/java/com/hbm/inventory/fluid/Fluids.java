@@ -248,6 +248,7 @@ public class Fluids {
 	public static FluidType ALUMINA;
 	public static FluidType AQUEOUS_NICKEL;
 	public static FluidType HGAS;
+	public static FluidType TITANIUM_TETRACHLORIDE;
 	public static FluidType CONCRETE;
 	public static FluidType VINYL;
 	public static FluidType TCRUDE;
@@ -539,7 +540,8 @@ public class Fluids {
 		LITHCARBONATE =			new FluidType("LITHCARBONATE",		0xD1CEBE, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
 		AIRBLAST =				new FluidType("AIRBLAST",			0xFFDADA, 0, 3, 0, EnumSymbol.NONE).setTemp(1_200).addTraits(GASEOUS);
 		FLUE =					new FluidType("FLUE",				0x131313, 1, 4, 1, EnumSymbol.NONE).addContainers(new CD_Gastank(0xFF4545, 0xFFE97F)).addTraits(new FT_Flammable(25_000), GASEOUS, new FT_Polluting().burn(PollutionType.SOOT, SOOT_GAS).release(PollutionType.SOOT, SOOT_GAS * 5));
-
+		TITANIUM_TETRACHLORIDE =new FluidType("TITANIUM_TETRACHLORIDE",0xDBF796, 3, 0, 2, EnumSymbol.NOWATER).addContainers(new CD_Canister(0xE1E549)).addTraits(LIQUID);
+		
 		// ^ ^ ^ ^ ^ ^ ^ ^
 		//ADD NEW FLUIDS HERE
 
@@ -741,6 +743,7 @@ public class Fluids {
 		metaOrder.add(BAUXITE_SOLUTION);
 		metaOrder.add(ALUMINA);
 		metaOrder.add(AQUEOUS_NICKEL);
+		metaOrder.add(TITANIUM_TETRACHLORIDE);
 		metaOrder.add(CONCRETE);
 		//solutions and working fluids
 		metaOrder.add(FRACKSOL);
@@ -1252,6 +1255,10 @@ public class Fluids {
 		}
 
 		return all;
+	}
+	
+	public static boolean isSmoke(FluidType type) {
+		return type == Fluids.SMOKE || type == Fluids.SMOKE_POISON || type == Fluids.SMOKE_LEADED;
 	}
 
 	public static class CD_Canister {

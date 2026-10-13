@@ -495,7 +495,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 
 	@Override
 	public FluidTank[] getSendingTanks() {
-		return new FluidTank[] { blood };
+		return new FluidTank[] { blood, smoke, smoke_leaded, smoke_poison };
 	}
 
 	@Override
