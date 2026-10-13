@@ -56,10 +56,10 @@ public class TileEntityRadiator extends TileEntityCondenser {
 			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 
 			cachedPorts = new PortDef[] {
-				PortDef.make(xCoord + rot.offsetX, yCoord + 1, zCoord + rot.offsetZ, dir),
-				PortDef.make(xCoord + rot.offsetX, yCoord - 1, zCoord + rot.offsetZ, dir),
-				PortDef.make(xCoord - rot.offsetX, yCoord + 1, zCoord - rot.offsetZ, dir),
-				PortDef.make(xCoord - rot.offsetX, yCoord - 1, zCoord - rot.offsetZ, dir),
+				PortDef.make(xCoord + rot.offsetX, yCoord + 1, zCoord + rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord + rot.offsetX, yCoord - 1, zCoord + rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord - rot.offsetX, yCoord + 1, zCoord - rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord - rot.offsetX, yCoord - 1, zCoord - rot.offsetZ, dir.getOpposite()),
 			};
 		}
 		
