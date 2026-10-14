@@ -26,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -392,6 +393,9 @@ public interface IToolAreaAbility extends IBaseAbility {
 
 		@Override
 		public boolean onDig(int level, World world, int x, int y, int z, EntityPlayer player, ItemToolAbility tool) {
+			// Rich deposits fall back to single-block harvesting, without an explosion.
+			if(world.getBlock(x, y, z) instanceof BlockRichOre) return false;
+
 			float strength = strengthAtLevel[level];
 
 			ExplosionNT ex = new ExplosionNT(player.worldObj, player, x + 0.5, y + 0.5, z + 0.5, strength);
@@ -399,6 +403,11 @@ public interface IToolAreaAbility extends IBaseAbility {
 			ex.addAttrib(ExAttrib.NOHURT);
 			ex.addAttrib(ExAttrib.NOPARTICLE);
 			ex.doExplosionA();
+			// Exploding a nearby ordinary block must not cash out rich deposits either.
+			ex.affectedBlockPositions.removeIf(position -> {
+				ChunkPosition pos = (ChunkPosition) position;
+				return world.getBlock(pos.chunkPosX, pos.chunkPosY, pos.chunkPosZ) instanceof BlockRichOre;
+			});
 			ex.doExplosionB(false);
 
 			player.worldObj.createExplosion(player, x + 0.5, y + 0.5, z + 0.5, 0.1F, false);

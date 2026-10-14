@@ -106,7 +106,7 @@ public class BlockRichOre extends BlockOre implements ILookOverlay {
 	// units in a fresh block
 	public static final int MAX_UNITS = 8;
 
-	// hand vein-mining applies to 3 rich blocks max per swing (one tick); fake players exempt
+	// at most one rich extraction per player per tick; fake players exempt
 	private static final HashMap<UUID, long[]> veinCounts = new HashMap<>();
 
 	public final RichOreType type;
@@ -223,7 +223,7 @@ public class BlockRichOre extends BlockOre implements ILookOverlay {
 			veinCounts.put(player.getUniqueID(), entry);
 		}
 
-		if(entry[1] >= 3) return false;
+		if(entry[1] >= 1) return false;
 		entry[1]++;
 		return true;
 	}
