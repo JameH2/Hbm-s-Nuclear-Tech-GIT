@@ -18,10 +18,12 @@ import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import com.hbm.tileentity.TilePort.PortDef;
+import com.hbm.tileentity.TilePortShapes;
 
 import api.hbm.energymk2.IEnergyProviderMK2;
 import api.hbm.energymk2.IBatteryItem;
-import api.hbm.fluid.IFluidStandardTransceiver;
+import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -36,9 +38,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import com.hbm.inventory.container.ContainerMachineSelenium;
 import com.hbm.inventory.gui.GUIMachineSelenium;
-import com.hbm.util.fauxpointtwelve.DirPos;
 
-public class TileEntityMachineSeleniumEngine extends TileEntityLoadedBase implements ISidedInventory, IEnergyProviderMK2, IFluidStandardTransceiver, IConfigurableMachine, IGUIProvider, IFluidCopiable {
+public class TileEntityMachineSeleniumEngine extends TileEntityLoadedBase implements ISidedInventory, IEnergyProviderMK2, IFluidStandardTransceiverMK2, IConfigurableMachine, IGUIProvider, IFluidCopiable {
 
 	private ItemStack slots[];
 
@@ -224,8 +225,11 @@ public class TileEntityMachineSeleniumEngine extends TileEntityLoadedBase implem
 	public void updateEntity() {
 		if(!worldObj.isRemote) {
 
-			this.subscribeToAllAround(tank.getTankType(), this);
-			this.tryProvide(worldObj, xCoord, yCoord - 1, zCoord, ForgeDirection.DOWN);
+			if(cachedFluidPorts == null) cachedFluidPorts = TilePortShapes.around(xCoord, yCoord, zCoord);
+			if(cachedPowerPorts == null) cachedPowerPorts = new PortDef[] { PortDef.make(xCoord, yCoord, zCoord, ForgeDirection.DOWN) };
+			this.setupFluidPorts(cachedFluidPorts);
+			this.setupPowerPorts(cachedPowerPorts);
+			this.updatePortPOFIFO();
 
 			pistonCount = countPistons();
 
@@ -244,6 +248,9 @@ public class TileEntityMachineSeleniumEngine extends TileEntityLoadedBase implem
 			this.networkPackNT(150);
 		}
 	}
+
+	protected PortDef[] cachedFluidPorts;
+	protected PortDef[] cachedPowerPorts;
 
 	@Override
 	public void serialize(ByteBuf buf) {

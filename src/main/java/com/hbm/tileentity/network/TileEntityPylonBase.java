@@ -37,6 +37,10 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 
 		double len = Math.min(first.getMaxWireLength(), second.getMaxWireLength());
 
+		return len >= getWireDistance(first, second) ? 0 : 3;
+	}
+
+	public static double getWireDistance(TileEntityPylonBase first, TileEntityPylonBase second) {
 		Vec3 firstPos = first.getConnectionPoint();
 		Vec3 secondPos = second.getConnectionPoint();
 
@@ -46,7 +50,7 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 				(secondPos.zCoord) - (firstPos.zCoord)
 				);
 
-		return len >= delta.lengthVector() ? 0 : 3;
+		return delta.lengthVector();
 	}
 
 	public boolean setColor(ItemStack stack) {

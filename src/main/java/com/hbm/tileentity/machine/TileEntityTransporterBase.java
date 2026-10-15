@@ -4,21 +4,23 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import com.hbm.interfaces.IControlReceiver;
-import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.items.tool.ItemTransporterLinker.TransporterInfo;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BufferUtil;
 import com.hbm.util.InventoryUtil;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IEnergyReceiverMK2.ConnectionPriority;
-import api.hbm.fluid.IFluidStandardTransceiver;
 import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
+import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -31,7 +33,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public abstract class TileEntityTransporterBase extends TileEntityMachineBase implements IGUIProvider, IControlReceiver, IFluidStandardTransceiver {
+public abstract class TileEntityTransporterBase extends TileEntityMachineBase implements IGUIProvider, IControlReceiver, IFluidStandardTransceiverMK2 {
 
 	private String name = "container.transporter";
 
@@ -48,8 +50,8 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 		for(int i = 0; i < tankCount; i++) {
 			tanks[i] = new FluidTank(Fluids.NONE, tankSize);
 		}
-		for(int i = tankCount; i < tankCount + extraTanks; i++) {
-			tanks[i] = new FluidTank(Fluids.NONE, extraTankSize);
+		for(int i = 0; i < extraTanks; i++) {
+			tanks[i + tankCount] = new FluidTank(Fluids.NONE, extraTankSize);
 		}
 
 		inputSlotMax = slotCount / 2;
@@ -57,6 +59,9 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 
 		inputTankMax = tankCount / 2;
 		outputTankMax = tankCount;
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks()).setOutputTanks(getSendingTanks());
+		moduleFuelPorts = new ModulePortManFluidAdaptive(fuelReceiver).setInputTanks(fuelReceiver.getReceivingTanks());
 	}
 
 	// The transporter we're sending our contents to
@@ -69,6 +74,9 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 	private int inputTankMax;
 	private int outputTankMax;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+	protected ModulePortManFluidAdaptive moduleFuelPorts;
+
 	@Override
 	public String getName() {
 		return "container.transporter";
@@ -77,6 +85,9 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 	@Override
 	public void updateEntity() {
 		if(worldObj.isRemote) return;
+
+		moduleFluidPorts.update(getFluidPorts());
+		moduleFuelPorts.update(getFuelPorts());
 
 		// Set tank types and split fills
 		for(int i = 0; i < inputTankMax; i++) {
@@ -151,25 +162,6 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 	}
 
 	private void updateConnections() {
-		// Sending/Receiving tanks
-		for(DirPos pos : getConPos()) {
-			for(int i = 0; i < outputTankMax; i++) {
-				if(tanks[i].getTankType() != Fluids.NONE) {
-					trySubscribe(tanks[i].getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-					this.sendFluid(tanks[i], worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-				}
-			}
-		}
-
-		// Fuel tanks
-		for(DirPos pos : getTankPos()) {
-			for(int i = outputTankMax; i < tanks.length; i++) {
-				if(tanks[i].getTankType() != Fluids.NONE) {
-					trySubscribeFuel(tanks[i].getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-				}
-			}
-		}
-
 		// Inserter
 		for(DirPos pos : getInsertPos()) {
 			tryLoad(pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
@@ -258,20 +250,15 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 		}
 	}
 
-	public void trySubscribeFuel(FluidType type, World world, int x, int y, int z, ForgeDirection dir) {
-		fuelReceiver.trySubscribe(type, world, x, y, z, dir);
-	}
+	@Override
+	public void setWorldObj(World world) {
+		super.setWorldObj(world);
+        fuelReceiver.setWorldObj(world);
+    }
 
 	FuelReceiver fuelReceiver = new FuelReceiver();
 
-	private class FuelReceiver implements IFluidStandardReceiverMK2 {
-
-		boolean valid = true;
-
-		@Override
-		public boolean isLoaded() {
-			return valid && TileEntityTransporterBase.this.isLoaded();
-		}
+	private class FuelReceiver extends TileEntityLoadedBase implements IFluidStandardReceiverMK2 {
 
 		@Override
 		public FluidTank[] getAllTanks() {
@@ -288,12 +275,6 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 			return ConnectionPriority.HIGH;
 		}
 
-	}
-
-	@Override
-	public void invalidate() {
-		super.invalidate();
-		fuelReceiver.valid = false;
 	}
 
 	// splitting is commutative, order don't matter
@@ -369,8 +350,11 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 		name = BufferUtil.readString(buf);
 	}
 
-	protected abstract DirPos[] getConPos();
-	protected abstract DirPos[] getTankPos();
+	protected PortDef[] cachedFluidPorts;
+	protected PortDef[] cachedFuelPorts;
+
+	protected abstract PortDef[] getFluidPorts();
+	protected abstract PortDef[] getFuelPorts();
 	protected abstract DirPos[] getInsertPos();
 	protected abstract DirPos[] getExtractPos();
 
@@ -491,7 +475,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 
 	// Is commutative, will automatically link and unlink its pair
 	@Override
-	public void receiveControl(NBTTagCompound nbt) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound nbt) {
 		if(nbt.hasKey("name")) name = nbt.getString("name");
 		if(nbt.hasKey("unlink")) {
 			unlinkTransporter();

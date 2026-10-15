@@ -25,6 +25,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.util.FakePlayer;
 
 public class EntityDamageUtil {
 
@@ -530,5 +531,9 @@ public class EntityDamageUtil {
 	public static Vec3 getPosition(EntityPlayer player) {
 		boolean client = player.yOffset != 0; // shitty hack to account for the weird offset rules i couldn't really work around otherwise
 		return Vec3.createVectorHelper(player.posX, player.posY + (client ? 0 : player.getEyeHeight()), player.posZ);
+	}
+	
+	public static boolean isRealPlayer(Entity entity) {
+		return entity instanceof EntityPlayer && !(entity instanceof FakePlayer);
 	}
 }

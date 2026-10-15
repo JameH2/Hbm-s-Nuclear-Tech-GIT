@@ -61,6 +61,11 @@ public class StructureConfig {
 	public static int featuresSpawnWeight = 50;
 
 	public static int aircraftCarrierSpawnWeight = 3;
+	
+	public static int falloutShelterHouseSpawnWeight = 15;
+	public static int abandonedArcticStationSpawnWeight = 5;
+	public static int militaryBaseSpawnWeight = 1;
+	public static int submarineSpawnWeight = 2;
 
 	public static int campASpawnWeight = 10;
 	public static int campBSpawnWeight = 5;
@@ -126,6 +131,10 @@ public class StructureConfig {
 		towerBaseSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.41_towerBaseSpawnWeight", "Spawn weight for tower base.", 30);
 		waterPumpSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.42_waterPumpSpawnWeight", "Spawn weight for water pump structure.", 15);
 		deadDishSmallSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.43_deadDishSmallSpawnWeight", "Spawn weight for dead dish small structure.", 15);
+		falloutShelterHouseSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.44_falloutShelterHouseSpawnWeight", "Spawn weight for fallout shelter house.", 15);
+		abandonedArcticStationSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.45_abandonedArcticStationSpawnWeight", "Spawn weight for abandoned arctic station.", 5);
+		militaryBaseSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.46_militaryBaseSpawnWeight", "Spawn weight for military base.", 1);
+		submarineSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.49_submarineSpawnWeight", "Spawn weight for submarine.", 2);
 		campASpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.47_campASpawnWeight", "Spawn weight for camp A.", 10);
 		campBSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.48_campBSpawnWeight", "Spawn weight for camp B.", 5);
 		airplaneSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.50_airplaneSpawnWeight", "Spawn weight for airplane.", 2);

@@ -2,14 +2,15 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
-import com.hbm.inventory.fluid.trait.FT_Gaseous;
-import com.hbm.inventory.fluid.trait.FT_Polluting;
+import com.hbm.inventory.fluid.trait.FluidTrait;
 import com.hbm.inventory.fluid.trait.FluidTrait.FluidReleaseType;
 import com.hbm.inventory.fluid.trait.FluidTraitSimple.FT_Amat;
 import com.hbm.main.MainRegistry;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.TileEntityLoadedBase;
-import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.tileentity.TilePort.PortDef;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
@@ -29,20 +30,21 @@ public class TileEntityAtmosphericEmitter extends TileEntityLoadedBase implement
 	public float prevFan = 0;
 	private AudioWrapper audio;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityAtmosphericEmitter() {
 		this.tank = new FluidTank(Fluids.NONE, 50_000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks());
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 	
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote) {
-
-			if(worldObj.getTotalWorldTime() % 20 == 0) {
-				for(DirPos pos : getConPos()) {
-					trySubscribe(tank.getTankType(), worldObj, pos);
-					trySubscribe(worldObj, pos);
-				}
-			}
+			moduleFluidPorts.update(getPorts());
+			modulePowerPorts.update(getPorts());
 
 			networkPackNT(50);
 
@@ -56,9 +58,8 @@ public class TileEntityAtmosphericEmitter extends TileEntityLoadedBase implement
 					}
 	
 					tank.setFill(tank.getFill() - toSpill);
-	
-					FT_Polluting.pollute(worldObj, xCoord, yCoord, zCoord, tank.getTankType(), FluidReleaseType.SPILL, toSpill);
-					FT_Gaseous.release(worldObj, tank.getTankType(), toSpill);
+
+					FluidTrait.onRelease(worldObj, xCoord, yCoord, zCoord, tank.getTankType(), tank, FluidReleaseType.SPILL, toSpill);
 	
 					this.power -= toSpill * 10;
 				}
@@ -116,22 +117,29 @@ public class TileEntityAtmosphericEmitter extends TileEntityLoadedBase implement
 		}
 	}
 
-	public DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		return new DirPos[] {
-				new DirPos(xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ, dir),
-				new DirPos(xCoord + dir.offsetX + rot.offsetX, yCoord, zCoord + dir.offsetZ + rot.offsetZ, dir),
+	protected PortDef[] cachedPorts;
 
-				new DirPos(xCoord - dir.offsetX * 2, yCoord, zCoord - dir.offsetZ * 2, dir.getOpposite()),
-				new DirPos(xCoord - dir.offsetX * 2 + rot.offsetX, yCoord, zCoord - dir.offsetZ * 2 + rot.offsetZ, dir.getOpposite()),
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 
-				new DirPos(xCoord + rot.offsetX * 2, yCoord, zCoord + rot.offsetZ * 2, rot),
-				new DirPos(xCoord + rot.offsetX * 2 - dir.offsetX, yCoord, zCoord + rot.offsetZ * 2 - dir.offsetZ, rot),
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord, yCoord, zCoord, dir),
+				PortDef.make(xCoord + rot.offsetX, yCoord, zCoord + rot.offsetZ, dir),
+	
+				PortDef.make(xCoord - dir.offsetX, yCoord, zCoord - dir.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX + rot.offsetX, yCoord, zCoord - dir.offsetZ + rot.offsetZ, dir.getOpposite()),
+	
+				PortDef.make(xCoord + rot.offsetX, yCoord, zCoord + rot.offsetZ, rot),
+				PortDef.make(xCoord + rot.offsetX - dir.offsetX, yCoord, zCoord + rot.offsetZ - dir.offsetZ, rot),
+	
+				PortDef.make(xCoord, yCoord, zCoord, rot.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX, yCoord, zCoord - dir.offsetZ, rot.getOpposite())
+			};
+		}
 
-				new DirPos(xCoord - rot.offsetX, yCoord, zCoord - rot.offsetZ, rot.getOpposite()),
-				new DirPos(xCoord - rot.offsetX - dir.offsetX, yCoord, zCoord - rot.offsetZ - dir.offsetZ, rot.getOpposite())
-		};
+		return cachedPorts;
 	}
 
 	@Override public AudioWrapper createAudioLoop() {
@@ -184,16 +192,15 @@ public class TileEntityAtmosphericEmitter extends TileEntityLoadedBase implement
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-
 		if(bb == null) {
 			bb = AxisAlignedBB.getBoundingBox(
-					xCoord - 1,
-					yCoord,
-					zCoord - 1,
-					xCoord + 2,
-					yCoord + 3,
-					zCoord + 2
-					);
+				xCoord - 1,
+				yCoord,
+				zCoord - 1,
+				xCoord + 2,
+				yCoord + 3,
+				zCoord + 2
+			);
 		}
 
 		return bb;

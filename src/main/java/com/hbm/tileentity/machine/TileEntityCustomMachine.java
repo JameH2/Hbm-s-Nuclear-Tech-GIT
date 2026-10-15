@@ -25,6 +25,7 @@ import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachinePolluting;
 import com.hbm.tileentity.TileEntityProxyBase;
 import com.hbm.tileentity.TileEntityProxyCombo;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BufferUtil;
 import com.hbm.util.Compat;
 import com.hbm.util.fauxpointtwelve.BlockPos;
@@ -32,7 +33,7 @@ import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IEnergyProviderMK2;
 import api.hbm.energymk2.IEnergyReceiverMK2;
-import api.hbm.fluid.IFluidStandardTransceiver;
+import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -62,7 +63,7 @@ import com.hbm.items.tool.ItemTooling;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemTool;
 
-public class TileEntityCustomMachine extends TileEntityMachinePolluting implements IFluidStandardTransceiver, IEnergyProviderMK2, IEnergyReceiverMK2, ICrucibleAcceptor, IControlReceiver, IGUIProvider {
+public class TileEntityCustomMachine extends TileEntityMachinePolluting implements IFluidStandardTransceiverMK2, IEnergyProviderMK2, IEnergyReceiverMK2, ICrucibleAcceptor, IControlReceiver, IGUIProvider {
 
 	public String machineType;
 	public MachineConfiguration config;
@@ -89,8 +90,10 @@ public class TileEntityCustomMachine extends TileEntityMachinePolluting implemen
 	private int[] accessibleSlots = null;
 	private int cachedItemInCount = -1;
 	public List<DirPos> connectionPos = new ArrayList();
+	public PortDef[] ports = new PortDef[0];
 	public List<DirPos> fluxPos = new ArrayList();
 	public List<DirPos> heatPos = new ArrayList();
+	
 
 	public TileEntityCustomMachine() {
 		/*
@@ -185,11 +188,22 @@ public class TileEntityCustomMachine extends TileEntityMachinePolluting implemen
 
 		if (!worldObj.isRemote) {
 
-			if (config == null) {
+			if(config == null) {
 				worldObj.func_147480_a(xCoord, yCoord, zCoord, false);
 				return;
 			}
 			this.isProgressing = false;
+			
+			if(this.structureOK){
+				this.setupAllPorts(ports);
+				this.moduleSmokePorts.update(ports);
+				if(config.generatorMode) {
+					this.updatePortPOFIFO();
+				} else {
+					this.updatePortPIFIFO();
+				}
+			}
+
 			this.power = Library.chargeTEFromItems(slots, 0, power, this.config.maxPower);
 
 			if (this.inputTanks.length > 0) this.inputTanks[0].setType(1, slots);
@@ -200,13 +214,6 @@ public class TileEntityCustomMachine extends TileEntityMachinePolluting implemen
 			if (this.structureCheckDelay <= 0) this.checkStructure();
 
 			if (this.worldObj.getTotalWorldTime() % 20 == 0) {
-				for (DirPos pos : this.connectionPos) {
-					for (FluidTank tank : this.inputTanks) {
-						this.trySubscribe(tank.getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-					}
-					if (!config.generatorMode)
-						this.trySubscribe(worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-				}
 				for (byte d = 2; d < 6; d++) {
 					ForgeDirection dir = ForgeDirection.getOrientation(d);
 					for (DirPos pos : this.fluxPos) {
@@ -231,15 +238,6 @@ public class TileEntityCustomMachine extends TileEntityMachinePolluting implemen
 						}
 					}
 				}
-			}
-
-			for (DirPos pos : this.connectionPos) {
-				if (config.generatorMode && power > 0)
-					this.tryProvide(worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-				for (FluidTank tank : this.outputTanks)
-					if (tank.getFill() > 0)
-						this.sendFluid(tank, worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-				this.sendSmoke(pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
 			}
 
 			if(hasMaterialSupport() && !materials.isEmpty() && worldObj.getTotalWorldTime() % 20 == 0) {
@@ -620,10 +618,12 @@ public class TileEntityCustomMachine extends TileEntityMachinePolluting implemen
 
 	public boolean checkStructure() {
 
-		this.connectionPos.clear();
 		this.structureCheckDelay = 300;
 		this.structureOK = false;
 		if(this.config == null) return false;
+		this.connectionPos.clear();
+		
+		List<PortDef> portList = new ArrayList();
 
 		for(ComponentDefinition comp : config.components) {
 
@@ -652,6 +652,7 @@ public class TileEntityCustomMachine extends TileEntityMachinePolluting implemen
 				for(ForgeDirection facing : ForgeDirection.VALID_DIRECTIONS) {
 					this.connectionPos.add(new DirPos(x + facing.offsetX, y + facing.offsetY, z + facing.offsetZ, facing));
 				}
+				portList.add(PortDef.make(x, y, z, ForgeDirection.VALID_DIRECTIONS));
 			}
 			if(worldObj.getBlock(x,y,z) == ModBlocks.cm_flux){
 				for(ForgeDirection facing : ForgeDirection.VALID_DIRECTIONS) {
@@ -665,9 +666,9 @@ public class TileEntityCustomMachine extends TileEntityMachinePolluting implemen
 			}
 
 		}
-		for(ForgeDirection facing : ForgeDirection.VALID_DIRECTIONS) {
-			this.connectionPos.add(new DirPos(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ, facing));
-		}
+		
+		portList.add(PortDef.make(xCoord, yCoord, zCoord, ForgeDirection.VALID_DIRECTIONS));
+		this.ports = portList.toArray(new PortDef[0]);
 
 		this.structureOK = true;
 		return true;
@@ -862,9 +863,6 @@ public class TileEntityCustomMachine extends TileEntityMachinePolluting implemen
 
 	@Override
 	public boolean hasPermission(EntityPlayer player) { return player.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) <= 256; }
-
-	@Override
-	public void receiveControl(NBTTagCompound nbt) { }
 
 	@Override
 	public void receiveControl(EntityPlayer player, NBTTagCompound nbt) {

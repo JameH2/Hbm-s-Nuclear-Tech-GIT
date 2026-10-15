@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.Compat;
 import com.hbm.util.fauxpointtwelve.BlockPos;
 
@@ -30,6 +32,9 @@ public class TileEntityConverterHeRf extends TileEntityLoadedBase implements IEn
 	public static double inputDecay = 0.0;
 	public EnergyStorage storage = new ConverterEnergyStorage(1_000_000);
 
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.around(xCoord, yCoord, zCoord); return cachedPorts; }
+
 	public TileEntityConverterHeRf() {
 		updateRfLimits();
 	}
@@ -39,6 +44,10 @@ public class TileEntityConverterHeRf extends TileEntityLoadedBase implements IEn
 
 		if(!worldObj.isRemote) {
 
+			this.setupPowerPorts(getPorts());
+			this.updateAllPorts();
+			this.receivePower();
+
 			long rfCreated = Math.min(Math.max(0, storage.getMaxEnergyStored() - storage.getEnergyStored()), power / heInput * rfOutput);
 			this.power -= rfCreated * heInput / rfOutput;
 			this.storage.setEnergyStored((int) (storage.getEnergyStored() + rfCreated));
@@ -46,7 +55,6 @@ public class TileEntityConverterHeRf extends TileEntityLoadedBase implements IEn
 			if(rfCreated > 0) this.worldObj.markTileEntityChunkModified(this.xCoord, this.yCoord, this.zCoord, this);
 
 			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-				this.trySubscribe(worldObj, xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ, dir);
 
 				BlockPos loc = new BlockPos(xCoord, yCoord, zCoord).offset(dir);
 				TileEntity entity = Compat.getTileStandard(worldObj, loc.getX(), loc.getY(), loc.getZ());

@@ -12,10 +12,12 @@ import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.gui.GUIHydroponic;
 import com.hbm.items.ModItems;
 import com.hbm.lib.Library;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.InventoryUtil;
-import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
@@ -48,11 +50,17 @@ public class TileEntityHydroponic extends TileEntityMachineBase implements IGUIP
 	private boolean lightsOn = false;
 	private int[] prevMeta = new int[3];
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityHydroponic() {
 		super(6);
 		tanks = new FluidTank[2];
 		tanks[0] = new FluidTank(Fluids.CARBONDIOXIDE, 16_000);
 		tanks[1] = new FluidTank(Fluids.OXYGEN, 16_000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks()).setOutputTanks(getSendingTanks());
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 
 	@Override
@@ -77,14 +85,8 @@ public class TileEntityHydroponic extends TileEntityMachineBase implements IGUIP
 			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
 			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 
-			for(DirPos pos : getFluidPos()) {
-				trySubscribe(tanks[0].getTankType(), worldObj, pos);
-				tryProvide(tanks[1].getTankType(), worldObj, pos);
-			}
-
-			for(DirPos pos : getPowerPos()) {
-				trySubscribe(worldObj, pos);
-			}
+			moduleFluidPorts.update(getFluidPorts());
+			modulePowerPorts.update(getPowerPorts());
 
 			if(power > 0) {
 				power = Math.max(power - 25, 0);
@@ -240,22 +242,33 @@ public class TileEntityHydroponic extends TileEntityMachineBase implements IGUIP
 		return true;
 	}
 
-	private DirPos[] getFluidPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	protected PortDef[] fluidPorts;
+	protected PortDef[] powerPorts;
 
-		return new DirPos[] {
-			new DirPos(xCoord + rot.offsetX * 2 + dir.offsetX, yCoord, zCoord + rot.offsetZ * 2 + dir.offsetZ, dir),
-			new DirPos(xCoord - rot.offsetX * 2 + dir.offsetX, yCoord, zCoord - rot.offsetZ * 2 + dir.offsetZ, dir),
-			new DirPos(xCoord + rot.offsetX * 2 - dir.offsetX, yCoord, zCoord + rot.offsetZ * 2 - dir.offsetZ, dir.getOpposite()),
-			new DirPos(xCoord - rot.offsetX * 2 - dir.offsetX, yCoord, zCoord - rot.offsetZ * 2 - dir.offsetZ, dir.getOpposite()),
-		};
+	public PortDef[] getFluidPorts() {
+		if(fluidPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	
+			fluidPorts = new PortDef[] {
+				PortDef.make(xCoord + rot.offsetX * 2, yCoord, zCoord + rot.offsetZ * 2, dir),
+				PortDef.make(xCoord - rot.offsetX * 2, yCoord, zCoord - rot.offsetZ * 2, dir),
+				PortDef.make(xCoord + rot.offsetX * 2, yCoord, zCoord + rot.offsetZ * 2, dir.getOpposite()),
+				PortDef.make(xCoord - rot.offsetX * 2, yCoord, zCoord - rot.offsetZ * 2, dir.getOpposite()),
+			};
+		}
+
+		return fluidPorts;
 	}
 
-	private DirPos[] getPowerPos() {
-		return new DirPos[] {
-			new DirPos(xCoord, yCoord + 3, zCoord, ForgeDirection.UP),
-		};
+	public PortDef[] getPowerPorts() {
+		if(powerPorts == null) {
+			powerPorts = new PortDef[] {
+				PortDef.make(xCoord, yCoord + 2, zCoord, ForgeDirection.UP),
+			};
+		}
+
+		return powerPorts;
 	}
 
 	@Override

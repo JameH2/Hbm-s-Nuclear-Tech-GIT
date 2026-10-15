@@ -7,8 +7,12 @@ import java.util.Locale;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.pollution.PollutionHandler.PollutionData;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
+import com.hbm.items.ModItems;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
 public class SatelliteMapper extends SatelliteBase {
@@ -22,6 +26,13 @@ public class SatelliteMapper extends SatelliteBase {
 	public SatelliteMapper() { }
 
 	@Override public String getType() { return "NOT_A_SPY_SATELLITE_:)"; }
+	
+	@Override
+	public IChatComponent[] getInfo(World world) {
+		return new IChatComponent[] {
+				new ChatComponentTranslation(ModItems.sat_mapper.getUnlocalizedName(new ItemStack(ModItems.sat_mapper)) + ".name")
+		};
+	}
 	
 	@Override
 	public void onCommandImpl(World world, String... cmd) {
