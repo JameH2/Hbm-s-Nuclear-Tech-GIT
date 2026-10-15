@@ -1711,7 +1711,7 @@ public class ModEventHandler {
 
 	@SubscribeEvent
 	public void onBreakSpeed(net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed event) {
-		if(event.block instanceof BlockRichOre) event.newSpeed /= 2.5F;
+		if(event.block instanceof BlockRichOre) event.newSpeed /= 5F;
 	}
 
 	@SubscribeEvent
