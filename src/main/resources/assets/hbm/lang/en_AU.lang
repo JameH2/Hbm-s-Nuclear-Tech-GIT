@@ -26,11 +26,13 @@ entity.entity_moon_cow.name=Dumb Cunt
 
 generator.martian=The Outback
 
-container.bat9000=Fuck-Off Huge Tank 9000
+container.bat9000=Fuck-Off Huge Tank
+container.bigAssTank=Fuck-Off Huge Tank 9000
 container.electricFurnace=Electric Barbie
 container.zirnox=BEERNOX Nuclear Reactor
 
-tile.machine_bat9000.name=Fuck-Off Huge Tank 9000
+tile.machine_bat9000.name=Fuck-Off Huge Tank
+tile.machine_bigasstank.name=Fuck-Off Huge Tank 9000
 tile.machine_electric_furnace_off.name=Electric Barbie
 tile.machine_electric_furnace_on.name=Electric Barbie
 tile.deco_loot.name=Free Shit

@@ -7,7 +7,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.AxisAlignedBB;
 
-@Deprecated
 public class TileEntityMachineBAT9000 extends TileEntityBarrel {
 
 	public TileEntityMachineBAT9000() {

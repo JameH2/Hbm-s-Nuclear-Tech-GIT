@@ -1139,7 +1139,7 @@ public class ModBlocks {
 	public static Block machine_supercomputer;
 
 	public static Block machine_fluidtank;
-	@Deprecated public static Block machine_bat9000;
+	public static Block machine_bat9000;
 	public static Block machine_bigasstank;
 	public static Block machine_orbus;
 
