@@ -29,9 +29,40 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 	public ItemStack slots[];
 
 	private String customName;
+	private boolean redstoneDirty = true;
+	private boolean redstonePowered;
 
 	public TileEntityMachineBase(int slotCount) {
 		slots = new ItemStack[slotCount];
+	}
+
+	/**
+	 * Lazily caches power at this tile's own coordinates. Blocks using this must
+	 * call {@link #invalidateRedstone()} when receiving neighbor updates.
+	 * Multiblock inputs at other positions need separate handling.
+	 */
+	public boolean isRedstonePowered() {
+		if(redstoneDirty && hasWorldObj()) {
+			redstonePowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+			redstoneDirty = false;
+		}
+		return redstonePowered;
+	}
+
+	public void invalidateRedstone() {
+		redstoneDirty = true;
+	}
+
+	@Override
+	public void validate() {
+		super.validate();
+		invalidateRedstone();
+	}
+
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		invalidateRedstone();
 	}
 
 	@Override
@@ -159,6 +190,7 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		invalidateRedstone();
 		NBTTagList list = nbt.getTagList("items", 10);
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound nbt1 = list.getCompoundTagAt(i);

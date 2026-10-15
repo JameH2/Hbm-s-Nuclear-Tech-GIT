@@ -71,7 +71,7 @@ public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGU
 				}
 			}
 			
-			if(worldObj.getTotalWorldTime() % delay == 0 && !this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {
+			if(worldObj.getTotalWorldTime() % delay == 0 && !isRedstonePowered()) {
 				int amount = 1;
 				
 				if(slots[18] != null && slots[18].getItem() == ModItems.upgrade_stack) {

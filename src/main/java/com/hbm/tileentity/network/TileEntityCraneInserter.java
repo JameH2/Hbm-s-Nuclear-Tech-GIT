@@ -41,7 +41,8 @@ public class TileEntityCraneInserter extends TileEntityCraneBase implements IGUI
 		super.updateEntity();
 		if(!worldObj.isRemote) {
 
-			if(!this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {ForgeDirection outputSide = getOutputSide();
+			if(!isRedstonePowered()) {
+				ForgeDirection outputSide = getOutputSide();
 				TileEntity te = Compat.getTileStandard(worldObj, xCoord + outputSide.offsetX, yCoord + outputSide.offsetY, zCoord + outputSide.offsetZ);
 				
 				int[] access = null;
