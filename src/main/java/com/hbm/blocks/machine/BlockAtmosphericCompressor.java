@@ -80,10 +80,10 @@ public class BlockAtmosphericCompressor extends BlockDummyable implements ILookO
 
 		List<String> text = new ArrayList<String>();
 		if(!CelestialBody.hasTrait(world, CBT_Atmosphere.class)) {
-			text.add(((EnumChatFormatting.RED + "ERROR: ")) + EnumChatFormatting.RESET + I18nUtil.resolveKey("CANNOT COLLECT IN VACUUM"));
+			text.add(((EnumChatFormatting.RED + I18nUtil.resolveKey("gui.atmospheric_compressor.error"))) + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.atmospheric_compressor.cannot_collect_in_vacuum"));
 		} else {
-			text.add((tower.power < tower.getMaxPower() / 20 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + "Power: " + BobMathUtil.getShortNumber(tower.power) + "HE");
-			text.add(((EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET + I18nUtil.resolveKey("hbmfluid." + tower.tank.getTankType().getName().toLowerCase()) + ": " + tower.tank.getFill() + "/" + tower.tank.getMaxFill() + "mB");
+			text.add(((tower.power < tower.getMaxPower() / 20 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN)) + I18nUtil.resolveKey("overlay.common.power", BobMathUtil.getShortNumber(tower.power)));
+			text.add(I18nUtil.resolveKey("overlay.common.tank", ((EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET, I18nUtil.resolveKey("hbmfluid." + tower.tank.getTankType().getName().toLowerCase()), tower.tank.getFill(), tower.tank.getMaxFill()));
 		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
@@ -111,7 +111,7 @@ public class BlockAtmosphericCompressor extends BlockDummyable implements ILookO
 
 		return true;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		if(player.isSneaking()) {
@@ -126,14 +126,14 @@ public class BlockAtmosphericCompressor extends BlockDummyable implements ILookO
 
 			TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
 			if(!(te instanceof TileEntityAtmosphericCompressor)) return true;
-			
+
 			TileEntityAtmosphericCompressor compressor = (TileEntityAtmosphericCompressor) te;
 			FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, x, y, z, player.getHeldItem());
 			if(compressor.switchGas(type)) {
 				compressor.markDirty();
-				player.addChatComponentMessage(new ChatComponentText("Changed type to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
 			}
-			
+
 			return true;
 		}
 	}

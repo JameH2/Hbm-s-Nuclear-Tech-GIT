@@ -6,6 +6,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class CommandRadiation extends CommandBase {
 
@@ -16,22 +17,22 @@ public class CommandRadiation extends CommandBase {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "/ntmrad <set/clear>";
+		return "commands.radiation.ntmrad_set_clear";
 	}
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
-		
+
 		if(args.length == 1 && "clear".equals(args[0])) {
 			ChunkRadiationManager.proxy.clearSystem(sender.getEntityWorld());
-			sender.addChatMessage(new ChatComponentText("Cleared radiation data!"));
+			sender.addChatMessage(new ChatComponentTranslation("commands.radiation.cleared_radiation_data"));
 			return;
 		}
-		
+
 		if(args.length == 2 && "set".equals(args[0])) {
 			float amount = (float) this.parseDoubleBounded(sender, args[1], 0D, 100_000D);
 			ChunkRadiationManager.proxy.setRadiation(sender.getEntityWorld(), sender.getPlayerCoordinates().posX, sender.getPlayerCoordinates().posY, sender.getPlayerCoordinates().posZ, amount);
-			sender.addChatMessage(new ChatComponentText("Radiation set."));
+			sender.addChatMessage(new ChatComponentTranslation("commands.radiation.radiation_set"));
 			return;
 		}
 

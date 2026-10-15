@@ -9,6 +9,7 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
+import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.fluidmk2.IFillableItem;
 import net.minecraft.client.resources.I18n;
@@ -40,7 +41,7 @@ public class ItemModOxy extends ItemArmorMod implements IFillableItem {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.LIGHT_PURPLE + fuel.getLocalizedName() + ": " + getFuel(itemstack) + "mB / " + this.maxFuel + "mB");
+		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.jetpack_fueled_base.desc1", fuel.getLocalizedName(), getFuel(itemstack), this.maxFuel));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 		list.add(EnumChatFormatting.GOLD + I18n.format("armor.mustSeal"));
@@ -49,7 +50,7 @@ public class ItemModOxy extends ItemArmorMod implements IFillableItem {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.RED + "  " + stack.getDisplayName() + " (" + fuel.getLocalizedName() + ": " + getFuel(stack) + "mB / " + this.maxFuel + "mB");
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_oxy.desc1", stack.getDisplayName(), fuel.getLocalizedName(), getFuel(stack), this.maxFuel));
 	}
 
 	@Override

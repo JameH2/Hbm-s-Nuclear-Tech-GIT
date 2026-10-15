@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockPileBrick extends BlockFlammable implements IToolable {
-	
+
 	@SideOnly(Side.CLIENT) protected IIcon iconTop;
 	@SideOnly(Side.CLIENT) protected IIcon iconSide;
 
@@ -51,11 +51,11 @@ public class BlockPileBrick extends BlockFlammable implements IToolable {
 
 	@Override
 	public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, int side, float fX, float fY, float fZ, ToolType tool) {
-		
+
 		if(tool == tool.HAND_DRILL) {
 			if(side == 0 || side == 1) return false;
 			if(world.isRemote) return true;
-			
+
 			ForgeDirection dir = ForgeDirection.getOrientation(side).getOpposite();
 			ForgeDirection dirLeft = dir.getRotation(ForgeDirection.DOWN);
 
@@ -74,28 +74,28 @@ public class BlockPileBrick extends BlockFlammable implements IToolable {
 			for(int i = 1; i <= MAX_H_SIZE - left - 1; i++) {		if(world.getBlock(x - dirLeft.offsetX * i, y, z - dirLeft.offsetZ * i) != this) break; right = i; }
 			// depth
 			for(int i = 1; i <= MAX_H_SIZE; i++) {					if(world.getBlock(x + dir.offsetX * i, y, z + dir.offsetZ * i) != this) break; depth = i; }
-			
+
 			/// SIZE CHECKS ///
 			if(posHeight + negHeight + 1 < MIN_V_SIZE) {
-				MachinePWRController.sendError(world, x, y + posHeight, z, "Height too low (<" + MIN_V_SIZE + ")", player);
-				MachinePWRController.sendError(world, x, y - negHeight, z, "Height too low (<" + MIN_V_SIZE + ")", player);
+				MachinePWRController.sendError(world, x, y + posHeight, z, "chat.pile.height_too_low", "v:" + MIN_V_SIZE, player);
+				MachinePWRController.sendError(world, x, y - negHeight, z, "chat.pile.height_too_low", "v:" + MIN_V_SIZE, player);
 				return true;
 			}
-			
+
 			if(left + right + 1 < MIN_H_SIZE) {
-				MachinePWRController.sendError(world, x + dirLeft.offsetX * left, y, z + dirLeft.offsetZ * right, "Width too low (<" + MIN_H_SIZE + ")", player);
-				MachinePWRController.sendError(world, x - dirLeft.offsetX * right, y, z - dirLeft.offsetZ * right, "Width too low (<" + MIN_H_SIZE + ")", player);
+				MachinePWRController.sendError(world, x + dirLeft.offsetX * left, y, z + dirLeft.offsetZ * right, "chat.pile.width_too_low", "v:" + MIN_H_SIZE, player);
+				MachinePWRController.sendError(world, x - dirLeft.offsetX * right, y, z - dirLeft.offsetZ * right, "chat.pile.width_too_low", "v:" + MIN_H_SIZE, player);
 				return true;
 			}
-			
+
 			if(depth + 1 < MIN_H_SIZE) {
-				MachinePWRController.sendError(world, x + dir.offsetX * depth, y, z + dir.offsetZ * depth, "Depth too low (<" + MIN_H_SIZE + ")", player);
+				MachinePWRController.sendError(world, x + dir.offsetX * depth, y, z + dir.offsetZ * depth, "chat.pile.depth_too_low", "v:" + MIN_H_SIZE, player);
 				return true;
 			}
 
 			/// CORE EDGE CHECK ///
 			if(posHeight == 0 || negHeight == 0 || left == 0 || right == 0) {
-				MachinePWRController.sendError(world, x, y, z, "Core cannot be on an edge", player);
+				MachinePWRController.sendError(world, x, y, z, "chat.core_cannot_be_on_an_edge", player);
 				return true;
 			}
 
@@ -106,9 +106,9 @@ public class BlockPileBrick extends BlockFlammable implements IToolable {
 						int iX = x - dirLeft.offsetX * v + dir.offsetX * d;
 						int iY = y + h;
 						int iZ = z - dirLeft.offsetZ * v + dir.offsetZ * d;
-						
+
 						if(world.getBlock(iX, iY, iZ) != this) {
-							MachinePWRController.sendError(world, iX, iY, iZ, "Graphite block missing", player);
+							MachinePWRController.sendError(world, iX, iY, iZ, "chat.graphite_block_missing", player);
 							return true;
 						}
 					}
@@ -122,7 +122,7 @@ public class BlockPileBrick extends BlockFlammable implements IToolable {
 						int iX = x - dirLeft.offsetX * v + dir.offsetX * d;
 						int iY = y + h;
 						int iZ = z - dirLeft.offsetZ * v + dir.offsetZ * d;
-						
+
 						if(x == iX && y == iY && z == iZ) {
 							world.setBlock(iX, iY, iZ, ModBlocks.pile_block, BlockPile.META_CORE, 3);
 							TileEntityPileCore core = (TileEntityPileCore) world.getTileEntity(iX, iY, iZ);
@@ -141,10 +141,10 @@ public class BlockPileBrick extends BlockFlammable implements IToolable {
 					}
 				}
 			}
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
 }

@@ -41,30 +41,30 @@ public class MachineDrain extends BlockDummyable implements ILookOverlay {
 	public int getOffset() {
 		return 0;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(!world.isRemote && !player.isSneaking()) {
-				
+
 			if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof IItemFluidIdentifier) {
 				int[] pos = this.findCore(world, x, y, z);
 				if(pos == null) return false;
-				
+
 				TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
 				if(!(te instanceof TileEntityMachineDrain)) return false;
-				
+
 				TileEntityMachineDrain drain = (TileEntityMachineDrain) te;
-				
+
 				FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, pos[0], pos[1], pos[2], player.getHeldItem());
 				drain.tank.setTankType(type);
 				drain.markDirty();
-				player.addChatComponentMessage(new ChatComponentText("Changed type to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
-				
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+
 				return true;
 			}
 			return false;
-			
+
 		} else {
 			return true;
 		}
@@ -74,13 +74,13 @@ public class MachineDrain extends BlockDummyable implements ILookOverlay {
 	public void printHook(Pre event, World world, int x, int y, int z) {
 		int[] pos = this.findCore(world, x, y, z);
 		if(pos == null) return;
-		
+
 		TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
 		if(!(te instanceof TileEntityMachineDrain)) return;
-		
+
 		TileEntityMachineDrain drain = (TileEntityMachineDrain) te;
 		List<String> text = new ArrayList();
-		text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + drain.tank.getTankType().getLocalizedName() + ": " + drain.tank.getFill() + "/" + drain.tank.getMaxFill() + "mB");
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_input", drain.tank.getTankType().getLocalizedName(), drain.tank.getFill(), drain.tank.getMaxFill()));
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 }

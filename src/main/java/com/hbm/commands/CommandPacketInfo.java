@@ -14,6 +14,7 @@ import java.lang.management.ThreadInfo;
 import java.util.concurrent.TimeUnit;
 
 import static com.hbm.handler.threading.PacketThreading.totalCnt;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class CommandPacketInfo extends CommandBase {
 	@Override
@@ -38,11 +39,11 @@ public class CommandPacketInfo extends CommandBase {
 				case "toggleThreadingStatus":
 					GeneralConfig.enablePacketThreading = !GeneralConfig.enablePacketThreading; // Force toggle.
 					PacketThreading.init(); // Reinit threads.
-					sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Packet sending status toggled to " + GeneralConfig.enablePacketThreading + "."));
+					sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.packet_sending_status_toggled_to", GeneralConfig.enablePacketThreading).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.GREEN)));
 					return;
 				case "forceLock":
 					PacketThreading.lock.lock(); // oh my fucking god never do this please unless you really have to
-					sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Packet thread lock acquired, this may freeze the main thread!"));
+					sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.text.01").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 					MainRegistry.logger.error("Packet thread lock acquired by {}, this may freeze the main thread!", sender.getCommandSenderName());
 					return;
 				case "forceUnlock":
@@ -50,37 +51,37 @@ public class CommandPacketInfo extends CommandBase {
 					MainRegistry.logger.warn("Packet thread lock released by {}.", sender.getCommandSenderName());
 					return;
 				case "info":
-					sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "NTM Packet Debugger v1.2"));
+					sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.ntm_packet_debugger_v1_2").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.GOLD)));
 
 					if (PacketThreading.isTriggered() && GeneralConfig.enablePacketThreading)
-						sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Packet Threading Errored, check log."));
+						sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.packet_threading_errored_check_l").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 					else if (GeneralConfig.enablePacketThreading)
-						sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Packet Threading Active"));
+						sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.packet_threading_active").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.GREEN)));
 					else
-						sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Packet Threading Inactive"));
+						sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.packet_threading_inactive").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 
-					sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "Thread Pool Info"));
-					sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "# Threads (total): " + PacketThreading.threadPool.getPoolSize()));
-					sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "# Threads (core): " + PacketThreading.threadPool.getCorePoolSize()));
-					sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "# Threads (idle): " + (PacketThreading.threadPool.getPoolSize() - PacketThreading.threadPool.getActiveCount())));
-					sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "# Threads (maximum): " + PacketThreading.threadPool.getMaximumPoolSize()));
+					sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.thread_pool_info").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+					sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.threads_total", PacketThreading.threadPool.getPoolSize()).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+					sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.threads_core", PacketThreading.threadPool.getCorePoolSize()).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+					sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.threads_idle", (PacketThreading.threadPool.getPoolSize() - PacketThreading.threadPool.getActiveCount())).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+					sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.threads_maximum", PacketThreading.threadPool.getMaximumPoolSize()).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
 					for (ThreadInfo thread : ManagementFactory.getThreadMXBean().dumpAllThreads(false, false))
 						if (thread.getThreadName().startsWith(PacketThreading.threadPrefix)) {
-							sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "Thread Name: " + thread.getThreadName()));
-							sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "Thread ID: " + thread.getThreadId()));
-							sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "Thread state: " + thread.getThreadState()));
-							sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "Locked by: " + (thread.getLockOwnerName() == null ? "None" : thread.getLockName())));
+							sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.thread_name", thread.getThreadName()).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.GOLD)));
+							sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.thread_id", thread.getThreadId()).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+							sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.thread_state", thread.getThreadState()).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+							sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.locked_by", (thread.getLockOwnerName() == null ? "None" : thread.getLockName())).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 						}
 
-					sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "Packet Info: "));
-					sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "Amount total: " + totalCnt));
-					sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "Amount remaining: " + PacketThreading.threadPool.getQueue().size()));
+					sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.packet_info").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.GOLD)));
+					sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.amount_total", totalCnt).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+					sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.amount_remaining", PacketThreading.threadPool.getQueue().size()).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
 					if (totalCnt != 0)
-						sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "% Remaining to process: " + BobMathUtil.roundDecimal(((double) PacketThreading.threadPool.getQueue().size() / totalCnt) * 100, 2) + "%"));
+						sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.remaining_to_process", BobMathUtil.roundDecimal(((double) PacketThreading.threadPool.getQueue().size() / totalCnt) * 100, 2)).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
-					sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "Time spent waiting on thread(s) last tick: " + BobMathUtil.roundDecimal(TimeUnit.MILLISECONDS.convert(PacketThreading.nanoTimeWaited, TimeUnit.NANOSECONDS), 4) + "ms"));
+					sender.addChatMessage(new ChatComponentTranslation("commands.packet_info.text.02", BobMathUtil.roundDecimal(TimeUnit.MILLISECONDS.convert(PacketThreading.nanoTimeWaited, TimeUnit.NANOSECONDS), 4)).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 					return;
 			}
 		}

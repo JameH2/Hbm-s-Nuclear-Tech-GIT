@@ -33,13 +33,13 @@ public class MachineStirling extends BlockDummyable implements ILookOverlay, ITo
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		
+
 		if(meta >= 12)
 			return new TileEntityStirling();
-		
+
 		if(meta >= extra)
 			return new TileEntityProxyCombo().power();
-		
+
 		return null;
 	}
 
@@ -52,35 +52,45 @@ public class MachineStirling extends BlockDummyable implements ILookOverlay, ITo
 	public int getOffset() {
 		return 1;
 	}
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, 0, ForgeDirection.EAST.ordinal()},
+			{-1, 0, 0, ForgeDirection.WEST.ordinal()},
+			{0, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, -1, ForgeDirection.NORTH.ordinal()}
+		}, dir);
+	}
+	@Override
+	public double[][] getAABBExtras() {
+		return new double[][] {
+			{0, 0, 0.5, -0.3, 0.4, -0.4, 1}
+		};
+	}
 	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
 		
-		x = x + dir.offsetX * o;
-		z = z + dir.offsetZ * o;
-
-		this.makeExtra(world, x + 1, y, z);
-		this.makeExtra(world, x - 1, y, z);
-		this.makeExtra(world, x, y, z + 1);
-		this.makeExtra(world, x, y, z - 1);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(world.isRemote) {
 			return true;
-			
+
 		} else if(!player.isSneaking()) {
 			int[] pos = this.findCore(world, x, y, z);
-			
+
 			if(pos == null)
 				return false;
-			
+
 			TileEntityStirling stirling = (TileEntityStirling)world.getTileEntity(pos[0], pos[1], pos[2]);
 			int meta = stirling.getGeatMeta();
-			
+
 			if(!stirling.hasCog && player.getHeldItem() != null && player.getHeldItem().getItem() == ModItems.gear_large && player.getHeldItem().getItemDamage() == meta) {
 				player.getHeldItem().stackSize--;
 				stirling.hasCog = true;
@@ -96,28 +106,28 @@ public class MachineStirling extends BlockDummyable implements ILookOverlay, ITo
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack) {
 		super.onBlockPlacedBy(world, x, y, z, player, itemStack);
-		
+
 		if(itemStack.getItemDamage() == 1) {
 
 			int i = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 			int o = -getOffset();
-			
+
 			ForgeDirection dir = ForgeDirection.NORTH;
 			if(i == 0) dir = ForgeDirection.getOrientation(2);
 			if(i == 1) dir = ForgeDirection.getOrientation(5);
 			if(i == 2) dir = ForgeDirection.getOrientation(3);
 			if(i == 3) dir = ForgeDirection.getOrientation(4);
-			
+
 			dir = getDirModified(dir);
 
 			TileEntity te = world.getTileEntity(x + dir.offsetX * o, y + dir.offsetY * o, z + dir.offsetZ * o);
-			
+
 			if(te instanceof TileEntityStirling) {
 				((TileEntityStirling) te).hasCog = false;
 			}
 		}
 	}
-	
+
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
@@ -126,14 +136,14 @@ public class MachineStirling extends BlockDummyable implements ILookOverlay, ITo
 		int dmg = 0;
 
 		int[] pos = this.findCore(world, x, y, z);
-		
+
 		if(pos != null) {
 			TileEntityStirling stirling = (TileEntityStirling)world.getTileEntity(pos[0], pos[1], pos[2]);
 			if(!stirling.hasCog) {
 				dmg = 1;
 			}
 		}
-		
+
 		for(int i = 0; i < count; i++) {
 			Item item = getItemDropped(metadata, world.rand, fortune);
 			if(item != null) {
@@ -145,42 +155,42 @@ public class MachineStirling extends BlockDummyable implements ILookOverlay, ITo
 
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
-		
+
 		int[] pos = this.findCore(world, x, y, z);
-		
+
 		if(pos == null)
 			return;
-		
+
 		TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
-		
+
 		if(!(te instanceof TileEntityStirling))
 			return;
-		
+
 		TileEntityStirling stirling = (TileEntityStirling) te;
 
 		List<String> text = new ArrayList();
-		text.add(stirling.heat + "TU/t");
-		text.add((stirling.hasCog ? stirling.powerBuffer : 0) + "HE/t");
+		text.add(I18nUtil.resolveKey("overlay.stirling.tu_t", stirling.heat));
+		text.add(I18nUtil.resolveKey("overlay.stirling.he_t", (stirling.hasCog ? stirling.powerBuffer : 0)));
 
 		if(this != ModBlocks.machine_stirling_creative) {
 			int maxHeat = stirling.maxHeat();
 			double percent = (double) stirling.heat / (double) maxHeat;
 			int color = ((int) (0xFF - 0xFF * percent)) << 16 | ((int)(0xFF * percent) << 8);
-			
+
 			if(percent > 1D)
 				color = 0xff0000;
-			
+
 			text.add("&[" + color + "&]" + ((stirling.heat * 1000 / maxHeat) / 10D) + "%");
-			
+
 			if(stirling.heat > maxHeat) {
-				text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! OVERSPEED ! ! !");
+				text.add(I18nUtil.resolveKey("overlay.stirling.overspeed", (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00)));
 			}
-			
+
 			if(!stirling.hasCog) {
-				text.add("&[" + 0xff0000 + "&]Gear missing!");
+				text.add(I18nUtil.resolveKey("overlay.stirling.gear_missing", 0xff0000));
 			}
 		}
-		
+
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 

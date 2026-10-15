@@ -14,6 +14,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ChatComponentTranslation;
 
 public abstract class CommandReloadConfig extends CommandBase {
 
@@ -21,7 +22,7 @@ public abstract class CommandReloadConfig extends CommandBase {
 	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		return sender instanceof EntityPlayer;
 	}
-	
+
 	public abstract void help(ICommandSender sender, String[] args);
 	public abstract HashMap<String, ConfigWrapper> getConfigMap();
 	public abstract void refresh();
@@ -30,60 +31,66 @@ public abstract class CommandReloadConfig extends CommandBase {
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
-		
+
 		if(args.length < 1) throw new CommandException(getCommandUsage(sender));
-		
+
 		String operator = args[0];
-		
+
 		if("help".equals(operator)) {
 			help(sender, args);
 			return;
 		}
-		
+
 		if("list".equals(operator)) {
-			sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + getTitle()));
+			sender.addChatMessage(new ChatComponentTranslation(getTitle()).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 			for(Entry<String, ConfigWrapper> line : getConfigMap().entrySet()) {
 				sender.addChatMessage(new ChatComponentText("  " + EnumChatFormatting.GOLD + line.getKey() + ": " + EnumChatFormatting.YELLOW + line.getValue().value));
 			}
 			return;
 		}
-		
+
 		if("reload".equals(operator)) {
 			reload();
-			sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "Variables loaded from config file."));
+			sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.variables_loaded_config_file").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 			return;
 		}
 
 		if(args.length < 2) throw new CommandException(getCommandUsage(sender));
-		
+
 		String key = args[1];
-		
+
 		if("get".equals(operator)) {
 			ConfigWrapper wrapper = getConfigMap().get(key);
-			if(wrapper == null) throw new CommandException("Key does not exist.");
+			if(wrapper == null) {
+				sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.key_does_not_exist"));
+				return;
+			}
 			sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + key + ": " + EnumChatFormatting.YELLOW + wrapper.value));
 			return;
 		}
 
 		if(args.length < 3) throw new CommandException(getCommandUsage(sender));
-		
+
 		String value = args[2];
-		
+
 		if("set".equals(operator)) {
 			ConfigWrapper wrapper = getConfigMap().get(key);
-			if(wrapper == null) throw new CommandException("Key does not exist.");
-			
+			if(wrapper == null) {
+				sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.key_does_not_exist"));
+				return;
+			}
+
 			try {
 				wrapper.update(value);
 				refresh();
-				sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "Value updated."));
+				sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.value_updated").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 			} catch(Exception ex) {
-				throw new CommandException("Error parsing type for " + wrapper.value.getClass().getSimpleName() + ": " + ex.getLocalizedMessage());
+				sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.error_parsing_type_for", wrapper.value.getClass().getSimpleName(), ex.getLocalizedMessage()));
 			}
-			
+
 			return;
 		}
-		
+
 		throw new CommandException(getCommandUsage(sender));
 	}
 

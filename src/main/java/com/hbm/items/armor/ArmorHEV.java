@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import com.hbm.util.i18n.I18nUtil;
 
 public class ArmorHEV extends ArmorFSBPowered implements IItemRendererProvider {
 
@@ -169,7 +170,7 @@ public class ArmorHEV extends ArmorFSBPowered implements IItemRendererProvider {
 			else if(radiation < 1)
 				delta = "<1";
 
-			Minecraft.getMinecraft().fontRenderer.drawString(delta + " RAD/s", dX, dY, 0xFF0000);
+			Minecraft.getMinecraft().fontRenderer.drawString(I18nUtil.resolveKey("gui.armor_hev.rad", delta), dX, dY, 0xFF0000);
 		}
 
 		GL11.glColor4f(1F, 1F, 1F, 1F);

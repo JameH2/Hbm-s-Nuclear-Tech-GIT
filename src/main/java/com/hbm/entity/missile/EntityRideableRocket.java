@@ -794,14 +794,14 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 				ExplosionLarge.spawnShock(worldObj, x, groundHeight + 0.5, z, 1 + worldObj.rand.nextInt(3), 1 + worldObj.rand.nextGaussian());
 			}
 		} else if(state == RocketState.LAUNCHING || getStateTimer() < 200) {
-			spawnContraolWithOffset(0, 0, 0);
+			spawnContrailWithOffset(0, 0, 0);
 
 			int cluster = stage.getCluster();
 			for(int c = 1; c < cluster; c++) {
 				float spin = (float)c / (float)(cluster - 1);
 				double ox = Math.cos(spin * Math.PI * 2) * stage.fuselage.part.bottom.radius;
 				double oz = Math.sin(spin * Math.PI * 2) * stage.fuselage.part.bottom.radius;
-				spawnContraolWithOffset(ox, 0, oz);
+				spawnContrailWithOffset(ox, 0, oz);
 			}
 		}
 	}
@@ -960,7 +960,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 			text.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("station.travelling") + ": " + EnumChatFormatting.RESET + I18nUtil.resolveKey("body." + station.target.name));
 			text.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("station.progress") + ": " + EnumChatFormatting.RESET + "" + Math.round(progress * 100) + "%");
 
-			ILookOverlay.printGeneric(event, "Rocket", 0xffff00, 0x404000, text);
+			ILookOverlay.printGeneric(event, I18nUtil.resolveKey("gui.rocket.rocket"), 0xffff00, 0x404000, text);
 
 			return;
 		}
@@ -977,40 +977,40 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 
 		// Check if the stage can make the journey
 		if(state == RocketState.NEEDSFUEL) {
-			text.add(EnumChatFormatting.RED + "Rocket has no fuel!");
+			text.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket.rocket_has_no_fuel"));
 		} else if(canLaunch && !rocket.hasSufficientFuel(from.body, to.body, from.inOrbit, to.inOrbit)) {
-			text.add(EnumChatFormatting.RED + "Rocket can't reach destination!");
+			text.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket.rocket_can_t_reach_destination"));
 			canLaunch = false;
 		}
 
 		if(riddenByEntity == null) {
-			text.add("Interact to enter");
+			text.add(I18nUtil.resolveKey("overlay.rocket.interact_to_enter"));
 		} else if(riddenByEntity != player) {
-			text.add("OCCUPIED");
+			text.add(I18nUtil.resolveKey("overlay.rocket.occupied"));
 		} else {
 			if(to.inOrbit) {
-				text.add("Destination: ORBITAL STATION");
+				text.add(I18nUtil.resolveKey("overlay.rocket.destination_orbital_station"));
 			} else if(to.body != null) {
-				text.add("Destination: " + I18nUtil.resolveKey("body." + to.body.name));
+				text.add(I18nUtil.resolveKey("overlay.rocket.destination", I18nUtil.resolveKey("body." + to.body.name)));
 			} else {
-				text.add("Destination: NO DRIVE INSTALLED");
+				text.add(I18nUtil.resolveKey("overlay.rocket.destination_no_drive_installed"));
 			}
 
 			if(canLaunch) {
-				text.add("JUMP TO LAUNCH");
+				text.add(I18nUtil.resolveKey("overlay.rocket.jump_to_launch"));
 			} else if(state == RocketState.LANDED) {
-				text.add("Insert next drive to continue");
+				text.add(I18nUtil.resolveKey("overlay.rocket.insert_next_drive_to_continue"));
 			}
 
 			ItemStack stack = player.getHeldItem();
 			if((state == RocketState.LANDED || state == RocketState.AWAITING) && stack != null && stack.getItem() instanceof ItemVOTVdrive) {
 				if(ItemVOTVdrive.getProcessed(stack)) {
-					text.add("Interact to swap drive");
+					text.add(I18nUtil.resolveKey("overlay.rocket.interact_to_swap_drive"));
 				}
 			}
 		}
 
-		ILookOverlay.printGeneric(event, "Rocket", 0xffff00, 0x404000, text);
+		ILookOverlay.printGeneric(event, I18nUtil.resolveKey("gui.rocket.rocket"), 0xffff00, 0x404000, text);
 	}
 
 	@Override

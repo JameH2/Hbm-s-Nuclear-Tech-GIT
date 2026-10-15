@@ -173,9 +173,9 @@ public class BlockWandLogic extends BlockContainer implements ILookOverlay, IToo
 		TileEntityWandLogic logic = (TileEntityWandLogic) te;
 
 		List<String> text = new ArrayList<>();
-		text.add("Action: " + logic.actionID);
-		text.add("Condition: " + logic.conditionID);
-		text.add("Interaction: " + (logic.interactionID != null ? logic.interactionID : "None"));
+		text.add(I18nUtil.resolveKey("overlay.wand_logic.action", logic.actionID));
+		text.add(I18nUtil.resolveKey("overlay.wand_logic.condition", logic.conditionID));
+		text.add(I18nUtil.resolveKey("overlay.wand_logic.interaction", (logic.interactionID != null ? logic.interactionID : I18nUtil.resolveKey("gui.wand_logic.none"))));
 
 		String block;
 
@@ -184,17 +184,17 @@ public class BlockWandLogic extends BlockContainer implements ILookOverlay, IToo
 		else
 			block = "None";
 
-		text.add("Disguise Block: " + block);
+		text.add(I18nUtil.resolveKey("overlay.wand_logic.disguise_block", block));
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.GOLD + "Use screwdriver to cycle forwards through the action list, shift click to go back");
-		list.add(EnumChatFormatting.GOLD + "Use defuser to cycle forwards through the condition list, shift click to go back");
-		list.add(EnumChatFormatting.GOLD + "Use hand drill to cycle forwards through the interaction list, shift click to go back");
-		list.add(EnumChatFormatting.YELLOW + "Use a detonator to transform");
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_logic.line.03"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_logic.line.01"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_logic.line.02"));
+		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.detonator_transform"));
 	}
 
 	@Override

@@ -8,19 +8,23 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BobMathUtil;
 
-import api.hbm.fluid.IFluidStandardReceiver;
 import api.hbm.fluidmk2.IFillableItem;
+import baubles.api.BaublesApi;
+import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
+import xonin.backhand.api.core.BackhandUtils;
 
-public class TileEntityRefueler extends TileEntityLoadedBase implements IFluidStandardReceiver {
+public class TileEntityRefueler extends TileEntityLoadedBase implements IFluidStandardReceiverMK2 {
 
 	public double fillLevel;
 	public double prevFillLevel;
@@ -35,6 +39,18 @@ public class TileEntityRefueler extends TileEntityLoadedBase implements IFluidSt
 		tank = new FluidTank(Fluids.KEROSENE, 100);
 	}
 
+	protected PortDef[] cachedPorts;
+	
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite();
+			cachedPorts = new PortDef[] {
+					PortDef.make(xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ, dir),
+			};
+		}
+		return cachedPorts;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateEntity() {
@@ -42,7 +58,9 @@ public class TileEntityRefueler extends TileEntityLoadedBase implements IFluidSt
 		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 
 		if(!worldObj.isRemote) {
-			trySubscribe(tank.getTankType(), worldObj, xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ, dir);
+			
+			this.setupFluidPorts(getPorts());
+			this.updatePortFIFO();
 
 			isOperating = false;
 
@@ -50,23 +68,15 @@ public class TileEntityRefueler extends TileEntityLoadedBase implements IFluidSt
 
 			for(EntityPlayer player : players) {
 				for(int i = 0; i < 5; i++) {
+					fillEquipment(player.getEquipmentInSlot(i));
+				}
 
-					ItemStack stack = player.getEquipmentInSlot(i);
-					if(stack == null) continue;
+				fillEquipment(BackhandUtils.getOffhandItem(player));
 
-					if(fillFillable(stack)) {
-						isOperating = true;
-					}
-
-					if(stack.getItem() instanceof ItemArmor && ArmorModHandler.hasMods(stack)) {
-						for(ItemStack mod : ArmorModHandler.pryMods(stack)) {
-							if(mod == null) continue;
-
-							if(fillFillable(mod)) {
-								ArmorModHandler.applyMod(stack, mod);
-								isOperating = true;
-							}
-						}
+				IInventory baubles = BaublesApi.getBaubles(player);
+				if(baubles != null) {
+					for(int i = 0; i < baubles.getSizeInventory(); i++) {
+						fillEquipment(baubles.getStackInSlot(i));
 					}
 				}
 			}
@@ -105,6 +115,25 @@ public class TileEntityRefueler extends TileEntityLoadedBase implements IFluidSt
 		}
 
 
+	}
+
+	private void fillEquipment(ItemStack stack) {
+		if(stack == null) return;
+
+		if(fillFillable(stack)) {
+			isOperating = true;
+		}
+
+		if(stack.getItem() instanceof ItemArmor && ArmorModHandler.hasMods(stack)) {
+			for(ItemStack mod : ArmorModHandler.pryMods(stack)) {
+				if(mod == null) continue;
+
+				if(fillFillable(mod)) {
+					ArmorModHandler.applyMod(stack, mod);
+					isOperating = true;
+				}
+			}
+		}
 	}
 
 	private boolean fillFillable(ItemStack stack) {

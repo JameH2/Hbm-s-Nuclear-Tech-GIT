@@ -42,19 +42,21 @@ public class MachineSteamEngine extends BlockDummyable implements ILookOverlay, 
 	public int getOffset() {
 		return 1;
 	}
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 1, 0, ForgeDirection.EAST.ordinal()},
+			{1, 1, 1, ForgeDirection.EAST.ordinal()},
+			{1, 1, -1, ForgeDirection.EAST.ordinal()}
+		}, dir);
+	}
 	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
 
-		x = x + dir.offsetX * o;
-		z = z + dir.offsetZ * o;
-
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-
-		this.makeExtra(world, x + rot.offsetX, y + 1, z + rot.offsetZ);
-		this.makeExtra(world, x + rot.offsetX + dir.offsetX, y + 1, z + rot.offsetZ + dir.offsetZ);
-		this.makeExtra(world, x + rot.offsetX - dir.offsetX, y + 1, z + rot.offsetZ - dir.offsetZ);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override
@@ -73,8 +75,8 @@ public class MachineSteamEngine extends BlockDummyable implements ILookOverlay, 
 		TileEntitySteamEngine engine = (TileEntitySteamEngine) te;
 
 		List<String> text = new ArrayList();
-		text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + engine.tanks[0].getTankType().getLocalizedName() + ": " + String.format(Locale.US, "%,d", engine.tanks[0].getFill()) + " / " + String.format(Locale.US, "%,d", engine.tanks[0].getMaxFill()) + "mB");
-		text.add(EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + engine.tanks[1].getTankType().getLocalizedName() + ": " + String.format(Locale.US, "%,d", engine.tanks[1].getFill()) + " / " + String.format(Locale.US, "%,d", engine.tanks[1].getMaxFill()) + "mB");
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.steam_engine.mb", engine.tanks[0].getTankType().getLocalizedName(), String.format(Locale.US, "%,d", engine.tanks[0].getFill()), String.format(Locale.US, "%,d", engine.tanks[0].getMaxFill())));
+		text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.steam_engine.mb.2", engine.tanks[1].getTankType().getLocalizedName(), String.format(Locale.US, "%,d", engine.tanks[1].getFill()), String.format(Locale.US, "%,d", engine.tanks[1].getMaxFill())));
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}

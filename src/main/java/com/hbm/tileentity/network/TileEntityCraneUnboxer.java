@@ -1,6 +1,8 @@
 package com.hbm.tileentity.network;
 
 import api.hbm.conveyor.IConveyorBelt;
+
+import com.hbm.entity.item.EntityMovingConveyorObject;
 import com.hbm.entity.item.EntityMovingItem;
 import com.hbm.inventory.container.ContainerCraneUnboxer;
 import com.hbm.inventory.gui.GUICraneUnboxer;
@@ -75,7 +77,6 @@ public class TileEntityCraneUnboxer extends TileEntityCraneBase implements IGUIP
 						if(stack != null){
 							stack = stack.copy();
 							int toSend = Math.min(amount, stack.stackSize);
-							decrStackSize(i, toSend);
 							stack.stackSize = toSend;
 							
 							EntityMovingItem moving = new EntityMovingItem(worldObj);
@@ -83,7 +84,11 @@ public class TileEntityCraneUnboxer extends TileEntityCraneBase implements IGUIP
 							Vec3 snap = belt.getClosestSnappingPosition(worldObj, xCoord + outputSide.offsetX, yCoord + outputSide.offsetY, zCoord + outputSide.offsetZ, pos);
 							moving.setPosition(snap.xCoord, snap.yCoord, snap.zCoord);
 							moving.setItemStack(stack);
-							worldObj.spawnEntityInWorld(moving);
+							if(EntityMovingConveyorObject.trySendToConveyor(worldObj,
+									xCoord + outputSide.offsetX, yCoord + outputSide.offsetY, zCoord + outputSide.offsetZ,
+									outputSide.getOpposite(), moving)) {
+								decrStackSize(i, toSend);
+							}
 							break;
 						}
 					}

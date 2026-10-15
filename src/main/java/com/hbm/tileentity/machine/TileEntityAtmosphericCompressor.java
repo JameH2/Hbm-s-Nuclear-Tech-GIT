@@ -10,8 +10,10 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.fluid.trait.FT_Gaseous;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.tileentity.TileEntityMachineBase;
-import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.tileentity.TilePort.PortDef;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardSenderMK2;
@@ -31,9 +33,15 @@ public class TileEntityAtmosphericCompressor extends TileEntityMachineBase imple
 	public long power = 0;
 	public FluidTank tank;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityAtmosphericCompressor() {
 		super(0);
 		tank = new FluidTank(Fluids.EARTHAIR, 50000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setOutputTanks(getSendingTanks());
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 
 	@Override
@@ -45,8 +53,8 @@ public class TileEntityAtmosphericCompressor extends TileEntityMachineBase imple
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
-
-			this.updateConnections();
+			moduleFluidPorts.update(getPorts());
+			modulePowerPorts.update(getPorts());
 
 			// Extractors will not work indoors (or in space oops)
 			CBT_Atmosphere atmosphere = !(worldObj.provider instanceof WorldProviderOrbit) && !ChunkAtmosphereManager.proxy.hasAtmosphere(worldObj, xCoord, yCoord, zCoord)
@@ -136,13 +144,6 @@ public class TileEntityAtmosphericCompressor extends TileEntityMachineBase imple
 		return false;
 	}
 
-	protected void updateConnections() {
-		for(DirPos pos : getConPos()) {
-			trySubscribe(worldObj, pos);
-			tryProvide(tank, worldObj, pos);
-		}
-	}
-
 	@Override
 	public void serialize(ByteBuf buf) {
 		super.serialize(buf);
@@ -202,23 +203,29 @@ public class TileEntityAtmosphericCompressor extends TileEntityMachineBase imple
 		return new FluidTank[] { tank };
 	}
 
-	private DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
+	protected PortDef[] cachedPorts;
 
-		return new DirPos[] {
-				new DirPos(this.xCoord - dir.offsetX * 2, this.yCoord, this.zCoord - dir.offsetZ * 2, dir.getOpposite()),
-				new DirPos(this.xCoord - dir.offsetX * 2 + rot.offsetX, this.yCoord, this.zCoord - dir.offsetZ * 2 + rot.offsetZ, dir.getOpposite()),
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
+	
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord - dir.offsetX, yCoord, zCoord - dir.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX + rot.offsetX, yCoord, zCoord - dir.offsetZ + rot.offsetZ, dir.getOpposite()),
 
-				new DirPos(this.xCoord + dir.offsetX, this.yCoord, this.zCoord + dir.offsetZ, dir),
-				new DirPos(this.xCoord + dir.offsetX + rot.offsetX, this.yCoord, this.zCoord + dir.offsetZ  + rot.offsetZ, dir),
+				PortDef.make(xCoord, yCoord, zCoord, dir),
+				PortDef.make(xCoord + rot.offsetX, yCoord, zCoord + rot.offsetZ, dir),
 
-				new DirPos(this.xCoord - rot.offsetX, this.yCoord, this.zCoord - rot.offsetZ, rot.getOpposite()),
-				new DirPos(this.xCoord - dir.offsetX - rot.offsetX, this.yCoord, this.zCoord - dir.offsetZ - rot.offsetZ, rot.getOpposite()),
+				PortDef.make(xCoord, yCoord, zCoord, rot.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX, yCoord, zCoord - dir.offsetZ, rot.getOpposite()),
 
-				new DirPos(this.xCoord + rot.offsetX * 2, this.yCoord, this.zCoord + rot.offsetZ * 2, rot),
-				new DirPos(this.xCoord - dir.offsetX + rot.offsetX * 2, this.yCoord, this.zCoord - dir.offsetZ + rot.offsetZ * 2, rot),
-		};
+				PortDef.make(xCoord + rot.offsetX, yCoord, zCoord + rot.offsetZ, rot),
+				PortDef.make(xCoord - dir.offsetX + rot.offsetX, yCoord, zCoord - dir.offsetZ + rot.offsetZ, rot),
+			};
+		}
+
+		return cachedPorts;
 	}
 
 	AxisAlignedBB bb = null;

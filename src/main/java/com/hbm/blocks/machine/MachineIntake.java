@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class MachineIntake extends BlockDummyable implements ILookOverlay {
 
@@ -30,7 +31,19 @@ public class MachineIntake extends BlockDummyable implements ILookOverlay {
 
 	@Override public int[] getDimensions() { return new int[] {0, 0, 1, 0, 1, 0}; }
 	@Override public int getOffset() { return 0; }
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, 0, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, 0, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, -1, ForgeDirection.NORTH.ordinal()},
+			{1, 0, -1, ForgeDirection.NORTH.ordinal()},
+			{1, 0, 0, ForgeDirection.EAST.ordinal()},
+			{1, 0, -1, ForgeDirection.EAST.ordinal()},
+			{0, 0, 0, ForgeDirection.WEST.ordinal()},
+			{0, 0, -1, ForgeDirection.WEST.ordinal()}
+		}, dir);
+	}
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
 
@@ -42,8 +55,8 @@ public class MachineIntake extends BlockDummyable implements ILookOverlay {
 		TileEntityMachineIntake intake = (TileEntityMachineIntake) te;
 
 		List<String> text = new ArrayList();
-		text.add((intake.power < intake.getMaxPower() / 20 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + "Power: " + BobMathUtil.getShortNumber(intake.power) + "HE");
-		text.add(EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + intake.compair.getTankType().getLocalizedName() + ": " + intake.compair.getFill() + "/" + intake.compair.getMaxFill() + "mB");
+		text.add(((intake.power < intake.getMaxPower() / 20 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN)) + I18nUtil.resolveKey("overlay.common.power", BobMathUtil.getShortNumber(intake.power)));
+		text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_output", intake.compair.getTankType().getLocalizedName(), intake.compair.getFill(), intake.compair.getMaxFill()));
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}

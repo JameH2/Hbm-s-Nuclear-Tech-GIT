@@ -28,13 +28,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S23PacketBlockChange;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -97,8 +97,8 @@ public class ItemConveyorWand extends Item implements ILookOverlay {
 				list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey(super.getUnlocalizedName(stack) + ".vertical.desc"));
 			}
 		} else {
-			list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + "Hold <" + EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + "LSHIFT" + EnumChatFormatting.DARK_GRAY
-					+ "" + EnumChatFormatting.ITALIC + "> to display more info");
+			list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.hold_prefix") + EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.lshift_key") + EnumChatFormatting.DARK_GRAY
+					+ "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.more_info_suffix"));
 		}
 	}
 
@@ -208,11 +208,11 @@ public class ItemConveyorWand extends Item implements ILookOverlay {
 						player.inventoryContainer.detectAndSendChanges();
 					}
 
-					player.addChatMessage(new ChatComponentText("Conveyor built!"));
+					player.addChatMessage(new ChatComponentTranslation("chat.conveyor_wand.conveyor_built"));
 				} else if(constructCount == 0) {
-					player.addChatMessage(new ChatComponentText("Not enough conveyors, build cancelled"));
+					player.addChatMessage(new ChatComponentTranslation("chat.conveyor_wand.not_enough_conveyors_build_cancelled"));
 				} else {
-					player.addChatMessage(new ChatComponentText("Conveyor obstructed, build cancelled"));
+					player.addChatMessage(new ChatComponentTranslation("chat.conveyor_wand.conveyor_obstructed_build_cancelled"));
 				}
 			} else {
 				RenderOverhead.clearActionPreview();
@@ -511,7 +511,7 @@ public class ItemConveyorWand extends Item implements ILookOverlay {
 		Block block = world.getBlock(x, y, z);
 		if(block instanceof BlockConveyorBase) {
 			List<String> text = new ArrayList<>();
-			text.add("Break whole conveyor line");
+			text.add(I18nUtil.resolveKey("desc.item.conveyor_wand.break_whole_conveyor_line"));
 			ILookOverlay.printGeneric(event, I18nUtil.resolveKey(block.getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 		}
 	}

@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 public class FuelPoolHandler extends NEIUniversalHandler {
 
 	public FuelPoolHandler() {
-		super("Spent Fuel Pool Drum", ModBlocks.machine_waste_drum, FuelPoolRecipes.recipes);
+		super("nei.fuel_pool.name", ModBlocks.machine_waste_drum, FuelPoolRecipes.recipes);
 	}
 
 	@Override

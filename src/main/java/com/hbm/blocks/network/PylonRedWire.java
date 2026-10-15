@@ -11,8 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
+import com.hbm.util.i18n.I18nUtil;
 
 public class PylonRedWire extends BlockDummyable implements ITooltipProvider {
 
@@ -28,27 +30,35 @@ public class PylonRedWire extends BlockDummyable implements ITooltipProvider {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.GOLD + "Connection Type: " + EnumChatFormatting.YELLOW + "Single");
-		list.add(EnumChatFormatting.GOLD + "Connection Range: " + EnumChatFormatting.YELLOW + "25m");
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_type_single.desc4", EnumChatFormatting.YELLOW + "Single"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_range_25m", EnumChatFormatting.YELLOW + "25m"));
 	}
-	
+
 	@Override
 	public int[] getDimensions() {
 		return new int[] {4, 0, 0, 0, 0, 0};
 	}
-	
+
 	@Override
 	public int getOffset() {
 		return 0;
 	}
-	
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{0, 0, 0, ForgeDirection.EAST.ordinal()},
+			{0, 0, 0, ForgeDirection.WEST.ordinal()},
+			{0, 0, 0, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, 0, ForgeDirection.NORTH.ordinal()}
+		}, dir);
+	}
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block b, int m) {
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityPylonBase) ((TileEntityPylonBase)te).disconnectAll();
 		super.breakBlock(world, x, y, z, b, m);
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		if(world.isRemote) {

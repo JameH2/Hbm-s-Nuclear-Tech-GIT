@@ -9,6 +9,7 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.AstronomyUtil;
 import com.hbm.util.ArmorUtil;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
@@ -96,9 +97,9 @@ public class JetpackBreak extends JetpackFueledBase {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 
-		list.add("Regular jetpack that will automatically hover mid-air.");
-		list.add("Sneaking will stop hover mode.");
-		list.add("Hover mode will consume less fuel and increase air-mobility.");
+		list.add(I18nUtil.resolveKey("item.jetpack_break.desc1"));
+		list.add(I18nUtil.resolveKey("desc.item.jetpack_break.sneaking_stop_hover_mode"));
+		list.add(I18nUtil.resolveKey("item.jetpack_break.desc3"));
 
 		super.addInformation(stack, player, list, ext);
 	}

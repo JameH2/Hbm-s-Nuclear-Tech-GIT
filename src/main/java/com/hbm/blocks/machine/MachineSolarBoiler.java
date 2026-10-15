@@ -40,15 +40,19 @@ public class MachineSolarBoiler extends BlockDummyable implements ILookOverlay {
 	public int getOffset() {
 		return 1;
 	}
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{0, 2, 0, ForgeDirection.UP.ordinal()},
+			{0, 0, 0, ForgeDirection.DOWN.ordinal()},
+		}, dir);
+	}
 	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
-
-		x = x + dir.offsetX * o;
-		z = z + dir.offsetZ * o;
-
-		this.makeExtra(world, x, y + 2, z);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override
@@ -70,12 +74,12 @@ public class MachineSolarBoiler extends BlockDummyable implements ILookOverlay {
 		FluidTank[] tanks = boiler.getAllTanks();
 
 		for(int i = 0; i < tanks.length; i++)
-			text.add((i < 1 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET + tanks[i].getTankType().getLocalizedName() + ": " + tanks[i].getFill() + "/" + tanks[i].getMaxFill() + "mB");
+			text.add(I18nUtil.resolveKey("overlay.common.tank", (i < 1 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET, tanks[i].getTankType().getLocalizedName(), tanks[i].getFill(), tanks[i].getMaxFill()));
 
 		if(boiler.display < 1) {
-			text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]Too cold!");
+			text.add(I18nUtil.resolveKey("overlay.solar_boiler.too_cold", (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00)));
 		}
-		
+
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 }

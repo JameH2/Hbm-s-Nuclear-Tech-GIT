@@ -122,6 +122,15 @@ public class MachineChungus extends BlockDummyable implements ITooltipProvider, 
 		};
 	}
 	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{0, 2, 4, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, -10, ForgeDirection.NORTH.ordinal()},
+			{2, 0, 0, ForgeDirection.EAST.ordinal()},
+			{-2, 0, 0, ForgeDirection.WEST.ordinal()}
+		}, dir);
+	}
+	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		MultiblockHandlerXR.fillSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {3, 0, 0, 3, 2, 2}, this, dir);
 		MultiblockHandlerXR.fillSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {4, -4, 0, 3, 1, 1}, this, dir);
@@ -129,11 +138,9 @@ public class MachineChungus extends BlockDummyable implements ITooltipProvider, 
 		MultiblockHandlerXR.fillSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {2, 0, 10, -7, 1, 1}, this, dir);
 		world.setBlock(x + dir.offsetX, y + 2, z + dir.offsetZ, this, dir.ordinal(), 3);
 
-		this.makeExtra(world, x + dir.offsetX, y + 2, z + dir.offsetZ); //front connector
-		this.makeExtra(world, x + dir.offsetX * (o - 10), y, z + dir.offsetZ * (o - 10)); //back connector
-		ForgeDirection side = dir.getRotation(ForgeDirection.UP);
-		this.makeExtra(world, x + dir.offsetX * o + side.offsetX * 2 , y, z + dir.offsetZ * o + side.offsetZ * 2); //side connectors
-		this.makeExtra(world, x + dir.offsetX * o - side.offsetX * 2 , y, z + dir.offsetZ * o - side.offsetZ * 2);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override
@@ -180,9 +187,9 @@ public class MachineChungus extends BlockDummyable implements ITooltipProvider, 
 			outputType = inputType.getTrait(FT_Coolable.class).coolsTo;
 		}
 
-		text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + inputType.getLocalizedName() + ": " + String.format(Locale.US, "%,d", tankInput.getFill()) + "/" + String.format(Locale.US, "%,d", tankInput.getMaxFill()) + "mB");
-		text.add(EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + outputType.getLocalizedName() + ": " + String.format(Locale.US, "%,d", tankOutput.getFill()) + "/" + String.format(Locale.US, "%,d", tankOutput.getMaxFill()) + "mB");
-		text.add(EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(chungus.powerBuffer) + "HE");
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_input", inputType.getLocalizedName(), String.format(Locale.US, "%,d", tankInput.getFill()), String.format(Locale.US, "%,d", tankInput.getMaxFill())));
+		text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_output", outputType.getLocalizedName(), String.format(Locale.US, "%,d", tankOutput.getFill()), String.format(Locale.US, "%,d", tankOutput.getMaxFill())));
+		text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.chungus.he", BobMathUtil.getShortNumber(chungus.powerBuffer)));
 
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);

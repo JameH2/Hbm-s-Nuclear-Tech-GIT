@@ -7,6 +7,7 @@ import com.hbm.main.MainRegistry;
 
 import api.hbm.fluidmk2.IFluidUserMK2;
 import api.ntm1of90.compat.fluid.adapter.AutoForgeFluidAdapter;
+import com.hbm.util.FluidDebug;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -67,6 +68,8 @@ public class ForgeFluidAdapterRegistry {
 
             IFluidHandler adapter = new AutoForgeFluidAdapter(fluidUser, tileEntity);
             adapterMap.put(tileEntity, adapter);
+            FluidDebug.event("adapter.created|" + FluidDebug.tileKey(tileEntity),
+                () -> "ADAPTER created AutoForgeFluidAdapter for " + FluidDebug.describeTile(tileEntity) + " with " + tanks.length + " tank(s) requested by " + FluidDebug.callerHint());
             return adapter;
         }
 

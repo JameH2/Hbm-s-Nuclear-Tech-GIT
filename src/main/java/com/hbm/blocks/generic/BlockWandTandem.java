@@ -216,11 +216,11 @@ public class BlockWandTandem extends BlockContainer implements IBlockSideRotatio
 
 		List<String> text = new ArrayList<String>();
 
-		text.add(EnumChatFormatting.GRAY + "Target pool: " + EnumChatFormatting.RESET + jigsaw.pool);
-		text.add(EnumChatFormatting.GRAY + "Target name: " + EnumChatFormatting.RESET + jigsaw.target);
-		text.add(EnumChatFormatting.GRAY + "Turns into: " + EnumChatFormatting.RESET + GameRegistry.findUniqueIdentifierFor(jigsaw.replaceBlock).toString());
-		text.add(EnumChatFormatting.GRAY + "   with meta: " + EnumChatFormatting.RESET + jigsaw.replaceMeta);
-		text.add(EnumChatFormatting.GRAY + "Joint type: " + EnumChatFormatting.RESET + (jigsaw.isRollable ? "Rollable" : "Aligned"));
+		text.add((EnumChatFormatting.GRAY) + I18nUtil.resolveKey("overlay.wand_tandem.target_pool", EnumChatFormatting.RESET + String.valueOf(jigsaw.pool)));
+		text.add((EnumChatFormatting.GRAY) + I18nUtil.resolveKey("overlay.wand_tandem.target_name", EnumChatFormatting.RESET + String.valueOf(jigsaw.target)));
+		text.add((EnumChatFormatting.GRAY) + I18nUtil.resolveKey("overlay.wand_tandem.turns_into", EnumChatFormatting.RESET + String.valueOf(GameRegistry.findUniqueIdentifierFor(jigsaw.replaceBlock).toString())));
+		text.add((EnumChatFormatting.GRAY) + I18nUtil.resolveKey("overlay.wand_tandem.with_meta", EnumChatFormatting.RESET + String.valueOf(jigsaw.replaceMeta)));
+		text.add((EnumChatFormatting.GRAY) + I18nUtil.resolveKey("overlay.wand_tandem.joint_type", EnumChatFormatting.RESET + String.valueOf((jigsaw.isRollable ? I18nUtil.resolveKey("gui.wand_tandem.rollable") : I18nUtil.resolveKey("gui.wand_tandem.aligned")))));
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
@@ -341,7 +341,7 @@ public class BlockWandTandem extends BlockContainer implements IBlockSideRotatio
 		}
 
 		@Override
-		public void receiveControl(NBTTagCompound nbt) {
+		public void receiveControl(EntityPlayer player, NBTTagCompound nbt) {
 			readFromNBT(nbt);
 			markDirty();
 		}
@@ -376,20 +376,20 @@ public class BlockWandTandem extends BlockContainer implements IBlockSideRotatio
 			textTarget = new GuiTextField(fontRendererObj, this.width / 2 + 10, 100, 140, 20);
 			textTarget.setText(jigsaw.target);
 
-			jointToggle = new GuiButton(0, this.width / 2 + 60, 150, 90, 20, jigsaw.isRollable ? "Rollable" : "Aligned");
+			jointToggle = new GuiButton(0, this.width / 2 + 60, 150, 90, 20, jigsaw.isRollable ? I18nUtil.resolveKey("gui.wand_tandem.rollable") : I18nUtil.resolveKey("gui.wand_tandem.aligned"));
 		}
 
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 			drawDefaultBackground();
 
-			drawString(fontRendererObj, "Target pool:", this.width / 2 - 150, 37, 0xA0A0A0);
+			drawString(fontRendererObj, I18nUtil.resolveKey("gui.wand_tandem.target_pool"), this.width / 2 - 150, 37, 0xA0A0A0);
 			textPool.drawTextBox();
 
-			drawString(fontRendererObj, "Target name:", this.width / 2 + 10, 87, 0xA0A0A0);
+			drawString(fontRendererObj, I18nUtil.resolveKey("gui.wand_tandem.target_name"), this.width / 2 + 10, 87, 0xA0A0A0);
 			textTarget.drawTextBox();
 
-			drawString(fontRendererObj, "Joint type:", this.width / 2 + 60, 137, 0xA0A0A0);
+			drawString(fontRendererObj, I18nUtil.resolveKey("gui.wand_tandem.joint_type"), this.width / 2 + 60, 137, 0xA0A0A0);
 			jointToggle.drawButton(mc, mouseX, mouseY);
 
 			super.drawScreen(mouseX, mouseY, partialTicks);

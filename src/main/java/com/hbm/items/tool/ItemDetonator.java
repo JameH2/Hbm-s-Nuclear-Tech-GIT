@@ -10,6 +10,7 @@ import com.hbm.interfaces.IBomb.BombReturnCode;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.NTMSounds;
 import com.hbm.util.ChatBuilder;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -22,12 +23,12 @@ public class ItemDetonator extends Item {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add("Shift right-click to set position,");
-		list.add("right-click to detonate!");
+		list.add(I18nUtil.resolveKey("item.drop.desc26"));
+		list.add(I18nUtil.resolveKey("desc.item.detonator.right_click_detonate"));
 		if(itemstack.getTagCompound() == null) {
-			list.add(EnumChatFormatting.RED + "No position set!");
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.misc.noPos"));
 		} else {
-			list.add(EnumChatFormatting.YELLOW + "Linked to " + itemstack.stackTagCompound.getInteger("x") + ", " + itemstack.stackTagCompound.getInteger("y") + ", " + itemstack.stackTagCompound.getInteger("z"));
+			list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.designator_arty_range.desc2", itemstack.stackTagCompound.getInteger("x"), itemstack.stackTagCompound.getInteger("y"), itemstack.stackTagCompound.getInteger("z")));
 		}
 	}
 
@@ -46,7 +47,7 @@ public class ItemDetonator extends Item {
 				player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)
 						.nextTranslation(this.getUnlocalizedName() + ".name").color(EnumChatFormatting.DARK_AQUA)
 						.next("] ").color(EnumChatFormatting.DARK_AQUA)
-						.next("Position set!").color(EnumChatFormatting.GREEN).flush());
+						.nextTranslation("desc.misc.posSet").color(EnumChatFormatting.GREEN).flush());
 			}
 
 			world.playSoundAtEntity(player, NTMSounds.TECH_BOOP, 2.0F, 1.0F);
@@ -65,7 +66,7 @@ public class ItemDetonator extends Item {
 				player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)
 						.nextTranslation(this.getUnlocalizedName() + ".name").color(EnumChatFormatting.DARK_AQUA)
 						.next("] ").color(EnumChatFormatting.DARK_AQUA)
-						.next("No position set!").color(EnumChatFormatting.RED).flush());
+						.nextTranslation("desc.misc.noPos").color(EnumChatFormatting.RED).flush());
 			}
 		} else {
 			int x = stack.stackTagCompound.getInteger("x");
@@ -79,13 +80,13 @@ public class ItemDetonator extends Item {
 
 					if(GeneralConfig.enableExtendedLogging)
 						MainRegistry.logger.log(Level.INFO, "[DET] Tried to detonate block at " + x + " / " + y + " / " + z + " by " + player.getDisplayName() + "!");
-					
+
 					player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)
 							.nextTranslation(this.getUnlocalizedName() + ".name").color(EnumChatFormatting.DARK_AQUA)
 							.next("] ").color(EnumChatFormatting.DARK_AQUA)
 							.nextTranslation(ret.getUnlocalizedMessage()).color(ret.wasSuccessful() ? EnumChatFormatting.YELLOW : EnumChatFormatting.RED).flush());
 				}
-				
+
 			} else {
 				if(!world.isRemote) {
 					player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)

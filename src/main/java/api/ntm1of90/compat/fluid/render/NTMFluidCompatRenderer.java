@@ -97,22 +97,10 @@ public class NTMFluidCompatRenderer {
         return fluid.getFlowingIcon();
     }
 
-    /**
-     * Get the color to use for a fluid in inventory rendering
-     * @param fluid The fluid to get the color for
-     * @return The color to use for the fluid
-     */
+    // NTM textures are fully colored already, so they report white to avoid double tinting
     public static int getFluidColor(Fluid fluid) {
         if (fluid == null) return 0xFFFFFF;
-
-        // Try to get the color from ColoredForgeFluid
-        if (fluid instanceof ColoredForgeFluid) {
-            return ((ColoredForgeFluid) fluid).getColor();
-        }
-
-        // Try to get the color from the fluid
-        FluidStack fluidStack = new FluidStack(fluid, 1000);
-        return fluid.getColor(fluidStack);
+        return fluid.getColor(new FluidStack(fluid, 1000));
     }
 
     /**
@@ -188,6 +176,6 @@ public class NTMFluidCompatRenderer {
         }
 
         // Fall back to a default texture
-        return new ResourceLocation(RefStrings.MODID, "textures/gui/forgefluids/water.png");
+        return new ResourceLocation(RefStrings.MODID, "textures/gui/fluids/water.png");
     }
 }

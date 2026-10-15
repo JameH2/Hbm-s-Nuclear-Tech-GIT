@@ -28,7 +28,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
 public class ItemModGasmask extends ItemArmorMod implements IGasMask {
-	
+
 	private ModelM65 modelM65;
 	private ResourceLocation tex = new ResourceLocation("hbm:textures/models/ModelM65.png");
 	private ResourceLocation tex_mono = new ResourceLocation("hbm:textures/models/ModelM65Mono.png");
@@ -36,22 +36,22 @@ public class ItemModGasmask extends ItemArmorMod implements IGasMask {
 	public ItemModGasmask() {
 		super(ArmorModHandler.helmet_only, true, false, false, false);
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		
-		list.add(EnumChatFormatting.GREEN + "Gas protection");
-		
+
+		list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("desc.item.mod_gasmask.gas_protection"));
+
 		list.add("");
 		super.addInformation(stack, player, list, bool);
-		
+
 		ArmorUtil.addGasMaskTooltip(stack, player, list, bool);
-		
+
 		List<HazardClass> haz = getBlacklist(stack, player);
-		
+
 		if(!haz.isEmpty()) {
-			list.add(EnumChatFormatting.RED + "Will never protect against:");
-			
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.mod_gasmask.never_protect_against"));
+
 			for(HazardClass clazz : haz) {
 				list.add(EnumChatFormatting.DARK_RED + " -" + I18nUtil.resolveKey(clazz.lang));
 			}
@@ -60,8 +60,8 @@ public class ItemModGasmask extends ItemArmorMod implements IGasMask {
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		
-		list.add(EnumChatFormatting.GREEN + "  " + stack.getDisplayName() + " (gas protection)");
+
+		list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.mod_gasmask.desc3", stack.getDisplayName()));
 		ArmorUtil.addGasMaskTooltip(stack, MainRegistry.proxy.me(), list, false);
 	}
 
@@ -72,14 +72,14 @@ public class ItemModGasmask extends ItemArmorMod implements IGasMask {
 		if(this.modelM65 == null) {
 			this.modelM65 = new ModelM65();
 		}
-		
+
 		RenderPlayer renderer = event.renderer;
 		ModelBiped model = renderer.modelArmor;
 		EntityPlayer player = event.entityPlayer;
 
 		modelM65.isSneak = model.isSneak;
 		modelM65.isChild = renderer.modelBipedMain.isChild;
-		
+
 		float interp = event.partialRenderTick;
 		float yawHead = player.prevRotationYawHead + (player.rotationYawHead - player.prevRotationYawHead) * interp;
 		float yawOffset = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * interp;
@@ -91,13 +91,13 @@ public class ItemModGasmask extends ItemArmorMod implements IGasMask {
 			Minecraft.getMinecraft().renderEngine.bindTexture(tex);
 		if(this == ModItems.attachment_mask_mono)
 			Minecraft.getMinecraft().renderEngine.bindTexture(tex_mono);
-		
+
 		modelM65.render(event.entityPlayer, 0.0F, 0.0F, yawWrapped, yaw, pitch, 0.0625F);
 	}
 
 	@Override
 	public ArrayList<HazardClass> getBlacklist(ItemStack stack, EntityLivingBase entity) {
-		
+
 		if(this == ModItems.attachment_mask_mono) {
 			return new ArrayList<HazardClass>(Arrays.asList(new HazardClass[] {HazardClass.GAS_LUNG, HazardClass.GAS_BLISTERING, HazardClass.BACTERIA}));
 		} else {
@@ -127,20 +127,20 @@ public class ItemModGasmask extends ItemArmorMod implements IGasMask {
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-		
+
 		if(player.isSneaking()) {
-			
+
 			ItemStack filter = this.getFilter(stack, player);
-			
+
 			if(filter != null) {
 				ArmorUtil.removeFilter(stack);
-				
+
 				if(!player.inventory.addItemStackToInventory(filter)) {
 					player.dropPlayerItemWithRandomChoice(filter, true);
 				}
 			}
 		}
-		
+
 		return super.onItemRightClick(stack, world, player);
 	}
 }

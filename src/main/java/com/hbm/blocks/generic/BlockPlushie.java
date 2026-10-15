@@ -6,6 +6,7 @@ import java.util.Random;
 import com.hbm.blocks.IBlockMulti;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.items.ModItems;
+import com.hbm.util.i18n.I18nUtil;
 import com.hbm.world.gen.nbt.INBTTileEntityTransformable;
 import com.hbm.world.gen.nbt.INBTBlockTransformable;
 
@@ -173,15 +174,15 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 
 	public static enum PlushieType {
 		NONE(		"NONE",				null, null),
-		BUFKA(		"Bufka2011",	    "Brain damage", "hbm:block.bufka"),
-		YOMI(		"Yomi",				"Hi! Can I be your rabbit friend?", "hbm:block.squeakyToy"),
-		NUMBERNINE(	"Number Nine",		"None of y'all deserve coal.", "hbm:block.squeakyToy"),
+		BUFKA(		"Bufka2011",	    "plushie.bufka.inscription", "hbm:block.bufka"),
+		YOMI(		"Yomi",				"plushie.yomi.inscription", "hbm:block.squeakyToy"),
+		NUMBERNINE(	"Number Nine",		"plushie.numbernine.inscription", "hbm:block.squeakyToy"),
 		HUNDUN(		"Hundun",			"混沌", "hbm:block.hunduns_magnificent_howl"),
-		TETO(		"Kasane Teto",		"please help I've been trapped in her basement for da-", "hbm:block.teto"),
-		MIKU(		"Hatsune Miku",		"In your wifi, and your heart.", "hbm:block.miku"),
-		NERU(		"Akita Neru",		"Careful, she might electrocute you.", "hbm:block.akita"),
-		DERG(		"Dragon",			"Squeeze him.", "hbm:block.squeakyToy"), // blerg
-		FATO(		"FAT TETO",			"pls don't bully me", "hbm:block.teto");
+		TETO(		"Kasane Teto",		"plushie.teto.inscription", "hbm:block.teto"),
+		MIKU(		"Hatsune Miku",		"plushie.miku.inscription", "hbm:block.miku"),
+		NERU(		"Akita Neru",		"plushie.neru.inscription", "hbm:block.akita"),
+		DERG(		"Dragon",			"plushie.derg.inscription", "hbm:block.squeakyToy"), // blerg
+		FATO(		"FAT TETO",			"plushie.fato.inscription", "hbm:block.teto");
 
 		public String label;
 		public String inscription;
@@ -208,6 +209,6 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 		PlushieType type = PlushieType.values()[Math.abs(stack.getItemDamage()) % PlushieType.values().length];
-		if(type.inscription != null) list.add(type.inscription);
+		if(type.inscription != null) list.add(I18nUtil.resolveKey(type.inscription));
 	}
 }

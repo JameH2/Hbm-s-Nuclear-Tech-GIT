@@ -5,8 +5,10 @@ import java.util.List;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
+import com.hbm.util.BobMathUtil;
 import com.hbm.util.ChatBuilder;
 import com.hbm.util.fauxpointtwelve.BlockPos;
+import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.energymk2.IEnergyConductorMK2;
 import api.hbm.energymk2.Nodespace;
@@ -51,11 +53,11 @@ public class ItemPowerNetTool extends Item {
 
 				PowerNetMK2 net = node.net;
 				String id = Integer.toHexString(net.hashCode());
-				player.addChatComponentMessage(ChatBuilder.start("Start of diagnostic for network " + id).color(EnumChatFormatting.GOLD).flush());
-				player.addChatComponentMessage(ChatBuilder.start("Links: " + net.links.size()).color(EnumChatFormatting.YELLOW).flush());
-				player.addChatComponentMessage(ChatBuilder.start("Providers: " + net.providerEntries.size()).color(EnumChatFormatting.YELLOW).flush());
-				player.addChatComponentMessage(ChatBuilder.start("Receivers: " + net.receiverEntries.size()).color(EnumChatFormatting.YELLOW).flush());
-				player.addChatComponentMessage(ChatBuilder.start("End of diagnostic for network " + id).color(EnumChatFormatting.GOLD).flush());
+				player.addChatComponentMessage(ChatBuilder.startTranslation("chat.power_net_tool.start_diagnostic_network", id).color(EnumChatFormatting.GOLD).flush());
+				player.addChatComponentMessage(ChatBuilder.startTranslation("chat.power_net_tool.2", net.links.size()).color(EnumChatFormatting.YELLOW).flush());
+				player.addChatComponentMessage(ChatBuilder.startTranslation("chat.power_net_tool.3", net.providerEntries.size()).color(EnumChatFormatting.YELLOW).flush());
+				player.addChatComponentMessage(ChatBuilder.startTranslation("chat.power_net_tool.4", net.receiverEntries.size()).color(EnumChatFormatting.YELLOW).flush());
+				player.addChatComponentMessage(ChatBuilder.startTranslation("chat.power_net_tool.end_diagnostic_network", id).color(EnumChatFormatting.GOLD).flush());
 
 				for(PowerNode link : net.links) {
 
@@ -70,7 +72,7 @@ public class ItemPowerNetTool extends Item {
 				}
 
 			} else {
-				player.addChatComponentMessage(ChatBuilder.start("Error: No network found!").color(EnumChatFormatting.RED).flush());
+				player.addChatComponentMessage(ChatBuilder.startTranslation("chat.power_net_tool.error_no_network_found").color(EnumChatFormatting.RED).flush());
 			}
 
 			return true;
@@ -83,12 +85,12 @@ public class ItemPowerNetTool extends Item {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.RED + "Right-click cable to analyze the power net.");
-		list.add(EnumChatFormatting.RED + "Links (cables, poles, etc.) are YELLOW");
-		list.add(EnumChatFormatting.RED + "Subscribers (any receiver) are BLUE");
-		list.add(EnumChatFormatting.RED + "Links with mismatching network info (BUGGED!) are RED");
-		list.add(EnumChatFormatting.RED + "Displays stats such as link and subscriber count");
-		list.add(EnumChatFormatting.RED + "Proxies are connection points for multiblock links (e.g. 4 for substations)");
-		list.add(EnumChatFormatting.RED + "Particles only spawn in a " + radius + " block radius!");
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.power_net_tool.right_click_cable_analyze_power"));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.power_net_tool.links_cables_poles_etc_yellow"));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.power_net_tool.subscribers_receiver_blue"));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.power_net_tool.desc4"));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.power_net_tool.displays_stats_link_subscriber"));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.power_net_tool.desc6"));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.power_net_tool.particles_spawn_block_radius", radius));
 	}
 }

@@ -3,6 +3,7 @@ package com.hbm.items.block;
 import java.util.List;
 
 import com.hbm.blocks.BlockRemap;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -26,9 +27,9 @@ public class ItemBlockRemap extends ItemBlockBase {
 		BlockRemap remap = (BlockRemap) this.field_150939_a;
 		player.inventory.setInventorySlotContents(slot, new ItemStack(remap.remapBlock, stack.stackSize, remap.remapMeta));
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.RED + "Compatibility item, hold in inventory to convert!");
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.remap.desc1"));
 	}
 }

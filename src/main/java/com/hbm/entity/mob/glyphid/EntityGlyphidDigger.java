@@ -29,7 +29,7 @@ public class EntityGlyphidDigger extends EntityGlyphid {
 	}
 
 	public ResourceLocation getSkin() {
-		return ResourceManager.glyphid_digger_tex;
+		return isTamed() ? ResourceManager.glyphid_digger_tame_tex : ResourceManager.glyphid_digger_tex;
 	}
 
 	@Override

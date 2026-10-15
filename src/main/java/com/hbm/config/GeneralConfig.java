@@ -40,6 +40,7 @@ public class GeneralConfig {
 	public static boolean enableLoadScreenReplacement = true;
 	public static boolean enableMachineGravity = false;
 	public static boolean enableUnavoidableGravity = true;
+	public static boolean enableFluidDebugLogging = false;
 	public static int normalSoundChannels = 200;
 
 	public static boolean enableExpensiveMode = false;
@@ -66,7 +67,6 @@ public class GeneralConfig {
 	}
 
 	public static boolean enableLBSM = false;
-	public static boolean enableLBSMFullSchrab = true;
 	public static boolean enableLBSMShorterDecay = true;
 	public static boolean enableLBSMSimpleArmorRecipes = true;
 	public static boolean enableLBSMSimpleToolRecipes = true;
@@ -137,6 +137,7 @@ public class GeneralConfig {
 		enableLoadScreenReplacement = config.get(CATEGORY_GENERAL, "1.43_enableLoadScreenReplacement", true, "Tries to replace the vanilla load screen with the 'tip of the day' one, may clash with other mods trying to do the same.").getBoolean(true);
 		enableMachineGravity = config.get(CATEGORY_GENERAL, "1.44_enableMachineGravity", false, "Requires large large machines to have a proper foundation, or else they tilt and break. Independent from the 528 version of this config, which does the same, but only works with 528 enabled.").getBoolean(false);
 		enableUnavoidableGravity = config.get(CATEGORY_GENERAL, "1.45_enableUnavoidableGravity", true, "Requires extra large machines to have a proper foundation, for machines that have gravity by default, rather than by config (only applies to the Big-Ass Tank currently).").getBoolean(true);
+		enableFluidDebugLogging = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.46_enableFluidDebugLogging", "Debug tracing for the Forge fluid / AE2 integration (adapter traffic, mappings, icons, tank mutations). Grep the server log for [FluidDebug]. Keep OFF unless debugging fluid issues.", false);
 		enableExpensiveMode = config.get(CATEGORY_GENERAL, "1.99_enableExpensiveMode", false, "It does what the name implies.").getBoolean(false);
 
 		final String CATEGORY_528 = CommonConfig.CATEGORY_528;
@@ -165,7 +166,6 @@ public class GeneralConfig {
 				+ "Progression-braking recipes are usually not too severe, so the mode is generally server-friendly!");
 
 		enableLBSM = CommonConfig.createConfigBool(config, CATEGORY_LBSM, "enableLessBullshitMode", "The central toggle for LBS mode. Forced OFF when 528 is enabled!", false);
-		enableLBSMFullSchrab = CommonConfig.createConfigBool(config, CATEGORY_LBSM, "LBSM_fullSchrab", "When enabled, this will replace schraranium with full schrabidium ingots in the transmutator's output", true);
 		enableLBSMShorterDecay = CommonConfig.createConfigBool(config, CATEGORY_LBSM, "LBSM_shortDecay", "When enabled, this will highly accelerate the speed at which nuclear waste disposal drums decay their contents. 60x faster than 528 mode and 5-12x faster than on normal mode.", true);
 		enableLBSMSimpleArmorRecipes = CommonConfig.createConfigBool(config, CATEGORY_LBSM, "LBSM_recipeSimpleArmor", "When enabled, simplifies the recipe for armor sets like starmetal or schrabidium.", true);
 		enableLBSMSimpleToolRecipes = CommonConfig.createConfigBool(config, CATEGORY_LBSM, "LBSM_recipeSimpleTool", "When enabled, simplifies the recipe for tool sets like starmetal or scrhabidium", true);

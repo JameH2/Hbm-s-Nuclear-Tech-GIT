@@ -107,17 +107,17 @@ public class BlockWandLoot extends BlockContainer implements ILookOverlay, ITool
 		TileEntityWandLoot loot = (TileEntityWandLoot) te;
 
 		List<String> text = new ArrayList<String>();
-		text.add("Will replace with: " + loot.replaceBlock.getUnlocalizedName());
-		text.add("   meta: " + loot.replaceMeta);
-		text.add("Loot pool: " + loot.poolName);
+		text.add(I18nUtil.resolveKey("overlay.wand_loot.will_replace_with", loot.replaceBlock.getUnlocalizedName()));
+		text.add(I18nUtil.resolveKey("overlay.wand_loot.meta", loot.replaceMeta));
+		text.add(I18nUtil.resolveKey("overlay.wand_loot.loot_pool", loot.poolName));
 		if(loot.replaceBlock != ModBlocks.deco_loot) {
-			text.add("Minimum items: " + loot.minItems);
-			text.add("Maximum items: " + loot.maxItems);
+			text.add(I18nUtil.resolveKey("overlay.wand_loot.minimum_items", loot.minItems));
+			text.add(I18nUtil.resolveKey("overlay.wand_loot.maximum_items", loot.maxItems));
 		}
 
 		if(loot.lockCode != 0){
-			text.add("Container will be locked");
-			text.add("Lockpicking chance:" + loot.lockMod);
+			text.add(I18nUtil.resolveKey("overlay.wand_loot.container_will_be_locked"));
+			text.add(I18nUtil.resolveKey("overlay.wand_loot.lockpicking_chance", loot.lockMod));
 		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
@@ -126,11 +126,11 @@ public class BlockWandLoot extends BlockContainer implements ILookOverlay, ITool
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add("Define loot crates/piles in .nbt structures");
-		list.add(EnumChatFormatting.GOLD + "Use screwdriver to increase/decrease minimum loot");
-		list.add(EnumChatFormatting.GOLD + "Use hand drill to increase/decrease maximum loot");
-		list.add(EnumChatFormatting.GOLD + "Use defuser to cycle loot types");
-		list.add(EnumChatFormatting.GOLD + "Use container block to set the block that spawns with loot inside");
+		list.add(I18nUtil.resolveKey("tile.wand_loot.define_loot_crates_piles_nbt"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_loot.line.04"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_loot.line.03"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.defuser_cycle_loot_types"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_loot.line.02"));
 	}
 
 	@Override

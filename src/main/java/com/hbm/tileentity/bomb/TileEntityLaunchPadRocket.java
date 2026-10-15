@@ -24,8 +24,11 @@ import com.hbm.items.ItemVOTVdrive.Target;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemCustomRocket;
 import com.hbm.lib.Library;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IBatteryItem;
@@ -48,6 +51,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import com.hbm.util.i18n.I18nUtil;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
 public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements IControlReceiver, IEnergyReceiverMK2, IFluidStandardReceiverMK2, IGUIProvider, SimpleComponent, CompatHandler.OCComponent {
@@ -67,10 +71,16 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 	public RocketStruct rocket;
 	public int height;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityLaunchPadRocket() {
 		super(5); // 0 rocket, 1 drive, 2 battery, 3/4 liquid/solid fuel in/out
 		tanks = new FluidTank[RocketStruct.MAX_STAGES * 2]; // enough tanks for any combination of rocket stages
 		for(int i = 0; i < tanks.length; i++) tanks[i] = new FluidTank(Fluids.NONE, 64_000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks());
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 
 	@Override
@@ -85,24 +95,13 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 
 		if(!worldObj.isRemote) {
+			moduleFluidPorts.update(getPorts());
+			modulePowerPorts.update(getPorts());
+
 			ItemVOTVdrive.getTarget(slots[1], worldObj);
 
 			// Setup tanks required for the current rocket
 			updateTanks();
-
-			// Connections
-			if(worldObj.getTotalWorldTime() % 20 == 0) {
-				for(DirPos pos : getConPos()) {
-					trySubscribe(worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-
-					if(hasRocket()) {
-						for(FluidTank tank : tanks) {
-							if(tank.getTankType() == Fluids.NONE) continue;
-							trySubscribe(tank.getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-						}
-					}
-				}
-			}
 
 			// Fills, note that the liquid input also takes solid fuel
 			power = Library.chargeTEFromItems(slots, 2, power, maxPower);
@@ -243,11 +242,11 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 		return false;
 	}
 
-	private DirPos[] conPos;
+	protected PortDef[] cachedPorts;
 
-	public DirPos[] getConPos() {
-		if(conPos == null) {
-			conPos = new DirPos[13]; // 12 + 1 inputs
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			cachedPorts = new PortDef[13]; // 12 + 1 inputs
 
 			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
 			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
@@ -256,13 +255,13 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 
 			for(int or = 1; or < 5; or++) {
 				for(int oy = 0; oy < 3; oy++) {
-					conPos[i++] = new DirPos(xCoord - rot.offsetX * or - dir.offsetX * 8, yCoord + oy, zCoord - rot.offsetZ * or - dir.offsetZ * 8, dir.getOpposite());
+					cachedPorts[i++] = PortDef.make(xCoord - rot.offsetX * or - dir.offsetX * 7, yCoord + oy, zCoord - rot.offsetZ * or - dir.offsetZ * 7, dir.getOpposite());
 				}
 			}
-			conPos[i++] = new DirPos(xCoord + rot.offsetX * 3 - dir.offsetX * 8, yCoord, zCoord + rot.offsetZ * 3 - dir.offsetZ * 8, dir.getOpposite());
+			cachedPorts[i++] = PortDef.make(xCoord + rot.offsetX * 3 - dir.offsetX * 7, yCoord, zCoord + rot.offsetZ * 3 - dir.offsetZ * 7, dir.getOpposite());
 		}
 
-		return conPos;
+		return cachedPorts;
 	}
 
 	public void launch(EntityPlayer player) {
@@ -390,35 +389,35 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 				tankName = split[split.length - 1];
 			}
 			if(fill < maxFill) {
-				issues.add(EnumChatFormatting.YELLOW + "" + fill + "/" + maxFill + "mB " + tankName);
+				issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.launch_pad_rocket.drive_fill", fill, maxFill, tankName));
 			} else {
-				issues.add(EnumChatFormatting.GREEN + "" + fill + "/" + maxFill + "mB " + tankName);
+				issues.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("overlay.launch_pad_rocket.drive_fill", fill, maxFill, tankName));
 			}
 		}
 
 		if(solidFuel.max > 0) {
 			if(solidFuel.level < solidFuel.max) {
-				issues.add(EnumChatFormatting.YELLOW + "" + solidFuel.level + "/" + solidFuel.max + "kg Solid Fuel");
+				issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.launch_pad_rocket.solid_fuel_skg", solidFuel.level, solidFuel.max));
 			} else {
-				issues.add(EnumChatFormatting.GREEN + "" + solidFuel.level + "/" + solidFuel.max + "kg Solid Fuel");
+				issues.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("overlay.launch_pad_rocket.solid_fuel_skg", solidFuel.level, solidFuel.max));
 			}
 		}
 	}
 
 	public static boolean findDriveIssues(List<String> issues, RocketStruct rocket, ItemStack drive) {
 		if(drive == null || !(drive.getItem() instanceof ItemVOTVdrive)) {
-			issues.add(EnumChatFormatting.YELLOW + "No destination drive installed");
+			issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.launch_pad_rocket.no_destination_drive_installed"));
 			return true;
 		}
 
 		if(!ItemVOTVdrive.getProcessed(drive)) {
-			issues.add(EnumChatFormatting.RED + "Destination drive needs processing");
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.destination_drive_needs"));
 			return true;
 		}
 
 		SolarSystem.Body target = ItemVOTVdrive.getDestination(drive).body;
 		if(target == SolarSystem.Body.ORBIT && rocket.capsule.part != ModItems.rp_capsule_20 && rocket.capsule.part != ModItems.rp_station_core_20) {
-			issues.add(EnumChatFormatting.RED + "Satellite target must be a planet");
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.satellite_target_must_planet"));
 			return true;
 		}
 
@@ -427,15 +426,15 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 
 	public static void findTravelIssues(List<String> issues, RocketStruct rocket, Target from, Target to) {
 		if(to.inOrbit && !to.isValid && rocket.capsule.part != ModItems.rp_station_core_20) {
-			issues.add(EnumChatFormatting.RED + "Station not yet launched");
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.station_not_yet_launched"));
 		}
 
 		if(to.inOrbit && to.isValid && rocket.capsule.part == ModItems.rp_station_core_20) {
-			issues.add(EnumChatFormatting.RED + "Station already launched");
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.station_already_launched"));
 		}
 
 		if(!rocket.hasSufficientFuel(from.body, to.body, from.inOrbit, to.inOrbit)) {
-			issues.add(EnumChatFormatting.RED + "Rocket can't reach destination");
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.line.04"));
 		}
 	}
 
@@ -448,11 +447,11 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 		RocketStruct rocket = ItemCustomRocket.get(slots[0]);
 
 		if(!canSeeSky) {
-			issues.add(EnumChatFormatting.RED + "Pad is obstructed");
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.pad_is_obstructed"));
 		}
 
 		if(power < maxPower * 0.75) {
-			issues.add(EnumChatFormatting.RED + "Insufficient power");
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.insufficient_power"));
 		}
 
 		findTankIssues(issues, tanks, solidFuel);
@@ -544,9 +543,6 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 	public boolean hasPermission(EntityPlayer player) {
 		return this.isUseableByPlayer(player);
 	}
-
-	@Override
-	public void receiveControl(NBTTagCompound data) { }
 
 	@Override
 	public void receiveControl(EntityPlayer player, NBTTagCompound data) {

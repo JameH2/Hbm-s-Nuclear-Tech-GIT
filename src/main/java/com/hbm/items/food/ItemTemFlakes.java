@@ -1,5 +1,7 @@
 package com.hbm.items.food;
 
+import com.hbm.util.i18n.I18nUtil;
+
 import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
@@ -24,7 +26,7 @@ public class ItemTemFlakes extends ItemFood {
     {
     	p_77849_3_.heal(2F);
     }
-    
+
     @Override
 	@SideOnly(Side.CLIENT)
     public void getSubItems(Item p_150895_1_, CreativeTabs p_150895_2_, List p_150895_3_)
@@ -33,21 +35,21 @@ public class ItemTemFlakes extends ItemFood {
         p_150895_3_.add(new ItemStack(p_150895_1_, 1, 1));
         p_150895_3_.add(new ItemStack(p_150895_1_, 1, 2));
     }
-	
+
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool)
 	{
 		if(itemstack.getItemDamage() == 0)
 		{
-			list.add("Heals 2HP DISCOUNT FOOD OF TEM!!!");
+			list.add(I18nUtil.resolveKey("desc.item.tem_flakes.heals_2hp_discount_food_tem"));
 		}
 		if(itemstack.getItemDamage() == 1)
 		{
-			list.add("Heals 2HP food of tem");
+			list.add(I18nUtil.resolveKey("desc.item.tem_flakes.heals_2hp_food_tem"));
 		}
 		if(itemstack.getItemDamage() == 2)
 		{
-			list.add("Heals food of tem (expensiv)");
+			list.add(I18nUtil.resolveKey("desc.item.tem_flakes.heals_food_tem_expensiv"));
 		}
 	}
 

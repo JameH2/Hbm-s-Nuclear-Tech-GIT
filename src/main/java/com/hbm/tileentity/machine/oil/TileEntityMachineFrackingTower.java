@@ -13,11 +13,11 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.gui.GUIMachineOilWell;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
-import com.hbm.lib.Library;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IUpgradeInfoProvider;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BobMathUtil;
-import com.hbm.util.fauxpointtwelve.DirPos;
 import com.hbm.util.i18n.I18nUtil;
 import com.hbm.world.feature.OilSpot;
 
@@ -44,6 +44,9 @@ public class TileEntityMachineFrackingTower extends TileEntityOilDrillBase {
 		tanks[1] = new FluidTank(Fluids.GAS, 64_000);
 		tanks[2] = new FluidTank(Fluids.FRACKSOL, 64_000);
 	}
+	
+	@Override
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.horizontal(xCoord, yCoord, zCoord); return cachedPorts; }
 
 	@Override
 	public String getName() {
@@ -117,24 +120,6 @@ public class TileEntityMachineFrackingTower extends TileEntityOilDrillBase {
 	}
 
 	@Override
-	public DirPos[] getConPos() {
-		return new DirPos[] {
-				new DirPos(xCoord + 1, yCoord, zCoord, Library.POS_X),
-				new DirPos(xCoord - 1, yCoord, zCoord, Library.NEG_X),
-				new DirPos(xCoord, yCoord, zCoord + 1, Library.POS_Z),
-				new DirPos(xCoord, yCoord, zCoord - 1, Library.NEG_Z)
-		};
-	}
-
-	@Override
-	protected void updateConnections() {
-		for(DirPos pos : getConPos()) {
-			this.trySubscribe(worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-			this.trySubscribe(tanks[2].getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-		}
-	}
-
-	@Override
 	public String getConfigName() {
 		return "frackingtower";
 	}
@@ -183,7 +168,7 @@ public class TileEntityMachineFrackingTower extends TileEntityOilDrillBase {
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(KEY_BURN, level * 10, level * 50));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
-			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + "YES");
+			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}
 }

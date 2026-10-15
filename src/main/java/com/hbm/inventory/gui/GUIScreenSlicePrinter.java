@@ -17,8 +17,8 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class GUIScreenSlicePrinter extends GuiScreen {
 
@@ -68,7 +68,7 @@ public class GUIScreenSlicePrinter extends GuiScreen {
 
 		// Once we've reached the top slice, close the GUI
 		if(yIndex >= sizeY) {
-			mc.thePlayer.addChatMessage(new ChatComponentText("Slices saved to: .minecraft/printer/" + dirname));
+			mc.thePlayer.addChatMessage(new ChatComponentTranslation("chat.slice_printer.slices_saved", dirname));
 			mc.thePlayer.closeScreen();
 			return;
 		}

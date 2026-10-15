@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
+import com.hbm.util.i18n.I18nUtil;
 
 public class MachineHydrotreater extends BlockDummyable implements IPersistentInfoProvider {
 
@@ -37,15 +38,26 @@ public class MachineHydrotreater extends BlockDummyable implements IPersistentIn
 
 	@Override public int[] getDimensions() { return new int[] {6, 0, 1, 1, 1, 1}; }
 	@Override public int getOffset() { return 1; }
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, 1, ForgeDirection.EAST.ordinal()},
+			{1, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{1, 0, -1, ForgeDirection.EAST.ordinal()},
+			{1, 0, -1, ForgeDirection.NORTH.ordinal()},
+			{-1, 0, 1, ForgeDirection.WEST.ordinal()},
+			{-1, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{-1, 0, -1, ForgeDirection.WEST.ordinal()},
+			{-1, 0, -1, ForgeDirection.NORTH.ordinal()}
+		}, dir);
+	}
 	@Override
 	protected void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
 
-		this.makeExtra(world, x - dir.offsetX + 1, y, z - dir.offsetZ + 1);
-		this.makeExtra(world, x - dir.offsetX + 1, y, z - dir.offsetZ - 1);
-		this.makeExtra(world, x - dir.offsetX - 1, y, z - dir.offsetZ + 1);
-		this.makeExtra(world, x - dir.offsetX - 1, y, z - dir.offsetZ - 1);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override
@@ -54,7 +66,7 @@ public class MachineHydrotreater extends BlockDummyable implements IPersistentIn
 		for(int i = 0; i < 4; i++) {
 			FluidTank tank = new FluidTank(Fluids.NONE, 0);
 			tank.readFromNBT(persistentTag, "" + i);
-			list.add(EnumChatFormatting.YELLOW + "" + tank.getFill() + "/" + tank.getMaxFill() + "mB " + tank.getTankType().getLocalizedName());
+			list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.hydrotreater.mb", tank.getFill(), tank.getMaxFill(), tank.getTankType().getLocalizedName()));
 		}
 	}
 }

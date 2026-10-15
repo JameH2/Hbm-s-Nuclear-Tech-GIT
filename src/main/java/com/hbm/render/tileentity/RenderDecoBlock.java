@@ -124,7 +124,6 @@ public class RenderDecoBlock extends TileEntitySpecialRenderer {
 		if(b == ModBlocks.sat_dock || b == ModBlocks.gas_dock) {
 			GL11.glRotatef(180, 0F, 0F, 1F);
 			GL11.glTranslatef(0, -1.5F, 0);
-
 			if(b == ModBlocks.gas_dock) {
 				bindTexture(ResourceManager.gasdock_tex);
 			} else {

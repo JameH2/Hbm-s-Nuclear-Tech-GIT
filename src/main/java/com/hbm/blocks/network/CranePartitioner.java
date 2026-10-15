@@ -5,6 +5,7 @@ import api.hbm.conveyor.IConveyorItem;
 import api.hbm.conveyor.IConveyorPackage;
 import api.hbm.conveyor.IEnterableBlock;
 import com.hbm.blocks.ITooltipProvider;
+import com.hbm.entity.item.EntityMovingConveyorObject;
 import com.hbm.entity.item.EntityMovingItem;
 import com.hbm.inventory.recipes.CrystallizerRecipes;
 import com.hbm.lib.RefStrings;
@@ -84,7 +85,26 @@ public class CranePartitioner extends BlockContainer implements IConveyorBelt, I
 	@Override public boolean isOpaqueCube() { return false; }
 	@Override public boolean renderAsNormalBlock() { return false; }
 
-	@Override public boolean canItemEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorItem entity) { return getTravelDirection(world, x, y, z, null) == dir; }
+	@Override
+	public boolean canItemEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorItem entity) {
+		if(getTravelDirection(world, x, y, z, null) != dir || entity == null || entity.getItemStack() == null) return false;
+
+		TileEntity te = world.getTileEntity(x, y, z);
+		if(!(te instanceof TileEntityCranePartitioner)) return false;
+
+		TileEntityCranePartitioner partitioner = (TileEntityCranePartitioner) te;
+		ItemStack[] contents = new ItemStack[partitioner.getSizeInventory()];
+
+		for(int i = 0; i < contents.length; i++) {
+			ItemStack stack = partitioner.getStackInSlot(i);
+			contents[i] = stack == null ? null : stack.copy();
+		}
+
+		ItemStack incoming = entity.getItemStack().copy();
+		int start = CrystallizerRecipes.getAmount(incoming) > 0 ? 0 : TileEntityCranePartitioner.INPUT_COUNT;
+		int end = start == 0 ? TileEntityCranePartitioner.INPUT_COUNT - 1 : contents.length - 1;
+		return InventoryUtil.tryAddItemToInventory(contents, start, end, incoming) == null;
+	}
 	@Override public boolean canPackageEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorPackage entity) { return false; }
 	@Override public void onPackageEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorPackage entity) { }
 
@@ -125,15 +145,10 @@ public class CranePartitioner extends BlockContainer implements IConveyorBelt, I
 	public void onItemEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorItem entity) {
 		TileEntityCranePartitioner partitioner = (TileEntityCranePartitioner) world.getTileEntity(x, y, z);
 		ItemStack stack = entity.getItemStack();
-		ItemStack remainder = null;
 		if(CrystallizerRecipes.getAmount(stack) > 0) {
-			remainder = InventoryUtil.tryAddItemToInventory(partitioner, 0, TileEntityCranePartitioner.INPUT_COUNT - 1, stack);
+			InventoryUtil.tryAddItemToInventory(partitioner, 0, TileEntityCranePartitioner.INPUT_COUNT - 1, stack);
 		} else {
-			remainder = InventoryUtil.tryAddItemToInventory(partitioner, TileEntityCranePartitioner.INPUT_COUNT, TileEntityCranePartitioner.INPUT_COUNT + TileEntityCranePartitioner.OUTPUT_COUNT - 1, stack);
-		}
-		if(remainder != null) {
-			EntityItem item = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, remainder.copy());
-			world.spawnEntityInWorld(item);
+			InventoryUtil.tryAddItemToInventory(partitioner, TileEntityCranePartitioner.INPUT_COUNT, TileEntityCranePartitioner.INPUT_COUNT + TileEntityCranePartitioner.OUTPUT_COUNT - 1, stack);
 		}
 	}
 
@@ -153,7 +168,7 @@ public class CranePartitioner extends BlockContainer implements IConveyorBelt, I
 		@Override
 		public void updateEntity() {
 
-			if(!worldObj.isRemote) {
+			if(!worldObj.isRemote && !EntityMovingConveyorObject.isCrammed(worldObj, xCoord, yCoord, zCoord)) {
 
 				List<ItemStack> stacks = new ArrayList<>();
 				for(int i = 0; i < INPUT_COUNT; i++) if(slots[i] != null) stacks.add(slots[i]);

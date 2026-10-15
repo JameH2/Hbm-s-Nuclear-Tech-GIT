@@ -28,6 +28,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import com.hbm.util.i18n.I18nUtil;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
 public class TileEntityRadioTelex extends TileEntityLoadedBase implements IControlReceiver, IGUIProvider, SimpleComponent, CompatHandler.OCComponent {
@@ -159,7 +160,7 @@ public class TileEntityRadioTelex extends TileEntityLoadedBase implements IContr
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 
 		for(int i = 0; i < 5; i++) {
 			if(data.hasKey("tx" + i)) this.txBuffer[i] = data.getString("tx" + i);
@@ -196,7 +197,7 @@ public class TileEntityRadioTelex extends TileEntityLoadedBase implements IContr
 			if(!rxBuffer[i].isEmpty()) text.add(rxBuffer[i]);
 		}
 		ItemStackUtil.addTooltipToStack(stack, text.toArray(new String[0]));
-		stack.setStackDisplayName("Message");
+		I18nUtil.setItemName(stack, "gui.telex.message");
 		worldObj.spawnEntityInWorld(new EntityItem(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, stack));
 	}
 

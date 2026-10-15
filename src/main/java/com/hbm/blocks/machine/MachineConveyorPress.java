@@ -46,7 +46,16 @@ public class MachineConveyorPress extends BlockDummyable implements IConveyorBel
 	public int getOffset() {
 		return 0;
 	}
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{0, 0, 0, ForgeDirection.EAST.ordinal()},
+			{0, 0, 0, ForgeDirection.WEST.ordinal()},
+			{0, 0, 0, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, 0, ForgeDirection.NORTH.ordinal()},
+			{0, 0, 0, ForgeDirection.DOWN.ordinal()}
+		}, dir);
+	}
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		if(world.isRemote) {
@@ -160,8 +169,8 @@ public class MachineConveyorPress extends BlockDummyable implements IConveyorBel
 		TileEntityConveyorPress press = (TileEntityConveyorPress) te;
 		List<String> text = new ArrayList();
 
-		text.add(BobMathUtil.getShortNumber(press.power) + "HE / " + BobMathUtil.getShortNumber(press.maxPower) + "HE");
-		text.add("Installed stamp: " + ((press.syncStack == null || press.syncStack.getItem() == null) ? (EnumChatFormatting.RED + "NONE") : press.syncStack.getDisplayName()));
+		text.add(I18nUtil.resolveKey("overlay.conveyor_press.he_he", BobMathUtil.getShortNumber(press.power), BobMathUtil.getShortNumber(press.maxPower)));
+		text.add(I18nUtil.resolveKey("overlay.conveyor_press.installed_stamp", ((press.syncStack == null || press.syncStack.getItem() == null) ? (EnumChatFormatting.RED + I18nUtil.resolveKey("gui.conveyor_press.none")) : press.syncStack.getDisplayName())));
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}

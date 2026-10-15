@@ -1,5 +1,7 @@
 package com.hbm.blocks.machine;
 
+import com.hbm.util.i18n.I18nUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -282,7 +284,7 @@ public class BlockMassStorage extends BlockContainer implements IBlockMulti, ILo
 		TileEntityMassStorage storage = (TileEntityMassStorage) te;
 
 		List<String> text = new ArrayList();
-		String title = "Empty";
+		String title = I18nUtil.resolveKey("gui.common.empty");
 		boolean full = storage.type != null;
 
 		if(full) {

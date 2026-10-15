@@ -20,7 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class ItemGuideBook extends Item implements IGUIProvider {
-	
+
 	public ItemGuideBook() {
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(true);
@@ -28,20 +28,20 @@ public class ItemGuideBook extends Item implements IGUIProvider {
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-		
+
 		if(world.isRemote)
 			player.openGui(MainRegistry.instance, 0, world, 0, 0, 0);
-		
+
 		return stack;
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tab, List list) {
-		
+
 		for(int i = 1; i < BookType.values().length; i++)
 			if(i != 2) list.add(new ItemStack(item, 1, i));
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		list.add(String.join(" ", I18nUtil.resolveKeyArray(BookType.getType(stack.getItemDamage()).title)));
@@ -53,44 +53,44 @@ public class ItemGuideBook extends Item implements IGUIProvider {
 		RBMK("book.rbmk.cover", 1.5F, statFacRBMK()),
 		HADRON("book.error.cover", 1.5F, statFacHadron()),
 		STARTER("book.starter.cover", 1.5F, statFacStarter());
-		
+
 		public List<GuidePage> pages;
 		public float titleScale;
 		public String title;
-		
+
 		private BookType(String title, float titleScale, List<GuidePage> pages) {
 			this.title = title;
 			this.titleScale = titleScale;
 			this.pages = pages;
 		}
-		
+
 		public static BookType getType(int i) {
 			return BookType.values()[Math.abs(i) % BookType.values().length];
 		}
 	}
-	
+
 	public static List<GuidePage> statFacTest() {
-		
+
 		List<GuidePage> pages = new ArrayList();
-		
-		pages.add(new GuidePage().addTitle("Title LMAO", 0x800000, 1F)
+
+		pages.add(new GuidePage().addTitle("book.test.title1", 0x800000, 1F)
 				.addText("book.test.page1", 2F)
 				.addImage(new ResourceLocation(RefStrings.MODID + ":textures/gui/book/smileman.png"), 100, 40, 40));
-		pages.add(new GuidePage().addTitle("LA SEXO", 0x800000, 0.5F)
+		pages.add(new GuidePage().addTitle("book.test.title2", 0x800000, 0.5F)
 				.addText("book.test.page1", 1.75F)
 				.addImage(new ResourceLocation(RefStrings.MODID + ":textures/gui/book/smileman.png"), 100, 40, 40));
-		pages.add(new GuidePage().addText("test test"));
-		pages.add(new GuidePage().addText("test test test"));
-		pages.add(new GuidePage().addText("test test"));
-		pages.add(new GuidePage().addText("test test test"));
-		pages.add(new GuidePage().addText("test test"));
-		
+		pages.add(new GuidePage().addText("book.test.page2"));
+		pages.add(new GuidePage().addText("book.test.page3"));
+		pages.add(new GuidePage().addText("book.test.page2"));
+		pages.add(new GuidePage().addText("book.test.page3"));
+		pages.add(new GuidePage().addText("book.test.page2"));
+
 		return pages;
 	}
-	
+
 	//TODO: Make sure this is all correct
 	public static List<GuidePage> statFacRBMK() {
-		
+
 		List<GuidePage> pages = new ArrayList();
 		pages.add(new GuidePage().addTitle("book.rbmk.title1", 0x800000, 1F)
 				.addText("book.rbmk.page1", 2F)
@@ -139,28 +139,28 @@ public class ItemGuideBook extends Item implements IGUIProvider {
 		pages.add(new GuidePage().addTitle("book.rbmk.title16", 0x800000, 1F)
 				.addText("book.rbmk.page16", 2F)
 				.addImage(new ResourceLocation(RefStrings.MODID + ":textures/gui/book/rbmk16.png"), 50, 70, 100));
-		
+
 		return pages;
 	}
-	
+
 	public static List<GuidePage> statFacHadron() {
-		
+
 		List<GuidePage> pages = new ArrayList();
-		
+
 		for(int i = 1; i <= 9; i++) {
 			pages.add(new GuidePage().addTitle("book.error.title" + i, 0x800000, 1F).addText("book.error.page" + i, 2F));
 		}
-		
+
 		return pages;
 	}
-	
+
 	/* Mmm, maybe I should include something that allows you to have variable textures for the gui + item
 	   That would be something to do after the book is done though (nah, fuck that)
 	 */
 	public static List<GuidePage> statFacStarter() {
-		
+
 		List<GuidePage> pages = new ArrayList();
-		
+
 		pages.add(new GuidePage().addTitle("book.starter.title1", 0x800000, 1F)
 				.addText("book.starter.page1", 2F)
 				.addImage(new ResourceLocation(RefStrings.MODID + ":textures/gui/book/starter1.png"), 96, 101, 56));
@@ -221,76 +221,76 @@ public class ItemGuideBook extends Item implements IGUIProvider {
 		pages.add(new GuidePage().addTitle("book.starter.title18", 0x800000, 1F)
 				.addText("book.starter.page18", 2F)
 				.addImage(new ResourceLocation(RefStrings.MODID + ":textures/gui/book/starter18.png"), 10, 69, 100, 100));
-		
+
 		return pages;
 	}
-	
+
 	public static class GuidePage {
-		
+
 		public String title;
 		public int titleColor;
 		public float titleScale;
-		
+
 		public List<GuideText> texts = new ArrayList();
 		public List<GuideImage> images = new ArrayList();
-		
+
 		public GuidePage() { }
-		
+
 		public GuidePage addTitle(String title, int color, float scale) {
 			this.title = title;
 			this.titleColor = color;
 			this.titleScale = scale;
 			return this;
 		}
-		
+
 		public GuidePage addText(String text) {
 			texts.add(new GuideText(text));
 			return this;
 		}
-		
+
 		public GuidePage addText(String text, float scale) {
 			texts.add(new GuideText(text).setScale(scale));
 			return this;
 		}
-		
+
 		public GuidePage addText(String text, int xOffset, int yOffset, int width) {
 			texts.add(new GuideText(text).setSize(xOffset, yOffset, width));
 			return this;
 		}
-		
+
 		public GuidePage addText(String text, float scale, int xOffset, int yOffset, int width) {
 			texts.add(new GuideText(text).setSize(xOffset, yOffset, width).setScale(scale));
 			return this;
 		}
-		
+
 		public GuidePage addImage(ResourceLocation image, int xOffset, int yOffset, int sizeX, int sizeY) {
 			images.add(new GuideImage(image, xOffset, yOffset, sizeX, sizeY));
 			return this;
 		}
-		
+
 		//xOffset = -1 for automatic centering
 		public GuidePage addImage(ResourceLocation image, int yOffset, int sizeX, int sizeY) {
 			images.add(new GuideImage(image, -1, yOffset, sizeX, sizeY));
 			return this;
 		}
 	}
-	
+
 	public static class GuideText {
 		public String text;
 		public float scale = 1F;
 		public int xOffset = 0;
 		public int yOffset = -1;
 		public int width = 100;
-		
+
 		public GuideText(String text) {
 			this.text = text;
 		}
-		
+
 		public GuideText setScale(float scale) {
 			this.scale = scale;
 			return this;
 		}
-		
+
 		//yOffset = -1, xOffset = 0 for default
 		public GuideText setSize(int xOffset, int yOffset, int width) {
 			this.xOffset = xOffset;
@@ -299,14 +299,14 @@ public class ItemGuideBook extends Item implements IGUIProvider {
 			return this;
 		}
 	}
-	
+
 	public static class GuideImage {
 		public ResourceLocation image;
 		public int x;
 		public int y;
 		public int sizeX;
 		public int sizeY;
-		
+
 		public GuideImage(ResourceLocation image, int x, int y, int sizeX, int sizeY) {
 			this.image = image;
 			this.x = x;

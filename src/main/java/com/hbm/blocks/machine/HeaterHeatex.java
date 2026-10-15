@@ -35,7 +35,7 @@ public class HeaterHeatex extends BlockDummyable implements ILookOverlay, IToolt
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		
+
 		if(meta >= 12) return new TileEntityHeaterHeatex();
 		if(hasExtra(meta)) return new TileEntityProxyCombo().fluid();
 		return null;
@@ -50,10 +50,24 @@ public class HeaterHeatex extends BlockDummyable implements ILookOverlay, IToolt
 	public int getOffset() {
 		return 1;
 	}
-	
+	@Override
+	public double[][] getAABBExtras() {
+		return new double[][] {
+			{1, 1, 0.5, -0.3, 0.4, -0.4, 1}
+		};
+	}
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{-1, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{1, 0, -1, ForgeDirection.NORTH.ordinal()},
+			{-1, 0, -1, ForgeDirection.NORTH.ordinal()}
+		}, dir);
+	}
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(world.isRemote) {
 			return true;
 		} else {
@@ -61,45 +75,45 @@ public class HeaterHeatex extends BlockDummyable implements ILookOverlay, IToolt
 
 			if(pos == null)
 				return false;
-			
+
 			if(player.isSneaking()) {
 				TileEntityHeaterHeatex trialEntity = (TileEntityHeaterHeatex) world.getTileEntity(pos[0], pos[1], pos[2]);
-				
+
 				if(trialEntity != null) {
 					if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof IItemFluidIdentifier) {
 						FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, pos[0], pos[1], pos[2], player.getHeldItem());
-	
+
 						trialEntity.tanks[0].setTankType(type);
 						trialEntity.markDirty();
-						player.addChatComponentMessage(new ChatComponentText("Changed type to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+						player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
 						return true;
 					}
 				}
 			} else {
 				FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, pos[0], pos[1], pos[2]);
 			}
-			
+
 			return true;
 		}
 	}
 
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
-		
+
 		int[] pos = this.findCore(world, x, y, z);
-		
+
 		if(pos == null)
 			return;
-		
+
 		TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
-		
+
 		if(!(te instanceof TileEntityHeaterHeatex))
 			return;
-		
+
 		TileEntityHeaterHeatex heater = (TileEntityHeaterHeatex) te;
 
 		List<String> text = new ArrayList();
-		text.add(String.format(Locale.US, "%,d", heater.heatEnergy) + " TU");
+		text.add(I18nUtil.resolveKey("overlay.heater_heatex.tu", String.format(Locale.US, "%,d", heater.heatEnergy)));
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 
@@ -107,13 +121,9 @@ public class HeaterHeatex extends BlockDummyable implements ILookOverlay, IToolt
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
 
-		x += dir.offsetX * o;
-		z += dir.offsetZ * o;
-
-		this.makeExtra(world, x + 1, y, z + 1);
-		this.makeExtra(world, x + 1, y, z - 1);
-		this.makeExtra(world, x - 1, y, z + 1);
-		this.makeExtra(world, x - 1, y, z - 1);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override

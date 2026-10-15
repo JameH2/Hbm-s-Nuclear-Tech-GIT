@@ -18,6 +18,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUICoreEmitter extends GuiInfoContainer {
 
@@ -80,7 +81,7 @@ public class GUICoreEmitter extends GuiInfoContainer {
 		String name = I18n.format(this.emitter.getInventoryName());
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6, 4210752);
 
-		this.fontRendererObj.drawString("Output: " + BobMathUtil.getShortNumber(emitter.prev) + "Spk", 50, 30, 0xFF7F7F);
+		this.fontRendererObj.drawString(I18nUtil.resolveKey("gui.core_emitter.output_spk", BobMathUtil.getShortNumber(emitter.prev)), 50, 30, 0xFF7F7F);
 
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}

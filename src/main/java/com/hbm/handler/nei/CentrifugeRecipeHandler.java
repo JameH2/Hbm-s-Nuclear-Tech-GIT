@@ -9,14 +9,14 @@ import com.hbm.inventory.recipes.CentrifugeRecipes;
 public class CentrifugeRecipeHandler extends NEIUniversalHandler {
 
 	public CentrifugeRecipeHandler() {
-		super("Centrifuge", ModBlocks.machine_centrifuge, CentrifugeRecipes.getRecipes());
+		super("nei.centrifuge.name", ModBlocks.machine_centrifuge, CentrifugeRecipes.getRecipes());
 	}
 
 	@Override
 	public String getKey() {
 		return "ntmCentrifuge";
 	}
-	
+
 	@Override
 	public void loadTransferRects() {
 		super.loadTransferRects();

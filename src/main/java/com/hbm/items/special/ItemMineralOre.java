@@ -15,6 +15,7 @@ import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.particle.SpentCasing;
 import com.hbm.util.EnumUtil;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -44,7 +45,7 @@ public class ItemMineralOre extends Item {
 	public final int CLUMP_HYDROCHLORIC = 4;
 	public final int CLUMP_SCHRABIDIC = 5;
 	/* non-item shell types */
-	
+
 	public ItemMineralOre() {
 		this.setHasSubtypes(true);
 		this.setCreativeTab(MainRegistry.partsTab);
@@ -59,25 +60,25 @@ public class ItemMineralOre extends Item {
 		String b = EnumChatFormatting.BLUE + "";
 		String o = EnumChatFormatting.GOLD + "";
 		String g = EnumChatFormatting.GREEN + "";
-		
+
 		switch(stack.getItemDamage()) {
 		case CLUMP_PEROXIDE:
-			list.add(y + "[Peroxide]");
+			list.add(y + I18nUtil.resolveKey("item.mineral_ore.desc1"));
 			break;
 		case CLUMP_NITRIC:
-			list.add(o + "[Nitric]");
+			list.add(o + I18nUtil.resolveKey("item.mineral_ore.desc2"));
 			break;
 		case CLUMP_SULFURIC:
-			list.add(y + "[Sulfuric]");
+			list.add(y + I18nUtil.resolveKey("item.mineral_ore.desc3"));
 			break;
 		case CLUMP_SOLVENT:
-			list.add(r + "[Solvent]");
+			list.add(r + I18nUtil.resolveKey("item.mineral_ore.desc4"));
 			break;
 		case CLUMP_HYDROCHLORIC:
-			list.add(g + "[Chloric]");
+			list.add(g + I18nUtil.resolveKey("item.mineral_ore.desc5"));
 			break;
 		case CLUMP_SCHRABIDIC:
-			list.add(b + "[Schrabidic]");
+			list.add(b + I18nUtil.resolveKey("item.mineral_ore.desc6"));
 			break;
 		}
 	}
@@ -107,41 +108,41 @@ public class ItemMineralOre extends Item {
 		for(int i = 0; i < icons.length; i++) {
 			this.icons[i] = p_94581_1_.registerIcon(RefStrings.MODID + ":" + itemTypes[i].name);
 		}
-		
+
 	}
 
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconIndex(ItemStack stack) {
-		
+
 		return this.getIconFromDamage(stack.getItemDamage());
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int meta) {
 		return this.icons[meta];
 	}
-	
+
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		return "item." + itemTypes[Math.abs(stack.getItemDamage()) % itemTypes.length].name;
 	}
-	
+
 	//@Override
 	//public String getItemStackDisplayName(ItemStack stack) {
-		
+
 		//EnumMineralOre ore = EnumUtil.grabEnumSafely(EnumMineralOre.class, stack.getItemDamage());
 		//String oreName = StatCollector.translateToLocal("item.ore." + ore.oreName.toLowerCase());
 		///return StatCollector.translateToLocalFormatted(this.getUnlocalizedNameInefficiently(stack) + ".name", oreName);
 	//}
 	public abstract class Mineral {
-		
+
 		String name;
-		
+
 		public Mineral(String name) {
 			this.name = name;
 		}
-		
+
 	}
 	private void init() {
 		this.itemTypes[CLUMP_PEROXIDE] = new Mineral("clump_peroxide"){};
@@ -152,5 +153,5 @@ public class ItemMineralOre extends Item {
 		this.itemTypes[CLUMP_SCHRABIDIC] = new Mineral("clump_schrabidic") {};
 	}
 
-	
+
 }

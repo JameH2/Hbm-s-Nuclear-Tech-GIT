@@ -6,7 +6,10 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.dim.SolarSystem;
 import com.hbm.handler.atmosphere.IBlockSealable;
 import com.hbm.main.MainRegistry;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.sound.AudioWrapper;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.tileentity.machine.albion.TileEntityCooledBase;
 import com.hbm.tileentity.machine.fusion.IFusionPowerReceiver;
 import com.hbm.uninos.GenNode;
@@ -25,6 +28,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import com.hbm.util.i18n.I18nUtil;
 
 public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPropulsion, IFusionPowerReceiver, IBlockSealable {
 
@@ -37,7 +41,7 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 	public static long maxPower = 200_000_000L;
 
 	public static final int COOLANT_USE = 50;
-	
+
 	public float rotor;
 	public float prevRotor;
 	public float rotorSpeed;
@@ -53,24 +57,27 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 	public float plasmaG;
 	public float plasmaB;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityMachineHTRNeo() {
 		super(0);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks()).setOutputTanks(getSendingTanks());
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 
 	@Override
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
+			moduleFluidPorts.update(getPorts());
+			modulePowerPorts.update(getPorts());
+
 			if(!hasRegistered) {
 				if(isFacingPrograde()) registerPropulsion();
 				hasRegistered = true;
 				isOn = false;
-			}
-
-			for(DirPos pos : this.getConPos()) {
-				this.trySubscribe(worldObj, pos);
-				this.trySubscribe(coolantTanks[0].getTankType(), worldObj, pos);
-				this.tryProvide(coolantTanks[1], worldObj, pos);
 			}
 
 			plasmaEnergySync = plasmaEnergy;
@@ -128,7 +135,7 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 			this.networkPackNT(200);
 			this.plasmaEnergy = 0;
 		} else {
-			
+
 			if(power >= maxPower || isOn) this.rotorSpeed += 0.125F;
 			else this.rotorSpeed -= 0.125F;
 
@@ -154,7 +161,7 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 					audio.updateVolume(getVolume(1F));
 					audio.keepAlive();
 				}
-				
+
 				thrustAmount += 0.01D;
 				if(thrustAmount > 1) thrustAmount = 1;
 			} else {
@@ -162,7 +169,7 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 					audio.stopSound();
 					audio = null;
 				}
-				
+
 				thrustAmount -= 0.01D;
 				if(thrustAmount < 0) thrustAmount = 0;
 			}
@@ -212,17 +219,22 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 		plasmaB = b;
 	}
 
-	@Override
-	public DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	protected PortDef[] cachedPorts;
 
-		return new DirPos[] {
-			new DirPos(xCoord - rot.offsetX * 5 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * 5 - dir.offsetZ * 3, dir.getOpposite()),
-			new DirPos(xCoord - rot.offsetX * -1 - dir.offsetX * 3, yCoord - 2, zCoord - rot.offsetZ * -1 - dir.offsetZ * 3, dir.getOpposite()),
-			new DirPos(xCoord - rot.offsetX * 5 - dir.offsetX * -3, yCoord - 2, zCoord - rot.offsetZ * 5 - dir.offsetZ * -3, dir),
-			new DirPos(xCoord - rot.offsetX * -1 - dir.offsetX * -3, yCoord - 2, zCoord - rot.offsetZ * -1 - dir.offsetZ * -3, dir),
-		};
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord - rot.offsetX * 5 - dir.offsetX * 2, yCoord - 2, zCoord - rot.offsetZ * 5 - dir.offsetZ * 2, dir.getOpposite()),
+				PortDef.make(xCoord - rot.offsetX * -1 - dir.offsetX * 2, yCoord - 2, zCoord - rot.offsetZ * -1 - dir.offsetZ * 2, dir.getOpposite()),
+				PortDef.make(xCoord - rot.offsetX * 5 - dir.offsetX * -2, yCoord - 2, zCoord - rot.offsetZ * 5 - dir.offsetZ * -2, dir),
+				PortDef.make(xCoord - rot.offsetX * -1 - dir.offsetX * -2, yCoord - 2, zCoord - rot.offsetZ * -1 - dir.offsetZ * -2, dir),
+			};
+		}
+
+		return cachedPorts;
 	}
 
 	@Override
@@ -239,15 +251,15 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 	@Override
 	public void addErrors(List<String> errors) {
 		if(plasmaEnergySync < fuelCost) {
-			errors.add(EnumChatFormatting.RED + "Insufficient plasma energy: needs " + BobMathUtil.getShortNumber(fuelCost) + " TU");
+			errors.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.htrneo.insufficient_plasma_energy_needs_tu", BobMathUtil.getShortNumber(fuelCost)));
 		}
 
 		if(power < maxPower) {
-			errors.add(EnumChatFormatting.RED + "Insufficient power");
+			errors.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.htrneo.insufficient_power"));
 		}
 
 		if(!isCool()) {
-			errors.add(EnumChatFormatting.RED + "Coolant loop not operational!");
+			errors.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.htrneo.coolant_loop_not_operational"));
 		}
 	}
 

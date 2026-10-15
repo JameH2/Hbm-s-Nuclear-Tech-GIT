@@ -102,7 +102,7 @@ public class EntityGlyphidBrawler extends EntityGlyphid {
 	}
 	@Override
 	public ResourceLocation getSkin() {
-		return ResourceManager.glyphid_brawler_tex;
+		return isTamed() ? ResourceManager.glyphid_brawler_tame_tex : ResourceManager.glyphid_brawler_tex;
 	}
 
 	@Override

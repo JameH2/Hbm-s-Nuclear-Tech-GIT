@@ -132,7 +132,7 @@ dependencies {
 
 	implementation('com.github.GTNewHorizons:NotEnoughItems:2.8.114-GTNH:dev') { transitive = false }
 
-	compileOnly fileTree(dir: 'deps', include: ['*.jar'])
+	compileOnly fileTree(dir: 'deps', include: ['*.jar'], exclude: ['Baubles-*.jar'])
 
 	compileOnly("inventorytweaks:InventoryTweaks:1.59-dev:deobf") { transitive = false }
 
@@ -141,7 +141,9 @@ dependencies {
 	implementation("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-1045-GTNH:dev") { transitive = false }
 	implementation("com.github.GTNewHorizons:AE2FluidCraft-Rework:1.5.105-gtnh:dev") { transitive = false }
 	implementation("com.github.GTNewHorizons:GTNHLib:0.11.34:dev") { transitive = false }
-	implementation("com.github.LegacyModdingMC.UniMixins:unimixins-all-1.7.10:0.2.1:dev") { transitive = false }
+	implementation("io.github.legacymoddingmc:unimixins:0.3.1:dev") { transitive = false }
+	implementation("com.github.GTNewHorizons:Backhand:1.8.14:dev") { transitive = false }
+	implementation("com.github.GTNewHorizons:Baubles-Expanded:2.2.21-GTNH:dev") { transitive = false }
 }
 
 processResources {

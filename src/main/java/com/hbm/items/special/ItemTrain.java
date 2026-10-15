@@ -11,6 +11,7 @@ import com.hbm.entity.train.TrainCargoTramTrailer;
 import com.hbm.items.ItemEnumMulti;
 import com.hbm.util.EnumUtil;
 import com.hbm.util.fauxpointtwelve.BlockPos;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,25 +27,25 @@ public class ItemTrain extends ItemEnumMulti {
 		this.setCreativeTab(null);//CreativeTabs.tabTransport);
 		this.setMaxStackSize(1);
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		EnumTrainType train = EnumUtil.grabEnumSafely(this.theEnum, stack.getItemDamage());
 
-		if(train.engine != null) list.add(EnumChatFormatting.GREEN + "Engine: " + EnumChatFormatting.RESET + train.engine);
-		list.add(EnumChatFormatting.GREEN + "Gauge: " + EnumChatFormatting.RESET + train.gauge);
-		if(train.maxSpeed != null) list.add(EnumChatFormatting.GREEN + "Max Speed: " + EnumChatFormatting.RESET + train.maxSpeed);
-		if(train.acceleration != null) list.add(EnumChatFormatting.GREEN + "Acceleration: " + EnumChatFormatting.RESET + train.acceleration);
-		if(train.brakeThreshold != null) list.add(EnumChatFormatting.GREEN + "Engine Brake Threshold: " + EnumChatFormatting.RESET + train.brakeThreshold);
-		if(train.parkingBrake != null) list.add(EnumChatFormatting.GREEN + "Parking Brake: " + EnumChatFormatting.RESET + train.parkingBrake);
+		if(train.engine != null) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.train.desc1", EnumChatFormatting.RESET + String.valueOf(I18nUtil.resolveKey(train.engine))));
+		list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.train.desc2", EnumChatFormatting.RESET + String.valueOf(I18nUtil.resolveKey(train.gauge))));
+		if(train.maxSpeed != null) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("desc.item.train.max_speed", EnumChatFormatting.RESET + String.valueOf(I18nUtil.resolveKey(train.maxSpeed))));
+		if(train.acceleration != null) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.train.desc4", EnumChatFormatting.RESET + String.valueOf(train.acceleration)));
+		if(train.brakeThreshold != null) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("desc.item.train.engine_brake_threshold", EnumChatFormatting.RESET + String.valueOf(train.brakeThreshold)));
+		if(train.parkingBrake != null) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("desc.item.train.parking_brake", EnumChatFormatting.RESET + String.valueOf(I18nUtil.resolveKey(train.parkingBrake))));
 	}
 
 	public static enum EnumTrainType {
-		
+
 		//                                              Engine          Gauge               Max Speed   Accel.      Eng. Brake  Parking Brake
-		CARGO_TRAM(TrainCargoTram.class, 				"Electric",		"Standard Gauge",	"10m/s",	"0.2m/s²",	"<1m/s",	"Yes"),
-		CARGO_TRAM_TRAILER(TrainCargoTramTrailer.class,	null,			"Standard Gauge",	"Yes",		null,		null,		"No");
-		
+		CARGO_TRAM(TrainCargoTram.class, 				"item.train.engine.electric",	"item.train.gauge.standard",	"10m/s",	"0.2m/s²",	"<1m/s",	"gui.common.yes"),
+		CARGO_TRAM_TRAILER(TrainCargoTramTrailer.class,	null,			"item.train.gauge.standard",	"gui.common.yes",		null,		null,		"gui.common.no");
+
 		public Class<? extends EntityRailCarBase> train;
 		public String engine;
 		public String maxSpeed;
@@ -65,17 +66,17 @@ public class ItemTrain extends ItemEnumMulti {
 
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer entity, World world, int x, int y, int z, int side, float fx, float fy, float fz) {
-		
+
 		Block b = world.getBlock(x, y, z);
-		
+
 		if(b instanceof IRailNTM) {
-			
+
 			EnumTrainType type = EnumUtil.grabEnumSafely(theEnum, stack.getItemDamage());
 			EntityRailCarBase train = null;
 			try { train = type.train.getConstructor(World.class).newInstance(world); } catch(Exception e) { }
-			
+
 			if(train != null && train.getGauge() == ((IRailNTM) b).getGauge(world, x, y, z)) {
-				
+
 				train.setPosition(x + fx, y + fy, z + fz);
 				BlockPos anchor = train.getCurrentAnchorPos();
 				train.rotationYaw = entity.rotationYaw;
@@ -95,7 +96,7 @@ public class ItemTrain extends ItemEnumMulti {
 				}
 			}
 		}
-		
+
 		return false;
 	}
 }

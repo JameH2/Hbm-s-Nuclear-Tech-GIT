@@ -41,7 +41,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class ItemRebarPlacer extends Item implements IGUIProvider {
-	
+
 	public static List<Pair<Block, Integer>> acceptableConk = new ArrayList();
 
 	public ItemRebarPlacer() {
@@ -51,11 +51,11 @@ public class ItemRebarPlacer extends Item implements IGUIProvider {
 		acceptableConk.add(new Pair(ModBlocks.concrete_rebar, 0));
 		acceptableConk.add(new Pair(ModBlocks.concrete_smooth, 0));
 		acceptableConk.add(new Pair(ModBlocks.concrete_pillar, 0));
-		
+
 		for(int i = 0; i < 16; i++) acceptableConk.add(new Pair(ModBlocks.concrete_colored, i));
 		for(int i = 0; i < EnumConcreteType.values().length; i++) acceptableConk.add(new Pair(ModBlocks.concrete_colored_ext, i));
 	}
-	
+
 	public static boolean isValidConk(Item item, int meta) {
 
 		for(Pair<Block, Integer> conk : acceptableConk) {
@@ -74,12 +74,12 @@ public class ItemRebarPlacer extends Item implements IGUIProvider {
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean held) {
 		if(stack.hasTagCompound() && stack.stackTagCompound.hasKey("pos")) {
 			ItemStack theConk = ItemStackUtil.readStacksFromNBT(stack, 1)[0];
-			
+
 			if(!held || theConk == null) {
 				stack.stackTagCompound.removeTag("pos");
 				return;
 			}
-			
+
 			if(!isValidConk(theConk.getItem(), theConk.getItemDamage())) {
 				stack.stackTagCompound.removeTag("pos");
 				return;
@@ -92,10 +92,10 @@ public class ItemRebarPlacer extends Item implements IGUIProvider {
 		if(!world.isRemote && player.isSneaking()) player.openGui(MainRegistry.instance, 0, world, 0, 0, 0);
 		return stack;
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		
+
 	}
 
 	@Override
@@ -106,19 +106,19 @@ public class ItemRebarPlacer extends Item implements IGUIProvider {
 			ItemStackUtil.addStacksToNBT(stack, new ItemStack[] {new ItemStack(ModBlocks.concrete_rebar)});
 		}
 		ItemStack theConk = ItemStackUtil.readStacksFromNBT(stack, 1)[0];
-		
+
 		boolean hasConk = theConk != null && isValidConk(theConk.getItem(), theConk.getItemDamage());
-		
+
 		if(!hasConk) {
 			player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)
 					.nextTranslation(this.getUnlocalizedName() + ".name").color(EnumChatFormatting.DARK_AQUA)
 					.next("] ").color(EnumChatFormatting.DARK_AQUA)
-					.next("No valid concrete type set!").color(EnumChatFormatting.RED).flush());
+					.nextTranslation("chat.rebar_placer.no_valid_concrete_type").color(EnumChatFormatting.RED).flush());
 			return true;
 		}
-		
+
 		ForgeDirection dir = ForgeDirection.getOrientation(side);
-		
+
 		if(!stack.stackTagCompound.hasKey("pos")) {
 			stack.stackTagCompound.setIntArray("pos", new int[] {x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ});
 		} else {
@@ -127,11 +127,11 @@ public class ItemRebarPlacer extends Item implements IGUIProvider {
 				player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)
 						.nextTranslation(this.getUnlocalizedName() + ".name").color(EnumChatFormatting.DARK_AQUA)
 						.next("] ").color(EnumChatFormatting.DARK_AQUA)
-						.next("Out of rebar!").color(EnumChatFormatting.RED).flush());
+						.nextTranslation("chat.rebar_placer.2").color(EnumChatFormatting.RED).flush());
 				stack.stackTagCompound.removeTag("pos");
 				return true;
 			}
-			
+
 			int[] pos = stack.stackTagCompound.getIntArray("pos");
 			int iX = x + dir.offsetX;
 			int iY = y + dir.offsetY;
@@ -143,14 +143,14 @@ public class ItemRebarPlacer extends Item implements IGUIProvider {
 			int maxY = Math.max(pos[1], iY);
 			int minZ = Math.min(pos[2], iZ);
 			int maxZ = Math.max(pos[2], iZ);
-			
+
 			int rebarUsed = 0;
-			
+
 			outer: for(int k = minY; k <= maxY; k++) {
 				for(int j = minZ; j <= maxZ; j++) {
 					for(int i = minX; i<= maxX; i++) {
 						if(rebarLeft <= 0) break outer;
-						
+
 						if(world.getBlock(i, k, j).isReplaceable(world, i, k, j) && player.canPlayerEdit(i, k, j, side, stack)) {
 							world.setBlock(i, k, j, ModBlocks.rebar);
 							TileEntity tile = world.getTileEntity(i, k, j);
@@ -163,18 +163,18 @@ public class ItemRebarPlacer extends Item implements IGUIProvider {
 					}
 				}
 			}
-			
+
 			InventoryUtil.tryConsumeAStack(player.inventory.mainInventory, 0, player.inventory.mainInventory.length - 1, new ComparableStack(ModBlocks.rebar, rebarUsed));
-			
+
 			player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)
 					.nextTranslation(this.getUnlocalizedName() + ".name").color(EnumChatFormatting.DARK_AQUA)
 					.next("] ").color(EnumChatFormatting.DARK_AQUA)
-					.next("Placed " + rebarUsed + " rebar!").color(EnumChatFormatting.GREEN).flush());
-			
+					.nextTranslation("chat.rebar_placer.placed_rebar", rebarUsed).color(EnumChatFormatting.GREEN).flush());
+
 			stack.stackTagCompound.removeTag("pos");
 			player.inventoryContainer.detectAndSendChanges();
 		}
-		
+
 		return true;
 	}
 
@@ -207,14 +207,14 @@ public class ItemRebarPlacer extends Item implements IGUIProvider {
 		@Override public boolean hasCustomInventoryName() { return target.hasDisplayName(); }
 		@Override public int getInventoryStackLimit() { return 1; }
 	}
-	
+
 	public static class ContainerRebar extends Container {
-		
+
 		private InventoryRebar rebar;
-		
+
 		public ContainerRebar(InventoryPlayer invPlayer, InventoryRebar rebar) {
 			this.rebar = rebar;
-			
+
 			this.addSlotToContainer(new SlotPattern(rebar, 0, 53, 36));
 
 			for(int i = 0; i < 3; i++) {
@@ -235,27 +235,27 @@ public class ItemRebarPlacer extends Item implements IGUIProvider {
 
 		@Override
 		public ItemStack slotClick(int index, int button, int mode, EntityPlayer player) {
-			
+
 			//L/R: 0
 			//M3: 3
 			//SHIFT: 1
 			//DRAG: 5
-			
+
 			// prevents the player from moving around the currently open box
 			if(mode == 2 && button == player.inventory.currentItem) return null;
 			if(index == player.inventory.currentItem + 47) return null;
-			
+
 			if(index != 0) return super.slotClick(index, button, mode, player);
 
 			Slot slot = this.getSlot(index);
-			
+
 			ItemStack ret = null;
 			ItemStack held = player.inventory.getItemStack();
-			
+
 			if(slot.getHasStack()) ret = slot.getStack().copy();
 			slot.putStack(held);
 			rebar.markDirty();
-			
+
 			return ret;
 		}
 
@@ -263,13 +263,13 @@ public class ItemRebarPlacer extends Item implements IGUIProvider {
 		public boolean canInteractWith(EntityPlayer player) {
 			return rebar.isUseableByPlayer(player);
 		}
-		
+
 		@Override
 		public void onContainerClosed(EntityPlayer player) {
 			super.onContainerClosed(player);
 		}
 	}
-	
+
 	public static class GUIRebar extends GuiInfoContainer {
 
 		private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_rebar.png");
@@ -282,25 +282,25 @@ public class ItemRebarPlacer extends Item implements IGUIProvider {
 			this.xSize = 176;
 			this.ySize = 182;
 		}
-		
+
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float f) {
 			super.drawScreen(mouseX, mouseY, f);
-			
+
 			if(this.isMouseOverSlot(this.inventorySlots.getSlot(0), mouseX, mouseY) && !this.inventorySlots.getSlot(0).getHasStack()) {
 
 				List<Object[]> lines = new ArrayList();
 				List<ItemStack> list = new ArrayList();
 				for(Pair<Block, Integer> conk : acceptableConk) list.add(new ItemStack(conk.getKey(), 1, conk.getValue()));
 				ItemStack selected = list.get(0);
-				
+
 				if(list.size() > 1) {
 					int cycle = (int) ((System.currentTimeMillis() % (1000 * list.size())) / 1000);
 					selected = ((ItemStack) list.get(cycle)).copy();
 					selected.stackSize = 0;
 					list.set(cycle, selected);
 				}
-				
+
 				if(list.size() < 10) {
 					lines.add(list.toArray());
 				} else if(list.size() < 24) {
@@ -313,7 +313,7 @@ public class ItemRebarPlacer extends Item implements IGUIProvider {
 					lines.add(list.subList(bound0, bound1).toArray());
 					lines.add(list.subList(bound1, list.size()).toArray());
 				}
-				
+
 				lines.add(new Object[] {I18nUtil.resolveKey(selected.getDisplayName())});
 				this.drawStackText(lines, mouseX, mouseY, this.fontRendererObj);
 			}

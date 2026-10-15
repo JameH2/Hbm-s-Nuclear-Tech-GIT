@@ -28,25 +28,25 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 public class GUICrucible extends GuiInfoContainer {
-	
+
 	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_crucible.png");
 	private TileEntityCrucible crucible;
 
 	public GUICrucible(InventoryPlayer invPlayer, TileEntityCrucible tedf) {
 		super(new ContainerCrucible(invPlayer, tedf));
 		crucible = tedf;
-		
+
 		this.xSize = 176;
 		this.ySize = 214;
 	}
-	
+
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
 
 		drawStackInfo(crucible.wasteStack, x, y, 16, 17);
 		drawStackInfo(crucible.recipeStack, x, y, 61, 17);
-		
+
 		this.drawCustomInfoStat(x, y, guiLeft + 125, guiTop + 81, 34, 7, x, y, new String[] { String.format(Locale.US, "%,d", crucible.progress) + " / " + String.format(Locale.US, "%,d", crucible.processTime) + "TU" });
 		this.drawCustomInfoStat(x, y, guiLeft + 125, guiTop + 90, 34, 7, x, y, new String[] { String.format(Locale.US, "%,d", crucible.heat) + " / " + String.format(Locale.US, "%,d", crucible.maxHeat) + "TU" });
 
@@ -66,11 +66,11 @@ public class GUICrucible extends GuiInfoContainer {
 
 		if(this.checkClick(x, y, 106, 80, 18, 18)) GUIScreenRecipeSelector.openSelector(CrucibleRecipes.INSTANCE, crucible, crucible.recipe, 0, null, this);
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.crucible.hasCustomInventoryName() ? this.crucible.getInventoryName() : I18n.format(this.crucible.getInventoryName());
-		
+
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6, 0xffffff);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}
@@ -80,7 +80,7 @@ public class GUICrucible extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		int pGauge = crucible.progress * 33 / crucible.processTime;
 		if(pGauge > 0) drawTexturedModalRect(guiLeft + 126, guiTop + 82, 176, 0, pGauge, 5);
 		int hGauge = crucible.heat * 33 / crucible.maxHeat;
@@ -88,43 +88,43 @@ public class GUICrucible extends GuiInfoContainer {
 
 		GenericRecipe recipe = CrucibleRecipes.INSTANCE.recipeNameMap.get(crucible.recipe);
 		this.renderItem(recipe != null ? recipe.getIcon() : TEMPLATE_FOLDER, 107, 81);
-		
+
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		if(!crucible.recipeStack.isEmpty()) drawStack(crucible.recipeStack, crucible.recipeZCapacity, 62, 97);
 		if(!crucible.wasteStack.isEmpty()) drawStack(crucible.wasteStack, crucible.wasteZCapacity, 17, 97);
 	}
-	
+
 	protected void drawStackInfo(List<MaterialStack> stack, int mouseX, int mouseY, int x, int y) {
-		
+
 		List<String> list = new ArrayList();
-		
+
 		if(stack.isEmpty())
-			list.add(EnumChatFormatting.RED + "Empty");
-		
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.misc.guicrucible.empty"));
+
 		for(MaterialStack sta : stack) {
 			list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey(sta.material.getUnlocalizedName()) + ": " + Mats.formatAmount(sta.amount, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
 		}
-		
+
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + x, guiTop + y, 36, 81, mouseX, mouseY, list);
 	}
-	
+
 	protected void drawStack(List<MaterialStack> stack, int capacity, int x, int y) {
-		
+
 		if(stack.isEmpty()) return;
-		
+
 		int lastHeight = 0;
 		int lastQuant = 0;
-		
+
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-		
+
 		for(MaterialStack sta : stack) {
-			
+
 			int targetHeight = (lastQuant + sta.amount) * 79 / capacity;
-			
+
 			if(lastHeight == targetHeight) continue; //skip draw calls that would be 0 pixels high
-			
+
 			int offset = sta.material.smeltable == SmeltingBehavior.ADDITIVE ? 34 : 0; //additives use a differnt texture
-			
+
 			int hex = sta.material.moltenColor;
 			//hex = 0xC18336;
 			Color color = new Color(hex);
@@ -134,7 +134,7 @@ public class GUICrucible extends GuiInfoContainer {
 			GL11.glColor4f(1F, 1F, 1F, 0.3F);
 			drawTexturedModalRect(guiLeft + x, guiTop + y - targetHeight, 176 + offset, 89 - targetHeight, 34, targetHeight - lastHeight);
 			GL11.glDisable(GL11.GL_BLEND);
-			
+
 			lastQuant += sta.amount;
 			lastHeight = targetHeight;
 		}

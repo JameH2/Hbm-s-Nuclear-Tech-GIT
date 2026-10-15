@@ -13,6 +13,7 @@ import com.hbm.lib.Library;
 import com.hbm.render.model.ModelNo9;
 import com.hbm.util.Tuple.Pair;
 import com.hbm.util.fauxpointtwelve.BlockPos;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,7 +32,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 public class ArmorNo9 extends ArmorModel implements IAttackHandler, IDamageHandler {
-	
+
 	protected ModelNo9 model;
 
 	public ArmorNo9(ArmorMaterial armorMaterial, int armorType) {
@@ -41,28 +42,28 @@ public class ArmorNo9 extends ArmorModel implements IAttackHandler, IDamageHandl
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.BLUE + "+0.5 DT");
-		list.add(EnumChatFormatting.YELLOW + "Lets you breathe coal, neat!");
+		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.armor_no9.desc1"));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.armor_no9.lets_breathe_coal_neat"));
 	}
 
 	@Override
 	public void handleDamage(LivingHurtEvent event, ItemStack stack) {
-		
+
 		if(event.source.isUnblockable())
 			return;
-		
+
 		event.ammount -= 0.5F;
-		
+
 		if(event.ammount < 0)
 			event.ammount = 0;
 	}
 
 	@Override
 	public void handleAttack(LivingAttackEvent event, ItemStack armor) {
-		
+
 		if(event.source.isUnblockable())
 			return;
-		
+
 		if(event.ammount <= 0.5F) {
 			event.setCanceled(true);
 		}
@@ -71,49 +72,49 @@ public class ArmorNo9 extends ArmorModel implements IAttackHandler, IDamageHandl
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
-		
+
 		if(model == null) {
 			model = new ModelNo9(0);
 		}
-		
+
 		return model;
 	}
 
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack armor) {
-		
+
 		if(!world.isRemote) {
 			if(!armor.hasTagCompound()) {
 				armor.stackTagCompound = new NBTTagCompound();
 			}
-			
+
 			boolean turnOn = HbmPlayerProps.getData(player).enableHUD;
 			boolean wasOn = armor.getTagCompound().getBoolean("isOn");
 
 			if(turnOn && !wasOn) world.playSoundAtEntity(player, "fire.ignite", 1F, 1.5F);
 			if(!turnOn && wasOn) world.playSoundAtEntity(player, "random.fizz", 0.5F, 2F);
 			armor.getTagCompound().setBoolean("isOn", turnOn); // a crude way of syncing the "enableHUD" prop to other players is just by piggybacking off the NBT sync
-			
+
 			if(HbmLivingProps.getBlackLung(player) > HbmLivingProps.maxBlacklung * 0.9) {
 				HbmLivingProps.setBlackLung(player, (int) (HbmLivingProps.maxBlacklung * 0.9));
 			}
-			
+
 			if(HbmLivingProps.getBlackLung(player) >= HbmLivingProps.maxBlacklung * 0.25) {
 				HbmLivingProps.setBlackLung(player, HbmLivingProps.getBlackLung(player) - 1);
 			}
 		}
-		
+
 		if(world.isRemote && world.getTotalWorldTime() % 2 == 0 && armor.hasTagCompound() && armor.getTagCompound().getBoolean("isOn")) {
 
 			//originally it would have just been a bright aura like a torch, but that's boring
 			/*int x = (int) Math.floor(player.posX);
 			int y = (int) Math.floor(player.posY + player.eyeHeight);
 			int z = (int) Math.floor(player.posZ);*/
-			
+
 			checkLights(world, false);
 			float range = 50F;
 			MovingObjectPosition mop = Library.rayTrace(player, range, 0F, false, true, false);
-			
+
 			if(mop != null && mop.typeOfHit == mop.typeOfHit.BLOCK) {
 				Vec3 look = Vec3.createVectorHelper(player.posX - mop.hitVec.xCoord, player.posY + player.getEyeHeight() - mop.hitVec.yCoord, player.posZ - mop.hitVec.zCoord);
 				ForgeDirection dir = ForgeDirection.getOrientation(mop.sideHit);
@@ -123,19 +124,19 @@ public class ArmorNo9 extends ArmorModel implements IAttackHandler, IDamageHandl
 			}
 		}
 	}
-	
+
 	public static Set<BlockPos> breadcrumb = new HashSet();
 	public static void lightUpRecursively(World world, int x, int y, int z, int light) {
 		if(light <= 0) return;
 		BlockPos pos = new BlockPos(x, y, z);
 		if(breadcrumb.contains(pos)) return;
 		breadcrumb.add(pos);
-		
+
 		int existingLight = world.getSavedLightValue(EnumSkyBlock.Block, x, y, z);
 		int occupancy = world.getBlockLightOpacity(x, y, z);
-		
+
 		if(occupancy >= 255) return; // only block if it's fully blocking, light goes through semi-translucent blocks like it's air
-		
+
 		int newLight = Math.min(15, Math.max(existingLight, light));
 		world.setLightValue(EnumSkyBlock.Block, x, y, z, newLight);
 		lightCheck.put(new Pair(world, pos), world.getTotalWorldTime() + 5);
@@ -147,35 +148,35 @@ public class ArmorNo9 extends ArmorModel implements IAttackHandler, IDamageHandl
 		lightUpRecursively(world, x, y, z + 1, light - 1);
 		lightUpRecursively(world, x, y, z - 1, light - 1);
 	}
-	
+
 	public static HashMap<World, Long> lastChecks = new HashMap();
 	public static HashMap<Pair<World, BlockPos>, Long> lightCheck = new HashMap();
-	
+
 	public static void checkLights(World world, boolean force) {
 		Iterator it = lightCheck.entrySet().iterator();
-		
+
 		while(it.hasNext()) {
 			Entry<Pair<World, BlockPos>, Long> entry = (Entry<Pair<World, BlockPos>, Long>) it.next();
-			
+
 			if(entry.getKey().getKey() == world && (world.getTotalWorldTime() > entry.getValue() || force)) {
 				BlockPos pos = entry.getKey().getValue();
 				world.updateLightByType(EnumSkyBlock.Block, pos.getX(), pos.getY(), pos.getZ());
 				it.remove();
 			}
 		}
-		
+
 		lastChecks.put(world, world.getTotalWorldTime());
 	}
-	
+
 	public static void updateWorldHook(World world) {
 		if(world == null || !world.isRemote) return;
 		Long last = lastChecks.get(world);
-		
+
 		if(last != null && last < world.getTotalWorldTime() + 15) {
 			checkLights(world, false);
 		}
 	}
-	
+
 	// lighting data is saved by the server, not the client, so why would we need that??
 	/*public static void unloadWorldHook(World world) {
 		if(!world.isRemote) return;

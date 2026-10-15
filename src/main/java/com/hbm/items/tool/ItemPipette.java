@@ -14,7 +14,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -88,10 +87,10 @@ public class ItemPipette extends Item implements IFillableItem, net.minecraftfor
 				int a;
 				if(this == ModItems.pipette_laboratory)
 					a = !player.isSneaking() ? Math.min(this.getContainerCapacity(stack) + 1, 50) : Math.max(this.getContainerCapacity(stack) - 1, 1);
-				else 
+				else
 					a = !player.isSneaking() ? Math.min(this.getContainerCapacity(stack) + 50, 1_000) : Math.max(this.getContainerCapacity(stack) - 50, 50);
 				stack.stackTagCompound.setShort("capacity", (short) a);
-				player.addChatMessage(new ChatComponentText(a + "/" + this.getMaxFill() + "mB"));
+				player.addChatMessage(new ChatComponentTranslation("chat.pipette.1", a, this.getMaxFill()));
 			} else {
 				player.addChatMessage(new ChatComponentTranslation("desc.item.pipette.noEmpty"));
 			}
@@ -109,8 +108,8 @@ public class ItemPipette extends Item implements IFillableItem, net.minecraftfor
 			list.add(I18nUtil.resolveKey("desc.item.pipette.corrosive"));
 		if(this == ModItems.pipette)
 			list.add(I18nUtil.resolveKey("desc.item.pipette.noCorrosive"));
-		list.add("Fluid: " + this.getType(stack).getLocalizedName());
-		list.add("Amount: " + this.getFill(stack) + "/" + this.getContainerCapacity(stack) + "mB (" + this.getMaxFill() + "mB)");
+		list.add(I18nUtil.resolveKey("item.pipette.desc1", this.getType(stack).getLocalizedName()));
+		list.add(I18nUtil.resolveKey("desc.item.pipette.amount_mb_mb", this.getFill(stack), this.getContainerCapacity(stack), this.getMaxFill()));
 	}
 
 	@Override
@@ -170,10 +169,10 @@ public class ItemPipette extends Item implements IFillableItem, net.minecraftfor
 			this.overlayIcon = icon.registerIcon("hbm:pipette_laboratory_overlay");
 		else
 			this.overlayIcon = icon.registerIcon("hbm:pipette_overlay");
-		
+
 		this.emptyIcon = icon.registerIcon("hbm:pipette_empty");
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(ItemStack stack, int pass) {

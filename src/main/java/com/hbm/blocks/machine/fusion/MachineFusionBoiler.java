@@ -50,6 +50,15 @@ public class MachineFusionBoiler extends BlockDummyable implements ILookOverlay,
 			{1.5, 3.5, -4.5, -4.5, 1, -1}
 		};
 	}
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, -1, ForgeDirection.EAST.ordinal()},
+			{-1, 0, -1, ForgeDirection.WEST.ordinal()},
+			{1, 0, 2, ForgeDirection.EAST.ordinal()},
+			{-1, 0, 2, ForgeDirection.WEST.ordinal()}
+		}, dir);
+	}
 
 	@Override
 	public boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
@@ -59,37 +68,31 @@ public class MachineFusionBoiler extends BlockDummyable implements ILookOverlay,
 	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
-
-		x += dir.offsetX * o;
-		z += dir.offsetZ * o;
 		
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 		//this.makeExtra(world, x + dir.offsetX * 4, y + 2, z + dir.offsetZ * 4);
-		this.makeExtra(world, x - dir.offsetX * 1 + rot.offsetX, y, z - dir.offsetZ * 1 + rot.offsetZ);
-		this.makeExtra(world, x - dir.offsetX * 1 - rot.offsetX, y, z - dir.offsetZ * 1 - rot.offsetZ);
-		this.makeExtra(world, x + dir.offsetX * 2 + rot.offsetX, y, z + dir.offsetZ * 2 + rot.offsetZ);
-		this.makeExtra(world, x + dir.offsetX * 2 - rot.offsetX, y, z + dir.offsetZ * 2 - rot.offsetZ);
 	}
 
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
 		int[] pos = this.findCore(world, x, y, z);
 		if(pos == null) return;
-		
+
 		TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
-		
+
 		if(!(te instanceof TileEntityFusionBoiler)) return;
 		TileEntityFusionBoiler boiler = (TileEntityFusionBoiler) te;
-		
+
 		List<String> text = new ArrayList();
-		text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + BobMathUtil.format(boiler.plasmaEnergy) + " TU");
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.fusion_boiler.tu", BobMathUtil.format(boiler.plasmaEnergy)));
 
 		for(int i = 0; i < boiler.getAllTanks().length; i++) {
 			FluidTank tank = boiler.getAllTanks()[i];
-			text.add((i == 0 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET + tank.getTankType().getLocalizedName() + ": " + tank.getFill() + "/" + tank.getMaxFill() + "mB");
+			text.add(I18nUtil.resolveKey("overlay.common.tank", (i == 0 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET, tank.getTankType().getLocalizedName(), tank.getFill(), tank.getMaxFill()));
 		}
-		
+
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 

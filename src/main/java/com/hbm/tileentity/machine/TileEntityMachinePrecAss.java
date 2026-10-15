@@ -21,8 +21,9 @@ import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BobMathUtil;
-import com.hbm.util.fauxpointtwelve.DirPos;
 import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
@@ -44,16 +45,16 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 
 	public FluidTank inputTank;
 	public FluidTank outputTank;
-	
+
 	public long power;
 	public long maxPower = 100_000;
 	public boolean didProcess = false;
-	
+
 	public boolean frame = false;
 	private AudioWrapper audio;
 
 	public ModuleMachinePrecAss assemblerModule;
-	
+
 	public double prevRing;
 	public double ring;
 	public double ringSpeed;
@@ -69,16 +70,19 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 	protected int strikerDelay;
 
 	public UpgradeManagerNT upgradeManager = new UpgradeManagerNT(this);
-	
+
 	public TileEntityMachinePrecAss() {
 		super(22);
 		this.inputTank = new FluidTank(Fluids.NONE, 4_000);
 		this.outputTank = new FluidTank(Fluids.NONE, 4_000);
-		
+
 		this.assemblerModule = new ModuleMachinePrecAss(0, this, slots)
 				.itemInput(4).itemOutput(13)
 				.fluidInput(inputTank).fluidOutput(outputTank);
 	}
+	
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.assembler(xCoord, yCoord, zCoord); return cachedPorts; }
 
 	@Override
 	public String getName() {
@@ -87,25 +91,22 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 
 	@Override
 	public void updateEntity() {
-		
+
 		if(maxPower <= 0) this.maxPower = 1_000_000;
-		
+
 		if(!worldObj.isRemote) {
+
+			this.setupAllPorts(getPorts());
+			this.updatePortPIFIFO();
 			
 			GenericRecipe recipe = assemblerModule.getRecipe();
 			if(recipe != null) {
 				this.maxPower = recipe.power * 100;
 			}
 			this.maxPower = BobMathUtil.max(this.power, this.maxPower, 100_000);
-			
+
 			this.power = Library.chargeTEFromItems(slots, 0, power, maxPower);
 			upgradeManager.checkSlots(slots, 2, 3);
-			
-			for(DirPos pos : getConPos()) {
-				this.trySubscribe(worldObj, pos);
-				if(inputTank.getTankType() != Fluids.NONE) this.trySubscribe(inputTank.getTankType(), worldObj, pos);
-				if(outputTank.getFill() > 0) this.tryProvide(outputTank, worldObj, pos);
-			}
 
 			double speed = 1D;
 			double pow = 1D;
@@ -116,19 +117,19 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 			pow -= Math.min(upgradeManager.getLevel(UpgradeType.POWER), 3) * 0.25D;
 			pow += Math.min(upgradeManager.getLevel(UpgradeType.SPEED), 3) * 1D;
 			pow += Math.min(upgradeManager.getLevel(UpgradeType.OVERDRIVE), 3) * 10D / 3D;
-			
+
 			this.assemblerModule.update(speed, pow, true, slots[1]);
 			this.didProcess = this.assemblerModule.didProcess;
 			if(this.assemblerModule.markDirty) this.markDirty();
-			
+
 			this.networkPackNT(100);
-			
+
 		} else {
-			
+
 			if(worldObj.getTotalWorldTime() % 20 == 0) {
 				frame = !worldObj.getBlock(xCoord, yCoord + 3, zCoord).isAir(worldObj, xCoord, yCoord + 3, zCoord);
 			}
-			
+
 			if(this.didProcess && MainRegistry.proxy.me().getDistance(xCoord , yCoord, zCoord) < 50) {
 				if(audio == null) {
 					audio = createAudioLoop();
@@ -139,7 +140,7 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 				audio.keepAlive();
 				audio.updatePitch(0.75F);
 				audio.updateVolume(this.getVolume(0.5F));
-				
+
 			} else {
 				if(audio != null) {
 					audio.stopSound();
@@ -149,9 +150,9 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 
 			for(int i = 0; i < 3; i++) this.prevArmAngles[i] = this.armAngles[i];
 			for(int i = 0; i < 4; i++) this.prevStrikers[i] = this.strikers[i];
-			
+
 			this.prevRing = this.ring;
-			
+
 			for(int i = 0; i < 4; i++) {
 				if(this.strikerDir[i]) {
 					this.strikers[i] = -0.75D;
@@ -161,7 +162,7 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 					this.strikers[i] = MathHelper.clamp_double(this.strikers[i] + 0.5D, -0.75D, 0D);
 				}
 			}
-			
+
 			if(this.ring != this.ringTarget) {
 				double ringDelta = Math.abs(this.ringTarget - this.ring);
 				if(ringDelta <= this.ringSpeed) this.ring = this.ringTarget;
@@ -175,7 +176,7 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 					this.ringDelay = 100 + worldObj.rand.nextInt(21);
 				}
 			}
-			
+
 			if(didProcess) {
 				if(this.ring == this.ringTarget) {
 					if(this.ringDelay > 0) this.ringDelay--;
@@ -185,11 +186,11 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 						if(!this.muffled) MainRegistry.proxy.playSoundClient(xCoord, yCoord, zCoord, "hbm:block.assemblerStart", this.getVolume(0.25F), 1.25F + worldObj.rand.nextFloat() * 0.25F);
 					}
 				}
-				
+
 				if(!isInWorkingPosition(this.armAngles) && canArmsMove()) {
 					move(WORKING_POSITION);
 				}
-				
+
 				if(isInWorkingPosition(this.armAngles)) {
 					this.strikerDelay--;
 					if(this.strikerDelay <= 0) {
@@ -198,12 +199,12 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 						this.strikerDelay = this.strikerIndex == 3 ? (10 + worldObj.rand.nextInt(3)) : 2;
 					}
 				}
-				
+
 			} else {
 				for(int i = 0; i < 4; i++) this.strikerDir[i] = false; // set all strikers to retract
 				if(canArmsMove()) move(NULL_POSITION);
 			}
-			
+
 			if(this.isInWorkingPosition(prevArmAngles) && !this.isInWorkingPosition(armAngles)) {
 				if(!this.muffled) MainRegistry.proxy.playSoundClient(xCoord, yCoord, zCoord, "hbm:block.assemblerStop", this.getVolume(0.25F), 1.25F + worldObj.rand.nextFloat() * 0.25F);
 			}
@@ -212,17 +213,17 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 
 	public double[] NULL_POSITION = new double[] {45, -30, 45};
 	public double[] WORKING_POSITION = new double[] {45, -15, -5};
-	
+
 	private boolean canArmsMove() {
 		for(int i = 0; i < 4; i++) if(this.strikers[i] != 0) return false;
 		return true;
 	}
-	
+
 	private boolean isInWorkingPosition(double[] arms) {
 		for(int i = 0; i < 3; i++) if(arms[i] != WORKING_POSITION[i]) return false;
 		return true;
 	}
-	
+
 	private boolean move(double[] targetAngles) {
 		boolean didMove = false;
 
@@ -246,29 +247,13 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 	}
 
 	@Override public void onChunkUnload() {
+		super.onChunkUnload();
 		if(audio != null) { audio.stopSound(); audio = null; }
 	}
 
 	@Override public void invalidate() {
 		super.invalidate();
 		if(audio != null) { audio.stopSound(); audio = null; }
-	}
-	
-	public DirPos[] getConPos() {
-		return new DirPos[] {
-				new DirPos(xCoord + 2, yCoord, zCoord - 1, Library.POS_X),
-				new DirPos(xCoord + 2, yCoord, zCoord + 0, Library.POS_X),
-				new DirPos(xCoord + 2, yCoord, zCoord + 1, Library.POS_X),
-				new DirPos(xCoord - 2, yCoord, zCoord - 1, Library.NEG_X),
-				new DirPos(xCoord - 2, yCoord, zCoord + 0, Library.NEG_X),
-				new DirPos(xCoord - 2, yCoord, zCoord + 1, Library.NEG_X),
-				new DirPos(xCoord - 1, yCoord, zCoord + 2, Library.POS_Z),
-				new DirPos(xCoord + 0, yCoord, zCoord + 2, Library.POS_Z),
-				new DirPos(xCoord + 1, yCoord, zCoord + 2, Library.POS_Z),
-				new DirPos(xCoord - 1, yCoord, zCoord - 2, Library.NEG_Z),
-				new DirPos(xCoord + 0, yCoord, zCoord - 2, Library.NEG_Z),
-				new DirPos(xCoord + 1, yCoord, zCoord - 2, Library.NEG_Z),
-		};
 	}
 
 	@Override
@@ -292,7 +277,7 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 		this.didProcess = buf.readBoolean();
 		this.assemblerModule.deserialize(buf);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -302,7 +287,7 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 		this.maxPower = nbt.getLong("maxPower");
 		this.assemblerModule.readFromNBT(nbt);
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
@@ -346,7 +331,7 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 	@Override public boolean hasPermission(EntityPlayer player) { return this.isUseableByPlayer(player); }
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("index") && data.hasKey("selection")) {
 			int index = data.getInteger("index");
 			String selection = data.getString("selection");
@@ -356,21 +341,21 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 			}
 		}
 	}
-	
+
 	AxisAlignedBB bb = null;
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		if(bb == null) bb = AxisAlignedBB.getBoundingBox(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
 		return bb;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared() {
 		return 65536.0D;
 	}
-	
+
 	@Override
 	public boolean canProvideInfo(UpgradeType type, int level, boolean extendedInfo) {
 		return type == UpgradeType.SPEED || type == UpgradeType.POWER || type == UpgradeType.OVERDRIVE;
@@ -387,7 +372,7 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(KEY_CONSUMPTION, "-" + (level * 25) + "%"));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
-			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + "YES");
+			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}
 

@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 public class BedrockDrillHandler extends NEICelestialHandler {
 
 	public BedrockDrillHandler() {
-		super("Bedrock Drilling", ModBlocks.machine_excavator, getRecipes());
+		super("nei.bedrock_drill.name", ModBlocks.machine_excavator, getRecipes());
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import com.google.common.collect.Multimap;
 import com.hbm.blocks.IStepTickReceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockAshes;
+import com.hbm.blocks.generic.BlockRichOre;
 import com.hbm.blocks.machine.BlockBeamBase;
 import com.hbm.blocks.generic.BlockPedestal;
 import com.hbm.config.GeneralConfig;
@@ -88,6 +89,8 @@ import com.hbm.packet.toclient.PlayerInformPacket;
 import com.hbm.packet.toclient.SerializableRecipePacket;
 import com.hbm.particle.helper.BlackPowderCreator;
 import com.hbm.potion.HbmPotion;
+import com.hbm.saveddata.SatelliteSavedData;
+import com.hbm.saveddata.satellites.SatelliteBase;
 import com.hbm.saveddata.satellites.SatelliteDetector;
 import com.hbm.saveddata.satellites.SatelliteRayScan;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
@@ -100,6 +103,7 @@ import com.hbm.util.ArmorRegistry.HazardClass;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
 import com.hbm.world.PlanetGen;
+import com.hbm.world.feature.RichOreBlob;
 import com.hbm.world.generator.TimedGenerator;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -190,6 +194,7 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraft.util.ChatComponentTranslation;
 
 @Spaghetti("fuck")
 public class ModEventHandler {
@@ -202,26 +207,26 @@ public class ModEventHandler {
 		if(!event.player.worldObj.isRemote) {
 
 			if(GeneralConfig.enableMOTD) {
-				event.player.addChatMessage(new ChatComponentText("Loaded world with JamesH2 & Mellow's NTM: Space " + RefStrings.VERSION + " for Minecraft 1.7.10!"));
+				event.player.addChatMessage(new ChatComponentTranslation("chat.mod_event.line.01", RefStrings.VERSION));
 
 				if(HTTPHandler.newVersion) {
 					event.player.addChatMessage(
-							new ChatComponentText("New version " + HTTPHandler.versionNumber + " is available! Click ")
+							new ChatComponentTranslation("chat.mod_event.new_version_is_available_click", HTTPHandler.versionNumber)
 							.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))
-							.appendSibling(new ChatComponentText("[here]")
+							.appendSibling(new ChatComponentTranslation("chat.mod_event.here")
 									.setChatStyle(new ChatStyle()
 										.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/JameH2/Hbm-s-Nuclear-Tech-GIT/releases"))
 										.setUnderlined(true)
 										.setColor(EnumChatFormatting.RED)
 									)
 								)
-							.appendSibling(new ChatComponentText(" to download!").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)))
+							.appendSibling(new ChatComponentTranslation("chat.mod_event.to_download").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)))
 							);
 				}
 			}
 
 			if(MobConfig.enableDucks && event.player instanceof EntityPlayerMP && !event.player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("hasDucked"))
-				PacketDispatcher.wrapper.sendTo(new PlayerInformPacket("Press O to Duck!", ServerProxy.ID_DUCK, 30_000), (EntityPlayerMP) event.player);
+				PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.startTranslation("info.common.press_o_to_duck").flush(), ServerProxy.ID_DUCK, 30_000), (EntityPlayerMP) event.player);
 
 
 			/*if(GeneralConfig.enableGuideBook) {
@@ -420,7 +425,7 @@ public class ModEventHandler {
 					 && !(((EntityDamageSource)event.source).getEntity() instanceof FakePlayer)) {
 
 				Random rng = event.entityLiving.getRNG();
-				
+
 				if(event.entityLiving instanceof EntitySpider && rng.nextInt(500) == 0) {
 					event.entityLiving.dropItem(ModItems.spider_milk, 1);
 				}
@@ -446,7 +451,7 @@ public class ModEventHandler {
 				if(event.entityLiving instanceof EntityVillager && event.entityLiving.getRNG().nextInt(1) == 0) {
 					event.entityLiving.dropItem(ModItems.flesh, 5);
 				}
-				
+
 				if(event.entityLiving instanceof EntityZombie) {
 					if(rng.nextInt(200) == 0) event.entityLiving.dropItem(ModItems.ingot_copper, 1);
 					if(rng.nextInt(200) == 0) event.entityLiving.dropItem(ModItems.ingot_aluminium, 1);
@@ -553,7 +558,7 @@ public class ModEventHandler {
 
 	private static ItemStack getSkelegun(float soot, Random rand) {
 		if(!MobConfig.enableMobWeapons) return null;
-		
+
 		soot -= MobConfig.mobWeaponSootReduction;
 		if(rand.nextDouble() > Math.log(soot) * 0.25) return null;
 
@@ -841,7 +846,7 @@ public class ModEventHandler {
 
 	@SubscribeEvent
 	public void worldTick(WorldTickEvent event) {
-		
+
 		World world = event.world;
 		long time = world.getTotalWorldTime();
 
@@ -913,7 +918,7 @@ public class ModEventHandler {
 					CelestialBody.updateChemistry(event.world);
 				}
 			}
-			
+
 			if(time % 20 == 0) {
 				BlockPedestal.checkPedestalEntries(world.provider.dimensionId, time);
 			}
@@ -932,6 +937,24 @@ public class ModEventHandler {
 			TimedGenerator.automaton(world, 100);
 
 			SatelliteDetector.updateSystem(world);
+			
+			SatelliteSavedData dat = SatelliteSavedData.getData(world);
+			
+			if(dat != null) {
+				boolean dirty = false;
+				
+				for(SatelliteBase sat : dat.sats.values()) {
+					sat.onUpdateTick(world);
+					
+					if(sat.isDirty) {
+						sat.isDirty = false;
+						dirty = true;
+					}
+				}
+				
+				if(dirty) dat.markDirty();
+			}
+			
 			if(world.getTotalWorldTime() % 20 == 10)
 				SatelliteRayScan.updateSystem(world);
 
@@ -975,6 +998,20 @@ public class ModEventHandler {
 	public void onGenerateOre(GenerateMinable event) {
 		if(event.world.provider instanceof WorldProviderCelestial && event.world.provider.dimensionId != 0) {
 			WorldGeneratorCelestial.onGenerateOre(event);
+		}
+
+		if(event.world.provider.dimensionId == 0 && RichOreBlob.overrideVanilla()) {
+			switch(event.type) {
+			case COAL:
+			case IRON:
+			case GOLD:
+			case REDSTONE:
+			case LAPIS:
+			case DIAMOND:
+				event.setResult(Result.DENY);
+				break;
+			default: break;
+			}
 		}
 	}
 
@@ -1145,7 +1182,7 @@ public class ModEventHandler {
 		EntityLivingBase e = event.entityLiving;
 
 		float gravity = CelestialBody.getGravity(e);
-		
+
 
 		// Reduce fall damage on low gravity bodies
 		if(gravity < 0.3F) {
@@ -1419,7 +1456,7 @@ public class ModEventHandler {
 			/// GHOST FIX START ///
 
 			if(!Float.isFinite(player.getHealth()) || !Float.isFinite(player.getAbsorptionAmount())) {
-				player.addChatComponentMessage(new ChatComponentText("Your health has been restored!"));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.mod_event.your_health_has_been_restored"));
 				player.worldObj.playSoundAtEntity(player, "hbm:item.syringe", 1.0F, 1.0F);
 				player.setHealth(player.getMaxHealth());
 				player.setAbsorptionAmount(0);
@@ -1604,7 +1641,8 @@ public class ModEventHandler {
 		}
 
 		if(parameters.length < 1 || parameters.length > 2) {
-			throw new WrongUsageException("commands.weather.usage", new Object[0]);
+			sender.addChatMessage(new ChatComponentTranslation("commands.weather.usage"));
+			return;
 		}
 
 		int duration = (300 + new Random().nextInt(600)) * 20;
@@ -1617,7 +1655,8 @@ public class ModEventHandler {
 		CelestialBody body = CelestialBody.getTarget(world, pos.posX, pos.posZ).body;
 		CBT_Weather weather = CBT_Weather.ensureTrait(body);
 		if(weather == null || !CBT_Weather.supportsWeather(body)) {
-			throw new CommandException("This celestial body has no weather cycle.");
+			sender.addChatMessage(new ChatComponentTranslation("commands.mod_event.celestial_body_no_weather_cycle"));
+			return;
 		}
 
 		if("clear".equalsIgnoreCase(parameters[0])) {
@@ -1630,7 +1669,8 @@ public class ModEventHandler {
 			weather.forceThunder(duration);
 			CommandBase.func_152373_a(sender, command, "commands.weather.thunder", new Object[0]);
 		} else {
-			throw new WrongUsageException("commands.weather.usage", new Object[0]);
+			sender.addChatMessage(new ChatComponentTranslation("commands.weather.usage"));
+			return;
 		}
 
 		SolarSystemWorldSavedData.get(world).markDirty();
@@ -1667,6 +1707,11 @@ public class ModEventHandler {
 		HbmPlayerProps.getData(event.original).serialize(buf);
 		HbmPlayerProps.getData(event.entityPlayer).deserialize(buf);
 		buf.release();
+	}
+
+	@SubscribeEvent
+	public void onBreakSpeed(net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed event) {
+		if(event.block instanceof BlockRichOre) event.newSpeed /= 5F;
 	}
 
 	@SubscribeEvent
@@ -2011,5 +2056,5 @@ public class ModEventHandler {
 		}
 	}
 
-	
+
 }

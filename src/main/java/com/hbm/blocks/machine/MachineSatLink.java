@@ -14,12 +14,13 @@ import com.hbm.util.i18n.I18nUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class MachineSatLink extends BlockDummyable implements ILookOverlay {
 
@@ -36,16 +37,26 @@ public class MachineSatLink extends BlockDummyable implements ILookOverlay {
 
 	@Override public int[] getDimensions() { return new int[] {6, 0, 1, 0, 1, 0}; }
 	@Override public int getOffset() { return 0; }
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, 0, ForgeDirection.EAST.ordinal()},
+			{1, 0, -1, ForgeDirection.EAST.ordinal()},
+			{0, 0, 0, ForgeDirection.WEST.ordinal()},
+			{0, 0, -1, ForgeDirection.WEST.ordinal()},
+			{0, 0, 0, ForgeDirection.SOUTH.ordinal()},
+			{1, 0, 0, ForgeDirection.SOUTH.ordinal()},
+			{1, 0, -1, ForgeDirection.NORTH.ordinal()},
+			{0, 0, -1, ForgeDirection.NORTH.ordinal()},
+		}, dir);
+	}
 	@Override
 	protected void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
 		
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-
-		this.makeExtra(world, x - dir.offsetX, y, z - dir.offsetZ);
-		this.makeExtra(world, x + rot.offsetX, y, z + rot.offsetZ);
-		this.makeExtra(world, x - dir.offsetX + rot.offsetX, y, z - dir.offsetZ + rot.offsetZ);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override
@@ -54,7 +65,7 @@ public class MachineSatLink extends BlockDummyable implements ILookOverlay {
 		if(!world.isRemote && !player.isSneaking()) {
 
 			if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ISatChip) {
-				
+
 				int[] pos = this.findCore(world, x, y, z);
 				if(pos == null) return false;
 
@@ -62,9 +73,9 @@ public class MachineSatLink extends BlockDummyable implements ILookOverlay {
 				if(!(te instanceof TileEntityMachineSatLink)) return false;
 
 				TileEntityMachineSatLink link = (TileEntityMachineSatLink) te;
-				
+
 				link.freq = ISatChip.getFreqS(player.getHeldItem());
-				player.addChatComponentMessage(new ChatComponentText("Set frequency to " + link.freq).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.sat_link.set_frequency_to", link.freq).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 				world.playSoundAtEntity(player, NTMSounds.TECH_BLEEP, 1F, 1F);
 
 				return true;
@@ -78,7 +89,7 @@ public class MachineSatLink extends BlockDummyable implements ILookOverlay {
 
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
-		
+
 		int[] pos = this.findCore(world, x, y, z);
 		if(pos == null) return;
 
@@ -86,10 +97,14 @@ public class MachineSatLink extends BlockDummyable implements ILookOverlay {
 		if(!(te instanceof TileEntityMachineSatLink)) return;
 
 		TileEntityMachineSatLink link = (TileEntityMachineSatLink) te;
-		
+
 		List<String> text = new ArrayList();
-		text.add("Freq: " + link.freq);
-		text.add("Connected: " + (link.connected ? (EnumChatFormatting.GREEN + "Yes") : (EnumChatFormatting.RED + "No")));
+		text.add(I18nUtil.resolveKey("tile.machine_satlink.freq") + ": " + link.freq);
+		text.add(I18nUtil.resolveKey("tile.machine_satlink.connected") + ": " + (link.connected ? (EnumChatFormatting.GREEN + I18nUtil.resolveKey("tile.machine_satlink.yes")) : (EnumChatFormatting.RED + I18nUtil.resolveKey("tile.machine_satlink.no"))));
+		
+		for(IChatComponent comp : link.info) {
+			if(comp != null) text.add(comp.getFormattedText());
+		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}

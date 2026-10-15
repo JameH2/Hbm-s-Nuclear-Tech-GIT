@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
+import com.hbm.util.i18n.I18nUtil;
 
 public class ConnectorRedWire extends PylonBase {
 
@@ -61,7 +62,7 @@ public class ConnectorRedWire extends PylonBase {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.GOLD + "Connection Type: " + EnumChatFormatting.YELLOW + "Single");
-		list.add(EnumChatFormatting.GOLD + "Connection Range: " + EnumChatFormatting.YELLOW + "10m");
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_type_single", EnumChatFormatting.YELLOW + "Single"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_range_10m", EnumChatFormatting.YELLOW + "10m"));
 	}
 }

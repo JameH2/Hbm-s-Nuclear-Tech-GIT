@@ -34,6 +34,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.*;
 import java.util.function.Consumer;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class LogicBlockActions {
 
@@ -298,7 +299,7 @@ public class LogicBlockActions {
 
 		if(tile.phase != 1) return;
 
-		world.getClosestPlayer(x,y,z, 25).addChatMessage(new ChatComponentText(EnumChatFormatting.LIGHT_PURPLE + "[COMMAND UNIT]"+ EnumChatFormatting.RESET + " Missile Fired"));
+		world.getClosestPlayer(x,y,z, 25).addChatMessage(new ChatComponentTranslation("chat.logic_block_actions.command_unit_missile_fired", EnumChatFormatting.RESET + " Missile Fired").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE)));
 
 		ForgeDirection parallel = tile.direction.getRotation(ForgeDirection.UP);
 

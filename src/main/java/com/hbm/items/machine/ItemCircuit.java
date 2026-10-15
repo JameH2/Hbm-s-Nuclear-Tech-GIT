@@ -10,6 +10,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import com.hbm.util.i18n.I18nUtil;
 
 public class ItemCircuit extends ItemEnumMulti {
 
@@ -39,6 +40,7 @@ public class ItemCircuit extends ItemEnumMulti {
 		list.add(new ItemStack(item, 1, EnumCircuitType.AERO.ordinal()));
 		list.add(new ItemStack(item, 1, EnumCircuitType.GAAS.ordinal()));
 		list.add(new ItemStack(item, 1, EnumCircuitType.QUANTUM.ordinal()));
+		list.add(new ItemStack(item, 1, EnumCircuitType.CRYSTAL.ordinal()));
 		list.add(new ItemStack(item, 1, EnumCircuitType.CONTROLLER_CHASSIS.ordinal()));
 		list.add(new ItemStack(item, 1, EnumCircuitType.CONTROLLER.ordinal()));
 		list.add(new ItemStack(item, 1, EnumCircuitType.CONTROLLER_ADVANCED.ordinal()));
@@ -83,6 +85,7 @@ public class ItemCircuit extends ItemEnumMulti {
 		HFCHIP,
 		MOLYCHIP,
 		NUMITRON,
+		CRYSTAL,
 	}
 
 	@Override
@@ -90,18 +93,18 @@ public class ItemCircuit extends ItemEnumMulti {
 		/*List<String> lines = new ArrayList();
 
 		switch(stack.getItemDamage()) {
-		case 0: lines.add("We taught this filament how to think."); break;
+		case 0: lines.add(I18nUtil.resolveKey("gui.circuit.we_taught_filament_how_think")); break;
 		case 1: lines.add("3300µF"); break;
-		case 2: lines.add("Sorry, we were out of flux capacitors, this is a regular one."); break;
-		case 3: lines.add("Laminated Sandwich Structure™"); break;
-		case 4: lines.add("Microscopic arcane sigils have given this rock anima."); break;
-		case 5: lines.add("Less tasty than it sounds."); break;
-		case 6: lines.add("The ALU is probably wired together correctly. Probably."); break;
-		case 7: lines.add("One final act of goodwill."); lines.add("If I have to hear the words \"Interplay\" or"); lines.add("\"objectively better\" one more time I'll blow"); lines.add("up Chris Avellone with a bazooka."); break;
-		case 8: lines.add("100% lead solder (not RoHS compliant)"); break;
-		case 9: lines.add("It's red, that means it's better."); break;
-		case 10: lines.add("Uses that exceptionally stanky 90s yellow PCB."); break;
-		case 11: lines.add("Can do up to three different things (instead of two)!"); break;
+		case 2: lines.add(I18nUtil.resolveKey("gui.circuit.text.03")); break;
+		case 3: lines.add(I18nUtil.resolveKey("gui.circuit.laminated_sandwich_structure")); break;
+		case 4: lines.add(I18nUtil.resolveKey("gui.circuit.text.02")); break;
+		case 5: lines.add(I18nUtil.resolveKey("gui.circuit.less_tasty_than_it_sounds")); break;
+		case 6: lines.add(I18nUtil.resolveKey("gui.circuit.text.04")); break;
+		case 7: lines.add(I18nUtil.resolveKey("gui.circuit.one_final_act_of_goodwill")); lines.add(I18nUtil.resolveKey("gui.circuit.i_hear_words_interplay")); lines.add(I18nUtil.resolveKey("gui.circuit.objectively_better_one_time_i")); lines.add(I18nUtil.resolveKey("gui.circuit.up_chris_avellone_with_a_bazooka")); break;
+		case 8: lines.add(I18nUtil.resolveKey("gui.circuit.100_lead_solder_rohs_compliant")); break;
+		case 9: lines.add(I18nUtil.resolveKey("gui.circuit.red_means_better")); break;
+		case 10: lines.add(I18nUtil.resolveKey("gui.circuit.uses_exceptionally_stanky_90s_ye")); break;
+		case 11: lines.add(I18nUtil.resolveKey("gui.circuit.text.01")); break;
 		}
 
 		for(String line : lines) {

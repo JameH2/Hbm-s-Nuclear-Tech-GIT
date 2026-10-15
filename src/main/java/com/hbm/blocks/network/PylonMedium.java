@@ -13,6 +13,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import java.util.List;
+import com.hbm.util.i18n.I18nUtil;
 
 public class PylonMedium extends BlockDummyable implements ITooltipProvider {
 
@@ -26,11 +27,18 @@ public class PylonMedium extends BlockDummyable implements ITooltipProvider {
 		if(meta >= 12) return new TileEntityPylonMedium();
 		return null;
 	}
-
+	/*
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{0, 0, 0, ForgeDirection.NORTH.ordinal()}
+		}, dir);
+	}
+	*/
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.GOLD + "Connection Type: " + EnumChatFormatting.YELLOW + "Triple");
-		list.add(EnumChatFormatting.GOLD + "Connection Range: " + EnumChatFormatting.YELLOW + "45m");
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_type_triple", EnumChatFormatting.YELLOW + "Triple"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_range_45m", EnumChatFormatting.YELLOW + "45m"));
 	}
 
 	@Override

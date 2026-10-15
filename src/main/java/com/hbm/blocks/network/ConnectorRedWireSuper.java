@@ -14,6 +14,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import com.hbm.util.i18n.I18nUtil;
 
 public class ConnectorRedWireSuper extends PylonBase {
 
@@ -56,7 +57,7 @@ public class ConnectorRedWireSuper extends PylonBase {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.GOLD + "Connection Type: " + EnumChatFormatting.YELLOW + "Single");
-		list.add(EnumChatFormatting.GOLD + "Connection Range: " + EnumChatFormatting.YELLOW + "100m");
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_type_single.connection_type_single", EnumChatFormatting.YELLOW + "Single"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_range_100m", EnumChatFormatting.YELLOW + "100m"));
 	}
 }

@@ -44,19 +44,26 @@ public class DeuteriumTower extends BlockDummyable implements ILookOverlay {
 	public int getOffset() {
 		return 0;
 	}
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{0, 0, 0, ForgeDirection.SOUTH.ordinal()},
+			{-1, 0, 0, ForgeDirection.SOUTH.ordinal()},
+			{-1, 0, -1, ForgeDirection.NORTH.ordinal()},
+			{0, 0, -1, ForgeDirection.NORTH.ordinal()},
+			{0, 0, 0, ForgeDirection.EAST.ordinal()},
+			{0, 0, -1, ForgeDirection.EAST.ordinal()},
+			{-1, 0, 0, ForgeDirection.WEST.ordinal()},
+			{-1, 0, -1, ForgeDirection.WEST.ordinal()}
+		}, dir);
+	}
 	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
 
-		x = x + dir.offsetX * o;
-		z = z + dir.offsetZ * o;
-
-		ForgeDirection dr2 = dir.getRotation(ForgeDirection.UP);
-
-		this.makeExtra(world, x - dir.offsetX - dr2.offsetX, y, z - dir.offsetZ - dr2.offsetZ);
-		this.makeExtra(world, x, y, z - dir.offsetZ - dr2.offsetZ);
-		this.makeExtra(world, x - dir.offsetX - dr2.offsetX, y, z);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override
@@ -74,10 +81,10 @@ public class DeuteriumTower extends BlockDummyable implements ILookOverlay {
 		TileEntityDeuteriumTower tower = (TileEntityDeuteriumTower) te;
 
 		List<String> text = new ArrayList();
-		text.add((tower.power < tower.getMaxPower() / 20 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + "Power: " + BobMathUtil.getShortNumber(tower.power) + "HE");
+		text.add(((tower.power < tower.getMaxPower() / 20 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN)) + I18nUtil.resolveKey("overlay.common.power", BobMathUtil.getShortNumber(tower.power)));
 
 		for(int i = 0; i < tower.tanks.length; i++)
-			text.add((i < 1 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET + tower.tanks[i].getTankType().getLocalizedName() + ": " + tower.tanks[i].getFill() + "/" + tower.tanks[i].getMaxFill() + "mB");
+			text.add(I18nUtil.resolveKey("overlay.common.tank", (i < 1 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET, tower.tanks[i].getTankType().getLocalizedName(), tower.tanks[i].getFill(), tower.tanks[i].getMaxFill()));
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}

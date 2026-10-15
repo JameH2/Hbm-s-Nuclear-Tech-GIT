@@ -65,7 +65,7 @@ public class ItemCustomMissile extends Item {
 			list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.desc.warhead") + ": " + EnumChatFormatting.GRAY + warhead.getWarhead());
 			list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.desc.strength") + ": " + EnumChatFormatting.GRAY + warhead.attributes[1]);
 			list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.desc.fuelType") + ": " + EnumChatFormatting.GRAY + fuselage.getFuelName());
-			list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.desc.fuelAmount") + ": " + EnumChatFormatting.GRAY + fuselage.getTankSize() + "l");
+			list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile.desc1", I18nUtil.resolveKey("item.missile.desc.fuelAmount"), EnumChatFormatting.GRAY + String.valueOf(fuselage.getTankSize())));
 			list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.desc.chipInaccuracy") + ": " + EnumChatFormatting.GRAY + (Float)chip.attributes[0] * 100 + "%");
 
 			if(stability != null)
@@ -79,7 +79,7 @@ public class ItemCustomMissile extends Item {
 			if(stability != null)
 				health += stability.health;
 
-			list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.desc.health") + ": " + EnumChatFormatting.GRAY + health + "HP");
+			list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile.desc2", I18nUtil.resolveKey("item.missile.desc.health"), EnumChatFormatting.GRAY + String.valueOf(health)));
 
 		} catch(Exception ex) {
 			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("error.generic"));

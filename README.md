@@ -21,6 +21,8 @@
 - Added 2 new music discs
 - Added AgriCraft compat to Threshener and Buzz Saw
 - Added ForgeFluids <-> NTM Fluids compat
+- Glyphid taming
+- Baubles compat
 
 Hi, i am memeing things into existence, dont mind me! im just the bent fork at the end of the table -JamesH_2
 

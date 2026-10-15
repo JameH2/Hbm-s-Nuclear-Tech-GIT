@@ -18,20 +18,21 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUICraneExtractor extends GuiInfoContainer {
-	
+
 	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_crane_ejector.png");
 	private TileEntityCraneExtractor ejector;
 
 	public GUICraneExtractor(InventoryPlayer invPlayer, TileEntityCraneExtractor tedf) {
 		super(new ContainerCraneExtractor(invPlayer, tedf));
 		ejector = tedf;
-		
+
 		this.xSize = 212;
 		this.ySize = 185;
 	}
-	
+
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
@@ -39,15 +40,15 @@ public class GUICraneExtractor extends GuiInfoContainer {
 		if(this.mc.thePlayer.inventory.getItemStack() == null) {
 			for(int i = 0; i < 9; ++i) {
 				Slot slot = (Slot) this.inventorySlots.inventorySlots.get(i);
-	
+
 				if(this.isMouseOverSlot(slot, x, y) && ejector.matcher.modes[i] != null) {
-					this.func_146283_a(Arrays.asList(new String[] { EnumChatFormatting.RED + "Right click to change", ModulePatternMatcher.getLabel(ejector.matcher.modes[i]) }), x, y - 30);
+					this.func_146283_a(Arrays.asList(new String[] { EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.change"), ModulePatternMatcher.getLabel(ejector.matcher.modes[i]) }), x, y - 30);
 				}
 			}
 		}
-		
+
 		if(guiLeft + 187 <= x && guiLeft + 187 + 18 > x && guiTop + 34 < y && guiTop + 34 + 18 >= y) {
-			this.func_146283_a(Arrays.asList(new String[] { "Only take maximum possible: " + (ejector.maxEject ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF") }), x, y);
+			this.func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.crane_extractor.only_take_maximum_possible") + (ejector.maxEject ? EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on") : EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off")) }), x, y);
 		}
 	}
 
@@ -69,7 +70,7 @@ public class GUICraneExtractor extends GuiInfoContainer {
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, ejector.xCoord, ejector.yCoord, ejector.zCoord));
 		}
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.ejector.hasCustomInventoryName() ? this.ejector.getInventoryName() : I18n.format(this.ejector.getInventoryName());
@@ -82,9 +83,9 @@ public class GUICraneExtractor extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		if(ejector.maxEject) drawTexturedModalRect(guiLeft + 187, guiTop + 34, 212, 0, 18, 18);
-		
+
 		if(ejector.isWhitelist) {
 			drawTexturedModalRect(guiLeft + 139, guiTop + 33, 212, 18, 3, 6);
 		} else {

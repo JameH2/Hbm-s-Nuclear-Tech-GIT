@@ -8,6 +8,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.PlayerInformPacket;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.util.ChatBuilder;
 
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import io.netty.buffer.ByteBuf;
@@ -33,7 +34,7 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 	/** Keybind tracking */
 	private boolean[] keysPressed = new boolean[EnumKeybind.values().length];
 
-	
+
 	/* Dashes for bismuth armor/cloud in a bottle */
 	public boolean dashActivated = true;
 	public int dashCooldown = 0;
@@ -58,14 +59,14 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 
 	/** Hack for allowing ladders on multiblocks */
 	public boolean isOnLadder = false;
-	
+
 	/** Pulling the pin on a grenade - it's a player prop instead of an NBT trait */
 	public int grenadeDeployment;
 
 	public boolean hasWarped = false;
 
 	public int lastDimension = 0;
-	
+
 	/** Maskman timer */
 	public int maskManTimer = 0;
 
@@ -105,9 +106,9 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 					this.enableBackpack = !this.enableBackpack;
 
 					if(this.enableBackpack)
-						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(EnumChatFormatting.GREEN + "Jetpack ON", MainRegistry.proxy.ID_JETPACK, 1000), (EntityPlayerMP) player);
+						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.startTranslation("info.toggle.jetpack_on").color(EnumChatFormatting.GREEN).flush(), MainRegistry.proxy.ID_JETPACK, 1000), (EntityPlayerMP) player);
 					else
-						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(EnumChatFormatting.RED + "Jetpack OFF", MainRegistry.proxy.ID_JETPACK, 1000), (EntityPlayerMP) player);
+						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.startTranslation("info.toggle.jetpack_off").color(EnumChatFormatting.RED).flush(), MainRegistry.proxy.ID_JETPACK, 1000), (EntityPlayerMP) player);
 				}
 			}
 			if (key == EnumKeybind.TOGGLE_MAGNET){
@@ -115,9 +116,9 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 					this.enableMagnet = !this.enableMagnet;
 
 					if(this.enableMagnet)
-						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(EnumChatFormatting.GREEN + "Magnet ON", MainRegistry.proxy.ID_MAGNET, 1000), (EntityPlayerMP) player);
+						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.startTranslation("info.toggle.magnet_on").color(EnumChatFormatting.GREEN).flush(), MainRegistry.proxy.ID_MAGNET, 1000), (EntityPlayerMP) player);
 					else
-						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(EnumChatFormatting.RED + "Magnet OFF", MainRegistry.proxy.ID_MAGNET, 1000), (EntityPlayerMP) player);
+						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.startTranslation("info.toggle.magnet_off").color(EnumChatFormatting.RED).flush(), MainRegistry.proxy.ID_MAGNET, 1000), (EntityPlayerMP) player);
 				}
 			}
 			if(key == EnumKeybind.TOGGLE_HEAD) {
@@ -126,9 +127,9 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 					this.enableHUD = !this.enableHUD;
 
 					if(this.enableHUD)
-						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(EnumChatFormatting.GREEN + "HUD ON", MainRegistry.proxy.ID_HUD, 1000), (EntityPlayerMP) player);
+						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.startTranslation("info.toggle.hud_on").color(EnumChatFormatting.GREEN).flush(), MainRegistry.proxy.ID_HUD, 1000), (EntityPlayerMP) player);
 					else
-						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(EnumChatFormatting.RED + "HUD OFF", MainRegistry.proxy.ID_HUD, 1000), (EntityPlayerMP) player);
+						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.startTranslation("info.toggle.hud_off").color(EnumChatFormatting.RED).flush(), MainRegistry.proxy.ID_HUD, 1000), (EntityPlayerMP) player);
 				}
 			}
 

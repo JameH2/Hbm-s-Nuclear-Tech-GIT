@@ -1,236 +1,117 @@
 package api.ntm1of90.compat.fluid.registry;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.lib.RefStrings;
 
 import api.ntm1of90.compat.fluid.render.ColoredForgeFluid;
+import api.ntm1of90.compat.fluid.render.FluidAtlasSprite;
+import com.hbm.util.FluidDebug;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fluids.Fluid;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-/**
- * Registry for fluid textures and properties.
- * This class loads fluid definitions from the Fluids.java class and registers them with Minecraft.
+/*
+ * Stitches every NTM fluid into the block atlas via a custom loader sprite, sourced from the
+ * fluid's GUI texture. Icons are only applied to NTM-owned fluids (ColoredForgeFluid) so
+ * fluids provided by other mods keep their own textures. Only NONE is excluded; NOCON/NOID
+ * fluids are covered too since AE2 crashes on icon-less fluids.
  */
 public class FluidRegistry {
 
-    // Maps fluid names to their still and flowing icons
     private static final Map<String, IIcon> stillIcons = new HashMap<>();
     private static final Map<String, IIcon> flowingIcons = new HashMap<>();
     private static final Map<String, IIcon> inventoryIcons = new HashMap<>();
 
-    // Maps fluid names to their properties
-    private static final Map<String, FluidProperties> fluidProperties = new HashMap<>();
+    // fluids that got a sprite registered in the current stitch run
+    private static final Set<FluidType> preparedFluids = new HashSet<>();
 
-    // Default properties for fluids not defined in Fluids.java
-    private static FluidProperties defaultProperties;
+    private static boolean registered = false;
 
-    /**
-     * Initialize the fluid registry.
-     * This should be called during mod initialization.
-     */
     public static void initialize() {
-        if (cpw.mods.fml.common.FMLCommonHandler.instance().getSide() == cpw.mods.fml.relauncher.Side.CLIENT) {
-            net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(new FluidRegistry());
-            System.out.println("[NTM] Registered fluid registry for texture stitch events");
-        }
-
-        loadFluidProperties();
-
-        System.out.println("[NTM] Fluid registry initialized with " + fluidProperties.size() + " fluids");
+        if (registered) return;
+        if (cpw.mods.fml.common.FMLCommonHandler.instance().getSide() != Side.CLIENT) return;
+        registered = true;
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(new FluidRegistry());
     }
 
-    /**
-     * Load fluid properties from Fluids.java
-     */
-    private static void loadFluidProperties() {
-        try {
-            defaultProperties = new FluidProperties(
-                "default",
-                0xFFFFFF,
-                "fluid_still",
-                "fluid_flowing",
-                "forgefluid/default"
-            );
-
-            FluidType[] allFluids = Fluids.getAll();
-            for (FluidType hbmFluid : allFluids) {
-                if (hbmFluid == Fluids.NONE) continue;
-
-                String name = hbmFluid.getName().toLowerCase(Locale.US);
-                int color = hbmFluid.getColor();
-
-                String stillTexture = "forgefluid/" + name;
-                String flowingTexture = "forgefluid/" + name;
-                String inventoryTexture = "forgefluid/" + name;
-
-                FluidProperties properties = new FluidProperties(name, color, stillTexture, flowingTexture, inventoryTexture);
-                fluidProperties.put(name, properties);
-
-                System.out.println("[NTM] Loaded fluid properties for " + name + ": " + properties);
-            }
-
-        } catch (Exception e) {
-            System.err.println("[NTM] Error loading fluid properties from Fluids.java: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Handle texture stitching to register fluid textures
-     */
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onTextureStitch(TextureStitchEvent.Pre event) {
-        TextureMap map = event.map;
+    public void onTextureStitchPre(TextureStitchEvent.Pre event) {
+        if (event.map.getTextureType() != 0) return; // fluid icons live in the block atlas
 
-        for (FluidType hbmFluid : Fluids.getAll()) {
-            if (hbmFluid == Fluids.NONE) continue;
+        preparedFluids.clear();
 
-            String fluidName = hbmFluid.getName().toLowerCase(Locale.US);
-            Fluid forgeFluid = FluidMappingRegistry.getForgeFluid(hbmFluid);
+        for (FluidType type : Fluids.getAll()) {
+            // NONE is never exposed, but every other fluid needs a sprite (AE2 NPE-crashes
+            // on icon-less fluids, and counterparts are handed out even for NOCON/NOID fluids).
+            // Forge registration for all of these now happens in common init
+            // (FluidMappingRegistry.initialize); this stitch is purely cosmetic here.
+            if (type == Fluids.NONE) continue;
+            if (!(FluidMappingRegistry.getForgeFluid(type) instanceof ColoredForgeFluid)) continue;
 
-            if (forgeFluid != null) {
-                if (map.getTextureType() == 0) {
-                    registerFluidTextures(map, forgeFluid, fluidName);
-                } else if (map.getTextureType() == 1) {
-                    registerInventoryIcon(map, forgeFluid, fluidName);
+            String spriteName = FluidAtlasSprite.getSpriteName(type);
+            event.map.setTextureEntry(spriteName, new FluidAtlasSprite(spriteName, type));
+            preparedFluids.add(type);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onTextureStitchPost(TextureStitchEvent.Post event) {
+        if (event.map.getTextureType() != 0) return;
+
+        for (FluidType type : preparedFluids) {
+            Fluid fluid = FluidMappingRegistry.getForgeFluid(type);
+            if (!(fluid instanceof ColoredForgeFluid)) continue;
+
+            IIcon icon = event.map.getAtlasSprite(FluidAtlasSprite.getSpriteName(type));
+
+            // static texture, so still, flowing and inventory icons all use the same sprite
+            fluid.setIcons(icon, icon);
+
+            String key = type.getName().toLowerCase(Locale.US);
+            stillIcons.put(key, icon);
+            flowingIcons.put(key, icon);
+            inventoryIcons.put(key, icon);
+        }
+
+        StringBuilder missing = FluidDebug.isEnabled() ? new StringBuilder() : null;
+        if (missing != null) {
+            for (FluidType type : Fluids.getAll()) {
+                if (type == Fluids.NONE) continue;
+                Fluid fluid = FluidMappingRegistry.getForgeFluid(type);
+                if (fluid instanceof ColoredForgeFluid && !stillIcons.containsKey(type.getName().toLowerCase(Locale.US))) {
+                    if (missing.length() > 0) missing.append(", ");
+                    missing.append(type.getName());
                 }
             }
+            FluidDebug.event("stitch.summary",
+                () -> "STITCH prepared " + preparedFluids.size() + " fluid sprites"
+                + (missing.length() > 0 ? "; STILL ICON-LESS (AE2-crash risk): " + missing : "; all NTM Forge fluids have icons"));
         }
     }
 
-    /**
-     * Register textures for a specific fluid
-     */
-    @SideOnly(Side.CLIENT)
-    private void registerFluidTextures(TextureMap map, Fluid forgeFluid, String fluidName) {
-        try {
-            // Get the fluid properties
-            FluidProperties properties = getFluidProperties(fluidName);
-
-            IIcon stillIcon = map.registerIcon(RefStrings.MODID + ":" + properties.stillTexture);
-            IIcon flowingIcon = map.registerIcon(RefStrings.MODID + ":" + properties.flowingTexture);
-
-            stillIcons.put(fluidName, stillIcon);
-            flowingIcons.put(fluidName, flowingIcon);
-
-            forgeFluid.setIcons(stillIcon, flowingIcon);
-
-            if (forgeFluid instanceof ColoredForgeFluid) {
-                ((ColoredForgeFluid) forgeFluid).setColor(properties.color);
-                ((ColoredForgeFluid) forgeFluid).setHasCustomTexture(true);
-            }
-
-            System.out.println("[NTM] Registered textures for Forge fluid: " + fluidName +
-                " (still: " + properties.stillTexture + ", flowing: " + properties.flowingTexture + ")");
-        } catch (Exception e) {
-            System.err.println("[NTM] Error registering textures for fluid " + fluidName + ": " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Register an inventory icon for a fluid
-     */
-    @SideOnly(Side.CLIENT)
-    private void registerInventoryIcon(TextureMap map, Fluid forgeFluid, String fluidName) {
-        try {
-            // Get the fluid properties
-            FluidProperties properties = getFluidProperties(fluidName);
-
-            IIcon icon = map.registerIcon(RefStrings.MODID + ":" + properties.inventoryTexture);
-
-            inventoryIcons.put(fluidName, icon);
-
-            if (forgeFluid instanceof ColoredForgeFluid) {
-                ((ColoredForgeFluid) forgeFluid).setInventoryIcon(icon);
-            }
-
-            System.out.println("[NTM] Registered inventory icon for fluid: " + fluidName +
-                " (texture: " + properties.inventoryTexture + ")");
-        } catch (Exception e) {
-            System.err.println("[NTM] Error registering inventory icon for fluid " + fluidName + ": " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Get the properties for a fluid
-     */
-    public static FluidProperties getFluidProperties(String fluidName) {
-        fluidName = fluidName.toLowerCase(Locale.US);
-
-        FluidProperties properties = fluidProperties.get(fluidName);
-
-        if (properties == null) {
-            System.out.println("[NTM] No properties found for fluid " + fluidName + ", using defaults");
-            properties = defaultProperties;
-        }
-
-        return properties;
-    }
-
-    /**
-     * Get the still icon for a fluid
-     */
     @SideOnly(Side.CLIENT)
     public static IIcon getStillIcon(String fluidName) {
         return stillIcons.get(fluidName.toLowerCase(Locale.US));
     }
 
-    /**
-     * Get the flowing icon for a fluid
-     */
     @SideOnly(Side.CLIENT)
     public static IIcon getFlowingIcon(String fluidName) {
         return flowingIcons.get(fluidName.toLowerCase(Locale.US));
     }
 
-    /**
-     * Get the inventory icon for a fluid
-     */
     @SideOnly(Side.CLIENT)
     public static IIcon getInventoryIcon(String fluidName) {
         return inventoryIcons.get(fluidName.toLowerCase(Locale.US));
-    }
-
-    /**
-     * Class to hold fluid properties
-     */
-    public static class FluidProperties {
-        public final String name;
-        public final int color;
-        public final String stillTexture;
-        public final String flowingTexture;
-        public final String inventoryTexture;
-
-        public FluidProperties(String name, int color, String stillTexture, String flowingTexture, String inventoryTexture) {
-            this.name = name;
-            this.color = color;
-            this.stillTexture = stillTexture;
-            this.flowingTexture = flowingTexture;
-            this.inventoryTexture = inventoryTexture;
-        }
-
-        @Override
-        public String toString() {
-            return "FluidProperties{" +
-                "name='" + name + '\'' +
-                ", color=0x" + Integer.toHexString(color) +
-                ", stillTexture='" + stillTexture + '\'' +
-                ", flowingTexture='" + flowingTexture + '\'' +
-                ", inventoryTexture='" + inventoryTexture + '\'' +
-                '}';
-        }
     }
 }

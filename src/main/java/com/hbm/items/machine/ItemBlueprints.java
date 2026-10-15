@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.inventory.recipes.loader.GenericRecipes;
 import com.hbm.items.ModItems;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -43,7 +44,7 @@ public class ItemBlueprints extends Item {
 
 	@Override
 	public IIcon getIcon(ItemStack stack, int pass) {
-		
+
 		if(stack.hasTagCompound()) {
 			String poolName = stack.stackTagCompound.getString("pool");
 			if(poolName == null) return this.itemIcon;
@@ -51,7 +52,7 @@ public class ItemBlueprints extends Item {
 			if(poolName.startsWith(GenericRecipes.POOL_PREFIX_SECRET)) return this.iconSecret; // black
 			if(poolName.startsWith(GenericRecipes.POOL_PREFIX_528)) return this.icon528; // grey
 		}
-		
+
 		return this.itemIcon; // blue
 	}
 
@@ -63,63 +64,63 @@ public class ItemBlueprints extends Item {
 			if(!poolName.startsWith(GenericRecipes.POOL_PREFIX_SECRET)) list.add(make(poolName));
 		}
 	}
-	
+
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 		if(world.isRemote) return stack;
 		if(!stack.hasTagCompound()) return stack;
-		
+
 		String poolName = stack.stackTagCompound.getString("pool");
-		
+
 		if(poolName.startsWith(GenericRecipes.POOL_PREFIX_SECRET)) return stack;
 		if(!player.inventory.hasItem(Items.paper)) return stack;
-		
+
 		player.inventory.consumeInventoryItem(Items.paper);
 		player.swingItem();
-		
+
 		ItemStack copy = stack.copy();
 		copy.stackSize = 1;
-		
+
 		if(!player.capabilities.isCreativeMode) {
 			if(stack.stackSize < stack.getMaxStackSize()) {
 				stack.stackSize++;
 				return stack;
 			}
-			
+
 			if(!player.inventory.addItemStackToInventory(copy)) {
 				copy = stack.copy();
 				copy.stackSize = 1;
 				player.dropPlayerItemWithRandomChoice(copy, false);
 			}
-			
+
 			player.inventoryContainer.detectAndSendChanges();
 		} else {
 			player.dropPlayerItemWithRandomChoice(copy, false);
 		}
-		
+
 		return stack;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		
+
 		if(!stack.hasTagCompound()) {
 			return;
 		}
-		
+
 		String poolName = stack.stackTagCompound.getString("pool");
 		List<String> pool = GenericRecipes.blueprintPools.get(poolName);
-		
+
 		if(pool == null || pool.isEmpty()) {
 			return;
 		}
 		if(poolName.startsWith(GenericRecipes.POOL_PREFIX_SECRET)) {
-			list.add(EnumChatFormatting.RED + "Cannot be copied!");
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.blueprints.cannot_copied"));
 		} else {
-			list.add(EnumChatFormatting.YELLOW + "Right-click to copy (requires paper)");
+			list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.blueprints.right_click_copy_requires_paper"));
 		}
-		
+
 		for(String name : pool) {
 			GenericRecipe recipe = GenericRecipes.nameToRecipeGlobal.get(name);
 			if(recipe != null) {
@@ -127,7 +128,7 @@ public class ItemBlueprints extends Item {
 			}
 		}
 	}
-	
+
 	public static String grabPool(ItemStack stack) {
 		if(stack == null) return null;
 		if(stack.getItem() != ModItems.blueprints) return null;
@@ -135,7 +136,7 @@ public class ItemBlueprints extends Item {
 		if(!stack.stackTagCompound.hasKey("pool")) return null;
 		return stack.stackTagCompound.getString("pool");
 	}
-	
+
 	public static ItemStack make(String pool) {
 		ItemStack stack = new ItemStack(ModItems.blueprints);
 		stack.stackTagCompound = new NBTTagCompound();

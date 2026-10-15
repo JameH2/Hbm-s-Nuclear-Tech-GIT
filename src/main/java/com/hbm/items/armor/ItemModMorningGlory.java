@@ -3,6 +3,7 @@ package com.hbm.items.armor;
 import java.util.List;
 
 import com.hbm.handler.ArmorModHandler;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,31 +18,31 @@ public class ItemModMorningGlory extends ItemArmorMod {
 	public ItemModMorningGlory() {
 		super(ArmorModHandler.extra, true, true, true, true);
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.LIGHT_PURPLE + "5% chance to apply resistance when hit, wither immunity");
+		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.mod_morning_glory.desc1"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.LIGHT_PURPLE + "  " + stack.getDisplayName() + " (5% for resistance, wither immunity)");
+		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("desc.item.mod_morning_glory.resistance_wither_immunity", stack.getDisplayName()));
 	}
-	
+
 	@Override
 	public void modDamage(LivingHurtEvent event, ItemStack armor) {
-		
+
 		if(!event.entity.worldObj.isRemote && event.entity.worldObj.rand.nextInt(20) == 0) {
 			event.entityLiving.addPotionEffect(new PotionEffect(Potion.resistance.id, 100, 4));
 		}
 	}
-	
+
 	@Override
 	public void modUpdate(EntityLivingBase entity, ItemStack armor) {
-		
+
 		if(!entity.worldObj.isRemote && entity.isPotionActive(Potion.wither.id)) {
 			entity.removePotionEffect(Potion.wither.id);
 		}

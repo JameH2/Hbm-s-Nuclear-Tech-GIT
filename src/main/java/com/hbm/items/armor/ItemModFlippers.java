@@ -3,6 +3,7 @@ package com.hbm.items.armor;
 import java.util.List;
 
 import com.hbm.handler.ArmorModHandler;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +22,7 @@ public class ItemModFlippers extends ItemArmorMod {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.BLUE + "Increases swim speed");
+		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("desc.item.mod_flippers.increases_swim_speed"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
@@ -29,7 +30,7 @@ public class ItemModFlippers extends ItemArmorMod {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.DARK_PURPLE + "  " + stack.getDisplayName() + " (increased swim speed)");
+		list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("desc.item.mod_flippers.increased_swim_speed", stack.getDisplayName()));
 	}
 
 	@Override

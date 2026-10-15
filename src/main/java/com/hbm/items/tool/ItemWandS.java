@@ -8,6 +8,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockWandStructure.TileEntityWandStructure;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.Tuple.Pair;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,18 +16,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class ItemWandS extends Item {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add("Creative-only item");
-		list.add("\"Replication breeds decadence\"");
-		list.add("(Saves an area defined by two right-clicks,");
-		list.add("adds a block to the blacklist by crouch right-clicking!)");
+		list.add(I18nUtil.resolveKey("desc.item.wand.creative_item"));
+		list.add(I18nUtil.resolveKey("desc.item.wand_s.replication_breeds_decadence"));
+		list.add(I18nUtil.resolveKey("desc.item.wand_s.saves_area_defined_right_clicks"));
+		list.add(I18nUtil.resolveKey("item.wand_s.desc3"));
 
 		if(stack.stackTagCompound != null) {
 			int px = stack.stackTagCompound.getInteger("x");
@@ -34,15 +35,15 @@ public class ItemWandS extends Item {
 			int pz = stack.stackTagCompound.getInteger("z");
 
 			if(px != 0 || py != 0 || pz != 0) {
-				list.add(EnumChatFormatting.AQUA + "From: " + px + ", " + py + ", " + pz);
+				list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("item.wand_s.desc4", px, py, pz));
 			} else {
-				list.add(EnumChatFormatting.AQUA + "No start position set");
+				list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("desc.item.wand_s.no_start_position"));
 			}
 
 			Set<Pair<Block, Integer>> blocks = getBlocks(stack);
 
 			if(blocks.size() > 0) {
-				list.add("Blacklist:");
+				list.add(I18nUtil.resolveKey("item.wand_s.desc6"));
 				for(Pair<Block, Integer> block : blocks) {
 					list.add(EnumChatFormatting.RED + "- " + block.key.getUnlocalizedName());
 				}
@@ -63,10 +64,10 @@ public class ItemWandS extends Item {
 
 			if(blocks.contains(target)) {
 				blocks.remove(target);
-				if(world.isRemote) player.addChatMessage(new ChatComponentText("Removed from blacklist " + target.key.getUnlocalizedName()));
+				if(world.isRemote) player.addChatMessage(new ChatComponentTranslation("chat.wand_s.1", target.key.getUnlocalizedName()));
 			} else {
 				blocks.add(target);
-				if(world.isRemote) player.addChatMessage(new ChatComponentText("Added to blacklist " + target.key.getUnlocalizedName()));
+				if(world.isRemote) player.addChatMessage(new ChatComponentTranslation("chat.wand_s.2", target.key.getUnlocalizedName()));
 			}
 
 			setBlocks(stack, blocks);
@@ -79,7 +80,7 @@ public class ItemWandS extends Item {
 			if(px == 0 && py == 0 && pz == 0) {
 				setPosition(stack, x, y, z);
 
-				if(world.isRemote) player.addChatMessage(new ChatComponentText("First position set!"));
+				if(world.isRemote) player.addChatMessage(new ChatComponentTranslation("chat.wand_s.3"));
 			} else {
 				setPosition(stack, 0, 0, 0);
 
@@ -104,12 +105,12 @@ public class ItemWandS extends Item {
 					structure.blacklist = getBlocks(stack);
 				} else {
 					if (world.isRemote)
-						player.addChatMessage(new ChatComponentText("Could not add a structure block!"));
+						player.addChatMessage(new ChatComponentTranslation("chat.wand_s.4"));
 					return true;
 				}
 
 				if (world.isRemote)
-					player.addChatMessage(new ChatComponentText("Structure block configured and added at: " + minX + ", " + minY + ", " + minZ));
+					player.addChatMessage(new ChatComponentTranslation("chat.wand_s.5", minX, minY, minZ));
 			}
 		}
 
@@ -159,7 +160,7 @@ public class ItemWandS extends Item {
 			stack.stackTagCompound.setIntArray("metas", new int[0]);
 
 			if(world.isRemote) {
-				player.addChatMessage(new ChatComponentText("Cleared blacklist"));
+				player.addChatMessage(new ChatComponentTranslation("chat.wand_s.6"));
 			}
 		}
 

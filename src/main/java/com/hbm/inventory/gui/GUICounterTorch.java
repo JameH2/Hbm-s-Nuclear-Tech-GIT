@@ -26,14 +26,14 @@ import net.minecraft.util.ResourceLocation;
 public class GUICounterTorch extends GuiInfoContainer {
 
 	protected static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_rtty_counter.png");
-	
+
 	protected TileEntityRadioTorchCounter counter;
 	protected GuiTextField[] frequency;
 
 	public GUICounterTorch(InventoryPlayer invPlayer, TileEntityRadioTorchCounter counter) {
 		super(new ContainerCounterTorch(invPlayer, counter));
 		this.counter = counter;
-		
+
 		this.xSize = 218;
 		this.ySize = 238;
 	}
@@ -43,9 +43,9 @@ public class GUICounterTorch extends GuiInfoContainer {
 		super.initGui();
 
 		Keyboard.enableRepeatEvents(true);
-		
+
 		this.frequency = new GuiTextField[3];
-		
+
 		for(int i = 0; i < 3; i++) {
 
 			this.frequency[i] = new GuiTextField(this.fontRendererObj, guiLeft + 29, guiTop + 21 + 44 * i, 86, 14);
@@ -56,24 +56,24 @@ public class GUICounterTorch extends GuiInfoContainer {
 			this.frequency[i].setText(counter.channel[i] == null ? "" : counter.channel[i]);
 		}
 	}
-	
+
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
 
 		if(guiLeft + 193 <= x && guiLeft + 193 + 18 > x && guiTop + 8 < y && guiTop + 8 + 18 >= y) {
-			func_146283_a(Arrays.asList(new String[] { counter.polling ? "Polling" : "State Change" }), x, y);
+			func_146283_a(Arrays.asList(new String[] { counter.polling ? I18nUtil.resolveKey("gui.common.polling") : I18nUtil.resolveKey("gui.common.state_change") }), x, y);
 		}
 		if(guiLeft + 193 <= x && guiLeft + 193 + 18 > x && guiTop + 30 < y && guiTop + 30 + 18 >= y) {
-			func_146283_a(Arrays.asList(new String[] { "Save Settings" }), x, y);
+			func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.common.save") }), x, y);
 		}
 
 		if(this.mc.thePlayer.inventory.getItemStack() == null) {
 			for(int i = 0; i < 3; ++i) {
 				Slot slot = (Slot) this.inventorySlots.inventorySlots.get(i);
-	
+
 				if(this.isMouseOverSlot(slot, x, y) && counter.matcher.modes[i] != null) {
-					this.func_146283_a(Arrays.asList(new String[] { EnumChatFormatting.RED + "Right click to change", ModulePatternMatcher.getLabel(counter.matcher.modes[i]) }), x, y - 30);
+					this.func_146283_a(Arrays.asList(new String[] { EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.change"), ModulePatternMatcher.getLabel(counter.matcher.modes[i]) }), x, y - 30);
 				}
 			}
 		}
@@ -82,7 +82,7 @@ public class GUICounterTorch extends GuiInfoContainer {
 	@Override
 	protected void mouseClicked(int x, int y, int i) {
 		super.mouseClicked(x, y, i);
-		
+
 		for(int j = 0; j < 3; j++) this.frequency[j].mouseClicked(x, y, i);
 
 		if(guiLeft + 193 <= x && guiLeft + 193 + 18 > x && guiTop + 8 < y && guiTop + 8 + 18 >= y) {
@@ -92,11 +92,11 @@ public class GUICounterTorch extends GuiInfoContainer {
 			data.setBoolean("polling", true);
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, counter.xCoord, counter.yCoord, counter.zCoord));
 		}
-		
+
 		if(guiLeft + 193 <= x && guiLeft + 193 + 18 > x && guiTop + 30 < y && guiTop + 30 + 18 >= y) {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
-			
+
 			for(int j = 0; j < 3; j++) data.setString("c" + j, this.frequency[j].getText());
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, counter.xCoord, counter.yCoord, counter.zCoord));
 		}
@@ -114,19 +114,19 @@ public class GUICounterTorch extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		if(counter.polling) {
 			drawTexturedModalRect(guiLeft + 193, guiTop + 8, 218, 0, 18, 18);
 		}
-		
+
 		for(int i = 0; i < 3; i++) this.frequency[i].drawTextBox();
 	}
 
 	@Override
 	protected void keyTyped(char c, int i) {
-		
+
 		for(int j = 0; j < 3; j++) if(this.frequency[j].textboxKeyTyped(c, i)) return;
-		
+
 		super.keyTyped(c, i);
 	}
 
@@ -135,7 +135,7 @@ public class GUICounterTorch extends GuiInfoContainer {
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
 	}
-	
+
 	@Override
 	public boolean doesGuiPauseGame() {
 		return false;

@@ -47,7 +47,7 @@ public class EntityGlyphidScout extends EntityGlyphid {
 	
 	@Override
 	public ResourceLocation getSkin() {
-		return ResourceManager.glyphid_scout_tex;
+		return isTamed() ? ResourceManager.glyphid_scout_tame_tex : ResourceManager.glyphid_scout_tex;
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class EntityGlyphidScout extends EntityGlyphid {
 		if(entityToAttack != null && ticksExisted % 60 == 0){
 			entityToAttack = findPlayerToAttack();
 		}
-		if((getCurrentTask() != TASK_BUILD_HIVE || getCurrentTask() != TASK_TERRAFORM) && taskWaypoint == null) {
+		if((getCurrentTask() != TASK_BUILD_HIVE || getCurrentTask() != TASK_TERRAFORM) && taskWaypoint == null && !isTamed()) {
 
 				if(MobConfig.rampantGlyphidGuidance && PollutionHandler.targetCoords != null){
 					if(!hasTarget) {
@@ -107,7 +107,7 @@ public class EntityGlyphidScout extends EntityGlyphid {
 
 		}
 
-		if(getCurrentTask() == TASK_BUILD_HIVE || getCurrentTask() == TASK_TERRAFORM) {
+		if((getCurrentTask() == TASK_BUILD_HIVE || getCurrentTask() == TASK_TERRAFORM) && !isTamed()) {
 
 			if(!worldObj.isRemote && !hasTarget) {
 				//Check for whether a big man johnson is nearby, this makes the scout switch into its terraforming task
@@ -223,6 +223,7 @@ public class EntityGlyphidScout extends EntityGlyphid {
 
 	@Override
 	public boolean expandHive() {
+		if(isTamed()) return false;
 
 		int nestX = rand.nextInt((homeX + scoutingRange) - (homeX - scoutingRange)) + (homeX - scoutingRange);
 		int nestZ = rand.nextInt((homeZ + scoutingRange) - (homeZ - scoutingRange)) + (homeZ - scoutingRange);
@@ -306,6 +307,7 @@ public class EntityGlyphidScout extends EntityGlyphid {
 
 	@Override
 	protected Entity findPlayerToAttack() {
+		if(isTamed()) return null;
 		if(this.isPotionActive(Potion.blindness)) return null;
 		//no extended targeting, and a low attack distance, ensures the scouts are focused in expanding, and not in chasing the player
 		return this.worldObj.getClosestVulnerablePlayerToEntity(this, 10);

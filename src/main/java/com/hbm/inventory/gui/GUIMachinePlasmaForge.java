@@ -56,20 +56,20 @@ public class GUIMachinePlasmaForge extends GuiInfoContainer {
 		}
 
 		PlasmaForgeRecipe recipe = (PlasmaForgeRecipe) forge.plasmaModule.getRecipe();
-		
+
 		if(recipe != null) {
-			drawCustomInfoStat(mouseX, mouseY, guiLeft + 25, guiTop + 115, 18, 18, mouseX, mouseY, EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(forge.plasmaEnergySync) + "TU / " + BobMathUtil.getShortNumber(recipe.ignitionTemp) + "TU");
+			drawCustomInfoStat(mouseX, mouseY, guiLeft + 25, guiTop + 115, 18, 18, mouseX, mouseY, EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(forge.plasmaEnergySync) + I18nUtil.resolveKey("gui.plasma_forge.tu") + BobMathUtil.getShortNumber(recipe.ignitionTemp) + "TU");
 		} else {
-			drawCustomInfoStat(mouseX, mouseY, guiLeft + 25, guiTop + 115, 18, 18, mouseX, mouseY, "0TU / 0TU");
+			drawCustomInfoStat(mouseX, mouseY, guiLeft + 25, guiTop + 115, 18, 18, mouseX, mouseY, I18nUtil.resolveKey("gui.plasma_forge.0_tu_0_tu"));
 		}
-		
+
 		if(this.isMouseOverSlot(this.inventorySlots.getSlot(2), mouseX, mouseY) && forge.slots[2] == null && this.mc.thePlayer.inventory.getItemStack() == null) {
 
 			List<ItemStack> list = new ArrayList();
 			forge.boosters.forEach((pair) -> list.addAll(pair.getKey().extractForNEI()));
 			List<Object[]> lines = new ArrayList();
 			ItemStack selected = list.get(0);
-			
+
 			// ...i should really make a util for this
 			if(list.size() > 1) {
 				int cycle = (int) ((System.currentTimeMillis() % (1000 * list.size())) / 1000);
@@ -77,9 +77,9 @@ public class GUIMachinePlasmaForge extends GuiInfoContainer {
 				selected.stackSize = 0;
 				list.set(cycle, selected);
 			}
-			
-			lines.add(new Object[] {"Booster Isotope:"});
-			
+
+			lines.add(new Object[] {I18nUtil.resolveKey("gui.plasma_forge.booster_isotope")});
+
 			if(list.size() < 10) {
 				lines.add(list.toArray());
 			} else if(list.size() < 24) {
@@ -92,7 +92,7 @@ public class GUIMachinePlasmaForge extends GuiInfoContainer {
 				lines.add(list.subList(bound0, bound1).toArray());
 				lines.add(list.subList(bound1, list.size()).toArray());
 			}
-			
+
 			lines.add(new Object[] {I18nUtil.resolveKey(selected.getDisplayName())});
 			this.drawStackText(lines, mouseX, mouseY, this.fontRendererObj);
 		}
@@ -142,10 +142,10 @@ public class GUIMachinePlasmaForge extends GuiInfoContainer {
 		} else if(recipe != null && forge.power >= recipe.power) {
 			drawTexturedModalRect(guiLeft + 56, guiTop + 76, 192, 0, 3, 6);
 		}
-		
+
 		double inputGauge = recipe == null ? 0 : Math.min(((double) forge.plasmaEnergySync / (double) recipe.ignitionTemp), 1.5) / 1.5D;
 		double boosterGauge = forge.maxBooster <= 0 ? 0 : (double) forge.booster / (double) forge.maxBooster;
-		
+
 		// input energy
 		GUIElements.drawSmoothGauge(guiLeft + 34, guiTop + 124, this.zLevel, inputGauge, 5, 2, 1, 0xA00000);
 		// output genergy

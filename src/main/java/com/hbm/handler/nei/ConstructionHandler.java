@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 public class ConstructionHandler extends NEIUniversalHandler {
 
 	public ConstructionHandler() {
-		super("Construction", getRecipes(true), getRecipes(false));
+		super("nei.construction.name", getRecipes(true), getRecipes(false));
 	}
 
 	@Override
@@ -33,13 +33,13 @@ public class ConstructionHandler extends NEIUniversalHandler {
 
 	public static HashMap<Object[], Object> bufferedRecipes = new HashMap();
 	public static HashMap<Object[], Object> bufferedTools = new HashMap();
-	
+
 	public static HashMap<Object[], Object> getRecipes(boolean recipes) {
-		
+
 		if(!bufferedRecipes.isEmpty()) {
 			return recipes ? bufferedRecipes : bufferedTools;
 		}
-		
+
 		/* WATZ */
 		ItemStack[] watz = new ItemStack[] {
 				new ItemStack(ModBlocks.watz_end, 48),
@@ -52,13 +52,13 @@ public class ConstructionHandler extends NEIUniversalHandler {
 
 		bufferedRecipes.put(watz, new ItemStack(ModBlocks.watz));
 		bufferedTools.put(watz, new ItemStack(ModBlocks.struct_watz_core));
-		
+
 		/* COMPACT LAUNCHER */
 		ItemStack[] launcher = new ItemStack[] { new ItemStack(ModBlocks.struct_launcher, 8) };
 
 		bufferedRecipes.put(launcher, new ItemStack(ModBlocks.compact_launcher));
 		bufferedTools.put(launcher, new ItemStack(ModBlocks.struct_launcher_core));
-		
+
 		/* LAUNCH TABLE */
 		ItemStack[] table = new ItemStack[] {
 				new ItemStack(ModBlocks.struct_launcher, 16),
@@ -67,7 +67,7 @@ public class ConstructionHandler extends NEIUniversalHandler {
 
 		bufferedRecipes.put(table, new ItemStack(ModBlocks.launch_table));
 		bufferedTools.put(table, new ItemStack(ModBlocks.struct_launcher_core_large));
-		
+
 		/* SOYUZ LAUNCHER */
 		ItemStack[] soysauce = new ItemStack[] {
 				new ItemStack(ModBlocks.struct_launcher, 30),
@@ -79,7 +79,7 @@ public class ConstructionHandler extends NEIUniversalHandler {
 
 		bufferedRecipes.put(soysauce, new ItemStack(ModBlocks.soyuz_launcher));
 		bufferedTools.put(soysauce, new ItemStack(ModBlocks.struct_soyuz_core));
-		
+
 		/* ICF */
 		Object[] icf = new Object[] {
 				new ItemStack(ModBlocks.icf_component, 50, 0),
@@ -95,7 +95,7 @@ public class ConstructionHandler extends NEIUniversalHandler {
 
 		bufferedRecipes.put(icf, new ItemStack(ModBlocks.icf));
 		bufferedTools.put(icf, new ItemStack(ModBlocks.struct_icf_core));
-		
+
 		/* FUSION TORUS */
 		int wallCount = 0;
 		int blanketCount = 0;
@@ -111,7 +111,7 @@ public class ConstructionHandler extends NEIUniversalHandler {
 				if(meta == 3) pipeCount++;
 			}
 		}
-		
+
 		List<ItemStack> torusItems = new ArrayList();
 		int plateCount = wallCount;
 		while(wallCount > 0) { int a = Math.min(wallCount, 256); torusItems.add(new ItemStack(ModBlocks.fusion_component, a, 0)); wallCount -= a; }
@@ -121,10 +121,10 @@ public class ConstructionHandler extends NEIUniversalHandler {
 		torusItems.add(new ItemStack(ModItems.blowtorch));
 		for(ItemStack stack : torusItems) ItemStackUtil.addStackSizeLabel(stack);
 		ItemStack[] torus = torusItems.toArray(new ItemStack[0]);
-		
+
 		bufferedRecipes.put(torus, new ItemStack(ModBlocks.fusion_torus));
 		bufferedTools.put(torus, new ItemStack(ModBlocks.struct_torus_core));
-		
+
 		return recipes ? bufferedRecipes : bufferedTools;
 	}
 }

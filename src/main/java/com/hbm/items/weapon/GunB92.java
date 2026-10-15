@@ -9,6 +9,7 @@ import com.hbm.entity.logic.EntityNukeExplosionMK3;
 import com.hbm.entity.projectile.EntityB92Beam;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.main.MainRegistry;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -47,7 +48,7 @@ public class GunB92 extends Item {
 			j = event.charge;
 
 			boolean flag = true;
-			
+
 			if (flag) {
 				float f = j / 20.0F;
 				f = (f * f + f * 2.0F) / 3.0F;
@@ -64,18 +65,18 @@ public class GunB92 extends Item {
 					for(int i = 0; i < getPower(p_77615_1_); i++) {
 						EntityB92Beam entityarrow1;
 						entityarrow1 = new EntityB92Beam(p_77615_2_, p_77615_3_, 3.0F);
-						
+
 						float divergence = i * 0.2F;
-						
+
 						if(divergence > 1F)
 							divergence = 1F;
-						
+
 						if(i > 0) {
 							entityarrow1.motionX += rand.nextGaussian() * divergence;
 							entityarrow1.motionY += rand.nextGaussian() * divergence;
 							entityarrow1.motionZ += rand.nextGaussian() * divergence;
 						}
-				
+
 						p_77615_1_.damageItem(1, p_77615_3_);
 
 						p_77615_2_.spawnEntityInWorld(entityarrow1);
@@ -103,17 +104,17 @@ public class GunB92 extends Item {
 			if (j == 15) {
 				world.playSoundAtEntity(entity, "hbm:weapon.b92Reload", 2F, 0.9F);
 				setPower(stack, getPower(stack) + 1);
-				
+
 				if(getPower(stack) > 10) {
-					
+
 					setPower(stack, 0);
-					
+
 					if(!world.isRemote) {
 						EntityNukeExplosionMK3 ex = EntityNukeExplosionMK3.statFacFleija(world, entity.posX, entity.posY, entity.posZ, 50);
 						if(!ex.isDead) {
 							world.playSoundEffect(entity.posX, entity.posY, entity.posZ, "random.explode", 100.0f, world.rand.nextFloat() * 0.1F + 0.9F);
 							world.spawnEntityInWorld(ex);
-	
+
 							EntityCloudFleijaRainbow cloud = new EntityCloudFleijaRainbow(world, 50);
 							cloud.posX = entity.posX;
 							cloud.posY = entity.posY;
@@ -183,25 +184,25 @@ public class GunB92 extends Item {
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
 		if(MainRegistry.polaroidID == 11) {
-			list.add("A weapon that came from the stars.");
-			list.add("It screams for murder.");
+			list.add(I18nUtil.resolveKey("item.gun_b92.desc1"));
+			list.add(I18nUtil.resolveKey("item.gun_b92.desc2"));
 		} else if(MainRegistry.polaroidID == 18) {
-			list.add("One could turn the gun into a bomb");
-			list.add("by overloading the capacitors...");
+			list.add(I18nUtil.resolveKey("item.gun_b92.desc3"));
+			list.add(I18nUtil.resolveKey("item.gun_b92.desc4"));
 		} else {
-			list.add("Stay away from me compootur!");
+			list.add(I18nUtil.resolveKey("item.gun_b92.desc5"));
 		}
 		list.add("");
-		list.add("Projectiles explode on impact.");
-		list.add("Sneak while holding the right mouse button");
-		list.add("to charge additional energy.");
-		list.add("The more energy is stored, the less accurate");
-		list.add("the beams become.");
-		list.add("Only up to ten charges may be stored.");
+		list.add(I18nUtil.resolveKey("item.gun_b92.desc6"));
+		list.add(I18nUtil.resolveKey("item.gun_b92.desc7"));
+		list.add(I18nUtil.resolveKey("item.gun_b92.desc8"));
+		list.add(I18nUtil.resolveKey("item.gun_b92.desc9"));
+		list.add(I18nUtil.resolveKey("item.gun_b92.desc10"));
+		list.add(I18nUtil.resolveKey("item.gun_b92.desc11"));
 		list.add("");
-		list.add("\"It's nerf or nothing!\"");
+		list.add(I18nUtil.resolveKey("item.gun_b92.desc12"));
 		list.add("");
-		list.add("[LEGENDARY WEAPON]");
+		list.add(I18nUtil.resolveKey("item.gun_b92.desc13"));
 	}
 
 	@Override

@@ -230,7 +230,7 @@ public class MachineBattery extends BlockContainer implements ILookOverlay, IPer
 		TileEntityMachineBattery battery = (TileEntityMachineBattery) te;
 
 		List<String> text = new ArrayList();
-		text.add(BobMathUtil.getShortNumber(battery.getPower()) + " / " + BobMathUtil.getShortNumber(battery.getMaxPower()) + "HE");
+		text.add(I18nUtil.resolveKey("overlay.common.energy", BobMathUtil.getShortNumber(battery.getPower()), BobMathUtil.getShortNumber(battery.getMaxPower())));
 
 		double percent = (double) battery.getPower() / (double) battery.getMaxPower();
 		int charge = (int) Math.floor(percent * 10_000D);
@@ -281,14 +281,14 @@ public class MachineBattery extends BlockContainer implements ILookOverlay, IPer
 
 	@Override
 	public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.YELLOW + "" + BobMathUtil.getShortNumber(persistentTag.getLong("power")) + "/" + BobMathUtil.getShortNumber(this.maxPower) + "HE");
+		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.battery.he", BobMathUtil.getShortNumber(persistentTag.getLong("power")), BobMathUtil.getShortNumber(this.maxPower)));
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.GOLD + "Stores up to "+ BobMathUtil.getShortNumber(this.maxPower) + "HE");
-		list.add(EnumChatFormatting.GOLD + "Charge speed: "+ BobMathUtil.getShortNumber(this.maxPower / 200) + "HE");
-		list.add(EnumChatFormatting.GOLD + "Discharge speed: "+ BobMathUtil.getShortNumber(this.maxPower / 600) + "HE");
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.battery.stores_up_to_he", BobMathUtil.getShortNumber(this.maxPower)));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.battery.charge_speed_he", BobMathUtil.getShortNumber(this.maxPower / 200)));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.battery.discharge_speed_he", BobMathUtil.getShortNumber(this.maxPower / 600)));
 	}
 
 }

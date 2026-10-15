@@ -6,6 +6,7 @@ import com.hbm.inventory.gui.GUIScreenHolotape;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.EnumUtil;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -29,47 +30,47 @@ public class ItemHolotapeImage extends ItemHoloTape implements IGUIProvider {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		
+
 		EnumHoloImage holo = EnumUtil.grabEnumSafely(EnumHoloImage.class, stack.getItemDamage());
-		list.add("Band Color: " + holo.colorCode + holo.colorName);
-		list.add("Label: " + holo.name);
+		list.add(I18nUtil.resolveKey("desc.item.holotape_image.band_color", holo.colorCode, I18nUtil.resolveKey(holo.colorName)));
+		list.add(I18nUtil.resolveKey("item.holotape_image.desc2", holo.name));
 	}
-	
+
 	public static enum EnumHoloImage {
-		HOLO_DIGAMMA(		EnumChatFormatting.RED,			"Crimson",	"D#",				"The tape contains a music track that has degraded heavily in quality, making it near-impossible to make out what it once was. There is an image file on it that has also lost its quality, being reduced to a blur of crimson and cream colors. The disk has small shreds of greasy wrapping paper stuck to it."),
-		HOLO_RESTORED(		EnumChatFormatting.RED,			"Crimson",	"D0",				"The tape contains a music track that you do not recognize, consisting of mostly electric guitars with lyrics telling the story of a man being left by someone who is moving to another city. The tape also contains an image file, the crimson and cream colors sharp on an otherwise colorless background. You try to look closer but you can't. It feels as if reality itself is twisted and stretched and snapped back into shape like a rubber band."),
-		HOLO_FE_HALL(		EnumChatFormatting.GREEN,		"Lime",		"001-HALL"	,		"The tape contains an audio track that is mostly gabled sound and garbage noise. There is an image file on it, depicting a small hall with a fountain in the center, a metal door to the left and an open wooden door to the right, with faint green light coming through the doorway. On the left wall of the room, there is a wooden bench with a skeleton sitting on it."),
-		HOLO_FE_CORRIDOR(	EnumChatFormatting.GREEN,		"Lime",		"002-CORRIDOR",		"The tape contains an audio track that is mostly gabled sound and garbage noise. There is an image file on it, depicting a short hallway with a terminal screen mounted to the right wall, bathing the corridor in a phosphorus-green light. In front of the terminal, an unusually large skeleton is piled up on the floor. On the back of the hallway there's a sturdy metal door standing open."),
-		HOLO_FE_SERVER(		EnumChatFormatting.GREEN,		"Lime",		"003-SERVER",		"The tape contains an audio track that is mostly gabled sound and garbage noise. There is an image file on it, depicting what appears to be a server room with racks covering every wall. In the center, what appears to be some sort of super computer is standing tall, with wires coming out from it, going in every direction. On the right side of the room, a small brass trapdoor stands open where one of the wall racks would be."),
-		HOLO_FEH_DOME(		EnumChatFormatting.RED,			"Red",		"011-DOME",			"The tape contains an audio track that is mostly gabled sound and garbage noise. There is an image file on it, depicting the insides of a large dome-like concrete structure that is mostly empty, save for a few catwalks and a shiny blueish metal capsule suspended in the center. In the background, the faint outline of what appears to be a tank is visible, sporting mechanical legs instead of treads."),
-		HOLO_FEH_BOAT(		EnumChatFormatting.RED,			"Red",		"012-BOAT",			"The tape contains an audio track that is mostly gabled sound and garbage noise. There is an image file on it, depicting the wooden deck of what appears to be an old river boat. There are four rusted railway spikes stuck in the planks in a roughly square shape."),
-		HOLO_FEH_LSC(		EnumChatFormatting.RED,			"Red",		"013-LAUNCH",		"The tape contains an audio track that is mostly gabled sound and garbage noise. There is an image file on it, depicting an array of launch pads surrounded by large metal bulwarks. Two of the launch pads are empty, the remaining rockets seem to be heavily damaged. A tipped-over booster is visible, creating plumes of fog."),
-		HOLO_F3_RC(			EnumChatFormatting.DARK_GREEN,	"Green",	"021-RIVET",		"The tape contains an audio track that is mostly gabled sound and garbage noise. There is an image file on it, depicting an old aircraft carrier that has broken in two. A makeshift bridge held up by the ship's crane connects the tower with a small building on the shore."),
-		HOLO_F3_IV(			EnumChatFormatting.DARK_GREEN,	"Green",	"022-V87",			"The tape contains an audio track that is mostly gabled sound and garbage noise. There is a very grainy image file on it, depicting what appears to be a crater with a small tunnel leading into the ground at the very bottom, closed off with a small wooden door."),
-		HOLO_F3_WM(			EnumChatFormatting.DARK_GREEN,	"Green",	"023-MONUMENT",		"The tape contains an audio track that is mostly gabled sound and garbage noise. There is an image file on it, depicting a large white obelisk that seems half destroyed. At the top there is a radio dish sticking out of the structure."),
-		HOLO_NV_CRATER(		EnumChatFormatting.GOLD,		"Brown",	"031-MOUNTAIN",		"The tape contains an audio track that is mostly gabled sound and garbage noise. There is an image file on it, depicting a large dome in blue light surrounded by many smaller buildings. In the distance, there is a smaller dome with red lights."),
-		HOLO_NV_DIVIDE(		EnumChatFormatting.GOLD,		"Brown",	"032-ROAD",			"The tape contains an audio track that is mostly gabled sound and garbage noise. There is an image file on it, depicting a large chasm with broken highways and destroyed buildings littering the landscape."),
-		HOLO_NV_BM(			EnumChatFormatting.GOLD,		"Brown",	"033-BROADCAST",	"The tape contains an audio track that is mostly gabled sound and garbage noise. There is an image file on it, depicting a satellite broadcasting station on top of a hill. In the distance, there is a very large person walking hand in hand with a robot into the sunset."),
-		HOLO_O_1(			EnumChatFormatting.WHITE,		"Chroma",	"X00-TRANSCRIPT",	"[Transcript redacted]"),
-		HOLO_O_2(			EnumChatFormatting.WHITE,		"Chroma",	"X01-NEWS",			"The tape contains a news article, reporting an unusually pale person throwing flashbangs at people in public. The image at the bottom shows one of the incidents, unsurprisingly the light from one of the flashbangs made it unrecognizable."),
-		HOLO_O_3(			EnumChatFormatting.WHITE,		"Chroma",	"X02-FICTION",		"The tape contains an article from a science fiction magazine, engaging with various reader comments about what to do with a time machine. One of those comments suggests engaging in various unsanitary acts with the future self, being signed off with just the initial '~D'."),
-		HOLO_CHALLENGE(		EnumChatFormatting.GRAY,		"None",		"-",				"An empty holotape. The back has the following message scribbled on it with black marker: \"official challenge - convince me that lyons' brotherhood isn't the best brotherhood of steel chapter and win a custom cape!\" The tape smells like chicken nuggets."),
+		HOLO_DIGAMMA(		EnumChatFormatting.RED,			"holotape.holo_digamma.color",	"D#",				"holotape.holo_digamma.text"),
+		HOLO_RESTORED(		EnumChatFormatting.RED,			"holotape.holo_restored.color",	"D0",				"holotape.holo_restored.text"),
+		HOLO_FE_HALL(		EnumChatFormatting.GREEN,		"holotape.holo_fe_hall.color",		"001-HALL"	,		"holotape.holo_fe_hall.text"),
+		HOLO_FE_CORRIDOR(	EnumChatFormatting.GREEN,		"holotape.holo_fe_corridor.color",		"002-CORRIDOR",		"holotape.holo_fe_corridor.text"),
+		HOLO_FE_SERVER(		EnumChatFormatting.GREEN,		"holotape.holo_fe_server.color",		"003-SERVER",		"holotape.holo_fe_server.text"),
+		HOLO_FEH_DOME(		EnumChatFormatting.RED,			"holotape.holo_feh_dome.color",		"011-DOME",			"holotape.holo_feh_dome.text"),
+		HOLO_FEH_BOAT(		EnumChatFormatting.RED,			"holotape.holo_feh_boat.color",		"012-BOAT",			"holotape.holo_feh_boat.text"),
+		HOLO_FEH_LSC(		EnumChatFormatting.RED,			"holotape.holo_feh_lsc.color",		"013-LAUNCH",		"holotape.holo_feh_lsc.text"),
+		HOLO_F3_RC(			EnumChatFormatting.DARK_GREEN,	"holotape.holo_f3_rc.color",	"021-RIVET",		"holotape.holo_f3_rc.text"),
+		HOLO_F3_IV(			EnumChatFormatting.DARK_GREEN,	"holotape.holo_f3_iv.color",	"022-V87",			"holotape.holo_f3_iv.text"),
+		HOLO_F3_WM(			EnumChatFormatting.DARK_GREEN,	"holotape.holo_f3_wm.color",	"023-MONUMENT",		"holotape.holo_f3_wm.text"),
+		HOLO_NV_CRATER(		EnumChatFormatting.GOLD,		"holotape.holo_nv_crater.color",	"031-MOUNTAIN",		"holotape.holo_nv_crater.text"),
+		HOLO_NV_DIVIDE(		EnumChatFormatting.GOLD,		"holotape.holo_nv_divide.color",	"032-ROAD",			"holotape.holo_nv_divide.text"),
+		HOLO_NV_BM(			EnumChatFormatting.GOLD,		"holotape.holo_nv_bm.color",	"033-BROADCAST",	"holotape.holo_nv_bm.text"),
+		HOLO_O_1(			EnumChatFormatting.WHITE,		"holotape.holo_o_1.color",	"X00-TRANSCRIPT",	"holotape.holo_o_1.text"),
+		HOLO_O_2(			EnumChatFormatting.WHITE,		"holotape.holo_o_2.color",	"X01-NEWS",			"holotape.holo_o_2.text"),
+		HOLO_O_3(			EnumChatFormatting.WHITE,		"holotape.holo_o_3.color",	"X02-FICTION",		"holotape.holo_o_3.text"),
+		HOLO_CHALLENGE(		EnumChatFormatting.GRAY,		"holotape.holo_challenge.color",		"-",				"holotape.holo_challenge.text"),
 		;
-		
+
 		private String name;
 		private String text;
 		private String colorName;
 		private EnumChatFormatting colorCode;
-		
+
 		private EnumHoloImage(EnumChatFormatting colorCode, String colorName, String name, String text) {
 			this.name = name;
 			this.text = text;
 			this.colorName = colorName;
 			this.colorCode = colorCode;
 		}
-		
+
 		public String getText() {
-			return this.text;
+			return I18nUtil.resolveKey(this.text);
 		}
 	}
 

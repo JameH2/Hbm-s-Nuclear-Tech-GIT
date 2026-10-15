@@ -18,6 +18,7 @@ import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
+import com.hbm.util.i18n.I18nUtil;
 
 public class CrucibleCastingHandler extends TemplateRecipeHandler implements ICompatNHNEI {
 
@@ -32,17 +33,17 @@ public class CrucibleCastingHandler extends TemplateRecipeHandler implements ICo
 	public String getRecipeID() {
 		return "ntmCrucibleFoundry";
 	}
-	
+
 	public LinkedList<RecipeTransferRect> transferRectsRec = new LinkedList<RecipeTransferRect>();
 	public LinkedList<Class<? extends GuiContainer>> guiRec = new LinkedList<Class<? extends GuiContainer>>();
-	
+
 	public class RecipeSet extends TemplateRecipeHandler.CachedRecipe {
 
 		PositionedStack input;
 		PositionedStack mold;
 		PositionedStack basin;
 		PositionedStack output;
-		
+
 		public RecipeSet(ItemStack[] stacks) {
 			this.input = new PositionedStack(stacks[0].copy(), 48, 24);
 			this.mold = new PositionedStack(stacks[1].copy(), 75, 6);
@@ -75,19 +76,19 @@ public class CrucibleCastingHandler extends TemplateRecipeHandler implements ICo
 
 	@Override
 	public String getRecipeName() {
-		return "Crucible Casting";
+		return I18nUtil.resolveKey("nei.crucible_casting.name");
 	}
 
 	@Override
 	public String getGuiTexture() {
 		return RefStrings.MODID + ":textures/gui/nei/gui_nei_foundry.png";
 	}
-	
+
 	@Override
 	public void loadCraftingRecipes(String outputId, Object... results) {
-		
+
 		if(outputId.equals("ntmCrucibleFoundry")) {
-			
+
 			for(ItemStack[] recipe : CrucibleRecipes.getMoldRecipes()) {
 				this.arecipes.add(new RecipeSet(recipe));
 			}
@@ -95,32 +96,32 @@ public class CrucibleCastingHandler extends TemplateRecipeHandler implements ICo
 			super.loadCraftingRecipes(outputId, results);
 		}
 	}
-	
+
 	@Override
 	public void loadCraftingRecipes(ItemStack result) {
-		
+
 		for(ItemStack[] recipe : CrucibleRecipes.getMoldRecipes()) {
 			if(NEIServerUtils.areStacksSameTypeCrafting(recipe[3], result)) {
 				this.arecipes.add(new RecipeSet(recipe));
 			}
 		}
 	}
-	
+
 	@Override
 	public void loadUsageRecipes(String inputId, Object... ingredients) {
-		
+
 		if(inputId.equals("ntmCrucibleFoundry")) {
 			loadCraftingRecipes("ntmCrucibleFoundry", new Object[0]);
 		} else {
 			super.loadUsageRecipes(inputId, ingredients);
 		}
 	}
-	
+
 	@Override
 	public void loadUsageRecipes(ItemStack ingredient) {
-		
+
 		for(ItemStack[] recipe : CrucibleRecipes.getMoldRecipes()) {
-			
+
 			for(int i = 0; i < 3; i++) {
 				if(NEIServerUtils.areStacksSameTypeCrafting(recipe[i], ingredient)) {
 					this.arecipes.add(new RecipeSet(recipe));
@@ -129,7 +130,7 @@ public class CrucibleCastingHandler extends TemplateRecipeHandler implements ICo
 			}
 		}
 	}
-	
+
 	@Override
 	public void loadTransferRects() {
 		transferRects.add(new RecipeTransferRect(new Rectangle(65, 23, 36, 18), "ntmCrucibleFoundry"));

@@ -9,6 +9,7 @@ import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.gui.GUITurretMaxwell;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
+import com.hbm.items.weapon.sedna.factory.XFactoryTurret;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.potion.HbmPotion;
@@ -81,7 +82,7 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 	public void provideInfo(UpgradeType type, int level, List<String> info, boolean extendedInfo) {
 		info.add(IUpgradeInfoProvider.getStandardLabel(ModBlocks.turret_maxwell));
 		if(type == UpgradeType.SPEED) {
-			info.add(EnumChatFormatting.GREEN + "Damage +0." + (level * 25) + "/t");
+			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.turret_maxwell.damage_0") + (level * 25) + "/t");
 		}
 		if(type == UpgradeType.POWER) {
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(this.KEY_CONSUMPTION, "-" + (level * 3) + "%"));
@@ -90,10 +91,10 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(this.KEY_RANGE, "+" + (level * 3) + "m"));
 		}
 		if(type == UpgradeType.AFTERBURN) {
-			info.add(EnumChatFormatting.GREEN + "Afterburn +3s");
+			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.turret_maxwell.afterburn_3s"));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
-			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + "YES");
+			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}
 
@@ -244,7 +245,7 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 				EntityPlayer living = (EntityPlayer) target;
 				living.addPotionEffect(new PotionEffect(HbmPotion.death.id, 30 * 60 * 20, 0, true));
 			} else {
-				EntityDamageUtil.attackEntityFromIgnoreIFrame(this.target, ModDamageSource.microwave, (this.blackLevel * 10 + this.redLevel + 1F) * 0.25F);
+				EntityDamageUtil.attackEntityFromIgnoreIFrame(this.target, ModDamageSource.microwave, (this.blackLevel * 10 + this.redLevel + 1F) * getBaseDamage());
 			}
 
 			if(pinkLevel > 0)
@@ -269,6 +270,9 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 			this.shot = false;
 		}
 	}
+	
+	@Override
+	public float getBaseDamage() { return XFactoryTurret.TURRET_MAXWELL_DAMAGE.get(); }
 
 	private boolean shot = false;
 

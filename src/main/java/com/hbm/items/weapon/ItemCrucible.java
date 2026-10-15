@@ -14,6 +14,7 @@ import com.hbm.render.anim.BusAnimation;
 import com.hbm.render.anim.BusAnimationSequence;
 import com.hbm.render.anim.HbmAnimations;
 import com.hbm.util.ShadyUtil;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
@@ -29,11 +30,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class ItemCrucible extends ItemSwordAbility implements IEquipReceiver, IAnimatedItem<ToolAnimation> {
 
@@ -102,7 +103,7 @@ public class ItemCrucible extends ItemSwordAbility implements IEquipReceiver, IA
 		} else {
 
 			if(!attacker.worldObj.isRemote && attacker instanceof EntityPlayer)
-				((EntityPlayer)attacker).addChatComponentMessage(new ChatComponentText("Not enough energy.").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+				((EntityPlayer)attacker).addChatComponentMessage(new ChatComponentTranslation("chat.crucible.not_enough_energy").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 			return false;
 		}
 	}
@@ -122,7 +123,7 @@ public class ItemCrucible extends ItemSwordAbility implements IEquipReceiver, IA
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 
-		String charge = EnumChatFormatting.RED + "Charge [";
+		String charge = I18nUtil.resolveKey("item.crucible.charge_prefix");
 
 		for(int i = 2; i >= 0; i--)
 			if(stack.getItemDamage() <= i)

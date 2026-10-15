@@ -263,7 +263,7 @@ public class ModEventHandlerClient {
 
 			if(!(ArmorFSB.hasFSBArmor(player) && ((ArmorFSB)player.inventory.armorInventory[2].getItem()).customGeiger)) {
 
-				if(player.inventory.hasItem(ModItems.geiger_counter)) {
+				if(player.inventory.hasItem(ModItems.geiger_counter) || BaublesCompat.hasItem(player, ModItems.geiger_counter)) {
 
 					float rads = HbmLivingProps.getRadiation(player);
 
@@ -291,16 +291,16 @@ public class ModEventHandlerClient {
 					}
 
 					/*List<String> text = new ArrayList();
-					text.add("Meta: " + world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ));
-					ILookOverlay.printGeneric(event, "DEBUG", 0xffff00, 0x4040000, text);*/
-					
+					text.add(I18nUtil.resolveKey("overlay.armor_mod.meta", world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ)));
+					ILookOverlay.printGeneric(event, I18nUtil.resolveKey("gui.weapon.quality.debug"), 0xffff00, 0x4040000, text);*/
+
 					if(ClientConfig.SHOW_BLOCK_META_OVERLAY.get()) {
 						Block b = world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
 						int i = world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
 						List<String> text = new ArrayList();
 						text.add(b.getUnlocalizedName());
-						text.add("Meta: " + i);
-						ILookOverlay.printGeneric(event, "DEBUG", 0xffff00, 0x4040000, text);
+						text.add(I18nUtil.resolveKey("overlay.armor_mod.meta", i));
+						ILookOverlay.printGeneric(event, I18nUtil.resolveKey("gui.weapon.quality.debug"), 0xffff00, 0x4040000, text);
 					}
 
 				} else if(mop.typeOfHit == MovingObjectType.ENTITY) {
@@ -315,17 +315,17 @@ public class ModEventHandlerClient {
 			}
 
 			/*List<String> text = new ArrayList();
-			text.add("IMPACT: " + ImpactWorldHandler.getImpactForClient(world));
-			text.add("DUST: " + ImpactWorldHandler.getDustForClient(world));
-			text.add("FIRE: " + ImpactWorldHandler.getFireForClient(world));
-			ILookOverlay.printGeneric(event, "DEBUG", 0xffff00, 0x4040000, text);*/
+			text.add(I18nUtil.resolveKey("overlay.armor_mod.impact", ImpactWorldHandler.getImpactForClient(world)));
+			text.add(I18nUtil.resolveKey("overlay.armor_mod.dust", ImpactWorldHandler.getDustForClient(world)));
+			text.add(I18nUtil.resolveKey("overlay.armor_mod.fire", ImpactWorldHandler.getFireForClient(world)));
+			ILookOverlay.printGeneric(event, I18nUtil.resolveKey("gui.weapon.quality.debug"), 0xffff00, 0x4040000, text);*/
 
 			/*if(mop != null && mop.typeOfHit == mop.typeOfHit.BLOCK) {
 				ScaledResolution resolution = event.resolution;
 				GL11.glPushMatrix();
 				int pX = resolution.getScaledWidth() / 2 + 8;
 				int pZ = resolution.getScaledHeight() / 2;
-				mc.fontRenderer.drawString("META: " + world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ), pX, pZ - 3, 0xffff00);
+				mc.fontRenderer.drawString(I18nUtil.resolveKey("gui.armor_mod.meta", world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ)), pX, pZ - 3, 0xffff00);
 				GL11.glDisable(GL11.GL_BLEND);
 				GL11.glColor3f(1F, 1F, 1F);
 				GL11.glPopMatrix();
@@ -399,7 +399,7 @@ public class ModEventHandlerClient {
 
 				} while(distanceToCover != 0);
 
-				ILookOverlay.printGeneric(event, "DEBUG", 0xffff00, 0x4040000, text);
+				ILookOverlay.printGeneric(event, I18nUtil.resolveKey("gui.weapon.quality.debug"), 0xffff00, 0x4040000, text);
 			}*/
 		}
 
@@ -802,6 +802,13 @@ public class ModEventHandlerClient {
 
 		ItemStack stack = event.itemStack;
 		List<String> list = event.toolTip;
+		if(stack.hasTagCompound() && stack.getTagCompound().hasKey(I18nUtil.ITEM_NAME_KEY) && !list.isEmpty()) {
+			list.set(0, I18nUtil.resolveKey(stack.getTagCompound().getString(I18nUtil.ITEM_NAME_KEY)));
+		}
+		if(stack.hasTagCompound() && stack.getTagCompound().hasKey(I18nUtil.ITEM_LORE_KEY)) {
+			String[] lore = I18nUtil.resolveKeyArray(stack.getTagCompound().getString(I18nUtil.ITEM_LORE_KEY));
+			for(int i = lore.length - 1; i >= 0; i--) list.add(1, EnumChatFormatting.DARK_PURPLE + "" + EnumChatFormatting.ITALIC + lore[i]);
+		}
 
 		/// DAMAGE RESISTANCE ///
 		DamageResistanceHandler.addInfo(stack, list);
@@ -818,9 +825,9 @@ public class ModEventHandlerClient {
 				}
 			} else {
 
-				list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC +"Hold <" +
-						EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + "LSHIFT" +
-						EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + "> to display protection info");
+				list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC +I18nUtil.resolveKey("gui.armor_mod.hold") +
+						EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.lshift") +
+						EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.to_display_protection_info"));
 			}
 		}
 
@@ -834,13 +841,13 @@ public class ModEventHandlerClient {
 
 			if(!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && !(Minecraft.getMinecraft().currentScreen instanceof GUIArmorTable)) {
 
-				list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC +"Hold <" +
-						EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + "LSHIFT" +
-						EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + "> to display installed armor mods");
+				list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC +I18nUtil.resolveKey("gui.armor_mod.hold") +
+						EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.lshift") +
+						EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.to_display_installed_armor_mods"));
 
 			} else {
 
-				list.add(EnumChatFormatting.YELLOW + "Mods:");
+				list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("desc.misc.armor_mod.mods"));
 
 				ItemStack[] mods = ArmorModHandler.pryMods(stack);
 
@@ -861,7 +868,7 @@ public class ModEventHandlerClient {
 			List<String> names = ItemStackUtil.getOreDictNames(stack);
 
 			if(names.size() > 0) {
-				list.add(EnumChatFormatting.BLUE + "Ore Dict:");
+				list.add((EnumChatFormatting.BLUE) + I18nUtil.resolveKey("desc.misc.ore_dict"));
 				for(String s : names) {
 					list.add(EnumChatFormatting.AQUA + " -" + s);
 				}
@@ -882,7 +889,7 @@ public class ModEventHandlerClient {
 				list.add(EnumChatFormatting.YELLOW + (rads2 + "RAD/s"));
 
 				if(stack.stackSize > 1) {
-					list.add(EnumChatFormatting.YELLOW + "Stack: " + ((Math.floor(level * 1000 * stack.stackSize) / 1000) + "RAD/s"));
+					list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("desc.misc.armor_mod.stack", ((Math.floor(level * 1000 * stack.stackSize) / 1000) + "RAD/s")));
 				}
 			}
 		}
@@ -899,10 +906,10 @@ public class ModEventHandlerClient {
 					list.add("");
 
 				if(entry.entry == EnumEntryType.ADD)
-					list.add(EnumChatFormatting.GOLD + "Adds " + entry.value + " to the custom nuke stage " + entry.type);
+					list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("desc.misc.adds_custom_nuke_stage", entry.value, entry.type));
 
 				if(entry.entry == EnumEntryType.MULT)
-					list.add(EnumChatFormatting.GOLD + "Adds multiplier " + entry.value + " to the custom nuke stage " + entry.type);
+					list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("desc.misc.armor_mod.line.01", entry.value, entry.type));
 			}
 		}
 
@@ -917,7 +924,7 @@ public class ModEventHandlerClient {
 				qmawTimestamp = Clock.get_ms();
 			}
 		} catch(Exception ex) {
-			list.add(EnumChatFormatting.RED + "Error loading cannery: " + ex.getLocalizedMessage());
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.misc.error_loading_cannery", ex.getLocalizedMessage()));
 		}
 
 		try {
@@ -928,7 +935,7 @@ public class ModEventHandlerClient {
 				canneryTimestamp = Clock.get_ms();
 			}
 		} catch(Exception ex) {
-			list.add(EnumChatFormatting.RED + "Error loading cannery: " + ex.getLocalizedMessage());
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.misc.error_loading_cannery", ex.getLocalizedMessage()));
 		}
 
 		/*ItemStack copy = stack.copy();
@@ -949,7 +956,7 @@ public class ModEventHandlerClient {
 					ore.addInformation(stack, event.entityPlayer, list, event.showAdvancedItemTooltips);
 				} else if(block == Blocks.coal_ore) {
 					// we don't have any celestial coal, special case
-					list.add(EnumChatFormatting.GOLD + "Can be found on:");
+					list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("desc.misc.found"));
 					list.add(EnumChatFormatting.AQUA + " - " + I18nUtil.resolveKey("body.kerbin"));
 				}
 			}
@@ -1069,16 +1076,16 @@ public class ModEventHandlerClient {
 			}
 
 			if(ArmorUtil.isWearingEmptyMask(mc.thePlayer)) {
-				MainRegistry.proxy.displayTooltip(EnumChatFormatting.RED + "Your mask has no filter!", ServerProxy.ID_FILTER);
+				MainRegistry.proxy.displayTooltip(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.armor_mod.your_mask_has_no_filter"), ServerProxy.ID_FILTER);
 			}
-			
+
 			//prune other entities' muzzle flashes
 			if(mc.theWorld.getTotalWorldTime() % 30 == 0) {
 				long millis = System.currentTimeMillis();
 				//dead entities may have later insertion order than actively firing ones, so we be safe
 				ItemRenderWeaponBase.flashMap.values().removeIf(entry -> millis - entry.longValue() >= 150);
 			}
-			
+
 			CelestialBody body = CelestialBody.getBody(mc.theWorld);
 			CBT_Invasion invasion = body.getTrait(CBT_Invasion.class);
 
@@ -1145,7 +1152,7 @@ public class ModEventHandlerClient {
 					ItemFluidDuct.class
 				);
 
-				String prefix = "Gun ";
+				String prefix = I18nUtil.resolveKey("gui.wiki_render.gun_prefix");
 				//int gunScale = 16;
 				//int defaultScale = 1;
 				int slotScale = 16;
@@ -1357,7 +1364,30 @@ public class ModEventHandlerClient {
 				}
 			}
 		}*/
+
+		// slot clicky noises demo
+		/*if(event.phase == Phase.END) {
+			
+			if(mc.currentScreen instanceof GuiContainer) {
+				EntityPlayer player = mc.thePlayer;
+				ItemStack held = player.inventory.getItemStack();
+				
+				if(!ItemStack.areItemStacksEqual(prevHeld, held)) {
+					
+					int prevStack = prevHeld != null ? prevHeld.stackSize : 0;
+					int currStack = held != null ? held.stackSize : 0;
+					
+					mc.getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(NTMSounds.VANILLA_ORB), 0.1F, prevStack < currStack ? 1.0F : 0.75F, (float) player.posX, (float) player.posY, (float) player.posZ));
+					
+					prevHeld = held != null ? held.copy() : null;
+				}
+			} else {
+				prevHeld = null;
+			}
+		}*/
 	}
+	
+	//private static ItemStack prevHeld;
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
@@ -1628,24 +1658,24 @@ public class ModEventHandlerClient {
 			int rand = (int)(Math.random() * 150);
 
 			switch(rand) {
-			case 0: main.splashText = "Floppenheimer!"; break;
-			case 1: main.splashText = "i should dip my balls in sulfuric acid"; break;
-			case 2: main.splashText = "All answers are popbob!"; break;
-			case 3: main.splashText = "None may enter The Orb!"; break;
-			case 4: main.splashText = "Wacarb was here"; break;
-			case 5: main.splashText = "SpongeBoy me Bob I am overdosing on ketamine agagagagaga"; break;
-			case 6: main.splashText = EnumChatFormatting.RED + "I know where you live, " + System.getProperty("user.name"); break;
-			case 7: main.splashText = "Nice toes, now hand them over."; break;
-			case 8: main.splashText = "I smell burnt toast!"; break;
-			case 9: main.splashText = "There are bugs under your skin!"; break;
-			case 10: main.splashText = "Fentanyl!"; break;
-			case 11: main.splashText = "Do drugs!"; break;
-			case 12: main.splashText = "Imagine being scared by splash texts!"; break;
-			case 13: main.splashText = "Semantic versioning? More like pedantic versioning."; break;
+			case 0: main.splashText = I18nUtil.resolveKey("splash.0"); break;
+			case 1: main.splashText = I18nUtil.resolveKey("splash.1"); break;
+			case 2: main.splashText = I18nUtil.resolveKey("splash.2"); break;
+			case 3: main.splashText = I18nUtil.resolveKey("splash.3"); break;
+			case 4: main.splashText = I18nUtil.resolveKey("splash.4"); break;
+			case 5: main.splashText = I18nUtil.resolveKey("splash.5"); break;
+			case 6: main.splashText = I18nUtil.resolveKey("splash.6", System.getProperty("user.name")); break;
+			case 7: main.splashText = I18nUtil.resolveKey("splash.7"); break;
+			case 8: main.splashText = I18nUtil.resolveKey("splash.8"); break;
+			case 9: main.splashText = I18nUtil.resolveKey("splash.9"); break;
+			case 10: main.splashText = I18nUtil.resolveKey("splash.10"); break;
+			case 11: main.splashText = I18nUtil.resolveKey("splash.11"); break;
+			case 12: main.splashText = I18nUtil.resolveKey("splash.12"); break;
+			case 13: main.splashText = I18nUtil.resolveKey("splash.13"); break;
 			}
 
 			double d = Math.random();
-			if(d < 0.025) main.splashText = "Redditors aren't people!";
+			if(d < 0.025) main.splashText = I18nUtil.resolveKey("splash.redditors");
 		}
 	}
 }

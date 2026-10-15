@@ -150,7 +150,7 @@ public class ContaminationUtil {
 		double eRad = ((int)(HbmLivingProps.getRadiation(player) * 10)) / 10D;
 
 		double neut = ((int)(HbmLivingProps.getNeutronActivation(player) * 10)) / 10D;
-		
+
 		double rads = ((int)(ChunkRadiationManager.proxy.getRadiation(world, (int) Math.floor(player.posX), (int) Math.floor(player.posY), (int) Math.floor(player.posZ)) * 10)) / 10D;
 		double env = ((int)(HbmLivingProps.getRadBuf(player) * 10D)) / 10D;
 
@@ -181,10 +181,10 @@ public class ContaminationUtil {
 		//localization and server-side restrictions have turned this into a painful mess
 		//a *functioning* painful mess, nonetheless
 		player.addChatMessage(new ChatComponentText("===== ☢ ").appendSibling(new ChatComponentTranslation("geiger.title")).appendSibling(new ChatComponentText(" ☢ =====")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));
-		player.addChatMessage(new ChatComponentTranslation("geiger.chunkRad").appendSibling(new ChatComponentText(" " + chunkPrefix + rads + " RAD/s")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
-		player.addChatMessage(new ChatComponentTranslation("geiger.envRad").appendSibling(new ChatComponentText(" " + envPrefix + env + " RAD/s")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
-		player.addChatMessage(new ChatComponentTranslation("geiger.playerRad").appendSibling(new ChatComponentText(" " + radPrefix + eRad + " RAD")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
-		player.addChatMessage(new ChatComponentTranslation("geiger.playerAct").appendSibling(new ChatComponentText(" " + envPrefix + neut + " RAD/s")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+		player.addChatMessage(new ChatComponentTranslation("geiger.chunkRad").appendSibling(new ChatComponentTranslation("chat.contamination_util.rad.3", chunkPrefix + rads)).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+		player.addChatMessage(new ChatComponentTranslation("geiger.envRad").appendSibling(new ChatComponentTranslation("chat.contamination_util.rad.3", envPrefix + env)).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+		player.addChatMessage(new ChatComponentTranslation("geiger.playerRad").appendSibling(new ChatComponentTranslation("chat.contamination_util.rad", radPrefix, eRad)).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+		player.addChatMessage(new ChatComponentTranslation("geiger.playerAct").appendSibling(new ChatComponentTranslation("chat.contamination_util.rad.3", envPrefix + neut)).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 		player.addChatMessage(new ChatComponentTranslation("geiger.playerRes").appendSibling(new ChatComponentText(" " + resPrefix + res + "% (" + resKoeff + ")")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 	}
 
@@ -201,7 +201,7 @@ public class ContaminationUtil {
 		String envPrefix = getPreffixFromRad(env);
 
 		player.addChatMessage(new ChatComponentText("===== ☢ ").appendSibling(new ChatComponentTranslation("geiger.title.dosimeter")).appendSibling(new ChatComponentText(" ☢ =====")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));
-		player.addChatMessage(new ChatComponentTranslation("geiger.envRad").appendSibling(new ChatComponentText(" " + envPrefix + (limit ? ">" : "") + env + " RAD/s")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+		player.addChatMessage(new ChatComponentTranslation("geiger.envRad").appendSibling(new ChatComponentTranslation("chat.contamination_util.rad.2", envPrefix + (limit ? ">" : ""), env)).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 	}
 
 	public static String getPreffixFromRad(double rads) {
@@ -230,9 +230,9 @@ public class ContaminationUtil {
 		double halflife = ((int)((1D - Math.pow(0.5, digamma)) * 10000)) / 100D;
 
 		player.addChatMessage(new ChatComponentText("===== Ϝ ").appendSibling(new ChatComponentTranslation("digamma.title")).appendSibling(new ChatComponentText(" Ϝ =====")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_PURPLE)));
-		player.addChatMessage(new ChatComponentTranslation("digamma.playerDigamma").appendSibling(new ChatComponentText(EnumChatFormatting.RED + " " + digamma + " DRX")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE)));
+		player.addChatMessage(new ChatComponentTranslation("digamma.playerDigamma").appendSibling(new ChatComponentTranslation("chat.contamination_util.drx", digamma).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED))).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE)));
 		player.addChatMessage(new ChatComponentTranslation("digamma.playerHealth").appendSibling(new ChatComponentText(EnumChatFormatting.RED + " " + halflife + "%")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE)));
-		player.addChatMessage(new ChatComponentTranslation("digamma.playerRes").appendSibling(new ChatComponentText(EnumChatFormatting.BLUE + " " + "N/A")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE)));
+		player.addChatMessage(new ChatComponentTranslation("digamma.playerRes").appendSibling(new ChatComponentTranslation("chat.contamination_util.not_available").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.BLUE))).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE)));
 	}
 
 	public static enum HazardType {
@@ -263,7 +263,7 @@ public class ContaminationUtil {
 			float radEnv = HbmLivingProps.getRadEnv(entity);
 			HbmLivingProps.setRadEnv(entity, radEnv + amount);
 		}
-		
+
 		if(hazard == HazardType.NEUTRON && !RadiationConfig.disableNeutron) {
 			float radEnv = HbmLivingProps.getRadEnv(entity);
 			HbmLivingProps.setRadEnv(entity, radEnv + amount*10);

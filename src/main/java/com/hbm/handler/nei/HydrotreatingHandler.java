@@ -6,7 +6,7 @@ import com.hbm.inventory.recipes.HydrotreatingRecipes;
 public class HydrotreatingHandler extends NEIUniversalHandler {
 
 	public HydrotreatingHandler() {
-		super("Hydrotreating", ModBlocks.machine_hydrotreater, HydrotreatingRecipes.getRecipes());
+		super("nei.hydrotreating.name", ModBlocks.machine_hydrotreater, HydrotreatingRecipes.getRecipes());
 	}
 
 	@Override

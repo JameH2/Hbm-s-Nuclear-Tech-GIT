@@ -19,6 +19,7 @@ import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
+import com.hbm.util.i18n.I18nUtil;
 
 public class CrucibleSmeltingHandler extends TemplateRecipeHandler implements ICompatNHNEI {
 
@@ -33,17 +34,17 @@ public class CrucibleSmeltingHandler extends TemplateRecipeHandler implements IC
 	}
 	public LinkedList<RecipeTransferRect> transferRectsRec = new LinkedList<RecipeTransferRect>();
 	public LinkedList<Class<? extends GuiContainer>> guiRec = new LinkedList<Class<? extends GuiContainer>>();
-	
+
 	public class RecipeSet extends TemplateRecipeHandler.CachedRecipe {
 
 		PositionedStack input;
 		PositionedStack crucible;
 		List<PositionedStack> outputs = new ArrayList();
-		
+
 		public RecipeSet(AStack input, List<ItemStack> outputs) {
 			this.input = new PositionedStack(input.extractForNEI(), 48, 24);
 			this.crucible = new PositionedStack(new ItemStack(ModBlocks.machine_crucible), 75, 42);
-			
+
 			for(int i = 0; i < outputs.size(); i++) {
 				PositionedStack pos = new PositionedStack(outputs.get(i), 102 + (i % 3) * 18, 6 + (i / 3) * 18);
 				this.outputs.add(pos);
@@ -72,21 +73,21 @@ public class CrucibleSmeltingHandler extends TemplateRecipeHandler implements IC
 
 	@Override
 	public String getRecipeName() {
-		return "Crucible Smelting";
+		return I18nUtil.resolveKey("nei.crucible_smelting.name");
 	}
 
 	@Override
 	public String getGuiTexture() {
 		return RefStrings.MODID + ":textures/gui/nei/gui_nei_crucible_smelting.png";
 	}
-	
+
 	@Override
 	public void loadCraftingRecipes(String outputId, Object... results) {
-		
+
 		if(outputId.equals("ntmCrucibleSmelting")) {
-			
+
 			HashMap<AStack, List<ItemStack>> smelting = CrucibleRecipes.getSmeltingRecipes();
-			
+
 			for(Entry<AStack, List<ItemStack>> recipe : smelting.entrySet()) {
 				this.arecipes.add(new RecipeSet(recipe.getKey(), recipe.getValue()));
 			}
@@ -94,15 +95,15 @@ public class CrucibleSmeltingHandler extends TemplateRecipeHandler implements IC
 			super.loadCraftingRecipes(outputId, results);
 		}
 	}
-	
+
 	@Override
 	public void loadCraftingRecipes(ItemStack result) {
 		HashMap<AStack, List<ItemStack>> smelting = CrucibleRecipes.getSmeltingRecipes();
 
 		for(Entry<AStack, List<ItemStack>> recipe : smelting.entrySet()) {
-			
+
 			for(ItemStack stack : recipe.getValue()) {
-				
+
 				if(NEIServerUtils.areStacksSameTypeCrafting(stack, result)) {
 					this.arecipes.add(new RecipeSet(recipe.getKey(), recipe.getValue()));
 					break;
@@ -110,17 +111,17 @@ public class CrucibleSmeltingHandler extends TemplateRecipeHandler implements IC
 			}
 		}
 	}
-	
+
 	@Override
 	public void loadUsageRecipes(String inputId, Object... ingredients) {
-		
+
 		if(inputId.equals("ntmCrucibleSmelting")) {
 			loadCraftingRecipes("ntmCrucibleSmelting", new Object[0]);
 		} else {
 			super.loadUsageRecipes(inputId, ingredients);
 		}
 	}
-	
+
 	@Override
 	public void loadUsageRecipes(ItemStack ingredient) {
 		HashMap<AStack, List<ItemStack>> smelting = CrucibleRecipes.getSmeltingRecipes();
@@ -131,7 +132,7 @@ public class CrucibleSmeltingHandler extends TemplateRecipeHandler implements IC
 			}
 		}
 	}
-	
+
 	@Override
 	public void loadTransferRects() {
 		transferRects.add(new RecipeTransferRect(new Rectangle(65, 23, 36, 18), "ntmCrucibleSmelting"));

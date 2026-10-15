@@ -17,6 +17,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUIPneumoTube extends GuiInfoContainer {
 
@@ -29,31 +30,31 @@ public class GUIPneumoTube extends GuiInfoContainer {
 		super(new ContainerPneumoTube(invPlayer, tedf));
 		this.tube = tedf;
 		this.endpointOnly = endpointOnly;
-		
+
 		this.xSize = 176;
 		this.ySize = 185;
 	}
-	
+
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
-		
+
 		if(!endpointOnly) {
 			tube.compair.renderTankInfo(this, x, y, guiLeft + 7, guiTop + 16, 18, 18);
-			
-			this.drawCustomInfoStat(x, y, guiLeft + 7, guiTop + 52, 18, 18, x, y, (tube.redstone ? (EnumChatFormatting.GREEN + "ON ") : (EnumChatFormatting.RED + "OFF ")) + EnumChatFormatting.RESET + "with Redstone");
-			this.drawCustomInfoStat(x, y, guiLeft + 6, guiTop + 36, 20, 8, x, y, "Compressor: " + tube.compair.getPressure() + " PU", "Max range: " + tube.getRangeFromPressure(tube.compair.getPressure()) + "m");
-			
-			this.drawCustomInfoStat(x, y, guiLeft + 151, guiTop + 16, 18, 18, x, y, EnumChatFormatting.YELLOW + "Receiver order:", tube.receiveOrder == PneumaticNetwork.RECEIVE_ROBIN ? "Round robin" : "Random");
-			this.drawCustomInfoStat(x, y, guiLeft + 151, guiTop + 52, 18, 18, x, y, EnumChatFormatting.YELLOW + "Provider slot order:", tube.sendOrder == PneumaticNetwork.SEND_FIRST ? "First to last" : tube.sendOrder == PneumaticNetwork.SEND_LAST ? "Last to first" : "Random");
+
+			this.drawCustomInfoStat(x, y, guiLeft + 7, guiTop + 52, 18, 18, x, y, (tube.redstone ? (EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.pneumo_tube.on")) : (EnumChatFormatting.RED + I18nUtil.resolveKey("gui.pneumo_tube.off"))) + EnumChatFormatting.RESET + I18nUtil.resolveKey("gui.pneumo_tube.with_redstone"));
+			this.drawCustomInfoStat(x, y, guiLeft + 6, guiTop + 36, 20, 8, x, y, I18nUtil.resolveKey("gui.pneumo_tube.compressor") + tube.compair.getPressure() + I18nUtil.resolveKey("gui.pneumo_tube.pu"), I18nUtil.resolveKey("gui.pneumo_tube.max_range") + tube.getRangeFromPressure(tube.compair.getPressure()) + "m");
+
+			this.drawCustomInfoStat(x, y, guiLeft + 151, guiTop + 16, 18, 18, x, y, EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.pneumo_tube.receiver_order"), tube.receiveOrder == PneumaticNetwork.RECEIVE_ROBIN ? I18nUtil.resolveKey("gui.pneumo_tube.round_robin") : I18nUtil.resolveKey("gui.pneumo_tube.random"));
+			this.drawCustomInfoStat(x, y, guiLeft + 151, guiTop + 52, 18, 18, x, y, EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.pneumo_tube.provider_slot_order"), tube.sendOrder == PneumaticNetwork.SEND_FIRST ? I18nUtil.resolveKey("gui.pneumo_tube.first_to_last") : tube.sendOrder == PneumaticNetwork.SEND_LAST ? I18nUtil.resolveKey("gui.pneumo_tube.last_to_first") : I18nUtil.resolveKey("gui.pneumo_tube.random"));
 		}
 
 		if(this.mc.thePlayer.inventory.getItemStack() == null) {
 			for(int i = 0; i < 15; ++i) {
 				Slot slot = (Slot) this.inventorySlots.inventorySlots.get(i);
-	
+
 				if(this.isMouseOverSlot(slot, x, y) && tube.pattern.modes[i] != null) {
-					this.func_146283_a(Arrays.asList(new String[] { EnumChatFormatting.RED + "Right click to change", ModulePatternMatcher.getLabel(tube.pattern.modes[i]) }), x, y - 30);
+					this.func_146283_a(Arrays.asList(new String[] { EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.change"), ModulePatternMatcher.getLabel(tube.pattern.modes[i]) }), x, y - 30);
 				}
 			}
 		}
@@ -69,14 +70,14 @@ public class GUIPneumoTube extends GuiInfoContainer {
 			clickSendFlag(tube, x, y, 151, 16, 18, 18, "receive");
 			clickSendFlag(tube, x, y, 151, 52, 18, 18, "send");
 		}
-		
+
 		clickSendFlag(tube, x, y, 128, 30, 14, 26, "whitelist");
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.tube.hasCustomInventoryName() ? this.tube.getInventoryName() : I18n.format(this.tube.getInventoryName());
-		
+
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 5, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}
@@ -86,7 +87,7 @@ public class GUIPneumoTube extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(endpointOnly ? texture_endpoint : texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		if(tube.whitelist) {
 			drawTexturedModalRect(guiLeft + 139, guiTop + 33, 176, 0, 3, 6);
 		} else {
@@ -97,7 +98,7 @@ public class GUIPneumoTube extends GuiInfoContainer {
 			if(tube.redstone) drawTexturedModalRect(guiLeft + 7, guiTop + 52, 179, 0, 18, 18);
 			drawTexturedModalRect(guiLeft + 151, guiTop + 16, 197, 18 * tube.receiveOrder, 18, 18);
 			drawTexturedModalRect(guiLeft + 151, guiTop + 52, 215, 18 * tube.sendOrder, 18, 18);
-			
+
 			drawTexturedModalRect(guiLeft + 6 + 4 * (tube.compair.getPressure() - 1), guiTop + 36, 179, 18, 4, 8);
 			GUIElements.drawSmoothGauge(guiLeft + 16, guiTop + 25, this.zLevel, (double) tube.compair.getFill() / (double) tube.compair.getMaxFill(), 5, 2, 1, 0xCA6C43, 0xAB4223);
 		}

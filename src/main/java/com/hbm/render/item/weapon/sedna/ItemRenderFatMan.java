@@ -1,5 +1,7 @@
 package com.hbm.render.item.weapon.sedna;
 
+import com.hbm.util.i18n.I18nUtil;
+
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -25,15 +27,15 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 	@Override
 	public void setupFirstPerson(ItemStack stack) {
 		GL11.glTranslated(0, 0, 0.875);
-		
+
 		float offset = 0.8F;
 		standardAimingTransform(stack,
 				-1.5F * offset, -1.25F * offset, 0.5F * offset,
 				-1F * offset, -1.25F * offset, 0F * offset);
 	}
-	
-	protected static String label = "AUTO";
-	
+
+	protected static String label = I18nUtil.resolveKey("renderer.weapon.auto");
+
 	@Override
 	public void renderFirstPerson(ItemStack stack) {
 
@@ -41,7 +43,7 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.fatman_tex);
 		double scale = 0.5D;
 		GL11.glScaled(scale, scale, scale);
-		
+
 		boolean isLoaded = gun.getConfig(stack, 0).getReceivers(stack)[0].getMagazine(stack).getAmount(stack, null) > 0;
 
 		double[] equip = HbmAnimations.getRelevantTransformation("EQUIP");
@@ -50,11 +52,11 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 		double[] piston = HbmAnimations.getRelevantTransformation("PISTON");
 		double[] handle = HbmAnimations.getRelevantTransformation("HANDLE");
 		double[] gauge = HbmAnimations.getRelevantTransformation("GAUGE");
-		
+
 		GL11.glTranslated(0, 1, -2);
 		GL11.glRotated(equip[0], 1, 0, 0);
 		GL11.glTranslated(0, -1, 2);
-		
+
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 
 		ResourceManager.fatman.renderPart("Launcher");
@@ -62,7 +64,7 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 		GL11.glPushMatrix();
 		GL11.glTranslated(0, 0, handle[2]);
 		ResourceManager.fatman.renderPart("Handle");
-		
+
 		GL11.glTranslated(0.4375, -0.875, 0);
 		GL11.glRotated(gauge[2], 0, 0, 1);
 		GL11.glTranslated(-0.4375, 0.875, 0);
@@ -75,7 +77,7 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 		GL11.glTranslated(-0.25, -0.125, 0);
 		ResourceManager.fatman.renderPart("Lid");
 		GL11.glPopMatrix();
-		
+
 		GL11.glPushMatrix();
 		GL11.glTranslated(0, 0, piston[2]);
 		if(!isLoaded && piston[2] == 0) GL11.glTranslated(0, 0, 3);
@@ -88,7 +90,7 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 			renderNuke(gun.getConfig(stack, 0).getReceivers(stack)[0].getMagazine(stack).getType(stack, null));
 			GL11.glPopMatrix();
 		}
-		
+
 		GL11.glShadeModel(GL11.GL_FLAT);
 	}
 
@@ -125,7 +127,7 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 		ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
 		boolean isLoaded = gun.getConfig(stack, 0).getReceivers(stack)[0].getMagazine(stack).getAmount(stack, null) > 0;
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.fatman_tex);
-		
+
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		ResourceManager.fatman.renderPart("Launcher");
 		ResourceManager.fatman.renderPart("Handle");
@@ -136,7 +138,7 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 		if(isLoaded) renderNuke(gun.getConfig(stack, 0).getReceivers(stack)[0].getMagazine(stack).getType(stack, null));
 		GL11.glShadeModel(GL11.GL_FLAT);
 	}
-	
+
 	public void renderNuke(Object type) {
 		if(type == XFactoryCatapult.nuke_balefire) {
 			renderBalefire(interp);
@@ -145,7 +147,7 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 			ResourceManager.fatman.renderPart("MiniNuke");
 		}
 	}
-	
+
 	public static void renderBalefire(float interp) {
 
 		Minecraft mc = Minecraft.getMinecraft();
@@ -161,7 +163,7 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 		float speed = -6;
 		float glintColor = 0.76F;
 		int layers = 3;
-		
+
 		GL11.glPushMatrix();
 		float offset = mc.thePlayer.ticksExisted + interp;
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -197,7 +199,7 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 		GL11.glPopMatrix();
-		
+
 		mc.entityRenderer.enableLightmap(interp);
 	}
 }

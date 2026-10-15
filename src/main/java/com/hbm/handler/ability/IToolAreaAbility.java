@@ -7,12 +7,16 @@ import java.util.List;
 import java.util.Set;
 
 import com.hbm.config.ToolConfig;
+import com.hbm.blocks.generic.BlockRichOre;
 import com.hbm.explosion.ExplosionNT;
 import com.hbm.explosion.ExplosionNT.ExAttrib;
 import com.hbm.handler.ThreeInts;
 import com.hbm.inventory.OreDictManager;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.tool.ItemToolAbility;
+import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -94,6 +99,9 @@ public interface IToolAreaAbility extends IBaseAbility {
 		public boolean onDig(int level, World world, int x, int y, int z, EntityPlayer player, ItemToolAbility tool) {
 			Block b = world.getBlock(x, y, z);
 
+			// depletable rich ores sip one unit per swing; veining the whole blob made machines pointless
+			if(b instanceof BlockRichOre) return false;
+
 			if(!ToolConfig.recursiveStone) {
 				Item item = Item.getItemFromBlock(b);
 				List<ItemStack> stone = OreDictionary.getOres(OreDictManager.KEY_STONE);
@@ -162,10 +170,16 @@ public interface IToolAreaAbility extends IBaseAbility {
 
 			Block b = world.getBlock(x, y, z);
 			Block ref = world.getBlock(refX, refY, refZ);
+
+			// belt and suspenders with the onDig guard above: rich extras never vein
+			if(b instanceof BlockRichOre || ref instanceof BlockRichOre) return;
+
 			int meta = world.getBlockMetadata(x, y, z);
 			int refMeta = world.getBlockMetadata(refX, refY, refZ);
+			TileEntity te1 = world.getTileEntity(refX, refY, refZ);
+			TileEntity te2 = world.getTileEntity(x, y, z);
 
-			if(!isSameBlock(b, ref))
+			if(!isSameBlock(b, ref, te1, te2))
 				return;
 
 			if(meta != refMeta)
@@ -179,7 +193,17 @@ public interface IToolAreaAbility extends IBaseAbility {
 			recurse(world, x, y, z, refX, refY, refZ, player, tool, depth, radius);
 		}
 
-		private boolean isSameBlock(Block b1, Block b2) {
+		private boolean isSameBlock(Block b1, Block b2, TileEntity te1, TileEntity te2) {
+
+			if (te1 instanceof TileEntityPipeBaseNT && te2 instanceof TileEntityPipeBaseNT){
+				FluidType type1 = ((TileEntityPipeBaseNT) te1).getType();
+				FluidType type2 = ((TileEntityPipeBaseNT) te2).getType();
+				//This check literally just prevents you from being able to break boxducts and fluidducts at the same time,
+				// if you want all fluid ducts to break in reference to type and not block as well, delete this line
+				if(b1 == b2)
+					return type1 == type2;
+			}
+			
 			if(b1 == b2)
 				return true;
 			if((b1 == Blocks.redstone_ore && b2 == Blocks.lit_redstone_ore) || (b1 == Blocks.lit_redstone_ore && b2 == Blocks.redstone_ore))
@@ -369,6 +393,9 @@ public interface IToolAreaAbility extends IBaseAbility {
 
 		@Override
 		public boolean onDig(int level, World world, int x, int y, int z, EntityPlayer player, ItemToolAbility tool) {
+			// Rich deposits fall back to single-block harvesting, without an explosion.
+			if(world.getBlock(x, y, z) instanceof BlockRichOre) return false;
+
 			float strength = strengthAtLevel[level];
 
 			ExplosionNT ex = new ExplosionNT(player.worldObj, player, x + 0.5, y + 0.5, z + 0.5, strength);
@@ -376,6 +403,11 @@ public interface IToolAreaAbility extends IBaseAbility {
 			ex.addAttrib(ExAttrib.NOHURT);
 			ex.addAttrib(ExAttrib.NOPARTICLE);
 			ex.doExplosionA();
+			// Exploding a nearby ordinary block must not cash out rich deposits either.
+			ex.affectedBlockPositions.removeIf(position -> {
+				ChunkPosition pos = (ChunkPosition) position;
+				return world.getBlock(pos.chunkPosX, pos.chunkPosY, pos.chunkPosZ) instanceof BlockRichOre;
+			});
 			ex.doExplosionB(false);
 
 			player.worldObj.createExplosion(player, x + 0.5, y + 0.5, z + 0.5, 0.1F, false);

@@ -12,6 +12,7 @@ import net.minecraft.util.EnumChatFormatting;
 
 import java.io.IOException;
 import java.util.List;
+import com.hbm.util.i18n.I18nUtil;
 
 public class FT_Terraformer extends FluidTrait {
 
@@ -31,7 +32,7 @@ public class FT_Terraformer extends FluidTrait {
 
 	@Override
 	public void addInfo(List<String> info) {
-		info.add(EnumChatFormatting.AQUA + "[Terraforming]");
+		info.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("gui.ft_terraformer.terraforming"));
 	}
 
 	@Override

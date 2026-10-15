@@ -31,19 +31,19 @@ public class HeaterOilburner extends BlockDummyable implements ILookOverlay, ITo
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		
+
 		if(meta >= 12)
 			return new TileEntityHeaterOilburner();
-		
+
 		if(hasExtra(meta) && meta - extra > 1)
 			return new TileEntityProxyCombo().fluid();
-		
+
 		if(hasExtra(meta))
 			return new TileEntityProxyCombo().heatSource();
-		
+
 		return null;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		return this.standardOpenBehavior(world, x, y, z, player, 0);
@@ -58,19 +58,32 @@ public class HeaterOilburner extends BlockDummyable implements ILookOverlay, ITo
 	public int getOffset() {
 		return 1;
 	}
+	@Override
+	public double[][] getAABBExtras() {
+		return new double[][] {
+			{2, 2, 0.5, -0.3, 0.4, -0.4, 1}
+		};
+	}
+
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, 0, ForgeDirection.EAST.ordinal()},
+			{-1, 0, 0, ForgeDirection.WEST.ordinal()},
+			{0, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, -1, ForgeDirection.NORTH.ordinal()}
+		}, dir);
+	}
 
 	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
-
-		x = x + dir.offsetX * o;
-		z = z + dir.offsetZ * o;
-
-		this.makeExtra(world, x + 1, y, z);
-		this.makeExtra(world, x - 1, y, z);
-		this.makeExtra(world, x, y, z + 1);
-		this.makeExtra(world, x, y, z - 1);
-		this.makeExtra(world, x, y + 1, z);
+		
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
+		
+		this.makeExtra(world, x - dir.offsetX, y + 1, z - dir.offsetZ);
 	}
 
 	@Override
@@ -80,50 +93,46 @@ public class HeaterOilburner extends BlockDummyable implements ILookOverlay, ITo
 
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
-		
+
 		int[] pos = this.findCore(world, x, y, z);
-		
-		if(pos == null)
-			return;
+		if(pos == null) return;
 		
 		TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
-		
-		if(!(te instanceof TileEntityHeaterOilburner))
-			return;
+		if(!(te instanceof TileEntityHeaterOilburner)) return;
 		
 		TileEntityHeaterOilburner heater = (TileEntityHeaterOilburner) te;
 
 		List<String> text = new ArrayList();
-		text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + heater.setting + " mB/t");
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.heater_oilburner.m_b_t", heater.setting));
 		FluidType type = heater.tank.getTankType();
 		if(type.hasTrait(FT_Flammable.class)) {
 			int heat = (int)(type.getTrait(FT_Flammable.class).getHeatEnergy() * heater.setting / 1000);
-			text.add(EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + String.format(Locale.US, "%,d", heat) + " TU/t");
+			text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.heater_oilburner.tu_t", String.format(Locale.US, "%,d", heat)));
 		}
-		
+
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 
 	@Override
 	public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, int side, float fX, float fY, float fZ, ToolType tool) {
-		
+
 		if(tool != ToolType.SCREWDRIVER)
 			return false;
-		
+
 		if(world.isRemote) return true;
-		
+
 		int[] pos = this.findCore(world, x, y, z);
-		
+
 		if(pos == null) return false;
-		
+
 		TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
-		
+
 		if(!(te instanceof TileEntityHeaterOilburner)) return false;
-		
+
 		TileEntityHeaterOilburner tile = (TileEntityHeaterOilburner) te;
 		tile.toggleSetting();
 		tile.markDirty();
-		
+
 		return true;
 	}
 }

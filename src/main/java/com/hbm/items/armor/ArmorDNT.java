@@ -196,7 +196,7 @@ public class ArmorDNT extends ArmorFSBPowered implements IItemRendererProvider {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
-		list.add("Charge: " + BobMathUtil.getShortNumber(getCharge(stack)) + " / " + BobMathUtil.getShortNumber(this.getMaxCharge(stack)));
+		list.add(I18nUtil.resolveKey("desc.item.charge", BobMathUtil.getShortNumber(getCharge(stack)), BobMathUtil.getShortNumber(this.getMaxCharge(stack))));
 
 		list.add(EnumChatFormatting.BLUE + "" + I18nUtil.format("armor.canBreathe"));
 

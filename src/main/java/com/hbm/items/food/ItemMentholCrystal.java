@@ -3,6 +3,7 @@ package com.hbm.items.food;
 import java.util.List;
 
 import com.hbm.potion.HbmPotion;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -57,6 +58,6 @@ public class ItemMentholCrystal extends ItemFood {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.GRAY + "Methol");
+		list.add(EnumChatFormatting.GRAY + I18nUtil.resolveKey("item.menthol_crystal.desc1"));
 	}
 }

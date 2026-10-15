@@ -19,6 +19,7 @@ import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.TileEntityTransporterBase;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.CompatExternal;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -30,9 +31,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.common.DimensionManager;
 
 public class ItemTransporterLinker extends Item implements IGUIProvider {
@@ -43,8 +44,8 @@ public class ItemTransporterLinker extends Item implements IGUIProvider {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add("Sneak-click to save transporter");
-		list.add("Use on transporter to link to a saved transporter");
+		list.add(I18nUtil.resolveKey("desc.item.transporter_linker.sneak_click_save"));
+		list.add(I18nUtil.resolveKey("item.transporter_linker.desc2"));
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class ItemTransporterLinker extends Item implements IGUIProvider {
 		if(player.isSneaking()) {
 			if(!world.isRemote) {
 				addTransporter(stack, world, transporter);
-				player.addChatMessage(new ChatComponentText("Added transporter to linker"));
+				player.addChatMessage(new ChatComponentTranslation("chat.transporter_linker.added_transporter_linker"));
 			}
 		} else if(world.isRemote) {
 			lastTransporter = TransporterInfo.from(world.provider.dimensionId, transporter);

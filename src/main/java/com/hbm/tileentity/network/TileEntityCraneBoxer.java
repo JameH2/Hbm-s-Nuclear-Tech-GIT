@@ -1,6 +1,7 @@
 package com.hbm.tileentity.network;
 
 import api.hbm.conveyor.IConveyorBelt;
+import com.hbm.entity.item.EntityMovingConveyorObject;
 import com.hbm.entity.item.EntityMovingPackage;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerCraneBoxer;
@@ -66,13 +67,14 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
 				if(belt != null && pack > 0) {
 					
 					ItemStack[] box = new ItemStack[pack];
+					int[] selectedSlots = new int[pack];
 					
 					for(int i = 0; i < slots.length && pack > 0; i++) {
 						
 						if(slots[i] != null) {
 							pack--;
 							box[pack] = slots[i].copy();
-							slots[i] = null;
+							selectedSlots[pack] = i;
 						}
 					}
 					
@@ -81,7 +83,11 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
 					Vec3 snap = belt.getClosestSnappingPosition(worldObj, xCoord + outputSide.offsetX, yCoord + outputSide.offsetY, zCoord + outputSide.offsetZ, pos);
 					moving.setPosition(snap.xCoord, snap.yCoord, snap.zCoord);
 					moving.setItemStacks(box);
-					worldObj.spawnEntityInWorld(moving);
+					if(EntityMovingConveyorObject.trySendToConveyor(worldObj,
+							xCoord + outputSide.offsetX, yCoord + outputSide.offsetY, zCoord + outputSide.offsetZ,
+							outputSide.getOpposite(), moving)) {
+						for(int selectedSlot : selectedSlots) slots[selectedSlot] = null;
+					}
 				}
 			}
 					
@@ -125,13 +131,14 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
 				if(belt != null && fullStacks >= pack) {
 					
 					ItemStack[] box = new ItemStack[pack];
+					int[] selectedSlots = new int[pack];
 					
 					for(int i = 0; i < slots.length && pack > 0; i++) {
 						
 						if(slots[i] != null && slots[i].stackSize == slots[i].getMaxStackSize()) {
 							pack--;
 							box[pack] = slots[i].copy();
-							slots[i] = null;
+							selectedSlots[pack] = i;
 						}
 					}
 					
@@ -140,7 +147,11 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
 					Vec3 snap = belt.getClosestSnappingPosition(worldObj, xCoord + outputSide.offsetX, yCoord + outputSide.offsetY, zCoord + outputSide.offsetZ, pos);
 					moving.setPosition(snap.xCoord, snap.yCoord, snap.zCoord);
 					moving.setItemStacks(box);
-					worldObj.spawnEntityInWorld(moving);
+					if(EntityMovingConveyorObject.trySendToConveyor(worldObj,
+							xCoord + outputSide.offsetX, yCoord + outputSide.offsetY, zCoord + outputSide.offsetZ,
+							outputSide.getOpposite(), moving)) {
+						for(int selectedSlot : selectedSlots) slots[selectedSlot] = null;
+					}
 				}
 			}
 
@@ -201,7 +212,7 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("toggle")) {
 			this.mode = (byte) ((this.mode + 1) % 4);
 		}

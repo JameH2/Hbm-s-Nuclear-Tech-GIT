@@ -29,35 +29,35 @@ public class GUIMixer extends GuiInfoContainer {
 
 	public GUIMixer(InventoryPlayer player, TileEntityMachineMixer mixer) {
 		super(new ContainerMixer(player, mixer));
-		
+
 		this.mixer = mixer;
 		this.xSize = 176;
 		this.ySize = 204;
 	}
-	
+
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
-		
+
 		this.drawElectricityInfo(this, x, y, guiLeft + 12, guiTop + 18, 16, 52, mixer.getPower(), mixer.getMaxPower());
-		
+
 		String[] upgradeText = new String[4];
 		upgradeText[0] = I18nUtil.resolveKey("desc.gui.upgrade");
 		upgradeText[1] = I18nUtil.resolveKey("desc.gui.upgrade.speed");
 		upgradeText[2] = I18nUtil.resolveKey("desc.gui.upgrade.power");
 		upgradeText[3] = I18nUtil.resolveKey("desc.gui.upgrade.overdrive");
 		this.drawCustomInfoStat(x, y, guiLeft + 152, guiTop + 55, 8, 8, x, y, upgradeText);
-		
+
 		MixerRecipe[] recipes = MixerRecipes.getOutput(mixer.tanks[2].getTankType());
-		
+
 		if(recipes != null && recipes.length > 1) {
 			List<String> label = new ArrayList();
-			label.add(EnumChatFormatting.YELLOW + "Current recipe (" + (mixer.recipeIndex + 1) + "/" + recipes.length + "):");
+			label.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.mixer.current_recipe") + (mixer.recipeIndex + 1) + "/" + recipes.length + "):");
 			MixerRecipe recipe = recipes[mixer.recipeIndex % recipes.length];
 			if(recipe.input1 != null) label.add("-" + recipe.input1.type.getLocalizedName());
 			if(recipe.input2 != null) label.add("-" + recipe.input2.type.getLocalizedName());
 			if(recipe.solidInput != null) label.add("-" + recipe.solidInput.extractForCyclingDisplay(20).getDisplayName());
-			label.add(EnumChatFormatting.RED + "Click to change!");
+			label.add(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.mixer.click_to_change"));
 			this.drawCustomInfoStat(x, y, guiLeft + 71, guiTop + 17, 12, 12, x, y, label);
 		}
 
@@ -82,7 +82,7 @@ public class GUIMixer extends GuiInfoContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer( int i, int j) {
 		String name = this.mixer.hasCustomInventoryName() ? this.mixer.getInventoryName() : I18n.format(this.mixer.getInventoryName());
-		
+
 		this.fontRendererObj.drawString(name, this.xSize / 2 + 40 / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}
@@ -92,10 +92,10 @@ public class GUIMixer extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		int i = (int) (mixer.getPower() * 52 / mixer.getMaxPower());
 		drawTexturedModalRect(guiLeft + 12, guiTop + 70 - i, 176, 52 - i, 16, i);
-		
+
 		if(mixer.processTime > 0 && mixer.progress > 0) {
 			int j = mixer.progress * 52 / mixer.processTime;
 			drawTexturedModalRect(guiLeft + 71, guiTop + 31, 192, 0, j, 44);
@@ -104,7 +104,7 @@ public class GUIMixer extends GuiInfoContainer {
 		mixer.tanks[0].renderTank(guiLeft + 52, guiTop + 70, this.zLevel, 7, 52);
 		mixer.tanks[1].renderTank(guiLeft + 61, guiTop + 70, this.zLevel, 7, 52);
 		mixer.tanks[2].renderTank(guiLeft + 126, guiTop + 70, this.zLevel, 16, 52);
-		
+
 		this.drawInfoPanel(guiLeft + 152, guiTop + 55, 8, 8, 8);
 	}
 }

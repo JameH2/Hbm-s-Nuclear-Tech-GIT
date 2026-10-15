@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
+import com.hbm.util.i18n.I18nUtil;
 
 public class Substation extends BlockDummyable implements ITooltipProvider {
 
@@ -36,8 +37,8 @@ public class Substation extends BlockDummyable implements ITooltipProvider {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.GOLD + "Connection Type: " + EnumChatFormatting.YELLOW + "Quadruple");
-		list.add(EnumChatFormatting.GOLD + "Connection Range: " + EnumChatFormatting.YELLOW + "20m");
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_type_quadruple.connection_type", EnumChatFormatting.YELLOW + "Quadruple"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.substation.connection_range_s20m", EnumChatFormatting.YELLOW + "20m"));
 	}
 
 	@Override
@@ -61,15 +62,22 @@ public class Substation extends BlockDummyable implements ITooltipProvider {
 	public int getOffset() {
 		return 1;
 	}
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{-1, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{1, 0, -1, ForgeDirection.NORTH.ordinal()},
+			{-1, 0, -1, ForgeDirection.NORTH.ordinal()}
+		}, dir);
+	}
 	@Override
 	protected void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
 
-		this.makeExtra(world, x + dir.offsetX * o + 1, y, z + dir.offsetZ * o + 1);
-		this.makeExtra(world, x + dir.offsetX * o + 1, y, z + dir.offsetZ * o - 1);
-		this.makeExtra(world, x + dir.offsetX * o - 1, y, z + dir.offsetZ * o + 1);
-		this.makeExtra(world, x + dir.offsetX * o - 1, y, z + dir.offsetZ * o - 1);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override

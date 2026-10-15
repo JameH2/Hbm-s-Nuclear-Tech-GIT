@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 public class AtmosphericCompressorHandler extends NEICelestialHandler {
 
 	public AtmosphericCompressorHandler() {
-		super("Atmosphere Extraction", ModBlocks.machine_atmo_vent, getRecipes());
+		super("nei.atmospheric_compressor.name", ModBlocks.machine_atmo_vent, getRecipes());
 	}
 
 	@Override

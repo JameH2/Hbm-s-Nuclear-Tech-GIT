@@ -8,6 +8,7 @@ import com.hbm.items.tool.ItemAmmoBag.InventoryAmmoBag;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.particle.SpentCasing;
+import com.hbm.util.BaublesCompat;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -32,6 +33,8 @@ public class MagazineBelt implements IMagazine<BulletConfig> {
 	public void useUpAmmo(ItemStack stack, IInventory inventory, int amount) {
 		if(inventory == null) return;
 		if(!IMagazine.shouldUseUpTrenchie(inventory)) return;
+		IInventory playerInventory = inventory;
+		inventory = BaublesCompat.includeBaubles(inventory);
 		
 		BulletConfig first = this.getFirstConfig(stack, inventory);
 		
@@ -43,7 +46,7 @@ public class MagazineBelt implements IMagazine<BulletConfig> {
 					int toRemove = Math.min(slot.stackSize, amount);
 					amount -= toRemove;
 					inventory.decrStackSize(i, toRemove);
-					IMagazine.handleAmmoBag(inventory, first, toRemove);
+					IMagazine.handleAmmoBag(playerInventory, first, toRemove);
 					if(amount <= 0) return;
 				}
 
@@ -58,7 +61,7 @@ public class MagazineBelt implements IMagazine<BulletConfig> {
 								int toRemove = Math.min(bagslot.stackSize, amount);
 								amount -= toRemove;
 								if(!infBag) bag.decrStackSize(j, toRemove);
-								IMagazine.handleAmmoBag(inventory, first, toRemove);
+								IMagazine.handleAmmoBag(playerInventory, first, toRemove);
 								if(amount <= 0) return;
 							}
 						}
@@ -82,6 +85,7 @@ public class MagazineBelt implements IMagazine<BulletConfig> {
 	@Override
 	public int getAmount(ItemStack stack, IInventory inventory) {
 		if(inventory == null) return 1; // for EntityAIFireGun
+		inventory = BaublesCompat.includeBaubles(inventory);
 		BulletConfig first = this.getFirstConfig(stack, inventory);
 		int count = 0;
 		for(int i = 0; i < inventory.getSizeInventory(); i++) {
@@ -128,6 +132,7 @@ public class MagazineBelt implements IMagazine<BulletConfig> {
 	public BulletConfig getFirstConfig(ItemStack stack, IInventory inventory) {
 
 		if(inventory == null) return acceptedBullets.get(0);
+		inventory = BaublesCompat.includeBaubles(inventory);
 		
 		for(int i = 0; i < inventory.getSizeInventory(); i++) {
 			ItemStack slot = inventory.getStackInSlot(i);

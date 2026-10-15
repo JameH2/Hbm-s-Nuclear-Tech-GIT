@@ -3,6 +3,7 @@ package com.hbm.items.armor;
 import java.util.List;
 
 import com.hbm.handler.ArmorModHandler;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,12 +18,12 @@ public class ItemModShackles extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.RED + "You will speak when I ask you to.");
-		list.add(EnumChatFormatting.RED + "You will eat when I tell you to.");
-		list.add(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + "You will die when I allow you to.");
-		
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_shackles.desc1"));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_shackles.desc2"));
+		list.add(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.mod_shackles.desc3"));
+
 		list.add("");
-		list.add(EnumChatFormatting.GOLD + "∞ revives left");
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("desc.item.mod_shackles.revives_left"));
 		list.add("");
 		super.addInformation(stack, player, list, bool);
 	}
@@ -30,6 +31,6 @@ public class ItemModShackles extends ItemArmorMod {
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
 
-		list.add(EnumChatFormatting.GOLD + "  " + stack.getDisplayName() + " (∞ revives left)");
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_shackles.desc5", stack.getDisplayName()));
 	}
 }

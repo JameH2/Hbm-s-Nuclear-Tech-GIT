@@ -4,42 +4,43 @@ import java.util.List;
 
 import com.hbm.blocks.bomb.LaunchPad;
 import com.hbm.main.NTMSounds;
+import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.item.IDesignatorItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class ItemDesingator extends Item implements IDesignatorItem {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		if(itemstack.stackTagCompound != null) {
-			list.add("Target Coordinates:");
-			list.add("X: " + itemstack.stackTagCompound.getInteger("xCoord"));
-			list.add("Z: " + itemstack.stackTagCompound.getInteger("zCoord"));
+			list.add(I18nUtil.resolveKey("desc.item.desingator.target_coordinates"));
+			list.add(I18nUtil.resolveKey("item.tele_link.desc1", itemstack.stackTagCompound.getInteger("xCoord")));
+			list.add(I18nUtil.resolveKey("item.tele_link.desc3", itemstack.stackTagCompound.getInteger("zCoord")));
 		} else {
-			list.add("Please select a target.");
+			list.add(I18nUtil.resolveKey("desc.item.desingator.please_select_target"));
 		}
 	}
 
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(!(world.getBlock(x, y, z) instanceof LaunchPad)) {
 
 			if(stack.stackTagCompound == null)
 				stack.stackTagCompound = new NBTTagCompound();
-			
+
 			stack.stackTagCompound.setInteger("xCoord", x);
 			stack.stackTagCompound.setInteger("zCoord", z);
-			
+
 			if(world.isRemote) {
-				player.addChatMessage(new ChatComponentText("Position set!"));
+				player.addChatMessage(new ChatComponentTranslation("desc.misc.posSet"));
 			}
 
 			world.playSoundAtEntity(player, NTMSounds.TECH_BLEEP, 1.0F, 1.0F);

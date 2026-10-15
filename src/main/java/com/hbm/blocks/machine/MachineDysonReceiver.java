@@ -121,12 +121,12 @@ public class MachineDysonReceiver extends BlockDummyable implements ILookOverlay
 		List<String> text = new ArrayList<String>();
 
 		if(receiver.swarmId > 0) {
-			text.add("ID: " + receiver.swarmId);
-			text.add("Swarm: " + receiver.swarmCount + " members");
-			text.add("Consumers: " + receiver.swarmConsumers + " consumers");
-			text.add("Power: " + BobMathUtil.getShortNumber(energyOutput) + "HE/s");
+			text.add(I18nUtil.resolveKey("overlay.dyson_receiver.id", receiver.swarmId));
+			text.add(I18nUtil.resolveKey("overlay.dyson_receiver.swarm_members", receiver.swarmCount));
+			text.add(I18nUtil.resolveKey("overlay.dyson_receiver.consumers_consumers", receiver.swarmConsumers));
+			text.add(I18nUtil.resolveKey("overlay.dyson_receiver.power_he", BobMathUtil.getShortNumber(energyOutput)));
 		} else {
-			text.add("No Satellite ID-Chip installed!");
+			text.add(I18nUtil.resolveKey("overlay.dyson_receiver.no_satellite_id_chip_installed"));
 		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);

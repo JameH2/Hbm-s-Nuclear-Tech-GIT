@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import com.hbm.util.i18n.I18nUtil;
 
 public class BlockChargeC4 extends BlockChargeBase {
 
@@ -51,7 +52,7 @@ public class BlockChargeC4 extends BlockChargeBase {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 		super.addInformation(stack, player, list, ext);
-		list.add(EnumChatFormatting.BLUE + "Does not drop blocks.");
+		list.add((EnumChatFormatting.BLUE) + I18nUtil.resolveKey("tile.charge_c4.does_not_drop_blocks"));
 	}
 
 }

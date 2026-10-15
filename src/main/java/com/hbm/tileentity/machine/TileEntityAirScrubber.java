@@ -7,17 +7,20 @@ import com.hbm.handler.atmosphere.AtmosphereBlob;
 import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
+import com.hbm.tileentity.TilePortShapes;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
-import api.hbm.fluid.IFluidStandardSender;
+import api.hbm.fluidmk2.IFluidStandardSenderMK2;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityAirScrubber extends TileEntityMachineBase implements IFluidStandardSender, IEnergyReceiverMK2 {
+public class TileEntityAirScrubber extends TileEntityMachineBase implements IFluidStandardSenderMK2, IEnergyReceiverMK2 {
 
 	private TileEntityAirPump pump;
 	public FluidTank tank;
@@ -28,10 +31,19 @@ public class TileEntityAirScrubber extends TileEntityMachineBase implements IFlu
 	public float prevRot;
 	private float rotSpeed;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityAirScrubber() {
 		super(0);
 		tank = new FluidTank(Fluids.CARBONDIOXIDE, 16_000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setOutputTanks(getSendingTanks());
+		modulePowerPorts = new ModulePortManPower(this);
 	}
+	
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.around(xCoord, yCoord, zCoord); return cachedPorts; }
 
 	@Override
 	public String getName() {
@@ -41,6 +53,8 @@ public class TileEntityAirScrubber extends TileEntityMachineBase implements IFlu
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote) {
+			moduleFluidPorts.update(getPorts());
+			modulePowerPorts.update(getPorts());
 
 			if(canOperate()) {
 				// Fetch a new pump to scrub CO2 from
@@ -64,11 +78,6 @@ public class TileEntityAirScrubber extends TileEntityMachineBase implements IFlu
 						}
 					}
 				}
-			}
-
-			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-				trySubscribe(worldObj, xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ, dir);
-				if(tank.getFill() > 0) sendFluid(tank, worldObj, xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ, dir);
 			}
 
 			networkPackNT(20);

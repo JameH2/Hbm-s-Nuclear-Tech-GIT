@@ -3,6 +3,7 @@ package com.hbm.items.tool;
 import java.util.List;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,26 +11,26 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class ItemWand extends Item {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add("Creative-only item");
-		list.add("\"Destruction brings creation\"");
-		list.add("(Set positions with right click,");
-		list.add("set block with shift-right click!)");
+		list.add(I18nUtil.resolveKey("desc.item.wand.creative_item"));
+		list.add(I18nUtil.resolveKey("desc.item.wand.destruction_brings_creation"));
+		list.add(I18nUtil.resolveKey("desc.item.wand.positions_right_click"));
+		list.add(I18nUtil.resolveKey("desc.item.wand.block_shift_right_click"));
 
 		if(stack.stackTagCompound != null && !(stack.stackTagCompound.getInteger("x") == 0 && stack.stackTagCompound.getInteger("y") == 0 && stack.stackTagCompound.getInteger("z") == 0)) {
-			list.add("Pos: " + stack.stackTagCompound.getInteger("x") + ", " + stack.stackTagCompound.getInteger("y") + ", " + stack.stackTagCompound.getInteger("z"));
+			list.add(I18nUtil.resolveKey("item.wand.desc5", stack.stackTagCompound.getInteger("x"), stack.stackTagCompound.getInteger("y"), stack.stackTagCompound.getInteger("z")));
 		} else {
-			list.add("Positions not set!");
+			list.add(I18nUtil.resolveKey("desc.item.wand.positions_not"));
 		}
 		if(stack.stackTagCompound != null)
-			list.add("Block saved: " + Block.getBlockById(stack.stackTagCompound.getInteger("block")).getUnlocalizedName());
+			list.add(I18nUtil.resolveKey("desc.item.wand.block_saved", Block.getBlockById(stack.stackTagCompound.getInteger("block")).getUnlocalizedName()));
 	}
 
 	@Override
@@ -42,14 +43,14 @@ public class ItemWand extends Item {
 			stack.stackTagCompound.setInteger("block", Block.getIdFromBlock(world.getBlock(x, y, z)));
 			stack.stackTagCompound.setInteger("meta", world.getBlockMetadata(x, y, z));
 			if(world.isRemote)
-				player.addChatMessage(new ChatComponentText("Set block " + Block.getBlockById(stack.stackTagCompound.getInteger("block")).getUnlocalizedName()));
+				player.addChatMessage(new ChatComponentTranslation("chat.wand.1", Block.getBlockById(stack.stackTagCompound.getInteger("block")).getUnlocalizedName()));
 		} else {
 			if(stack.stackTagCompound.getInteger("x") == 0 && stack.stackTagCompound.getInteger("y") == 0 && stack.stackTagCompound.getInteger("z") == 0) {
 				stack.stackTagCompound.setInteger("x", x);
 				stack.stackTagCompound.setInteger("y", y);
 				stack.stackTagCompound.setInteger("z", z);
 				if(world.isRemote)
-					player.addChatMessage(new ChatComponentText("Position set!"));
+					player.addChatMessage(new ChatComponentTranslation("desc.misc.posSet"));
 			} else {
 
 				int ox = stack.stackTagCompound.getInteger("x");
@@ -75,7 +76,7 @@ public class ItemWand extends Item {
 					}
 				}
 				if(world.isRemote)
-					player.addChatMessage(new ChatComponentText("Selection filled!"));
+					player.addChatMessage(new ChatComponentTranslation("chat.wand.selection_filled"));
 			}
 		}
 
@@ -91,7 +92,7 @@ public class ItemWand extends Item {
 			stack.stackTagCompound.setInteger("block", 0);
 			stack.stackTagCompound.setInteger("meta", 0);
 			if(world.isRemote)
-				player.addChatMessage(new ChatComponentText("Set block " + Block.getBlockById(stack.stackTagCompound.getInteger("block")).getUnlocalizedName()));
+				player.addChatMessage(new ChatComponentTranslation("chat.wand.1", Block.getBlockById(stack.stackTagCompound.getInteger("block")).getUnlocalizedName()));
 		}
 
 		return stack;

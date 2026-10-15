@@ -24,8 +24,8 @@ public interface IRepairable {
 
 	public boolean isDamaged();
 	public List<AStack> getRepairMaterials();
-	public void repair();
-
+	public void repair(EntityPlayer player);
+	
 	public static List<AStack> getRepairMaterials(World world, int x, int y, int z, BlockDummyable dummy, EntityPlayer player) {
 
 		int[] pos = dummy.findCore(world, x, y, z);
@@ -52,7 +52,7 @@ public interface IRepairable {
 
 		List<AStack> list = repairable.getRepairMaterials();
 		if(list == null || list.isEmpty() || InventoryUtil.doesPlayerHaveAStacks(player, list, true)) {
-			if(!world.isRemote) repairable.repair();
+			if(!world.isRemote) repairable.repair(player);
 			return true;
 		}
 
@@ -67,11 +67,11 @@ public interface IRepairable {
 		if(materials == null) return;
 
 		List<String> text = new ArrayList<>();
-		text.add(EnumChatFormatting.GOLD + "Repair with:");
+		text.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("overlay.irepairable.repair_with"));
 
 		ItemStack held = Minecraft.getMinecraft().thePlayer.getHeldItem();
 		if(held == null || !(held.getItem() instanceof ItemBlowtorch)) {
-			text.add("Tool: Blowtorch");
+			text.add(I18nUtil.resolveKey("overlay.irepairable.tool_blowtorch"));
 		}
 
 		for(AStack stack : materials) {
@@ -79,7 +79,7 @@ public interface IRepairable {
 				ItemStack display = stack.extractForCyclingDisplay(20);
 				text.add("- " + display.getDisplayName() + " x" + display.stackSize);
 			} catch(Exception ex) {
-				text.add(EnumChatFormatting.RED + "- ERROR");
+				text.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.irepairable.error"));
 			}
 		}
 

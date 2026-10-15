@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hbm.items.ModItems;
 import com.hbm.util.ItemStackUtil;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -59,7 +60,7 @@ public class ItemKitNBT extends Item {
 
 		if(stacks != null) {
 
-			list.add("Contains:");
+			list.add(I18nUtil.resolveKey("item.kit_nbt.desc1"));
 
 			for(ItemStack item : stacks) {
 				list.add("-" + item.getDisplayName() + (item.stackSize > 1 ? (" x" + item.stackSize) : ""));

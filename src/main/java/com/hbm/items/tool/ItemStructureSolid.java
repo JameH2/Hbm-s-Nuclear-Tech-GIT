@@ -3,6 +3,7 @@ package com.hbm.items.tool;
 import java.util.List;
 
 import com.hbm.util.fauxpointtwelve.BlockPos;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,12 +12,12 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 public class ItemStructureSolid extends ItemStructureTool {
-	
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 		super.addInformation(stack, player, list, ext);
-		list.add(EnumChatFormatting.YELLOW + "Click to print a <fillWithMetadataBlocks> or <fillWithBlocks>");
-		list.add(EnumChatFormatting.YELLOW + "line with wildcard block and metadata.");
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.structure_solid.desc1"));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.structure_solid.line_wildcard_block_metadata"));
 	}
 
 	@Override
@@ -26,7 +27,7 @@ public class ItemStructureSolid extends ItemStructureTool {
 
 	@Override
 	protected void doTheThing(ItemStack stack, World world, int x, int y, int z) {
-		
+
 		BlockPos pos = this.getAnchor(stack);
 		if(pos == null) return;
 
@@ -49,7 +50,7 @@ public class ItemStructureSolid extends ItemStructureTool {
 			line = "fillWithMetadataBlocks(world, box, " + minX + ", " + minY + ", " + minZ + ", " + maxX + ", " + maxY + ", " + maxZ + ", " + b.getUnlocalizedName() +", " + meta +");\n";
 		else
 			line = "fillWithBlocks(world, box, " + minX + ", " + minY + ", " + minZ + ", " + maxX + ", " + maxY + ", " + maxZ + ", " + b.getUnlocalizedName() +");\n";
-		
+
 		System.out.print(line);
 		writeToFile(line);
 	}

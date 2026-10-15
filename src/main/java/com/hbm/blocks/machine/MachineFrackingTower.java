@@ -22,6 +22,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.hbm.util.i18n.I18nUtil;
 
 public class MachineFrackingTower extends BlockDummyable implements IPersistentInfoProvider {
 
@@ -59,6 +60,15 @@ public class MachineFrackingTower extends BlockDummyable implements IPersistentI
 			new int[] {24, -9, 1, 1, 1, 1},
 			new int[] {1, 0, -2, 3, 1, 1, 0, 15, 0},
 		};
+	}
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{0, 0, 0, ForgeDirection.EAST.ordinal()},
+			{0, 0, 0, ForgeDirection.WEST.ordinal()},
+			{0, 0, 0, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, 0, ForgeDirection.NORTH.ordinal()}
+		}, dir);
 	}
 	@Override
 	protected boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
@@ -120,11 +130,11 @@ public class MachineFrackingTower extends BlockDummyable implements IPersistentI
 
 	@Override
 	public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.GREEN + BobMathUtil.getShortNumber(persistentTag.getLong("power")) + "HE");
+		list.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("overlay.common.energy_value", BobMathUtil.getShortNumber(persistentTag.getLong("power"))));
 		for(int i = 0; i < 2; i++) {
 			FluidTank tank = new FluidTank(Fluids.NONE, 0);
 			tank.readFromNBT(persistentTag, "t" + i);
-			list.add(EnumChatFormatting.YELLOW + "" + tank.getFill() + "/" + tank.getMaxFill() + "mB " + tank.getTankType().getLocalizedName());
+			list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.fracking_tower.mb", tank.getFill(), tank.getMaxFill(), tank.getTankType().getLocalizedName()));
 		}
 	}
 }

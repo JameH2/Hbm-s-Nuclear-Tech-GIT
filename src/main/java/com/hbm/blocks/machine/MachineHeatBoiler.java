@@ -40,41 +40,41 @@ public class MachineHeatBoiler extends BlockDummyable implements ILookOverlay, I
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		
+
 		if(meta >= 12) return new TileEntityHeatBoiler();
 		if(meta >= extra) return new TileEntityProxyCombo().fluid();
 		return null;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(!world.isRemote && !player.isSneaking()) {
-				
+
 			if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof IItemFluidIdentifier) {
 				int[] pos = this.findCore(world, x, y, z);
-					
+
 				if(pos == null)
 					return false;
-				
+
 				TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
-				
+
 				if(!(te instanceof TileEntityHeatBoiler))
 					return false;
-				
+
 				TileEntityHeatBoiler boiler = (TileEntityHeatBoiler) te;
-				
+
 				FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, pos[0], pos[1], pos[2], player.getHeldItem());
-				
+
 				if(type.hasTrait(FT_Heatable.class) && type.getTrait(FT_Heatable.class).getEfficiency(HeatingType.BOILER) > 0) {
 					boiler.tanks[0].setTankType(type);
 					boiler.markDirty();
-					player.addChatComponentMessage(new ChatComponentText("Changed type to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+					player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
 				}
 				return true;
 			}
 			return false;
-			
+
 		} else {
 			return true;
 		}
@@ -83,28 +83,28 @@ public class MachineHeatBoiler extends BlockDummyable implements ILookOverlay, I
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack) {
 		super.onBlockPlacedBy(world, x, y, z, player, itemStack);
-		
+
 		if(itemStack.getItemDamage() == 1) {
 
 			int i = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 			int o = -getOffset();
-			
+
 			ForgeDirection dir = ForgeDirection.NORTH;
 			if(i == 0) dir = ForgeDirection.getOrientation(2);
 			if(i == 1) dir = ForgeDirection.getOrientation(5);
 			if(i == 2) dir = ForgeDirection.getOrientation(3);
 			if(i == 3) dir = ForgeDirection.getOrientation(4);
-			
+
 			dir = getDirModified(dir);
 
 			TileEntity te = world.getTileEntity(x + dir.offsetX * o, y + dir.offsetY * o, z + dir.offsetZ * o);
-			
+
 			if(te instanceof TileEntityHeatBoiler) {
 				((TileEntityHeatBoiler) te).hasExploded = true;
 			}
 		}
 	}
-	
+
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
@@ -113,7 +113,7 @@ public class MachineHeatBoiler extends BlockDummyable implements ILookOverlay, I
 		int dmg = 0;
 
 		int[] pos = this.findCore(world, x, y, z);
-		
+
 		if(pos != null) {
 			TileEntityHeatBoiler boiler = (TileEntityHeatBoiler)world.getTileEntity(pos[0], pos[1], pos[2]);
 			if(boiler.hasExploded) {
@@ -123,7 +123,7 @@ public class MachineHeatBoiler extends BlockDummyable implements ILookOverlay, I
 				return ret;
 			}
 		}
-		
+
 		for(int i = 0; i < count; i++) {
 			Item item = getItemDropped(metadata, world.rand, fortune);
 			if(item != null) {
@@ -142,43 +142,51 @@ public class MachineHeatBoiler extends BlockDummyable implements ILookOverlay, I
 	public int getOffset() {
 		return 1;
 	}
-
+	@Override
+	public double[][] getAABBExtras() {
+		return new double[][] {
+			{0, 0, 0.5, -0.3, 0.4, -0.4, 1}
+		};
+	}
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, 0, ForgeDirection.EAST.ordinal()},
+			{-1, 0, 0, ForgeDirection.WEST.ordinal()},
+			{0, 3, 0, ForgeDirection.UP.ordinal()}
+		}, dir);
+	}
 	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
 		
-		x = x + dir.offsetX * o;
-		z = z + dir.offsetZ * o;
-		
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-
-		this.makeExtra(world, x + rot.offsetX, y, z + rot.offsetZ);
-		this.makeExtra(world, x - rot.offsetX, y, z - rot.offsetZ);
-		this.makeExtra(world, x, y + 3, z);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
-		
+
 		int[] pos = this.findCore(world, x, y, z);
-		
+
 		if(pos == null)
 			return;
-		
+
 		TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
-		
+
 		if(!(te instanceof TileEntityHeatBoiler))
 			return;
-		
+
 		TileEntityHeatBoiler boiler = (TileEntityHeatBoiler) te;
-		
+
 		if(boiler.hasExploded) return;
 
 		List<String> text = new ArrayList();
-		text.add(String.format(Locale.US, "%,d", boiler.heat) + "TU");
-		text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + boiler.tanks[0].getTankType().getLocalizedName() + ": " + String.format(Locale.US, "%,d", boiler.tanks[0].getFill()) + " / " + String.format(Locale.US, "%,d", boiler.tanks[0].getMaxFill()) + "mB");
-		text.add(EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + boiler.tanks[1].getTankType().getLocalizedName() + ": " + String.format(Locale.US, "%,d", boiler.tanks[1].getFill()) + " / " + String.format(Locale.US, "%,d", boiler.tanks[1].getMaxFill()) + "mB");
-		
+		text.add(I18nUtil.resolveKey("overlay.heat_boiler.tu", String.format(Locale.US, "%,d", boiler.heat)));
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.heat_boiler.mb", boiler.tanks[0].getTankType().getLocalizedName(), String.format(Locale.US, "%,d", boiler.tanks[0].getFill()), String.format(Locale.US, "%,d", boiler.tanks[0].getMaxFill())));
+		text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.heat_boiler.mb.2", boiler.tanks[1].getTankType().getLocalizedName(), String.format(Locale.US, "%,d", boiler.tanks[1].getFill()), String.format(Locale.US, "%,d", boiler.tanks[1].getMaxFill())));
+
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 

@@ -44,7 +44,7 @@ public class MachineAtmosphericEmitter extends BlockDummyable implements ILookOv
 	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
-		
+
 		x -= dir.offsetX * o;
 		z -= dir.offsetZ * o;
 
@@ -54,32 +54,32 @@ public class MachineAtmosphericEmitter extends BlockDummyable implements ILookOv
 		this.makeExtra(world, x, y, z - dir.offsetZ + rot.offsetZ);
 		this.makeExtra(world, x - dir.offsetX + rot.offsetX, y, z);
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(!world.isRemote && !player.isSneaking()) {
-				
+
 			if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof IItemFluidIdentifier) {
 				int[] pos = this.findCore(world, x, y, z);
 				if(pos == null) return false;
-				
+
 				TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
 				if(!(te instanceof TileEntityAtmosphericEmitter)) return false;
-				
+
 				TileEntityAtmosphericEmitter drain = (TileEntityAtmosphericEmitter) te;
-				
+
 				FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, pos[0], pos[1], pos[2], player.getHeldItem());
 				if(type.hasTrait(FT_Gaseous.class) || type.hasTrait(FT_Gaseous_ART.class)) {
 					drain.tank.setTankType(type);
 					drain.markDirty();
-					player.addChatComponentMessage(new ChatComponentText("Changed type to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+					player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
 				}
-				
+
 				return true;
 			}
 			return false;
-			
+
 		} else {
 			return true;
 		}
@@ -89,16 +89,16 @@ public class MachineAtmosphericEmitter extends BlockDummyable implements ILookOv
 	public void printHook(Pre event, World world, int x, int y, int z) {
 		int[] pos = this.findCore(world, x, y, z);
 		if(pos == null) return;
-		
+
 		TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
 		if(!(te instanceof TileEntityAtmosphericEmitter)) return;
-		
+
 		TileEntityAtmosphericEmitter drain = (TileEntityAtmosphericEmitter) te;
 		List<String> text = new ArrayList<>();
-		
-		text.add((drain.power < Math.max(drain.tank.getFill() / 2, 1) * 10 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + "Power: " + BobMathUtil.getShortNumber(drain.power) + "HE");
-		text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + drain.tank.getTankType().getLocalizedName() + ": " + drain.tank.getFill() + "/" + drain.tank.getMaxFill() + "mB");
+
+		text.add(((drain.power < Math.max(drain.tank.getFill() / 2, 1) * 10 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN)) + I18nUtil.resolveKey("overlay.common.power", BobMathUtil.getShortNumber(drain.power)));
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_input", drain.tank.getTankType().getLocalizedName(), drain.tank.getFill(), drain.tank.getMaxFill()));
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
-	
+
 }

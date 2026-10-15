@@ -23,11 +23,11 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.common.DimensionManager;
 import org.lwjgl.input.Keyboard;
 
@@ -78,8 +78,8 @@ public class ItemSatellite extends ItemCustomMissilePart implements ISatChip, IG
 			list.add(formatTooltipEntry(I18nUtil.resolveKey("item.sat.desc.phase"), formatPhaseOffset(itemstack) + "°"));
 			list.add(formatTooltipEntry(I18nUtil.resolveKey("item.sat.desc.color"), getHexColor(itemstack)));
 		} else {
-			list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + "Hold <" + EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + "LSHIFT" + EnumChatFormatting.DARK_GRAY
-					+ "" + EnumChatFormatting.ITALIC + "> to display more info");
+			list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.hold_prefix") + EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.lshift_key") + EnumChatFormatting.DARK_GRAY
+					+ "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.more_info_suffix"));
 		}
 
 		if(this == ModItems.sat_foeq)
@@ -148,7 +148,7 @@ public class ItemSatellite extends ItemCustomMissilePart implements ISatChip, IG
 
 			XSatelliteRegistry.orbit(targetWorld, stack, getFreq(stack), player.posX, player.posY, player.posZ);
 
-			player.addChatMessage(new ChatComponentText("Satellite launched successfully!"));
+			player.addChatMessage(new ChatComponentTranslation("chat.satellite.satellite_launched_successfully"));
 		}
 
 		stack.stackSize--;

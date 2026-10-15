@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
+
 import com.hbm.extprop.HbmLivingProps;
 import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.main.NTMSounds;
@@ -17,17 +20,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class ItemGeigerCounter extends Item {
+public class ItemGeigerCounter extends Item implements IBauble {
 
 	Random rand = new Random();
 
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int i, boolean bool) {
 
-		if(!(entity instanceof EntityLivingBase) || world.isRemote)
-			return;
+		if(entity instanceof EntityLivingBase) {
+			tickGeiger(world, (EntityLivingBase) entity);
+		}
+	}
 
-		float x = HbmLivingProps.getRadBuf((EntityLivingBase)entity);
+	private void tickGeiger(World world, EntityLivingBase entity) {
+		if(world.isRemote) return;
+
+		float x = HbmLivingProps.getRadBuf(entity);
 
 		if(world.getTotalWorldTime() % 5 == 0) {
 			if(x > 1E-5) {
@@ -52,6 +60,32 @@ public class ItemGeigerCounter extends Item {
 				world.playSoundAtEntity(entity, NTMSounds.GEIGER_PREFIX + 1, 1.0F, 1.0F);
 			}
 		}
+	}
+
+	@Override
+	public BaubleType getBaubleType(ItemStack stack) {
+		return BaubleType.BELT;
+	}
+
+	@Override
+	public void onWornTick(ItemStack stack, EntityLivingBase entity) {
+		tickGeiger(entity.worldObj, entity);
+	}
+
+	@Override
+	public void onEquipped(ItemStack stack, EntityLivingBase entity) { }
+
+	@Override
+	public void onUnequipped(ItemStack stack, EntityLivingBase entity) { }
+
+	@Override
+	public boolean canEquip(ItemStack stack, EntityLivingBase entity) {
+		return true;
+	}
+
+	@Override
+	public boolean canUnequip(ItemStack stack, EntityLivingBase entity) {
+		return true;
 	}
 
 	static void setFloat(ItemStack stack, float i, String name) {

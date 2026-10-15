@@ -125,6 +125,54 @@ public class WorldConfig {
 	public static int copperClusterSpawn = 4;
 	public static int alexandriteSpawn = 100;
 
+	public static int richIronUnits = 100;
+	public static int richCopperUnits = 300;
+	public static int richAluminiumUnits = 250;
+	public static int richAsbestosUnits = 300;
+	public static int richBerylliumUnits = 250;
+	public static int richCoalUnits = 400;
+	public static int richDiamondUnits = 50;
+	public static int richFluoriteUnits = 250;
+	public static int richGoldUnits = 150;
+	public static int richLapisUnits = 250;
+	public static int richLeadUnits = 300;
+	public static int richLigniteUnits = 350;
+	public static int richLithiumUnits = 200;
+	public static int richNiterUnits = 175;
+	public static int richRedstoneUnits = 75;
+	public static int richSulfurUnits = 200;
+	public static int richThoriumUnits = 125;
+	public static int richTitaniumUnits = 225;
+	public static int richTungstenUnits = 225;
+	public static int richUraniumUnits = 100;
+	public static int richZincUnits = 100;
+
+	public static int richIronBlobSize = 28;
+	public static int richCopperBlobSize = 28;
+	public static int richAluminiumBlobSize = 28;
+	public static int richAsbestosBlobSize = 28;
+	public static int richBerylliumBlobSize = 28;
+	public static int richCoalBlobSize = 28;
+	public static int richDiamondBlobSize = 28;
+	public static int richFluoriteBlobSize = 28;
+	public static int richGoldBlobSize = 28;
+	public static int richLapisBlobSize = 28;
+	public static int richLeadBlobSize = 28;
+	public static int richLigniteBlobSize = 28;
+	public static int richLithiumBlobSize = 28;
+	public static int richNiterBlobSize = 28;
+	public static int richRedstoneBlobSize = 28;
+	public static int richSulfurBlobSize = 28;
+	public static int richThoriumBlobSize = 28;
+	public static int richTitaniumBlobSize = 28;
+	public static int richTungstenBlobSize = 28;
+	public static int richUraniumBlobSize = 28;
+	public static int richZincBlobSize = 28;
+
+	public static boolean enableRichOres = true;
+	public static boolean richOreAdvanced = false;
+	public static int richAdvRarityMult = 4;
+
 	public static int limestoneSpawn = 1;
 
 	public static int netherUraniumuSpawn = 8;
@@ -300,6 +348,52 @@ public class WorldConfig {
 		titaniumClusterSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.C01_titaniumClusterSpawn", "Amount of titanium cluster veins per chunk", 2);
 		aluminiumClusterSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.C02_aluminiumClusterSpawn", "Amount of aluminium cluster veins per chunk", 3);
 		copperClusterSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.C03_copperClusterSpawn", "Amount of copper cluster veins per chunk", 4);
+
+		richIronUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R00_richIronUnits", "Units in a fresh rich iron ore block", richIronUnits, 1, 100000);
+		richCopperUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R01_richCopperUnits", "Units in a fresh rich copper ore block", richCopperUnits, 1, 100000);
+		richAluminiumUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R02_richAluminiumUnits", "Units in a fresh rich aluminium ore block", richAluminiumUnits, 1, 100000);
+		richAsbestosUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R03_richAsbestosUnits", "Units in a fresh rich asbestos ore block", richAsbestosUnits, 1, 100000);
+		richBerylliumUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R04_richBerylliumUnits", "Units in a fresh rich beryllium ore block", richBerylliumUnits, 1, 100000);
+		richCoalUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R05_richCoalUnits", "Units in a fresh rich coal ore block", richCoalUnits, 1, 100000);
+		richDiamondUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R06_richDiamondUnits", "Units in a fresh rich diamond ore block", richDiamondUnits, 1, 100000);
+		richFluoriteUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R07_richFluoriteUnits", "Units in a fresh rich fluorite ore block", richFluoriteUnits, 1, 100000);
+		richGoldUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R08_richGoldUnits", "Units in a fresh rich gold ore block", richGoldUnits, 1, 100000);
+		richLapisUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R09_richLapisUnits", "Units in a fresh rich lapis ore block", richLapisUnits, 1, 100000);
+		richLeadUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R10_richLeadUnits", "Units in a fresh rich lead ore block", richLeadUnits, 1, 100000);
+		richLigniteUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R11_richLigniteUnits", "Units in a fresh rich lignite ore block", richLigniteUnits, 1, 100000);
+		richLithiumUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R12_richLithiumUnits", "Units in a fresh rich lithium ore block", richLithiumUnits, 1, 100000);
+		richNiterUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R13_richNiterUnits", "Units in a fresh rich niter ore block", richNiterUnits, 1, 100000);
+		richRedstoneUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R14_richRedstoneUnits", "Units in a fresh rich redstone ore block", richRedstoneUnits, 1, 100000);
+		richSulfurUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R15_richSulfurUnits", "Units in a fresh rich sulfur ore block", richSulfurUnits, 1, 100000);
+		richThoriumUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R16_richThoriumUnits", "Units in a fresh rich thorium ore block", richThoriumUnits, 1, 100000);
+		richTitaniumUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R17_richTitaniumUnits", "Units in a fresh rich titanium ore block", richTitaniumUnits, 1, 100000);
+		richTungstenUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R18_richTungstenUnits", "Units in a fresh rich tungsten ore block", richTungstenUnits, 1, 100000);
+		richUraniumUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R19_richUraniumUnits", "Units in a fresh rich uranium ore block", richUraniumUnits, 1, 100000);
+		richZincUnits = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R20_richZincUnits", "Units in a fresh rich zinc ore block", richZincUnits, 1, 100000);
+		richIronBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R23_richIronBlobSize", "Rich iron vein size in blocks", richIronBlobSize, 1, 1000);
+		richCopperBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R24_richCopperBlobSize", "Rich copper vein size in blocks", richCopperBlobSize, 1, 1000);
+		richAluminiumBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R25_richAluminiumBlobSize", "Rich aluminium vein size in blocks", richAluminiumBlobSize, 1, 1000);
+		richAsbestosBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R26_richAsbestosBlobSize", "Rich asbestos vein size in blocks", richAsbestosBlobSize, 1, 1000);
+		richBerylliumBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R27_richBerylliumBlobSize", "Rich beryllium vein size in blocks", richBerylliumBlobSize, 1, 1000);
+		richCoalBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R28_richCoalBlobSize", "Rich coal vein size in blocks", richCoalBlobSize, 1, 1000);
+		richDiamondBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R29_richDiamondBlobSize", "Rich diamond vein size in blocks", richDiamondBlobSize, 1, 1000);
+		richFluoriteBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R30_richFluoriteBlobSize", "Rich fluorite vein size in blocks", richFluoriteBlobSize, 1, 1000);
+		richGoldBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R31_richGoldBlobSize", "Rich gold vein size in blocks", richGoldBlobSize, 1, 1000);
+		richLapisBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R32_richLapisBlobSize", "Rich lapis vein size in blocks", richLapisBlobSize, 1, 1000);
+		richLeadBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R33_richLeadBlobSize", "Rich lead vein size in blocks", richLeadBlobSize, 1, 1000);
+		richLigniteBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R34_richLigniteBlobSize", "Rich lignite vein size in blocks", richLigniteBlobSize, 1, 1000);
+		richLithiumBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R35_richLithiumBlobSize", "Rich lithium vein size in blocks", richLithiumBlobSize, 1, 1000);
+		richNiterBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R36_richNiterBlobSize", "Rich niter vein size in blocks", richNiterBlobSize, 1, 1000);
+		richRedstoneBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R37_richRedstoneBlobSize", "Rich redstone vein size in blocks", richRedstoneBlobSize, 1, 1000);
+		richSulfurBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R38_richSulfurBlobSize", "Rich sulfur vein size in blocks", richSulfurBlobSize, 1, 1000);
+		richThoriumBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R39_richThoriumBlobSize", "Rich thorium vein size in blocks", richThoriumBlobSize, 1, 1000);
+		richTitaniumBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R40_richTitaniumBlobSize", "Rich titanium vein size in blocks", richTitaniumBlobSize, 1, 1000);
+		richTungstenBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R41_richTungstenBlobSize", "Rich tungsten vein size in blocks", richTungstenBlobSize, 1, 1000);
+		richUraniumBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R42_richUraniumBlobSize", "Rich uranium vein size in blocks", richUraniumBlobSize, 1, 1000);
+		richZincBlobSize = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R43_richZincBlobSize", "Rich zinc vein size in blocks", richZincBlobSize, 1, 1000);
+		enableRichOres = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.R21_enableRichOres", "Master switch for rich ore blob generation", true);
+		richOreAdvanced = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.R22_richOreAdvanced", "[WIP/BETA] Advanced rich ore generation: rare rich blobs with regular ore halos, overriding scattered veins and vanilla ores", false);
+		richAdvRarityMult = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.R45_richAdvRarityMult", "Advanced mode rarity divisor applied to rich ore deposits", richAdvRarityMult, 1, 64);
 
 		limestoneSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.L02_limestoneSpawn", "Amount of limestone block veins per chunk", 1);
 

@@ -16,7 +16,7 @@ public class EntityGlyphidBlaster extends EntityGlyphidBombardier {
 	
 	@Override
 	public ResourceLocation getSkin() {
-		return ResourceManager.glyphid_blaster_tex;
+		return isTamed() ? ResourceManager.glyphid_blaster_tame_tex : ResourceManager.glyphid_blaster_tex;
 	}
 
 	@Override

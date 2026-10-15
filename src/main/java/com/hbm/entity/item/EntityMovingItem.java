@@ -112,6 +112,8 @@ public class EntityMovingItem extends EntityMovingConveyorObject implements ICon
 		if(enterable.canItemEnter(worldObj, pos.getX(), pos.getY(), pos.getZ(), dir, this)) {
 			enterable.onItemEnter(worldObj, pos.getX(), pos.getY(), pos.getZ(), dir, this);
 			this.setDead();
+		} else {
+			this.retreatFromRejectedBlock();
 		}
 	}
 

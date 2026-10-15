@@ -12,16 +12,17 @@ import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
 import com.hbm.dim.trait.CBT_Destroyed;
 import com.hbm.lib.Library;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class ItemWandD extends Item {
 
@@ -44,17 +45,17 @@ public class ItemWandD extends Item {
 
 				if(targetId == 0) {
 					CelestialTeleporter.teleport(player, SpaceConfig.orbitDimension, player.posX, 128, player.posZ, false);
-					player.addChatMessage(new ChatComponentText("Teleported to: ORBIT"));
+					player.addChatMessage(new ChatComponentTranslation("chat.wand_d.1"));
 				} else {
 					SolarSystem.Body target = SolarSystem.Body.values()[targetId];
 
 					CelestialTeleporter.teleport(player, target.getBody().dimensionId, player.posX, 300, player.posZ, true);
-					player.addChatMessage(new ChatComponentText("Teleported to: " + target.getBody().getUnlocalizedName()));
+					player.addChatMessage(new ChatComponentTranslation("chat.wand_d.2", target.getBody().getUnlocalizedName()));
 				}
 
 			} else {
 
-				
+
 				int targetId = stack.stackTagCompound.getInteger("dim");
 				targetId++;
 
@@ -65,10 +66,10 @@ public class ItemWandD extends Item {
 				stack.stackTagCompound.setInteger("dim", targetId);
 
 				if(targetId == 0) {
-					player.addChatMessage(new ChatComponentText("Set teleport target to: ORBIT"));
+					player.addChatMessage(new ChatComponentTranslation("chat.wand_d.3"));
 				} else {
 					SolarSystem.Body target = SolarSystem.Body.values()[targetId];
-					player.addChatMessage(new ChatComponentText("Set teleport target to: " + target.getBody().getUnlocalizedName()));
+					player.addChatMessage(new ChatComponentTranslation("chat.wand_d.4", target.getBody().getUnlocalizedName()));
 				}
 			}
 		} else if(!(world.provider instanceof WorldProviderOrbit)) {
@@ -80,14 +81,14 @@ public class ItemWandD extends Item {
 				if(atmosphere != null) {
 					for(FluidEntry entry : atmosphere.fluids) {
 						// if(entry.pressure > 0.001) {
-							player.addChatMessage(new ChatComponentText("Atmosphere: " + entry.fluid.getUnlocalizedName() + " - " + entry.pressure + "bar"));
+							player.addChatMessage(new ChatComponentTranslation("chat.wand_d.5", entry.fluid.getUnlocalizedName(), entry.pressure));
 							isVacuum = false;
 						// }
 					}
 				}
 
 				if(isVacuum)
-					player.addChatMessage(new ChatComponentText("Atmosphere: NEAR VACUUM"));
+					player.addChatMessage(new ChatComponentTranslation("chat.wand_d.6"));
 			} else {
 				CelestialBody star = CelestialBody.getStar(world);
 
@@ -101,16 +102,16 @@ public class ItemWandD extends Item {
 
 					// GOD
 					// DAMN
-					player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "GOD"));
-					player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "DAMN"));
-					player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "THE"));
-					player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "" + EnumChatFormatting.OBFUSCATED + "SUN"));
+					player.addChatMessage(new ChatComponentTranslation("chat.wand_d.7").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
+					player.addChatMessage(new ChatComponentTranslation("chat.wand_d.8").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
+					player.addChatMessage(new ChatComponentTranslation("chat.wand_d.9").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
+					player.addChatMessage(new ChatComponentTranslation("chat.wand_d.10").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED).setObfuscated(true)));
 				} else {
 
 					star.clearTraits();
 					CelestialBody.clearTraits(world);
 
-					player.addChatMessage(new ChatComponentText("kidding"));
+					player.addChatMessage(new ChatComponentTranslation("chat.wand_d.11"));
 				}
 			}
 		} else {
@@ -123,15 +124,15 @@ public class ItemWandD extends Item {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add("Dimension teleporter and atmosphere debugger.");
+		list.add(I18nUtil.resolveKey("desc.item.wand_d.dimension_teleporter_atmosphere"));
 
 		if(stack.stackTagCompound != null) {
 			int targetId = stack.stackTagCompound.getInteger("dim");
 			if(targetId == 0) {
-				list.add("Teleportation target: ORBIT");
+				list.add(I18nUtil.resolveKey("desc.item.wand_d.teleportation_target_orbit"));
 			} else {
 				SolarSystem.Body target = SolarSystem.Body.values()[targetId];
-				list.add("Teleportation target: " + target.getBody().getUnlocalizedName());
+				list.add(I18nUtil.resolveKey("desc.item.wand_d.teleportation_target", target.getBody().getUnlocalizedName()));
 			}
 		}
 	}

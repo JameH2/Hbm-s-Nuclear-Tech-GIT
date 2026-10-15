@@ -18,6 +18,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUIHeaterHeatex extends GuiInfoContainer {
 
@@ -29,7 +30,7 @@ public class GUIHeaterHeatex extends GuiInfoContainer {
 	public GUIHeaterHeatex(InventoryPlayer invPlayer, TileEntityHeaterHeatex tedf) {
 		super(new ContainerHeaterHeatex(invPlayer, tedf));
 		heater = tedf;
-		
+
 		this.xSize = 176;
 		this.ySize = 204;
 	}
@@ -42,12 +43,12 @@ public class GUIHeaterHeatex extends GuiInfoContainer {
 		this.fieldCycles = new GuiTextField(this.fontRendererObj, guiLeft + 73, guiTop + 31, 30, 10);
 		initText(this.fieldCycles);
 		this.fieldCycles.setText(String.valueOf(heater.amountToCool));
-		
+
 		this.fieldDelay = new GuiTextField(this.fontRendererObj, guiLeft + 73, guiTop + 49, 30, 10);
 		initText(this.fieldDelay);
 		this.fieldDelay.setText(String.valueOf(heater.tickDelay));
 	}
-	
+
 	protected void initText(GuiTextField field) {
 		field.setTextColor(0x00ff00);
 		field.setDisabledTextColour(0x00ff00);
@@ -63,10 +64,10 @@ public class GUIHeaterHeatex extends GuiInfoContainer {
 		heater.tanks[1].renderTankInfo(this, x, y, guiLeft + 116, guiTop + 36, 16, 52);
 
 		if(guiLeft + 70 <= x && guiLeft + 70 + 36 > x && guiTop + 26 < y && guiTop + 26 + 18 >= y) {
-			func_146283_a(Arrays.asList(new String[] { "Amount per cycle" }), x, y);
+			func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.heater_heatex.amount_per_cycle") }), x, y);
 		}
 		if(guiLeft + 70 <= x && guiLeft + 70 + 36 > x && guiTop + 44 < y && guiTop + 44 + 18 >= y) {
-			func_146283_a(Arrays.asList(new String[] { "Cycle tick delay" }), x, y);
+			func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.heater_heatex.cycle_tick_delay") }), x, y);
 		}
 	}
 
@@ -115,7 +116,7 @@ public class GUIHeaterHeatex extends GuiInfoContainer {
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, heater.xCoord, heater.yCoord, heater.zCoord));
 			return;
 		}
-		
+
 		super.keyTyped(c, i);
 	}
 

@@ -13,8 +13,8 @@ import com.hbm.inventory.gui.GUIMachineOilWell;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IUpgradeInfoProvider;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BobMathUtil;
-import com.hbm.util.fauxpointtwelve.DirPos;
 import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
@@ -160,17 +160,19 @@ public class TileEntityMachinePumpjack extends TileEntityOilDrillBase {
 	}
 
 	@Override
-	public DirPos[] getConPos() {
-		this.getBlockMetadata();
-		ForgeDirection dir = ForgeDirection.getOrientation(this.blockMetadata - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
-
-		return new DirPos[] {
-			new DirPos(xCoord + rot.offsetX * 2 + dir.offsetX * 2, yCoord, zCoord + rot.offsetZ * 2 + dir.offsetZ * 2, dir),
-			new DirPos(xCoord + rot.offsetX * 2 + dir.offsetX * 2, yCoord, zCoord + rot.offsetZ * 4 - dir.offsetZ * 2, dir.getOpposite()),
-			new DirPos(xCoord + rot.offsetX * 4 - dir.offsetX * 2, yCoord, zCoord + rot.offsetZ * 4 + dir.offsetZ * 2, dir),
-			new DirPos(xCoord + rot.offsetX * 4 - dir.offsetX * 2, yCoord, zCoord + rot.offsetZ * 2 - dir.offsetZ * 2, dir.getOpposite())
-		};
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.blockMetadata - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
+			
+			cachedPorts = new PortDef[] {
+					PortDef.make(xCoord + rot.offsetX * 2 + dir.offsetX * 1, yCoord, zCoord + rot.offsetZ * 2 + dir.offsetZ * 1, dir),
+					PortDef.make(xCoord + rot.offsetX * 2 - dir.offsetX * 1, yCoord, zCoord + rot.offsetZ * 2 - dir.offsetZ * 1, dir.getOpposite()),
+					PortDef.make(xCoord + rot.offsetX * 4 + dir.offsetX * 1, yCoord, zCoord + rot.offsetZ * 4 + dir.offsetZ * 1, dir),
+					PortDef.make(xCoord + rot.offsetX * 4 - dir.offsetX * 1, yCoord, zCoord + rot.offsetZ * 4 - dir.offsetZ * 1, dir.getOpposite()),
+			};
+		}
+		return cachedPorts;
 	}
 
 	@Override
@@ -224,7 +226,7 @@ public class TileEntityMachinePumpjack extends TileEntityOilDrillBase {
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(KEY_BURN, level * 10, level * 50));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
-			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + "YES");
+			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}
 }

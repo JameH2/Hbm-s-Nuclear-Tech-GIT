@@ -5,6 +5,7 @@ import java.util.List;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,7 +38,7 @@ public class ItemDigammaCroissant extends ItemFood {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.DARK_RED + "3.33DRX/s");
+		list.add(EnumChatFormatting.DARK_RED + I18nUtil.resolveKey("item.digamma_croissant.desc1"));
 		super.addInformation(stack, player, list, bool);
 	}
 }

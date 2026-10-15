@@ -17,6 +17,7 @@ import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
+import com.hbm.util.i18n.I18nUtil;
 
 public class RefineryRecipeHandler extends TemplateRecipeHandler implements ICompatNHNEI {
 
@@ -72,10 +73,10 @@ public class RefineryRecipeHandler extends TemplateRecipeHandler implements ICom
 			return result1;
 		}
 	}
-    
+
 	@Override
 	public String getRecipeName() {
-		return "Refinery";
+		return I18nUtil.resolveKey("nei.refinery.name");
 	}
 
 	@Override
@@ -92,15 +93,15 @@ public class RefineryRecipeHandler extends TemplateRecipeHandler implements ICom
 	public TemplateRecipeHandler newInstance() {
 		return super.newInstance();
 	}
-	
+
 	@Override
 	public void loadCraftingRecipes(String outputId, Object... results) {
 		if ((outputId.equals("refinery")) && getClass() == RefineryRecipeHandler.class) {
 			Map<Object, Object[]> recipes = RefineryRecipes.getRefineryRecipe();
 			for (Map.Entry<Object, Object[]> recipe : recipes.entrySet()) {
-				this.arecipes.add(new SmeltingSet((ItemStack)recipe.getKey(), 
-						(ItemStack)recipe.getValue()[0], (ItemStack)recipe.getValue()[1], 
-						(ItemStack)recipe.getValue()[2], (ItemStack)recipe.getValue()[3], 
+				this.arecipes.add(new SmeltingSet((ItemStack)recipe.getKey(),
+						(ItemStack)recipe.getValue()[0], (ItemStack)recipe.getValue()[1],
+						(ItemStack)recipe.getValue()[2], (ItemStack)recipe.getValue()[3],
 						(ItemStack)recipe.getValue()[4]));
 			}
 		} else {
@@ -112,14 +113,14 @@ public class RefineryRecipeHandler extends TemplateRecipeHandler implements ICom
 	public void loadCraftingRecipes(ItemStack result) {
 		Map<Object, Object[]> recipes = RefineryRecipes.getRefineryRecipe();
 		for (Map.Entry<Object, Object[]> recipe : recipes.entrySet()) {
-			if (compareFluidStacks((ItemStack)recipe.getValue()[0], result) || 
-					compareFluidStacks((ItemStack)recipe.getValue()[1], result) || 
-					compareFluidStacks((ItemStack)recipe.getValue()[2], result) || 
-					compareFluidStacks((ItemStack)recipe.getValue()[3], result) || 
+			if (compareFluidStacks((ItemStack)recipe.getValue()[0], result) ||
+					compareFluidStacks((ItemStack)recipe.getValue()[1], result) ||
+					compareFluidStacks((ItemStack)recipe.getValue()[2], result) ||
+					compareFluidStacks((ItemStack)recipe.getValue()[3], result) ||
 					compareFluidStacks((ItemStack)recipe.getValue()[4], result))
-				this.arecipes.add(new SmeltingSet((ItemStack)recipe.getKey(), 
-						(ItemStack)recipe.getValue()[0], (ItemStack)recipe.getValue()[1], 
-						(ItemStack)recipe.getValue()[2], (ItemStack)recipe.getValue()[3], 
+				this.arecipes.add(new SmeltingSet((ItemStack)recipe.getKey(),
+						(ItemStack)recipe.getValue()[0], (ItemStack)recipe.getValue()[1],
+						(ItemStack)recipe.getValue()[2], (ItemStack)recipe.getValue()[3],
 						(ItemStack)recipe.getValue()[4]));
 		}
 	}
@@ -138,13 +139,13 @@ public class RefineryRecipeHandler extends TemplateRecipeHandler implements ICom
 		Map<Object, Object[]> recipes = RefineryRecipes.getRefineryRecipe();
 		for (Map.Entry<Object, Object[]> recipe : recipes.entrySet()) {
 			if (compareFluidStacks(ingredient, (ItemStack)recipe.getKey()))
-				this.arecipes.add(new SmeltingSet((ItemStack)recipe.getKey(), 
-						(ItemStack)recipe.getValue()[0], (ItemStack)recipe.getValue()[1], 
-						(ItemStack)recipe.getValue()[2], (ItemStack)recipe.getValue()[3], 
-						(ItemStack)recipe.getValue()[4]));				
+				this.arecipes.add(new SmeltingSet((ItemStack)recipe.getKey(),
+						(ItemStack)recipe.getValue()[0], (ItemStack)recipe.getValue()[1],
+						(ItemStack)recipe.getValue()[2], (ItemStack)recipe.getValue()[3],
+						(ItemStack)recipe.getValue()[4]));
 		}
 	}
-	
+
 	private boolean compareFluidStacks(ItemStack sta1, ItemStack sta2) {
 		return sta1.getItem() == sta2.getItem() && sta1.getItemDamage() == sta2.getItemDamage();
 	}

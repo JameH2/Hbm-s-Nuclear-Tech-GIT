@@ -32,6 +32,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import com.hbm.util.i18n.I18nUtil;
 
 public class BlockVolcano extends BlockContainer implements ITooltipProvider, IBlockMulti {
 
@@ -63,12 +64,12 @@ public class BlockVolcano extends BlockContainer implements ITooltipProvider, IB
 		int meta = stack.getItemDamage();
 
 		if(meta == META_SMOLDERING) {
-			list.add(EnumChatFormatting.GOLD + "SHIELD VOLCANO");
+			list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.volcano.shield_volcano"));
 			return;
 		}
 
-		list.add(BlockVolcano.isGrowing(meta) ? (EnumChatFormatting.RED + "DOES GROW") : (EnumChatFormatting.DARK_GRAY + "DOES NOT GROW"));
-		list.add(BlockVolcano.isExtinguishing(meta) ? (EnumChatFormatting.RED + "DOES EXTINGUISH") : (EnumChatFormatting.DARK_GRAY + "DOES NOT EXTINGUISH"));
+		list.add(BlockVolcano.isGrowing(meta) ? (EnumChatFormatting.RED + I18nUtil.resolveKey("gui.volcano.does_grow")) : (EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("gui.volcano.does_not_grow")));
+		list.add(BlockVolcano.isExtinguishing(meta) ? (EnumChatFormatting.RED + I18nUtil.resolveKey("gui.volcano.does_extinguish")) : (EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("gui.volcano.does_not_extinguish")));
 	}
 
 	public static final int META_STATIC_ACTIVE = 0;

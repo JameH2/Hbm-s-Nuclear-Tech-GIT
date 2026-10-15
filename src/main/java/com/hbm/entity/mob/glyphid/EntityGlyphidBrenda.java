@@ -22,7 +22,7 @@ public class EntityGlyphidBrenda extends EntityGlyphid {
 	
 	@Override
 	public ResourceLocation getSkin() {
-		return ResourceManager.glyphid_brenda_tex;
+		return isTamed() ? ResourceManager.glyphid_brenda_tame_tex : ResourceManager.glyphid_brenda_tex;
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import com.hbm.util.i18n.I18nUtil;
 
 public class MachineGasFlare extends BlockDummyable implements ITooltipProvider {
 
@@ -30,12 +31,12 @@ public class MachineGasFlare extends BlockDummyable implements ITooltipProvider 
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		
+
 		if(meta >= 12) return new TileEntityMachineGasFlare();
 		if(meta >= 6) return new TileEntityProxyCombo(false, true, true);
 		return null;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		return this.standardOpenBehavior(world, x, y, z, player, 0);
@@ -50,25 +51,32 @@ public class MachineGasFlare extends BlockDummyable implements ITooltipProvider 
 	public int getOffset() {
 		return 1;
 	}
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, 0, ForgeDirection.EAST.ordinal()},
+			{-1, 0, 0, ForgeDirection.WEST.ordinal()},
+			{0, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, -1, ForgeDirection.NORTH.ordinal()}
+		}, dir);
+	}
 	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
-		this.makeExtra(world, x + dir.offsetX * o + 1, y, z + dir.offsetZ * o);
-		this.makeExtra(world, x + dir.offsetX * o - 1, y, z + dir.offsetZ * o);
-		this.makeExtra(world, x + dir.offsetX * o, y, z + dir.offsetZ * o + 1);
-		this.makeExtra(world, x + dir.offsetX * o, y, z + dir.offsetZ * o - 1);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 
-		list.add(EnumChatFormatting.GOLD + "Can burn fluids and vent gasses");
-		list.add(EnumChatFormatting.GOLD + "Burns up to " + EnumChatFormatting.RED + "10mB/t");
-		list.add(EnumChatFormatting.GOLD + "Vents up to " + EnumChatFormatting.RED + "50mB/t");
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.burn_fluids_vent_gasses"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.gas_flare.burns_up_to_s10m_b_t", EnumChatFormatting.RED + "10mB/t"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.gas_flare.vents_up_to_s50m_b_t", EnumChatFormatting.RED + "50mB/t"));
 		list.add("");
-		list.add(EnumChatFormatting.YELLOW + "Fuel efficiency:");
-		list.add(EnumChatFormatting.YELLOW + "-Flammable Gasses: " + EnumChatFormatting.RED + "20%");
-		list.add(EnumChatFormatting.YELLOW + "-Flammable Liquids: " + EnumChatFormatting.RED + "10%");
+		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.gas_flare.fuel_efficiency"));
+		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.gas_flare.flammable_gasses_s20", EnumChatFormatting.RED + "20%"));
+		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.gas_flare.flammable_liquids_s10", EnumChatFormatting.RED + "10%"));
 	}
 }

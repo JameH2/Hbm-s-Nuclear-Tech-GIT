@@ -1,5 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.util.i18n.I18nUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,13 +148,13 @@ public class GUIScreenToolAbility extends GuiScreen {
 			tooltipValue = abilitiesHarvest.get(hoverIdxHarvest).ability.getFullName(level);
 		} else if(hoverIdxExtraBtn != -1) {
 			switch(hoverIdxExtraBtn) {
-			case 0: tooltipValue = "Reset all presets"; break;
-			case 1: tooltipValue = "Delete current preset"; break;
-			case 2: tooltipValue = "Add new preset"; break;
-			case 3: tooltipValue = "Select first preset"; break;
-			case 4: tooltipValue = "Next preset"; break;
-			case 5: tooltipValue = "Previous preset"; break;
-			case 6: tooltipValue = "Close window"; break;
+			case 0: tooltipValue = I18nUtil.resolveKey("gui.tool_ability.reset_presets"); break;
+			case 1: tooltipValue = I18nUtil.resolveKey("gui.tool_ability.delete_preset"); break;
+			case 2: tooltipValue = I18nUtil.resolveKey("gui.tool_ability.add_preset"); break;
+			case 3: tooltipValue = I18nUtil.resolveKey("gui.tool_ability.first_preset"); break;
+			case 4: tooltipValue = I18nUtil.resolveKey("gui.tool_ability.next_preset"); break;
+			case 5: tooltipValue = I18nUtil.resolveKey("gui.tool_ability.previous_preset"); break;
+			case 6: tooltipValue = I18nUtil.resolveKey("gui.tool_ability.close"); break;
 			}
 		}
 

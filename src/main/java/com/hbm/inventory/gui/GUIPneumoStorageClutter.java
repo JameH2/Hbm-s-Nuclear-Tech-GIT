@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUIPneumoStorageClutter extends GuiInfoContainer {
 
@@ -21,29 +22,29 @@ public class GUIPneumoStorageClutter extends GuiInfoContainer {
 	public GUIPneumoStorageClutter(InventoryPlayer invPlayer, TileEntityPneumoStorageClutter storage) {
 		super(new ContainerPneumoStorageClutter(invPlayer, storage));
 		this.storage = storage;
-		
+
 		this.xSize = 200;
 		this.ySize = 235;
 	}
-	
+
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
-		
-		this.drawCustomInfoStat(x, y, guiLeft + 174, guiTop + 36, 20, 8, x, y, "Compressor: " + storage.compair.getPressure() + " PU", "Max range: " + TileEntityPneumoTube.getRangeFromPressure(storage.compair.getPressure()) + "m");
+
+		this.drawCustomInfoStat(x, y, guiLeft + 174, guiTop + 36, 20, 8, x, y, I18nUtil.resolveKey("gui.pneumo_storage_clutter.compressor") + storage.compair.getPressure() + I18nUtil.resolveKey("gui.pneumo_storage_clutter.pu"), I18nUtil.resolveKey("gui.pneumo_storage_clutter.max_range") + TileEntityPneumoTube.getRangeFromPressure(storage.compair.getPressure()) + "m");
 	}
 
 	@Override
 	protected void mouseClicked(int x, int y, int i) {
 		super.mouseClicked(x, y, i);
-		
+
 		clickSendFlag(storage, x, y, 174, 36, 20, 8, "pressure");
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.storage.hasCustomInventoryName() ? this.storage.getInventoryName() : I18n.format(this.storage.getInventoryName());
-		
+
 		this.fontRendererObj.drawString(name, 176 / 2 - this.fontRendererObj.getStringWidth(name) / 2, 5, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}

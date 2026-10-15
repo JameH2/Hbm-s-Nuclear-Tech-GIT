@@ -20,23 +20,23 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 public class GUIScreenRadioTorchLogic extends GuiScreen {
-	
+
 	protected static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_rtty_logic_receiver.png");
-	
+
 	protected TileEntityRadioTorchLogic logic;
 	protected GuiTextField frequency;
 	protected GuiTextField[] map;
 	protected int[] conditions; //so the 'save settings' paradigm applies to the conditions, too
-	
+
 	protected static final int xSize = 256;
 	protected static final int ySize = 204;
 	protected int guiLeft;
 	protected int guiTop;
-	
+
 	public GUIScreenRadioTorchLogic(TileEntityRadioTorchLogic logic) {
 		this.logic = logic;
 	}
-	
+
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -44,20 +44,20 @@ public class GUIScreenRadioTorchLogic extends GuiScreen {
 		this.guiTop = (this.height - this.ySize) / 2;
 
 		Keyboard.enableRepeatEvents(true);
-		
+
 		int oX = 4;
 		int oY = 4;
-		
+
 		this.frequency = new GuiTextField(this.fontRendererObj, guiLeft + 25 + oX, guiTop + 17 + oY, 90 - oX * 2, 14);
 		this.frequency.setTextColor(0x00ff00);
 		this.frequency.setDisabledTextColour(0x00ff00);
 		this.frequency.setEnableBackgroundDrawing(false);
 		this.frequency.setMaxStringLength(GUIScreenRadioTorch.MAX_CHAN_LENGTH);
 		this.frequency.setText(logic.channel == null ? "" : logic.channel);
-		
+
 		this.map = new GuiTextField[16];
 		this.conditions = new int[16];
-		
+
 		for(int i = 0; i < 16; i++) {
 			this.map[i] = new GuiTextField(this.fontRendererObj, guiLeft + 7 + (130 * (i / 8)) + oX + 18, guiTop + 53 + (18 * (i % 8)) + oY, 54 - oX * 2, 14);
 			this.map[i].setTextColor(0x00ff00);
@@ -65,11 +65,11 @@ public class GUIScreenRadioTorchLogic extends GuiScreen {
 			this.map[i].setEnableBackgroundDrawing(false);
 			this.map[i].setMaxStringLength(15);
 			this.map[i].setText(logic.mapping[i] == null ? "" : logic.mapping[i]);
-			
+
 			this.conditions[i] = logic.conditions[i];
 		}
 	}
-	
+
 	@Override
 	public void drawScreen(int x, int y, float f) {
 		this.drawDefaultBackground();
@@ -79,12 +79,12 @@ public class GUIScreenRadioTorchLogic extends GuiScreen {
 		GL11.glEnable(GL11.GL_LIGHTING);
 		//easy selection
 		if(guiLeft > x && guiLeft + xSize <= x && guiTop > y && guiTop + ySize <= y) return;
-		
-		if(!Mouse.isButtonDown(0) && !Mouse.isButtonDown(1) && Mouse.next()) {	
+
+		if(!Mouse.isButtonDown(0) && !Mouse.isButtonDown(1) && Mouse.next()) {
 			for(int j = 0; j < 16; j++) {
 				if(guiLeft + 7 + (130 * (j / 8)) <= x && guiLeft + 7 + 18 + (130 * (j / 8)) > x && guiTop + 53 + (18 * (j % 8)) <= y && guiTop + 53 + 18 + (18 * (j % 8)) > y) {
 					int scroll = Mouse.getEventDWheel();
-					
+
 					if(scroll > 0) this.conditions[j] = (this.conditions[j] + 1) % 10;
 					if(scroll < 0) this.conditions[j] = (this.conditions[j] + 9) % 10;
 					return;
@@ -92,19 +92,19 @@ public class GUIScreenRadioTorchLogic extends GuiScreen {
 			}
 		}
 	}
-	
+
 	private void drawGuiContainerForegroundLayer(int x, int y) {
 		String name = I18nUtil.resolveKey("container.rttyLogic");
 		this.fontRendererObj.drawString(name, this.guiLeft + this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, this.guiTop + 6, 4210752);
 		//TODO add localization for *every* RTTY
 		if(guiLeft + 137 <= x && guiLeft + 137 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
-			func_146283_a(Arrays.asList(new String[] { logic.descending ? "Descending Order" : "Ascending Order" }), x, y);
+			func_146283_a(Arrays.asList(new String[] { logic.descending ? I18nUtil.resolveKey("gui.radio_torch_logic.descending_order") : I18nUtil.resolveKey("gui.radio_torch_logic.ascending_order") }), x, y);
 		}
 		if(guiLeft + 173 <= x && guiLeft + 173 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
-			func_146283_a(Arrays.asList(new String[] { logic.polling ? "Polling" : "State Change" }), x, y);
+			func_146283_a(Arrays.asList(new String[] { logic.polling ? I18nUtil.resolveKey("gui.common.polling") : I18nUtil.resolveKey("gui.common.state_change") }), x, y);
 		}
 		if(guiLeft + 209 <= x && guiLeft + 209 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
-			func_146283_a(Arrays.asList(new String[] { "Save Settings" }), x, y);
+			func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.common.save") }), x, y);
 		}
 		for(int j = 0; j < 16; j++) {
 			if(guiLeft + 7 + (130 * (j / 8)) <= x && guiLeft + 7 + 18 + (130 * (j / 8)) > x && guiTop + 53 + (18 * (j % 8)) <= y && guiTop + 53 + 18 + (18 * (j % 8)) > y) {
@@ -120,7 +120,7 @@ public class GUIScreenRadioTorchLogic extends GuiScreen {
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		if(logic.descending) drawTexturedModalRect(guiLeft + 137, guiTop + 17, 0, 204, 18, 18);
 		if(logic.polling) drawTexturedModalRect(guiLeft + 173, guiTop + 17, 0, 222, 18, 18);
-		
+
 		for(int i = 0; i < 16; i++) {
 			if(logic.mapping[i].isEmpty()) {
 				if(this.conditions[i] != 0)
@@ -130,7 +130,7 @@ public class GUIScreenRadioTorchLogic extends GuiScreen {
 				drawTexturedModalRect(guiLeft + 85 + (130 * (i / 8)), guiTop + 57 + (18 * (i % 8)), 198, 204, 14, 10);
 			}
 		}
-		
+
 		for(int i = 0; i < 16; i++) this.map[i].drawTextBox();
 		this.frequency.drawTextBox();
 	}
@@ -138,24 +138,24 @@ public class GUIScreenRadioTorchLogic extends GuiScreen {
 	@Override
 	protected void mouseClicked(int x, int y, int i) {
 		super.mouseClicked(x, y, i);
-		
+
 		this.frequency.mouseClicked(x, y, i);
 		for(int j = 0; j < 16; j++) this.map[j].mouseClicked(x, y, i);
-		
+
 		if(guiLeft + 137 <= x && guiLeft + 137 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
 			data.setBoolean("d", !logic.descending);
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, logic.xCoord, logic.yCoord, logic.zCoord));
 		}
-		
+
 		if(guiLeft + 173 <= x && guiLeft + 173 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
 			data.setBoolean("p", !logic.polling);
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, logic.xCoord, logic.yCoord, logic.zCoord));
 		}
-		
+
 		if(guiLeft + 209 <= x && guiLeft + 209 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
@@ -164,7 +164,7 @@ public class GUIScreenRadioTorchLogic extends GuiScreen {
 			for(int j = 0; j < 16; j++) data.setInteger("c" + j, this.conditions[j]);
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, logic.xCoord, logic.yCoord, logic.zCoord));
 		}
-		
+
 		for(int j = 0; j < 16; j++) {
 			if(guiLeft + 7 + (130 * (j / 8)) <= x && guiLeft + 7 + 18 + (130 * (j / 8)) > x && guiTop + 53 + (18 * (j % 8)) <= y && guiTop + 53 + 18 + (18 * (j % 8)) > y) {
 				mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
@@ -175,12 +175,12 @@ public class GUIScreenRadioTorchLogic extends GuiScreen {
 
 	@Override
 	protected void keyTyped(char c, int i) {
-		
+
 		if(this.frequency.textboxKeyTyped(c, i))
 			return;
 
 		for(int j = 0; j < 16; j++) if(this.map[j].textboxKeyTyped(c, i)) return;
-		
+
 		if(i == 1 || i == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
 			this.mc.thePlayer.closeScreen();
 			this.mc.setIngameFocus();
@@ -191,10 +191,10 @@ public class GUIScreenRadioTorchLogic extends GuiScreen {
 	public void onGuiClosed() {
 		Keyboard.enableRepeatEvents(false);
 	}
-	
+
 	@Override
 	public boolean doesGuiPauseGame() {
 		return false;
 	}
-	
+
 }

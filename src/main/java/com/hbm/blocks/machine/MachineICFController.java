@@ -162,7 +162,7 @@ public class MachineICFController extends BlockContainer implements ILookOverlay
 		if(assembly.containsKey(pos)) return;
 		if(assembly.size() >= maxSize) {
 			errored = true;
-			sendError(world, x, y, z, "Max size exceeded", player);
+			sendError(world, x, y, z, "chat.max_size_exceeded", player);
 			return;
 		}
 
@@ -197,7 +197,7 @@ public class MachineICFController extends BlockContainer implements ILookOverlay
 			return;
 		}
 
-		sendError(world, x, y, z, "Non-laser block", player);
+		sendError(world, x, y, z, "chat.non_laser_block", player);
 		errored = true;
 	}
 
@@ -220,7 +220,7 @@ public class MachineICFController extends BlockContainer implements ILookOverlay
 		if(!(te instanceof TileEntityICFController)) return;
 		TileEntityICFController icf = (TileEntityICFController) te;
 		List<String> text = new ArrayList();
-		text.add(BobMathUtil.getShortNumber(icf.getPower()) + "/" + BobMathUtil.getShortNumber(icf.getMaxPower()) + "HE");
+		text.add(I18nUtil.resolveKey("overlay.icf_controller.he", BobMathUtil.getShortNumber(icf.getPower()), BobMathUtil.getShortNumber(icf.getMaxPower())));
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 }

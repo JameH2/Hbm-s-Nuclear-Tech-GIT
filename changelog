@@ -1,6 +1,16 @@
 ## Changed
-* Machines no longer tilt at all when unsupported in orbit
+* HTRF4 for the old fusion reactor has been removed
+* Titanium bedrock ore on all planets changed to ilmenite, except for Tekto, which still provides pure titanium!
+## Added
+* Depletable rich iron and copper ores: metadata tracks richness, final unit turns the block to stone, no silk harvest
+* Rich ore chunks (smelt/shred/centrifuge exactly like regular ores: x1/x2/x3)
+* Per-variant ore richness config (default 250 units), exact counts kept in world save
+* Rich ores rename as they deplete (Rich / Half-Depleted / Almost Depleted) in inventory and on the crosshair overlay
+* Large Mining Drill mines rich blobs: one chunk per 3s alone, or the whole blob at 3.1s per block with vein miner on, scaled by drillbit speed
+## Fixed
+* Fixed the pollution detector's localization being broken
+* Fixed an exploit achievable via packet manipulation
+* Fixed assembly factory and chemical factory RoR reader index offset
 
 ## Fixed
-* Can't launch the 2 new satellites with custom rockets
-* Satellites don't travel to the correct dimension on launch
+* Solar panel ports inconsistent and don't match model

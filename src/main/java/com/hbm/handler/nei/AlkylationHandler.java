@@ -6,7 +6,7 @@ import com.hbm.inventory.recipes.AlkylationRecipes;
 public class AlkylationHandler extends NEIUniversalHandler {
 
 	public AlkylationHandler() {
-		super("Alkylation", ModBlocks.machine_alkylation, AlkylationRecipes.getRecipes());
+		super("nei.alkylation.name", ModBlocks.machine_alkylation, AlkylationRecipes.getRecipes());
 	}
 
 	@Override

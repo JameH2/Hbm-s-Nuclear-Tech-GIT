@@ -6,7 +6,7 @@ import com.hbm.inventory.recipes.CrackingRecipes;
 public class CrackingHandler extends NEIUniversalHandler {
 
 	public CrackingHandler() {
-		super("Cracking", ModBlocks.machine_catalytic_cracker, CrackingRecipes.getCrackingRecipesForNEI());
+		super("nei.cracking.name", ModBlocks.machine_catalytic_cracker, CrackingRecipes.getCrackingRecipesForNEI());
 	}
 
 	@Override

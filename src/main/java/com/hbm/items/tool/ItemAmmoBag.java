@@ -1,5 +1,8 @@
 package com.hbm.items.tool;
 
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
+
 import com.hbm.inventory.container.ContainerAmmoBag;
 import com.hbm.inventory.gui.GUIAmmoBag;
 import com.hbm.items.ModItems;
@@ -9,6 +12,7 @@ import com.hbm.util.ItemStackUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -17,7 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class ItemAmmoBag extends Item implements IGUIProvider {
+public class ItemAmmoBag extends Item implements IGUIProvider, IBauble {
 
 	public ItemAmmoBag() {
 		this.setMaxStackSize(1);
@@ -69,6 +73,24 @@ public class ItemAmmoBag extends Item implements IGUIProvider {
 		}
 		return 1D - (double) bullets / (double) capacity;
 	}
+
+	@Override
+	public BaubleType getBaubleType(ItemStack stack) { return BaubleType.BELT; }
+
+	@Override
+	public void onWornTick(ItemStack stack, EntityLivingBase entity) { }
+
+	@Override
+	public void onEquipped(ItemStack stack, EntityLivingBase entity) { }
+
+	@Override
+	public void onUnequipped(ItemStack stack, EntityLivingBase entity) { }
+
+	@Override
+	public boolean canEquip(ItemStack stack, EntityLivingBase entity) { return true; }
+
+	@Override
+	public boolean canUnequip(ItemStack stack, EntityLivingBase entity) { return true; }
 	
 	public static class InventoryAmmoBag implements IInventory {
 		
@@ -144,6 +166,11 @@ public class ItemAmmoBag extends Item implements IGUIProvider {
 		@Override public boolean isUseableByPlayer(EntityPlayer player) { return true; }
 		@Override public void openInventory() { }
 		@Override public void closeInventory() { }
-		@Override public boolean isItemValidForSlot(int slot, ItemStack stack) { return !stack.hasTagCompound(); }
+		@Override public boolean isItemValidForSlot(int slot, ItemStack stack) {
+			return !stack.hasTagCompound() && (
+				stack.getItem() == ModItems.ammo_standard || 
+				stack.getItem() == ModItems.ammo_secret
+			);
+		}
 	}
 }

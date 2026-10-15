@@ -12,7 +12,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -54,7 +53,14 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
 	@Override
 	public boolean canItemEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorItem entity) {
 		ForgeDirection orientation = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
-		return orientation == dir;
+		if(orientation != dir) return false;
+
+		TileEntity te = world.getTileEntity(x, y, z);
+		if(!(te instanceof TileEntityCraneInserter)) return false;
+
+		TileEntityCraneInserter inserter = (TileEntityCraneInserter) te;
+		return inserter.destroyer || entity != null && entity.getItemStack() != null
+				&& canAcceptAll(world, x, y, z, inserter, new ItemStack[] { entity.getItemStack() });
 	}
 
 	@Override
@@ -83,19 +89,17 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
 			}
 		}
 
-		TileEntityCraneInserter inserter = null;
-
 		if(toAdd.stackSize > 0) {
-			inserter = (TileEntityCraneInserter) world.getTileEntity(x, y, z);
+			TileEntityCraneInserter inserter = (TileEntityCraneInserter) world.getTileEntity(x, y, z);
 			addToInventory(inserter, null, toAdd, outputDirection.getOpposite().ordinal());
-		}
-		if(toAdd.stackSize > 0 && inserter != null && !inserter.destroyer) {
-			EntityItem drop = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, toAdd.copy());
-			world.spawnEntityInWorld(drop);
 		}
 	}
 
 	public static ItemStack addToInventory(IInventory inv, int[] access, ItemStack toAdd, int side) {
+		return addToInventory(inv, access, toAdd, side, null);
+	}
+
+	private static ItemStack addToInventory(IInventory inv, int[] access, ItemStack toAdd, int side, ItemStack[] simulatedContents) {
 
 		ISidedInventory sided = inv instanceof ISidedInventory ? (ISidedInventory) inv : null;
 		int limit = inv.getInventoryStackLimit();
@@ -104,7 +108,7 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
 
 		for(int i = 0; i < size; i++) {
 			int index = access == null ? i : access[i];
-			ItemStack stack = inv.getStackInSlot(index);
+			ItemStack stack = simulatedContents == null ? inv.getStackInSlot(index) : simulatedContents[index];
 
 			if(stack != null && toAdd.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(toAdd, stack) && stack.stackSize < Math.min(stack.getMaxStackSize(), limit)
 					 && ((sided == null || sided.canInsertItem(index, toAdd, side)) && inv.isItemValidForSlot(index, toAdd))) {
@@ -114,7 +118,7 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
 
 				stack.stackSize += amount;
 				toAdd.stackSize -= amount;
-				inv.markDirty();
+				if(simulatedContents == null) inv.markDirty();
 
 				if(toAdd.stackSize == 0) {
 					return null;
@@ -124,7 +128,7 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
 
 		for(int i = 0; i < size; i++) {
 			int index = access == null ? i : access[i];
-			ItemStack stack = inv.getStackInSlot(index);
+			ItemStack stack = simulatedContents == null ? inv.getStackInSlot(index) : simulatedContents[index];
 
 			if(stack == null && ((sided == null || sided.canInsertItem(index, toAdd, side)) && inv.isItemValidForSlot(index, toAdd))) {
 
@@ -132,9 +136,13 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
 
 				ItemStack newStack = toAdd.copy();
 				newStack.stackSize = amount;
-				inv.setInventorySlotContents(index, newStack);
+				if(simulatedContents == null) {
+					inv.setInventorySlotContents(index, newStack);
+				} else {
+					simulatedContents[index] = newStack;
+				}
 				toAdd.stackSize -= amount;
-				inv.markDirty();
+				if(simulatedContents == null) inv.markDirty();
 
 				if(toAdd.stackSize == 0) {
 					return null;
@@ -145,7 +153,71 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
 		return toAdd;
 	}
 
-	@Override public boolean canPackageEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorPackage entity) { return true; }
+	private static ItemStack[] copyContents(IInventory inv) {
+		ItemStack[] contents = new ItemStack[inv.getSizeInventory()];
+
+		for(int i = 0; i < contents.length; i++) {
+			ItemStack stack = inv.getStackInSlot(i);
+			contents[i] = stack == null ? null : stack.copy();
+		}
+
+		return contents;
+	}
+
+	public static boolean canAddAllToInventory(IInventory inv, int[] access, int side, ItemStack... stacks) {
+		if(inv == null || stacks == null) return false;
+
+		ItemStack[] contents = copyContents(inv);
+		boolean hasItems = false;
+
+		for(ItemStack stack : stacks) {
+			if(stack == null || stack.stackSize <= 0) continue;
+			hasItems = true;
+
+			ItemStack remainder = addToInventory(inv, access, stack.copy(), side, contents);
+			if(remainder != null && remainder.stackSize > 0) return false;
+		}
+
+		return hasItems;
+	}
+
+	private boolean canAcceptAll(World world, int x, int y, int z, TileEntityCraneInserter inserter, ItemStack[] stacks) {
+		ForgeDirection outputDirection = getOutputSide(world, x, y, z);
+		TileEntity output = world.getTileEntity(x + outputDirection.offsetX, y + outputDirection.offsetY, z + outputDirection.offsetZ);
+		IInventory outputInventory = output instanceof IInventory ? (IInventory) output : null;
+		int[] outputAccess = null;
+
+		if(outputInventory instanceof ISidedInventory) {
+			outputAccess = InventoryUtil.masquerade((ISidedInventory) outputInventory, outputDirection.getOpposite().ordinal());
+		}
+
+		ItemStack[] outputContents = outputInventory == null ? null : copyContents(outputInventory);
+		ItemStack[] inserterContents = copyContents(inserter);
+		boolean canUseOutput = outputInventory != null && !world.isBlockIndirectlyGettingPowered(x, y, z);
+		int side = outputDirection.getOpposite().ordinal();
+
+		for(ItemStack stack : stacks) {
+			if(stack == null || stack.stackSize <= 0) continue;
+
+			ItemStack remainder = stack.copy();
+			if(canUseOutput) remainder = addToInventory(outputInventory, outputAccess, remainder, side, outputContents);
+			if(remainder != null) remainder = addToInventory(inserter, null, remainder, side, inserterContents);
+
+			if(remainder != null && remainder.stackSize > 0) return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean canPackageEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorPackage entity) {
+		TileEntity te = world.getTileEntity(x, y, z);
+		if(!(te instanceof TileEntityCraneInserter)) return false;
+
+		TileEntityCraneInserter inserter = (TileEntityCraneInserter) te;
+		return inserter.destroyer || entity != null && entity.getItemStacks() != null
+				&& canAcceptAll(world, x, y, z, inserter, entity.getItemStacks());
+	}
 
 	@Override
 	public void onPackageEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorPackage entity) {
@@ -173,17 +245,12 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
 			}
 		}
 
-		TileEntityCraneInserter inserter = null;
-		
 		for(ItemStack stack : toAdd) {
-			
+			if(stack == null) continue;
+
 			if(stack.stackSize > 0) {
-				inserter = (TileEntityCraneInserter) world.getTileEntity(x, y, z);
+				TileEntityCraneInserter inserter = (TileEntityCraneInserter) world.getTileEntity(x, y, z);
 				addToInventory(inserter, null, stack, outputDirection.getOpposite().ordinal());
-			}
-			if(stack.stackSize > 0 && inserter != null && !inserter.destroyer) {
-				EntityItem drop = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, stack.copy());
-				world.spawnEntityInWorld(drop);
 			}
 		}
 	}

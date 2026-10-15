@@ -15,6 +15,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import com.hbm.util.i18n.I18nUtil;
 
 public class RailGeneric extends BlockRailBase implements ITooltipProvider {
 
@@ -81,15 +82,15 @@ public class RailGeneric extends BlockRailBase implements ITooltipProvider {
 		float speed = this.maxSpeed / this.baseSpeed;
 
 		if(speed != 1F) {
-			list.add((speed > 1 ? EnumChatFormatting.BLUE : EnumChatFormatting.RED) + "Speed: " + ((int) (speed * 100)) + "%");
+			list.add(((speed > 1 ? EnumChatFormatting.BLUE : EnumChatFormatting.RED)) + I18nUtil.resolveKey("tile.rail_generic.speed", ((int) (speed * 100))));
 		}
 
 		if(!flexible) {
-			list.add(EnumChatFormatting.RED + "Cannot be used for turns!");
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("tile.cannot_used_turns"));
 		}
 
 		if(!slopable) {
-			list.add(EnumChatFormatting.RED + "Cannot be used for slopes!");
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("tile.cannot_used_slopes"));
 		}
 	}
 }

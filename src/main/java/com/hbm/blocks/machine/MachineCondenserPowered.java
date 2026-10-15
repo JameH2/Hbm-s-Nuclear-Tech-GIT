@@ -50,20 +50,23 @@ public class MachineCondenserPowered extends BlockDummyable implements ILookOver
 	}
 
 	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{3, 1, 0, ForgeDirection.EAST.ordinal()},
+			{-3, 1, 0, ForgeDirection.WEST.ordinal()},
+			{1, 1, 1, ForgeDirection.SOUTH.ordinal()},
+			{-1, 1, 1, ForgeDirection.SOUTH.ordinal()},
+			{1, 1, -1, ForgeDirection.NORTH.ordinal()},
+			{-1, 1, -1, ForgeDirection.NORTH.ordinal()}
+		}, dir);
+	}
+	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
 
-		x = x + dir.offsetX * o;
-		z = z + dir.offsetZ * o;
-
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-
-		this.makeExtra(world, x + rot.offsetX * 3, y + 1, z + rot.offsetZ * 3);
-		this.makeExtra(world, x - rot.offsetX * 3, y + 1, z - rot.offsetZ * 3);
-		this.makeExtra(world, x + dir.offsetX + rot.offsetX, y + 1, z + dir.offsetZ + rot.offsetZ);
-		this.makeExtra(world, x + dir.offsetX - rot.offsetX, y + 1, z + dir.offsetZ - rot.offsetZ);
-		this.makeExtra(world, x - dir.offsetX + rot.offsetX, y + 1, z - dir.offsetZ + rot.offsetZ);
-		this.makeExtra(world, x - dir.offsetX - rot.offsetX, y + 1, z - dir.offsetZ - rot.offsetZ);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override
@@ -85,10 +88,10 @@ public class MachineCondenserPowered extends BlockDummyable implements ILookOver
 
 		List<String> text = new ArrayList<>();
 
-		text.add(BobMathUtil.getShortNumber(tower.power) + "HE / " + BobMathUtil.getShortNumber(TileEntityCondenserPowered.maxPower) + "HE");
+		text.add(I18nUtil.resolveKey("overlay.condenser_powered.he_he", BobMathUtil.getShortNumber(tower.power), BobMathUtil.getShortNumber(TileEntityCondenserPowered.maxPower)));
 
 		for(int i = 0; i < tower.tanks.length; i++)
-			text.add((i < 1 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET + tower.tanks[i].getTankType().getLocalizedName() + ": " + String.format(Locale.US, "%,d", tower.tanks[i].getFill()) + "/" + String.format(Locale.US, "%,d", tower.tanks[i].getMaxFill()) + "mB");
+			text.add(I18nUtil.resolveKey("overlay.common.tank", (i < 1 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET, tower.tanks[i].getTankType().getLocalizedName(), String.format(Locale.US, "%,d", tower.tanks[i].getFill()), String.format(Locale.US, "%,d", tower.tanks[i].getMaxFill())));
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}

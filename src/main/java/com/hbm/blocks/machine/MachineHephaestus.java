@@ -32,7 +32,7 @@ public class MachineHephaestus extends BlockDummyable implements ILookOverlay {
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		
+
 		if(meta >= 12) return new TileEntityMachineHephaestus();
 		if(meta >= 6) return new TileEntityProxyCombo().fluid();
 		return null;
@@ -47,51 +47,54 @@ public class MachineHephaestus extends BlockDummyable implements ILookOverlay {
 	public int getOffset() {
 		return 1;
 	}
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, 0, ForgeDirection.EAST.ordinal()},
+			{-1, 0, 0, ForgeDirection.WEST.ordinal()},
+			{0, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, -1, ForgeDirection.NORTH.ordinal()},
+			{1, 11, 0, ForgeDirection.EAST.ordinal()},
+			{-1, 11, 0, ForgeDirection.WEST.ordinal()},
+			{0, 11, 1, ForgeDirection.SOUTH.ordinal()},
+			{0, 11, -1, ForgeDirection.NORTH.ordinal()}
+		}, dir);
+	}
 	@Override
 	protected void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
-		
-		x -= dir.offsetX;
-		z -= dir.offsetZ;
-
-		this.makeExtra(world, x + 1, y, z);
-		this.makeExtra(world, x - 1, y, z);
-		this.makeExtra(world, x, y, z + 1);
-		this.makeExtra(world, x, y, z - 1);
-		this.makeExtra(world, x + 1, y + 11, z);
-		this.makeExtra(world, x - 1, y + 11, z);
-		this.makeExtra(world, x, y + 11, z + 1);
-		this.makeExtra(world, x, y + 11, z - 1);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(!world.isRemote && !player.isSneaking()) {
-				
+
 			if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof IItemFluidIdentifier) {
 				int[] pos = this.findCore(world, x, y, z);
-					
+
 				if(pos == null)
 					return false;
-				
+
 				TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
-				
+
 				if(!(te instanceof TileEntityMachineHephaestus))
 					return false;
-				
+
 				TileEntityMachineHephaestus heatex = (TileEntityMachineHephaestus) te;
 				FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, pos[0], pos[1], pos[2], player.getHeldItem());
 				heatex.input.setTankType(type);
 				heatex.markDirty();
-				player.addChatComponentMessage(new ChatComponentText("Changed type to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
 
-				
+
 				return true;
 			}
 			return false;
-			
+
 		} else {
 			return true;
 		}
@@ -100,25 +103,25 @@ public class MachineHephaestus extends BlockDummyable implements ILookOverlay {
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
 		int[] pos = this.findCore(world, x, y, z);
-		
+
 		if(pos == null)
 			return;
-		
+
 		TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
-		
+
 		if(!(te instanceof TileEntityMachineHephaestus))
 			return;
-		
+
 		TileEntityMachineHephaestus heatex = (TileEntityMachineHephaestus) te;
-		
+
 		List<String> text = new ArrayList();
-		text.add(String.format(Locale.US, "%,d", heatex.bufferedHeat) + " TU");
+		text.add(I18nUtil.resolveKey("overlay.hephaestus.tu", String.format(Locale.US, "%,d", heatex.bufferedHeat)));
 
 		for(int i = 0; i < heatex.getAllTanks().length; i++) {
 			FluidTank tank = heatex.getAllTanks()[i];
-			text.add((i == 0 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET + tank.getTankType().getLocalizedName() + ": " + tank.getFill() + "/" + tank.getMaxFill() + "mB");
+			text.add(I18nUtil.resolveKey("overlay.common.tank", (i == 0 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET, tank.getTankType().getLocalizedName(), tank.getFill(), tank.getMaxFill()));
 		}
-		
+
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 }

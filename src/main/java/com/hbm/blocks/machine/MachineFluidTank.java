@@ -37,6 +37,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.common.util.ForgeDirection;
+import com.hbm.util.i18n.I18nUtil;
 
 public class MachineFluidTank extends BlockDummyable implements IPersistentInfoProvider, IToolable, ILookOverlay {
 
@@ -60,21 +61,21 @@ public class MachineFluidTank extends BlockDummyable implements IPersistentInfoP
 	public int getOffset() {
 		return 1;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(world.isRemote) {
 			return true;
-		} 
+		}
 		else if(!player.isSneaking()) {
 			int[] pos = this.findCore(world, x, y, z);
 
 			if(pos == null)
 				return false;
-			
+
 			TileEntityMachineFluidTank tank = (TileEntityMachineFluidTank) world.getTileEntity(pos[0], pos[1], pos[2]);
-			
+
 			if(tank != null) {
 				if(tank.hasExploded) return false;
 				FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, pos[0], pos[1], pos[2]);
@@ -86,9 +87,9 @@ public class MachineFluidTank extends BlockDummyable implements IPersistentInfoP
 
 			if(pos == null)
 				return false;
-			
+
 			TileEntityMachineFluidTank tank = (TileEntityMachineFluidTank) world.getTileEntity(pos[0], pos[1], pos[2]);
-			
+
 			if(tank != null) {
 				if(tank.hasExploded) return false;
 			if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof IItemFluidIdentifier) {
@@ -96,26 +97,33 @@ public class MachineFluidTank extends BlockDummyable implements IPersistentInfoP
 
 				tank.tank.setTankType(type);
 				tank.markDirty();
-				player.addChatComponentMessage(new ChatComponentText("Changed type to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
 				}
-			} 
+			}
 			return true;
 		}else {
 			return true;
 		}
-		
-	}
 
+	}
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, -1, ForgeDirection.NORTH.ordinal()},
+			{1, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{-1, 0, -1, ForgeDirection.NORTH.ordinal()},
+			{-1, 0, 1, ForgeDirection.SOUTH.ordinal()}
+		}, dir);
+	}
 	@Override
 	protected void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
 
-		this.makeExtra(world, x - dir.offsetX + 1, y, z - dir.offsetZ + 1);
-		this.makeExtra(world, x - dir.offsetX + 1, y, z - dir.offsetZ - 1);
-		this.makeExtra(world, x - dir.offsetX - 1, y, z - dir.offsetZ + 1);
-		this.makeExtra(world, x - dir.offsetX - 1, y, z - dir.offsetZ - 1);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
-	
+
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
 		return IPersistentNBT.getDrops(world, x, y, z, this);
@@ -125,7 +133,7 @@ public class MachineFluidTank extends BlockDummyable implements IPersistentInfoP
 	public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {
 		FluidTank tank = new FluidTank(Fluids.NONE, 0);
 		tank.readFromNBT(persistentTag, "tank");
-		list.add(EnumChatFormatting.YELLOW + "" + tank.getFill() + "/" + tank.getMaxFill() + "mB " + tank.getTankType().getLocalizedName());
+		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.fluid_tank.mb", tank.getFill(), tank.getMaxFill(), tank.getTankType().getLocalizedName()));
 	}
 
 	@Override
@@ -140,20 +148,20 @@ public class MachineFluidTank extends BlockDummyable implements IPersistentInfoP
 		if(pos == null) return;
 		TileEntity core = world.getTileEntity(pos[0], pos[1], pos[2]);
 		if(!(core instanceof TileEntityMachineFluidTank)) return;
-		
+
 		TileEntityMachineFluidTank tank = (TileEntityMachineFluidTank) core;
 		if(tank.lastExplosion == explosion) return;
 		tank.lastExplosion = explosion;
-		
+
 		if(!tank.hasExploded) {
 			tank.explode();
-			
+
 			if(explosion.exploder != null && explosion.exploder instanceof EntityBombletZeta) {
 				if(tank.tank.getTankType().getTrait(FT_Flammable.class) == null) return;
-				
+
 				List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class,
 						AxisAlignedBB.getBoundingBox(x + 0.5, y + 0.5, z + 0.5, x + 0.5, y + 0.5, z + 0.5).expand(100, 100, 100));
-				
+
 				for(EntityPlayer p : players) p.triggerAchievement(MainRegistry.achInferno);
 			}
 		} else {
@@ -170,25 +178,25 @@ public class MachineFluidTank extends BlockDummyable implements IPersistentInfoP
 	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
 
 		int meta = world.getBlockMetadata(x, y, z);
-		
+
 		if(meta >= 6) {
 			int[] pos = this.findCore(world, x, y, z);
 			if(pos == null) return 0;
 			TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
-	
+
 			if(!(te instanceof TileEntityMachineFluidTank))
 				return 0;
-	
+
 			TileEntityMachineFluidTank tank = (TileEntityMachineFluidTank) te;
 			return tank.getComparatorPower();
 		}
-		
+
 		return 0;
 	}
 
 	@Override
 	public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, int side, float fX, float fY, float fZ, ToolType tool) {
-		
+
 		if(tool != ToolType.TORCH) return false;
 		return IRepairable.tryRepairMultiblock(world, x, y, z, this, player);
 	}

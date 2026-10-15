@@ -15,6 +15,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUIMachineSolderingStation extends GuiInfoContainer {
 
@@ -23,26 +24,26 @@ public class GUIMachineSolderingStation extends GuiInfoContainer {
 
 	public GUIMachineSolderingStation(InventoryPlayer playerInv, TileEntityMachineSolderingStation tile) {
 		super(new ContainerMachineSolderingStation(playerInv, tile));
-		
+
 		this.solderer = tile;
 		this.xSize = 176;
 		this.ySize = 204;
 	}
-	
+
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
 
 		solderer.tank.renderTankInfo(this, x, y, guiLeft + 35, guiTop + 63, 34, 16);
 		this.drawElectricityInfo(this, x, y, guiLeft + 152, guiTop + 18, 16, 52, solderer.getPower(), solderer.getMaxPower());
-		
+
 		this.drawCustomInfoStat(x, y, guiLeft + 78, guiTop + 67, 8, 8, guiLeft + 78, guiTop + 67, this.getUpgradeInfo(solderer));
-		
+
 
 		this.drawCustomInfoStat(x, y, guiLeft + 5, guiTop + 66, 10, 10, x, y,
-				"Recipe Collision Prevention: " + (solderer.collisionPrevention ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF"),
-				"Prevents no-fluid recipes from being processed",
-				"when fluid is present.");
+				I18nUtil.resolveKey("gui.soldering_station.recipe_collision_prevention") + (solderer.collisionPrevention ? EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on") : EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off")),
+				I18nUtil.resolveKey("gui.soldering_station.prevents_no_fluid_recipes"),
+				I18nUtil.resolveKey("gui.soldering_station.when_fluid_is_present"));
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public class GUIMachineSolderingStation extends GuiInfoContainer {
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, solderer.xCoord, solderer.yCoord, solderer.zCoord));
 		}
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.solderer.hasCustomInventoryName() ? this.solderer.getInventoryName() : I18n.format(this.solderer.getInventoryName());
@@ -69,7 +70,7 @@ public class GUIMachineSolderingStation extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		if(solderer.collisionPrevention) {
 			drawTexturedModalRect(guiLeft + 5, guiTop + 66, 192, 14, 10, 10);
 		}
@@ -79,7 +80,7 @@ public class GUIMachineSolderingStation extends GuiInfoContainer {
 
 		int i = solderer.progress * 33 / Math.max(solderer.processTime, 1);
 		drawTexturedModalRect(guiLeft + 72, guiTop + 28, 192, 0, i, 14);
-		
+
 		if(solderer.power >= solderer.consumption) {
 			drawTexturedModalRect(guiLeft + 156, guiTop + 4, 176, 52, 9, 12);
 		}

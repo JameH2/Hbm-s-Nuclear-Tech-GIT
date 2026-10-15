@@ -3,6 +3,7 @@ package com.hbm.items.machine;
 import java.util.List;
 
 import com.hbm.util.BobMathUtil;
+import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.energymk2.IBatteryItem;
 import cpw.mods.fml.relauncher.Side;
@@ -28,13 +29,13 @@ public class ItemBattery extends Item implements IBatteryItem {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		long charge = maxCharge;
-		
+
 		if(itemstack.hasTagCompound())
 			charge = getCharge(itemstack);
 
-		list.add("Energy stored: " + BobMathUtil.getShortNumber(charge) + "/" + BobMathUtil.getShortNumber(maxCharge) + "HE");
-		list.add("Charge rate: " + BobMathUtil.getShortNumber(chargeRate) + "HE/t");
-		list.add("Discharge rate: " + BobMathUtil.getShortNumber(dischargeRate) + "HE/t");
+		list.add(I18nUtil.resolveKey("desc.item.battery.energy_stored_he", BobMathUtil.getShortNumber(charge), BobMathUtil.getShortNumber(maxCharge)));
+		list.add(I18nUtil.resolveKey("item.battery.desc2", BobMathUtil.getShortNumber(chargeRate)));
+		list.add(I18nUtil.resolveKey("item.battery.desc3", BobMathUtil.getShortNumber(dischargeRate)));
 	}
 
 	public void chargeBattery(ItemStack stack, long i) {
@@ -138,7 +139,7 @@ public class ItemBattery extends Item implements IBatteryItem {
 		if(this.chargeRate > 0) {
 			list.add(getEmptyBattery(item));
 		}
-		
+
 		if(this.dischargeRate > 0) {
 			list.add(getFullBattery(item));
 		}

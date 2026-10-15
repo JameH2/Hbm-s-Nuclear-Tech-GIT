@@ -10,6 +10,8 @@ import java.util.List;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockOreFluid;
+import com.hbm.blocks.generic.BlockRichOre;
+import com.hbm.blocks.generic.OreRichnessHelper;
 import com.hbm.dim.SolarSystem;
 import com.hbm.inventory.UpgradeManagerNT;
 import com.hbm.inventory.RecipesCommon.AStack;
@@ -30,6 +32,8 @@ import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.InventoryUtil;
 import com.hbm.util.fauxpointtwelve.BlockPos;
@@ -37,7 +41,7 @@ import com.hbm.util.fauxpointtwelve.DirPos;
 import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
-import api.hbm.fluid.IFluidStandardSender;
+import api.hbm.fluidmk2.IFluidStandardSenderMK2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -60,7 +64,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityMachineMiningLaser extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardSender, IGUIProvider, IUpgradeInfoProvider {
+public class TileEntityMachineMiningLaser extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardSenderMK2, IGUIProvider, IUpgradeInfoProvider {
 
 	public long power;
 	public int age = 0;
@@ -117,16 +121,19 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		return false;
 	}
 
+	protected PortDef[] cachedSidePorts;
+	protected PortDef[] cachedTopPorts;
+	public PortDef[] getSidePorts() { if(cachedSidePorts == null) cachedSidePorts = TilePortShapes.flare(xCoord, yCoord, zCoord); return cachedSidePorts; }
+	public PortDef[] getTopPorts() { if(cachedTopPorts == null) cachedTopPorts = new PortDef[] {PortDef.make(xCoord, yCoord + 1, zCoord, Library.POS_Y)}; return cachedTopPorts; }
+
 	@Override
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
 
-			this.updateConnections();
-
-			for (DirPos pos : getConPos()) {
-				this.sendFluid(tank, worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-			}
+			this.setupPowerPorts(getTopPorts());
+			this.setupFluidPorts(getSidePorts());
+			this.updatePortPIFIFO();
 
 			power = Library.chargeTEFromItems(slots, 0, power, maxPower);
 
@@ -210,10 +217,6 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		}
 	}
 
-	private void updateConnections() {
-		this.trySubscribe(worldObj, xCoord, yCoord + 2, zCoord, ForgeDirection.UP);
-	}
-
 	@Override
 	public void serialize(ByteBuf buf) {
 		super.serialize(buf);
@@ -287,6 +290,19 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 
 		if(b == Blocks.lit_redstone_ore)
 			b = Blocks.redstone_ore;
+
+		// rich ore: sip one unit, bypass upgrade processing
+		if(b instanceof BlockRichOre) {
+			ItemStack drained = OreRichnessHelper.drainOneUnit(worldObj, targetX, targetY, targetZ, fortune);
+
+			if(drained != null) {
+				worldObj.spawnEntityInWorld(new EntityItem(worldObj, targetX + 0.5, targetY + 0.5, targetZ + 0.5, drained));
+			}
+
+			suckDrops();
+			breakProgress = 0;
+			return;
+		}
 
 		ItemStack stack = new ItemStack(b, 1, meta);
 
@@ -443,7 +459,11 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 
 	public double getBreakSpeed(int speed) {
 
-		float hardness = worldObj.getBlock(targetX, targetY, targetZ).getBlockHardness(worldObj, targetX, targetY, targetZ) * 15 / speed;
+		Block target = worldObj.getBlock(targetX, targetY, targetZ);
+		float hardness = target.getBlockHardness(worldObj, targetX, targetY, targetZ) * 15 / speed;
+
+		// rich ore: one block-time per stage left, 2.5x slower by hand-laser parity
+		if(target instanceof BlockRichOre) hardness *= (worldObj.getBlockMetadata(targetX, targetY, targetZ) + 1) * 2.5F;
 
 		if(hardness == 0)
 			return 1;
@@ -677,7 +697,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(this.KEY_FORTUNE, "+" + level));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
-			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + "YES");
+			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}
 

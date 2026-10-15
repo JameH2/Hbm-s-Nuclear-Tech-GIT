@@ -20,9 +20,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class PneumoStorageClutter extends BlockContainer {
 
@@ -93,7 +93,7 @@ public class PneumoStorageClutter extends BlockContainer {
 
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
-		
+
 		if(!world.isRemote && !ServerConfig.CRATE_KEEP_CONTENTS.get()) {
 			if(!player.capabilities.isCreativeMode) {
 				world.spawnEntityInWorld(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, new ItemStack(this)));
@@ -137,7 +137,7 @@ public class PneumoStorageClutter extends BlockContainer {
 					byte[] abyte = CompressedStreamTools.compress(drop.stackTagCompound);
 
 					if(abyte.length > 6000) {
-						player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Warning: Container NBT exceeds 6kB, contents will be ejected!"));
+						player.addChatComponentMessage(new ChatComponentTranslation("chat.pneumo_storage_clutter.line.01").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 						world.spawnEntityInWorld(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, new ItemStack(this)));
 						return world.setBlockToAir(x, y, z);
 					}
@@ -166,7 +166,7 @@ public class PneumoStorageClutter extends BlockContainer {
 			}
 			if(stack.hasDisplayName()) inv.setCustomName(stack.getDisplayName());
 		}
-		
+
 		super.onBlockPlacedBy(world, x, y, z, player, stack);
 	}
 }

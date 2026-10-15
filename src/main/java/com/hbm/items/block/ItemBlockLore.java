@@ -35,30 +35,30 @@ public class ItemBlockLore extends ItemBlockBase {
 		}
 
 		if(this.field_150939_a instanceof RedBarrel) {
-			list.add("Static fluid barrel");
+			list.add(I18nUtil.resolveKey("item.block_lore.desc1"));
 		}
 
 		if(this.field_150939_a == ModBlocks.meteor_battery) {
-			list.add("Provides infinite charge to tesla coils");
+			list.add(I18nUtil.resolveKey("item.block_lore.desc2"));
 		}
-		
+
 		if(this.field_150939_a == ModBlocks.gravel_diamond) {
-			list.add("There is some kind of joke here,");
-			list.add("but I can't quite tell what it is.");
+			list.add(I18nUtil.resolveKey("item.block_lore.desc3"));
+			list.add(I18nUtil.resolveKey("item.block_lore.desc4"));
 			list.add("");
-			list.add("Update, 2020-07-04:");
-			list.add("We deny any implications of a joke on");
-			list.add("the basis that it was so severely unfunny");
-			list.add("that people started stabbing their eyes out.");
+			list.add(I18nUtil.resolveKey("item.block_lore.desc5"));
+			list.add(I18nUtil.resolveKey("item.block_lore.desc6"));
+			list.add(I18nUtil.resolveKey("item.block_lore.desc7"));
+			list.add(I18nUtil.resolveKey("item.block_lore.desc8"));
 			list.add("");
-			list.add("Update, 2020-17-04:");
-			list.add("As it turns out, \"Diamond Gravel\" was");
-			list.add("never really a thing, rendering what might");
-			list.add("have been a joke as totally nonsensical.");
-			list.add("We apologize for getting your hopes up with");
-			list.add("this non-joke that hasn't been made.");
+			list.add(I18nUtil.resolveKey("item.block_lore.desc9"));
+			list.add(I18nUtil.resolveKey("item.block_lore.desc10"));
+			list.add(I18nUtil.resolveKey("item.block_lore.desc11"));
+			list.add(I18nUtil.resolveKey("item.block_lore.desc12"));
+			list.add(I18nUtil.resolveKey("item.block_lore.desc13"));
+			list.add(I18nUtil.resolveKey("item.block_lore.desc14"));
 			list.add("");
-			list.add("i added an item for a joke that isn't even here, what am i, stupid? can't even tell the difference between gravel and a gavel, how did i not forget how to breathe yet?");
+			list.add(I18nUtil.resolveKey("item.line.desc01"));
 		}
 	}
 

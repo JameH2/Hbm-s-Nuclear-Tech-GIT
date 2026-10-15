@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hbm.items.ModItems;
 import com.hbm.util.ItemStackUtil;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,7 +20,7 @@ public class ItemKitCustom extends ItemKitNBT {
 
 	@SideOnly(Side.CLIENT) IIcon overlay1;
 	@SideOnly(Side.CLIENT) IIcon overlay2;
-	
+
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tab, List list) {
 		// list.add(new ItemStack(item, 1, 0));
@@ -54,28 +55,28 @@ public class ItemKitCustom extends ItemKitNBT {
 		if(pass == 2) return getColor(stack, 2);
 		return 0xffffff;
 	}
-	
+
 	public static ItemStack create(String name, String lore, int color1, int color2, ItemStack... contents) {
 		ItemStack stack = new ItemStack(ModItems.kit_custom);
-		
+
 		stack.stackTagCompound = new NBTTagCompound();
 
 		setColor(stack, color1, 1);
 		setColor(stack, color2, 2);
-		
-		if(lore != null) ItemStackUtil.addTooltipToStack(stack, lore.split("\\$"));
-		stack.setStackDisplayName(EnumChatFormatting.RESET + name);
+
+		if(lore != null) stack.getTagCompound().setString(I18nUtil.ITEM_LORE_KEY, lore);
+		I18nUtil.setItemName(stack, name);
 		ItemStackUtil.addStacksToNBT(stack, contents);
-		
+
 		return stack;
 	}
-	
+
 	public static void setColor(ItemStack stack, int color, int index) {
 		if(!stack.hasTagCompound())
 			stack.stackTagCompound = new NBTTagCompound();
 		stack.stackTagCompound.setInteger("color" + index, color);
 	}
-	
+
 	public static int getColor(ItemStack stack, int index) {
 		if(!stack.hasTagCompound()) return 0;
 		return stack.stackTagCompound.getInteger("color" + index);

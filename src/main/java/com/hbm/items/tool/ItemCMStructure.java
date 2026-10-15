@@ -8,6 +8,7 @@ import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.fauxpointtwelve.BlockPos;
+import com.hbm.util.i18n.I18nUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemCMStructure extends Item implements ILookOverlay {
-	
+
 	private static File file = new File(MainRegistry.configHbmDir, "CMstructureOutput.txt");
 
 	public static BlockPos getAnchor(ItemStack stack) {
@@ -64,18 +65,18 @@ public class ItemCMStructure extends Item implements ILookOverlay {
 		int maxY = Math.max(y1, y2);
 		int minZ = Math.min(z1, z2);
 		int maxZ = Math.max(z1, z2);
-		
+
 		try {
 			JsonWriter writer = new JsonWriter(new FileWriter(config));
 			writer.setIndent("  ");
 			writer.beginObject();
 			writer.name("components").beginArray();
-			
+
 			for(int x = minX; x <= maxX; x++) {
 				for(int y = minY; y <= maxY; y++) {
 					for(int z = minZ; z <= maxZ; z++) {
-						
-						int compY = y - anchorY; 
+
+						int compY = y - anchorY;
 						int compX = 0;
 						int compZ = 0;
 
@@ -96,12 +97,12 @@ public class ItemCMStructure extends Item implements ILookOverlay {
 							compZ = anchorX - x;
 							compX = z - anchorZ;
 						}
-						
+
 						if(x == anchorX && y == anchorY && z == anchorZ) continue;
 						Block block = world.getBlock(x, y, z);
 						int meta = world.getBlockMetadata(x, y, z);
 						if(block == Blocks.air) continue;
-						
+
 						writer.beginObject().setIndent("");
 						writer.name("block").value(Block.blockRegistry.getNameForObject(block));
 						writer.name("x").value(compX);
@@ -156,10 +157,10 @@ public class ItemCMStructure extends Item implements ILookOverlay {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 		super.addInformation(stack, player, list, ext);
-		list.add(EnumChatFormatting.YELLOW + "Click Custom Machine Structure Positioning Anchor to");
-		list.add(EnumChatFormatting.YELLOW + "Confirm the location of the custom machine core block.");
-		list.add(EnumChatFormatting.YELLOW + "Output all blocks between Position1 and Position2 with");
-		list.add(EnumChatFormatting.YELLOW + "metadata to \"CMstructureOutput.txt\" in hbmConfig.");
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.cm_structure.desc1"));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.cm_structure.desc2"));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.cm_structure.desc3"));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.cm_structure.desc4"));
 	}
 
 	@Override
@@ -171,24 +172,24 @@ public class ItemCMStructure extends Item implements ILookOverlay {
 
 		if(anchor == null) {
 
-			text.add(EnumChatFormatting.RED + "No Anchor");
+			text.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.cm_structure.desc5"));
 		} else {
 			int anchorX = stack.stackTagCompound.getInteger("anchorX");
 			int anchorY = stack.stackTagCompound.getInteger("anchorY");
 			int anchorZ = stack.stackTagCompound.getInteger("anchorZ");
-			text.add(EnumChatFormatting.GOLD + "Anchor: " + anchorX + " / " + anchorY + " / " + anchorZ);
+			text.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.cm_structure.desc6", anchorX, anchorY, anchorZ));
 			if(stack.stackTagCompound.hasKey("x1")) {
 				int x1 = stack.stackTagCompound.getInteger("x1");
 				int y1 = stack.stackTagCompound.getInteger("y1");
 				int z1 = stack.stackTagCompound.getInteger("z1");
 
-				text.add(EnumChatFormatting.YELLOW + "Position1: " + x1 + " / " + y1 + " / " + z1);
+				text.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.cm_structure.desc7", x1, y1, z1));
 			}
 			if(stack.stackTagCompound.hasKey("x2")) {
 				int x2 = stack.stackTagCompound.getInteger("x2");
 				int y2 = stack.stackTagCompound.getInteger("y2");
 				int z2 = stack.stackTagCompound.getInteger("z2");
-				text.add(EnumChatFormatting.YELLOW + "Position2: " + x2 + " / " + y2 + " / " + z2);
+				text.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.cm_structure.desc8", x2, y2, z2));
 			}
 		}
 

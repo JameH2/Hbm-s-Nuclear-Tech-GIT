@@ -11,6 +11,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 
 import java.util.ArrayList;
 import java.util.Random;
+import com.hbm.util.i18n.I18nUtil;
 
 public class BlockRemap extends Block implements ILookOverlay {
 
@@ -42,6 +43,6 @@ public class BlockRemap extends Block implements ILookOverlay {
 
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
-		ILookOverlay.printGeneric(event, "Compatibility block, will convert on update tick.", 0xffff00, 0x404000, new ArrayList());
+		ILookOverlay.printGeneric(event, I18nUtil.resolveKey("gui.remap.compatibility_block_convert_upda"), 0xffff00, 0x404000, new ArrayList());
 	}
 }

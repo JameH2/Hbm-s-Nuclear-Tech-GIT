@@ -7,6 +7,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.storage.WorldInfo;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class CommandTotalTime extends CommandBase {
 
@@ -22,7 +23,7 @@ public class CommandTotalTime extends CommandBase {
 	}
 
 	public String getCommandUsage(ICommandSender sender) {
-		return "commands.time.usage";
+		return "commands.total_time.totaltime";
 	}
 
 	public void processCommand(ICommandSender sender, String[] args) {
@@ -44,7 +45,7 @@ public class CommandTotalTime extends CommandBase {
 			}
 		}
 
-		throw new WrongUsageException("commands.time.usage", new Object[0]);
+		sender.addChatMessage(new ChatComponentTranslation("commands.time.usage"));
 	}
 
 	/**

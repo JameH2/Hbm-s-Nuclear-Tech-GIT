@@ -109,12 +109,12 @@ public class MachinePWRController extends BlockContainer implements ITooltipProv
 		floodFill(world, x + dir.offsetX, y, z + dir.offsetZ, player);
 
 		if(fuelRods.size() == 0){
-			sendError(world, x, y, z, "Fuel rods required", player);
+			sendError(world, x, y, z, "chat.fuel_rods_required", player);
 			errored = true;
 		}
 
 		if(sources.size() == 0) {
-			sendError(world, x, y, z, "Neutron sources required", player);
+			sendError(world, x, y, z, "chat.neutron_sources_required", player);
 			errored = true;
 		}
 
@@ -159,7 +159,7 @@ public class MachinePWRController extends BlockContainer implements ITooltipProv
 		if(assembly.containsKey(pos)) return;
 		if(assembly.size() >= maxSize) {
 			errored = true;
-			sendError(world, x, y, z, "Max size exceeded", player);
+			sendError(world, x, y, z, "chat.max_size_exceeded", player);
 			return;
 		}
 
@@ -183,11 +183,15 @@ public class MachinePWRController extends BlockContainer implements ITooltipProv
 			return;
 		}
 
-		sendError(world, x, y, z, "Non-reactor block", player);
+		sendError(world, x, y, z, "chat.non_reactor_block", player);
 		errored = true;
 	}
 
 	public static void sendError(World world, int x, int y, int z, String message, EntityPlayer player) {
+		sendError(world, x, y, z, message, null, player);
+	}
+
+	public static void sendError(World world, int x, int y, int z, String message, String messageArgs, EntityPlayer player) {
 
 		if(player instanceof EntityPlayerMP) {
 			NBTTagCompound data = new NBTTagCompound();
@@ -196,6 +200,7 @@ public class MachinePWRController extends BlockContainer implements ITooltipProv
 			data.setInteger("expires", 5_000);
 			data.setDouble("dist", 128D);
 			if(message != null) data.setString("label", message);
+			if(messageArgs != null) data.setString("labelArgs", messageArgs);
 			PacketThreading.createSendToThreadedPacket(new AuxParticlePacketNT(data, x, y, z), (EntityPlayerMP) player);
 		}
 	}

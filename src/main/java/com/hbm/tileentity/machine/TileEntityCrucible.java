@@ -117,24 +117,23 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
 				for(EntityItem item : list) {
 					if(item.isDead) continue;
 					ItemStack stack = item.getEntityItem();
-					if(this.isItemSmeltable(stack)) {
 
-						for(int i = 1; i < 10; i++) {
-							if(slots[i] == null) {
+					for(int i = 1; i < 10; i++) {
+						//re-check for every item so material already queued in the buffer is accounted for
+						if(slots[i] == null && this.isItemSmeltable(stack, true)) {
 
-								if(stack.stackSize == 1) {
-									slots[i] = stack.copy();
-									item.setDead();
-									item.delayBeforeCanPickup = 60;
-									break;
-								} else {
-									slots[i] = stack.copy();
-									slots[i].stackSize = 1;
-									stack.stackSize--;
-								}
-
-								this.markChanged();
+							if(stack.stackSize == 1) {
+								slots[i] = stack.copy();
+								item.setDead();
+								item.delayBeforeCanPickup = 60;
+								break;
+							} else {
+								slots[i] = stack.copy();
+								slots[i].stackSize = 1;
+								stack.stackSize--;
 							}
+
+							this.markChanged();
 						}
 					}
 				}
@@ -453,10 +452,22 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack stack) {
-		return isItemSmeltable(stack);
+		return isItemSmeltable(stack, true);
 	}
 
 	public boolean isItemSmeltable(ItemStack stack) {
+		return isItemSmeltable(stack, false);
+	}
+
+	/**
+	 * Checks whether an item can be smelted in the crucible.
+	 * @param includeBuffer when true, material already waiting in the input buffer is counted towards the
+	 *                      crucible's capacity. This must be used for admission (item collection and slot
+	 *                      validation) so that more material than the crucible can ultimately hold never
+	 *                      gets queued. When checking which buffered item can be smelted right now, this
+	 *                      must be false, otherwise a full buffer would block itself.
+	 */
+	public boolean isItemSmeltable(ItemStack stack, boolean includeBuffer) {
 
 		List<MaterialStack> materials = Mats.getSmeltingMaterialsFromItem(stack);
 
@@ -472,6 +483,23 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
 		//the total amount of the current waste stack, used for simulation
 		int recipeAmount = getQuantaFromType(this.recipeStack, null);
 		int wasteAmount = getQuantaFromType(this.wasteStack, null);
+
+		//account for material that is already queued in the input buffer
+		if(includeBuffer) {
+			for(int i = 1; i < 10; i++) {
+				if(slots[i] == null) continue;
+
+				for(MaterialStack buffered : Mats.getSmeltingMaterialsFromItem(slots[i])) {
+					if(recipe != null && getQuantaFromType(recipe.output, buffered.material) > 0) {
+						recipeAmount += buffered.amount;
+					} else if(recipe != null && getQuantaFromType(recipe.input, buffered.material) > 0) {
+						recipeAmount += buffered.amount;
+					} else {
+						wasteAmount += buffered.amount;
+					}
+				}
+			}
+		}
 
 		for(MaterialStack mat : materials) {
 			//if no recipe is loaded, everything will land in the waste stack
@@ -493,6 +521,9 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
 				int matMaximum = recipeInputRequired * this.recipeZCapacity / recipeContent;
 				int amountStored = getQuantaFromType(recipeStack, mat.material);
 
+				//include buffered material of the same type
+				if(includeBuffer) amountStored += getBufferedQuanta(mat.material);
+
 				matchesRecipe = true;
 				recipeAmount += mat.amount;
 
@@ -504,6 +535,22 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
 
 		//if the amount doesn't exceed the capacity and the recipe matches (or isn't null), return true
 		return recipeAmount <= this.recipeZCapacity && wasteAmount <= this.wasteZCapacity && matchesRecipe;
+	}
+
+	/** Returns the total amount of a material that is currently waiting in the input buffer. */
+	protected int getBufferedQuanta(NTMMaterial mat) {
+
+		int sum = 0;
+
+		for(int i = 1; i < 10; i++) {
+			if(slots[i] == null) continue;
+
+			for(MaterialStack buffered : Mats.getSmeltingMaterialsFromItem(slots[i])) {
+				if(buffered.material == mat) sum += buffered.amount;
+			}
+		}
+
+		return sum;
 	}
 
 	public void addToStack(List<MaterialStack> stack, MaterialStack matStack) {
@@ -625,16 +672,15 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
 		int recipeContent = recipe.getInputAmount();
 		int recipeInputRequired = getQuantaFromType(recipe.input, stack.material);
 		int matMaximum = recipeInputRequired * this.recipeZCapacity / recipeContent;
+		int amount = getQuantaFromType(this.recipeStack, stack.material);
+		int amountTotal = getQuantaFromType(this.recipeStack, null);
 
-		if(recipeInputRequired + stack.amount <= matMaximum) {
-			this.addToStack(this.recipeStack, stack.copy());
-			return null;
-		}
+		int toAdd = Math.min(matMaximum - amount, this.recipeZCapacity - amountTotal);
+		toAdd = Math.min(toAdd, stack.amount);
+		if(toAdd <= 0) return stack;
 
-		int toAdd = matMaximum - stack.amount;
-		toAdd = Math.min(toAdd, this.recipeZCapacity - getQuantaFromType(this.recipeStack, null));
 		this.addToStack(this.recipeStack, new MaterialStack(stack.material, toAdd));
-		return new MaterialStack(stack.material, stack.amount - toAdd);
+		return toAdd < stack.amount ? new MaterialStack(stack.material, stack.amount - toAdd) : null;
 	}
 
 	@Override public boolean canAcceptPartialFlow(World world, int x, int y, int z, ForgeDirection side, MaterialStack stack) { return false; }
@@ -659,7 +705,7 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("index") && data.hasKey("selection")) {
 			int index = data.getInteger("index");
 			String selection = data.getString("selection");

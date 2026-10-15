@@ -55,7 +55,7 @@ public class MachineDishControl extends BlockDummyable implements ITooltipProvid
 					player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)
 						.nextTranslation(this.getUnlocalizedName() + ".name").color(EnumChatFormatting.DARK_AQUA)
 						.next("] ").color(EnumChatFormatting.DARK_AQUA)
-						.next("Dish not linked!").color(EnumChatFormatting.RED).flush());
+						.nextTranslation("chat.dish_control.not_linked").color(EnumChatFormatting.RED).flush());
 
 					return false;
 				}
@@ -68,7 +68,7 @@ public class MachineDishControl extends BlockDummyable implements ITooltipProvid
 					player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)
 						.nextTranslation(this.getUnlocalizedName() + ".name").color(EnumChatFormatting.DARK_AQUA)
 						.next("] ").color(EnumChatFormatting.DARK_AQUA)
-						.next("Missing control target!").color(EnumChatFormatting.RED).flush());
+						.nextTranslation("chat.dish_control.missing_target").color(EnumChatFormatting.RED).flush());
 
 					return false;
 				}

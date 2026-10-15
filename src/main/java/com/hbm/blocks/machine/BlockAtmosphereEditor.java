@@ -48,10 +48,10 @@ public class BlockAtmosphereEditor extends BlockContainer implements IToolable, 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.GOLD + "Use screwdriver to turn on and off");
-		list.add(EnumChatFormatting.GOLD + "Use hand drill to increase/decrease throughput");
-		list.add(EnumChatFormatting.GOLD + "Use defuser to switch emission/capture mode");
-		list.add(EnumChatFormatting.GOLD + "Use fluid identifier to change fluid");
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.atmosphere_editor.screwdriver_turn_off"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.atmosphere_editor.hand_drill_increase"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.atmosphere_editor.defuser_switch_emission"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.atmosphere_editor.fluid_identifier_change"));
 	}
 
 	@Override
@@ -72,10 +72,10 @@ public class BlockAtmosphereEditor extends BlockContainer implements IToolable, 
 
 		List<String> text = new ArrayList<String>();
 
-		text.add("State: " + (editor.isOn ? "RUNNING" : "OFF"));
-		text.add("Current gas: " + editor.fluid.getLocalizedName() + " - " + pressure);
-		text.add("Current mode: " + (editor.isEmitting ? "EMITTING" : "CAPTURING"));
-		text.add("Current throughput: " + Math.pow(10, editor.throughputFactor) / AstronomyUtil.MB_PER_ATM);
+		text.add(I18nUtil.resolveKey("overlay.atmosphere_editor.state", (editor.isOn ? I18nUtil.resolveKey("gui.atmosphere_editor.running") : I18nUtil.resolveKey("gui.common.off"))));
+		text.add(I18nUtil.resolveKey("overlay.atmosphere_editor.current_gas", editor.fluid.getLocalizedName(), pressure));
+		text.add(I18nUtil.resolveKey("overlay.atmosphere_editor.current_mode", (editor.isEmitting ? I18nUtil.resolveKey("gui.atmosphere_editor.emitting") : I18nUtil.resolveKey("gui.atmosphere_editor.capturing"))));
+		text.add(I18nUtil.resolveKey("overlay.atmosphere_editor.current_throughput", Math.pow(10, editor.throughputFactor) / AstronomyUtil.MB_PER_ATM));
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
@@ -124,7 +124,7 @@ public class BlockAtmosphereEditor extends BlockContainer implements IToolable, 
 			FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, x, y, z, player.getHeldItem());
 			editor.fluid = type;
 			editor.markDirty();
-			player.addChatComponentMessage(new ChatComponentText("Changed type to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+			player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
 
 			return true;
 		}

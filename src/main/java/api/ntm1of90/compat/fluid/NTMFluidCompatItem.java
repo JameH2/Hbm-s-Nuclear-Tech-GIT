@@ -1,7 +1,5 @@
 package api.ntm1of90.compat.fluid;
 
-import com.hbm.lib.RefStrings;
-
 import api.ntm1of90.compat.fluid.render.NTMFluidCompatRenderer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -47,7 +45,6 @@ public class NTMFluidCompatItem extends Item {
     private NTMFluidCompatItem() {
         super();
         this.setUnlocalizedName("ntm_fluid_compat");
-        this.setTextureName(RefStrings.MODID + ":forgefluid/water");
         this.setCreativeTab(null); // Not shown in creative tab
     }
     

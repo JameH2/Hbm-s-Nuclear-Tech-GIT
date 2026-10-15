@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.items.ModItems;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAICreeperSwell;
@@ -21,33 +22,33 @@ public class ItemModDefuser extends ItemArmorMod {
 	public ItemModDefuser() {
 		super(ArmorModHandler.extra, true, true, true, true);
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.YELLOW + "Defuses nearby creepers");
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.mod_defuser.defuses_nearby_creepers"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.YELLOW + "  " + stack.getDisplayName() + " (Defuses creepers)");
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.mod_defuser.defuses_creepers", stack.getDisplayName()));
 	}
 
 	@Override
 	public void modUpdate(EntityLivingBase entity, ItemStack armor) {
-		
+
 		if(entity.worldObj.isRemote || entity.worldObj.getTotalWorldTime() % 20 != 0) return;
-		
+
 		List<EntityCreeper> creepers = entity.worldObj.getEntitiesWithinAABB(EntityCreeper.class, entity.boundingBox.expand(5, 5, 5));
-		
+
 		for(EntityCreeper creeper : creepers) castrateCreeper(creeper, entity, true);
 	}
-	
+
 	/** my bualls */
 	public static boolean castrateCreeper(EntityCreeper creeper, EntityLivingBase entity, boolean dropItem) {
-		
+
 		creeper.setCreeperState(-1);
 		creeper.getDataWatcher().updateObject(18, new Byte((byte) 0));
 
@@ -74,7 +75,7 @@ public class ItemModDefuser extends ItemArmorMod {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 }

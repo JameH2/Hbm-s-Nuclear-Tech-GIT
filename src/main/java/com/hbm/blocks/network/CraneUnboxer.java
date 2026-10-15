@@ -11,9 +11,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -99,7 +99,14 @@ public class CraneUnboxer extends BlockCraneBase implements IEnterableBlock {
 
 	@Override
 	public boolean canPackageEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorPackage entity) {
-		return getOutputSide(world, x, y, z) == dir;
+		if(getOutputSide(world, x, y, z) != dir || entity == null) return false;
+
+		TileEntity te = world.getTileEntity(x, y, z);
+		if(!(te instanceof TileEntityCraneUnboxer)) return false;
+
+		TileEntityCraneUnboxer unboxer = (TileEntityCraneUnboxer) te;
+		ForgeDirection accessedSide = getOutputSide(world, x, y, z).getOpposite();
+		return CraneInserter.canAddAllToInventory(unboxer, unboxer.getAccessibleSlotsFromSide(accessedSide.ordinal()), accessedSide.ordinal(), entity.getItemStacks());
 	}
 
 	@Override
@@ -108,12 +115,7 @@ public class CraneUnboxer extends BlockCraneBase implements IEnterableBlock {
 		ForgeDirection accessedSide = getOutputSide(world, x, y, z).getOpposite();
 
 		for(ItemStack stack : entity.getItemStacks()) {
-			ItemStack remainder = CraneInserter.addToInventory(unboxer, unboxer.getAccessibleSlotsFromSide(accessedSide.ordinal()), stack, accessedSide.ordinal());
-			
-			if(remainder != null && remainder.stackSize > 0) {
-				EntityItem drop = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, remainder.copy());
-				world.spawnEntityInWorld(drop);
-			}
+			if(stack != null) CraneInserter.addToInventory(unboxer, unboxer.getAccessibleSlotsFromSide(accessedSide.ordinal()), stack, accessedSide.ordinal());
 		}
 	}
 	

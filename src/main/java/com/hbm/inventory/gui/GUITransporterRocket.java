@@ -1,5 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.util.i18n.I18nUtil;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -17,7 +19,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
 public class GUITransporterRocket extends GuiInfoContainer {
-	
+
 	protected static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_transporter.png");
 
 	private GuiTextField transporterName;
@@ -28,7 +30,7 @@ public class GUITransporterRocket extends GuiInfoContainer {
 		super(new ContainerTransporterRocket(invPlayer, transporter));
 
 		this.transporter = transporter;
-	
+
 		xSize = 230;
 		ySize = 236;
 	}
@@ -36,13 +38,13 @@ public class GUITransporterRocket extends GuiInfoContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		
+
 		Keyboard.enableRepeatEvents(true);
 		transporterName = new GuiTextField(this.fontRendererObj, guiLeft + 8, guiTop + 12, 122, 12);
 		transporterName.setTextColor(0x00ff00);
 		transporterName.setDisabledTextColour(0x00ff00);
 		transporterName.setEnableBackgroundDrawing(false);
-		transporterName.setText(transporter.getTransporterName());
+		transporterName.setText(I18nUtil.resolveKey(transporter.getTransporterName()));
 	}
 
 	@Override
@@ -105,7 +107,7 @@ public class GUITransporterRocket extends GuiInfoContainer {
 		int width = fontRendererObj.getStringWidth("x" + threshold);
 
 		fontRendererObj.drawStringWithShadow("x" + threshold, guiLeft + 167 - width, guiTop + 12, -1);
-		
+
 		transporterName.drawTextBox();
 	}
 
@@ -114,17 +116,17 @@ public class GUITransporterRocket extends GuiInfoContainer {
 		super.mouseClicked(mouseX, mouseY, button);
 		transporterName.mouseClicked(mouseX, mouseY, button);
 	}
-	
+
 	@Override
 	protected void mouseClickMove(int mouseX, int mouseY, int lastButtonClicked, long timeSinceLastClick) {
 		super.mouseClickMove(mouseX, mouseY, lastButtonClicked, timeSinceLastClick);
-	
+
 		int slidPos = transporter.threshold;
 
 		if(isInAABB(mouseX, mouseY, guiLeft + 98, guiTop + 120, 74, 20)) {
 			slidPos = (int)((mouseX - (guiLeft + 98)) / 6.78);
 			slidPos = MathHelper.clamp_int(slidPos, 0, 10); // 2^0 - 2^9 | 0 - 512
-			
+
 			NBTTagCompound data = new NBTTagCompound();
 			data.setDouble("threshold", slidPos);
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, transporter.xCoord, transporter.yCoord, transporter.zCoord));

@@ -35,12 +35,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import com.hbm.util.i18n.I18nUtil;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class BlockStorageCrate extends BlockContainer implements IBlockMulti, ILookOverlay, ITooltipProvider {
 
@@ -104,7 +105,7 @@ public class BlockStorageCrate extends BlockContainer implements IBlockMulti, IL
 
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
-		
+
 		if(!world.isRemote && !ServerConfig.CRATE_KEEP_CONTENTS.get()) {
 			dropInv = true;
 			if(!player.capabilities.isCreativeMode) {
@@ -175,7 +176,7 @@ public class BlockStorageCrate extends BlockContainer implements IBlockMulti, IL
 					byte[] abyte = CompressedStreamTools.compress(drop.stackTagCompound);
 
 					if(abyte.length > 6000) {
-						player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Warning: Container NBT exceeds 6kB, contents will be ejected!"));
+						player.addChatComponentMessage(new ChatComponentTranslation("chat.storage_crate.line.01").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 						world.spawnEntityInWorld(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, new ItemStack(this)));
 						return world.setBlockToAir(x, y, z);
 					}
@@ -327,23 +328,23 @@ public class BlockStorageCrate extends BlockContainer implements IBlockMulti, IL
 
 			if(stack.stackTagCompound.getBoolean("spiders")) {
 				if(stack.stackTagCompound.hasKey("lock")) {
-					list.add(EnumChatFormatting.RED + "This container is locked.");
+					list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("tile.container_locked"));
 				}
-				list.add(EnumChatFormatting.GRAY + "" + EnumChatFormatting.ITALIC + "Skittering emanates from within..."); // lamo
+				list.add(("" + EnumChatFormatting.GRAY + EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("tile.skittering_emanates_within")); // lamo
 				return;
 			}
 
 			if(stack.stackTagCompound.hasKey("lock")) {
-				list.add(EnumChatFormatting.RED + "This container is locked."); // Sorry people who want to see what's in it while it's locked...
+				list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("tile.container_locked")); // Sorry people who want to see what's in it while it's locked...
 
 				for(int i = 0; i < 104; i++) {
 					ItemStack content = ItemStack.loadItemStackFromNBT(stack.stackTagCompound.getCompoundTag("slot" + i));
 					if(content != null) {
-						list.add(EnumChatFormatting.YELLOW + "It feels heavy...");
+						list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.storage_crate.it_feels_heavy"));
 						return;
 					}
 				}
-				list.add(EnumChatFormatting.YELLOW + "It feels empty...");
+				list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.storage_crate.it_feels_empty"));
 				return;
 			}
 
@@ -363,12 +364,12 @@ public class BlockStorageCrate extends BlockContainer implements IBlockMulti, IL
 			}
 
 			if(!contents.isEmpty()) {
-				list.add(EnumChatFormatting.AQUA + "Contains:");
+				list.add((EnumChatFormatting.AQUA) + I18nUtil.resolveKey("tile.storage_crate.contains"));
 				list.addAll(contents);
 				amount -= contents.size();
 
 				if(amount > 0) {
-					list.add(EnumChatFormatting.AQUA + "...and " + amount + " more.");
+					list.add((EnumChatFormatting.AQUA) + I18nUtil.resolveKey("tile.storage_crate.and_more", amount));
 				}
 			}
 		}
@@ -376,7 +377,7 @@ public class BlockStorageCrate extends BlockContainer implements IBlockMulti, IL
 
 	@Override
 	public void printHook(RenderGameOverlayEvent.Pre event, World world, int x, int y, int z) {
-		
+
 		TileEntity te = world.getTileEntity(x, y, z);
 
 		if (!(te instanceof IInventory))
@@ -386,7 +387,7 @@ public class BlockStorageCrate extends BlockContainer implements IBlockMulti, IL
 
 		if (!inv.hasCustomInventoryName())
 			return;
-		
+
 		ILookOverlay.printGeneric(event, inv.getInventoryName(), 0xffff00, 0x404000, new ArrayList<String>(0));
 	}
 }

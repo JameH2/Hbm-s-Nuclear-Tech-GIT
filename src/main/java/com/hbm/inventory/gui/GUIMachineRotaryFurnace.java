@@ -27,12 +27,12 @@ public class GUIMachineRotaryFurnace extends GuiInfoContainer {
 
 	public GUIMachineRotaryFurnace(InventoryPlayer playerInv, TileEntityMachineRotaryFurnace tile) {
 		super(new ContainerMachineRotaryFurnace(playerInv, tile));
-		
+
 		this.furnace = tile;
 		this.xSize = 176;
 		this.ySize = 186;
 	}
-	
+
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
@@ -40,21 +40,21 @@ public class GUIMachineRotaryFurnace extends GuiInfoContainer {
 		furnace.tanks[0].renderTankInfo(this, x, y, guiLeft + 8, guiTop + 36, 52, 16);
 		furnace.tanks[1].renderTankInfo(this, x, y, guiLeft + 134, guiTop + 18, 16, 52);
 		furnace.tanks[2].renderTankInfo(this, x, y, guiLeft + 152, guiTop + 18, 16, 52);
-		
+
 		Slot slot = (Slot) this.inventorySlots.inventorySlots.get(4);
 		if(this.isMouseOverSlot(slot, x, y) && !slot.getHasStack()) {
 			List<String> bonuses = this.furnace.burnModule.getDesc();
 			if(!bonuses.isEmpty()) this.func_146283_a(bonuses, x, y);
 		}
-		
+
 		if(furnace.output == null) {
-			this.drawCustomInfoStat(x, y, guiLeft + 98, guiTop + 18, 16, 52, x, y, EnumChatFormatting.RED + "Empty");
+			this.drawCustomInfoStat(x, y, guiLeft + 98, guiTop + 18, 16, 52, x, y, EnumChatFormatting.RED + I18nUtil.resolveKey("gui.rotary_furnace.empty"));
 		} else {
 			this.drawCustomInfoStat(x, y, guiLeft + 98, guiTop + 18, 16, 52, x, y,EnumChatFormatting.YELLOW +
 					I18nUtil.resolveKey(furnace.output.material.getUnlocalizedName()) + ": " + Mats.formatAmount(furnace.output.amount, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
 		}
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.furnace.hasCustomInventoryName() ? this.furnace.getInventoryName() : I18n.format(this.furnace.getInventoryName());
@@ -67,19 +67,19 @@ public class GUIMachineRotaryFurnace extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		int p = (int) Math.ceil(furnace.progress * 33);
 		drawTexturedModalRect(guiLeft + 63, guiTop + 30, 176, 0, p, 10);
-		
+
 		if(furnace.maxBurnTime > 0) {
 			int b = furnace.burnTime * 14 / furnace.maxBurnTime;
 			drawTexturedModalRect(guiLeft + 26, guiTop + 69 - b, 176, 24 - b, 14, b);
 		}
-		
+
 		if(furnace.output != null) {
-			
+
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-			
+
 			int hex = furnace.output.material.moltenColor;
 			int amount = furnace.output.amount * 52 / furnace.maxOutput;
 			Color color = new Color(hex);

@@ -29,6 +29,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import com.hbm.util.i18n.I18nUtil;
 
 public class MachineOilWell extends BlockDummyable implements IPersistentInfoProvider {
 
@@ -51,7 +52,15 @@ public class MachineOilWell extends BlockDummyable implements IPersistentInfoPro
 	public int getOffset() {
 		return 0;
 	}
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{0, 0, 0, ForgeDirection.EAST.ordinal()},
+			{0, 0, 0, ForgeDirection.WEST.ordinal()},
+			{0, 0, 0, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, 0, ForgeDirection.NORTH.ordinal()}
+		}, dir);
+	}
 	@Override
 	protected boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		return MultiblockHandlerXR.checkSpace(world, x, y, z, new int[] {1, -1, 0, 0, 0, 0}, x, y, z, dir) &&
@@ -71,26 +80,26 @@ public class MachineOilWell extends BlockDummyable implements IPersistentInfoPro
 		MultiblockHandlerXR.fillSpace(world, x - 1, y + 1, z + 1, new int[] {-1, 1, 0, 0, 0, 0}, this, dir);
 		MultiblockHandlerXR.fillSpace(world, x - 1, y + 1, z - 1, new int[] {-1, 1, 0, 0, 0, 0}, this, dir);
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(world.isRemote) {
 			return true;
 		} else if(!player.isSneaking()) {
-			
+
 			int[] pos = this.findCore(world, x, y, z);
-			
+
 			if(pos == null)
 				return false;
-			
+
 			FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, pos[0], pos[1], pos[2]);
 			return true;
 		} else {
 			return true;
 		}
 	}
-	
+
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
 		return IPersistentNBT.getDrops(world, x, y, z, this);
@@ -98,11 +107,11 @@ public class MachineOilWell extends BlockDummyable implements IPersistentInfoPro
 
 	@Override
 	public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.GREEN + BobMathUtil.getShortNumber(persistentTag.getLong("power")) + "HE");
+		list.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("overlay.common.energy_value", BobMathUtil.getShortNumber(persistentTag.getLong("power"))));
 		for(int i = 0; i < 2; i++) {
 			FluidTank tank = new FluidTank(Fluids.NONE, 0);
 			tank.readFromNBT(persistentTag, "t" + i);
-			list.add(EnumChatFormatting.YELLOW + "" + tank.getFill() + "/" + tank.getMaxFill() + "mB " + tank.getTankType().getLocalizedName());
+			list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.oil_well.mb", tank.getFill(), tank.getMaxFill(), tank.getTankType().getLocalizedName()));
 		}
 	}
 
@@ -113,10 +122,10 @@ public class MachineOilWell extends BlockDummyable implements IPersistentInfoPro
 		if(pos == null) return;
 		TileEntity core = world.getTileEntity(pos[0], pos[1], pos[2]);
 		if(!(core instanceof TileEntityMachineOilWell)) return;
-		
+
 		world.setBlockToAir(x, y, z);
 		onBlockDestroyedByExplosion(world, x, y, z, explosion);
-		
+
 		TileEntityMachineOilWell well = (TileEntityMachineOilWell) core;
 		if(well.tanks[0].getFill() > 0 || well.tanks[1].getFill() > 0) {
 			well.tanks[0].setFill(0);
@@ -128,7 +137,7 @@ public class MachineOilWell extends BlockDummyable implements IPersistentInfoPro
 			xnt.setEntityProcessor(new EntityProcessorStandard());
 			xnt.setPlayerProcessor(new PlayerProcessorStandard());
 			xnt.explode();
-			
+
 			ExplosionCreator.composeEffect(world, pos[0] + 0.5, pos[1] + 0.5, pos[2] + 0.5, 10, 2F, 0.5F, 25F, 5, 8, 20, 0.75F, 1F, -2F, 150);
 		}
 	}

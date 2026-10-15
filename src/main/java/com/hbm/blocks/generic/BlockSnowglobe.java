@@ -56,7 +56,7 @@ public class BlockSnowglobe extends BlockContainer implements IGUIProvider {
 	public Item getItemDropped(int i, Random rand, int j) {
 		return null;
 	}
-	
+
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
 		TileEntitySnowglobe entity = (TileEntitySnowglobe) world.getTileEntity(x, y, z);
@@ -66,7 +66,7 @@ public class BlockSnowglobe extends BlockContainer implements IGUIProvider {
 
 	@Override
 	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player) {
-		
+
 		if(!player.capabilities.isCreativeMode) {
 			harvesters.set(player);
 			if(!world.isRemote) {
@@ -82,7 +82,7 @@ public class BlockSnowglobe extends BlockContainer implements IGUIProvider {
 			harvesters.set(null);
 		}
 	}
-	
+
 	@Override
 	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
 		player.addStat(StatList.mineBlockStatArray[getIdFromBlock(this)], 1);
@@ -91,11 +91,11 @@ public class BlockSnowglobe extends BlockContainer implements IGUIProvider {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(world.isRemote) {
 			FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, x, y, z);
 			return true;
-			
+
 		} else {
 			return true;
 		}
@@ -111,12 +111,12 @@ public class BlockSnowglobe extends BlockContainer implements IGUIProvider {
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
 		int meta = MathHelper.floor_double((double)((player.rotationYaw + 180.0F) * 16.0F / 360.0F) + 0.5D) & 15;
 		world.setBlockMetadataWithNotify(x, y, z, meta, 2);
-		
+
 		TileEntitySnowglobe bobble = (TileEntitySnowglobe) world.getTileEntity(x, y, z);
 		bobble.type = SnowglobeType.values()[Math.abs(stack.getItemDamage()) % SnowglobeType.values().length];
 		bobble.markDirty();
 	}
-	
+
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
 		float f = 0.0625F;
@@ -135,7 +135,7 @@ public class BlockSnowglobe extends BlockContainer implements IGUIProvider {
 	}
 
 	public static class TileEntitySnowglobe extends TileEntity {
-		
+
 		public SnowglobeType type = SnowglobeType.NONE;
 
 		@Override
@@ -149,7 +149,7 @@ public class BlockSnowglobe extends BlockContainer implements IGUIProvider {
 			this.writeToNBT(nbt);
 			return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
 		}
-		
+
 		@Override
 		public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 			this.readFromNBT(pkt.func_148857_g());
@@ -167,18 +167,18 @@ public class BlockSnowglobe extends BlockContainer implements IGUIProvider {
 			nbt.setByte("type", (byte) type.ordinal());
 		}
 	}
-	
+
 	public static enum SnowglobeType {
-		NONE(			"NONE",				null),
-		RIVETCITY(		"Rivet City",		"Welcome to Rivet City. Please wait while the bridge extends."),
-		TENPENNYTOWER(	"Tenpenny Tower",	"Tenpenny Tower is the brainchild of Allistair Tenpenny, a British refugee who came to the Capital Wasteland seeking his fortune."),
-		LUCKY38(		"Lucky 38",			"My guess? Leads to a big cashout at some casino - and if the \"38\" on it is any indication... well... Lucky 38 it is."),
-		SIERRAMADRE(	"Sierra Madre",		"It's the moment you've been waiting for, the reason we're all here - the Gala Event, the Grand Opening of the Sierra Madre Casino."),
-		PRYDWEN(		"The Prydwen",		"People of the Commonwealth. Do not interfere. Our intentions are peaceful. We are the Brotherhood of Steel.");
-		
+		NONE(			"snowglobe.none.label",				null),
+		RIVETCITY(		"snowglobe.rivetcity.label",		"snowglobe.rivetcity.inscription"),
+		TENPENNYTOWER(	"snowglobe.tenpennytower.label",	"snowglobe.tenpennytower.inscription"),
+		LUCKY38(		"snowglobe.lucky38.label",			"snowglobe.lucky38.inscription"),
+		SIERRAMADRE(	"snowglobe.sierramadre.label",		"snowglobe.sierramadre.inscription"),
+		PRYDWEN(		"snowglobe.prydwen.label",		"snowglobe.prydwen.inscription");
+
 		public String label;
 		public String inscription;
-		
+
 		private SnowglobeType(String label, String inscription) {
 			this.label = label;
 			this.inscription = inscription;

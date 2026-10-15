@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 public class RBMKWasteDecayHandler extends NEIUniversalHandler {
 
 	public RBMKWasteDecayHandler() {
-		super("Nuclear Waste Decay", ModBlocks.machine_storage_drum, getRecipes());
+		super("nei.rbmkwaste_decay.name", ModBlocks.machine_storage_drum, getRecipes());
 	}
 
 	@Override

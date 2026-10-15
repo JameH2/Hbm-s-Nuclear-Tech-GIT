@@ -49,7 +49,7 @@ public class ItemMissile extends ItemCustomLore {
 		} else {
 			// Fuel localized & colored via enum helper
 			list.add(I18nUtil.resolveKey("item.missile.desc.fuel") + ": " + this.fuel.getDisplay());
-			if(this.fuelCap > 0) list.add(I18nUtil.resolveKey("item.missile.desc.fuelCapacity") + ": " + this.fuelCap + "mB");
+			if(this.fuelCap > 0) list.add(I18nUtil.resolveKey("item.missile.desc1", I18nUtil.resolveKey("item.missile.desc.fuelCapacity"), this.fuelCap));
 			super.addInformation(itemstack, player, list, bool);
 		}
 	}

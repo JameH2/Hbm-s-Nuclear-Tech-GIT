@@ -26,9 +26,9 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 
 public class ItemICFPellet extends Item {
-	
+
 	protected IIcon iconBG;
-	
+
 	public static enum EnumICFFuel {
 
 		HYDROGEN(	0x4040FF,	1.00D,	0.85D,	1.00D),
@@ -47,12 +47,12 @@ public class ItemICFPellet extends Item {
 		CALCIUM(	0xD2C7A9,	3.00D,	1.00D,	9.75D),
 		//titanium
 		;
-		
+
 		public int color;
 		public double reactionMult;
 		public double depletionSpeed;
 		public double fusingDifficulty;
-		
+
 		private EnumICFFuel(int color, double react, double depl, double laser) {
 			this.color = color;
 			this.reactionMult = react;
@@ -60,10 +60,10 @@ public class ItemICFPellet extends Item {
 			this.fusingDifficulty = laser;
 		}
 	}
-	
+
 	public static HashMap<FluidType, EnumICFFuel> fluidMap = new HashMap();
 	public static HashMap<NTMMaterial, EnumICFFuel> materialMap = new HashMap();
-	
+
 	public static void init() {
 		if(!fluidMap.isEmpty() && !materialMap.isEmpty()) return;
 		fluidMap.put(Fluids.HYDROGEN, EnumICFFuel.HYDROGEN);
@@ -84,7 +84,7 @@ public class ItemICFPellet extends Item {
 	public ItemICFPellet() {
 		this.setMaxStackSize(1);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tab, List list) {
@@ -94,36 +94,36 @@ public class ItemICFPellet extends Item {
 		list.add(this.setup(EnumICFFuel.SODIUM, EnumICFFuel.CHLORINE, true));
 		list.add(this.setup(EnumICFFuel.BERYLLIUM, EnumICFFuel.CALCIUM, true));
 	}
-	
+
 	public static long getMaxDepletion(ItemStack stack) {
 		long base = 50_000_000_000L;
 		base /= getType(stack, true).depletionSpeed;
 		base /= getType(stack, false).depletionSpeed;
 		return base;
 	}
-	
+
 	public static long getFusingDifficulty(ItemStack stack) {
 		long base = 10_000_000L;
 		base *= getType(stack, true).fusingDifficulty * getType(stack, false).fusingDifficulty;
 		if(stack.hasTagCompound() && stack.stackTagCompound.getBoolean("muon")) base /= 4;
 		return base;
 	}
-	
+
 	public static long getDepletion(ItemStack stack) {
 		if(!stack.hasTagCompound()) return 0L;
 		return stack.stackTagCompound.getLong("depletion");
 	}
-	
+
 	public static long react(ItemStack stack, long heat) {
 		if(!stack.hasTagCompound()) stack.stackTagCompound = new NBTTagCompound();
 		stack.stackTagCompound.setLong("depletion", stack.stackTagCompound.getLong("depletion") + heat);
 		return (long) (heat * getType(stack, true).reactionMult * getType(stack, false).reactionMult);
 	}
-	
+
 	public static ItemStack setup(EnumICFFuel type1, EnumICFFuel type2, boolean muon) {
 		return setup(new ItemStack(ModItems.icf_pellet), type1, type2, muon);
 	}
-	
+
 	public static ItemStack setup(ItemStack stack, EnumICFFuel type1, EnumICFFuel type2, boolean muon) {
 		if(!stack.hasTagCompound()) stack.stackTagCompound = new NBTTagCompound();
 		stack.stackTagCompound.setByte("type1", (byte) type1.ordinal());
@@ -131,7 +131,7 @@ public class ItemICFPellet extends Item {
 		stack.stackTagCompound.setBoolean("muon", muon);
 		return stack;
 	}
-	
+
 	public static EnumICFFuel getType(ItemStack stack, boolean first) {
 		if(!stack.hasTagCompound()) return first ? EnumICFFuel.DEUTERIUM : EnumICFFuel.TRITIUM;
 		return EnumUtil.grabEnumSafely(EnumICFFuel.class, stack.stackTagCompound.getByte("type" + (first ? 1 : 2)));
@@ -179,14 +179,14 @@ public class ItemICFPellet extends Item {
 		}
 		return 0xffffff;
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		boolean muon = stack.hasTagCompound() && stack.stackTagCompound.getBoolean("muon");
-		list.add(EnumChatFormatting.GREEN + "Depletion: " + String.format(Locale.US, "%.1f", getDurabilityForDisplay(stack) * 100D) + "%");
-		list.add(EnumChatFormatting.YELLOW + "Fuel: " + I18nUtil.resolveKey("icffuel." + getType(stack, true).name().toLowerCase(Locale.US)) + " / " + I18nUtil.resolveKey("icffuel." + getType(stack, false).name().toLowerCase(Locale.US)));
-		list.add(EnumChatFormatting.YELLOW + "Heat required: " + BobMathUtil.getShortNumber(this.getFusingDifficulty(stack)) + "TU");
-		list.add(EnumChatFormatting.YELLOW + "Reactivity multiplier: x" + (int) (getType(stack, true).reactionMult * getType(stack, false).reactionMult * 100) / 100D);
-		if(muon) list.add(EnumChatFormatting.DARK_AQUA + "Muon catalyzed!");
+		list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.pile_rod_mk2.desc2", String.format(Locale.US, "%.1f", getDurabilityForDisplay(stack) * 100D)));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.icf_pellet.desc4", I18nUtil.resolveKey("icffuel." + getType(stack, true).name().toLowerCase(Locale.US)), I18nUtil.resolveKey("icffuel." + getType(stack, false).name().toLowerCase(Locale.US))));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.icf_pellet.heat_required_tu", BobMathUtil.getShortNumber(this.getFusingDifficulty(stack))));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.icf_pellet.desc2", (int) (getType(stack, true).reactionMult * getType(stack, false).reactionMult * 100) / 100D));
+		if(muon) list.add(EnumChatFormatting.DARK_AQUA + I18nUtil.resolveKey("desc.item.icf_pellet.muon_catalyzed"));
 	}
 }

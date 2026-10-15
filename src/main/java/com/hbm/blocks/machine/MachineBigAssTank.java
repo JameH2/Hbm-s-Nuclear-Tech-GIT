@@ -27,6 +27,7 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import com.hbm.util.i18n.I18nUtil;
 
 public class MachineBigAssTank extends BlockDummyable implements IPersistentInfoProvider {
 
@@ -56,19 +57,27 @@ public class MachineBigAssTank extends BlockDummyable implements IPersistentInfo
 		};
 	}
 	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{0, 0, 6, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, -6, ForgeDirection.NORTH.ordinal()}
+		}, dir);
+	}
+	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
-		x += dir.offsetX * o;
-		z += dir.offsetZ * o;
-		MultiblockHandlerXR.fillSpace(world, x, y, z, new int[] {4, 0, 5, -4, 2, 2}, this, dir);
-		MultiblockHandlerXR.fillSpace(world, x, y, z, new int[] {4, 0, -4, 5, 2, 2}, this, dir);
-		MultiblockHandlerXR.fillSpace(world, x, y, z, new int[] {4, 0, 2, 2, 5, -4}, this, dir);
-		MultiblockHandlerXR.fillSpace(world, x, y, z, new int[] {4, 0, 2, 2, -4, 5}, this, dir);
-		MultiblockHandlerXR.fillSpace(world, x, y, z, new int[] {3, 0, 6, -5, 0, 0}, this, dir);
-		MultiblockHandlerXR.fillSpace(world, x, y, z, new int[] {3, 0, -5, 6, 0, 0}, this, dir);
+		int cx = x + dir.offsetX * o;
+		int cz = z + dir.offsetZ * o;
+		MultiblockHandlerXR.fillSpace(world, cx, y, cz, new int[] {4, 0, 5, -4, 2, 2}, this, dir);
+		MultiblockHandlerXR.fillSpace(world, cx, y, cz, new int[] {4, 0, -4, 5, 2, 2}, this, dir);
+		MultiblockHandlerXR.fillSpace(world, cx, y, cz, new int[] {4, 0, 2, 2, 5, -4}, this, dir);
+		MultiblockHandlerXR.fillSpace(world, cx, y, cz, new int[] {4, 0, 2, 2, -4, 5}, this, dir);
+		MultiblockHandlerXR.fillSpace(world, cx, y, cz, new int[] {3, 0, 6, -5, 0, 0}, this, dir);
+		MultiblockHandlerXR.fillSpace(world, cx, y, cz, new int[] {3, 0, -5, 6, 0, 0}, this, dir);
 
-		this.makeExtra(world, x + dir.offsetX * 6, y, z + dir.offsetZ * o);
-		this.makeExtra(world, x - dir.offsetX * 6, y, z - dir.offsetZ * o);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override
@@ -87,7 +96,7 @@ public class MachineBigAssTank extends BlockDummyable implements IPersistentInfo
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 
 		if(world.isRemote) return true;
-		
+
 		if(!player.isSneaking()) {
 
 			int[] pos = this.findCore(world, x, y, z);
@@ -106,7 +115,7 @@ public class MachineBigAssTank extends BlockDummyable implements IPersistentInfo
 
 					trialEntity.tank.setTankType(type);
 					trialEntity.markDirty();
-					player.addChatComponentMessage(new ChatComponentText("Changed type to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+					player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
 				}
 			}
 			return true;
@@ -148,6 +157,6 @@ public class MachineBigAssTank extends BlockDummyable implements IPersistentInfo
 	public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {
 		FluidTank tank = new FluidTank(Fluids.NONE, 0);
 		tank.readFromNBT(persistentTag, "tank");
-		list.add(EnumChatFormatting.YELLOW + "" + tank.getFill() + "/" + tank.getMaxFill() + "mB " + tank.getTankType().getLocalizedName());
+		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.big_ass_tank.mb", tank.getFill(), tank.getMaxFill(), tank.getTankType().getLocalizedName()));
 	}
 }

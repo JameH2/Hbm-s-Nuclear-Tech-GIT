@@ -8,8 +8,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ChatComponentTranslation;
 
 import java.io.IOException;
 import java.util.Random;
@@ -49,7 +49,7 @@ public abstract class ItemInventory implements IInventory {
 			byte[] abyte = CompressedStreamTools.compress(nbt);
 
 			if (abyte.length > 6000) {
-				player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Warning: Container NBT exceeds 6kB, contents will be ejected!"));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.inventory.1").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 				for (int i1 = 0; i1 < this.getSizeInventory(); ++i1) {
 					ItemStack itemstack = this.getStackInSlot(i1);
 

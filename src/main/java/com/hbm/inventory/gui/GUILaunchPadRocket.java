@@ -16,6 +16,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUILaunchPadRocket extends GuiInfoContainer {
 
@@ -36,7 +37,7 @@ public class GUILaunchPadRocket extends GuiInfoContainer {
 
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 167, guiTop + 36, 16, 52, machine.power, machine.maxPower);
 
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 56, guiTop + 20, 18, 17, mouseX, mouseY, new String[]{"COMMIT TO LAUNCH"} );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 56, guiTop + 20, 18, 17, mouseX, mouseY, new String[]{I18nUtil.resolveKey("gui.launch_pad_rocket.commit_to_launch")} );
 	}
 
 	@Override

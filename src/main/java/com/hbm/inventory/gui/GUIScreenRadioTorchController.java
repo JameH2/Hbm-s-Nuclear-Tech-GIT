@@ -35,7 +35,7 @@ public class GUIScreenRadioTorchController extends GuiScreen {
 	protected int guiLeft;
 	protected int guiTop;
 	protected GuiTextField frequency;
-	
+
 	public GUIScreenRadioTorchController(TileEntityRadioTorchController radio) {
 		this.rtty = radio;
 
@@ -50,7 +50,7 @@ public class GUIScreenRadioTorchController extends GuiScreen {
 		this.guiTop = (this.height - this.ySize) / 2;
 
 		Keyboard.enableRepeatEvents(true);
-		
+
 		int oX = 4;
 		int oY = 4;
 
@@ -76,10 +76,10 @@ public class GUIScreenRadioTorchController extends GuiScreen {
 		this.fontRendererObj.drawString(name, this.guiLeft + this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, this.guiTop + 6, 4210752);
 
 		if(guiLeft + 173 <= x && guiLeft + 173 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
-			func_146283_a(Arrays.asList(new String[] { rtty.polling ? "Polling" : "State Change" }), x, y);
+			func_146283_a(Arrays.asList(new String[] { rtty.polling ? I18nUtil.resolveKey("gui.common.polling") : I18nUtil.resolveKey("gui.common.state_change") }), x, y);
 		}
 		if(guiLeft + 209 <= x && guiLeft + 209 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
-			func_146283_a(Arrays.asList(new String[] { "Save Settings" }), x, y);
+			func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.common.save") }), x, y);
 		}
 		if(guiLeft + 137 <= x && guiLeft + 137 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
 			ForgeDirection dir = ForgeDirection.getOrientation(rtty.getBlockMetadata()).getOpposite();
@@ -88,7 +88,7 @@ public class GUIScreenRadioTorchController extends GuiScreen {
 				IRORInfo prov = (IRORInfo) tile;
 				String[] info = prov.getFunctionInfo();
 				List<String> lines = new ArrayList();
-				lines.add("Usable functions:");
+				lines.add(I18nUtil.resolveKey("gui.radio_torch_controller.usable_functions"));
 				for(String s : info) {
 					if(s.startsWith(IRORValueProvider.PREFIX_FUNCTION))
 					lines.add(EnumChatFormatting.AQUA + s.substring(4));
@@ -102,27 +102,27 @@ public class GUIScreenRadioTorchController extends GuiScreen {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		if(rtty.polling) {
 			drawTexturedModalRect(guiLeft + 173, guiTop + 17, 0, 42, 18, 18);
 		}
-		
+
 		this.frequency.drawTextBox();
 	}
 
 	@Override
 	protected void mouseClicked(int x, int y, int i) {
 		super.mouseClicked(x, y, i);
-		
+
 		this.frequency.mouseClicked(x, y, i);
-		
+
 		if(guiLeft + 173 <= x && guiLeft + 173 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
 			data.setBoolean("p", !rtty.polling);
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, rtty.xCoord, rtty.yCoord, rtty.zCoord));
 		}
-		
+
 		if(guiLeft + 209 <= x && guiLeft + 209 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
@@ -134,7 +134,7 @@ public class GUIScreenRadioTorchController extends GuiScreen {
 	@Override
 	protected void keyTyped(char c, int i) {
 		if(this.frequency.textboxKeyTyped(c, i)) return;
-		
+
 		if(i == 1 || i == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
 			this.mc.thePlayer.closeScreen();
 			this.mc.setIngameFocus();
@@ -145,7 +145,7 @@ public class GUIScreenRadioTorchController extends GuiScreen {
 	public void onGuiClosed() {
 		Keyboard.enableRepeatEvents(false);
 	}
-	
+
 	@Override
 	public boolean doesGuiPauseGame() {
 		return false;

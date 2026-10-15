@@ -16,20 +16,21 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUIMachineSelenium extends GuiInfoContainer {
-	
+
 	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_selenium.png");
 	private TileEntityMachineSeleniumEngine selenium;
 
 	public GUIMachineSelenium(InventoryPlayer invPlayer, TileEntityMachineSeleniumEngine tedf) {
 		super(new ContainerMachineSelenium(invPlayer, tedf));
 		selenium = tedf;
-		
+
 		this.xSize = 176;
 		this.ySize = 222;
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
@@ -38,46 +39,46 @@ public class GUIMachineSelenium extends GuiInfoContainer {
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 108, 160, 16, selenium.power, selenium.powerCap);
 
 		List<String> text = new ArrayList();
-		text.add(EnumChatFormatting.YELLOW + "Accepted Fuels:");
-		
+		text.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.selenium.accepted_fuels"));
+
 		for(FluidType type : Fluids.getInNiceOrder()) {
 			long energy = selenium.getHEFromFuel(type);
-			
+
 			if(energy > 0)
-				text.add("  " + type.getLocalizedName() + " (" + BobMathUtil.getShortNumber(energy) + "HE/t)");
+				text.add(I18nUtil.resolveKey("overlay.selenium.he_t", type.getLocalizedName(), BobMathUtil.getShortNumber(energy)));
 		}
 
-		text.add(EnumChatFormatting.ITALIC + "(These numbers are base values,");
-		text.add(EnumChatFormatting.ITALIC + "actual output is based");
-		text.add(EnumChatFormatting.ITALIC + "on piston count)");
-		
+		text.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("overlay.selenium.these_numbers_are_base_values"));
+		text.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("overlay.selenium.sactual_output_is_based"));
+		text.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("overlay.selenium.son_piston_count"));
+
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36, 16, 16, guiLeft - 8, guiTop + 36 + 16, text.toArray(new String[0]));
-		
-		String[] text1 = new String[] { "Fuel consumption rate:",
-				"  1 mB/t",
-				"  20 mB/s",
-				"(Consumption rate per piston)" };
+
+		String[] text1 = new String[] { I18nUtil.resolveKey("gui.selenium.fuel_consumption_rate"),
+				I18nUtil.resolveKey("gui.selenium.1_m_b_t"),
+				I18nUtil.resolveKey("gui.selenium.20_mb"),
+				I18nUtil.resolveKey("gui.selenium.consumption_rate_per_piston") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36 + 16, 16, 16, guiLeft - 8, guiTop + 36 + 16, text1);
-		
+
 		if(selenium.pistonCount < 3) {
-			
-			String[] text2 = new String[] { "Error: At least three pistons are",
-					"required to operate this radial engine!" };
+
+			String[] text2 = new String[] { I18nUtil.resolveKey("gui.selenium.error_at_least_three_pistons_are"),
+					I18nUtil.resolveKey("gui.selenium.required_operate_radial_engine") };
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36 + 32, 16, 16, guiLeft - 8, guiTop + 36 + 16 + 32, text2);
 		}
-		
+
 		if(!selenium.hasAcceptableFuel()) {
-			
-			String[] text2 = new String[] { "Error: The currently set fuel type",
-					"is not supported by this engine!" };
+
+			String[] text2 = new String[] { I18nUtil.resolveKey("gui.selenium.error_currently_set_fuel_type"),
+					I18nUtil.resolveKey("gui.selenium.is_not_supported_by_this_engine") };
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36 + 48, 16, 16, guiLeft - 8, guiTop + 36 + 16 + 32, text2);
 		}
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.selenium.hasCustomInventoryName() ? this.selenium.getInventoryName() : I18n.format(this.selenium.getInventoryName());
-		
+
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}
@@ -87,35 +88,35 @@ public class GUIMachineSelenium extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		if(selenium.power > 0) {
 			int i = (int)selenium.getPowerScaled(160);
-			
+
 			i = (int) Math.min(i, 160);
-			
+
 			drawTexturedModalRect(guiLeft + 8, guiTop + 108, 0, 222, i, 16);
 		}
-		
+
 		if(selenium.tank.getFill() > 0 && selenium.hasAcceptableFuel() && selenium.pistonCount > 2)
 		{
 			drawTexturedModalRect(guiLeft + 115, guiTop + 71, 192, 0, 18, 18);
 		}
-		
+
 		if(selenium.pistonCount > 0)
 		{
 			int k = selenium.pistonCount;
 			drawTexturedModalRect(guiLeft + 26, guiTop + 81, 176, 52 + 16 * k - 16, 16, 16);
 		}
-		
+
 		if(selenium.pistonCount < 3)
 			this.drawInfoPanel(guiLeft - 16, guiTop + 36 + 32, 16, 16, 6);
-		
+
 		if(!selenium.hasAcceptableFuel())
 			this.drawInfoPanel(guiLeft - 16, guiTop + 36 + 48, 16, 16, 7);
-		
+
 		this.drawInfoPanel(guiLeft - 16, guiTop + 36, 16, 16, 2);
 		this.drawInfoPanel(guiLeft - 16, guiTop + 36 + 16, 16, 16, 3);
-		
+
 		selenium.tank.renderTank(guiLeft + 80 + 36, guiTop + 70, this.zLevel, 16, 52);
 	}
 }

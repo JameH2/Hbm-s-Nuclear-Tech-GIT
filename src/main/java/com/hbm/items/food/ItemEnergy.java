@@ -3,14 +3,20 @@ package com.hbm.items.food;
 import java.util.List;
 
 import com.hbm.config.VersatileConfig;
-import com.hbm.explosion.ExplosionLarge;
+import com.hbm.explosion.vanillant.ExplosionVNT;
+import com.hbm.explosion.vanillant.standard.BlockAllocatorStandard;
+import com.hbm.explosion.vanillant.standard.BlockProcessorStandard;
+import com.hbm.explosion.vanillant.standard.EntityProcessorCross;
+import com.hbm.explosion.vanillant.standard.PlayerProcessorStandard;
 import com.hbm.extprop.HbmLivingProps;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
+import com.hbm.particle.helper.ExplosionCreator;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,16 +32,16 @@ import net.minecraftforge.common.util.FakePlayer;
 
 @Spaghetti("wtf is this shit")
 public class ItemEnergy extends Item {
-	
+
 	private Item container = null;
 	private Item cap = null;
 	private boolean requiresOpener = false;
-	
+
 	public ItemEnergy() {
 		this.setCreativeTab(MainRegistry.consumableTab);
 	}
-	
-	
+
+
 	public ItemEnergy makeCan() {
 		this.container = ModItems.can_empty;
 		this.cap = ModItems.ring_pull;
@@ -43,7 +49,7 @@ public class ItemEnergy extends Item {
 		this.setContainerItem(this.container);
 		return this;
 	}
-	 
+
 	public ItemEnergy makeBottle(Item bottle, Item cap) {
 		this.container = bottle;
 		this.cap = cap;
@@ -52,7 +58,7 @@ public class ItemEnergy extends Item {
 		this.setCreativeTab(MainRegistry.consumableTab);
 		return this;
 	}
-	
+
 	public ItemEnergy makeGlass() {
 		this.requiresOpener = false;
 		return this;
@@ -71,7 +77,7 @@ public class ItemEnergy extends Item {
 				world.newExplosion(player, player.posX, player.posY, player.posZ, 5F, true, true);
 				return super.onEaten(stack, world, player);
 			}
-			
+
 			VersatileConfig.applyPotionSickness(player, 5);
 
 			if(this == ModItems.can_smart) {
@@ -119,7 +125,13 @@ public class ItemEnergy extends Item {
 				player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 60 * 20, 2));
 			}
 			if(this == ModItems.chocolate_milk) {
-				ExplosionLarge.explode(world, player.posX, player.posY, player.posZ, 50, true, false, false);
+				ExplosionCreator.composeEffectStandard(world, player.posX, player.posY + player.height / 2, player.posZ);
+				ExplosionVNT xnt = new ExplosionVNT(world, player.posX, player.posY + player.height / 2, player.posZ, 50);
+				xnt.setBlockAllocator(new BlockAllocatorStandard(32));
+				xnt.setBlockProcessor(new BlockProcessorStandard().setNoDrop());
+				xnt.setEntityProcessor(new EntityProcessorCross(5D));
+				xnt.setPlayerProcessor(new PlayerProcessorStandard());
+				xnt.explode();
 			}
 			if(this == ModItems.bottle_nuka) {
 				player.heal(4F);
@@ -140,7 +152,7 @@ public class ItemEnergy extends Item {
 				//System.out.println(this.container);
 			}
 			if(this == ModItems.teacup) {
-				player.heal(3F); 				
+				player.heal(3F);
 				player.addPotionEffect(new PotionEffect(Potion.resistance.id, 30 * 20, 4));
 
 				this.setContainerItem(ModItems.teacup_empty);
@@ -150,7 +162,7 @@ public class ItemEnergy extends Item {
 				player.heal(9F);  //sweet sorrow
 				float digamma = HbmLivingProps.getDigamma(player);
 				HbmLivingProps.setDigamma(player, Math.max(digamma - 0.3F, 0F));
-				
+
 				this.setContainerItem(Items.glass_bottle);
 				this.container = Items.glass_bottle;
 			}
@@ -216,7 +228,7 @@ public class ItemEnergy extends Item {
 					player.inventory.addItemStackToInventory(new ItemStack(this.container));
 				}
 			}
-			
+
 			player.inventoryContainer.detectAndSendChanges();
 		}
 
@@ -248,62 +260,62 @@ public class ItemEnergy extends Item {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack p_77624_1_, EntityPlayer p_77624_2_, List list, boolean p_77624_4_) {
 		if(this == ModItems.can_smart) {
-			list.add("Cheap and full of bubbles");
+			list.add(I18nUtil.resolveKey("item.energy.desc1"));
 		}
 		if(this == ModItems.can_creature) {
-			list.add("Basically gasoline in a tin can");
+			list.add(I18nUtil.resolveKey("item.energy.desc2"));
 		}
 		if(this == ModItems.can_redbomb) {
-			list.add("Liquefied explosives");
+			list.add(I18nUtil.resolveKey("item.energy.desc3"));
 		}
 		if(this == ModItems.can_mrsugar) {
-			list.add("An intellectual drink, for the chosen ones!");
+			list.add(I18nUtil.resolveKey("item.energy.desc4"));
 		}
 		if(this == ModItems.can_overcharge) {
-			list.add("Possible side effects include heart attacks, seizures or zombification");
+			list.add(I18nUtil.resolveKey("item.energy.desc5"));
 		}
 		if(this == ModItems.can_luna) {
-			list.add("Contains actual selenium and star metal. Tastes like night.");
+			list.add(I18nUtil.resolveKey("item.energy.desc6"));
 		}
 		if(this == ModItems.can_bepis) {
-			list.add("beppp");
+			list.add(I18nUtil.resolveKey("item.energy.desc7"));
 		}
 		if(this == ModItems.can_breen) {
-			list.add("Don't drink the water. They put something in it, to make you forget.");
-			list.add("I don't even know how I got here.");
+			list.add(I18nUtil.resolveKey("item.energy.desc8"));
+			list.add(I18nUtil.resolveKey("item.energy.desc9"));
 		}
 		if(this == ModItems.chocolate_milk) {
-			list.add("Regular chocolate milk. Safe to drink.");
-			list.add("Totally not made from nitroglycerine.");
+			list.add(I18nUtil.resolveKey("item.energy.desc10"));
+			list.add(I18nUtil.resolveKey("item.energy.desc11"));
 		}
 		if(this == ModItems.bottle_nuka) {
-			list.add("Contains about 210 kcal and 1500 mSv.");
+			list.add(I18nUtil.resolveKey("item.energy.desc12"));
 		}
 		if(this == ModItems.bottle_cherry) {
-			list.add("Now with severe radiation poisoning in every seventh bottle!");
+			list.add(I18nUtil.resolveKey("item.energy.desc13"));
 		}
 		if(this == ModItems.bottle_quantum) {
-			list.add("Comes with a colorful mix of over 70 isotopes!");
+			list.add(I18nUtil.resolveKey("item.energy.desc14"));
 		}
 		if(this == ModItems.bottle2_korl) {
-			list.add("Contains actual orange juice!");
+			list.add(I18nUtil.resolveKey("item.energy.desc15"));
 		}
 		if(this == ModItems.bottle2_fritz) {
-			list.add("moremore caffeine");
+			list.add(I18nUtil.resolveKey("item.energy.desc16"));
 		}
 		if(this == ModItems.bottle_sparkle) {
 			if(MainRegistry.polaroidID == 11)
-				list.add("Contains trace amounts of taint.");
+				list.add(I18nUtil.resolveKey("item.energy.desc17"));
 			else
-				list.add("The most delicious beverage in the wasteland!");
+				list.add(I18nUtil.resolveKey("item.energy.desc18"));
 		}
 		if(this == ModItems.bottle_rad) {
 			if(MainRegistry.polaroidID == 11)
-				list.add("Now with 400% more radiation!");
+				list.add(I18nUtil.resolveKey("item.energy.desc19"));
 			else
-				list.add("Tastes like radish and radiation.");
+				list.add(I18nUtil.resolveKey("item.energy.desc20"));
 		}
-		
-		if(this.requiresOpener) list.add("[Requires bottle opener]");
+
+		if(this.requiresOpener) list.add(I18nUtil.resolveKey("item.energy.desc21"));
 	}
 }

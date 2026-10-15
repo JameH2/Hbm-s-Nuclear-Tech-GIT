@@ -6,6 +6,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.items.machine.ItemBattery;
 import com.hbm.main.NTMSounds;
 import com.hbm.util.BobMathUtil;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,8 +23,8 @@ public class ItemAnchorRemote extends ItemBattery {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		long charge = maxCharge;
 		if(stack.hasTagCompound()) charge = getCharge(stack);
-		list.add("Energy stored: " + BobMathUtil.getShortNumber(charge) + "/" + BobMathUtil.getShortNumber(maxCharge) + "HE");
-		list.add("Charge rate: " + BobMathUtil.getShortNumber(chargeRate) + "HE/t");
+		list.add(I18nUtil.resolveKey("desc.item.battery.energy_stored_he", BobMathUtil.getShortNumber(charge), BobMathUtil.getShortNumber(maxCharge)));
+		list.add(I18nUtil.resolveKey("item.battery.desc2", BobMathUtil.getShortNumber(chargeRate)));
 	}
 
 	@Override
@@ -55,7 +56,7 @@ public class ItemAnchorRemote extends ItemBattery {
 			world.playSoundAtEntity(player, NTMSounds.VANILLA_ORB, 0.25F, 0.75F);
 			return stack;
 		}
-		
+
 		if(this.getCharge(stack) < 10_000) {
 			world.playSoundAtEntity(player, NTMSounds.VANILLA_ORB, 0.25F, 0.75F);
 			return stack;
@@ -82,9 +83,9 @@ public class ItemAnchorRemote extends ItemBattery {
 			for(int i = 0; i < 32; ++i) {
 				world.spawnParticle("portal", player.posX, player.posY + player.getRNG().nextDouble() * 2.0D, player.posZ, player.getRNG().nextGaussian(), 0.0D, player.getRNG().nextGaussian());
 			}
-			
+
 			this.dischargeBattery(stack, 10_000);
-			
+
 		} else {
 			world.playSoundAtEntity(player, NTMSounds.VANILLA_ORB, 0.25F, 0.75F);
 		}

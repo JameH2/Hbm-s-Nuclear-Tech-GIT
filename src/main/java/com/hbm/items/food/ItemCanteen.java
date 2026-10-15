@@ -5,6 +5,7 @@ import java.util.List;
 import com.hbm.config.VersatileConfig;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -67,16 +68,16 @@ public class ItemCanteen extends Item {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack p_77624_1_, EntityPlayer p_77624_2_, List list, boolean p_77624_4_) {
 		if(this == ModItems.canteen_vodka) {
-			list.add("Cooldown: 3 minutes");
-			list.add("Nausea I for 10 seconds");
-			list.add("Strength III for 30 seconds");
+			list.add(I18nUtil.resolveKey("desc.item.canteen.cooldown_minutes"));
+			list.add(I18nUtil.resolveKey("item.canteen.desc2"));
+			list.add(I18nUtil.resolveKey("desc.item.canteen.strength_iii_seconds"));
 			list.add("");
 
 			if(MainRegistry.polaroidID == 11)
-				// list.add("Why sipp when you can succ?");
-				list.add("Time to get hammered & sickled!");
+				// list.add(I18nUtil.resolveKey("desc.item.why_sipp_when_succ"));
+				list.add(I18nUtil.resolveKey("desc.item.canteen.time_hammered_sickled"));
 			else
-				list.add("Smells like disinfectant, tastes like disinfectant.");
+				list.add(I18nUtil.resolveKey("item.canteen.desc5"));
 		}
 	}
 

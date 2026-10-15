@@ -40,35 +40,35 @@ public class MachineThresher extends BlockContainer implements ILookOverlay, ITo
 	@Override public int getRenderType() { return -1; }
 	@Override public boolean isOpaqueCube() { return false; }
 	@Override public boolean renderAsNormalBlock() { return false; }
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(!world.isRemote && !player.isSneaking()) {
-				
+
 			if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof IItemFluidIdentifier) {
-				
+
 				TileEntityMachineThresher saw = (TileEntityMachineThresher) world.getTileEntity(x, y, z);
-				
+
 				FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, x, y, z, player.getHeldItem());
 				if(TileEntityMachineAutosaw.acceptedFuels.contains(type)) {
 					saw.tank.setTankType(type);
 					saw.markDirty();
-					player.addChatComponentMessage(new ChatComponentText("Changed type to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+					player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
 					return true;
 				}
 			}
-			
+
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack) {
 		int i = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-		
+
 		if(i == 0) world.setBlockMetadataWithNotify(x, y, z, 3, 2);
 		if(i == 1) world.setBlockMetadataWithNotify(x, y, z, 4, 2);
 		if(i == 2) world.setBlockMetadataWithNotify(x, y, z, 2, 2);
@@ -92,19 +92,19 @@ public class MachineThresher extends BlockContainer implements ILookOverlay, ITo
 
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
-		
+
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(!(te instanceof TileEntityMachineThresher)) return;
-		
+
 		TileEntityMachineThresher saw = (TileEntityMachineThresher) te;
-		
+
 		List<String> text = new ArrayList();
-		text.add(saw.tank.getTankType().getLocalizedName() + ": " + saw.tank.getFill() + "/" + saw.tank.getMaxFill() + "mB");
+		text.add(I18nUtil.resolveKey("overlay.thresher.mb", saw.tank.getTankType().getLocalizedName(), saw.tank.getFill(), saw.tank.getMaxFill()));
 
 		if(saw.isSuspended) {
 			text.add(EnumChatFormatting.RED + "! " + I18nUtil.resolveKey(getUnlocalizedName() + ".suspended") + " !");
 		}
-		
+
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 

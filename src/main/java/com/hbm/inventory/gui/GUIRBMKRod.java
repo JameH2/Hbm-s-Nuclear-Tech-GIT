@@ -11,34 +11,35 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUIRBMKRod extends GuiInfoContainer {
-	
+
 	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/reactors/gui_rbmk_element.png");
 	private TileEntityRBMKRod rod;
 
 	public GUIRBMKRod(InventoryPlayer invPlayer, TileEntityRBMKRod tedf) {
 		super(new ContainerRBMKRod(invPlayer, tedf));
 		rod = tedf;
-		
+
 		this.xSize = 176;
 		this.ySize = 186;
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
 
 		if(!rod.coldEnoughForAutoloader())
-			this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 20, 16, 16, guiLeft - 8, guiTop + 20 + 16, "Fuel skin temperature has exceeded 1,000°C,", "autoloaders can no longer cycle fuel!");
+			this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 20, 16, 16, guiLeft - 8, guiTop + 20 + 16, I18nUtil.resolveKey("gui.rbmk_rod.fuel_skin_temperature_exceeded_1"), I18nUtil.resolveKey("gui.rbmk_rod.autoloaders_no_longer_cycle_fuel"));
 		if(!rod.coldEnoughForManual())
-			this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36, 16, 16, guiLeft - 8, guiTop + 36 + 16, "Fuel skin temperature has exceeded 200°C,", "fuel can no longer be removed by hand!");
+			this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36, 16, 16, guiLeft - 8, guiTop + 36 + 16, I18nUtil.resolveKey("gui.rbmk_rod.fuel_skin_temperature_exceeded_2"), I18nUtil.resolveKey("gui.rbmk_rod.fuel_no_longer_removed_hand"));
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.rod.hasCustomInventoryName() ? this.rod.getInventoryName() : I18n.format(this.rod.getInventoryName());
-		
+
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}
@@ -48,14 +49,14 @@ public class GUIRBMKRod extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		if(rod.slots[0] != null && rod.slots[0].getItem() instanceof ItemRBMKRod) {
 			drawTexturedModalRect(guiLeft + 34, guiTop + 21, 176, 0, 18, 67);
-			
+
 			double depletion = 1D - ItemRBMKRod.getEnrichment(rod.slots[0]);
 			int d = (int)(depletion * 67);
 			drawTexturedModalRect(guiLeft + 34, guiTop + 21, 194, 0, 18, d);
-			
+
 			double xenon = ItemRBMKRod.getPoisonLevel(rod.slots[0]);
 			int x = (int)(xenon * 58);
 			drawTexturedModalRect(guiLeft + 126, guiTop + 82 - x, 212, 58 - x, 14, x);

@@ -87,7 +87,7 @@ public class GUIMachineStrandCaster extends GuiInfoContainer {
 		List<String> list = new ArrayList();
 
 		if(caster.type == null)
-			list.add(EnumChatFormatting.RED + "Empty");
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.misc.strand_caster.empty"));
 		else
 			list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey(caster.type.getUnlocalizedName()) + ": " + Mats.formatAmount(caster.amount, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
 

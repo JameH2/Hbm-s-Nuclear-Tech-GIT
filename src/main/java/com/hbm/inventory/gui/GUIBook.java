@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUIBook extends GuiContainer {
 
@@ -22,8 +23,8 @@ public class GUIBook extends GuiContainer {
 
 	protected void drawGuiContainerForegroundLayer(int mX, int mY) {
 
-		Minecraft.getMinecraft().standardGalacticFontRenderer.drawString("Extended 4-Slot Crafting", 28, 6, 4210752);
-		Minecraft.getMinecraft().standardGalacticFontRenderer.drawString("Standard Inventory", 8, this.ySize - 96 + 2, 4210752);
+		Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(I18nUtil.resolveKey("gui.book.extended_4_slot_crafting"), 28, 6, 4210752);
+		Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(I18nUtil.resolveKey("gui.book.standard_inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}
 
 	protected void drawGuiContainerBackgroundLayer(float inter, int mX, int mY) {

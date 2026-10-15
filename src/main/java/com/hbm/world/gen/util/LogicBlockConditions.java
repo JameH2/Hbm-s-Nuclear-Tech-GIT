@@ -9,7 +9,6 @@ import com.hbm.tileentity.bomb.TileEntityCharge;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -18,6 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Function;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class LogicBlockConditions {
 
@@ -85,7 +85,7 @@ public class LogicBlockConditions {
 		int z = tile.zCoord;
 
 		if(tile.phase == 0 &&  world.isBlockIndirectlyGettingPowered(x,y,z)){
-			world.getClosestPlayer(x,y,z, 25).addChatMessage(new ChatComponentText("Find a " + EnumChatFormatting.GOLD + "great" + EnumChatFormatting.RESET + " ancient weapon, of questionable use in the modern age"));
+			world.getClosestPlayer(x,y,z, 25).addChatMessage(new ChatComponentTranslation("chat.logic_block_conditions.line.01", EnumChatFormatting.GOLD + "great" + EnumChatFormatting.RESET + " ancient weapon, of questionable use in the modern age"));
 			world.setBlock(x,y + 1,z, ModBlocks.pedestal);
 			return true;
 		}

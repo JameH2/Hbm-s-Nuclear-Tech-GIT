@@ -39,7 +39,7 @@ public class EntityGlyphidNuclear extends EntityGlyphid {
 
 	@Override
 	public ResourceLocation getSkin() {
-		return ResourceManager.glyphid_nuclear_tex;
+		return isTamed() ? ResourceManager.glyphid_nuclear_tame_tex : ResourceManager.glyphid_nuclear_tex;
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockRichOre;
 import com.hbm.config.ClientConfig;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.handler.ability.AvailableAbilities;
@@ -35,6 +36,7 @@ import com.hbm.packet.toclient.PlayerInformPacket;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.EntityDamageUtil;
 import com.hbm.util.Tuple.Pair;
+import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.item.IDepthRockTool;
 import cpw.mods.fml.relauncher.ReflectionHelper;
@@ -285,7 +287,7 @@ public class ItemToolAbility extends ItemTool implements IDepthRockTool, IGUIPro
 
 		if(this.rockBreaker) {
 			list.add("");
-			list.add(EnumChatFormatting.RED + "Can break depth rock!");
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.tool_ability.break_depth_rock"));
 		}
 	}
 
@@ -306,6 +308,10 @@ public class ItemToolAbility extends ItemTool implements IDepthRockTool, IGUIPro
 
 		Block block = world.getBlock(x, y, z);
 		int meta = world.getBlockMetadata(x, y, z);
+
+		// Rich deposits are mined only at the selected block, never as vein/AOE extras.
+		if((x != refX || y != refY || z != refZ) &&
+				(block instanceof BlockRichOre || world.getBlock(refX, refY, refZ) instanceof BlockRichOre)) return;
 
 		if(!(canHarvestBlock(block, stack) ||
 				canShearBlock(block, stack, world, x, y, z)) ||
@@ -387,7 +393,7 @@ public class ItemToolAbility extends ItemTool implements IDepthRockTool, IGUIPro
 
 			if(removedByPlayer && canHarvest) {
 				try {
-					
+
 					blockCaptureDrops.invoke(block, true);
 					block.harvestBlock(world, player, x, y, z, l);
 					List<ItemStack> drops = (List)blockCaptureDrops.invoke(block, false);
@@ -565,10 +571,10 @@ public class ItemToolAbility extends ItemTool implements IDepthRockTool, IGUIPro
 
 			World world = player.worldObj;
 			if(!canOperate(stack)) return;
-			
+
 			EntityPlayerMP playerMP = (EntityPlayerMP) player;
 			MovingObjectPosition mop = EntityDamageUtil.getMouseOver(playerMP, playerMP.theItemInWorldManager.getBlockReachDistance());
-			
+
 			if(mop != null && mop.typeOfHit == mop.typeOfHit.BLOCK) {
 				// this is horrifying and won't always produce the correct results, but it beats not having anything
 				// simply put, we check if we are aiming at a block, and if we do, we compare that block's onBlockActivated

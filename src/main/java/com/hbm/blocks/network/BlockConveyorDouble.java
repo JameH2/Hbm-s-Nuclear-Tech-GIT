@@ -25,11 +25,13 @@ public class BlockConveyorDouble extends BlockConveyorBendable {
 
 		if(dir.offsetX != 0) {
 			posX = itemPos.xCoord;
-			posZ += itemPos.zCoord > posZ ? 0.25 : -0.25;
+			double laneOffset = itemPos.zCoord - posZ;
+			posZ += laneOffset > 0.15 ? 0.25 : laneOffset < -0.15 ? -0.25 : dir.offsetX * 0.25;
 		}
 		if(dir.offsetZ != 0) {
 			posZ = itemPos.zCoord;
-			posX += itemPos.xCoord > posX ? 0.25 : -0.25;
+			double laneOffset = itemPos.xCoord - posX;
+			posX += laneOffset > 0.15 ? 0.25 : laneOffset < -0.15 ? -0.25 : -dir.offsetZ * 0.25;
 		}
 
 		return Vec3.createVectorHelper(posX, y + 0.25, posZ);

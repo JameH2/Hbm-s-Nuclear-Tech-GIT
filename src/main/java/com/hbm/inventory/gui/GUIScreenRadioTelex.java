@@ -21,9 +21,10 @@ import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUIScreenRadioTelex extends GuiScreen {
-	
+
 	protected static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_telex.png");
 	protected TileEntityRadioTelex telex;
 	protected int xSize = 256;
@@ -33,18 +34,18 @@ public class GUIScreenRadioTelex extends GuiScreen {
 	protected GuiTextField txFrequency;
 	protected GuiTextField rxFrequency;
 	protected boolean textFocus = false;
-	
+
 	protected String[] txBuffer;
 	protected int cursorPos = 0;
-	
+
 	public GUIScreenRadioTelex(TileEntityRadioTelex tile) {
 		this.telex = tile;
 		this.txBuffer = new String[tile.txBuffer.length];
-		
+
 		for(int i = 0; i < txBuffer.length; i++) {
 			this.txBuffer[i] = tile.txBuffer[i];
 		}
-		
+
 		for(int i = 4; i > 0; i--) {
 			if(!txBuffer[i].isEmpty()) {
 				cursorPos = i;
@@ -87,35 +88,35 @@ public class GUIScreenRadioTelex extends GuiScreen {
 
 	private void drawGuiContainerForegroundLayer(int x, int y) {
 
-		if(checkClick(x, y, 7, 85, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GOLD + "BELL", "Plays a bell when this character is received"}), x, y);
-		if(checkClick(x, y, 27, 85, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GOLD + "PRINT", "Forces recipient to print message after transmission ends"}), x, y);
-		if(checkClick(x, y, 47, 85, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GOLD + "CLEAR SCREEN", "Wipes message buffer when this character is received"}), x, y);
-		if(checkClick(x, y, 67, 85, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GOLD + "FORMAT", "Inserts format character for message formatting"}), x, y);
-		if(checkClick(x, y, 87, 85, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GOLD + "PAUSE", "Pauses message transmission for one second"}), x, y);
+		if(checkClick(x, y, 7, 85, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GOLD + I18nUtil.resolveKey("gui.radio_telex.bell"), I18nUtil.resolveKey("gui.radio_telex.plays_bell_character_received")}), x, y);
+		if(checkClick(x, y, 27, 85, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GOLD + I18nUtil.resolveKey("gui.radio_telex.print"), I18nUtil.resolveKey("gui.radio_telex.text.01")}), x, y);
+		if(checkClick(x, y, 47, 85, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GOLD + I18nUtil.resolveKey("gui.radio_telex.clear_screen"), I18nUtil.resolveKey("gui.radio_telex.text.05")}), x, y);
+		if(checkClick(x, y, 67, 85, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GOLD + I18nUtil.resolveKey("gui.radio_telex.format"), I18nUtil.resolveKey("gui.radio_telex.inserts_format_character_message")}), x, y);
+		if(checkClick(x, y, 87, 85, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GOLD + I18nUtil.resolveKey("gui.radio_telex.pause"), I18nUtil.resolveKey("gui.radio_telex.pauses_message_transmission_second")}), x, y);
 
-		if(checkClick(x, y, 127, 105, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GREEN + "SAVE ID"}), x, y);
-		if(checkClick(x, y, 147, 105, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.YELLOW + "SEND MESSAGE"}), x, y);
-		if(checkClick(x, y, 167, 105, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.RED + "DELETE MESSAGE BUFFER"}), x, y);
-		
-		if(checkClick(x, y, 127, 219, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GREEN + "SAVE ID"}), x, y);
-		if(checkClick(x, y, 147, 219, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.AQUA + "PRINT MESSAGE"}), x, y);
-		if(checkClick(x, y, 167, 219, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.RED + "CLEAR SCREEN"}), x, y);
+		if(checkClick(x, y, 127, 105, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.radio_telex.save_id")}), x, y);
+		if(checkClick(x, y, 147, 105, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.radio_telex.send_message")}), x, y);
+		if(checkClick(x, y, 167, 105, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.RED + I18nUtil.resolveKey("gui.radio_telex.delete_message_buffer")}), x, y);
+
+		if(checkClick(x, y, 127, 219, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.radio_telex.save_id")}), x, y);
+		if(checkClick(x, y, 147, 219, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.AQUA + I18nUtil.resolveKey("gui.radio_telex.print_message")}), x, y);
+		if(checkClick(x, y, 167, 219, 18, 18)) this.func_146283_a(Arrays.asList(new String[] {EnumChatFormatting.RED + I18nUtil.resolveKey("gui.radio_telex.clear_screen")}), x, y);
 	}
 
 	private void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		this.txFrequency.drawTextBox();
 		this.rxFrequency.drawTextBox();
-		
+
 		for(int line = 0; line < 5; line++) {
 			String text = txBuffer[line];
 			int y = 11 + 14 * line;
-			
+
 			String format = EnumChatFormatting.RESET + "";
-			
+
 			for(int index = 0; index < text.length(); index++) {
 				int x = 11 + 7 * index;
 				char c = text.charAt(index);
@@ -139,17 +140,17 @@ public class GUIScreenRadioTelex extends GuiScreen {
 				}
 			}
 		}
-		
+
 		for(int line = 0; line < 5; line++) {
 			String text = telex.rxBuffer[line];
 			int y = 145 + 14 * line;
-			
+
 			String format = EnumChatFormatting.RESET + "";
-			
+
 			int x = 11;
-			
+
 			for(int index = 0; index < text.length(); index++) {
-				
+
 				char c = text.charAt(index);
 				x += (7 - this.fontRendererObj.getCharWidth(c)) / 2;
 				if(c == '§' && text.length() > index + 1) {
@@ -191,16 +192,16 @@ public class GUIScreenRadioTelex extends GuiScreen {
 
 		this.txFrequency.mouseClicked(x, y, i);
 		this.rxFrequency.mouseClicked(x, y, i);
-		
+
 		if(guiLeft + 7 <= x && guiLeft + 7 + 242 > x && guiTop + 7 < y && guiTop + 7 + 74 >= y) {
 			this.textFocus = true;
 		} else {
 			this.textFocus = false;
 		}
-		
+
 		char character = '\0';
 		String cmd = null;
-		
+
 		/* special characters */
 		// BEL
 		if(checkClick(x, y, 7, 85, 18, 18)) character = '\u0007'; // bell
@@ -212,7 +213,7 @@ public class GUIScreenRadioTelex extends GuiScreen {
 		if(checkClick(x, y, 67, 85, 18, 18)) character = '§'; // minecraft formatting character
 		// PSE
 		if(checkClick(x, y, 87, 85, 18, 18)) character = '\u0016'; // synchronous idle
-		
+
 		// SVE
 		if(checkClick(x, y, 127, 105, 18, 18) || checkClick(x, y, 127, 219, 18, 18)) cmd = "sve"; // save channel
 		// SND
@@ -229,35 +230,35 @@ public class GUIScreenRadioTelex extends GuiScreen {
 		if(checkClick(x, y, 147, 219, 18, 18)) cmd = "rxprt"; // print message in RX buffer
 		// CLS
 		if(checkClick(x, y, 167, 219, 18, 18)) cmd = "rxcls"; // delete message in RX buffer
-		
+
 		if(cmd != null) {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("cmd", cmd);
-			
+
 			if("snd".equals(cmd)) {
 				for(int j = 0; j < 5; j++) data.setString("tx" + j, this.txBuffer[j]);
 			}
-			
+
 			if("sve".equals(cmd)) {
 				data.setString("txChan", this.txFrequency.getText());
 				data.setString("rxChan", this.rxFrequency.getText());
 			}
-			
+
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, telex.xCoord, telex.yCoord, telex.zCoord));
 		}
-		
+
 		if(character != '\0') {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			setTextFocus();
 			submitChar(character);
 		}
 	}
-	
+
 	protected boolean checkClick(int x, int y, int left, int top, int sizeX, int sizeY) {
 		return guiLeft + left <= x && guiLeft + left + sizeX > x && guiTop + top < y && guiTop + top + sizeY >= y;
 	}
-	
+
 	protected void setTextFocus() {
 		this.textFocus = true;
 		this.txFrequency.setFocused(false);
@@ -269,9 +270,9 @@ public class GUIScreenRadioTelex extends GuiScreen {
 
 		if(this.txFrequency.textboxKeyTyped(c, i)) return;
 		if(this.rxFrequency.textboxKeyTyped(c, i)) return;
-		
+
 		if(this.textFocus) {
-			
+
 			if(i == 1) {
 				this.textFocus = false;
 				return;
@@ -279,28 +280,28 @@ public class GUIScreenRadioTelex extends GuiScreen {
 
 			if(i == Keyboard.KEY_UP) this.cursorPos--;
 			if(i == Keyboard.KEY_DOWN) this.cursorPos++;
-			
+
 			this.cursorPos = MathHelper.clamp_int(cursorPos, 0, 4);
-			
+
 			if(ChatAllowedCharacters.isAllowedCharacter(c)) {
 				submitChar(c);
 				return;
 			}
-			
+
 			if(i == Keyboard.KEY_BACK && this.txBuffer[cursorPos].length() > 0) {
 				this.txBuffer[cursorPos] = this.txBuffer[cursorPos].substring(0, this.txBuffer[cursorPos].length() - 1);
 			}
 		}
-		
+
 		if(i == 1 || i == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
 			this.mc.thePlayer.closeScreen();
 			this.mc.setIngameFocus();
 		}
 	}
-	
+
 	protected void submitChar(char c) {
 		String line = this.txBuffer[cursorPos];
-		
+
 		if(line.length() < TileEntityRadioTelex.lineWidth) {
 			this.txBuffer[cursorPos] = line + c;
 		}
@@ -313,7 +314,7 @@ public class GUIScreenRadioTelex extends GuiScreen {
 		for(int j = 0; j < 5; j++) data.setString("tx" + j, this.txBuffer[j]);
 		PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, telex.xCoord, telex.yCoord, telex.zCoord));
 	}
-	
+
 	@Override
 	public boolean doesGuiPauseGame() {
 		return false;

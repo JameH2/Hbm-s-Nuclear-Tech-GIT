@@ -21,7 +21,7 @@ public class ItemDigamma extends Item {
 
 	public ItemDigamma(int digamma) {
 		super();
-		
+
 		//obacht! the particle's digamma value is "ticks until half life" while the superclass' interpretation is "simply add flat value"
 		this.digamma = digamma;
 	}
@@ -48,7 +48,7 @@ public class ItemDigamma extends Item {
 		float d = ((int) ((1000F / digamma) * 200F)) / 10F;
 
 		list.add(EnumChatFormatting.RED + "[" + I18nUtil.resolveKey("trait.digamma") + "]");
-		list.add(EnumChatFormatting.DARK_RED + "" + d + "mDRX/s");
+		list.add(EnumChatFormatting.DARK_RED + "" + I18nUtil.resolveKey("item.digamma.desc1", d));
 
 		list.add(EnumChatFormatting.RED + "[" + I18nUtil.resolveKey("trait.drop") + "]");
 	}

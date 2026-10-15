@@ -17,26 +17,27 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUICraneInserter extends GuiInfoContainer {
-	
+
 	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_crane_inserter.png");
 	private TileEntityCraneInserter inserter;
 
 	public GUICraneInserter(InventoryPlayer invPlayer, TileEntityCraneInserter tedf) {
 		super(new ContainerCraneInserter(invPlayer, tedf));
 		inserter = tedf;
-		
+
 		this.xSize = 176;
 		this.ySize = 185;
 	}
-	
+
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
 
 		if(guiLeft + 151 <= x && guiLeft + 151 + 18 > x && guiTop + 34 < y && guiTop + 34 + 18 >= y) {
-			this.func_146283_a(Arrays.asList(new String[] { "Destroy overflow: " + (inserter.destroyer ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF") }), x, y);
+			this.func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.crane_inserter.destroy_overflow") + (inserter.destroyer ? EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on") : EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off")) }), x, y);
 		}
 	}
 
@@ -51,7 +52,7 @@ public class GUICraneInserter extends GuiInfoContainer {
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, inserter.xCoord, inserter.yCoord, inserter.zCoord));
 		}
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.inserter.hasCustomInventoryName() ? this.inserter.getInventoryName() : I18n.format(this.inserter.getInventoryName());
@@ -64,7 +65,7 @@ public class GUICraneInserter extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		if(inserter.destroyer)
 			drawTexturedModalRect(guiLeft + 151, guiTop + 34, 176, 0, 18, 18);
 	}

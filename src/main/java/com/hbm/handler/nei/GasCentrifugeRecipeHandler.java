@@ -23,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GasCentrifugeRecipeHandler extends TemplateRecipeHandler implements ICompatNHNEI {
 	@Override
@@ -47,7 +48,7 @@ public class GasCentrifugeRecipeHandler extends TemplateRecipeHandler implements
 			this.input = new PositionedStack(input, 52 - 5, 35 - 11);
 			this.isHighSpeed = isHighSpeed;
 			this.centNumber = centNumber;
-			
+
 			for(byte i = 0; i < results.length; i++) {
 				this.output.add(new PositionedStack(results[i], i % 2 == 0 ? 134 - 5 : 152 - 5, i < 2 ? 26 - 11 : 44 - 11 ));
 			}
@@ -83,7 +84,7 @@ public class GasCentrifugeRecipeHandler extends TemplateRecipeHandler implements
 
 	@Override
 	public String getRecipeName() {
-		return "Gas Centrifuge";
+		return I18nUtil.resolveKey("nei.gas_centrifuge.name");
 	}
 
 	@Override
@@ -148,17 +149,17 @@ public class GasCentrifugeRecipeHandler extends TemplateRecipeHandler implements
 	@Override
 	public void drawExtras(int recipe) {
 		drawProgressBar(3, 51 - 45, 176, 0, 16, 34, 480, 7);
-		
+
 		SmeltingSet set = (SmeltingSet) this.arecipes.get(recipe);
-		
+
 		drawProgressBar(79 - 5, 28 - 11, 208, 0, 44, 37, set.isHighSpeed ? 150 - 70 : 150, 0);
-		
+
 		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-		
-		String centrifuges = set.centNumber + " G. Cents";
+
+		String centrifuges = I18nUtil.resolveKey("nei.gas_centrifuge.centrifuges", set.centNumber);
 		fontRenderer.drawString(centrifuges, (50 - fontRenderer.getStringWidth(centrifuges) / 2), 21 - 11, 65280);
 	}
-	
+
 	public LinkedList<RecipeTransferRect> transferRectsRec = new LinkedList<RecipeTransferRect>();
 	public LinkedList<RecipeTransferRect> transferRectsGui = new LinkedList<RecipeTransferRect>();
 	public LinkedList<Class<? extends GuiContainer>> guiRec = new LinkedList<Class<? extends GuiContainer>>();
@@ -168,21 +169,21 @@ public class GasCentrifugeRecipeHandler extends TemplateRecipeHandler implements
 	public void loadTransferRects() {
 		transferRectsGui = new LinkedList<RecipeTransferRect>();
 		guiGui = new LinkedList<Class<? extends GuiContainer>>();
-		
+
 		transferRects.add(new RecipeTransferRect(new Rectangle(79 - 5, 26 - 11, 44, 40), "gascentprocessing"));
 		transferRectsGui.add(new RecipeTransferRect(new Rectangle(70 - 5, 36 - 11, 36, 12), "gascentprocessing"));
-		
+
 		guiGui.add(GUIMachineGasCent.class);
 		RecipeTransferRectHandler.registerRectsToGuis(getRecipeTransferRectGuis(), transferRects);
 		RecipeTransferRectHandler.registerRectsToGuis(guiGui, transferRectsGui);
 	}
-	
+
 	@Override
 	public void drawBackground(int recipe) {
 		super.drawBackground(recipe);
-		
+
 		SmeltingSet set = (SmeltingSet) this.arecipes.get(recipe);
-		
+
 		if(set.isHighSpeed)
 			drawTexturedModalRect(30 - 5, 35 - 11, 192, 0, 16, 16);
 	}

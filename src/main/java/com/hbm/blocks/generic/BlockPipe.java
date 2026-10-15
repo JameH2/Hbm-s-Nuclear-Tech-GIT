@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import com.hbm.util.i18n.I18nUtil;
 
 public class BlockPipe extends Block implements ITooltipProvider, INBTBlockTransformable {
 
@@ -91,7 +92,7 @@ public class BlockPipe extends Block implements ITooltipProvider, INBTBlockTrans
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add("Purely decorative");
+		list.add(I18nUtil.resolveKey("tile.pipe.purely_decorative"));
 	}
 
 	@Override

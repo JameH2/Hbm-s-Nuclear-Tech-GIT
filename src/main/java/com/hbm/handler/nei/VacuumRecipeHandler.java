@@ -6,7 +6,7 @@ import com.hbm.inventory.recipes.VacuumRefineryRecipes;
 public class VacuumRecipeHandler extends NEIUniversalHandler {
 
 	public VacuumRecipeHandler() {
-		super("Vacuum Refinery", ModBlocks.machine_vacuum_distill, VacuumRefineryRecipes.getVacuumRecipe());
+		super("nei.vacuum.name", ModBlocks.machine_vacuum_distill, VacuumRefineryRecipes.getVacuumRecipe());
 	}
 
 	@Override

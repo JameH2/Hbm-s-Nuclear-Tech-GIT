@@ -130,10 +130,10 @@ public class DroneWaypoint extends BlockContainer implements ILookOverlay, ITool
 		TileEntityDroneWaypoint tile = (TileEntityDroneWaypoint) world.getTileEntity(x, y, z);
 		List<String> text = new ArrayList();
 
-		text.add("Waypoint distance: " + tile.height);
+		text.add(I18nUtil.resolveKey("overlay.drone_waypoint.waypoint_distance", tile.height));
 
 		if(tile.nextY != -1) {
-			text.add("Next waypoint: " + tile.nextX + " / " + tile.nextY + " / " + tile.nextZ);
+			text.add(I18nUtil.resolveKey("overlay.drone_waypoint.next_waypoint", tile.nextX, tile.nextY, tile.nextZ));
 		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);

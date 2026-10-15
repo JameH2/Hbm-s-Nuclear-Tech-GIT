@@ -24,6 +24,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.Constants;
+import com.hbm.util.i18n.I18nUtil;
 
 public class RocketStruct {
 
@@ -97,39 +98,39 @@ public class RocketStruct {
 		if(capsule == null && stages.size() == 0) return issues;
 
 		if(capsule == null || (capsule.part.attributes[0] != WarheadType.APOLLO && capsule.part.attributes[0] != WarheadType.SATELLITE))
-			issues.add(EnumChatFormatting.RED + "Invalid Capsule/Satellite");
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.invalid_capsule_satellite"));
 
 		// Current stage stats
 		if(stageNum < stages.size()) {
 			RocketStage stage = stages.get(stageNum);
-			issues.add("Dry mass: " + getLaunchMass(stageNum) + "kg");
-			issues.add("Wet mass: " + getWetMass(stageNum) + "kg");
+			issues.add(I18nUtil.resolveKey("overlay.rocket_struct.dry_mass_skg", getLaunchMass(stageNum)));
+			issues.add(I18nUtil.resolveKey("overlay.rocket_struct.wet_mass_skg", getWetMass(stageNum)));
 			if(stage.thruster != null) {
-				issues.add("Thrust: " + getThrust(stage) + "N");
-				issues.add("ISP: " + getISP(stage) + "s");
+				issues.add(I18nUtil.resolveKey("overlay.rocket_struct.thrust_n", getThrust(stage)));
+				issues.add(I18nUtil.resolveKey("overlay.rocket_struct.isp_ss", getISP(stage)));
 			}
 		}
 
 		for(int i = 0; i < stages.size(); i++) {
 			RocketStage stage = stages.get(i);
 			if(stage.fuselage == null)
-				issues.add(EnumChatFormatting.RED + "Stage " + (i + 1) + " missing fuselage");
+				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.stage_missing_fuselage", (i + 1)));
 			if(stage.thruster == null)
-				issues.add(EnumChatFormatting.RED + "Stage " + (i + 1) + " missing thruster");
+				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.stage_missing_thruster", (i + 1)));
 
 			if(stage.fuselage == null || stage.thruster == null)
 				continue;
 
 			if(stage.thrusterCount > stage.fuselageCount)
-				issues.add(EnumChatFormatting.RED + "Stage " + (i + 1) + " too many thrusters");
+				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.stage_too_many_thrusters", (i + 1)));
 			if(stage.fuselageCount % stage.thrusterCount != 0)
-				issues.add(EnumChatFormatting.RED + "Stage " + (i + 1) + " uneven thrusters");
+				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.stage_uneven_thrusters", (i + 1)));
 
 			if(stage.fuselage.part.attributes[0] != FuelType.ANY && stage.fuselage.part.attributes[0] != stage.thruster.part.attributes[0])
-				issues.add(EnumChatFormatting.RED + "Stage " + (i + 1) + " fuel mismatch");
+				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.stage_fuel_mismatch", (i + 1)));
 
 			if(i > 0 && stage.fins == null)
-				issues.add(EnumChatFormatting.YELLOW + "Stage " + (i + 1) + " lacks landing legs");
+				issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.rocket_struct.stage_lacks_landing_legs", (i + 1)));
 
 			// I was gonna add all sorts of realistic restrictions but then realised
 			// KSP lets you shit any part onto any part, and that's fun
@@ -142,11 +143,11 @@ public class RocketStruct {
 			int fuelCapacity = getFuelCapacity(stageNum);
 
 			if(fuelRequirement == Integer.MAX_VALUE) {
-				issues.add(EnumChatFormatting.YELLOW + "Insufficient thrust");
+				issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.rocket_struct.insufficient_thrust"));
 			} else if(fuelCapacity < fuelRequirement) {
-				issues.add(EnumChatFormatting.YELLOW + "Insufficient fuel: " + fuelCapacity + "/" + fuelRequirement + "mB");
+				issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.rocket_struct.insufficient_fuel_mb", fuelCapacity, fuelRequirement));
 			} else if(fuelCapacity > 0 && fuelRequirement > 0) {
-				issues.add(EnumChatFormatting.GREEN + "Trip possible! " + fuelCapacity + "/" + fuelRequirement + "mB");
+				issues.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("overlay.rocket_struct.trip_possible_mb", fuelCapacity, fuelRequirement));
 			}
 		}
 

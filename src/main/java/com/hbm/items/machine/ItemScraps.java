@@ -27,7 +27,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 
 public class ItemScraps extends ItemAutogen {
-	
+
 	@SideOnly(Side.CLIENT) public IIcon liquidIcon;
 	@SideOnly(Side.CLIENT) public IIcon addiviceIcon;
 
@@ -55,38 +55,38 @@ public class ItemScraps extends ItemAutogen {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack stack, int layer) {
-		
+
 		if(stack.hasTagCompound() && stack.stackTagCompound.getBoolean("liquid")) {
-			
+
 			NTMMaterial mat = Mats.matById.get(stack.getItemDamage());
-			
+
 			if(mat != null) {
 				return mat.moltenColor;
 			}
 		}
-		
+
 		return super.getColorFromItemStack(stack, layer);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconIndex(ItemStack stack) {
-		
+
 		if(stack.hasTagCompound() && stack.stackTagCompound.getBoolean("liquid")) {
-			
+
 			NTMMaterial mat = Mats.matById.get(stack.getItemDamage());
-			
+
 			if(mat != null) {
 				if(mat.smeltable == mat.smeltable.SMELTABLE) return this.liquidIcon;
 				if(mat.smeltable == mat.smeltable.ADDITIVE) return this.addiviceIcon;
 			}
 		}
-		
+
 		return this.getIconFromDamage(stack.getItemDamage());
 	}
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
-		
+
 		MaterialStack contents = getMats(stack);
 		if(contents != null) {
 			String matName = contents.material.getUnlocalizedName();
@@ -97,44 +97,44 @@ public class ItemScraps extends ItemAutogen {
 				return ("" + StatCollector.translateToLocalFormatted(this.getUnlocalizedNameInefficiently(stack) + ".name", StatCollector.translateToLocal(matName))).trim();
 			}
 		}
-		
-		return "Foundry Scraps";
+
+		return I18nUtil.resolveKey("item.scraps.foundry_scraps");
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		MaterialStack contents = getMats(stack);
-		
+
 		if(contents != null) {
-			
+
 			list.add(Mats.formatAmount(contents.amount, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
-			
+
 			if(stack.hasTagCompound() && stack.stackTagCompound.getBoolean("liquid")) {
-				if(contents.material.smeltable == contents.material.smeltable.ADDITIVE) list.add(EnumChatFormatting.DARK_RED + "Additive, not castable!");
+				if(contents.material.smeltable == contents.material.smeltable.ADDITIVE) list.add(EnumChatFormatting.DARK_RED + I18nUtil.resolveKey("desc.item.scraps.additive_not_castable"));
 			}
 		}
 	}
-	
+
 	public static MaterialStack getMats(ItemStack stack) {
-		
+
 		if(stack.getItem() != ModItems.scraps) return null;
-		
+
 		NTMMaterial mat = Mats.matById.get(stack.getItemDamage());
 		if(mat == null) return null;
-		
+
 		int amount = MaterialShapes.INGOT.q(1);
-		
+
 		if(stack.hasTagCompound()) {
 			amount = stack.getTagCompound().getInteger("amount");
 		}
-		
+
 		return new MaterialStack(mat, amount);
 	}
-	
+
 	public static ItemStack create(MaterialStack stack) {
 		return create(stack, false);
 	}
-	
+
 	public static ItemStack create(MaterialStack stack, boolean liquid) {
 		if(stack.material == null)
 			return new ItemStack(ModItems.nothing); //why do i bother adding checks for fucking everything when they don't work

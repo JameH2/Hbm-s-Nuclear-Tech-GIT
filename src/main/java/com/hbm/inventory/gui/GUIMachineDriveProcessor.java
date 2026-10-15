@@ -13,6 +13,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUIMachineDriveProcessor extends GuiInfoContainer {
 
@@ -27,15 +28,15 @@ public class GUIMachineDriveProcessor extends GuiInfoContainer {
 		this.xSize = 176;
 		this.ySize = 207;
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
-		
+
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 18, 16, 52, machine.power, machine.maxPower);
-        
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 49, guiTop + 17, 18, 18, mouseX, mouseY, new String[] {"Clone drive"} );
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 38, guiTop + 61, 18, 18, mouseX, mouseY, new String[] {"Start drive processing"} );
+
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 49, guiTop + 17, 18, 18, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.drive_processor.clone_drive")} );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 38, guiTop + 61, 18, 18, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.drive_processor.start_drive_processing")} );
 	}
 
 	@Override
@@ -61,9 +62,9 @@ public class GUIMachineDriveProcessor extends GuiInfoContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mx, int my) {
-		
+
 	}
-	
+
 	@Override
 	protected void mouseClicked(int x, int y, int i) {
 		super.mouseClicked(x, y, i);
@@ -88,5 +89,5 @@ public class GUIMachineDriveProcessor extends GuiInfoContainer {
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, machine.xCoord, machine.yCoord, machine.zCoord));
 		}
 	}
-	
+
 }

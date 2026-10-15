@@ -15,6 +15,7 @@ import com.hbm.inventory.gui.element.GUIElements;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.util.BobMathUtil;
+import com.hbm.util.FluidDebug;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,67 +27,80 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
+import com.hbm.util.i18n.I18nUtil;
 
 public class FluidTank implements Cloneable {
-	
+
+	public static final FluidTank NONE_TANK = new FluidTank(Fluids.NONE, 1_000);
 	public static final FluidTank[] EMPTY_ARRAY = new FluidTank[0];
 
 	public static final List<FluidLoadingHandler> loadingHandlers = new ArrayList<FluidLoadingHandler>();
 	public static final Set<Item> noDualUnload = new HashSet<Item>();
-	
+
 	static {
 		loadingHandlers.add(new FluidLoaderStandard());
 		loadingHandlers.add(new FluidLoaderFillableItem());
 		loadingHandlers.add(new FluidLoaderInfinite());
 	}
-	
+
 	protected FluidType type;
 	protected int fluid;
 	protected int maxFluid;
 	protected int pressure = 0;
-	
+
 	public FluidTank(FluidType type, int maxFluid) {
 		this.type = type;
 		this.maxFluid = maxFluid;
 	}
-	
+
 	public FluidTank withPressure(int pressure) {
 		if(this.pressure != pressure) this.setFill(0);
 		this.pressure = pressure;
 		return this;
 	}
 	
-	public void setFill(int i) { fluid = i; }
+	public void setFill(int i) {
+		FluidType oldType = this.type;
+		int oldFill = this.fluid;
+		fluid = i;
+		FluidDebug.checkTank(this, "setFill", oldType, oldFill);
+	}
 	
 	public void setTankType(FluidType type) {
 		if(type == null) type = Fluids.NONE;
 		if(this.type == type) return;
 		
+		FluidType oldType = this.type;
+		int oldFill = this.fluid;
 		this.type = type;
 		this.setFill(0);
+		FluidDebug.logTypeChange(this, "setTankType", oldType, oldFill);
 	}
-	
+
 	public void resetTank() {
+		FluidType oldType = this.type;
+		int oldFill = this.fluid;
 		this.type = Fluids.NONE;
 		this.fluid = 0;
 		this.pressure = 0;
+		FluidDebug.logTypeChange(this, "resetTank", oldType, oldFill);
 	}
-	
+
 	/** Changes type and pressure based on a fluid stack, useful for changing tank types based on recipes */
 	public FluidTank conform(FluidStack stack) {
 		this.setTankType(stack.type);
 		this.withPressure(stack.pressure);
 		return this;
 	}
-	
+
 	public FluidType getTankType() { return type; }
 	public int getFill() { return fluid; }
 	public int getMaxFill() { return maxFluid; }
 	public int getPressure() { return pressure; }
-	
+
 	public int changeTankSize(int size) {
 		maxFluid = size;
-		
+
 		if(fluid > maxFluid) {
 			int dif = fluid - maxFluid;
 			fluid = maxFluid;
@@ -94,44 +108,44 @@ public class FluidTank implements Cloneable {
 		}
 		return 0;
 	}
-	
+
 	//Fills tank from canisters
 	public boolean loadTank(int in, int out, ItemStack[] slots) {
 		if(slots[in] == null) return false;
 
 		boolean isInfiniteBarrel = slots[in].getItem() == ModItems.fluid_barrel_infinite;
 		if(!isInfiniteBarrel && pressure != 0) return false;
-		
+
 		int prev = this.getFill();
-		
+
 		for(FluidLoadingHandler handler : loadingHandlers) {
 			if(handler.emptyItem(slots, in, out, this)) {
 				break;
 			}
 		}
-		
+
 		return this.getFill() > prev;
 	}
-	
+
 	//Fills canisters from tank
 	public boolean unloadTank(int in, int out, ItemStack[] slots) {
 		if(slots[in] == null) return false;
-		
+
 		int prev = this.getFill();
-		
+
 		for(FluidLoadingHandler handler : loadingHandlers) {
 			if(handler.fillItem(slots, in, out, this)) {
 				break;
 			}
 		}
-		
+
 		return this.getFill() < prev;
 	}
 
 	public boolean setType(int in, ItemStack[] slots) {
 		return setType(in, in, slots);
 	}
-	
+
 	/**
 	 * Changes the tank type and returns true if successful
 	 * @param in
@@ -140,19 +154,22 @@ public class FluidTank implements Cloneable {
 	 * @return
 	 */
 	public boolean setType(int in, int out, ItemStack[] slots) {
-		
+
 		if(slots[in] != null && slots[in].getItem() instanceof IItemFluidIdentifier) {
 			IItemFluidIdentifier id = (IItemFluidIdentifier) slots[in].getItem();
+			FluidType oldType = this.type;
+			int oldFill = this.fluid;
 			
 			if(in == out) {
 				FluidType newType = id.getType(null, 0, 0, 0, slots[in]);
-				
+
 				if(type != newType) {
 					type = newType;
 					fluid = 0;
+					FluidDebug.logTypeChange(this, "setType", oldType, oldFill);
 					return true;
 				}
-				
+
 			} else if(slots[out] == null) {
 				FluidType newType = id.getType(null, 0, 0, 0, slots[in]);
 				if(type != newType) {
@@ -160,14 +177,15 @@ public class FluidTank implements Cloneable {
 					slots[out] = slots[in].copy();
 					slots[in] = null;
 					fluid = 0;
+					FluidDebug.logTypeChange(this, "setType", oldType, oldFill);
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Renders the fluid texture into a GUI, with the height based on the fill state
 	 * @param x the tank's left side
@@ -179,11 +197,11 @@ public class FluidTank implements Cloneable {
 	@SideOnly(Side.CLIENT) public void renderTank(int x, int y, double z, int width, int height) {
 		renderTank(x, y, z, width, height, 0);
 	}
-	
+
 	@SideOnly(Side.CLIENT) public void renderTank(int x, int y, double z, int width, int height, int orientation) {
 
 		GL11.glEnable(GL11.GL_BLEND);
-		
+
 		int color = type.getTint();
 		double r = ((color & 0xff0000) >> 16) / 255D;
 		double g = ((color & 0x00ff00) >> 8) / 255D;
@@ -191,38 +209,38 @@ public class FluidTank implements Cloneable {
 		GL11.glColor3d(r, g, b);
 
 		y -= height;
-		
+
 		Minecraft.getMinecraft().getTextureManager().bindTexture(type.getTexture());
-		
+
 		int i = (fluid * height) / maxFluid;
-		
+
 		double minX = x;
 		double maxX = x;
 		double minY = y;
 		double maxY = y;
-		
+
 		double minV = 1D - i / 16D;
 		double maxV = 1D;
 		double minU = 0D;
 		double maxU = width / 16D;
-		
+
 		if(orientation == 0) {
 			maxX += width;
 			minY += height - i;
 			maxY += height;
 		}
-		
+
 		if(orientation == 1) {
 			i = (fluid * width) / maxFluid;
 			maxX += i;
 			maxY += height;
-			
+
 			minV = 0D;
 			maxV = height / 16D;
 			minU = 1D;
 			maxU = 1D - i / 16D;
 		}
-		
+
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
 		tessellator.addVertexWithUV(minX, maxY, z, minU, maxV);
@@ -234,19 +252,19 @@ public class FluidTank implements Cloneable {
 		GL11.glColor3d(1D, 1D, 1D);
 		GL11.glDisable(GL11.GL_BLEND);
 	}
-	
+
 	@SideOnly(Side.CLIENT) public void renderTankInfo(GuiInfoContainer gui, int mouseX, int mouseY, int x, int y, int width, int height) {
 		if(x <= mouseX && x + width > mouseX && y < mouseY && y + height >= mouseY) {
-			
+
 			List<String> list = new ArrayList();
 			list.add(this.type.getLocalizedName());
-			list.add(fluid + "/" + maxFluid + "mB");
-			
+			list.add(I18nUtil.resolveKey("desc.item.fluid_tank.mb", fluid, maxFluid));
+
 			if(this.pressure != 0) {
-				list.add(EnumChatFormatting.RED + "Pressure: " + this.pressure + " PU");
-				list.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_RED) + "Pressurized, use compressor!");
+				list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.item.fluid_tank.pressure_pu", this.pressure));
+				list.add(((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_RED)) + I18nUtil.resolveKey("desc.item.pressurized_compressor"));
 			}
-			
+
 			type.addInfo(list);
 			GUIElements.drawHoveringTextFluid(list, mouseX, mouseY, gui.getFontRenderer(), gui.getItemRenderer(), gui.width, gui.height, this.type);
 		}
@@ -259,23 +277,24 @@ public class FluidTank implements Cloneable {
 		nbt.setInteger(s + "_type", type.getID());
 		nbt.setShort(s + "_p", (short) pressure);
 	}
-	
+
 	//Called by TE to load fillstate
 	public void readFromNBT(NBTTagCompound nbt, String s) {
 		fluid = nbt.getInteger(s);
 		int max = nbt.getInteger(s + "_max");
 		if(max > 0)
 			maxFluid = max;
-		
+
 		fluid = MathHelper.clamp_int(fluid, 0, max);
-		
+
 		type = Fluids.fromNameCompat(nbt.getString(s + "_type")); //compat
 		if(type == Fluids.NONE)
 			type = Fluids.fromID(nbt.getInteger(s + "_type"));
-		
+
 		this.pressure = nbt.getShort(s + "_p");
+		FluidDebug.checkTank(this, "readFromNBT", null, -1);
 	}
-	
+
 	public void serialize(ByteBuf buf) {
 		buf.writeInt(fluid);
 		buf.writeInt(maxFluid);
@@ -288,5 +307,6 @@ public class FluidTank implements Cloneable {
 		maxFluid = buf.readInt();
 		type = Fluids.fromID(buf.readInt());
 		pressure = buf.readShort();
+		FluidDebug.checkTank(this, "deserialize", null, -1);
 	}
 }

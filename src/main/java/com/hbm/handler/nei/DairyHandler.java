@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 public class DairyHandler extends NEIUniversalHandler {
 
 	public DairyHandler() {
-		super("Dairy", ModBlocks.machine_milk_reformer, getDairyRecipesForNEI());
+		super("nei.dairy.name", ModBlocks.machine_milk_reformer, getDairyRecipesForNEI());
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class DairyHandler extends NEIUniversalHandler {
     public static HashMap<Object, Object> getDairyRecipesForNEI() {
 
 		HashMap<Object, Object> recipes = new HashMap<>();
-        
+
         ItemStack[] in = new ItemStack[] {
             ItemFluidIcon.make(Fluids.MILK, 100),
         };
@@ -37,5 +37,5 @@ public class DairyHandler extends NEIUniversalHandler {
 
         return recipes;
 	}
-    
+
 }

@@ -51,34 +51,34 @@ public class SILEXRecipeHandler extends TemplateRecipeHandler implements ICompat
 		EnumWavelengths crystalStrength;
 
 		public RecipeSet(Object input, SILEXRecipe recipe) {
-			
+
 			this.input = new PositionedStack(input, 12, 24);
 			this.outputs = new ArrayList<PositionedStack>();
 			this.chances = new ArrayList<Double>();
 			this.produced = recipe.fluidProduced / recipe.fluidConsumed;
 			this.crystalStrength = recipe.laserStrength;
-			
+
 			double weight = 0;
-			
+
 			for(WeightedRandomObject obj : recipe.outputs) {
 				weight += obj.itemWeight;
 			}
-			
+
 			int sep = recipe.outputs.size() > 4 ? 3 : 2;
-			
+
 			for(int i = 0; i < recipe.outputs.size(); i++) {
-				
+
 				WeightedRandomObject obj = recipe.outputs.get(i);
-				
+
 				if(i < sep) {
 					outputs.add(new PositionedStack(obj.asStack(), 68, 24 + i * 18 - 9 * ((Math.min(recipe.outputs.size(), sep) + 1) / 2)));
 				} else {
 					outputs.add(new PositionedStack(obj.asStack(), 116, 24 + (i - sep) * 18 - 9 * ((Math.min(recipe.outputs.size() - sep, sep) + 1) / 2)));
 				}
-				
+
 				chances.add(100 * obj.itemWeight / weight);
 			}
-			
+
 			/*for(WeightedRandomObject obj : recipe.outputs) {
 				outputs.add(new PositionedStack(obj.asStack(), 65, 24 + off - 9 * ((recipe.outputs.size()) / 2) + 1));
 				off += 18;
@@ -103,7 +103,7 @@ public class SILEXRecipeHandler extends TemplateRecipeHandler implements ICompat
 
 	@Override
 	public String getRecipeName() {
-		return "SILEX";
+		return I18nUtil.resolveKey("nei.silexrecipe.name");
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class SILEXRecipeHandler extends TemplateRecipeHandler implements ICompat
 		if(outputId.equals("silex") && getClass() == SILEXRecipeHandler.class) {
 
 			Map<Object, SILEXRecipe> recipes = SILEXRecipes.getRecipes();
-			
+
 			for (Map.Entry<Object, SILEXRecipe> recipe : recipes.entrySet()) {
 				this.arecipes.add(new RecipeSet(recipe.getKey(), recipe.getValue()));
 			}
@@ -130,7 +130,7 @@ public class SILEXRecipeHandler extends TemplateRecipeHandler implements ICompat
 		for(Map.Entry<Object, SILEXRecipe> recipe : recipes.entrySet()) {
 
 			for(WeightedRandomObject out : recipe.getValue().outputs) {
-				
+
 				if(NEIServerUtils.areStacksSameTypeCrafting(out.asStack(), result)) {
 					this.arecipes.add(new RecipeSet(recipe.getKey(), recipe.getValue()));
 				}
@@ -154,14 +154,14 @@ public class SILEXRecipeHandler extends TemplateRecipeHandler implements ICompat
 		Map<Object, SILEXRecipe> recipes = SILEXRecipes.getRecipes();
 
 		for(Map.Entry<Object, SILEXRecipe> recipe : recipes.entrySet()) {
-			
+
 			if(recipe.getKey() instanceof ItemStack) {
 
 				if (NEIServerUtils.areStacksSameTypeCrafting(ingredient, (ItemStack)recipe.getKey()))
 					this.arecipes.add(new RecipeSet(recipe.getKey(), recipe.getValue()));
-				
+
 			} else if (recipe.getKey() instanceof ArrayList) {
-				
+
 				for(Object o : (ArrayList)recipe.getKey()) {
 					ItemStack stack = (ItemStack)o;
 
@@ -196,23 +196,23 @@ public class SILEXRecipeHandler extends TemplateRecipeHandler implements ICompat
 			fontRenderer.drawString(((int)(chance * 10D) / 10D) + "%", 84, 28 + index * 18 - 9 * ((rec.chances.size() + 1) / 2), 0x404040);
 			index++;
 		}*/
-		
+
 		for(int i = 0; i < rec.chances.size(); i++) {
-			
+
 			double chance = rec.chances.get(i);
-			
+
 			PositionedStack sta = rec.outputs.get(i);
-			
+
 			fontRenderer.drawString(((int)(chance * 10D) / 10D) + "%", sta.relx + 18, sta.rely + 4, 0x404040);
 		}
-		
+
 		String am = ((int)(rec.produced * 10D) / 10D) + "x";
 		fontRenderer.drawString(am, 52 - fontRenderer.getStringWidth(am) / 2, 43, 0x404040);
-		
+
 		String wavelength = (rec.crystalStrength == EnumWavelengths.NULL) ? EnumChatFormatting.WHITE + "N/A" : rec.crystalStrength.textColor + I18nUtil.resolveKey(rec.crystalStrength.name);
 		fontRenderer.drawString(wavelength, (33 - fontRenderer.getStringWidth(wavelength) / 2), 8, 0x404040);
-		
-		
+
+
 	}
 
 	@Override

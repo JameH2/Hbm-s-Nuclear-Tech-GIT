@@ -5,8 +5,6 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-# Yes this is a mostly untouched Github actions template
-
 
 name: Java CI with Gradle
 
@@ -20,8 +18,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    concurrency:
+      group: release-${{ github.ref }}
+      cancel-in-progress: false
     permissions:
-      contents: read
+      contents: write
 
     steps:
     - uses: actions/checkout@v4
@@ -60,5 +61,55 @@ jobs:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.6.0
       with:
-        # A file, directory or wildcard pattern that describes what to upload
-        path: ./build/libs
+        # Upload the built jar instead of the raw build/libs directory (which would get zipped)
+        path: ./build/libs/*.jar
+
+    # A release is only made when the mod was built from the spacetravel-two-pointfive branch
+    - name: Calculate release tag
+      id: release_tag
+      if: github.event_name != 'pull_request' && github.ref == 'refs/heads/spacetravel-two-pointfive'
+      run: |
+        days=${{ steps.calculate_days.outputs.days }}
+        base_tag="1.0.27_X${days}"
+        # escape regex metacharacters (the dots) so the match is exact
+        escaped=$(printf '%s' "$base_tag" | sed 's/[][\.^$*+?(){}|]/\\&/g')
+
+        found=0
+        highest=0
+        while IFS= read -r line; do
+          name="${line##*refs/tags/}"
+          name="${name%"^{}"}"   # strip peeled annotated-tag suffix — quoted properly this time
+          if [[ "$name" == "$base_tag" ]]; then
+            found=1              # base tag taken → next must be at least _1
+          elif [[ "$name" =~ ^${escaped}_([0-9]+)$ ]]; then
+            found=1
+            num="${BASH_REMATCH[1]}"
+            if (( num > highest )); then
+              highest=$num
+            fi
+          fi
+        done < <(git ls-remote --tags origin "refs/tags/${base_tag}*")
+
+        if (( found )); then
+          tag="${base_tag}_$((highest + 1))"
+        else
+          tag="$base_tag"
+        fi
+
+        echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+    - name: Create Release
+      if: github.event_name != 'pull_request' && github.ref == 'refs/heads/spacetravel-two-pointfive'
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        tag="${{ steps.release_tag.outputs.tag }}"
+        jar=$(ls ./build/libs/HBM-NTM-*.jar | head -n 1)
+
+        # gh interprets asset paths as glob patterns, so escape the [ ] in the jar name
+        asset=$(printf '%s' "$jar" | sed 's/[][?*\\]/\\&/g')
+
+        gh release create "$tag" "$asset" \
+          --title "$tag" \
+          --notes "Automated release build for the spacetravel-two-pointfive branch. Build number: ${{ steps.calculate_days.outputs.days }}" \
+          --latest

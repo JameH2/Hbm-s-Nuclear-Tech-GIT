@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.fluidmk2.IFillableItem;
 import cpw.mods.fml.relauncher.Side;
@@ -15,7 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 
 public class ItemToolAbilityFueled extends ItemToolAbility implements IFillableItem {
-	
+
 	protected int fillRate;
 	protected int consumption;
 	protected int maxFuel;
@@ -34,8 +35,8 @@ public class ItemToolAbilityFueled extends ItemToolAbility implements IFillableI
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 
-		list.add(EnumChatFormatting.GOLD + "Fuel: " + this.getFill(stack) + "/" + this.maxFuel + "mB");
-		
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.tool_ability_fueled.desc1", this.getFill(stack), this.maxFuel));
+
 		for(FluidType type : acceptedFuels) {
 			list.add(EnumChatFormatting.YELLOW + "- " + type.getLocalizedName());
 		}
@@ -75,7 +76,7 @@ public class ItemToolAbilityFueled extends ItemToolAbility implements IFillableI
 			setFill(stack, maxFuel);
 			return maxFuel;
 		}
-		
+
 		return stack.stackTagCompound.getInteger("fuel");
 	}
 
@@ -83,7 +84,7 @@ public class ItemToolAbilityFueled extends ItemToolAbility implements IFillableI
 		if(stack.stackTagCompound == null) {
 			stack.stackTagCompound = new NBTTagCompound();
 		}
-		
+
 		stack.stackTagCompound.setInteger("fuel", fill);
 	}
 
@@ -94,14 +95,14 @@ public class ItemToolAbilityFueled extends ItemToolAbility implements IFillableI
 
 	@Override
 	public int tryFill(FluidType type, int amount, ItemStack stack) {
-		
+
 		if(!acceptsFluid(type, stack))
 			return amount;
-		
+
 		int toFill = Math.min(amount, this.fillRate);
 		toFill = Math.min(toFill, this.maxFuel - this.getFill(stack));
 		this.setFill(stack, this.getFill(stack) + toFill);
-		
+
 		return amount - toFill;
 	}
 
@@ -114,7 +115,7 @@ public class ItemToolAbilityFueled extends ItemToolAbility implements IFillableI
 	public int tryEmpty(FluidType type, int amount, ItemStack stack) {
 		return amount;
 	}
-	
+
 	public static ItemStack getEmptyTool(Item item) {
 		ItemToolAbilityFueled tool = (ItemToolAbilityFueled) item;
 		ItemStack stack = new ItemStack(item);

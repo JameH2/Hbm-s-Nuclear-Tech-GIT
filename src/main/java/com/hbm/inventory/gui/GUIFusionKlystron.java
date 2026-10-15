@@ -19,17 +19,18 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUIFusionKlystron extends GuiInfoContainer {
 
 	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/reactors/gui_fusion_klystron.png");
 	public TileEntityFusionKlystron klystron;
 	private GuiTextField field;
-	
+
 	public GUIFusionKlystron(InventoryPlayer invPlayer, TileEntityFusionKlystron klystron) {
 		super(new ContainerFusionKlystron(invPlayer, klystron));
 		this.klystron = klystron;
-		
+
 		this.xSize = 194;
 		this.ySize = 200;
 	}
@@ -37,7 +38,7 @@ public class GUIFusionKlystron extends GuiInfoContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		
+
 		Keyboard.enableRepeatEvents(true);
 		this.field = new GuiTextField(this.fontRendererObj, guiLeft + 84, guiTop + 22, 102, 12);
 		this.field.setTextColor(0x00FF00);
@@ -49,19 +50,19 @@ public class GUIFusionKlystron extends GuiInfoContainer {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float interp) {
 		super.drawScreen(mouseX, mouseY, interp);
-		
+
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 18, 16, 52, klystron.power, klystron.getMaxPower());
-		
-		drawCustomInfoStat(mouseX, mouseY, guiLeft + 43, guiTop + 71, 18, 18, mouseX, mouseY, EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(klystron.output) + "KyU / " + BobMathUtil.getShortNumber(klystron.outputTarget) + "KyU");
+
+		drawCustomInfoStat(mouseX, mouseY, guiLeft + 43, guiTop + 71, 18, 18, mouseX, mouseY, EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(klystron.output) + I18nUtil.resolveKey("gui.fusion_klystron.ky_u") + BobMathUtil.getShortNumber(klystron.outputTarget) + "KyU");
 		klystron.compair.renderTankInfo(this, mouseX, mouseY, guiLeft + 76, guiTop + 71, 18, 18);
-		drawCustomInfoStat(mouseX, mouseY, guiLeft + 115, guiTop + 71, 18, 18, mouseX, mouseY, EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(klystron.output) + "HE / " + BobMathUtil.getShortNumber(klystron.outputTarget) + "HE");
+		drawCustomInfoStat(mouseX, mouseY, guiLeft + 115, guiTop + 71, 18, 18, mouseX, mouseY, EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(klystron.output) + I18nUtil.resolveKey("gui.fusion_klystron.he") + BobMathUtil.getShortNumber(klystron.outputTarget) + "HE");
 
 	}
 
 	@Override
 	protected void mouseClicked(int i, int j, int button) {
 		super.mouseClicked(i, j, button);
-		
+
 		this.field.mouseClicked(i, j, button);
 	}
 
@@ -70,7 +71,7 @@ public class GUIFusionKlystron extends GuiInfoContainer {
 		String name = this.klystron.hasCustomInventoryName() ? this.klystron.getInventoryName() : I18n.format(this.klystron.getInventoryName());
 		this.fontRendererObj.drawString(name, 115 - this.fontRendererObj.getStringWidth(name) / 2, 6, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 35, this.ySize - 93, 4210752);
-		
+
 		String result = "= " + BobMathUtil.getShortNumber(klystron.outputTarget) + "KyU";
 		if(klystron.outputTarget == klystron.MAX_OUTPUT) result += " (max)";
 		this.fontRendererObj.drawString(result, 183 - this.fontRendererObj.getStringWidth(result), 40, 0x00FF00);
@@ -83,7 +84,7 @@ public class GUIFusionKlystron extends GuiInfoContainer {
 
 		int p = (int) (klystron.power * 52 / klystron.getMaxPower());
 		drawTexturedModalRect(guiLeft + 8, guiTop + 70 - p, 194, 52 - p, 16, p);
-		
+
 		double outputGauge = klystron.outputTarget <= 0 ? 0 : ((double) klystron.output / (double) klystron.outputTarget);
 		double airGauge = (double) klystron.compair.getFill() / (double) klystron.compair.getMaxFill();
 		double powerGauge = TileEntityFusionTorus.getSpeedScaled(klystron.maxPower, klystron.power);
@@ -97,14 +98,14 @@ public class GUIFusionKlystron extends GuiInfoContainer {
 		// action LED
 		if(klystron.output >= klystron.outputTarget && klystron.output > 0) drawTexturedModalRect(guiLeft + 180, guiTop + 71, 210, 8, 8, 8);
 		else if(klystron.output > 0) drawTexturedModalRect(guiLeft + 180, guiTop + 71, 210, 0, 8, 8);
-		
+
 		// output energy
 		GUIElements.drawSmoothGauge(guiLeft + 52, guiTop + 80, this.zLevel, outputGauge, 5, 2, 1, 0xA00000);
 		// air cooling
 		GUIElements.drawSmoothGauge(guiLeft + 88, guiTop + 80, this.zLevel, airGauge, 5, 2, 1, 0xA00000);
 		// power consumption
 		GUIElements.drawSmoothGauge(guiLeft + 124, guiTop + 80, this.zLevel, powerGauge, 5, 2, 1, 0xA00000);
-		
+
 		this.field.drawTextBox();
 	}
 
@@ -112,7 +113,7 @@ public class GUIFusionKlystron extends GuiInfoContainer {
 	protected void keyTyped(char c, int key) {
 
 		if(this.field.textboxKeyTyped(c, key)) {
-			
+
 			String text = this.field.getText();
 			if(text.startsWith("0")) this.field.setText(text.substring(1));
 			if(this.field.getText().isEmpty()) this.field.setText("0");
@@ -122,10 +123,10 @@ public class GUIFusionKlystron extends GuiInfoContainer {
 				data.setLong("amount", num);
 				PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, klystron.xCoord, klystron.yCoord, klystron.zCoord));
 			}
-			
+
 			return;
 		}
-		
+
 		super.keyTyped(c, key);
 	}
 

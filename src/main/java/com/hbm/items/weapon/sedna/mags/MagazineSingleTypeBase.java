@@ -8,6 +8,7 @@ import com.hbm.items.tool.ItemAmmoBag.InventoryAmmoBag;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.particle.SpentCasing;
+import com.hbm.util.BaublesCompat;
 import com.hbm.util.BobMathUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -94,6 +95,8 @@ public abstract class MagazineSingleTypeBase implements IMagazine<BulletConfig> 
 			this.setAmount(stack, this.capacity);
 			return;
 		}
+
+		inventory = BaublesCompat.includeBaubles(inventory);
 		
 		for(int i = 0; i < inventory.getSizeInventory(); i++) {
 			ItemStack slot = inventory.getStackInSlot(i);
@@ -178,6 +181,7 @@ public abstract class MagazineSingleTypeBase implements IMagazine<BulletConfig> 
 	/** Returns the config of the first potential loadable round, either what's already chambered or the first valid one if empty */
 	public BulletConfig getFirstConfig(ItemStack stack, IInventory inventory) {
 		if(inventory == null) return null;
+		inventory = BaublesCompat.includeBaubles(inventory);
 		
 		for(int i = 0; i < inventory.getSizeInventory(); i++) {
 			ItemStack slot = inventory.getStackInSlot(i);

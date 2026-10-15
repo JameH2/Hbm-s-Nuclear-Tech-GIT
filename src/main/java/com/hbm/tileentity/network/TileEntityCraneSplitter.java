@@ -9,30 +9,31 @@ import net.minecraft.nbt.NBTTagCompound;
 public class TileEntityCraneSplitter extends TileEntityLoadedBase {
 
 	/* false: left belt is preferred, true: right belt is preferred */
-	private boolean position;
-	private byte remaining; // count until position swaps
+	private final boolean[] position = new boolean[3];
+	private final byte[] remaining = new byte[3]; // count until position swaps, per conveyor lane
 
 	public byte leftRatio = 1;
 	public byte rightRatio = 1;
 
 	// Splits the input stack into two, based on current ratio and internal state
-	public ItemStack[] splitStack(ItemStack stack) {
+	public ItemStack[] splitStack(ItemStack stack, int lane) {
+		lane = Math.max(0, Math.min(lane, position.length - 1));
 		int left = 0;
 		int right = 0;
 		int count = stack.stackSize;
 
-		if(remaining <= 0) remaining = position ? rightRatio : leftRatio;
+		if(remaining[lane] <= 0) remaining[lane] = position[lane] ? rightRatio : leftRatio;
 
 		while(count > 0) {
-			int toExtract = Math.min(remaining, count);
+			int toExtract = Math.min(remaining[lane], count);
 
-			remaining -= toExtract;
+			remaining[lane] -= toExtract;
 			count -= toExtract;
-			if(position) right += toExtract; else left += toExtract;
+			if(position[lane]) right += toExtract; else left += toExtract;
 
-			if(remaining <= 0) {
-				position = !position;
-				remaining = position ? rightRatio : leftRatio;
+			if(remaining[lane] <= 0) {
+				position[lane] = !position[lane];
+				remaining[lane] = position[lane] ? rightRatio : leftRatio;
 			}
 		}
 
@@ -54,8 +55,10 @@ public class TileEntityCraneSplitter extends TileEntityLoadedBase {
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		position = nbt.getBoolean("pos");
-		remaining = nbt.getByte("count");
+		for(int lane = 0; lane < position.length; lane++) {
+			position[lane] = nbt.getBoolean("pos" + lane);
+			remaining[lane] = nbt.getByte("count" + lane);
+		}
 
 		// Make sure existing conveyors are initialised with ratios
 		leftRatio = (byte)Math.max(nbt.getByte("left"), 1);
@@ -66,8 +69,10 @@ public class TileEntityCraneSplitter extends TileEntityLoadedBase {
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
-		nbt.setBoolean("pos", position);
-		nbt.setByte("count", remaining);
+		for(int lane = 0; lane < position.length; lane++) {
+			nbt.setBoolean("pos" + lane, position[lane]);
+			nbt.setByte("count" + lane, remaining[lane]);
+		}
 
 		nbt.setByte("left", leftRatio);
 		nbt.setByte("right", rightRatio);

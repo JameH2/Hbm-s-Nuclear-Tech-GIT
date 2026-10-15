@@ -3,6 +3,7 @@ package com.hbm.items.tool;
 import java.util.List;
 
 import com.hbm.util.BobMathUtil;
+import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.energymk2.IBatteryItem;
 import cpw.mods.fml.relauncher.Side;
@@ -82,7 +83,7 @@ public class ItemSwordAbilityPower extends ItemSwordAbility implements IBatteryI
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 
-		list.add("Charge: " + BobMathUtil.getShortNumber(getCharge(stack)) + " / " + BobMathUtil.getShortNumber(maxPower));
+		list.add(I18nUtil.resolveKey("desc.item.charge", BobMathUtil.getShortNumber(getCharge(stack)), BobMathUtil.getShortNumber(maxPower)));
 
 		super.addInformation(stack, player, list, ext);
 	}

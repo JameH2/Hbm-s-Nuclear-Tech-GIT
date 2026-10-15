@@ -18,12 +18,13 @@ import com.hbm.items.ISatChip;
 import com.hbm.items.ItemVOTVdrive;
 import com.hbm.items.ItemVOTVdrive.Target;
 import com.hbm.items.weapon.ItemCustomRocket;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
 import com.hbm.items.ModItems;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.tileentity.bomb.TileEntityLaunchPadRocket;
 import com.hbm.tileentity.bomb.TileEntityLaunchPadRocket.SolidFuelTank;
-import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import cpw.mods.fml.relauncher.Side;
@@ -58,6 +59,8 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 	public boolean hasDocked = false;
 	public boolean hasRider = false;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+
 	public TileEntityOrbitalStationLauncher() {
 		// launch:			drive + fuel in + fuel out
 		// construction:	capsule + stages + program drives
@@ -68,6 +71,8 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 
 		tanks = new FluidTank[RocketStruct.MAX_STAGES * 2]; // enough tanks for any combination of rocket stages
 		for(int i = 0; i < tanks.length; i++) tanks[i] = new FluidTank(Fluids.NONE, 64_000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks());
 	}
 
 	@Override
@@ -80,6 +85,8 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 		if(!CelestialBody.inOrbit(worldObj)) return;
 
 		if(!worldObj.isRemote) {
+			moduleFluidPorts.update(getPorts());
+
 			// This TE acts almost entirely like a port, except doesn't register itself so nothing actually tries to dock here
 
 			// ROCKET CONSTRUCTION //
@@ -117,21 +124,8 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 			// ROCKET LAUNCHING
 			updateTanks();
 
-			// Connections
-			if(worldObj.getTotalWorldTime() % 20 == 0) {
-				for(DirPos pos : getConPos()) {
-					// trySubscribe(worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-
-					if(rocket.validate()) {
-						for(FluidTank tank : tanks) {
-							if(tank.getTankType() == Fluids.NONE) continue;
-							trySubscribe(tank.getTankType(), worldObj, pos);
-						}
-					}
-				}
-			}
-
 			for(FluidTank tank : tanks) tank.loadTank(1, 2, slots);
+
 			if(slots[1] != null && slots[1].getItem() == ModItems.rocket_fuel && solidFuel.level < solidFuel.max) {
 				decrStackSize(1, 1);
 				solidFuel.level += 250;
@@ -243,24 +237,30 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 		TileEntityLaunchPadRocket.updateStorageTanks(rocket, tanks, solidFuel, false);
 	}
 
-	public DirPos[] getConPos() {
-		return new DirPos[] {
-			new DirPos(xCoord - 1, yCoord + 1, zCoord + 3, ForgeDirection.NORTH),
-			new DirPos(xCoord + 0, yCoord + 1, zCoord + 3, ForgeDirection.NORTH),
-			new DirPos(xCoord + 1, yCoord + 1, zCoord + 3, ForgeDirection.NORTH),
+	protected PortDef[] cachedPorts;
 
-			new DirPos(xCoord - 1, yCoord + 1, zCoord - 3, ForgeDirection.SOUTH),
-			new DirPos(xCoord + 0, yCoord + 1, zCoord - 3, ForgeDirection.SOUTH),
-			new DirPos(xCoord + 1, yCoord + 1, zCoord - 3, ForgeDirection.SOUTH),
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord - 1, yCoord + 1, zCoord + 2, ForgeDirection.NORTH),
+				PortDef.make(xCoord + 0, yCoord + 1, zCoord + 2, ForgeDirection.NORTH),
+				PortDef.make(xCoord + 1, yCoord + 1, zCoord + 2, ForgeDirection.NORTH),
+	
+				PortDef.make(xCoord - 1, yCoord + 1, zCoord - 2, ForgeDirection.SOUTH),
+				PortDef.make(xCoord + 0, yCoord + 1, zCoord - 2, ForgeDirection.SOUTH),
+				PortDef.make(xCoord + 1, yCoord + 1, zCoord - 2, ForgeDirection.SOUTH),
+	
+				PortDef.make(xCoord + 2, yCoord + 1, zCoord - 1, ForgeDirection.EAST),
+				PortDef.make(xCoord + 2, yCoord + 1, zCoord + 0, ForgeDirection.EAST),
+				PortDef.make(xCoord + 2, yCoord + 1, zCoord + 1, ForgeDirection.EAST),
+	
+				PortDef.make(xCoord - 2, yCoord + 1, zCoord - 1, ForgeDirection.WEST),
+				PortDef.make(xCoord - 2, yCoord + 1, zCoord + 0, ForgeDirection.WEST),
+				PortDef.make(xCoord - 2, yCoord + 1, zCoord + 1, ForgeDirection.WEST),
+			};
+		}
 
-			new DirPos(xCoord + 3, yCoord + 1, zCoord - 1, ForgeDirection.EAST),
-			new DirPos(xCoord + 3, yCoord + 1, zCoord + 0, ForgeDirection.EAST),
-			new DirPos(xCoord + 3, yCoord + 1, zCoord + 1, ForgeDirection.EAST),
-
-			new DirPos(xCoord - 3, yCoord + 1, zCoord - 1, ForgeDirection.WEST),
-			new DirPos(xCoord - 3, yCoord + 1, zCoord + 0, ForgeDirection.WEST),
-			new DirPos(xCoord - 3, yCoord + 1, zCoord + 1, ForgeDirection.WEST),
-		};
+		return cachedPorts;
 	}
 
 	public List<String> findIssues() {
@@ -341,9 +341,6 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 	public boolean hasPermission(EntityPlayer player) {
 		return isUseableByPlayer(player);
 	}
-
-	@Override
-	public void receiveControl(NBTTagCompound data) { }
 
 	@Override
 	public void receiveControl(EntityPlayer player, NBTTagCompound data) {

@@ -20,16 +20,17 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUICraneRouter extends GuiInfoContainer {
-	
+
 	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_crane_router.png");
 	private TileEntityCraneRouter router;
 
 	public GUICraneRouter(InventoryPlayer invPlayer, TileEntityCraneRouter tedf) {
 		super(new ContainerCraneRouter(invPlayer, tedf));
 		router = tedf;
-		
+
 		this.xSize = 256;
 		this.ySize = 201;
 	}
@@ -40,7 +41,7 @@ public class GUICraneRouter extends GuiInfoContainer {
 
 		for(int j = 0; j < 2; j++) {
 			for(int k = 0; k < 3; k++) {
-				
+
 				if(guiLeft + 7 + j * 222 <= x && guiLeft + 7 + j * 222 + 18 > x && guiTop + 16 + k * 26 < y && guiTop + 16 + k * 26 + 18 >= y) {
 
 					mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
@@ -51,26 +52,26 @@ public class GUICraneRouter extends GuiInfoContainer {
 			}
 		}
 	}
-	
+
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
 
 		for(int j = 0; j < 2; j++) {
 			for(int k = 0; k < 3; k++) {
-				
+
 				if(guiLeft + 7 + j * 222 <= x && guiLeft + 7 + j * 222 + 18 > x && guiTop + 16 + k * 26 < y && guiTop + 16 + k * 26 + 18 >= y) {
-					
+
 					String[] text = new String[2];
 					int index = j * 3 + k;
-					
+
 					switch(router.modes[index]) {
-					case 0: text = new String[] { "OFF" }; break;
-					case 1: text[0] = "WHITELIST"; text[1] = "Route if filter matches"; break;
-					case 2: text[0] = "BLACKLIST"; text[1] = "Route if filter doesn't match"; break;
-					case 3: text[0] = "WILDCARD"; text[1] = "Route if no other route is valid"; break;
+					case 0: text = new String[] { I18nUtil.resolveKey("gui.common.off") }; break;
+					case 1: text[0] = I18nUtil.resolveKey("gui.crane_router.whitelist"); text[1] = I18nUtil.resolveKey("gui.crane_router.whitelist_desc"); break;
+					case 2: text[0] = I18nUtil.resolveKey("gui.crane_router.blacklist"); text[1] = I18nUtil.resolveKey("gui.crane_router.blacklist_desc"); break;
+					case 3: text[0] = I18nUtil.resolveKey("gui.crane_router.wildcard"); text[1] = I18nUtil.resolveKey("gui.crane_router.wildcard_desc"); break;
 					}
-					
+
 					this.func_146283_a(Arrays.asList(text), x, y);
 				}
 			}
@@ -81,18 +82,18 @@ public class GUICraneRouter extends GuiInfoContainer {
 				Slot slot = (Slot) this.inventorySlots.inventorySlots.get(i);
 				ModulePatternMatcher matcher = router.patterns[i / 5];
 				int index = i % 5;
-				
+
 				if(this.isMouseOverSlot(slot, x, y) && matcher.modes[index] != null) {
-					this.func_146283_a(Arrays.asList(new String[] { EnumChatFormatting.RED + "Right click to change", ModulePatternMatcher.getLabel(matcher.modes[index])}), x, y - 30);
+					this.func_146283_a(Arrays.asList(new String[] { EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.change"), ModulePatternMatcher.getLabel(matcher.modes[index])}), x, y - 30);
 				}
 			}
 		}
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.router.hasCustomInventoryName() ? this.router.getInventoryName() : I18n.format(this.router.getInventoryName());
-		
+
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 5, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8 + 39, this.ySize - 96 + 2, 4210752);
 	}
@@ -111,7 +112,7 @@ public class GUICraneRouter extends GuiInfoContainer {
 				drawTexturedModalRect(guiLeft + 7 + j * 222, guiTop + 16 + k * 26, 238, 93 + mode * 18, 18, 18);
 			}
 		}
-		
+
 		if(Keyboard.isKeyDown(Keyboard.KEY_LMENU))
 		for(int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {
 			Slot s = this.inventorySlots.getSlot(i);

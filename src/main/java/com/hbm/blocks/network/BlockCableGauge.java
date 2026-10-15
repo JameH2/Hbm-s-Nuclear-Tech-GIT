@@ -101,8 +101,8 @@ public class BlockCableGauge extends BlockContainer implements IBlockMultiPass, 
 		TileEntityCableGauge duct = (TileEntityCableGauge) te;
 
 		List<String> text = new ArrayList();
-		text.add(BobMathUtil.getShortNumber(duct.deltaTick) + "HE/t");
-		text.add(BobMathUtil.getShortNumber(duct.deltaLastSecond) + "HE/s");
+		text.add(I18nUtil.resolveKey("overlay.cable_gauge.he_t", BobMathUtil.getShortNumber(duct.deltaTick)));
+		text.add(I18nUtil.resolveKey("overlay.cable_gauge.he", BobMathUtil.getShortNumber(duct.deltaLastSecond)));
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 

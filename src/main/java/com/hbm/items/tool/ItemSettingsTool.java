@@ -64,15 +64,15 @@ public class ItemSettingsTool extends Item {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add("Can copy the settings (filters, fluid ID, etc) of machines");
-		list.add("Shift right-click to copy, right click to paste");
-		list.add("Ctrl click on pipes to paste settings to multiple pipes");
+		list.add(I18nUtil.resolveKey("item.settings_tool.desc1"));
+		list.add(I18nUtil.resolveKey("desc.item.settings_tool.shift_right_click_copy_right"));
+		list.add(I18nUtil.resolveKey("item.settings_tool.desc3"));
 		if(stack.stackTagCompound != null) {
 			NBTTagCompound nbt = stack.stackTagCompound;
 			if (nbt.hasKey("tileName")){
 				list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey(nbt.getString("tileName") + ".name"));
 			} else {
-				list.add(EnumChatFormatting.RED + " None ");
+				list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.settings_tool.desc4"));
 			}
 
 		}
@@ -105,13 +105,13 @@ public class ItemSettingsTool extends Item {
 					player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)
 							.nextTranslation(this.getUnlocalizedName() + ".name").color(EnumChatFormatting.DARK_AQUA)
 							.next("] ").color(EnumChatFormatting.DARK_AQUA)
-							.next("Copied settings of " + copiable.getSettingsSourceDisplay(schrodinger)).color(EnumChatFormatting.AQUA).flush());
+							.nextTranslation("chat.settings_tool.copied_settings", copiable.getSettingsSourceDisplay(schrodinger)).color(EnumChatFormatting.AQUA).flush());
 				}
 			} else {
 				player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)
 						.nextTranslation(this.getUnlocalizedName() + ".name").color(EnumChatFormatting.DARK_AQUA)
 						.next("] ").color(EnumChatFormatting.DARK_AQUA)
-						.next("Copy failed, machine has no settings tool support: " + copiable.getSettingsSourceDisplay(schrodinger)).color(EnumChatFormatting.RED).flush());
+						.nextTranslation("chat.settings_tool.2", copiable.getSettingsSourceDisplay(schrodinger)).color(EnumChatFormatting.RED).flush());
 			}
 
 		} else if(stack.hasTagCompound()) {

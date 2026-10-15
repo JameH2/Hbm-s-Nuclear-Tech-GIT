@@ -1,5 +1,7 @@
 package com.hbm.render.item.weapon.sedna;
 
+import com.hbm.util.i18n.I18nUtil;
+
 import java.awt.Color;
 
 import org.lwjgl.opengl.GL11;
@@ -24,18 +26,18 @@ public class ItemRenderMissileLauncher extends ItemRenderWeaponBase {
 	@Override
 	public void setupFirstPerson(ItemStack stack) {
 		GL11.glTranslated(0, 0, 0.875);
-		
+
 		float offset = 0.8F;
 		standardAimingTransform(stack,
 				-1.5F * offset, -1.25F * offset, 0.5F * offset,
 				-1F * offset, -1.25F * offset, 0F * offset);
 	}
-	
-	protected static String label = "AUTO";
-	
+
+	protected static String label = I18nUtil.resolveKey("renderer.weapon.auto");
+
 	@Override
 	public void renderFirstPerson(ItemStack stack) {
-		
+
 		ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.missile_launcher_tex);
@@ -46,35 +48,35 @@ public class ItemRenderMissileLauncher extends ItemRenderWeaponBase {
 		double[] barrel = HbmAnimations.getRelevantTransformation("BARREL");
 		double[] open = HbmAnimations.getRelevantTransformation("OPEN");
 		double[] missile = HbmAnimations.getRelevantTransformation("MISSILE");
-		
+
 		GL11.glTranslated(0, -2, -2);
 		GL11.glRotated(equip[0], 1, 0, 0);
 		GL11.glTranslated(0, 2, 2);
-		
+
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 
 		ResourceManager.missile_launcher.renderPart("Launcher");
-		
+
 		GL11.glPushMatrix();
-		
+
 		GL11.glTranslated(0, 0.25, 1.6875);
 		GL11.glRotated(open[0], 1, 0, 0);
 		GL11.glTranslated(0, -0.25, -1.6875);
-		
+
 		ResourceManager.missile_launcher.renderPart("Front");
-		
+
 		GL11.glPushMatrix();
 		GL11.glTranslated(0, 0, barrel[2]);
 		ResourceManager.missile_launcher.renderPart("Barrel");
 		GL11.glPopMatrix();
-		
+
 		GL11.glPushMatrix();
 		GL11.glTranslated(missile[0], missile[1], missile[2]);
 		ResourceManager.missile_launcher.renderPart("Missile");
 		GL11.glPopMatrix();
-		
+
 		GL11.glPopMatrix();
-		
+
 		if(gun.prevAimingProgress >= 1F && gun.aimingProgress >= 1F) {
 
 			GL11.glPushMatrix();
@@ -96,13 +98,13 @@ public class ItemRenderMissileLauncher extends ItemRenderWeaponBase {
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glPopAttrib();
 			GL11.glPopMatrix();
-			
+
 			int brightness = player.worldObj.getLightBrightnessForSkyBlocks(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ), 0);
 			int j = brightness % 65536;
 			int k = brightness / 65536;
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j / 1.0F, (float) k / 1.0F);
 		}
-		
+
 		GL11.glShadeModel(GL11.GL_FLAT);
 
 		GL11.glPushMatrix();
@@ -147,14 +149,14 @@ public class ItemRenderMissileLauncher extends ItemRenderWeaponBase {
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.missile_launcher_tex);
 		ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
-		
+
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		ResourceManager.missile_launcher.renderPart("Launcher");
 		ResourceManager.missile_launcher.renderPart("Barrel");
 		ResourceManager.missile_launcher.renderPart("Front");
 		if(gun.getConfig(stack, 0).getReceivers(stack)[0].getMagazine(stack).getAmount(stack, null) > 0) ResourceManager.missile_launcher.renderPart("Missile");
 		GL11.glShadeModel(GL11.GL_FLAT);
-		
+
 		if(type == ItemRenderType.EQUIPPED) {
 			EntityLivingBase ent = (EntityLivingBase) data[1];
 			long shot;
@@ -166,7 +168,7 @@ public class ItemRenderMissileLauncher extends ItemRenderWeaponBase {
 				shot = ItemRenderWeaponBase.flashMap.getOrDefault(ent, (long) -1);
 				if(shot < 0) return;
 			}
-			
+
 			GL11.glPushMatrix();
 			GL11.glTranslated(0, 1, 6.75);
 			GL11.glRotated(90, 0, 1, 0);

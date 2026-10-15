@@ -19,6 +19,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.machine.ItemScraps;
 import com.hbm.lib.RefStrings;
+import com.hbm.util.i18n.I18nUtil;
 import com.hbm.util.ItemStackUtil;
 import com.hbm.util.Tuple.Pair;
 
@@ -254,7 +255,7 @@ public class CustomMachineHandler extends TemplateRecipeHandler {
 		RecipeSet Recipe = (RecipeSet) this.arecipes.get(recipe);
 		int side = 83;
 		if(Recipe.radiationAmount != 0){
-			String radiation = "Radiation:" + Recipe.radiationAmount + "";
+			String radiation = I18nUtil.resolveKey("nei.custom_machine.radiation", Recipe.radiationAmount);
 			GuiDraw.drawString(radiation, 160 - GuiDraw.fontRenderer.getStringWidth(radiation), 63, 0x08FF00);
 		}
 		if (Recipe.pollutionAmount != 0){
@@ -262,11 +263,11 @@ public class CustomMachineHandler extends TemplateRecipeHandler {
 			GuiDraw.drawString(pollution, 160 - GuiDraw.fontRenderer.getStringWidth(pollution), 75, 0x404040);
 		}
 		if(conf.fluxMode) {
-			String flux = "Flux:" + Recipe.flux + "";
+			String flux = I18nUtil.resolveKey("nei.custom_machine.flux", Recipe.flux);
 			GuiDraw.drawString(flux, side - GuiDraw.fontRenderer.getStringWidth(flux) / 2, 16, 0x08FF00);
 		}
 		if(conf.maxHeat>0 && Recipe.heat>0){
-			String heat = "Heat:" + Recipe.heat + "";
+			String heat = I18nUtil.resolveKey("nei.custom_machine.heat", Recipe.heat);
 			GuiDraw.drawString(heat, side - GuiDraw.fontRenderer.getStringWidth(heat) / 2, 8, 0xFF0000);
 		}
 	}

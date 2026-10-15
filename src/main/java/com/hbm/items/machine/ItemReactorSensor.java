@@ -7,6 +7,7 @@ import com.hbm.blocks.machine.MachineDishControl;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntityDishControl;
 import com.hbm.util.ChatBuilder;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.common.Mod;
 import net.minecraft.block.Block;
@@ -32,7 +33,7 @@ public class ItemReactorSensor extends Item {
 				stack.stackTagCompound = new NBTTagCompound();
 
 			if(!world.isRemote) {
-				SendMessage(player,"Position Set!");
+				SendMessage(player, "chat.reactor_sensor.position_set");
 			}
 
 			stack.stackTagCompound.setInteger("x", x);
@@ -61,7 +62,7 @@ public class ItemReactorSensor extends Item {
 			if(entity == null) return false;
 
 			if(!world.isRemote) {
-				SendMessage(player,"Stardar Linked!");
+				SendMessage(player, "chat.reactor_sensor.stardar_linked");
 				entity.TryLink(stack);
 			}
 
@@ -78,17 +79,17 @@ public class ItemReactorSensor extends Item {
 		player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)
 			.nextTranslation(this.getUnlocalizedName() + ".name").color(EnumChatFormatting.DARK_AQUA)
 			.next("] ").color(EnumChatFormatting.DARK_AQUA)
-			.next(text).color(EnumChatFormatting.GREEN).flush());
+			.nextTranslation(text).color(EnumChatFormatting.GREEN).flush());
 	}
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		if (itemstack.stackTagCompound != null) {
-			list.add("x: " + itemstack.stackTagCompound.getInteger("x"));
-			list.add("y: " + itemstack.stackTagCompound.getInteger("y"));
-			list.add("z: " + itemstack.stackTagCompound.getInteger("z"));
+			list.add(I18nUtil.resolveKey("item.reactor_sensor.desc1", itemstack.stackTagCompound.getInteger("x")));
+			list.add(I18nUtil.resolveKey("item.reactor_sensor.desc2", itemstack.stackTagCompound.getInteger("y")));
+			list.add(I18nUtil.resolveKey("item.reactor_sensor.desc3", itemstack.stackTagCompound.getInteger("z")));
 		} else {
-			list.add("No reactor selected!");
+			list.add(I18nUtil.resolveKey("desc.item.reactor_sensor.no_reactor_selected"));
 		}
 	}
 }

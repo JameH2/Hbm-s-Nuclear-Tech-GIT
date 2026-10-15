@@ -24,15 +24,15 @@ public class GUIFusionTorus extends GuiInfoContainer {
 	public GUIFusionTorus(InventoryPlayer invPlayer, TileEntityFusionTorus torus) {
 		super(new ContainerFusionTorus(invPlayer, torus));
 		this.torus = torus;
-		
+
 		this.xSize = 230;
 		this.ySize = 244;
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float interp) {
 		super.drawScreen(mouseX, mouseY, interp);
-		
+
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 18, 16, 62, torus.power, torus.getMaxPower());
 		torus.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 44, guiTop + 18, 16, 52);
 		torus.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 62, guiTop + 18, 16, 52);
@@ -40,12 +40,12 @@ public class GUIFusionTorus extends GuiInfoContainer {
 		torus.tanks[3].renderTankInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 18, 16, 52);
 		torus.coolantTanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 188, guiTop + 46, 16, 52);
 		torus.coolantTanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 206, guiTop + 46, 16, 52);
-		
+
 		FusionRecipe recipe = (FusionRecipe) this.torus.fusionModule.getRecipe();
-		
+
 		if(recipe != null) {
-			drawCustomInfoStat(mouseX, mouseY, guiLeft + 43, guiTop + 115, 18, 18, mouseX, mouseY, EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(torus.klystronEnergy) + "KyU / " + BobMathUtil.getShortNumber(recipe.ignitionTemp) + "KyU");
-			drawCustomInfoStat(mouseX, mouseY, guiLeft + 79, guiTop + 115, 18, 18, mouseX, mouseY, EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(torus.plasmaEnergy) + "TU / " + BobMathUtil.getShortNumber(recipe.outputTemp) + "TU");
+			drawCustomInfoStat(mouseX, mouseY, guiLeft + 43, guiTop + 115, 18, 18, mouseX, mouseY, EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(torus.klystronEnergy) + I18nUtil.resolveKey("gui.fusion_torus.ky_u") + BobMathUtil.getShortNumber(recipe.ignitionTemp) + "KyU");
+			drawCustomInfoStat(mouseX, mouseY, guiLeft + 79, guiTop + 115, 18, 18, mouseX, mouseY, EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(torus.plasmaEnergy) + I18nUtil.resolveKey("gui.fusion_torus.tu") + BobMathUtil.getShortNumber(recipe.outputTemp) + "TU");
 			String[] lines = new String[recipe.inputFluid.length];
 			for(int i = 0; i < lines.length; i++) {
 				int consumption = (int) Math.ceil(recipe.inputFluid[i].fill * torus.fuelConsumption);
@@ -53,8 +53,8 @@ public class GUIFusionTorus extends GuiInfoContainer {
 			}
 			drawCustomInfoStat(mouseX, mouseY, guiLeft + 115, guiTop + 115, 18, 18, mouseX, mouseY, lines);
 		} else {
-			drawCustomInfoStat(mouseX, mouseY, guiLeft + 43, guiTop + 115, 18, 18, mouseX, mouseY, "0KyU / 0KyU");
-			drawCustomInfoStat(mouseX, mouseY, guiLeft + 79, guiTop + 115, 18, 18, mouseX, mouseY, "0TU / 0TU");
+			drawCustomInfoStat(mouseX, mouseY, guiLeft + 43, guiTop + 115, 18, 18, mouseX, mouseY, I18nUtil.resolveKey("gui.fusion_torus.0_ky_u_0_ky_u"));
+			drawCustomInfoStat(mouseX, mouseY, guiLeft + 79, guiTop + 115, 18, 18, mouseX, mouseY, I18nUtil.resolveKey("gui.fusion_torus.0_tu_0_tu"));
 		}
 
 		if(guiLeft + 43 <= mouseX && guiLeft + 43 + 18 > mouseX && guiTop + 80 < mouseY && guiTop + 80 + 18 >= mouseY) {
@@ -72,7 +72,7 @@ public class GUIFusionTorus extends GuiInfoContainer {
 
 		if(this.checkClick(x, y, 43, 80, 18, 18)) GUIScreenRecipeSelector.openSelector(FusionRecipes.INSTANCE, torus, torus.fusionModule.getRecipeName(), 0, ItemBlueprints.grabPool(torus.slots[1]), this);
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.torus.hasCustomInventoryName() ? this.torus.getInventoryName() : I18n.format(this.torus.getInventoryName());
@@ -126,10 +126,10 @@ public class GUIFusionTorus extends GuiInfoContainer {
 		} else if(recipe != null && torus.power >= torus.power) {
 			drawTexturedModalRect(guiLeft + 92, guiTop + 76, 246, 0, 3, 6);
 		}
-		
+
 		double inputGauge = recipe == null ? 0 : Math.min(((double) torus.klystronEnergy / (double) recipe.ignitionTemp), 1.5) / 1.5D;
 		double outputGauge = recipe == null ? 0 : Math.min(((double) torus.plasmaEnergy / (double) recipe.outputTemp), 1);
-		
+
 		// input energy
 		GUIElements.drawSmoothGauge(guiLeft + 52, guiTop + 124, this.zLevel, inputGauge, 5, 2, 1, 0xA00000);
 		// output genergy
@@ -139,13 +139,13 @@ public class GUIFusionTorus extends GuiInfoContainer {
 
 		// recipe selector
 		this.renderItem(recipe != null ? recipe.getIcon() : TEMPLATE_FOLDER, 44, 81);
-		
+
 		// fluids
 		torus.tanks[0].renderTank(guiLeft + 44, guiTop + 70, this.zLevel, 16, 52);
 		torus.tanks[1].renderTank(guiLeft + 62, guiTop + 70, this.zLevel, 16, 52);
 		torus.tanks[2].renderTank(guiLeft + 80, guiTop + 70, this.zLevel, 16, 52);
 		torus.tanks[3].renderTank(guiLeft + 152, guiTop + 70, this.zLevel, 16, 52);
-		
+
 		// coolant
 		torus.coolantTanks[0].renderTank(guiLeft + 188, guiTop + 98, this.zLevel, 16, 52);
 		torus.coolantTanks[1].renderTank(guiLeft + 206, guiTop + 98, this.zLevel, 16, 52);

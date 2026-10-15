@@ -34,19 +34,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class EntityBFAngel extends EntityFlying implements IMob, IBossDisplayData, IRadiationImmune, ISuffocationImmune {
 
 	public int courseChangeCooldown;
 	public int scanCooldown;
-	
+
 	public int hurtCooldown;
 	public int beamTimer;
 	private Entity target;
@@ -420,7 +420,7 @@ public class EntityBFAngel extends EntityFlying implements IMob, IBossDisplayDat
 			List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.boundingBox.expand(200, 200, 200));
 
 			for(EntityPlayer player : players) {
-				player.addChatComponentMessage(new ChatComponentText("Stars are starting to flicker...").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.entity_bfangel.stars_are_starting_to_flicker").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 			}
 
 			CelestialBody body = CelestialBody.getBody(worldObj);

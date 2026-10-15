@@ -36,6 +36,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import com.hbm.util.i18n.I18nUtil;
 
 public class NTMAnvil extends BlockFallingNT implements ITooltipProvider, IGUIProvider {
 
@@ -47,9 +48,9 @@ public class NTMAnvil extends BlockFallingNT implements ITooltipProvider, IGUIPr
 	public static final int TIER_FUSION = 6;
 	public static final int TIER_PARTICLE = 7;
 	public static final int TIER_GERALD = 8;
-	
+
 	public final int tier;
-	
+
 	public static final HashMap<Integer, List<NTMAnvil>> tierMap = new HashMap();
 
 	@SideOnly(Side.CLIENT)
@@ -61,34 +62,34 @@ public class NTMAnvil extends BlockFallingNT implements ITooltipProvider, IGUIPr
 		this.setHardness(5.0F);
 		this.setResistance(100.0F);
 		this.tier = tier;
-		
+
 		List<NTMAnvil> anvils = tierMap.get((Integer)tier);
 		if(anvils == null)
 			anvils = new ArrayList();
 		anvils.add(this);
 		tierMap.put((Integer)tier, anvils);
 	}
-	
+
 	public static List<ItemStack> getAnvilsFromTier(int tier) {
 		List<NTMAnvil> anvils = tierMap.get((Integer)tier);
-		
+
 		if(anvils != null) {
 			List<ItemStack> stacks = new ArrayList();
-			
+
 			for(NTMAnvil anvil : anvils)
 				stacks.add(new ItemStack(anvil));
-			
+
 			return stacks;
 		}
-		
+
 		return new ArrayList();
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister) {
 		super.registerBlockIcons(iconRegister);
-		
+
 		if(this == ModBlocks.anvil_murky) {
 			this.iconTop = iconRegister.registerIcon(RefStrings.MODID + ":anvil_murky");
 		} else {
@@ -118,10 +119,10 @@ public class NTMAnvil extends BlockFallingNT implements ITooltipProvider, IGUIPr
 	public boolean renderAsNormalBlock() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(world.isRemote) {
 			return true;
 		} else if(!player.isSneaking()) {
@@ -129,14 +130,14 @@ public class NTMAnvil extends BlockFallingNT implements ITooltipProvider, IGUIPr
 			FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, x, y, z);
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack) {
 		int i = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-		
+
 		if(i == 0)
 		{
 			world.setBlockMetadataWithNotify(x, y, z, 3, 2);
@@ -158,10 +159,10 @@ public class NTMAnvil extends BlockFallingNT implements ITooltipProvider, IGUIPr
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
 		int meta = world.getBlockMetadata(x, y, z);
-		
+
 		if(meta == 2 || meta == 3)
 			this.setBlockBounds(0.0F, 0.0F, 0.25F, 1.0F, 0.75F, 0.75F);
-		
+
 		if(meta == 4 || meta == 5)
 			this.setBlockBounds(0.25F, 0.0F, 0.0F, 0.75F, 0.75F, 1.0F);
 	}
@@ -169,19 +170,19 @@ public class NTMAnvil extends BlockFallingNT implements ITooltipProvider, IGUIPr
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
 		int meta = world.getBlockMetadata(x, y, z);
-		
+
 		if(meta == 2 || meta == 3)
 			this.setBlockBounds(0.0F, 0.0F, 0.25F, 1.0F, 0.75F, 0.75F);
-		
+
 		if(meta == 4 || meta == 5)
 			this.setBlockBounds(0.25F, 0.0F, 0.0F, 0.75F, 0.75F, 1.0F);
-		
+
 		return AxisAlignedBB.getBoundingBox(x + this.minX, y + this.minY, z + this.minZ, x + this.maxX, y + this.maxY, z + this.maxZ);
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.GOLD + "Tier " + tier + " Anvil");
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.ntmanvil.tier_anvil", tier));
 	}
 
 	@Override

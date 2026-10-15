@@ -20,6 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import com.hbm.util.i18n.I18nUtil;
 
 public class MachineBatteryREDD extends BlockDummyable implements IPersistentInfoProvider {
 
@@ -41,24 +42,26 @@ public class MachineBatteryREDD extends BlockDummyable implements IPersistentInf
 
 	@Override public int[] getDimensions() { return new int[] {9, 0, 2, 2, 4, 4}; }
 	@Override public int getOffset() { return 2; }
-	
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{2, 0, 2, ForgeDirection.SOUTH.ordinal()},
+			{-2, 0, 2, ForgeDirection.SOUTH.ordinal()},
+			{2, 0, -2, ForgeDirection.NORTH.ordinal()},
+			{-2, 0, -2, ForgeDirection.NORTH.ordinal()},
+			{4, 0, 0, ForgeDirection.EAST.ordinal()},
+			{-4, 0, 0, ForgeDirection.WEST.ordinal()}
+		}, dir);
+	}
 	@Override
 	protected void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
 
-		x += dir.offsetX * o;
-		z += dir.offsetZ * o;
-		
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-
-		this.makeExtra(world, x + dir.offsetX * 2 + rot.offsetX * 2, y, z + dir.offsetZ * 2 + rot.offsetZ * 2);
-		this.makeExtra(world, x + dir.offsetX * 2 - rot.offsetX * 2, y, z + dir.offsetZ * 2 - rot.offsetZ * 2);
-		this.makeExtra(world, x - dir.offsetX * 2 + rot.offsetX * 2, y, z - dir.offsetZ * 2 + rot.offsetZ * 2);
-		this.makeExtra(world, x - dir.offsetX * 2 - rot.offsetX * 2, y, z - dir.offsetZ * 2 - rot.offsetZ * 2);
-		this.makeExtra(world, x + rot.offsetX * 4, y, z + rot.offsetZ * 4);
-		this.makeExtra(world, x - rot.offsetX * 4, y, z - rot.offsetZ * 4);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
-	
+
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
 		return IPersistentNBT.getDrops(world, x, y, z, this);
@@ -66,14 +69,14 @@ public class MachineBatteryREDD extends BlockDummyable implements IPersistentInf
 
 	@Override
 	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player) {
-		
+
 		if(!player.capabilities.isCreativeMode) {
 			harvesters.set(player);
 			this.dropBlockAsItem(world, x, y, z, meta, 0);
 			harvesters.set(null);
 		}
 	}
-	
+
 	@Override
 	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
 		player.addStat(StatList.mineBlockStatArray[getIdFromBlock(this)], 1);
@@ -83,6 +86,6 @@ public class MachineBatteryREDD extends BlockDummyable implements IPersistentInf
 	@Override
 	public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {
 		if(persistentTag != null && persistentTag.hasKey("power"))
-			list.add(EnumChatFormatting.YELLOW + "" + BobMathUtil.format(new BigInteger(persistentTag.getByteArray("power"))) + " HE");
+			list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.battery_redd.he", BobMathUtil.format(new BigInteger(persistentTag.getByteArray("power")))));
 	}
 }

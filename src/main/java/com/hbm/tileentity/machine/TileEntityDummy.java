@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.interfaces.IMultiblock;
+import com.hbm.util.FluidDebug;
 import api.ntm1of90.compat.fluid.registry.ForgeFluidAdapterRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -36,12 +37,18 @@ public class TileEntityDummy extends TileEntity implements IFluidHandler {
 		// re-resolve every second in case the core TE was replaced/repaired
 		if(!this.handlerResolved || this.worldObj.getTotalWorldTime() % 20 == 0) {
 			TileEntity target = this.worldObj.getTileEntity(targetX, targetY, targetZ);
+			IFluidHandler prev = this.cachedHandler;
 			if(target == null || target instanceof TileEntityDummy) {
 				this.cachedHandler = null;
 			} else {
 				this.cachedHandler = ForgeFluidAdapterRegistry.getFluidHandler(target);
 			}
 			this.handlerResolved = this.cachedHandler != null;
+			if(this.cachedHandler != prev) {
+				FluidDebug.event("dummy.resolve|" + FluidDebug.tileKey(this),
+					() -> "DUMMY handler " + (this.cachedHandler == null ? "lost" : "resolved to " + this.cachedHandler.getClass().getSimpleName())
+					+ " for port " + FluidDebug.describeTile(this) + " -> target " + (target == null ? "null" : FluidDebug.describeTile(target)));
+			}
 		}
 		return this.cachedHandler;
 	}

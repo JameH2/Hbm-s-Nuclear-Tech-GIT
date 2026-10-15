@@ -7,8 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class ItemTurretBiometry extends Item {
 
@@ -26,7 +26,7 @@ public class ItemTurretBiometry extends Item {
 		addName(stack, player.getDisplayName());
 
 		if(world.isRemote)
-			player.addChatMessage(new ChatComponentText("Added player data!"));
+			player.addChatMessage(new ChatComponentTranslation("chat.turret_biometry.added_player_data"));
 
 		world.playSoundAtEntity(player, "hbm:item.techBleep", 1.0F, 1.0F);
 

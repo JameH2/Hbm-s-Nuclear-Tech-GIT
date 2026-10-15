@@ -6,6 +6,7 @@ import com.hbm.inventory.container.ContainerBook;
 import com.hbm.inventory.gui.GUIBook;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,19 +17,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class ItemBook extends Item implements IGUIProvider {
-	
+
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		
-		list.add("Edition 4, gold lined pages");
+
+		list.add(I18nUtil.resolveKey("desc.item.book.edition_gold_lined_pages"));
 	}
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-		
+
 		if(!world.isRemote)
 			player.openGui(MainRegistry.instance, 0, world, 0, 0, 0);
-		
+
 		return stack;
 	}
 

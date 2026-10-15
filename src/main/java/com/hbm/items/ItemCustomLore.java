@@ -55,7 +55,7 @@ public class ItemCustomLore extends Item {
 
 			try {
 				if(player.worldObj.rand.nextInt(10) == 0) {
-					list.add(EnumChatFormatting.DARK_RED + "UNDEFINED");
+					list.add(EnumChatFormatting.DARK_RED + I18nUtil.resolveKey("item.custom_lore.desc1"));
 				} else {
 					Random rand = new Random(System.currentTimeMillis() / 500);
 
@@ -69,11 +69,11 @@ public class ItemCustomLore extends Item {
 					if(item != null) {
 						list.add(new ItemStack(item).getDisplayName());
 					} else {
-						list.add(EnumChatFormatting.RED + "ERROR #" + r);
+						list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.custom_lore.desc2", r));
 					}
 				}
 			} catch(Exception ex) {
-				list.add(EnumChatFormatting.DARK_RED + "UNDEFINED");
+				list.add(EnumChatFormatting.DARK_RED + I18nUtil.resolveKey("item.custom_lore.desc1"));
 			}
 		}
 	}
@@ -112,18 +112,28 @@ public class ItemCustomLore extends Item {
 	public String getItemStackDisplayName(ItemStack stack) {
 		if(stack.getItem() != ModItems.undefined || stack.getItemDamage() != 99) return ("" + StatCollector.translateToLocal(this.getUnlocalizedNameInefficiently(stack) + ".name")).trim();
 
+		if(!localizedNames) localizeNames();
 		return name.getResult();
 	}
 
 	public static String[] names = new String[] {
-		"THE DEFAULT", "NEXT ONE", "ANOTHER ONE", "NON-STANDARD NAME", "AMBIGUOUS TITLE", "SHORT"
+		"item.undefined.scramble.default", "item.undefined.scramble.next", "item.undefined.scramble.another", "item.undefined.scramble.nonstandard", "item.undefined.scramble.ambiguous", "item.undefined.scramble.short"
 	};
 
 	public static Random rand = new Random();
 	public static int currentIndex = 0;
-	public static ScramblingName name = new ScramblingName(names[0]);
+	public static ScramblingName name = new ScramblingName("");
+	private static boolean localizedNames;
+
+	/** Scramble names are stored as keys until the client resolves them, so the language can change at runtime. */
+	private static void localizeNames() {
+		for(int i = 0; i < names.length; i++) names[i] = I18nUtil.resolveKey(names[i]);
+		name = new ScramblingName(names[0]);
+		localizedNames = true;
+	}
 
 	public static void updateSystem() {
+		if(!localizedNames) localizeNames();
 		name.updateTick(names);
 	}
 

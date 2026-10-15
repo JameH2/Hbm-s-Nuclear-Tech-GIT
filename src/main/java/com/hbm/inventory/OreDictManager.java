@@ -32,7 +32,12 @@ import com.hbm.items.ItemEnums.EnumBriquetteType;
 import com.hbm.items.ItemEnums.EnumChunkType;
 import com.hbm.items.ItemEnums.EnumCokeType;
 import com.hbm.items.ItemEnums.EnumTarType;
+import com.hbm.items.special.ItemAutogen;
 import com.hbm.items.special.ItemBedrockOre.EnumBedrockOre;
+import com.hbm.items.special.ItemBedrockOreNew;
+import com.hbm.items.special.ItemBedrockOreNew.BedrockOreGrade;
+import com.hbm.items.special.ItemBedrockOreNew.CelestialBedrockOre;
+import com.hbm.items.special.ItemBedrockOreNew.CelestialBedrockOreType;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.Compat;
 
@@ -273,6 +278,7 @@ public class OreDictManager {
 	public static final DictFrame HEMATITE = new DictFrame("Hematite");
 	public static final DictFrame CONGLOMERATE  = new DictFrame("Conglomerate");
 	public static final DictFrame MALACHITE = new DictFrame("Malachite");
+	public static final DictFrame ILMENITE = new DictFrame("Ilmenite");
 	public static final DictFrame LIMESTONE = new DictFrame("Limestone");
 	public static final DictFrame SLAG = new DictFrame("Slag");
 	public static final DictFrame BAUXITE = new DictFrame("Bauxite");
@@ -367,30 +373,53 @@ public class OreDictManager {
 	public static final DictFrame ANY_ASH = new DictFrame("Ash");
 
 
+	private static String toPascalCase(String value) {
+		StringBuilder result = new StringBuilder();
+
+		for (String part : value.toLowerCase().split("_")) {
+			if (!part.isEmpty()) {
+				result.append(Character.toUpperCase(part.charAt(0)))
+					.append(part.substring(1));
+			}
+		}
+
+		return result.toString();
+	}
+
+	private static void registerBedrockOres() {
+		for(BedrockOreGrade grade : BedrockOreGrade.values()) {
+			for(CelestialBedrockOreType type : CelestialBedrockOre.getAllTypes()) {
+				ItemStack stack = ItemBedrockOreNew.make(grade, type);
+
+				OreDictionary.registerOre("oreBedrock" + toPascalCase(grade.toString()), stack);
+			}
+		}
+	}
+
 	public static void registerOres() {
 
 		/*
 		 * VANILLA
 		 */
-		COAL.gem(Items.coal).dustSmall(powder_coal_tiny).dust(powder_coal);
-		IRON.plate(plate_iron).dust(powder_iron).ore(ore_gneiss_iron).oreAll(ore_iron);
-		GOLD.plate(plate_gold).dust(powder_gold).ore(ore_gneiss_gold).oreAll(ore_gold);
-		LAPIS.dust(powder_lapis).oreAll(ore_lapis);
-		REDSTONE.oreAll(ore_redstone);
+		COAL.gem(Items.coal).dustSmall(powder_coal_tiny).dust(powder_coal).ore(new ItemStack(chunk_rich, 1, Mats.MAT_COAL.id));
+		IRON.plate(plate_iron).dust(powder_iron).ore(ore_gneiss_iron, new ItemStack(chunk_rich, 1, Mats.MAT_IRON.id)).oreAll(ore_iron);
+		GOLD.plate(plate_gold).dust(powder_gold).ore(ore_gneiss_gold, new ItemStack(chunk_rich, 1, Mats.MAT_GOLD.id)).oreAll(ore_gold);
+		LAPIS.dust(powder_lapis).ore(new ItemStack(chunk_rich, 1, Mats.MAT_LAPIS.id)).oreAll(ore_lapis);
+		REDSTONE.ore(new ItemStack(chunk_rich, 1, Mats.MAT_REDSTONE.id)).oreAll(ore_redstone);
 		NETHERQUARTZ.gem(Items.quartz).dust(powder_quartz).ore(Blocks.quartz_ore).oreAll(ore_quartz);
 		QUARTZ.dust(powder_quartz);
-		DIAMOND.dust(powder_diamond).ore(gravel_diamond, ore_sellafield_diamond).oreAll(ore_diamond);
+		DIAMOND.dust(powder_diamond).ore(gravel_diamond, ore_sellafield_diamond, new ItemStack(chunk_rich, 1, Mats.MAT_DIAMOND.id)).oreAll(ore_diamond);
 		EMERALD.dust(powder_emerald).ore(ore_sellafield_emerald).oreAll(ore_emerald);
 		GLOWSTONE.dust(Items.glowstone_dust);
 
 		/*
 		 * RADIOACTIVE
 		 */
-		U		.rad(HazardRegistry.u)								.nugget(nugget_uranium)		.billet(billet_uranium)		.ingot(ingot_uranium)		.dust(powder_uranium)									.block(block_uranium)		.ore(ore_uranium_scorched, ore_gneiss_uranium, ore_gneiss_uranium_scorched, ore_nether_uranium, ore_nether_uranium_scorched, ore_sellafield_uranium_scorched)	.oreNether(ore_nether_uranium, ore_nether_uranium_scorched) .oreAll(ore_uranium);
+		U		.rad(HazardRegistry.u)								.nugget(nugget_uranium)		.billet(billet_uranium)		.ingot(ingot_uranium)		.dust(powder_uranium)									.block(block_uranium)		.ore(ore_uranium_scorched, ore_gneiss_uranium, ore_gneiss_uranium_scorched, ore_nether_uranium, ore_nether_uranium_scorched, ore_sellafield_uranium_scorched, new ItemStack(chunk_rich, 1, Mats.MAT_URANIUM.id))	.oreNether(ore_nether_uranium, ore_nether_uranium_scorched) .oreAll(ore_uranium);
 		U233	.rad(HazardRegistry.u233)							.nugget(nugget_u233)		.billet(billet_u233)		.ingot(ingot_u233)																	.block(block_u233);
 		U235	.rad(HazardRegistry.u235)							.nugget(nugget_u235)		.billet(billet_u235)		.ingot(ingot_u235)																	.block(block_u235);
 		U238	.rad(HazardRegistry.u238)							.nugget(nugget_u238)		.billet(billet_u238)		.ingot(ingot_u238)																	.block(block_u238);
-		TH232	.rad(HazardRegistry.th232)							.nugget(nugget_th232)		.billet(billet_th232)		.ingot(ingot_th232)			.dust(powder_thorium)									.block(block_thorium)		.oreAll(ore_thorium);
+		TH232	.rad(HazardRegistry.th232)							.nugget(nugget_th232)		.billet(billet_th232)		.ingot(ingot_th232)			.dust(powder_thorium)									.block(block_thorium)		.ore(new ItemStack(chunk_rich, 1, Mats.MAT_THORIUM.id)) .oreAll(ore_thorium);
 		PU		.rad(HazardRegistry.pu)								.nugget(nugget_plutonium)	.billet(billet_plutonium)	.ingot(ingot_plutonium)		.dust(powder_plutonium)									.block(block_plutonium)		.ore(ore_nether_plutonium)	.oreNether(ore_nether_plutonium) .oreAll(ore_plutonium);
 		PURG	.rad(HazardRegistry.purg).neutron(HazardRegistry.purg/60f)							.nugget(nugget_pu_mix)		.billet(billet_pu_mix)		.ingot(ingot_pu_mix)																.block(block_pu_mix);
 		PU238	.rad(HazardRegistry.pu238)	.hot(3F)				.nugget(nugget_pu238)		.billet(billet_pu238)		.ingot(ingot_pu238)																	.block(block_pu238);
@@ -434,19 +463,19 @@ public class OreDictManager {
 		 */
 		NI																	.ingot(ingot_nickel)												.dust(powder_nickel)            .plate(plate_nickel) 			.block(block_nickel)		.oreAll(ore_nickel) 												.nugget(nugget_nickel);
 		NIM																	.dust(fromOne(chunk_ore, EnumChunkType.PENTLANDITE)); // dust selected for compat reasons
-		TI																	.ingot(ingot_titanium)												.dust(powder_titanium)			.plate(plate_titanium)			.block(block_titanium)		.oreAll(ore_titanium);
-		CU																	.ingot(ingot_copper)												.dust(powder_copper)			.plate(plate_copper)			.block(block_copper)		.ore(ore_gneiss_copper) .oreAll(ore_copper);
+		TI																	.ingot(ingot_titanium)												.dust(powder_titanium)			.plate(plate_titanium)			.block(block_titanium)		.ore(new ItemStack(chunk_rich, 1, Mats.MAT_TITANIUM.id)) .oreAll(ore_titanium);
+		CU																	.ingot(ingot_copper)												.dust(powder_copper)			.plate(plate_copper)			.block(block_copper)		.ore(ore_gneiss_copper, new ItemStack(chunk_rich, 1, Mats.MAT_COPPER.id)) .oreAll(ore_copper);
 		MINGRADE															.ingot(ingot_red_copper)											.dust(powder_red_copper)		.billet(billet_red_copper)		.block(block_red_copper);
-		W																	.ingot(ingot_tungsten)												.dust(powder_tungsten)											.block(block_tungsten)		.ore(ore_nether_tungsten)	.oreNether(ore_nether_tungsten) .oreAll(ore_tungsten);
+		W																	.ingot(ingot_tungsten)												.dust(powder_tungsten)											.block(block_tungsten)		.ore(ore_nether_tungsten, new ItemStack(chunk_rich, 1, Mats.MAT_TUNGSTEN.id))	.oreNether(ore_nether_tungsten) .oreAll(ore_tungsten);
 		WC																	.ingot(ingot_tungsten_carbide);
-		AL																	.ingot(ingot_aluminium)												.dust(powder_aluminium)			.plate(plate_aluminium)			.block(block_aluminium)		.oreAll(ore_aluminium);
+		AL																	.ingot(ingot_aluminium)												.dust(powder_aluminium)			.plate(plate_aluminium)			.block(block_aluminium)		.ore(new ItemStack(chunk_rich, 1, Mats.MAT_ALUMINIUM.id)) .oreAll(ore_aluminium);
 		STEEL																.ingot(ingot_steel)				.dustSmall(powder_steel_tiny)		.dust(powder_steel)				.plate(plate_steel)				.block(block_steel);
 		STAINLESS															.ingot(ingot_stainless)			 																	.plate(plate_stainless);
 		TCALLOY																.ingot(ingot_tcalloy)												.dust(powder_tcalloy)											.block(block_tcalloy);
 		CDALLOY																.ingot(ingot_cdalloy)																												.block(block_cdalloy);
 		BBRONZE																.ingot(ingot_bismuth_bronze);
 		ABRONZE																.ingot(ingot_arsenic_bronze);
-		PB			.nugget(nugget_lead)									.ingot(ingot_lead)													.dust(powder_lead)				.plate(plate_lead)				.block(block_lead)			.oreAll(ore_lead);
+		PB			.nugget(nugget_lead)									.ingot(ingot_lead)													.dust(powder_lead)				.plate(plate_lead)				.block(block_lead)			.ore(new ItemStack(chunk_rich, 1, Mats.MAT_LEAD.id)) .oreAll(ore_lead);
 		BSCCO																.ingot(ingot_bscco);
 		BI			.nugget(nugget_bismuth)		.billet(billet_bismuth)		.ingot(ingot_bismuth)												.dust(powder_bismuth)											.block(block_bismuth);
 		MEN			.nugget(nugget_menthol)		.billet(billet_menthol)		.ingot(ingot_menthol);
@@ -456,7 +485,7 @@ public class OreDictManager {
 		TA			.nugget(nugget_tantalium)	.gem(gem_tantalium)			.ingot(ingot_tantalium)												.dust(powder_tantalium)											.block(block_tantalium);
 		COLTAN																.ingot(fragment_coltan)												.dust(powder_coltan_ore)										.block(block_coltan)		.oreAll(ore_coltan);
 		NB			.nugget(nugget_niobium, fragment_niobium)				.ingot(ingot_niobium)			.dustSmall(powder_niobium_tiny)		.dust(powder_niobium)											.block(block_niobium)		.oreAll(ore_niobium);
-		BE			.nugget(nugget_beryllium)	.billet(billet_beryllium)	.ingot(ingot_beryllium)												.dust(powder_beryllium)											.block(block_beryllium)		.oreAll(ore_beryllium);
+		BE			.nugget(nugget_beryllium)	.billet(billet_beryllium)	.ingot(ingot_beryllium)												.dust(powder_beryllium)											.block(block_beryllium)		.ore(new ItemStack(chunk_rich, 1, Mats.MAT_BERYLLIUM.id)) .oreAll(ore_beryllium);
 		CO			.nugget(fragment_cobalt)	.nugget(nugget_cobalt)		.billet(billet_cobalt)			.ingot(ingot_cobalt)				.dust(powder_cobalt)			.dustSmall(powder_cobalt_tiny)	.block(block_cobalt)		.ore(ore_nether_cobalt)	.oreAll(ore_cobalt);
 		B			.nugget(fragment_boron)									.ingot(ingot_boron)				.dustSmall(powder_boron_tiny)		.dust(powder_boron)												.block(block_boron);
 		SI			.nugget(nugget_silicon)		.billet(billet_silicon)		.ingot(ingot_silicon);
@@ -482,9 +511,9 @@ public class OreDictManager {
 		EUPH		.nugget(nugget_euphemium)								.ingot(ingot_euphemium)												.dust(powder_euphemium)											.block(block_euphemium);
 		DNT			.nugget(nugget_dineutronium)							.ingot(ingot_dineutronium)											.dust(powder_dineutronium)										.block(block_dineutronium);
 		FIBER																.ingot(ingot_fiberglass)																											.block(block_fiberglass);
-		ASBESTOS	.asbestos(1F)											.ingot(ingot_asbestos)												.dust(powder_asbestos)											.block(block_asbestos)		.ore(ore_gneiss_asbestos, DictFrame.fromOne(ore_basalt, EnumBasaltOreType.ASBESTOS), DictFrame.fromOne(stone_resource, EnumStoneType.ASBESTOS)) .oreAll(ore_asbestos);
+		ASBESTOS	.asbestos(1F)											.ingot(ingot_asbestos)												.dust(powder_asbestos)											.block(block_asbestos)		.ore(ore_gneiss_asbestos, DictFrame.fromOne(ore_basalt, EnumBasaltOreType.ASBESTOS), DictFrame.fromOne(stone_resource, EnumStoneType.ASBESTOS), new ItemStack(chunk_rich, 1, Mats.MAT_ASBESTOS.id)) .oreAll(ore_asbestos);
 		OSMIRIDIUM	.nugget(nugget_osmiridium)								.ingot(ingot_osmiridium)											.block(block_osmiridium);
-		ZI			.nugget(nugget_zinc)									.ingot(ingot_zinc)													.dust(powder_zinc)		.oreAll(ore_zinc);
+		ZI			.nugget(nugget_zinc)									.ingot(ingot_zinc)													.dust(powder_zinc)		.ore(new ItemStack(chunk_rich, 1, Mats.MAT_ZINC.id)) .oreAll(ore_zinc);
 		GALLIUM		.nugget(nugget_gallium)									.ingot(ingot_gallium)												.dust(powder_gallium)		.dustSmall(powder_gallium_tiny);
 		GAAS		.nugget(nugget_gaas)									.ingot(ingot_gaas)													.billet(billet_gaas);
 		HAFNIUM		.nugget(nugget_hafnium)									.ingot(ingot_hafnium);
@@ -496,10 +525,10 @@ public class OreDictManager {
 		/*
 		 * DUST AND GEM ORES
 		 */
-		S																				.dust(sulfur)			.block(block_sulfur)	.ore(ore_nether_sulfur, DictFrame.fromOne(ore_basalt, EnumBasaltOreType.SULFUR), DictFrame.fromOne(stone_resource, EnumStoneType.SULFUR))	.oreNether(ore_nether_sulfur) .oreAll(ore_sulfur);
-		KNO																				.dust(niter)			.block(block_niter)		.oreAll(ore_niter);
-		F																				.dust(fluorite)			.block(block_fluorite)	.ore(DictFrame.fromOne(ore_basalt, EnumBasaltOreType.FLUORITE)) .oreAll(ore_fluorite);
-		LIGNITE							.gem(lignite)									.dust(powder_lignite)							.oreAll(ore_lignite);
+		S																				.dust(sulfur)			.block(block_sulfur)	.ore(ore_nether_sulfur, DictFrame.fromOne(ore_basalt, EnumBasaltOreType.SULFUR), DictFrame.fromOne(stone_resource, EnumStoneType.SULFUR), new ItemStack(chunk_rich, 1, Mats.MAT_SULFUR.id))	.oreNether(ore_nether_sulfur) .oreAll(ore_sulfur);
+		KNO																				.dust(niter)			.block(block_niter)		.ore(new ItemStack(chunk_rich, 1, Mats.MAT_KNO.id)) .oreAll(ore_niter);
+		F																				.dust(fluorite)			.block(block_fluorite)	.ore(DictFrame.fromOne(ore_basalt, EnumBasaltOreType.FLUORITE), new ItemStack(chunk_rich, 1, Mats.MAT_FLUORITE.id)) .oreAll(ore_fluorite);
+		LIGNITE							.gem(lignite)									.dust(powder_lignite)							.ore(new ItemStack(chunk_rich, 1, Mats.MAT_LIGNITE.id)) .oreAll(ore_lignite);
 		COALCOKE						.gem(fromOne(coke, EnumCokeType.COAL))			.dust(fromOne(powder_coke, EnumCokeType.COAL))		.block(fromOne(block_coke, EnumCokeType.COAL));
 		PETCOKE							.gem(fromOne(coke, EnumCokeType.PETROLEUM))		.dust(fromOne(powder_coke, EnumCokeType.PETROLEUM))	.block(fromOne(block_coke, EnumCokeType.PETROLEUM));
 		LIGCOKE							.gem(fromOne(coke, EnumCokeType.LIGNITE))		.dust(fromOne(powder_coke, EnumCokeType.LIGNITE))	.block(fromOne(block_coke, EnumCokeType.LIGNITE));
@@ -511,8 +540,9 @@ public class OreDictManager {
 		VOLCANIC						.gem(gem_volcanic)																				.ore(DictFrame.fromOne(ore_basalt, EnumBasaltOreType.GEM));
 		HEMATITE																														.ore(fromOne(stone_resource, EnumStoneType.HEMATITE));
 		MALACHITE						.ingot(DictFrame.fromOne(chunk_ore, EnumChunkType.MALACHITE))									.ore(fromOne(stone_resource, EnumStoneType.MALACHITE));
+		ILMENITE						.ingot(DictFrame.fromOne(chunk_ore, EnumChunkType.ILMENITE));
 		LIMESTONE																		.dust(powder_limestone)							.ore(fromOne(stone_resource, EnumStoneType.LIMESTONE));
-		BAUXITE																															.gem(fromOne(stone_resource, EnumStoneType.BAUXITE));
+		BAUXITE																															.ore(fromOne(stone_resource, EnumStoneType.BAUXITE));
 		CRYOLITE	.crystal(fromOne(chunk_ore, EnumChunkType.CRYOLITE));
 		SLAG																									.block(block_slag);
 		CONGLOMERATE																													.ore(fromOne(stone_resource, EnumStoneType.CONGLOMERATE));
@@ -522,8 +552,8 @@ public class OreDictManager {
 		/*
 		 * HAZARDS, MISC
 		 */
-		LI	.hydro(1F)	.ingot(lithium)	.dustSmall(powder_lithium_tiny)	.dust(powder_lithium)	.block(block_lithium)	.ore(ore_gneiss_lithium) .oreAll(ore_lithium);
-		NA	.hydro(1F)	.hazIngot()										.dust(powder_sodium);
+		LI	.hydro(1F)	.hazNugget()	.ingot(lithium)	.dustSmall(powder_lithium_tiny)	.dust(powder_lithium)	.block(block_lithium)	.ore(ore_gneiss_lithium, new ItemStack(chunk_rich, 1, Mats.MAT_LITHIUM.id)) .oreAll(ore_lithium);
+		NA	.hydro(1F)	.hazNugget()	.hazIngot()										.dust(powder_sodium);
 
 		/*
 		 * PHOSPHORUS
@@ -561,7 +591,7 @@ public class OreDictManager {
 		/*
 		 * FISSION FRAGMENTS
 		 */
-		SR									.hot(1F)	.hydro(1F)	.hazIngot()						.dust(powder_strontium);
+		SR									.hot(1F)	.hydro(1F)	.hazIngot()						.dust(powder_strontium)											.hazNugget();
 		SR90	.rad(HazardRegistry.sr90)	.hot(1F)	.hydro(1F)	.dustSmall(powder_sr90_tiny)	.dust(powder_sr90)	.ingot(ingot_sr90)	.billet(billet_sr90)	.nugget(nugget_sr90);
 		I131	.rad(HazardRegistry.i131)	.hot(1F)				.dustSmall(powder_i131_tiny)	.dust(powder_i131);
 		XE135	.rad(HazardRegistry.xe135)	.hot(10F)				.dustSmall(powder_xe135_tiny)	.dust(powder_xe135);
@@ -628,9 +658,11 @@ public class OreDictManager {
 			}
 			if(mat.autogen.contains(MaterialShapes.BOLT)) for(String name : mat.names) OreDictionary.registerOre(MaterialShapes.BOLT.name() + name, new ItemStack(ModItems.bolt, 1, mat.id));
 			if(mat.autogen.contains(MaterialShapes.INGOT)) for(String name : mat.names) OreDictionary.registerOre(MaterialShapes.INGOT.name() + name, new ItemStack(ModItems.ingot_raw, 1, mat.id));
+			if(mat.autogen.contains(MaterialShapes.NUGGET)) for(String name : mat.names) OreDictionary.registerOre(MaterialShapes.NUGGET.name() + name, new ItemStack(ModItems.nugget_raw, 1, mat.id));
 			if(mat.autogen.contains(MaterialShapes.SHELL)) for(String name : mat.names) OreDictionary.registerOre(MaterialShapes.SHELL.name() + name, new ItemStack(ModItems.shell, 1, mat.id));
 			if(mat.autogen.contains(MaterialShapes.PIPE)) for(String name : mat.names) OreDictionary.registerOre(MaterialShapes.PIPE.name() + name, new ItemStack(ModItems.pipe, 1, mat.id));
 			if(mat.autogen.contains(MaterialShapes.FRAGMENT)) for(String name : mat.names) OreDictionary.registerOre(MaterialShapes.FRAGMENT.name() + name, new ItemStack(ModItems.bedrock_ore_fragment, 1, mat.id));
+			if(mat.autogen.contains(MaterialShapes.FRAGMENT)) for(String name : mat.names) OreDictionary.registerOre("oreBedrockFragment" + name, new ItemStack(ModItems.bedrock_ore_fragment, 1, mat.id)); // TODO: to be changed in MaterialShapes.FRAGMENT in the future but here for now to keep it backwards compatible
 			if(mat.autogen.contains(MaterialShapes.WIRE)) for(String name : mat.names) OreDictionary.registerOre(MaterialShapes.WIRE.name() + name, new ItemStack(ModItems.wire_fine, 1, mat.id));
 
 			if(mat.autogen.contains(MaterialShapes.LIGHTBARREL)) for(String name : mat.names) OreDictionary.registerOre(MaterialShapes.LIGHTBARREL.name() + name, new ItemStack(ModItems.part_barrel_light, 1, mat.id));
@@ -640,7 +672,13 @@ public class OreDictManager {
 			if(mat.autogen.contains(MaterialShapes.MECHANISM)) for(String name : mat.names) OreDictionary.registerOre(MaterialShapes.MECHANISM.name() + name, new ItemStack(ModItems.part_mechanism, 1, mat.id));
 			if(mat.autogen.contains(MaterialShapes.STOCK)) for(String name : mat.names) OreDictionary.registerOre(MaterialShapes.STOCK.name() + name, new ItemStack(ModItems.part_stock, 1, mat.id));
 			if(mat.autogen.contains(MaterialShapes.GRIP)) for(String name : mat.names) OreDictionary.registerOre(MaterialShapes.GRIP.name() + name, new ItemStack(ModItems.part_grip, 1, mat.id));
+			for(Item custom : MaterialShapes.customShapesItem) {
+				MaterialShapes customShape = ((ItemAutogen) custom).getShape();
+				if(mat.autogen.contains(customShape)) for(String name : mat.names) OreDictionary.registerOre(customShape.name() + name, new ItemStack(custom, 1, mat.id));
+			}
 		}
+
+		registerBedrockOres();
 
 		for(EnumBedrockOre ore : EnumBedrockOre.values()) {
 			OreDictionary.registerOre("ore" + ore.oreName, new ItemStack(ModItems.ore_enriched, 1, ore.ordinal()));
@@ -749,6 +787,7 @@ public class OreDictManager {
 
 		OreDictionary.registerOre(KEY_LOG, vinyl_log);
 		OreDictionary.registerOre(KEY_LOG, pvc_log);
+		OreDictionary.registerOre(KEY_LOG, laythe_root);
 
 		OreDictionary.registerOre(KEY_PLANKS, vinyl_planks);
 		OreDictionary.registerOre(KEY_PLANKS, pvc_planks);
@@ -764,7 +803,15 @@ public class OreDictManager {
 				else if(!OreDictionary.getOres(MaterialShapes.CRYSTAL.name() + name).isEmpty()) MineralRecipes.add9To1(mat.make(ModItems.bedrock_ore_fragment), OreDictionary.getOres(MaterialShapes.CRYSTAL.name() + name).get(0).copy());
 				else if(!OreDictionary.getOres(MaterialShapes.INGOT.name() + name).isEmpty()) MineralRecipes.add9To1(mat.make(ModItems.bedrock_ore_fragment), OreDictionary.getOres(MaterialShapes.INGOT.name() + name).get(0).copy());
 				else if(!OreDictionary.getOres(MaterialShapes.BILLET.name() + name).isEmpty()) MineralRecipes.addBilletFragment(OreDictionary.getOres(MaterialShapes.BILLET.name() + name).get(0).copy(), mat.make(ModItems.bedrock_ore_fragment));
+				else if(!OreDictionary.getOres(MaterialShapes.ORE.name() + name).isEmpty()) MineralRecipes.add9To1(mat.make(ModItems.bedrock_ore_fragment), OreDictionary.getOres(MaterialShapes.ORE.name() + name).get(0).copy());
 				else MineralRecipes.add9To1(mat.make(ModItems.bedrock_ore_fragment), new ItemStack(ModItems.nothing));
+			}
+		}
+		
+		for(NTMMaterial mat : Mats.orderedList) {
+			System.out.println("Checking for " + MaterialShapes.INGOT.make(mat));
+			if(mat.autogen.contains(MaterialShapes.NUGGET) && !OreDictionary.getOres(MaterialShapes.INGOT.make(mat)).isEmpty()) {
+				MineralRecipes.add1To9Pair(OreDictionary.getOres(MaterialShapes.INGOT.make(mat)).get(0).copy(), new ItemStack(ModItems.nugget_raw, 9, mat.id));
 			}
 		}
 
@@ -1020,6 +1067,11 @@ public class OreDictManager {
 		public DictFrame makeBlocks(String tag, Block... blocks) {
 			for(Block b : blocks) registerStack(tag, new ItemStack(b));
 			return this;
+		}
+
+		public DictFrame hazNugget() {
+			hazMult = HazardRegistry.nugget;
+			return autoRegHazard(NUGGET);
 		}
 
 		public DictFrame hazIngot() {

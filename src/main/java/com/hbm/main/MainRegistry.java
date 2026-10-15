@@ -1,5 +1,6 @@
 package com.hbm.main;
 
+import baubles.api.expanded.BaubleExpandedSlots;
 import com.google.common.collect.ImmutableList;
 import com.hbm.blocks.BlockEnums.EnumStoneType;
 import com.hbm.blocks.ModBlocks;
@@ -24,6 +25,7 @@ import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.OreDictManager.DictFrame;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.recipes.*;
 import com.hbm.inventory.recipes.anvil.AnvilRecipes;
@@ -106,7 +108,12 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = RefStrings.MODID, name = RefStrings.NAME, version = RefStrings.VERSION)
+@Mod(
+	modid = RefStrings.MODID,
+	name = RefStrings.NAME,
+	version = RefStrings.VERSION,
+	dependencies = "required-after:backhand;required-after:appliedenergistics2;required-after:Baubles;required-after:Baubles|Expanded"
+)
 public class MainRegistry {
 
 	@Instance(RefStrings.MODID)
@@ -223,7 +230,6 @@ public class MainRegistry {
 	public static Achievement achManhattan;
 	public static Achievement achGasCent;
 	public static Achievement achCentrifuge;
-	public static Achievement achFOEQ;
 	public static Achievement achSoyuz;
 	public static Achievement achSpace;
 	public static Achievement achSchrab;
@@ -279,7 +285,9 @@ public class MainRegistry {
 		/* For whichever fucking reason, replacing the bolt items with a bolt autogen broke all autogen items, most likely due to the load order.
 		 * This "fix" just makes sure that the material system is loaded first no matter what. */
 		Mats.MAT_STONE.getUnlocalizedName();
+		Mats.customMatsInit();
 		Fluids.init();
+		MaterialShapes.customShapesInit();
 		// Initialize the fluid mapping registry and texture/color systems
 		api.ntm1of90.compat.fluid.registry.FluidMappingRegistry.initialize();
 		api.ntm1of90.compat.fluid.render.NTMFluidTextureMapper.initialize();
@@ -297,6 +305,7 @@ public class MainRegistry {
 		proxy.registerPreRenderInfo();
 		ModBlocks.mainRegistry();
 		ModItems.mainRegistry();
+		BaubleExpandedSlots.tryAssignSlotsUpToMinimum(BaubleExpandedSlots.charmType, 1);
 		ModBiomes.init();
 		proxy.registerRenderInfo();
 		HbmWorld.mainRegistry();
@@ -469,7 +478,6 @@ public class MainRegistry {
 		achGasCent = new Achievement("achievement.gasCent", "gasCent", 13, 2, ModItems.ingot_uranium_fuel, achDesh).initIndependentStat().registerStat();
 		achCentrifuge = new Achievement("achievement.centrifuge", "centrifuge", 12, -2, new ItemStack(ModBlocks.machine_centrifuge), achPolymer).initIndependentStat().registerStat();
 		achDriveFail = new Achievement("achievement.driveFail", "driveFail", 8, -3, new ItemStack(ModItems.full_drive), achPolymer).initIndependentStat().setSpecial().registerStat();
-		achFOEQ = new Achievement("achievement.FOEQ", "FOEQ", 5, 5, ModItems.sat_foeq, achDesh).initIndependentStat().setSpecial().registerStat();
 		achSoyuz = new Achievement("achievement.soyuz", "soyuz", 7, 6, Items.baked_potato, achDesh).initIndependentStat().setSpecial().registerStat();
 		achSpace = new Achievement("achievement.space", "space", 9, 7, ModItems.missile_soyuz, achDesh).initIndependentStat().setSpecial().registerStat();
 		achSchrab = new Achievement("achievement.schrab", "schrab", 11, 3, ModItems.ingot_schrabidium, achDesh).initIndependentStat().registerStat();
@@ -536,7 +544,6 @@ public class MainRegistry {
 			achGasCent,
 			achCentrifuge,
 			achDriveFail,
-			achFOEQ,
 			achSoyuz,
 			achSpace,
 			achSchrab,
@@ -571,6 +578,9 @@ public class MainRegistry {
 				proxy.handleNHNEICompat();
 			}
 		}
+
+		// Load compatibility for OC.
+		CompatHandler.init();
 	}
 
 	@EventHandler
@@ -639,7 +649,7 @@ public class MainRegistry {
 		proxy.registerMissileItems();
 
 		// Load compatibility for OC.
-		CompatHandler.init();
+		CompatHandler.postInit();
 
 		// Load compatibility for AE2.
 		AE2CompatHandler.init();
@@ -1754,6 +1764,14 @@ public class MainRegistry {
 		ignoreMappings.add("hbm:item.sat_head_laser");
 		ignoreMappings.add("hbm:item.sat_head_resonator");
 		ignoreMappings.add("hbm:item.sat_interface");
+		ignoreMappings.add("hbm:item.cape_radiation");
+		ignoreMappings.add("hbm:item.cape_gasmask");
+		ignoreMappings.add("hbm:item.cape_schrabidium");
+		ignoreMappings.add("hbm:item.cape_hidden");
+		ignoreMappings.add("hbm:tile.dummy_plate_cargo");
+		ignoreMappings.add("hbm:tile.machine_turbine");
+		ignoreMappings.add("hbm:tile.machine_fensu");
+		ignoreMappings.add("hbm:tile.machine_htrf4");
 		
 		/// REMAP ///
 		remapItems.put("hbm:item.gadget_explosive8", ModItems.early_explosive_lenses);

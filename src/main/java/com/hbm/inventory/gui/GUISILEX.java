@@ -40,14 +40,14 @@ public class GUISILEX extends GuiInfoContainer {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
-		
+
 		silex.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 42, 52, 7);
-		
+
 		if(silex.current != null) {
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 27, guiTop + 72, 16, 52, mouseX, mouseY, new String[] { silex.currentFill + "/" + silex.maxFill + "mB", silex.current.toStack().getDisplayName() });
 		}
-		
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 10, guiTop + 92, 10, 10, mouseX, mouseY, new String[] { "Void contents" });
+
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 10, guiTop + 92, 10, 10, mouseX, mouseY, new String[] { I18nUtil.resolveKey("gui.silex.void_contents") });
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class GUISILEX extends GuiInfoContainer {
 
 		this.fontRendererObj.drawString(name, (this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2) - 54, 8, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
-		
+
 		if(silex.mode != EnumWavelengths.NULL) {
 			this.fontRendererObj.drawString(silex.mode.textColor + I18nUtil.resolveKey(silex.mode.name), 100 + (32 - this.fontRendererObj.getStringWidth(I18nUtil.resolveKey(silex.mode.name)) / 2), 16, 0);
 		}
@@ -77,17 +77,17 @@ public class GUISILEX extends GuiInfoContainer {
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-		
+
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		if(silex.mode != EnumWavelengths.NULL) {
 			float freq = 0.05F * (float)Math.pow(2, silex.mode.ordinal());
 			int color = (silex.mode != EnumWavelengths.VISIBLE) ? silex.mode.guiColor : Color.HSBtoRGB(silex.getWorldObj().getTotalWorldTime() / 50.0F, 0.5F, 1F) & 16777215;
 			drawWave(81, 46, 16, 84, 0.5F, freq, color, 3F, 1F);
 		}
-		
+
 		if(silex.tank.getFill() > 0) {
-			
+
 			if(silex.tank.getTankType() == Fluids.PEROXIDE || silex.fluidConversion.containsKey(silex.tank.getTankType()) || SILEXRecipes.getOutput(new ItemStack(ModItems.fluid_icon, 1, silex.tank.getTankType().getID())) != null) {
 				drawTexturedModalRect(guiLeft + 7, guiTop + 41, 176, 118, 54, 9);
 			} else {
@@ -104,7 +104,7 @@ public class GUISILEX extends GuiInfoContainer {
 		int i = silex.getFluidScaled(52);
 		drawTexturedModalRect(guiLeft + 8, guiTop + 42, 176, silex.tank.getTankType() == Fluids.PEROXIDE ? 43 : 50, i, 7);
 	}
-	
+
 	private void drawWave(int x, int y, int height, int width, float resolution, float freq, int color, float thickness, float mult) {
 		float samples = ((float)width) / resolution;
 		float scale = ((float)height)/2F;
@@ -115,26 +115,26 @@ public class GUISILEX extends GuiInfoContainer {
 			double currentY = y + scale*Math.sin(freq*currentX);
 			double nextY = y + scale*Math.sin(freq*nextX);
 			drawLine(thickness, color, currentX-offset, currentY, nextX-offset, nextY);
-			
-			
+
+
 		}
 	}
-	
+
 	private void drawLine(float width, int color, double x1, double y1, double x2, double y2) {
-		
+
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glLineWidth(width);
-		
+
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawing(1);
 		tessellator.setColorOpaque_I(color);
-		
+
 		tessellator.addVertex(guiLeft + x1, guiTop + y1, this.zLevel);
 		tessellator.addVertex(guiLeft + x2, guiTop + y2, this.zLevel);
 		tessellator.draw();
-		
+
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
 	}

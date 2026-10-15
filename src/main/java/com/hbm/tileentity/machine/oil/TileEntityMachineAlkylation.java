@@ -6,13 +6,15 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.recipes.AlkylationRecipes;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.Tuple.Triplet;
-import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
-import api.hbm.fluid.IFluidStandardTransceiver;
+import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -20,12 +22,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityMachineAlkylation extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiver, IPersistentNBT {
+public class TileEntityMachineAlkylation extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IPersistentNBT {
 	
 	public long power;
 	public static final long maxPower = 1_000_000;
 
 	public FluidTank[] tanks;
+
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+	protected ModulePortManPower modulePowerPorts;
 
 	public TileEntityMachineAlkylation() {
 		super(11);
@@ -35,6 +40,9 @@ public class TileEntityMachineAlkylation extends TileEntityMachineBase implement
 		this.tanks[1] = new FluidTank(Fluids.NONE, 4_000);
 		this.tanks[2] = new FluidTank(Fluids.UNSATURATEDS, 8_000);
 		this.tanks[3] = new FluidTank(Fluids.CHLORINE, 8_000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks()).setOutputTanks(getSendingTanks());
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 
 	@Override
@@ -46,7 +54,7 @@ public class TileEntityMachineAlkylation extends TileEntityMachineBase implement
 	public void updateEntity() {
 		
 		if(!worldObj.isRemote) {
-			if(this.worldObj.getTotalWorldTime() % 10 == 0) this.updateConnections();
+			moduleFluidPorts.update(getPorts());
 			
 			if(worldObj.getTotalWorldTime() % 2 == 0) alkylate();
 			
@@ -95,36 +103,32 @@ public class TileEntityMachineAlkylation extends TileEntityMachineBase implement
 		
 		power -= 4_000;
 	}
-	
-	private void updateConnections() {
-		for(DirPos pos : getConPos()) {
-			this.trySubscribe(worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-			this.trySubscribe(tanks[0].getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-			this.trySubscribe(tanks[1].getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-			if(tanks[2].getFill() > 0) this.sendFluid(tanks[2], worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-			if(tanks[3].getFill() > 0) this.sendFluid(tanks[3], worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-		}
-	}
-	
-	public DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
-		
-		return new DirPos[] {
-			new DirPos(xCoord + rot.offsetX * 2, yCoord, zCoord + rot.offsetZ * 2, rot),
-			new DirPos(xCoord + rot.offsetX * 2 + dir.offsetX * 2, yCoord, zCoord + rot.offsetZ * 2 + dir.offsetZ * 2, rot),
-			new DirPos(xCoord + rot.offsetX * 2 - dir.offsetX * 2, yCoord, zCoord + rot.offsetZ * 2 - dir.offsetZ * 2, rot),
 
-			new DirPos(xCoord + rot.offsetX * 1 + dir.offsetX * 3, yCoord, zCoord + rot.offsetZ * 1 + dir.offsetZ * 3, dir),
-			new DirPos(xCoord - rot.offsetX * 1 + dir.offsetX * 3, yCoord, zCoord - rot.offsetZ * 1 + dir.offsetZ * 3, dir),
+	protected PortDef[] cachedPorts;
+	
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
 			
-			new DirPos(xCoord - rot.offsetX * 2, yCoord, zCoord - rot.offsetZ * 2, rot.getOpposite()),
-			new DirPos(xCoord - rot.offsetX * 2 + dir.offsetX * 2, yCoord, zCoord - rot.offsetZ * 2 + dir.offsetZ * 2, rot.getOpposite()),
-			new DirPos(xCoord - rot.offsetX * 2 - dir.offsetX * 2, yCoord, zCoord - rot.offsetZ * 2 - dir.offsetZ * 2, rot.getOpposite()),
-			
-			new DirPos(xCoord + rot.offsetX * 1 - dir.offsetX * 3, yCoord, zCoord + rot.offsetZ * 1 - dir.offsetZ * 3, dir.getOpposite()),
-			new DirPos(xCoord - rot.offsetX * 1 - dir.offsetX * 3, yCoord, zCoord - rot.offsetZ * 1 - dir.offsetZ * 3, dir.getOpposite()),
-		};
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord + rot.offsetX, yCoord, zCoord + rot.offsetZ, rot),
+				PortDef.make(xCoord + rot.offsetX + dir.offsetX * 2, yCoord, zCoord + rot.offsetZ + dir.offsetZ * 2, rot),
+				PortDef.make(xCoord + rot.offsetX - dir.offsetX * 2, yCoord, zCoord + rot.offsetZ - dir.offsetZ * 2, rot),
+	
+				PortDef.make(xCoord + rot.offsetX + dir.offsetX * 2, yCoord, zCoord + rot.offsetZ + dir.offsetZ * 2, dir),
+				PortDef.make(xCoord - rot.offsetX + dir.offsetX * 2, yCoord, zCoord - rot.offsetZ + dir.offsetZ * 2, dir),
+	
+				PortDef.make(xCoord - rot.offsetX, yCoord, zCoord - rot.offsetZ, rot.getOpposite()),
+				PortDef.make(xCoord - rot.offsetX + dir.offsetX * 2, yCoord, zCoord - rot.offsetZ + dir.offsetZ * 2, rot.getOpposite()),
+				PortDef.make(xCoord - rot.offsetX - dir.offsetX * 2, yCoord, zCoord - rot.offsetZ - dir.offsetZ * 2, rot.getOpposite()),
+	
+				PortDef.make(xCoord + rot.offsetX - dir.offsetX * 2, yCoord, zCoord + rot.offsetZ - dir.offsetZ * 2, dir.getOpposite()),
+				PortDef.make(xCoord - rot.offsetX - dir.offsetX * 2, yCoord, zCoord - rot.offsetZ - dir.offsetZ * 2, dir.getOpposite()),
+			};
+		}
+
+		return cachedPorts;
 	}
 	
 	@Override

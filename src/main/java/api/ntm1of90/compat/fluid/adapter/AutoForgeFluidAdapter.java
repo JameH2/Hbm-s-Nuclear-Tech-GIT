@@ -4,11 +4,13 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 
+import api.hbm.fluidmk2.IFluidReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardSenderMK2;
 import api.hbm.fluidmk2.IFluidUserMK2;
 import api.ntm1of90.compat.fluid.registry.FluidMappingRegistry;
 import api.ntm1of90.compat.fluid.util.NTMForgeFluidConverter;
+import com.hbm.util.FluidDebug;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -81,7 +83,7 @@ public class AutoForgeFluidAdapter implements IFluidHandler {
                 FluidType currentType = tank.getTankType();
                 int maxFill = tank.getMaxFill();
 
-                if (currentFill < maxFill && (currentFill <= 0 || currentType == ntmFluid)) {
+                if (currentFill < maxFill && (canAcceptInto(tanks, tank, ntmFluid))) {
                     int ntmAmount = toNTMAmount(resource.amount);
                     int fillAmount = Math.min(ntmAmount, maxFill - currentFill);
 
@@ -91,8 +93,10 @@ public class AutoForgeFluidAdapter implements IFluidHandler {
 
                     // Fill the tank
                     if (doFill) {
-                        if (currentFill == 0) {
+                        if (currentType == Fluids.NONE) {
                             tank.setTankType(ntmFluid);
+                            FluidDebug.eventStack("forge.retask|" + FluidDebug.tileKey(tileEntity) + "|" + ntmFluid.getName(),
+                                () -> "FORGE fill retasked NONE tank to " + FluidDebug.describe(ntmFluid) + " at " + FluidDebug.describeTile(tileEntity) + " by " + FluidDebug.callerHint());
                         }
                         tank.setFill(currentFill + fillAmount);
 
@@ -101,11 +105,16 @@ public class AutoForgeFluidAdapter implements IFluidHandler {
                         }
                     }
 
-                    return toForgeAmount(fillAmount);
+                    int filled = toForgeAmount(fillAmount);
+                    FluidDebug.event("forge.fill|" + FluidDebug.tileKey(tileEntity) + "|" + ntmFluid.getName(),
+                        () -> "FORGE fill " + FluidDebug.describeTile(tileEntity) + " side=" + from + " " + FluidDebug.describeForgeStack(resource) + " doFill=" + doFill + " => " + filled + " by " + FluidDebug.callerHint());
+                    return filled;
                 }
             }
         }
 
+        FluidDebug.event("forge.fill|" + FluidDebug.tileKey(tileEntity) + "|" + (ntmFluid == null ? "null" : ntmFluid.getName()),
+            () -> "FORGE fill " + FluidDebug.describeTile(tileEntity) + " side=" + from + " " + FluidDebug.describeForgeStack(resource) + " doFill=" + doFill + " => 0 (rejected) by " + FluidDebug.callerHint());
         return 0; // No tank could accept the fluid
     }
 
@@ -150,9 +159,8 @@ public class AutoForgeFluidAdapter implements IFluidHandler {
                     int newFill = currentFill - drainAmount;
                     tank.setFill(newFill);
 
-                    if (newFill <= 0) {
-                        tank.setTankType(Fluids.NONE);
-                    }
+                    // Never reset the tank type on drain: type is configuration, and wiping
+                    // fixed-type tanks (e.g. Rotary STEAM/SPENTSTEAM) bricks them into NONE-ghosts.
 
                     if (tileEntity != null) {
                         tileEntity.markDirty();
@@ -161,11 +169,16 @@ public class AutoForgeFluidAdapter implements IFluidHandler {
 
                 Fluid forgeFluid = FluidMappingRegistry.getForgeFluid(currentType);
                 if (forgeFluid != null) {
-                    return new FluidStack(forgeFluid, toForgeAmount(drainAmount));
+                    FluidStack drained = new FluidStack(forgeFluid, toForgeAmount(drainAmount));
+                    FluidDebug.event("forge.drain|" + FluidDebug.tileKey(tileEntity) + "|" + ntmFluid.getName(),
+                        () -> "FORGE drain " + FluidDebug.describeTile(tileEntity) + " side=" + from + " " + FluidDebug.describeForgeStack(resource) + " doDrain=" + doDrain + " => " + FluidDebug.describeForgeStack(drained) + " by " + FluidDebug.callerHint());
+                    return drained;
                 }
             }
         }
 
+        FluidDebug.event("forge.drain|" + FluidDebug.tileKey(tileEntity) + "|" + ntmFluid.getName(),
+            () -> "FORGE drain " + FluidDebug.describeTile(tileEntity) + " side=" + from + " " + FluidDebug.describeForgeStack(resource) + " doDrain=" + doDrain + " => null by " + FluidDebug.callerHint());
         return null; // No tank could provide the fluid
     }
 
@@ -211,16 +224,17 @@ public class AutoForgeFluidAdapter implements IFluidHandler {
                     int newFill = currentFill - drainAmount;
                     tank.setFill(newFill);
 
-                    if (newFill <= 0) {
-                        tank.setTankType(Fluids.NONE);
-                    }
+                    // Same as above: never reset the tank type on drain.
 
                     if (tileEntity != null) {
                         tileEntity.markDirty();
                     }
                 }
 
-                return new FluidStack(forgeFluid, toForgeAmount(drainAmount));
+                FluidStack drainedAll = new FluidStack(forgeFluid, toForgeAmount(drainAmount));
+                FluidDebug.event("forge.drainall|" + FluidDebug.tileKey(tileEntity) + "|" + currentType.getName(),
+                    () -> "FORGE drain-all " + FluidDebug.describeTile(tileEntity) + " side=" + from + " maxDrain=" + maxDrain + " doDrain=" + doDrain + " => " + FluidDebug.describeForgeStack(drainedAll) + " by " + FluidDebug.callerHint());
+                return drainedAll;
             }
         }
 
@@ -253,12 +267,16 @@ public class AutoForgeFluidAdapter implements IFluidHandler {
                 FluidType currentType = tank.getTankType();
                 int maxFill = tank.getMaxFill();
 
-                if (currentFill < maxFill && (currentFill <= 0 || currentType == ntmFluid)) {
+                if (currentFill < maxFill && (canAcceptInto(tanks, tank, ntmFluid))) {
+                    FluidDebug.event("forge.canfill|" + FluidDebug.tileKey(tileEntity) + "|" + ntmFluid.getName(),
+                        () -> "FORGE canFill " + FluidDebug.describeTile(tileEntity) + " side=" + from + " " + FluidDebug.describeForgeFluid(fluid) + " => true (" + FluidDebug.describeTank(tank) + ") by " + FluidDebug.callerHint());
                     return true; // Tank can accept the fluid
                 }
             }
         }
 
+        FluidDebug.event("forge.canfill|" + FluidDebug.tileKey(tileEntity) + "|" + FluidDebug.describeForgeFluid(fluid),
+            () -> "FORGE canFill " + FluidDebug.describeTile(tileEntity) + " side=" + from + " " + FluidDebug.describeForgeFluid(fluid) + " => false by " + FluidDebug.callerHint());
         return false; // No tank can accept the fluid
     }
 
@@ -288,11 +306,15 @@ public class AutoForgeFluidAdapter implements IFluidHandler {
                 FluidType currentType = tank.getTankType();
 
                 if (currentFill > 0 && currentType == ntmFluid) {
+                    FluidDebug.event("forge.candrain|" + FluidDebug.tileKey(tileEntity) + "|" + ntmFluid.getName(),
+                        () -> "FORGE canDrain " + FluidDebug.describeTile(tileEntity) + " side=" + from + " " + FluidDebug.describeForgeFluid(fluid) + " => true (" + FluidDebug.describeTank(tank) + ") by " + FluidDebug.callerHint());
                     return true; // Tank contains the fluid
                 }
             }
         }
 
+        FluidDebug.event("forge.candrain|" + FluidDebug.tileKey(tileEntity) + "|" + FluidDebug.describeForgeFluid(fluid),
+            () -> "FORGE canDrain " + FluidDebug.describeTile(tileEntity) + " side=" + from + " " + FluidDebug.describeForgeFluid(fluid) + " => false by " + FluidDebug.callerHint());
         return false; // No tank contains the fluid
     }
 
@@ -300,6 +322,7 @@ public class AutoForgeFluidAdapter implements IFluidHandler {
     public FluidTankInfo[] getTankInfo(ForgeDirection from) {
         FluidTank[] all = fluidUser.getAllTanks();
         java.util.List<FluidTankInfo> list = new java.util.ArrayList<>();
+        StringBuilder summary = FluidDebug.isEnabled() ? new StringBuilder() : null;
         for (FluidTank tank : all) {
             if (tank.getPressure() != 0) continue;
             int currentFill = tank.getFill();
@@ -313,7 +336,34 @@ public class AutoForgeFluidAdapter implements IFluidHandler {
                 }
             }
             list.add(new FluidTankInfo(stack, toForgeAmount(maxFill)));
+            if (summary != null) {
+                if (summary.length() > 0) summary.append(", ");
+                summary.append(stack == null ? "empty" : FluidDebug.describeForgeStack(stack)).append("/").append(toForgeAmount(maxFill));
+            }
+        }
+        if (summary != null) {
+            FluidDebug.event("forge.tankinfo|" + FluidDebug.tileKey(tileEntity),
+                () -> "FORGE getTankInfo " + FluidDebug.describeTile(tileEntity) + " side=" + from + " => [" + summary + "] by " + FluidDebug.callerHint());
         }
         return list.toArray(new FluidTankInfo[0]);
+    }
+
+    /** Untyped (NONE) tanks need machine demand, and must not steal a type another tank already owns. */
+    private boolean canAcceptInto(FluidTank[] tanks, FluidTank tank, FluidType ntmFluid) {
+        FluidType currentType = tank.getTankType();
+        if (currentType != Fluids.NONE && currentType != ntmFluid) return false;
+        if (currentType == Fluids.NONE) {
+            for (FluidTank other : tanks) {
+                if (other != tank && other.getTankType() == ntmFluid) {
+                    FluidDebug.event("forge.conflict|" + FluidDebug.tileKey(tileEntity) + "|" + ntmFluid.getName(),
+                        () -> "FORGE routing refused: NONE tank " + FluidDebug.describeTank(tank) + " keeps type, " + FluidDebug.describe(ntmFluid) + " already owned by " + FluidDebug.describeTank(other) + " at " + FluidDebug.describeTile(tileEntity));
+                    return false;
+                }
+            }
+            if (fluidUser instanceof IFluidReceiverMK2) {
+                return ((IFluidReceiverMK2) fluidUser).getDemand(ntmFluid, tank.getPressure()) > 0;
+            }
+        }
+        return true;
     }
 }

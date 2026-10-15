@@ -82,7 +82,7 @@ public class MachineLPW2 extends BlockDummyable implements ILookOverlay {
 		} else {
 			for(int i = 0; i < thruster.tanks.length; i++) {
 				FluidTank tank = thruster.tanks[i];
-				text.add(EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + tank.getTankType().getLocalizedName() + ": " + tank.getFill() + "/" + tank.getMaxFill() + "mB");
+				text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_input", tank.getTankType().getLocalizedName(), tank.getFill(), tank.getMaxFill()));
 			}
 		}
 

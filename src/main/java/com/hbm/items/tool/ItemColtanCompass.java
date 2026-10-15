@@ -3,7 +3,11 @@ package com.hbm.items.tool;
 import java.util.List;
 import java.util.Random;
 
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
+
 import com.hbm.main.MainRegistry;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -13,6 +17,7 @@ import net.minecraft.client.renderer.texture.TextureCompass;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,7 +25,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class ItemColtanCompass extends Item {
+public class ItemColtanCompass extends Item implements IBauble {
 
 	public int lastX = 0;
 	public int lastZ = 0;
@@ -29,29 +34,32 @@ public class ItemColtanCompass extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add("Points towards the coltan deposit.");
-		list.add("The deposit is a large area where coltan ore spawns like standard ore,");
-		list.add("it's not one large blob of ore on that exact location.");
+		list.add(I18nUtil.resolveKey("desc.item.coltan_compass.points_towards_coltan_deposit"));
+		list.add(I18nUtil.resolveKey("item.coltan_compass.desc2"));
+		list.add(I18nUtil.resolveKey("item.coltan_compass.desc3"));
 	}
 
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean inhand) {
-		
+		tickCompass(stack, world, entity);
+	}
+
+	private void tickCompass(ItemStack stack, World world, Entity entity) {
 		if(world.isRemote) {
 			if(stack.hasTagCompound()) {
 				lastX = stack.stackTagCompound.getInteger("colX");
 				lastZ = stack.stackTagCompound.getInteger("colZ");
 				lease = System.currentTimeMillis() + 1000;
-				
+
 				Vec3 vec = Vec3.createVectorHelper(entity.posX - lastX, 0, entity.posZ - lastZ);
 				MainRegistry.proxy.displayTooltip(((int) vec.lengthVector()) + "m", MainRegistry.proxy.ID_COMPASS);
 			}
-			
+
 			if(ItemColtanCompass.this.lease < System.currentTimeMillis()) {
 				lastX = 0;
 				lastZ = 0;
 			}
-			
+
 		} else {
 			if(!stack.hasTagCompound()) {
 				stack.stackTagCompound = new NBTTagCompound();
@@ -65,6 +73,26 @@ public class ItemColtanCompass extends Item {
 			}
 		}
 	}
+
+	@Override
+	public BaubleType getBaubleType(ItemStack stack) { return BaubleType.BELT; }
+
+	@Override
+	public void onWornTick(ItemStack stack, EntityLivingBase entity) {
+		tickCompass(stack, entity.worldObj, entity);
+	}
+
+	@Override
+	public void onEquipped(ItemStack stack, EntityLivingBase entity) { }
+
+	@Override
+	public void onUnequipped(ItemStack stack, EntityLivingBase entity) { }
+
+	@Override
+	public boolean canEquip(ItemStack stack, EntityLivingBase entity) { return true; }
+
+	@Override
+	public boolean canUnequip(ItemStack stack, EntityLivingBase entity) { return true; }
 
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister register) {
@@ -106,7 +134,7 @@ public class ItemColtanCompass extends Item {
 					double d5 = (double) ItemColtanCompass.this.lastZ - z;
 					yaw %= 360.0D;
 					angle = -((yaw - 90.0D) * Math.PI / 180.0D - Math.atan2(d5, d4));
-					
+
 				} else {
 					angle = Math.random() * Math.PI * 2.0D;
 				}

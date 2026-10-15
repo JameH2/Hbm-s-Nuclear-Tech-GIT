@@ -10,6 +10,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.List;
+import com.hbm.util.i18n.I18nUtil;
 
 public class BlockSpeedyStairs extends BlockGenericStairs implements IStepTickReceiver, ITooltipProvider {
 
@@ -34,6 +35,6 @@ public class BlockSpeedyStairs extends BlockGenericStairs implements IStepTickRe
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.BLUE + "Increases speed by " + (MathHelper.floor_double((speed - 1) * 100)) + "%");
+		list.add((EnumChatFormatting.BLUE) + I18nUtil.resolveKey("tile.speedy_stairs.increases_speed_by", (MathHelper.floor_double((speed - 1) * 100))));
 	}
 }

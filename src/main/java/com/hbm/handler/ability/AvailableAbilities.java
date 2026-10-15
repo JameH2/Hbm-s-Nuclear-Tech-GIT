@@ -12,6 +12,7 @@ import com.hbm.main.MainRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.EnumChatFormatting;
+import com.hbm.util.i18n.I18nUtil;
 
 // All abilities available on a given tool
 public class AvailableAbilities {
@@ -92,7 +93,7 @@ public class AvailableAbilities {
 				.sorted(Comparator.comparing(Map.Entry<IBaseAbility, Integer>::getKey).thenComparing(Map.Entry<IBaseAbility, Integer>::getValue)).collect(Collectors.toList());
 
 		if(!toolAbilities.isEmpty()) {
-			list.add("Abilities: ");
+			list.add(I18nUtil.resolveKey("desc.misc.available_abilities.abilities"));
 
 			toolAbilities.forEach(entry -> {
 				IBaseAbility ability = entry.getKey();
@@ -101,16 +102,16 @@ public class AvailableAbilities {
 				list.add("  " + EnumChatFormatting.GOLD + ability.getFullName(level));
 			});
 
-			list.add("Right click to cycle through presets!");
-			list.add("Sneak-click to go to first preset!");
-			list.add("Alt-click to open customization GUI!");
+			list.add(I18nUtil.resolveKey("desc.misc.right_click_cycle_presets"));
+			list.add(I18nUtil.resolveKey("desc.misc.sneak_click_go_first_preset"));
+			list.add(I18nUtil.resolveKey("desc.misc.alt_click_open_customization_gui"));
 		}
 
 		List<Map.Entry<IBaseAbility, Integer>> weaponAbilities = abilities.entrySet().stream().filter(entry -> (entry.getKey() instanceof IWeaponAbility && entry.getKey() != IWeaponAbility.NONE))
 				.sorted(Comparator.comparing(Map.Entry<IBaseAbility, Integer>::getKey).thenComparing(Map.Entry<IBaseAbility, Integer>::getValue)).collect(Collectors.toList());
 
 		if(!weaponAbilities.isEmpty()) {
-			list.add("Weapon modifiers: ");
+			list.add(I18nUtil.resolveKey("desc.misc.weapon_modifiers"));
 
 			weaponAbilities.forEach(entry -> {
 				IBaseAbility ability = entry.getKey();

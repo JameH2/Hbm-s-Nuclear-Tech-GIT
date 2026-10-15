@@ -33,9 +33,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntityGhast;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.pathfinding.PathEntity;
 
 import net.minecraft.util.*;
 
@@ -62,6 +66,10 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 	public int homeY;
 	public int homeZ;
 	protected int currentTask = 0;
+
+	//tamed pet tracking, mirrors vanilla EntityAIOwnerHurtByTarget/EntityAIOwnerHurtTarget timers
+	protected int ownerHurtTimer = 0;
+	protected int ownerAttackTimer = 0;
 
 	//both of those below are used for digging, so the glyphid remembers what it was doing
 	protected int previousTask;
@@ -105,6 +113,8 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 	public static final int DW_WALL = 16;
 	public static final int DW_ARMOR = 17;
 	public static final int DW_SUBTYPE = 18;
+	public static final int DW_TAMED = 20;
+	public static final int DW_OWNER = 21;
 
 	public EntityGlyphid(World world) {
 		super(world);
@@ -112,7 +122,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 	}
 
 	public ResourceLocation getSkin() {
-		return ResourceManager.glyphid_tex;
+		return isTamed() ? ResourceManager.glyphid_tame_tex : ResourceManager.glyphid_tex;
 	}
 
 	public double getScale() {
@@ -126,6 +136,8 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 		this.dataWatcher.addObject(DW_ARMOR, new Byte((byte) 0b11111));	//armor
 		this.dataWatcher.addObject(DW_SUBTYPE, new Byte((byte) 0));		//subtype (i.e. normal, infected, etc)
 		this.dataWatcher.addObject(DW_DANCE, new Integer(0));			//dance timer
+		this.dataWatcher.addObject(DW_TAMED, new Byte((byte) 0));		//tamed flags, same bits as vanilla EntityTameable: 4 = tamed, 1 = sitting
+		this.dataWatcher.addObject(DW_OWNER, "");						//owner name
 	}
 
 	@Override
@@ -166,6 +178,11 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+
+		//tamed glyphids are passive pets, don't cull them when the game is set to peaceful
+		if(isTamed() && !worldObj.isRemote && worldObj.difficultySetting == EnumDifficulty.PEACEFUL && this.getHealth() > 0) {
+			this.isDead = false;
+		}
 
 		if(isDancing()) {
 			if(worldObj.isRemote) {
@@ -239,6 +256,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 
 	@Override
 	protected Entity findPlayerToAttack() {
+		if(isTamed()) return null; //tamed glyphids don't hunt players
 		if(this.isPotionActive(Potion.blindness)) return null;
 
 		return this.worldObj.getClosestVulnerablePlayerToEntity(this, useExtendedTargeting() ? 128D : 16D);
@@ -254,7 +272,48 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 	@Override
 	protected void updateEntityActionState() {
 		super.updateEntityActionState();
-		
+
+		//tamed dog-like behavior, mirrors vanilla EntityWolf/EntityTameable (server-side only for pathing/targeting)
+		if(isTamed() && !worldObj.isRemote) {
+			EntityPlayer owner = getOwner();
+			if(owner == null) return;
+
+			//retaliate against whatever hurt the owner, mirrors EntityAIOwnerHurtByTarget
+			EntityLivingBase attacker = owner.getLastAttacker();
+			if(attacker != null && attacker != this && attacker.isEntityAlive() && owner.getLastAttackerTime() != ownerHurtTimer && isSuitableTargetForTamed(attacker, owner)) {
+				ownerHurtTimer = owner.getLastAttackerTime();
+				setTarget(attacker);
+				entityToAttack = attacker;
+			}
+
+			//attack whatever the owner is attacking, mirrors EntityAIOwnerHurtTarget
+			EntityLivingBase ownerTarget = owner.getAITarget();
+			if(ownerTarget != null && ownerTarget != this && ownerTarget.isEntityAlive() && owner.func_142015_aE() != ownerAttackTimer && isSuitableTargetForTamed(ownerTarget, owner)) {
+				ownerAttackTimer = owner.func_142015_aE();
+				setTarget(ownerTarget);
+				entityToAttack = ownerTarget;
+			}
+
+			//follow the owner when idle, mirrors vanilla EntityAIFollowOwner (repath every 10 ticks, never wipe a valid path)
+			if(!isSitting() && entityToAttack == null) {
+				double distSq = this.getDistanceSqToEntity(owner);
+				if(distSq > 16.0D && (ticksExisted % 10 == 0 || !hasPath())) {
+					PathEntity path = this.worldObj.getPathEntityToEntity(this, owner, 16.0F, true, false, false, true);
+
+					if(path != null) {
+						this.setPathToEntity(path);
+					} else if(distSq >= 144.0D) {
+						//last resort when the pet simply cannot find a way to the owner, mirrors vanilla EntityAIFollowOwner
+						teleportNearOwner(owner);
+					}
+				}
+			}
+
+			if(isSitting() && entityToAttack == null) {
+				setPathToEntity(null);
+			}
+		}
+
 		// re-scan for new targets every so often
 		// every third glyphid does not do this, so you cannot "juggle" hordes on purpose
 		if(this.getEntityId() % 3 > 0 && (this.getEntityId() + this.ticksExisted) % 100 == 0) {
@@ -268,7 +327,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 				// hell yeah!!
 				if(useExtendedTargeting() && this.entityToAttack != null) {
 					this.setPathToEntity(PathFinderUtils.getPathEntityToEntityPartial(worldObj, this, this.entityToAttack, 16F, true, false, true, true));
-				} else if (getCurrentTask() != TASK_IDLE) {
+				} else if (getCurrentTask() != TASK_IDLE && !isTamed()) {
 
 					this.worldObj.theProfiler.startSection("stroll");
 
@@ -354,6 +413,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 
 	@Override
 	protected boolean canDespawn() {
+		if(isTamed()) return false;
 		return entityToAttack == null && getCurrentTask() == TASK_IDLE && this.ticksExisted > 100;
 	}
 
@@ -388,7 +448,22 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
-		if(source.getEntity() instanceof EntityGlyphid) return false;
+		Entity attacker = source.getEntity();
+		if(attacker instanceof EntityGlyphid) {
+			if(isTamed()) {
+				EntityGlyphid attackerGlyphid = (EntityGlyphid) attacker;
+				if(attackerGlyphid.isTamed() && getOwnerName().length() > 0 && getOwnerName().equals(attackerGlyphid.getOwnerName())) return false;
+			}
+			return false;
+		}
+		if(isTamed() && attacker != null) {
+			if(attacker == getOwner()) {
+				//take the damage but don't retaliate against the owner, fall through to the damage handling below
+			} else if(attacker instanceof EntityLivingBase && getOwner() != null && isSuitableTargetForTamed((EntityLivingBase) attacker, getOwner())) {
+				setTarget(attacker);
+				entityToAttack = attacker;
+			}
+		}
 		if(isDancing()) {
 			stopDance();
 			stopNearbyDancers(12.0);
@@ -493,6 +568,13 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 
 	@Override
 	public boolean attackEntityAsMob(Entity victim) {
+		if(isTamed() && victim != null) {
+			if(victim == getOwner()) return false;
+			if(victim instanceof EntityGlyphid) {
+				EntityGlyphid other = (EntityGlyphid) victim;
+				if(other.isTamed() && getOwnerName().length() > 0 && getOwnerName().equals(other.getOwnerName())) return false;
+			}
+		}
 		if(this.isSwingInProgress) return false;
 		this.swingItem();
 
@@ -596,12 +678,13 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 
 	/** Copies tasks and waypoint to nearby glyphids. Does not work on glyphid scouts */
 	public void communicate(int task, @Nullable EntityWaypoint waypoint) {
+		if(this.isTamed()) return; //pets don't take part in horde logic
 		int radius = waypoint != null ? waypoint.radius : 4;
 		AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(this.posX, this.posY, this.posZ, this.posX, this.posY, this.posZ).expand(radius, radius, radius);
 
 		List<Entity> bugs = worldObj.getEntitiesWithinAABBExcludingEntity(this, bb);
 		for(Entity e : bugs) {
-			if(e instanceof EntityGlyphid && !(e instanceof EntityGlyphidScout)) {
+			if(e instanceof EntityGlyphid && !(e instanceof EntityGlyphidScout) && !((EntityGlyphid) e).isTamed()) {
 				if(((EntityGlyphid) e).getCurrentTask() != task) {
 					((EntityGlyphid) e).setCurrentTask(task, waypoint);
 				}
@@ -674,7 +757,45 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 			startDance(true);
 			return true;
 		}
-		return false;
+		if(isTamed()) {
+			if(!isOwner(player)) return false; //only the owner can command a pet
+			Item held = stack != null ? stack.getItem() : null;
+			if((held == ModItems.glyphid_meat || held == ModItems.glyphid_meat_grilled) && getHealth() < getMaxHealth()) {
+				heal(held == ModItems.glyphid_meat ? 4F : 8F);
+				stack.stackSize--;
+				if(stack.stackSize <= 0) {
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+				}
+				return true;
+			}
+			if(held == Items.bone || held == ModItems.glyphid_meat || held == ModItems.glyphid_meat_grilled) return false;
+			setSitting(!isSitting());
+			setPathToEntity(null);
+			return true;
+		} else {
+			if(!canBeTamed()) return false;
+			Item held = stack != null ? stack.getItem() : null;
+			if(held == ModItems.glyphid_meat_grilled) {
+				stack.stackSize--;
+				if(stack.stackSize <= 0) {
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+				}
+				if(rand.nextInt(3) == 0) {
+					setTamed(true);
+					setOwner(player.getCommandSenderName());
+					setSitting(false);
+					setCurrentTask(TASK_IDLE, null);
+					setTarget(null);
+					entityToAttack = null;
+					heal((float) (getMaxHealth() - getHealth()));
+					playTameEffect(true);
+				} else {
+					playTameEffect(false);
+				}
+				return true;
+			}
+			return false;
+		}
 	}
 
 	public boolean isDancing() {
@@ -730,6 +851,98 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 
 	///DANCE SYSTEM END
 
+	///TAMING SYSTEM START (mirrors vanilla EntityWolf/EntityTameable 1.7.10, adapted to EntityMob)
+
+	public boolean isTamed() {
+		return (this.dataWatcher.getWatchableObjectByte(DW_TAMED) & 4) != 0; //bit 4 = tamed, same as vanilla
+	}
+
+	public void setTamed(boolean tamed) {
+		byte flags = this.dataWatcher.getWatchableObjectByte(DW_TAMED);
+		if(tamed) {
+			this.dataWatcher.updateObject(DW_TAMED, Byte.valueOf((byte) (flags | 4)));
+		} else {
+			this.dataWatcher.updateObject(DW_TAMED, Byte.valueOf((byte) (flags & -5)));
+		}
+	}
+
+	public boolean isSitting() {
+		return (this.dataWatcher.getWatchableObjectByte(DW_TAMED) & 1) != 0; //bit 1 = sitting, same as vanilla
+	}
+
+	public void setSitting(boolean sitting) {
+		byte flags = this.dataWatcher.getWatchableObjectByte(DW_TAMED);
+		if(sitting) {
+			this.dataWatcher.updateObject(DW_TAMED, Byte.valueOf((byte) (flags | 1)));
+		} else {
+			this.dataWatcher.updateObject(DW_TAMED, Byte.valueOf((byte) (flags & -2)));
+		}
+	}
+
+	public String getOwnerName() {
+		return this.dataWatcher.getWatchableObjectString(DW_OWNER);
+	}
+
+	public void setOwner(String owner) {
+		this.dataWatcher.updateObject(DW_OWNER, owner);
+	}
+
+	public EntityPlayer getOwner() {
+		String name = getOwnerName();
+		if(name == null || name.isEmpty()) return null;
+		return worldObj.getPlayerEntityByName(name);
+	}
+
+	public boolean isOwner(Entity entity) {
+		return entity != null && entity == getOwner();
+	}
+
+	/** Infested glyphids cannot be tamed */
+	public boolean canBeTamed() {
+		return this.dataWatcher.getWatchableObjectByte(DW_SUBTYPE) != TYPE_INFECTED;
+	}
+
+	public void playTameEffect(boolean tamed) {
+		String particle = tamed ? "heart" : "smoke";
+		for(int i = 0; i < 7; ++i) {
+			double d0 = rand.nextGaussian() * 0.02D;
+			double d1 = rand.nextGaussian() * 0.02D;
+			double d2 = rand.nextGaussian() * 0.02D;
+			worldObj.spawnParticle(particle, posX + (rand.nextFloat() * width * 2.0F) - width, posY + 0.5D + (rand.nextFloat() * height), posZ + (rand.nextFloat() * width * 2.0F) - width, d0, d1, d2);
+		}
+	}
+
+	/** Mirrors vanilla EntityTameable target filtering so pets don't attack owners, packmates, creepers or ghasts */
+	public boolean isSuitableTargetForTamed(EntityLivingBase target, EntityLivingBase owner) {
+		if(target == null || !target.isEntityAlive()) return false;
+		if(target == owner) return false;
+		if(target instanceof EntityGlyphid) {
+			EntityGlyphid other = (EntityGlyphid) target;
+			if(other.isTamed() && isTamed() && getOwnerName().length() > 0 && getOwnerName().equals(other.getOwnerName())) return false;
+		}
+		if(target instanceof EntityCreeper || target instanceof EntityGhast) return false;
+		return true;
+	}
+
+	/** Last resort if a tamed pet cannot path to its owner, mirrors vanilla EntityAIFollowOwner's teleport */
+	protected void teleportNearOwner(EntityLivingBase owner) {
+		int i = MathHelper.floor_double(owner.posX) - 2;
+		int j = MathHelper.floor_double(owner.posZ) - 2;
+		int k = MathHelper.floor_double(owner.boundingBox.minY);
+
+		for(int l = 0; l <= 4; ++l) {
+			for(int i1 = 0; i1 <= 4; ++i1) {
+				if((l < 1 || i1 < 1 || l > 3 || i1 > 3) && World.doesBlockHaveSolidTopSurface(worldObj, i + l, k - 1, j + i1) && !worldObj.getBlock(i + l, k, j + i1).isNormalCube() && !worldObj.getBlock(i + l, k + 1, j + i1).isNormalCube()) {
+					this.setLocationAndAngles((double) ((float) (i + l) + 0.5F), (double) k, (double) ((float) (j + i1) + 0.5F), this.rotationYaw, this.rotationPitch);
+					this.setPathToEntity(null);
+					return;
+				}
+			}
+		}
+	}
+
+	///TAMING SYSTEM END
+
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
@@ -748,6 +961,10 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 
 		nbt.setInteger("task", currentTask);
 		nbt.setInteger("danceTicks", getDanceTicks());
+
+		nbt.setBoolean("tamed", isTamed());
+		nbt.setString("owner", getOwnerName());
+		nbt.setBoolean("sitting", isSitting());
 	}
 
 	@Override
@@ -768,6 +985,10 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider, ISu
 
 		this.currentTask = nbt.getInteger("task");
 		this.setDanceTicks(nbt.getInteger("danceTicks"));
+
+		this.setTamed(nbt.getBoolean("tamed"));
+		this.setOwner(nbt.getString("owner"));
+		this.setSitting(nbt.getBoolean("sitting"));
 	}
 
 	@Override

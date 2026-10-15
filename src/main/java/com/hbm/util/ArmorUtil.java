@@ -35,11 +35,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.ForgeEventFactory;
+import com.hbm.util.i18n.I18nUtil;
 
 public class ArmorUtil {
-	
+
 	public static List<Pair<Item, HazardClass[]>> external = new ArrayList();
 
 	public static HazardClass[] FULL_NO_LIGHT = new HazardClass[] {HazardClass.PARTICLE_COARSE, HazardClass.PARTICLE_FINE, HazardClass.GAS_LUNG, HazardClass.BACTERIA, HazardClass.GAS_BLISTERING, HazardClass.GAS_MONOXIDE, HazardClass.SAND};
@@ -67,20 +69,20 @@ public class ArmorUtil {
 		ArmorRegistry.registerHazard(ModItems.attachment_mask, HazardClass.SAND);
 
 		ArmorRegistry.registerHazard(ModItems.asbestos_helmet, HazardClass.SAND, HazardClass.LIGHT);
-		
+
 		ArmorRegistry.registerHazard(ModItems.hazmat_helmet, HazardClass.SAND);
 		ArmorRegistry.registerHazard(ModItems.hazmat_helmet_red, HazardClass.SAND);
 		ArmorRegistry.registerHazard(ModItems.hazmat_helmet_grey, HazardClass.SAND);
 		ArmorRegistry.registerHazard(ModItems.hazmat_paa_helmet, HazardClass.LIGHT, HazardClass.SAND);
 		ArmorRegistry.registerHazard(ModItems.liquidator_helmet, HazardClass.LIGHT, HazardClass.SAND);
-		
+
 		ArmorRegistry.registerHazard(ModItems.schrabidium_helmet, HazardClass.PARTICLE_COARSE, HazardClass.PARTICLE_FINE, HazardClass.GAS_LUNG, HazardClass.BACTERIA, HazardClass.GAS_BLISTERING, HazardClass.GAS_MONOXIDE, HazardClass.LIGHT, HazardClass.SAND);
 		ArmorRegistry.registerHazard(ModItems.euphemium_helmet, HazardClass.PARTICLE_COARSE, HazardClass.PARTICLE_FINE, HazardClass.GAS_LUNG, HazardClass.BACTERIA, HazardClass.GAS_BLISTERING, HazardClass.GAS_MONOXIDE, HazardClass.LIGHT, HazardClass.SAND);
 
 		for(Pair<Item, HazardClass[]> pair : external) {
 			ArmorRegistry.registerHazard(pair.getKey(), pair.getValue());
 		}
-		
+
 		//Ob ihr wirklich richtig steht, seht ihr wenn das Licht angeht!
 		registerIfExists(Compat.MOD_GT6, "gt.armor.hazmat.universal.head", HazardClass.PARTICLE_COARSE, HazardClass.PARTICLE_FINE, HazardClass.GAS_LUNG, HazardClass.BACTERIA, HazardClass.GAS_BLISTERING, HazardClass.GAS_MONOXIDE, HazardClass.LIGHT, HazardClass.SAND);
 		registerIfExists(Compat.MOD_GT6, "gt.armor.hazmat.biochemgas.head", HazardClass.PARTICLE_COARSE, HazardClass.PARTICLE_FINE, HazardClass.GAS_LUNG, HazardClass.BACTERIA, HazardClass.GAS_BLISTERING, HazardClass.GAS_MONOXIDE, HazardClass.LIGHT, HazardClass.SAND);
@@ -534,11 +536,11 @@ public class ArmorUtil {
 		ItemStack filter = ((IGasMask)mask.getItem()).getFilter(mask, player);
 
 		if(filter == null) {
-			list.add(EnumChatFormatting.RED + "No filter installed!");
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.misc.armor_util.no_filter_installed"));
 			return;
 		}
 
-		list.add(EnumChatFormatting.GOLD + "Installed filter:");
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("desc.misc.armor_util.installed_filter"));
 
 		int meta = filter.getItemDamage();
 		int max = filter.getMaxDamage();
@@ -574,5 +576,9 @@ public class ArmorUtil {
 		}
 
 		return false;
+	}
+
+	public static boolean checkForFireProtection(EntityLivingBase entity) {
+		return entity != null && (entity.isImmuneToFire() || DamageResistanceHandler.calculateDamage(entity, DamageSource.onFire, 1, 0, 0) <= 0);
 	}
 }

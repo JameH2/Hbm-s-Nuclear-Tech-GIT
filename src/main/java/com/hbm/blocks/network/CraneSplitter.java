@@ -8,6 +8,7 @@ import api.hbm.conveyor.IEnterableBlock;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ITooltipProvider;
+import com.hbm.entity.item.EntityMovingConveyorObject;
 import com.hbm.entity.item.EntityMovingItem;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.network.TileEntityCraneSplitter;
@@ -18,6 +19,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -88,12 +90,37 @@ public class CraneSplitter extends BlockDummyable implements IConveyorBelt, IEnt
 		return renderID;
 	}
 
-	@Override public boolean canItemEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorItem entity) { return getTravelDirection(world, x, y, z, null) == dir; }
+	@Override
+	public boolean canItemEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorItem entity) {
+		if(getTravelDirection(world, x, y, z, null) != dir) return false;
+		int[] core = this.findCore(world, x, y, z);
+		if(core == null) return false;
+		int coreX = core[0];
+		int coreY = core[1];
+		int coreZ = core[2];
+		TileEntity tile = world.getTileEntity(coreX, coreY, coreZ);
+		if(!(tile instanceof TileEntityCraneSplitter)) return false;
+		TileEntityCraneSplitter splitter = (TileEntityCraneSplitter) tile;
+		ForgeDirection rot = ForgeDirection.getOrientation(splitter.getBlockMetadata() - offset).getRotation(ForgeDirection.DOWN);
+
+		boolean leftCrammed = EntityMovingConveyorObject.isCrammed(world, coreX, coreY, coreZ);
+		boolean rightCrammed = EntityMovingConveyorObject.isCrammed(world, coreX + rot.offsetX, coreY, coreZ + rot.offsetZ);
+
+		return !leftCrammed || !rightCrammed;
+	}
 	@Override public boolean canPackageEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorPackage entity) { return false; }
 	@Override public void onPackageEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorPackage entity) { }
 
 	@Override
 	public void onItemEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorItem entity) {
+		double laneOffset = 0;
+		if(entity instanceof Entity) {
+			Entity moving = (Entity) entity;
+			if(dir.offsetX != 0) laneOffset = moving.posZ - (z + 0.5);
+			if(dir.offsetZ != 0) laneOffset = moving.posX - (x + 0.5);
+			laneOffset = MathHelper.clamp_double(laneOffset, -0.5, 0.5);
+		}
+
 		int[] core = this.findCore(world, x, y, z);
 		if(core == null) return;
 		x = core[0];
@@ -104,16 +131,27 @@ public class CraneSplitter extends BlockDummyable implements IConveyorBelt, IEnt
 		TileEntityCraneSplitter splitter = (TileEntityCraneSplitter) tile;
 		ForgeDirection rot = ForgeDirection.getOrientation(splitter.getBlockMetadata() - offset).getRotation(ForgeDirection.DOWN);
 
-		ItemStack[] splits = splitter.splitStack(entity.getItemStack());
+		boolean leftCrammed = EntityMovingConveyorObject.isCrammed(world, x, y, z);
+		boolean rightCrammed = EntityMovingConveyorObject.isCrammed(world, x + rot.offsetX, y, z + rot.offsetZ);
 
-		spawnMovingItem(world, x, y, z, splits[0]);
-		spawnMovingItem(world, x + rot.offsetX, y, z + rot.offsetZ, splits[1]);
+		if(leftCrammed) {
+			spawnMovingItem(world, x + rot.offsetX, y, z + rot.offsetZ, entity.getItemStack().copy(), dir, laneOffset);
+		} else if(rightCrammed) {
+			spawnMovingItem(world, x, y, z, entity.getItemStack().copy(), dir, laneOffset);
+		} else {
+			int lane = laneOffset < -0.15 ? 0 : laneOffset > 0.15 ? 2 : 1;
+			ItemStack[] splits = splitter.splitStack(entity.getItemStack(), lane);
+			spawnMovingItem(world, x, y, z, splits[0], dir, laneOffset);
+			spawnMovingItem(world, x + rot.offsetX, y, z + rot.offsetZ, splits[1], dir, laneOffset);
+		}
 	}
 
-	private void spawnMovingItem(World world, int x, int y, int z, ItemStack stack) {
+	private void spawnMovingItem(World world, int x, int y, int z, ItemStack stack, ForgeDirection dir, double laneOffset) {
 		if(stack == null || stack.stackSize <= 0) return;
 		EntityMovingItem moving = new EntityMovingItem(world);
 		Vec3 pos = Vec3.createVectorHelper(x + 0.5, y + 0.5, z + 0.5);
+		if(dir.offsetX != 0) pos.zCoord += laneOffset;
+		if(dir.offsetZ != 0) pos.xCoord += laneOffset;
 		Vec3 snap = this.getClosestSnappingPosition(world, x, y, z, pos);
 		moving.setPosition(snap.xCoord, snap.yCoord, snap.zCoord);
 		moving.setItemStack(stack);
@@ -143,8 +181,10 @@ public class CraneSplitter extends BlockDummyable implements IConveyorBelt, IEnt
 		itemPos.zCoord = MathHelper.clamp_double(itemPos.zCoord, z, z + 1);
 		double posX = x + 0.5;
 		double posZ = z + 0.5;
-		if(dir.offsetX != 0) posX = itemPos.xCoord;
-		if(dir.offsetZ != 0) posZ = itemPos.zCoord;
+		if(dir.offsetX != 0 || dir.offsetZ != 0) {
+			posX = itemPos.xCoord;
+			posZ = itemPos.zCoord;
+		}
 		return Vec3.createVectorHelper(posX, y + 0.25, posZ);
 	}
 
@@ -197,7 +237,7 @@ public class CraneSplitter extends BlockDummyable implements IConveyorBelt, IEnt
 		TileEntityCraneSplitter crane = (TileEntityCraneSplitter) te;
 
 		List<String> text = new ArrayList<>();
-		text.add("Splitter ratio: " + crane.leftRatio + ":" + crane.rightRatio);
+		text.add(I18nUtil.resolveKey("overlay.crane_splitter.splitter_ratio", crane.leftRatio, crane.rightRatio));
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}

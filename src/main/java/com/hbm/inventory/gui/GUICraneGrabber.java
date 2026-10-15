@@ -19,20 +19,21 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUICraneGrabber extends GuiInfoContainer {
-	
+
 	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_crane_grabber.png");
 	private TileEntityCraneGrabber grabber;
 
 	public GUICraneGrabber(InventoryPlayer invPlayer, TileEntityCraneGrabber tedf) {
 		super(new ContainerCraneGrabber(invPlayer, tedf));
 		grabber = tedf;
-		
+
 		this.xSize = 176;
 		this.ySize = 185;
 	}
-	
+
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
@@ -40,9 +41,9 @@ public class GUICraneGrabber extends GuiInfoContainer {
 		if(this.mc.thePlayer.inventory.getItemStack() == null) {
 			for(int i = 0; i < 9; ++i) {
 				Slot slot = (Slot) this.inventorySlots.inventorySlots.get(i);
-	
+
 				if(this.isMouseOverSlot(slot, x, y) && grabber.matcher.modes[i] != null) {
-					this.func_146283_a(Arrays.asList(new String[] { EnumChatFormatting.RED + "Right click to change", ModulePatternMatcher.getLabel(grabber.matcher.modes[i]) }), x, y - 30);
+					this.func_146283_a(Arrays.asList(new String[] { EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.change"), ModulePatternMatcher.getLabel(grabber.matcher.modes[i]) }), x, y - 30);
 				}
 			}
 		}
@@ -60,7 +61,7 @@ public class GUICraneGrabber extends GuiInfoContainer {
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, grabber.xCoord, grabber.yCoord, grabber.zCoord));
 		}
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.grabber.hasCustomInventoryName() ? this.grabber.getInventoryName() : I18n.format(this.grabber.getInventoryName());
@@ -73,7 +74,7 @@ public class GUICraneGrabber extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		if(grabber.isWhitelist) {
 			drawTexturedModalRect(guiLeft + 108, guiTop + 33, 176, 0, 3, 6);
 		} else {

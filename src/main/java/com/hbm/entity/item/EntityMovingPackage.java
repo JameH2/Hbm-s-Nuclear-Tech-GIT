@@ -79,6 +79,8 @@ public class EntityMovingPackage extends EntityMovingConveyorObject implements I
 		if(enterable.canPackageEnter(worldObj, pos.getX(), pos.getY(), pos.getZ(), dir, this)) {
 			enterable.onPackageEnter(worldObj, pos.getX(), pos.getY(), pos.getZ(), dir, this);
 			this.setDead();
+		} else {
+			this.retreatFromRejectedBlock();
 		}
 	}
 

@@ -185,12 +185,12 @@ public class DamageResistanceHandler {
 				.addExact(DamageSource.fall.damageType, 0F, 1F)
 				.setOther(0F, 0.15F));
 		registerSet(ModItems.rpa_helmet, ModItems.rpa_plate, ModItems.rpa_legs, ModItems.rpa_boots, new ResistanceStats()
-				.addCategory(CATEGORY_PHYSICAL, 25F, 0.65F)
-				.addCategory(CATEGORY_FIRE, 10F, 0.9F)
+				.addCategory(CATEGORY_PHYSICAL, 50F, 0.75F)
+				.addCategory(CATEGORY_FIRE, 25F, 0.9F)
 				.addCategory(CATEGORY_EXPLOSION, 15F, 0.25F)
-				.addCategory(CATEGORY_ENERGY, 25F, 0.75F)
+				.addCategory(CATEGORY_ENERGY, 30F, 0.8F)
 				.addExact(DamageSource.fall.damageType, 0F, 1F)
-				.setOther(15F, 0.3F));
+				.setOther(15F, 0.45F));
 		registerSet(ModItems.ncrpa_helmet, ModItems.ncrpa_plate, ModItems.ncrpa_legs, ModItems.ncrpa_boots, new ResistanceStats()
 				.addCategory(CATEGORY_PHYSICAL, 25F, 0.65F)
 				.addCategory(CATEGORY_FIRE, 10F, 0.9F)
@@ -302,6 +302,7 @@ public class DamageResistanceHandler {
 					toAdd.add(I18nUtil.resolveKey("damage.exact." + entry.getKey()) + ": " + entry.getValue().threshold + "/" + ((int)(entry.getValue().resistance * 100)) + "%");
 				}
 				if(stats.otherResistance != null) toAdd.add(I18nUtil.resolveKey("damage.other") + ": " + stats.otherResistance.threshold + "/" + ((int)(stats.otherResistance.resistance * 100)) + "%");
+				if(protectsFromNether(stats)) toAdd.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("damage.netherSafe"));
 				
 				if(!toAdd.isEmpty()) {
 					desc.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("damage.inset"));
@@ -329,12 +330,18 @@ public class DamageResistanceHandler {
 				toAdd.add(I18nUtil.resolveKey("damage.exact." + entry.getKey()) + ": " + entry.getValue().threshold + "/" + ((int)(entry.getValue().resistance * 100)) + "%");
 			}
 			if(stats.otherResistance != null) toAdd.add(I18nUtil.resolveKey("damage.other") + ": " + stats.otherResistance.threshold + "/" + ((int)(stats.otherResistance.resistance * 100)) + "%");
+			if(protectsFromNether(stats)) toAdd.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("damage.netherSafe"));
 			
 			if(!toAdd.isEmpty()) {
 				desc.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("damage.item"));
 				desc.addAll(toAdd);
 			}
 		}
+	}
+
+	private static boolean protectsFromNether(ResistanceStats stats) {
+		Resistance resistance = stats.getResistance(DamageSource.onFire);
+		return resistance != null && (resistance.threshold >= 1F || resistance.resistance >= 1F);
 	}
 	
 	public static void serialize(JsonWriter writer) throws IOException {

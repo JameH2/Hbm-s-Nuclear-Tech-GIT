@@ -22,6 +22,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUICombustionEngine extends GuiInfoContainer {
 
@@ -34,24 +35,24 @@ public class GUICombustionEngine extends GuiInfoContainer {
 		super(new ContainerCombustionEngine(invPlayer, tedf));
 		engine = tedf;
 		this.setting = engine.setting;
-		
+
 		this.xSize = 176;
 		this.ySize = 203;
 	}
-	
+
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
-		
+
 		if(!isMouseLocked) {
 			this.drawElectricityInfo(this, x, y, guiLeft + 143, guiTop + 17, 16, 52, engine.getPower(), engine.maxPower);
 			engine.tank.renderTankInfo(this, x, y, guiLeft + 35, guiTop + 17, 16, 52);
 		}
-		
+
 		if(isMouseLocked || (guiLeft + 80 <= x && guiLeft + 80 + 34 > x && guiTop + 38 < y && guiTop + 38 + 8 >= y)) {
-			drawCreativeTabHoveringText(((setting * 2) / 10D) + "mB/t", MathHelper.clamp_int(x, guiLeft + 80, guiLeft + 114), MathHelper.clamp_int(y, guiTop + 38, guiTop + 46));
+			drawCreativeTabHoveringText(((setting * 2) / 10D) + I18nUtil.resolveKey("gui.combustion_engine.m_b_t"), MathHelper.clamp_int(x, guiLeft + 80, guiLeft + 114), MathHelper.clamp_int(y, guiTop + 38, guiTop + 46));
 		}
-		
+
 		if(engine.slots[2] != null && engine.slots[2].getItem() == ModItems.piston_set) {
 			double power = 0;
 			if(engine.tank.getTankType().hasTrait(FT_Combustible.class)) {
@@ -61,16 +62,16 @@ public class GUICombustionEngine extends GuiInfoContainer {
 				power = setting * 0.2 * trait.getCombustionEnergy() / 1_000D * piston.eff[trait.getGrade().ordinal()];
 			}
 			String c = EnumChatFormatting.YELLOW + "";
-			drawCustomInfoStat(x, y, guiLeft + 79, guiTop + 50, 35, 14, x, y, c + String.format(Locale.US, "%,d", (int)(power)) + " HE/t", c + String.format(Locale.US, "%,d", (int)(power * 20)) + " HE/s");
+			drawCustomInfoStat(x, y, guiLeft + 79, guiTop + 50, 35, 14, x, y, c + String.format(Locale.US, "%,d", (int)(power)) + I18nUtil.resolveKey("gui.combustion_engine.he_t"), c + String.format(Locale.US, "%,d", (int)(power * 20)) + I18nUtil.resolveKey("gui.combustion_engine.he"));
 		}
-		
-		drawCustomInfoStat(x, y, guiLeft + 79, guiTop + 13, 35, 15, x, y, "Ignition");
+
+		drawCustomInfoStat(x, y, guiLeft + 79, guiTop + 13, 35, 15, x, y, I18nUtil.resolveKey("gui.combustion_engine.ignition"));
 
 		if(isMouseLocked) {
-			
+
 			int setting = (x - guiLeft - 81) * 30 / 32;
 			setting = MathHelper.clamp_int(setting, 0, 30);
-			
+
 			if(this.setting != setting) {
 				this.setting = setting;
 				NBTTagCompound data = new NBTTagCompound();
@@ -100,9 +101,9 @@ public class GUICombustionEngine extends GuiInfoContainer {
 	@Override
 	protected void mouseMovedOrUp(int x, int y, int i) {
 		super.mouseMovedOrUp(x, y, i);
-		
+
 		if(isMouseLocked) {
-			
+
 			if(i == 0 || i == 1) {
 				isMouseLocked = false;
 			}
@@ -119,18 +120,18 @@ public class GUICombustionEngine extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		if(engine.slots[2] != null && engine.slots[2].getItem() == ModItems.piston_set) {
 			int i = engine.slots[2].getItemDamage();
 			drawTexturedModalRect(guiLeft + 80, guiTop + 51, 176, 52 + i * 12, 25, 12);
 		}
-		
+
 		drawTexturedModalRect(guiLeft + 79 + (setting * 32 / 30), guiTop + 38, 192, 15, 4, 8);
-		
+
 		if(engine.isOn) {
 			drawTexturedModalRect(guiLeft + 79, guiTop + 13, 192, 0, 35, 15);
 		}
-		
+
 		int i = (int) (engine.power * 53 / engine.maxPower);
 		drawTexturedModalRect(guiLeft + 143, guiTop + 69 - i, 176, 52 - i, 16, i);
 

@@ -9,7 +9,7 @@ import net.minecraft.util.EnumChatFormatting;
 public class FluidTraitSimple {
 
 	/** gaseous at room temperature, for cryogenic hydrogen for example */
-	public static class FT_Gaseous_ART extends FluidTrait {
+	public static class FT_Gaseous_ART extends FT_Gaseous {
 		@Override public void addInfoHidden(List<String> info) {
 			info.add(EnumChatFormatting.BLUE + "[" + I18nUtil.resolveKey("hbmfluid.trait.gaseousRoom") + "]");
 		}
@@ -29,7 +29,7 @@ public class FluidTraitSimple {
 	}
 	@Deprecated public static class FT_Plasma extends FluidTrait {
 		@Override public void addInfoHidden(List<String> info) {
-			info.add(EnumChatFormatting.LIGHT_PURPLE + "[Plasma]");
+			info.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("gui.fluid_trait_simple.plasma"));
 		}
 	}
 
@@ -53,19 +53,19 @@ public class FluidTraitSimple {
 
 	public static class FT_ULTRAKILL extends FluidTrait {
 		@Override public void addInfoHidden(List<String> info) {
-			info.add(EnumChatFormatting.DARK_RED + "[ULTRAKILL]");
+			info.add(EnumChatFormatting.DARK_RED + I18nUtil.resolveKey("gui.fluid_trait_simple.ultrakill"));
 		}
 	}
 
 	public static class FT_EXPLOSIVE extends FluidTrait {
 		@Override public void addInfoHidden(List<String> info) {
-			info.add(EnumChatFormatting.RED + "[Explosive]");
+			info.add(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.fluid_trait_simple.explosive"));
 		}
 	}
-	
+
 	public static class FT_Leaded extends FluidTrait {
 		@Override public void addInfoHidden(List<String> info) {
-			info.add(EnumChatFormatting.BLUE + "[Leaded Fuel]");
+			info.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("gui.fluid_trait_simple.leaded_fuel"));
 		}
 	}
 

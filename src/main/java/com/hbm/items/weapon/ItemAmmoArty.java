@@ -29,6 +29,7 @@ import com.hbm.particle.SpentCasing;
 import com.hbm.particle.SpentCasing.CasingType;
 import com.hbm.particle.helper.ExplosionCreator;
 import com.hbm.potion.HbmPotion;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
@@ -100,41 +101,41 @@ public class ItemAmmoArty extends Item {
 
 		switch(stack.getItemDamage()) {
 		case NORMAL:
-			list.add(y + "Strength: 10");
-			list.add(y + "Damage modifier: 3x");
-			list.add(b + "Does not destroy blocks");
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc1"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc2"));
+			list.add(b + I18nUtil.resolveKey("item.ammo_arty.desc3"));
 			break;
 		case CLASSIC:
-			list.add(y + "Strength: 15");
-			list.add(y + "Damage modifier: 5x");
-			list.add(b + "Does not destroy blocks");
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc4"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc5"));
+			list.add(b + I18nUtil.resolveKey("item.ammo_arty.desc3"));
 			break;
 		case EXPLOSIVE:
-			list.add(y + "Strength: 15");
-			list.add(y + "Damage modifier: 3x");
-			list.add(r + "Destroys blocks");
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc4"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc2"));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc6"));
 			break;
 		case PHOSPHORUS:
-			list.add(y + "Strength: 10");
-			list.add(y + "Damage modifier: 3x");
-			list.add(r + "Phosphorus splash");
-			list.add(b + "Does not destroy blocks");
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc1"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc2"));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc7"));
+			list.add(b + I18nUtil.resolveKey("item.ammo_arty.desc3"));
 			break;
 		case PHOSPHORUS_MULTI:
-			list.add(r + "Splits x10");
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc8"));
 			break;
 		case MINI_NUKE:
-			list.add(y + "Strength: 20");
-			list.add(r + "Deals nuclear damage");
-			list.add(r + "Destroys blocks");
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc9"));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc10"));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc6"));
 			break;
 		case MINI_NUKE_MULTI:
-			list.add(r + "Splits x5");
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc11"));
 			break;
 		case NUKE:
 			list.add(r + "☠");
-			list.add(r + "(that is the best skull and crossbones");
-			list.add(r + "minecraft's unicode has to offer)");
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc12"));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc13"));
 			break;
 		case CARGO:
 
@@ -142,7 +143,7 @@ public class ItemAmmoArty extends Item {
 				ItemStack cargo = ItemStack.loadItemStackFromNBT(stack.stackTagCompound.getCompoundTag("cargo"));
 				list.add(y + cargo.getDisplayName());
 			} else {
-				list.add(r + "Empty");
+				list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc14"));
 			}
 			break;
 		}

@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import com.hbm.util.i18n.I18nUtil;
 
 public class MachineTurbofan extends BlockDummyable implements ITooltipProvider {
 
@@ -40,10 +41,10 @@ public class MachineTurbofan extends BlockDummyable implements ITooltipProvider 
 	public int getOffset() {
 		return 1;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(world.isRemote) {
 			return true;
 		} else if(!player.isSneaking()) {
@@ -51,9 +52,9 @@ public class MachineTurbofan extends BlockDummyable implements ITooltipProvider 
 
 			if(pos == null)
 				return false;
-			
+
 			TileEntityMachineTurbofan turbofan = (TileEntityMachineTurbofan) world.getTileEntity(pos[0], pos[1], pos[2]);
-			
+
 			if(turbofan != null) {
 				FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, pos[0], pos[1], pos[2]);
 			}
@@ -62,22 +63,27 @@ public class MachineTurbofan extends BlockDummyable implements ITooltipProvider 
 			return true;
 		}
 	}
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{0, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{-1, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, -1, ForgeDirection.NORTH.ordinal()},
+			{-1, 0, -1, ForgeDirection.NORTH.ordinal()}
+		}, dir);
+	}
 	@Override
 	protected void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
 		
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-
-		this.makeExtra(world, x, y, z);
-		this.makeExtra(world, x - rot.offsetX, y, z - rot.offsetZ);
-		this.makeExtra(world, x - dir.offsetX * 2, y, z - dir.offsetZ * 2);
-		this.makeExtra(world, x - dir.offsetX * 2 - rot.offsetX, y, z - dir.offsetZ * 2 - rot.offsetZ);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.YELLOW + "Fuel efficiency:");
+		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.turbofan.fuel_efficiency"));
 		list.add(EnumChatFormatting.YELLOW + "-" + FuelGrade.AERO.getLocalizedName() + ": " + EnumChatFormatting.RED + "100%");
 	}
 }

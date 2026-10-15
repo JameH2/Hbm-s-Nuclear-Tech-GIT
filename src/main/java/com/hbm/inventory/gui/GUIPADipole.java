@@ -6,11 +6,13 @@ import org.lwjgl.opengl.GL11;
 
 import com.hbm.inventory.container.ContainerPADipole;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemPACoil.EnumCoilType;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.albion.TileEntityPADipole;
+import com.hbm.util.EnumUtil;
 import com.hbm.util.Vec3NT;
 
 import net.minecraft.client.Minecraft;
@@ -22,18 +24,19 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUIPADipole extends GuiInfoContainer {
 
 	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/particleaccelerator/gui_dipole.png");
 	private TileEntityPADipole dipole;
-	
+
 	protected GuiTextField threshold;
 
 	public GUIPADipole(InventoryPlayer player, TileEntityPADipole dipole) {
 		super(new ContainerPADipole(player, dipole));
 		this.dipole = dipole;
-		
+
 		this.xSize = 176;
 		this.ySize = 204;
 	}
@@ -51,7 +54,7 @@ public class GUIPADipole extends GuiInfoContainer {
 		this.threshold.setMaxStringLength(9);
 		this.threshold.setText("" + dipole.threshold);
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
@@ -59,10 +62,10 @@ public class GUIPADipole extends GuiInfoContainer {
 		dipole.coolantTanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 36, 16, 52);
 		dipole.coolantTanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 36, 16, 52);
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 18, 16, 52, dipole.power, dipole.getMaxPower());
-		
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 62, guiTop + 29, 12, 12, mouseX, mouseY, EnumChatFormatting.BLUE + "Player orientation", EnumChatFormatting.RED + "Output orientation:", dipole.ditToForgeDir(dipole.dirLower).name());
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 62, guiTop + 43, 12, 12, mouseX, mouseY, EnumChatFormatting.BLUE + "Player orientation", EnumChatFormatting.RED + "Output orientation:", dipole.ditToForgeDir(dipole.dirUpper).name());
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 62, guiTop + 57, 12, 12, mouseX, mouseY, EnumChatFormatting.BLUE + "Player orientation", EnumChatFormatting.RED + "Output orientation:", dipole.ditToForgeDir(dipole.dirRedstone).name());
+
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 62, guiTop + 29, 12, 12, mouseX, mouseY, EnumChatFormatting.BLUE + I18nUtil.resolveKey("gui.padipole.player_orientation"), EnumChatFormatting.RED + I18nUtil.resolveKey("gui.padipole.output_orientation"), dipole.ditToForgeDir(dipole.dirLower).name());
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 62, guiTop + 43, 12, 12, mouseX, mouseY, EnumChatFormatting.BLUE + I18nUtil.resolveKey("gui.padipole.player_orientation"), EnumChatFormatting.RED + I18nUtil.resolveKey("gui.padipole.output_orientation"), dipole.ditToForgeDir(dipole.dirUpper).name());
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 62, guiTop + 57, 12, 12, mouseX, mouseY, EnumChatFormatting.BLUE + I18nUtil.resolveKey("gui.padipole.player_orientation"), EnumChatFormatting.RED + I18nUtil.resolveKey("gui.padipole.output_orientation"), dipole.ditToForgeDir(dipole.dirRedstone).name());
 	}
 
 	@Override
@@ -94,9 +97,9 @@ public class GUIPADipole extends GuiInfoContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer( int i, int j) {
-		
+
 		String name = this.dipole.hasCustomInventoryName() ? this.dipole.getInventoryName() : I18n.format(this.dipole.getInventoryName());
-		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2 - 9, 6, 4210752);
+		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2 - 9, 6, 0xffffff);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 
 		this.fontRendererObj.drawString(EnumChatFormatting.AQUA + "/123K", 136, 22, 4210752);
@@ -110,23 +113,31 @@ public class GUIPADipole extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		int j = (int) (dipole.power * 52 / dipole.getMaxPower());
 		drawTexturedModalRect(guiLeft + 8, guiTop + 70 - j, 184, 52 - j, 16, j);
 
 		int heat = (int) Math.ceil(dipole.temperature);
 		if(heat <= 123) drawTexturedModalRect(guiLeft + 93, guiTop + 54, 176, 8, 8, 8);
-		if(dipole.slots[1] != null && dipole.slots[1].getItem() == ModItems.pa_coil) drawTexturedModalRect(guiLeft + 103, guiTop + 54, 176, 8, 8, 8);
+		if(dipole.slots[1] != null && dipole.slots[1].getItem() == ModItems.pa_coil){
+			drawTexturedModalRect(guiLeft + 103, guiTop + 54, 176, 8, 8, 8);
+			EnumCoilType type = null;
+			type = EnumUtil.grabEnumSafely(EnumCoilType.class, dipole.slots[1].getItemDamage());
+			if (type == EnumCoilType.GOLD) drawTexturedModalRect(guiLeft + 83, guiTop + 20, 200, 96, 28, 28);
+			if (type == EnumCoilType.NIOBIUM) drawTexturedModalRect(guiLeft + 83, guiTop + 20, 228, 96, 28, 28);
+			if (type == EnumCoilType.BSCCO) drawTexturedModalRect(guiLeft + 83, guiTop + 20, 200, 124, 28, 28);
+			if (type == EnumCoilType.CHLOROPHYTE) drawTexturedModalRect(guiLeft + 83, guiTop + 20, 228, 124, 28, 28);
+		}
 		if(dipole.power >= dipole.usage) drawTexturedModalRect(guiLeft + 83, guiTop + 54, 176, 8, 8, 8);
-		
+
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glLineWidth(3F);
-		
+
 		Vec3NT vec = new Vec3NT(0, 0, 0);
 		vec.rotateAroundZDeg(MainRegistry.proxy.me().rotationYaw);
-		
+
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawing(1);
 		addLine(tessellator, 68, 35, 0x8080ff, vec, 180);
@@ -136,16 +147,16 @@ public class GUIPADipole extends GuiInfoContainer {
 		addLine(tessellator, 68, 63, 0x8080ff, vec, 180);
 		addLine(tessellator, 68, 63, 0xff0000, vec, MainRegistry.proxy.me().rotationYaw - dipole.dirRedstone * 90);
 		tessellator.draw();
-		
+
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
-		
+
 		this.threshold.drawTextBox();
 
 		dipole.coolantTanks[0].renderTank(guiLeft + 134, guiTop + 88, this.zLevel, 16, 52);
 		dipole.coolantTanks[1].renderTank(guiLeft + 152, guiTop + 88, this.zLevel, 16, 52);
 	}
-	
+
 	public void addLine(Tessellator tess, int x, int y, int color, Vec3NT vec, float yaw) {
 		vec.setComponents(0, 6, 0);
 		vec.rotateAroundZDeg(yaw);

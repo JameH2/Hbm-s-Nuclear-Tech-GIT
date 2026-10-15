@@ -20,6 +20,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import com.hbm.util.i18n.I18nUtil;
 
 @Spaghetti("why")
 public class Meteorite {
@@ -126,7 +127,7 @@ public class Meteorite {
 				// Star Blaster
 				world.createExplosion(null, x + 0.5, y + 0.5, z + 0.5, 10F, !safe);
 				ItemStack stack = new ItemStack(ModItems.gun_b92);
-				stack.setStackDisplayName("§9Star Blaster§r");
+				I18nUtil.setItemName(stack, "item.meteorite.star_blaster");
 				EntityItem blaster = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, stack);
 				world.spawnEntityInWorld(blaster);
 				return;

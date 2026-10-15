@@ -25,7 +25,10 @@ import com.hbm.tileentity.IConditionalInvAccess;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort;
+import com.hbm.tileentity.TilePortShapes;
 import com.hbm.tileentity.TileEntityProxyDyn.IProxyDelegateProvider;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.fauxpointtwelve.DirPos;
 import com.hbm.util.i18n.I18nUtil;
@@ -53,9 +56,12 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 	public FluidTank[] inputTanks;
 	public FluidTank[] outputTanks;
 	
+	public TilePort coolantInPort;
+	public TilePort coolantOutPort;
+	
 	public FluidTank water;
 	public FluidTank lps;
-	
+
 	public long power;
 	public long maxPower = 1_000_000;
 	public boolean[] didProcess = new boolean[4];
@@ -66,15 +72,15 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 
 	public ModuleMachineAssembler[] assemblerModule;
 	public UpgradeManagerNT upgradeManager = new UpgradeManagerNT(this);
-	
+
 	protected DelegateAssemblyFactoy delegate = new DelegateAssemblyFactoy();
 
 	public TileEntityMachineAssemblyFactory() {
 		super(60);
-		
+
 		animations = new TragicYuri[2];
 		for(int i = 0; i < animations.length; i++) animations[i] = new TragicYuri(i);
-		
+
 		this.inputTanks = new FluidTank[4];
 		this.outputTanks = new FluidTank[4];
 		for(int i = 0; i < 4; i++) {
@@ -84,19 +90,22 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 
 		this.water = new FluidTank(Fluids.WATER, 4_000);
 		this.lps = new FluidTank(Fluids.SPENTSTEAM, 4_000);
-		
+
 		this.allTanks = new FluidTank[this.inputTanks.length + this.outputTanks.length + 2];
 		for(int i = 0; i < inputTanks.length; i++) this.allTanks[i] = this.inputTanks[i];
 		for(int i = 0; i < outputTanks.length; i++) this.allTanks[i + this.inputTanks.length] = this.outputTanks[i];
-		
+
 		this.allTanks[this.allTanks.length - 2] = this.water;
 		this.allTanks[this.allTanks.length - 1] = this.lps;
-		
+
 		this.assemblerModule = new ModuleMachineAssembler[4];
 		for(int i = 0; i < 4; i++) this.assemblerModule[i] = new ModuleMachineAssembler(i, this, slots)
 				.itemInput(5 + i * 14).itemOutput(17 + i * 14)
 				.fluidInput(inputTanks[i]).fluidOutput(outputTanks[i]);
 	}
+	
+	protected PortDef[] powerPorts;
+	public PortDef[] getPowerPorts() { if(powerPorts == null) powerPorts = TilePortShapes.purex(xCoord, yCoord, zCoord); return powerPorts; }
 
 	@Override
 	public boolean canExtractItem(int i, ItemStack itemStack, int j) {
@@ -151,10 +160,20 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 
 	@Override
 	public void updateEntity() {
-		
+
 		if(maxPower <= 0) this.maxPower = 10_000_000;
-		
+
 		if(!worldObj.isRemote) {
+			
+			this.setupPowerPorts(getPowerPorts());
+			this.setupFluidPorts(getFluidPorts());
+			if(coolantInPort == null) coolantInPort = new TilePort().setupOwner(delegate).setupPort(getCoolantPort()).setupType(water.getTankType().getNetworkProvider());
+			if(coolantOutPort == null) coolantOutPort = new TilePort().setupOwner(delegate).setupPort(getCoolantPort()).setupType(lps.getTankType().getNetworkProvider());
+			this.updatePortPIFIFO();
+			coolantInPort.update(worldObj);
+			coolantInPort.checkSubscribe(worldObj);
+			coolantOutPort.update(worldObj);
+			coolantOutPort.checkProvide(worldObj);
 			
 			long nextMaxPower = 0;
 			for(int i = 0; i < 4; i++) {
@@ -165,22 +184,10 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 			}
 			this.maxPower = nextMaxPower;
 			this.maxPower = BobMathUtil.max(this.power, this.maxPower, 1_000_000);
-			
+
 			this.power = Library.chargeTEFromItems(slots, 0, power, maxPower);
 			upgradeManager.checkSlots(slots, 1, 3);
 			
-			for(DirPos pos : getConPos()) {
-				this.trySubscribe(worldObj, pos);
-				for(FluidTank tank : inputTanks) if(tank.getTankType() != Fluids.NONE) this.trySubscribe(tank.getTankType(), worldObj, pos);
-				for(FluidTank tank : outputTanks) if(tank.getFill() > 0) this.tryProvide(tank, worldObj, pos);
-			}
-			
-			for(DirPos pos : getCoolPos()) {
-				delegate.trySubscribe(worldObj, pos);
-				delegate.trySubscribe(water.getTankType(), worldObj, pos);
-				delegate.tryProvide(lps, worldObj, pos);
-			}
-
 			double speed = 1D;
 			double pow = 1D;
 
@@ -191,24 +198,24 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 			pow += Math.min(upgradeManager.getLevel(UpgradeType.SPEED), 3) * 1D;
 			pow += Math.min(upgradeManager.getLevel(UpgradeType.OVERDRIVE), 3) * 10D / 3D;
 			boolean markDirty = false;
-			
+
 			for(int i = 0; i < 4; i++) {
 				this.assemblerModule[i].update(speed * 2D, pow * 2D, canCool(), slots[4 + i * 14]);
 				this.didProcess[i] =  this.assemblerModule[i].didProcess;
 				markDirty |= this.assemblerModule[i].markDirty;
-				
+
 				if(this.assemblerModule[i].didProcess) {
 					this.water.setFill(this.water.getFill() - 100);
 					this.lps.setFill(this.lps.getFill() + 100);
 				}
 			}
-			
+
 			if(markDirty) this.markDirty();
-			
+
 			this.networkPackNT(100);
 		} else {
 			
-			if((didProcess[0] ||didProcess[1] ||didProcess[2] ||didProcess[3]) && MainRegistry.proxy.me().getDistance(xCoord , yCoord, zCoord) < 50) {
+			if((didProcess[0] || didProcess[1] || didProcess[2] || didProcess[3]) && MainRegistry.proxy.me().getDistance(xCoord , yCoord, zCoord) < 50) {
 				if(audio == null) {
 					audio = createAudioLoop();
 					audio.startSound();
@@ -218,7 +225,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 				audio.keepAlive();
 				audio.updatePitch(0.75F);
 				audio.updateVolume(this.getVolume(0.5F));
-				
+
 			} else {
 				if(audio != null) {
 					audio.stopSound();
@@ -226,7 +233,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 				}
 			}
 			
-			for(TragicYuri animation : animations) animation.update(didProcess[0] ||didProcess[1] ||didProcess[2] ||didProcess[3]);
+			for(TragicYuri animation : animations) animation.update(didProcess[0] || didProcess[1] || didProcess[2] || didProcess[3]);
 			
 			if(worldObj.getTotalWorldTime() % 20 == 0) {
 				frame = !worldObj.getBlock(xCoord, yCoord + 3, zCoord).isAir(worldObj, xCoord, yCoord + 3, zCoord);
@@ -246,51 +253,55 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 		super.invalidate();
 		if(audio != null) { audio.stopSound(); audio = null; }
 	}
-	
+
 	public boolean canCool() {
 		return water.getFill() >= 100 && lps.getFill() <= lps.getMaxFill() - 100;
 	}
 	
-	public DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		return new DirPos[] {
-				new DirPos(xCoord + 3, yCoord, zCoord - 2, Library.POS_X),
-				new DirPos(xCoord + 3, yCoord, zCoord + 0, Library.POS_X),
-				new DirPos(xCoord + 3, yCoord, zCoord + 2, Library.POS_X),
-				new DirPos(xCoord - 3, yCoord, zCoord - 2, Library.NEG_X),
-				new DirPos(xCoord - 3, yCoord, zCoord + 0, Library.NEG_X),
-				new DirPos(xCoord - 3, yCoord, zCoord + 2, Library.NEG_X),
-				new DirPos(xCoord - 2, yCoord, zCoord + 3, Library.POS_Z),
-				new DirPos(xCoord + 0, yCoord, zCoord + 3, Library.POS_Z),
-				new DirPos(xCoord + 2, yCoord, zCoord + 3, Library.POS_Z),
-				new DirPos(xCoord - 2, yCoord, zCoord - 3, Library.NEG_Z),
-				new DirPos(xCoord + 0, yCoord, zCoord - 3, Library.NEG_Z),
-				new DirPos(xCoord + 2, yCoord, zCoord - 3, Library.NEG_Z),
+	protected PortDef coolantPort;
+	public PortDef getCoolantPort() {
+		if(coolantPort == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+			
+			coolantPort = PortDef.combine(
+					PortDef.make(xCoord + rot.offsetX + dir.offsetX * 2, yCoord, zCoord + rot.offsetZ + dir.offsetZ * 2, dir),
+					PortDef.make(xCoord - rot.offsetX + dir.offsetX * 2, yCoord, zCoord - rot.offsetZ + dir.offsetZ * 2, dir),
+					PortDef.make(xCoord + rot.offsetX - dir.offsetX * 2, yCoord, zCoord + rot.offsetZ - dir.offsetZ * 2, dir.getOpposite()),
+					PortDef.make(xCoord - rot.offsetX - dir.offsetX * 2, yCoord, zCoord - rot.offsetZ - dir.offsetZ * 2, dir.getOpposite())
+			);
+		}
+		return coolantPort;
+	}
 
-				new DirPos(xCoord + dir.offsetX + rot.offsetX * 3, yCoord, zCoord + dir.offsetZ + rot.offsetZ * 3, rot),
-				new DirPos(xCoord - dir.offsetX + rot.offsetX * 3, yCoord, zCoord - dir.offsetZ + rot.offsetZ * 3, rot),
-				new DirPos(xCoord + dir.offsetX - rot.offsetX * 3, yCoord, zCoord + dir.offsetZ - rot.offsetZ * 3, rot.getOpposite()),
-				new DirPos(xCoord - dir.offsetX - rot.offsetX * 3, yCoord, zCoord - dir.offsetZ - rot.offsetZ * 3, rot.getOpposite()),
-		};
+	protected PortDef[] fluidPorts;
+	public PortDef[] getFluidPorts() {
+		if(fluidPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+			
+			fluidPorts = new PortDef[] {
+					PortDef.make(xCoord + dir.offsetX + rot.offsetX * 2, yCoord, zCoord + dir.offsetZ + rot.offsetZ * 2, rot),
+					PortDef.make(xCoord - dir.offsetX + rot.offsetX * 2, yCoord, zCoord - dir.offsetZ + rot.offsetZ * 2, rot),
+					PortDef.make(xCoord + dir.offsetX - rot.offsetX * 2, yCoord, zCoord + dir.offsetZ - rot.offsetZ * 2, rot.getOpposite()),
+					PortDef.make(xCoord - dir.offsetX - rot.offsetX * 2, yCoord, zCoord - dir.offsetZ - rot.offsetZ * 2, rot.getOpposite()),
+					PortDef.make(xCoord + 2, yCoord, zCoord + 0, Library.POS_X),
+					PortDef.make(xCoord + 2, yCoord, zCoord + 2, Library.POS_X, Library.POS_Z),
+					PortDef.make(xCoord + 0, yCoord, zCoord + 2, Library.POS_Z),
+					PortDef.make(xCoord - 2, yCoord, zCoord + 2, Library.NEG_X, Library.POS_Z),
+					PortDef.make(xCoord - 2, yCoord, zCoord + 0, Library.NEG_X),
+					PortDef.make(xCoord - 2, yCoord, zCoord - 2, Library.NEG_X, Library.NEG_Z),
+					PortDef.make(xCoord + 0, yCoord, zCoord - 2, Library.NEG_Z),
+					PortDef.make(xCoord + 2, yCoord, zCoord - 2, Library.POS_X, Library.NEG_Z),
+			};
+		}
+		return fluidPorts;
 	}
-	
-	public DirPos[] getCoolPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		
-		return new DirPos[] {
-				new DirPos(xCoord + rot.offsetX + dir.offsetX * 3, yCoord, zCoord + rot.offsetZ + dir.offsetZ * 3, dir),
-				new DirPos(xCoord - rot.offsetX + dir.offsetX * 3, yCoord, zCoord - rot.offsetZ + dir.offsetZ * 3, dir),
-				new DirPos(xCoord + rot.offsetX - dir.offsetX * 3, yCoord, zCoord + rot.offsetZ - dir.offsetZ * 3, dir.getOpposite()),
-				new DirPos(xCoord - rot.offsetX - dir.offsetX * 3, yCoord, zCoord - rot.offsetZ - dir.offsetZ * 3, dir.getOpposite()),
-		};
-	}
-	
+
 	public DirPos[] getIOPos() {
 		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
 		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		
+
 		return new DirPos[] {
 				new DirPos(xCoord + dir.offsetX + rot.offsetX * 3, yCoord, zCoord + dir.offsetZ + rot.offsetZ * 3, rot),
 				new DirPos(xCoord - dir.offsetX + rot.offsetX * 3, yCoord, zCoord - dir.offsetZ + rot.offsetZ * 3, rot),
@@ -324,7 +335,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 		for(int i = 0; i < 4; i++) this.didProcess[i] = buf.readBoolean();
 		for(int i = 0; i < 4; i++) this.assemblerModule[i].deserialize(buf);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -339,7 +350,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 		this.maxPower = nbt.getLong("maxPower");
 		for(int i = 0; i < 4; i++) this.assemblerModule[i].readFromNBT(nbt);
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
@@ -369,7 +380,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 	@Override public boolean hasPermission(EntityPlayer player) { return this.isUseableByPlayer(player); }
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("index") && data.hasKey("selection")) {
 			int index = data.getInteger("index");
 			String selection = data.getString("selection");
@@ -379,21 +390,21 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 			}
 		}
 	}
-	
+
 	AxisAlignedBB bb = null;
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		if(bb == null) bb = AxisAlignedBB.getBoundingBox(xCoord - 2, yCoord, zCoord - 2, xCoord + 3, yCoord + 3, zCoord + 3);
 		return bb;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared() {
 		return 65536.0D;
 	}
-	
+
 	@Override
 	public boolean canProvideInfo(UpgradeType type, int level, boolean extendedInfo) {
 		return type == UpgradeType.SPEED || type == UpgradeType.POWER || type == UpgradeType.OVERDRIVE;
@@ -410,7 +421,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(KEY_CONSUMPTION, "-" + (level * 25) + "%"));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
-			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + "YES");
+			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}
 
@@ -424,24 +435,24 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 	}
 
 	public DirPos[] coolantLine;
-	
+
 	@Override // carelessly copy pasted from TileEntityMachineChemicalFactory
 	public Object getDelegateForPosition(int x, int y, int z) {
 		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
 		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		
+
 		if(coolantLine == null) coolantLine = new DirPos[] {
 				new DirPos(xCoord + rot.offsetX + dir.offsetX * 2, yCoord, zCoord + rot.offsetZ + dir.offsetZ * 2, dir),
 				new DirPos(xCoord - rot.offsetX + dir.offsetX * 2, yCoord, zCoord - rot.offsetZ + dir.offsetZ * 2, dir),
 				new DirPos(xCoord + rot.offsetX - dir.offsetX * 2, yCoord, zCoord + rot.offsetZ - dir.offsetZ * 2, dir.getOpposite()),
 				new DirPos(xCoord - rot.offsetX - dir.offsetX * 2, yCoord, zCoord - rot.offsetZ - dir.offsetZ * 2, dir.getOpposite()),
 		};
-		
+
 		for(DirPos pos : coolantLine) if(pos.compare(x, y, z)) return this.delegate; // this actually fucking works
-		
+
 		return null;
 	}
-	
+
 	public class DelegateAssemblyFactoy implements IEnergyReceiverMK2, IFluidStandardTransceiverMK2 { // scumware
 
 		@Override public long getPower() { return TileEntityMachineAssemblyFactory.this.getPower(); }
@@ -454,15 +465,15 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 
 		@Override public FluidTank[] getAllTanks() { return TileEntityMachineAssemblyFactory.this.getAllTanks(); }
 	}
-	
+
 	/**
 	 * Carriage consisting of two arms - a striker and a saw
 	 * Movement of both arms is inverted, one pedestal can only be serviced by one arm at a time
-	 * 
+	 *
 	 * @author hbm
 	 */
 	public class TragicYuri {
-		
+
 		public AssemblerArm striker;
 		public AssemblerArm saw;
 
@@ -472,16 +483,16 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 		double prevSlider = 0;
 		boolean direction = false;
 		int timeUntilReposition;
-		
+
 		public TragicYuri(int group) {
 			striker = new AssemblerArm(	group == 0 ? 0 : 3);
 			saw = new AssemblerArm(		group == 0 ? 1 : 2).yepThatsASaw();
 			timeUntilReposition = 140 + rand.nextInt(161);
 		}
-		
+
 		public void update(boolean working) {
 			this.prevSlider = this.slider;
-			
+
 			// one of the arms must do something. doesn't matter which or what position the carriage is in
 			if(didProcess[striker.recipeIndex] || didProcess[saw.recipeIndex]) switch(state) {
 			case WORKING: {
@@ -515,18 +526,18 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 				if(state == YuriState.WORKING) timeUntilReposition = 140 + rand.nextInt(161); // 7 to 15 seconds
 			} break;
 			}
-			
+
 			striker.updateArm();
 			saw.updateArm();
 		}
-		
+
 		public double getSlider(float interp) {
 			return this.prevSlider + (this.slider - this.prevSlider) * interp;
 		}
-		
+
 		// there's a ton of way to make this more optimized/readable/professional/scrungular but i don't care i am happy this crap works at all
 		public class AssemblerArm { // more fucking nesting!!!11
-			
+
 			public double[] angles = new double[4];
 			public double[] prevAngles = new double[4];
 			public double[] targetAngles = new double[4];
@@ -538,15 +549,15 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 			ArmState state = ArmState.REPOSITION;
 			int actionDelay = 0;
 			boolean saw = false;
-			
+
 			public AssemblerArm(int index) {
 				this.recipeIndex = index;
 				this.resetSpeed();
 				this.chooseNewArmPoistion();
 			}
-			
+
 			public AssemblerArm yepThatsASaw() { this.saw = true; this.chooseNewArmPoistion(); return this; }
-			
+
 			private void resetSpeed() {
 				speed[0] = 15;	//Pivot
 				speed[1] = 15;	//Arm
@@ -556,17 +567,17 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 
 			public void updateArm() {
 				resetSpeed();
-				
+
 				for(int i = 0; i < angles.length; i++) {
 					prevAngles[i] = angles[i];
 				}
-				
+
 				prevSawAngle = sawAngle;
-				
+
 				int serviceIndex = recipeIndex;
 				if(slider > 0.5) serviceIndex += (serviceIndex % 2 == 0 ? 1 : -1); // if the carriage has moved, swap the indices so they match up with the serviced pedestal
 				if(!didProcess[serviceIndex]) state = ArmState.RETIRE;
-				
+
 				if(state == ArmState.CUT || state == ArmState.EXTEND) {
 					this.sawAngle += 45D;
 				}
@@ -587,7 +598,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 				} break;
 				case EXTEND:
 					if(move()) {
-						
+
 						if(saw) {
 							state = ArmState.CUT;
 							targetAngles[2] = -targetAngles[2];
@@ -618,7 +629,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 					this.targetAngles[1] = 0;
 					this.targetAngles[2] = 0;
 					this.targetAngles[3] = 0;
-					
+
 					if(move()) {
 						actionDelay = 2 + rand.nextInt(5);
 						chooseNewArmPoistion();
@@ -630,9 +641,9 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 				} break;
 				}
 			}
-			
+
 			public void chooseNewArmPoistion() {
-				
+
 				double[][] pos = !saw ? new double[][] {
 					// striker
 					{10, 10, -10},
@@ -650,13 +661,13 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 					{-15, 15, 2},
 					{-15, 15, -2}
 				};
-				
+
 				int chosen = rand.nextInt(pos.length);
 				this.targetAngles[0] = pos[chosen][0];
 				this.targetAngles[1] = pos[chosen][1];
 				this.targetAngles[2] = pos[chosen][2];
 			}
-			
+
 			private boolean move() {
 				boolean didMove = false;
 
@@ -685,7 +696,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 
 				return !didMove;
 			}
-			
+
 			public double[] getPositions(float interp) {
 				return new double[] {
 						BobMathUtil.interp(this.prevAngles[0], this.angles[0], interp),
@@ -697,7 +708,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 			}
 		}
 	}
-	
+
 	/*
 	 * Arms cycle through REPOSITION -> EXTEND -> CUT (if saw) -> RETRACT
 	 * If transit is planned, the carriage's state will change to RETIRING
@@ -707,7 +718,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 	 * Once transit is done, carriage returns to WORKING
 	 * If the carriage is WORKING, any arm that is in the WAIT state will return to REPOSITION
 	 */
-	
+
 	public static enum YuriState {
 		WORKING,
 		RETIRING, // waiting for arms to enter WAITING state
@@ -746,9 +757,9 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
 	public String provideRORValue(String name) {
 		if((PREFIX_VALUE + "anyactive").equals(name))			return "" + ((this.didProcess[0] || this.didProcess[1] || this.didProcess[2] || this.didProcess[3]) ? 1 : 0);
 		for(int i = 0; i < 4; i++) {
-			if((PREFIX_VALUE + "progress" + i).equals(name))	return "" + (int) Math.round(this.assemblerModule[i].progress * 100);
-			if((PREFIX_VALUE + "recipe" + i).equals(name))		return this.assemblerModule[i].getRecipeName();
-			if((PREFIX_VALUE + "active" + i).equals(name))		return "" + (this.didProcess[i] ? 1 : 0);
+			if((PREFIX_VALUE + "progress" + (i + 1)).equals(name))	return "" + (int) Math.round(this.assemblerModule[i].progress * 100);
+			if((PREFIX_VALUE + "recipe" + (i + 1)).equals(name))		return this.assemblerModule[i].getRecipeName();
+			if((PREFIX_VALUE + "active" + (i + 1)).equals(name))		return "" + (this.didProcess[i] ? 1 : 0);
 		}
 		return null;
 	}

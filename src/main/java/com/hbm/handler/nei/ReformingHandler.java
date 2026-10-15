@@ -6,7 +6,7 @@ import com.hbm.inventory.recipes.ReformingRecipes;
 public class ReformingHandler extends NEIUniversalHandler {
 
 	public ReformingHandler() {
-		super("Reforming", ModBlocks.machine_catalytic_reformer, ReformingRecipes.getRecipes());
+		super("nei.reforming.name", ModBlocks.machine_catalytic_reformer, ReformingRecipes.getRecipes());
 	}
 
 	@Override

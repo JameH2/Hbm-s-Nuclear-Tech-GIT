@@ -57,8 +57,8 @@ public abstract class GUITurretBase extends GuiInfoContainer {
 
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 45, 16, 52, turret.power, turret.getMaxPower());
 
-		String on = EnumChatFormatting.GREEN + I18nUtil.resolveKey("turret.on");
-		String off = EnumChatFormatting.RED + I18nUtil.resolveKey("turret.off");
+		String on = EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on");
+		String off = EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off");
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 8, guiTop + 30, 10, 10, mouseX, mouseY, I18nUtil.resolveKeyArray("turret.players", turret.targetPlayers ? on : off));
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 22, guiTop + 30, 10, 10, mouseX, mouseY, I18nUtil.resolveKeyArray("turret.animals", turret.targetAnimals ? on : off));
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 36, guiTop + 30, 10, 10, mouseX, mouseY, I18nUtil.resolveKeyArray("turret.mobs", turret.targetMobs ? on : off));
@@ -212,7 +212,7 @@ public abstract class GUITurretBase extends GuiInfoContainer {
 		if(index < 0)
 			index = 0;
 		
-		if(names != null) {
+		if(names != null && !names.isEmpty()) {
 			n = names.get(index);
 		}
 		

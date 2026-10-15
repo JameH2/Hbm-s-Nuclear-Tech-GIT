@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUIFEL extends GuiInfoContainer {
 
@@ -30,11 +31,11 @@ public class GUIFEL extends GuiInfoContainer {
 		this.xSize = 203;
 		this.ySize = 169;
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
-		
+
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 182, guiTop + 27, 16, 113, fel.power, fel.maxPower);
 	}
 
@@ -45,7 +46,7 @@ public class GUIFEL extends GuiInfoContainer {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(fel.xCoord, fel.yCoord, fel.zCoord, 0, 2));
 		}
-		
+
 	}
 
 	@Override
@@ -54,13 +55,13 @@ public class GUIFEL extends GuiInfoContainer {
 
 		this.fontRendererObj.drawString(name, 90 + this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 7, 0xffffff);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 98, 4210752);
-		
+
 		if(fel.missingValidSilex && fel.isOn) {
-			this.fontRendererObj.drawString(I18n.format("ERR."), 55 + this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 9, 0xFF0000);
+			this.fontRendererObj.drawString(I18n.format(I18nUtil.resolveKey("gui.fel.err")), 55 + this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 9, 0xFF0000);
 		} else if(fel.isOn) {
-			this.fontRendererObj.drawString(I18n.format("LIVE"), 54 + this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 9, 0x00FF00);
+			this.fontRendererObj.drawString(I18n.format(I18nUtil.resolveKey("gui.fel.live")), 54 + this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 9, 0x00FF00);
 		}
-		
+
 	}
 
 	@Override
@@ -68,39 +69,39 @@ public class GUIFEL extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		if(fel.isOn)
 			drawTexturedModalRect(guiLeft + 142, guiTop + 41, 203, 0, 29, 17);
-		
+
 		int k = (int)fel.getPowerScaled(114);
 		drawTexturedModalRect(guiLeft + 182, guiTop + 27 + 113 - k, 203, 17 + 113 - k, 16, k);
-		
+
 		int color = !(fel.mode == EnumWavelengths.VISIBLE) ? fel.mode.guiColor : Color.HSBtoRGB(fel.getWorldObj().getTotalWorldTime() / 50.0F, 0.5F, 1F) & 16777215;
-		
+
 		if(fel.power > fel.powerReq * Math.pow(2, fel.mode.ordinal()) && fel.isOn && !(fel.mode == EnumWavelengths.NULL) && fel.distance > 0) {
-			
+
 			GL11.glPushMatrix();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glLineWidth(5F);
-			
+
 			Tessellator tessellator = Tessellator.instance;
 			tessellator.startDrawing(1);
 			tessellator.setColorOpaque_I(color);
-			
+
 			tessellator.addVertex(guiLeft + 113, guiTop + 31.5F, this.zLevel);
 			tessellator.addVertex(guiLeft + 135, guiTop + 31.5F, this.zLevel);
 			tessellator.draw();
-			
+
 			tessellator.startDrawing(1);
 			tessellator.setColorOpaque_I(color);
-			
+
 			tessellator.addVertex(0, guiTop + 31.5F, this.zLevel);
 			tessellator.addVertex(guiLeft + 4, guiTop + 31.5F, this.zLevel);
 			tessellator.draw();
-			
+
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glPopMatrix();
 		}
-	}	
+	}
 }

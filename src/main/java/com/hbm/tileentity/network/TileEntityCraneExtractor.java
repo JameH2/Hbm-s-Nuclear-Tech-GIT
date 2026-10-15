@@ -1,8 +1,8 @@
 package com.hbm.tileentity.network;
 
 import api.hbm.conveyor.IConveyorBelt;
-import api.hbm.conveyor.IEnterableBlock;
 
+import com.hbm.entity.item.EntityMovingConveyorObject;
 import com.hbm.entity.item.EntityMovingItem;
 import com.hbm.inventory.container.ContainerCraneExtractor;
 import com.hbm.inventory.gui.GUICraneExtractor;
@@ -125,15 +125,18 @@ public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGU
 								int toSend = Math.min(amount, stack.stackSize);
 								
 								if (belt != null) {
-									inv.decrStackSize(index, toSend);
 									stack.stackSize = toSend;
-									sendItem(stack, belt, outputSide);
+									if(sendItem(stack, belt, outputSide)) {
+										inv.decrStackSize(index, toSend);
+										hasSent = true;
+									}
 								} else {
 									stack.stackSize = toSend;
 									ItemStack remaining = InventoryUtil.tryAddItemToInventory(this.slots, 9, 17, stack);
-									inv.decrStackSize(index, toSend - (remaining == null ? 0 : remaining.stackSize));
+									int transferred = toSend - (remaining == null ? 0 : remaining.stackSize);
+									inv.decrStackSize(index, transferred);
+									hasSent = transferred > 0;
 								}
-								hasSent = true;
 								break;
 							}
 						}
@@ -153,9 +156,10 @@ public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGU
 							int maxTarget = Math.min(amount, stack.getMaxStackSize());
 							if(this.maxEject && stack.stackSize < maxTarget) continue;
 
-							decrStackSize(i, toSend);
 							stack.stackSize = toSend;
-							sendItem(stack, belt, outputSide);
+							if(sendItem(stack, belt, outputSide)) {
+								decrStackSize(i, toSend);
+							}
 
 							break;
 						}
@@ -167,22 +171,16 @@ public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGU
 		}
 	}
 
-	private void sendItem(ItemStack stack, IConveyorBelt belt, ForgeDirection outputSide) {
+	private boolean sendItem(ItemStack stack, IConveyorBelt belt, ForgeDirection outputSide) {
 		EntityMovingItem moving = new EntityMovingItem(worldObj);
 		Vec3 pos = Vec3.createVectorHelper(xCoord + 0.5 + outputSide.offsetX * 0.55, yCoord + 0.5 + outputSide.offsetY * 0.55, zCoord + 0.5 + outputSide.offsetZ * 0.55);
 		Vec3 snap = belt.getClosestSnappingPosition(worldObj, xCoord + outputSide.offsetX, yCoord + outputSide.offsetY, zCoord + outputSide.offsetZ, pos);
 		moving.setPosition(snap.xCoord, snap.yCoord, snap.zCoord);
 		moving.setItemStack(stack);
-		worldObj.spawnEntityInWorld(moving);
 
-		if(belt instanceof IEnterableBlock) {
-			IEnterableBlock enterable = (IEnterableBlock) belt;
-
-			if(enterable.canItemEnter(worldObj, xCoord + outputSide.offsetX, yCoord + outputSide.offsetY, zCoord + outputSide.offsetZ, outputSide.getOpposite(), moving)) {
-				enterable.onItemEnter(worldObj, xCoord + outputSide.offsetX, yCoord + outputSide.offsetY, zCoord + outputSide.offsetZ, outputSide.getOpposite(), moving);
-				moving.setDead();
-			}
-		}
+		return EntityMovingConveyorObject.trySendToConveyor(worldObj,
+				xCoord + outputSide.offsetX, yCoord + outputSide.offsetY, zCoord + outputSide.offsetZ,
+				outputSide.getOpposite(), moving);
 	}
 
 	@Override
@@ -235,7 +233,9 @@ public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGU
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-		return i > 8 && i < 18;
+		boolean match = this.matchesFilter(itemStack);
+		
+		return i > 8 && i < 18 && ((isWhitelist && match) || (!isWhitelist && !match));
 	}
 
 	@Override
@@ -276,7 +276,7 @@ public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGU
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("whitelist")) {
 			this.isWhitelist = !this.isWhitelist;
 		}

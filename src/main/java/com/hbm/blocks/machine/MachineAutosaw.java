@@ -37,28 +37,28 @@ public class MachineAutosaw extends BlockContainer implements ILookOverlay, IToo
 	@Override public int getRenderType() { return -1; }
 	@Override public boolean isOpaqueCube() { return false; }
 	@Override public boolean renderAsNormalBlock() { return false; }
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(!world.isRemote && !player.isSneaking()) {
-				
+
 			if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof IItemFluidIdentifier) {
-				
+
 				TileEntityMachineAutosaw saw = (TileEntityMachineAutosaw) world.getTileEntity(x, y, z);
-				
+
 				FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, x, y, z, player.getHeldItem());
 				if(saw.acceptedFuels.contains(type)) {
 					saw.tank.setTankType(type);
 					saw.markDirty();
-					player.addChatComponentMessage(new ChatComponentText("Changed type to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+					player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
 					return true;
 				}
 			}
-			
+
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -79,19 +79,19 @@ public class MachineAutosaw extends BlockContainer implements ILookOverlay, IToo
 
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
-		
+
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(!(te instanceof TileEntityMachineAutosaw)) return;
-		
+
 		TileEntityMachineAutosaw saw = (TileEntityMachineAutosaw) te;
-		
+
 		List<String> text = new ArrayList();
-		text.add(saw.tank.getTankType().getLocalizedName() + ": " + saw.tank.getFill() + "/" + saw.tank.getMaxFill() + "mB");
+		text.add(I18nUtil.resolveKey("overlay.autosaw.mb", saw.tank.getTankType().getLocalizedName(), saw.tank.getFill(), saw.tank.getMaxFill()));
 
 		if(saw.isSuspended) {
 			text.add(EnumChatFormatting.RED + "! " + I18nUtil.resolveKey(getUnlocalizedName() + ".suspended") + " !");
 		}
-		
+
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 

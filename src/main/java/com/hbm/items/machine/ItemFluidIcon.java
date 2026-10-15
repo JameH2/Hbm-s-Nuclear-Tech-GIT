@@ -7,6 +7,7 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.util.BobMathUtil;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -41,15 +42,15 @@ public class ItemFluidIcon extends Item {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		if(stack.hasTagCompound()) {
 			if(getQuantity(stack) > 0) {
-				list.add(getQuantity(stack) + "mB");
+				list.add(I18nUtil.resolveKey("item.fluid_icon.desc1", getQuantity(stack)));
 			} else if(getAtmospheres(stack) > 0) {
 				double pressure = BobMathUtil.roundDecimal(getAtmospheres(stack), 3);
-				list.add(pressure + "atm");
+				list.add(I18nUtil.resolveKey("item.fluid_icon.desc2", pressure));
 			}
 
 			if(getPressure(stack) > 0) {
-				list.add(EnumChatFormatting.RED + "" + getPressure(stack) + "PU");
-				list.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_RED) + "Pressurized, use compressor!");
+				list.add(EnumChatFormatting.RED + "" + I18nUtil.resolveKey("item.fluid_icon.desc3", getPressure(stack)));
+				list.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_RED) + I18nUtil.resolveKey("desc.item.fluid_icon.pressurized_compressor"));
 			}
 		}
 
@@ -114,7 +115,7 @@ public class ItemFluidIcon extends Item {
 			return s;
 		}
 
-		return "Unknown";
+		return I18nUtil.resolveKey("gui.stardar.body.unknown");
 	}
 
 	@Override

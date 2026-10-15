@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.google.common.collect.Multimap;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.interfaces.IArmorModDash;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -14,13 +15,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 public class ItemModV1 extends ItemArmorMod implements IArmorModDash {
-	
+
 	private static final UUID speed = UUID.fromString("1d11e63e-28c4-4e14-b09f-fe0bd1be708f");
 
 	public ItemModV1() {
 		super(ArmorModHandler.plate_only, false, true, false, false);
 	}
-	
+
 	@Override
 	public Multimap getModifiers(ItemStack armor) {
 		Multimap multimap = super.getAttributeModifiers(armor);
@@ -30,17 +31,17 @@ public class ItemModV1 extends ItemArmorMod implements IArmorModDash {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		
-		list.add(EnumChatFormatting.RED + "BLOOD IS FUEL");
+
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.mod_v1.blood_fuel"));
 		list.add("");
 		super.addInformation(stack, player, list, bool);
 	}
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.RED + "  " + stack.getDisplayName() + " (BLOOD IS FUEL)");
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_v1.desc2", stack.getDisplayName()));
 	}
-	
+
 	public int getDashes() {
 		return 3;
 	}

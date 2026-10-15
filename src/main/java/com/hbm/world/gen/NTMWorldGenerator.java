@@ -248,6 +248,41 @@ public class NTMWorldGenerator implements IWorldGenerator {
 			structure = new JigsawPiece("tower_base", StructureManager.tower_base, -6);
 			spawnWeight = StructureConfig.towerBaseSpawnWeight;
 		}});
+		NBTStructure.registerStructure(0, new SpawnCondition("falloutshelter_house") {{
+			canSpawn = biome -> BiomeDictionary.isBiomeOfType(biome, Type.PLAINS);
+			structure = new JigsawPiece("falloutshelter_house", StructureManager.falloutshelter_house, -8);
+			spawnWeight = StructureConfig.falloutShelterHouseSpawnWeight;
+		}});
+		NBTStructure.registerStructure(0, new SpawnCondition("abandoned_arcticstation") {{
+			canSpawn = biome -> BiomeDictionary.isBiomeOfType(biome, Type.SNOWY);
+			structure = new JigsawPiece("abandoned_arcticstation", StructureManager.abandoned_arcticstation, 0);
+			spawnWeight = StructureConfig.abandonedArcticStationSpawnWeight;
+		}});
+		NBTStructure.registerStructure(0, new SpawnCondition("military_base") {{
+			canSpawn = biome -> BiomeDictionary.isBiomeOfType(biome, Type.SNOWY);
+			structure = new JigsawPiece("military_base", StructureManager.military_base, -5);
+			spawnWeight = StructureConfig.militaryBaseSpawnWeight;
+			}});
+		NBTStructure.registerStructure(0, new SpawnCondition("submarine") {{
+		    canSpawn = biome -> biome == BiomeGenBase.ocean || biome == BiomeGenBase.deepOcean;
+		    structure = new JigsawPiece("submarine", StructureManager.submarine, -10);
+		    spawnWeight = StructureConfig.submarineSpawnWeight;
+		}});
+		NBTStructure.registerStructure(0, new SpawnCondition("campA") {{
+			canSpawn = biome -> BiomeDictionary.isBiomeOfType(biome, Type.SNOWY);
+			structure = new JigsawPiece("campA", StructureManager.campA, -4);
+			spawnWeight = StructureConfig.campASpawnWeight;
+		}});
+		NBTStructure.registerStructure(0, new SpawnCondition("campB") {{
+			canSpawn = biome -> BiomeDictionary.isBiomeOfType(biome, Type.SNOWY);
+			structure = new JigsawPiece("campB", StructureManager.campB, -4);
+			spawnWeight = StructureConfig.campBSpawnWeight;
+		}});
+		NBTStructure.registerStructure(0, new SpawnCondition("airplane") {{
+			canSpawn = biome -> BiomeDictionary.isBiomeOfType(biome, Type.PLAINS);
+			structure = new JigsawPiece("airplane", StructureManager.airplane, -4);
+			spawnWeight = StructureConfig.airplaneSpawnWeight;
+		}});
 
 		NBTStructure.registerNullWeight(0, StructureConfig.plainsNullWeight, biome -> biome == BiomeGenBase.plains);
 		NBTStructure.registerNullWeight(0, StructureConfig.oceanNullWeight, biome -> BiomeDictionary.isBiomeOfType(biome, Type.OCEAN));

@@ -9,6 +9,7 @@ import com.hbm.handler.ArmorModHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.potion.HbmPotion;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,10 +19,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraft.init.Items;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class ItemModMilk extends ItemArmorMod {
 
@@ -32,14 +33,14 @@ public class ItemModMilk extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.WHITE + "Removes bad potion effects");
+		list.add(EnumChatFormatting.WHITE + I18nUtil.resolveKey("desc.item.mod_milk.removes_bad_potion_effects"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.WHITE + "  " + stack.getDisplayName() + " (Removes bad potion effects)");
+		list.add(EnumChatFormatting.WHITE + I18nUtil.resolveKey("item.mod_milk.desc2", stack.getDisplayName()));
 	}
 
 	@Override
@@ -87,7 +88,7 @@ public class ItemModMilk extends ItemArmorMod {
 
 			player.addPotionEffect(new PotionEffect(Potion.confusion.id, 7 * 20, 0));
 			player.addChatMessage(
-					new ChatComponentText(EnumChatFormatting.GRAY + "" + EnumChatFormatting.ITALIC + "Why did I do that?"));
+					new ChatComponentTranslation("chat.mod_milk.1").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.GRAY).setItalic(true)));
 
 			NBTTagCompound nbt = new NBTTagCompound();
 			nbt.setString("type", "vomit");

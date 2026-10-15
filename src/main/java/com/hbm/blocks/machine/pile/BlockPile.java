@@ -58,7 +58,7 @@ public class BlockPile extends BlockContainer implements IBlockCT, IToolable, IL
 	@SideOnly(Side.CLIENT) public CTStitchReceiver recChanOut;
 	@SideOnly(Side.CLIENT) public CTStitchReceiver recCon;
 	@SideOnly(Side.CLIENT) public CTStitchReceiver recCore;
-	
+
 	@SideOnly(Side.CLIENT) protected IIcon iconTop;
 
 	public BlockPile() { super(Material.iron); }
@@ -76,7 +76,7 @@ public class BlockPile extends BlockContainer implements IBlockCT, IToolable, IL
 	public void registerBlockIcons(IIconRegister reg) {
 		super.registerBlockIcons(reg);
 		this.iconTop = reg.registerIcon(RefStrings.MODID + ":pile_block_top");
-		
+
 		this.rec = IBlockCT.primeReceiver(reg, this.blockIcon.getIconName(), this.blockIcon);
 		this.recTop = IBlockCT.primeReceiver(reg, this.iconTop.getIconName(), this.iconTop);
 		this.recChanIn = IBlockCT.primeReceiver(reg, RefStrings.MODID + ":pile_block_input", this.blockIcon);
@@ -97,18 +97,18 @@ public class BlockPile extends BlockContainer implements IBlockCT, IToolable, IL
 
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-		
+
 		if(!TileEntityPileCore.meltingDown) {
 			TileEntity tile = world.getTileEntity(x, y, z);
-			
+
 			if(tile instanceof TileEntityPileBaseMK2) {
 				TileEntityPileBaseMK2 pile = (TileEntityPileBaseMK2) tile;
 				world.removeTileEntity(x, y, z);
 				if(pile.coreY >= 0) world.setBlock(x, y, z, ModBlocks.pile_brick);
-	
+
 				TileEntityPileCore core = pile.getCore();
 				if(core != null && !core.isInvalid()) core.destroy();
-				
+
 			} else {
 				world.removeTileEntity(x, y, z);
 				world.setBlock(x, y, z, ModBlocks.pile_brick);
@@ -119,16 +119,16 @@ public class BlockPile extends BlockContainer implements IBlockCT, IToolable, IL
 
 	@Override
 	public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, int side, float fX, float fY, float fZ, ToolType tool) {
-		
+
 		if(tool == tool.HAND_DRILL) {
-			
+
 			TileEntity tile = world.getTileEntity(x, y, z);
-			
+
 			if(tile instanceof TileEntityPileCore || world.getBlockMetadata(x, y, z) == META_CORE) {
-				MachinePWRController.sendError(world, x, y, z, "Cannot intersect core", player);
+				MachinePWRController.sendError(world, x, y, z, "chat.cannot_intersect_core", player);
 				return false;
 			}
-			
+
 			if(tile instanceof TileEntityPileBaseMK2) {
 				if(world.isRemote) return true;
 				TileEntityPileCore core = ((TileEntityPileBaseMK2) tile).getCore();
@@ -137,10 +137,10 @@ public class BlockPile extends BlockContainer implements IBlockCT, IToolable, IL
 					return core.drillChannel(x, y, z, dir, player);
 				}
 			}
-			
-			MachinePWRController.sendError(world, x, y, z, "No core found", player);
+
+			MachinePWRController.sendError(world, x, y, z, "chat.no_core_found", player);
 		}
-		
+
 		return false;
 	}
 
@@ -148,20 +148,20 @@ public class BlockPile extends BlockContainer implements IBlockCT, IToolable, IL
 	public void printHook(Pre event, World world, int x, int y, int z) {
 		int meta = world.getBlockMetadata(x, y, z);
 		List<String> text = new ArrayList();
-		if(meta == META_FUEL_IN) text.add("Fuel Loading Port");
-		if(meta == META_FUEL_OUT) text.add("Fuel Ejection Port");
-		if(meta == META_AIR_IN) text.add("Air Inlet");
-		if(meta == META_AIR_OUT) text.add("Air Outlet");
-		if(meta == META_CONTROL) text.add("Control Rod Channel");
-		
+		if(meta == META_FUEL_IN) text.add(I18nUtil.resolveKey("overlay.pile.fuel_loading_port"));
+		if(meta == META_FUEL_OUT) text.add(I18nUtil.resolveKey("overlay.pile.fuel_ejection_port"));
+		if(meta == META_AIR_IN) text.add(I18nUtil.resolveKey("overlay.pile.air_inlet"));
+		if(meta == META_AIR_OUT) text.add(I18nUtil.resolveKey("overlay.pile.air_outlet"));
+		if(meta == META_CONTROL) text.add(I18nUtil.resolveKey("overlay.pile.control_rod_channel"));
+
 		if(meta == META_CORE) {
 			TileEntity tile = world.getTileEntity(x, y, z);
 			if(tile instanceof TileEntityPileCore) {
 				TileEntityPileCore core = (TileEntityPileCore) tile;
-				text.add("Max Temp: " + (int) Math.round(core.highestHeat) + " / " + core.MAX_HEAT + "°C");
+				text.add(I18nUtil.resolveKey("overlay.pile.max_temp_c", (int) Math.round(core.highestHeat), core.MAX_HEAT));
 			}
 		}
-		
+
 		if(!text.isEmpty()) ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 }

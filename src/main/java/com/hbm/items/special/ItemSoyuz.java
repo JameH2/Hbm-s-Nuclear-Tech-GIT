@@ -3,6 +3,7 @@ package com.hbm.items.special;
 import java.util.List;
 
 import com.hbm.lib.RefStrings;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,45 +18,45 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 
 public class ItemSoyuz extends Item {
-	
+
 	IIcon[] icons = new IIcon[3];
-	
+
 	public ItemSoyuz() {
         this.setHasSubtypes(true);
 	}
-    
+
     @Override
 	@SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tab, List list) {
-    	
+
     	for(int i = 0; i < icons.length; i++)
     		list.add(new ItemStack(item, 1, i));
     }
-    
+
     @Override
 	public EnumRarity getRarity(ItemStack stack) {
-    	
+
     	if(stack.getItemDamage() == 0)
     		return EnumRarity.uncommon;
-    	
+
     	if(stack.getItemDamage() == 1)
     		return EnumRarity.rare;
-    	
+
     	if(stack.getItemDamage() == 2)
     		return EnumRarity.epic;
-    	
+
 		return EnumRarity.common;
     }
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
-		list.add("Skin:");
+		String desc = I18nUtil.resolveKey("item.missile_soyuz.desc") + " ";
 		
 		switch(stack.getItemDamage()) {
-		case 0: list.add(EnumChatFormatting.GOLD + "Original"); break;
-		case 1: list.add(EnumChatFormatting.BLUE + "Luna Space Center"); break;
-		case 2: list.add(EnumChatFormatting.GREEN + "Post War"); break;
+		case 0: list.add(desc + EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.missile_soyuz.orig.desc")); break;
+		case 1: list.add(desc + EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.missile_soyuz.luna.desc")); break;
+		case 2: list.add(desc + EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.missile_soyuz.war.desc")); break;
 		}
 	}
 
@@ -66,7 +67,7 @@ public class ItemSoyuz extends Item {
     		icons[i] = reg.registerIcon(RefStrings.MODID + ":soyuz_" + i);
     	}
     }
-	
+
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int meta)
     {

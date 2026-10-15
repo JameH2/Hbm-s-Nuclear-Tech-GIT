@@ -191,6 +191,9 @@ public class FluidType {
 	public boolean isCorrosive() {
 		return this.traits.containsKey(FT_Corrosive.class);
 	}
+	public boolean isHighlyCorrosive() {
+		return this.traits.containsKey(FT_Corrosive.class) && ((FT_Corrosive) this.traits.get(FT_Corrosive.class)).isHighlyCorrosive();
+	}
 	public boolean isAntimatter() {
 		return this.traits.containsKey(FT_Amat.class);
 	}
@@ -254,9 +257,9 @@ public class FluidType {
 		}
 
 		if(!hidden.isEmpty() && !shiftHeld) {
-			info.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC +"Hold <" +
-					EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + "LSHIFT" +
-					EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + "> to display more info");
+			info.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC +I18nUtil.resolveKey("desc.misc.hold_prefix") +
+					EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.lshift_key") +
+					EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.more_info_suffix"));
 		}
 	}
 	public static enum ExtContainer {

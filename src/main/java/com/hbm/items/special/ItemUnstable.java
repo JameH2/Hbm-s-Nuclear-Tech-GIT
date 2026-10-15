@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.lib.ModDamageSource;
+import com.hbm.util.i18n.I18nUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -21,52 +22,52 @@ public class ItemUnstable extends Item {
 	IIcon iconElements;
 	IIcon iconArsenic;
 	IIcon iconVault;
-	
+
 	int radius;
 	int timer;
-	
+
 	public ItemUnstable(int radius, int timer) {
 		this.radius = radius;
 		this.timer = timer;
         this.setHasSubtypes(true);
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-    	
+
     	if(stack.getItemDamage() != 0)
     		return;
-		
-		list.add("Decay: " + (getTimer(stack) * 100 / timer) + "%");
+
+		list.add(I18nUtil.resolveKey("item.unstable.desc1", (getTimer(stack) * 100 / timer)));
 	}
-	
+
     public void onUpdate(ItemStack stack, World world, Entity entity, int i, boolean b) {
-    	
+
     	if(stack.getItemDamage() != 0)
     		return;
-    	
+
     	this.setTimer(stack, this.getTimer(stack) + 1);
-    	
+
     	if(this.getTimer(stack) == timer && !world.isRemote) {
     		world.spawnEntityInWorld(EntityNukeExplosionMK5.statFac(world, radius, entity.posX, entity.posY, entity.posZ));
     		world.playSoundAtEntity(entity, "hbm:entity.oldExplosion", 1.0F, 1.0F);
     		entity.attackEntityFrom(ModDamageSource.nuclearBlast, 10000);
-    		
+
     		stack.stackSize = 0;
     	}
     }
-    
+
     private void setTimer(ItemStack stack, int time) {
     	if(!stack.hasTagCompound())
     		stack.stackTagCompound = new NBTTagCompound();
-    	
+
     	stack.stackTagCompound.setInteger("timer", time);
     }
-    
+
     private int getTimer(ItemStack stack) {
     	if(!stack.hasTagCompound())
     		stack.stackTagCompound = new NBTTagCompound();
-    	
+
     	return stack.stackTagCompound.getInteger("timer");
     }
 
@@ -87,7 +88,7 @@ public class ItemUnstable extends Item {
     {
         return true;
     }
-    
+
     @Override
 	@SideOnly(Side.CLIENT)
     public IIcon getIconFromDamageForRenderPass(int damage, int layer)

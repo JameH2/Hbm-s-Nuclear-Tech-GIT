@@ -29,11 +29,11 @@ public class GUIPASource extends GuiInfoContainer {
 	public GUIPASource(InventoryPlayer player, TileEntityPASource source) {
 		super(new ContainerPASource(player, source));
 		this.source = source;
-		
+
 		this.xSize = 176;
 		this.ySize = 204;
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
@@ -43,11 +43,11 @@ public class GUIPASource extends GuiInfoContainer {
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 18, 16, 52, source.power, source.getMaxPower());
 
 		List<String> info = new ArrayList();
-		info.add(EnumChatFormatting.BLUE + "Last momentum: " + EnumChatFormatting.RESET + String.format(Locale.US, "%,d", source.lastSpeed));
+		info.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("gui.pasource.last_momentum") + EnumChatFormatting.RESET + String.format(Locale.US, "%,d", source.lastSpeed));
 		String[] message = I18nUtil.resolveKeyArray("pa." + this.source.state.name().toLowerCase(Locale.US) + ".desc");
 		for(String s : message) info.add(EnumChatFormatting.YELLOW + s);
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 105, guiTop + 16, 10, 10, mouseX, mouseY, info);
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 105, guiTop + 28, 10, 10, mouseX, mouseY, EnumChatFormatting.RED + "Cancel operation");
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 105, guiTop + 28, 10, 10, mouseX, mouseY, EnumChatFormatting.RED + I18nUtil.resolveKey("gui.pasource.cancel_operation"));
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class GUIPASource extends GuiInfoContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer( int i, int j) {
-		
+
 		String name = this.source.hasCustomInventoryName() ? this.source.getInventoryName() : I18n.format(this.source.getInventoryName());
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2 - 9, 4, 0xffffff);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
@@ -73,7 +73,7 @@ public class GUIPASource extends GuiInfoContainer {
 		int heat = (int) Math.ceil(source.temperature);
 		String label = (heat > 123 ? EnumChatFormatting.RED : EnumChatFormatting.AQUA) + "" + heat + "K";
 		this.fontRendererObj.drawString(label, 166 - this.fontRendererObj.getStringWidth(label), 12, 4210752);
-		
+
 		String state = I18n.format("pa." + this.source.state.name().toLowerCase(Locale.US));
 		this.fontRendererObj.drawString(state, 79 - this.fontRendererObj.getStringWidth(state) / 2, 76, this.source.state.color);
 	}
@@ -83,7 +83,7 @@ public class GUIPASource extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		int j = (int) (source.power * 52 / source.getMaxPower());
 		drawTexturedModalRect(guiLeft + 8, guiTop + 70 - j, 184, 52 - j, 16, j);
 
@@ -95,7 +95,7 @@ public class GUIPASource extends GuiInfoContainer {
 		float red = (color & 0xff0000) >> 16;
 		float green = (color & 0x00ff00) >> 8;
 		float blue = (color & 0x0000ff);
-		
+
 		GL11.glColor4f(red, green, blue, 1.0F);
 		drawTexturedModalRect(guiLeft + 45, guiTop + 73, 176, 52, 68, 14);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

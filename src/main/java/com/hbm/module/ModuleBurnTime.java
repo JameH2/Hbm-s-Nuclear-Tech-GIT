@@ -13,6 +13,7 @@ import com.hbm.util.ItemStackUtil;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import com.hbm.util.i18n.I18nUtil;
 
 /**
  * A simple module for determining the burn time of a stack with added options to define bonuses
@@ -140,7 +141,7 @@ public class ModuleBurnTime {
 	public List<String> getTimeDesc() {
 		List<String> list = new ArrayList();
 
-		list.add(EnumChatFormatting.GOLD + "Burn time bonuses:");
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("desc.misc.burn_time_bonuses"));
 
 		addIf(list, "Logs", modTime[modLog]);
 		addIf(list, "Wood", modTime[modWood]);
@@ -160,7 +161,7 @@ public class ModuleBurnTime {
 	public List<String> getHeatDesc() {
 		List<String> list = new ArrayList();
 
-		list.add(EnumChatFormatting.RED + "Burn heat bonuses:");
+		list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.misc.burn_heat_bonuses"));
 
 		addIf(list, "Logs", modHeat[modLog]);
 		addIf(list, "Wood", modHeat[modWood]);

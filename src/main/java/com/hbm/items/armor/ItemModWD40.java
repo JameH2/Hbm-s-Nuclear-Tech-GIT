@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.common.collect.Multimap;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.main.MainRegistry;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -21,46 +22,46 @@ public class ItemModWD40 extends ItemArmorMod {
 	public ItemModWD40() {
 		super(ArmorModHandler.extra, true, true, true, true);
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		
+
 		String color = "" + (System.currentTimeMillis() % 1000 < 500 ? EnumChatFormatting.BLUE : EnumChatFormatting.YELLOW);
 
-		list.add(color + "Highly reduces damage taken by armor, +2 HP");
+		list.add(color + I18nUtil.resolveKey("desc.item.mod_wd40.highly_reduces_damage_taken_armor"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		
+
 		String color = "" + (System.currentTimeMillis() % 1000 < 500 ? EnumChatFormatting.BLUE : EnumChatFormatting.YELLOW);
-		
-		list.add(color + "  " + stack.getDisplayName() + " (-80% armor wear / +2 HP)");
+
+		list.add(color + I18nUtil.resolveKey("desc.item.mod_wd40.armor_wear_hp", stack.getDisplayName()));
 	}
-	
+
 	@Override
 	public void modDamage(LivingHurtEvent event, ItemStack armor) {
-		
+
 		if(!event.entityLiving.worldObj.isRemote && armor.getItemDamage() > 0 && event.entityLiving.getRNG().nextInt(5) != 0) {
 			armor.setItemDamage(armor.getItemDamage() - 1);
 		}
 	}
-	
+
 	@Override
 	public Multimap getModifiers(ItemStack armor) {
 		Multimap multimap = super.getAttributeModifiers(armor);
-		
+
 		multimap.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(),
 				new AttributeModifier(ArmorModHandler.UUIDs[((ItemArmor)armor.getItem()).armorType], "NTM Armor Mod Health", 4, 0));
-		
+
 		return multimap;
 	}
-	
+
 	@Override
 	public void modUpdate(EntityLivingBase entity, ItemStack armor) {
-		
+
 		if(entity.worldObj.isRemote && entity.hurtTime > 0) {
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("type", "vanillaExt");

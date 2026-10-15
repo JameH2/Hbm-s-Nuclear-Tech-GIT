@@ -1,5 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.util.i18n.I18nUtil;
+
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
@@ -26,7 +28,7 @@ public class LoadingScreenRendererNT extends LoadingScreenRenderer {
 	private boolean doesProgress;
 	private ScaledResolution resolution;
 	private Framebuffer frameBuffer;
-	public String tipOfTheDay = "Tip of the day: " + chooseTip();
+	public String tipOfTheDay = I18nUtil.resolveKey("gui.loading.tip", chooseTip());
 
 	public LoadingScreenRendererNT(Minecraft mc) {
 		super(mc);
@@ -35,9 +37,9 @@ public class LoadingScreenRendererNT extends LoadingScreenRenderer {
 		this.frameBuffer = new Framebuffer(mc.displayWidth, mc.displayHeight, false);
 		this.frameBuffer.setFramebufferFilter(9728);
 	}
-	
+
 	private String chooseTip() {
-		if(HTTPHandler.tipOfTheDay.isEmpty()) return "Explore! There's tons of free stuff to find.";
+		if(HTTPHandler.tipOfTheDay.isEmpty()) return I18nUtil.resolveKey("gui.loading.fallback_tip");
 		return HTTPHandler.tipOfTheDay.get(new Random().nextInt(HTTPHandler.tipOfTheDay.size()));
 	}
 
@@ -165,7 +167,7 @@ public class LoadingScreenRendererNT extends LoadingScreenRenderer {
 					OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 					this.mc.fontRenderer.drawStringWithShadow(this.currentlyDisplayedText, (width - this.mc.fontRenderer.getStringWidth(this.currentlyDisplayedText)) / 2, height / 2 - 4 - 16, 16777215);
 					this.mc.fontRenderer.drawStringWithShadow(this.message, (width - this.mc.fontRenderer.getStringWidth(this.message)) / 2, height / 2 - 4 + 8, 16777215);
-					
+
 					String[] frags = this.tipOfTheDay.split("\\$");
 					for(int i = 0; i < frags.length; i++) {
 						String frag = frags[i];

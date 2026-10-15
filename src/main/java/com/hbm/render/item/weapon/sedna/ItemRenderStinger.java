@@ -1,5 +1,7 @@
 package com.hbm.render.item.weapon.sedna;
 
+import com.hbm.util.i18n.I18nUtil;
+
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -26,7 +28,7 @@ public class ItemRenderStinger extends ItemRenderWeaponBase {
 	@Override
 	public void setupFirstPerson(ItemStack stack) {
 		GL11.glTranslated(0, 0, 0.875);
-		
+
 		float offset = 0.8F;
 		standardAimingTransform(stack,
 				-3.75F * offset, -9F * offset, -3.5F * offset,
@@ -36,7 +38,7 @@ public class ItemRenderStinger extends ItemRenderWeaponBase {
 	@Override
 	public void renderFirstPerson(ItemStack stack) {
 		if(ItemGunBaseNT.prevAimingProgress == 1 && ItemGunBaseNT.aimingProgress == 1) return;
-		
+
 		ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.stinger_tex);
 		double scale = 1.5D;
@@ -45,22 +47,22 @@ public class ItemRenderStinger extends ItemRenderWeaponBase {
 		double[] equip = HbmAnimations.getRelevantTransformation("EQUIP");
 		double[] reload = HbmAnimations.getRelevantTransformation("RELOAD");
 		double[] rocket = HbmAnimations.getRelevantTransformation("ROCKET");
-		
+
 		GL11.glTranslated(0, -1, -1);
 		GL11.glRotated(equip[0], 1, 0, 0);
 		GL11.glTranslated(0, 1, 1);
-		
+
 		GL11.glTranslated(0, -4, -3);
 		GL11.glRotated(reload[0], 1, 0, 0);
 		GL11.glTranslated(0, 4, 3);
-		
+
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 
 		GL11.glPushMatrix();
 		GL11.glRotated(180, 0, 1, 0);
 		ResourceManager.stinger.renderAll();
 		GL11.glPopMatrix();
-		
+
 		GL11.glPushMatrix();
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.panzerschreck_tex);
 		GL11.glTranslated(rocket[0], rocket[1] + 3.5, rocket[2] - 3);
@@ -74,7 +76,7 @@ public class ItemRenderStinger extends ItemRenderWeaponBase {
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 
-		String label = "Not accurate";
+		String label = I18nUtil.resolveKey("renderer.weapon.not_accurate");
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 		float f3 = 0.04F;
 		GL11.glTranslatef(0.025F, -0.5F, (font.getStringWidth(label) / 2) * f3 - 3);
@@ -87,7 +89,7 @@ public class ItemRenderStinger extends ItemRenderWeaponBase {
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
-		
+
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
@@ -130,13 +132,13 @@ public class ItemRenderStinger extends ItemRenderWeaponBase {
 	@Override
 	public void renderOther(ItemStack stack, ItemRenderType type, Object... data) {
 		GL11.glEnable(GL11.GL_LIGHTING);
-		
+
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.stinger_tex);
 		ResourceManager.stinger.renderAll();
 		GL11.glShadeModel(GL11.GL_FLAT);
-		
+
 		if(type == ItemRenderType.EQUIPPED) {
 			EntityLivingBase ent = (EntityLivingBase) data[1];
 			long shot;
@@ -149,7 +151,7 @@ public class ItemRenderStinger extends ItemRenderWeaponBase {
 				shot = ItemRenderWeaponBase.flashMap.getOrDefault(ent, (long) -1);
 				if(shot < 0) return;
 			}
-			
+
 			GL11.glPushMatrix();
 			GL11.glTranslated(0, 3.5, -10.3795);
 			GL11.glRotated(90, 0, 1, 0);

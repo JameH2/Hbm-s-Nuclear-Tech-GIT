@@ -29,13 +29,13 @@ public class ToolPreset {
 
 	public ChatComponentText getMessage() {
 		if(isNone()) {
-			return ChatBuilder.start("[Tool ability deactivated]").color(EnumChatFormatting.GOLD).flush();
+			return ChatBuilder.startTranslation("chat.tool_preset.tool_ability_deactivated").color(EnumChatFormatting.GOLD).flush();
 		}
 
 		boolean hasArea = areaAbility != IToolAreaAbility.NONE;
 		boolean hasHarvest = harvestAbility != IToolHarvestAbility.NONE;
 
-		ChatBuilder builder = ChatBuilder.start("[Enabled ");
+		ChatBuilder builder = ChatBuilder.startTranslation("chat.tool_preset.enabled");
 
 		if(hasArea) {
 			builder.nextTranslation(areaAbility.getName());

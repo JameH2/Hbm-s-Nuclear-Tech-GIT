@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hbm.extprop.HbmLivingProps;
 import com.hbm.handler.ArmorModHandler;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,18 +19,18 @@ public class ItemModMedal extends ItemArmorMod {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.GOLD + "-10 RAD/s");
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_medal.desc1"));
 		super.addInformation(stack, player, list, bool);
 	}
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.GOLD + "  " + stack.getDisplayName() + " (-10 RAD/s)");
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_medal.desc2", stack.getDisplayName()));
 	}
-	
+
 	@Override
 	public void modUpdate(EntityLivingBase entity, ItemStack armor) {
-		
+
 		if(!entity.worldObj.isRemote) {
 			float rad = HbmLivingProps.getRadiation(entity);
 			rad -= 0.5F;

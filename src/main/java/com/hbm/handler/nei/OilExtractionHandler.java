@@ -10,13 +10,14 @@ import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.machine.ItemFluidIcon;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.item.ItemStack;
 
 public class OilExtractionHandler extends NEICelestialHandler {
 
 	public OilExtractionHandler() {
-		super("Oil Extraction", new ItemStack[] { new ItemStack(ModBlocks.machine_well), new ItemStack(ModBlocks.machine_pumpjack), new ItemStack(ModBlocks.machine_fracking_tower) }, getRecipes());
+		super("nei.oil_extraction.name", new ItemStack[] { new ItemStack(ModBlocks.machine_well), new ItemStack(ModBlocks.machine_pumpjack), new ItemStack(ModBlocks.machine_fracking_tower) }, getRecipes());
 	}
 
 	@Override
@@ -78,7 +79,7 @@ public class OilExtractionHandler extends NEICelestialHandler {
 
 		// TODO: also not be hardcoded
 		if(body.name == "kerbin" || body.name == "tekto") {
-			drawString("Frackable", 102, 48, 0x000000, false);
+			drawString(I18nUtil.resolveKey("nei.oil_extraction.frackable"), 102, 48, 0x000000, false);
 		}
 	}
 

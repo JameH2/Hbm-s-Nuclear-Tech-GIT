@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
+import com.hbm.util.i18n.I18nUtil;
 
 public class PylonLarge extends BlockDummyable implements ITooltipProvider {
 
@@ -32,9 +33,9 @@ public class PylonLarge extends BlockDummyable implements ITooltipProvider {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.GOLD + "Connection Type: " + EnumChatFormatting.YELLOW + "Quadruple");
-		list.add(EnumChatFormatting.GOLD + "Connection Range: " + EnumChatFormatting.YELLOW + "100m");
-		list.add(EnumChatFormatting.GOLD + "This pylon requires a substation!");
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_type_quadruple", EnumChatFormatting.YELLOW + "Quadruple"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_range_100m.connection_range_100m", EnumChatFormatting.YELLOW + "100m"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.pylon_requires_substation"));
 	}
 
 	@Override

@@ -64,8 +64,8 @@ public class GenericRecipe {
 	public GenericRecipe setIcon(Item item) { return this.setIcon(new ItemStack(item)); }
 	public GenericRecipe setIcon(Block block) { return this.setIcon(new ItemStack(block)); }
 	public GenericRecipe setNamed() { this.customLocalization = true; return this; }
-	
-	public GenericRecipe setPools(String... pools) { 
+
+	public GenericRecipe setPools(String... pools) {
 		this.blueprintPools = pools;
 		for(String pool : pools) {
 			if(!GeneralConfig.enable528 && pool.startsWith(GenericRecipes.POOL_PREFIX_528)) throw new IllegalArgumentException("Tried initializing a recipe's default blueprint pool with a 528 blueprint - this is not allowed.");
@@ -84,7 +84,7 @@ public class GenericRecipe {
 	public GenericRecipe inputFluidsEx(FluidStack... input) { if(!GeneralConfig.enableExpensiveMode) return this; this.inputFluid = input; return this; }
 	public GenericRecipe outputItems(IOutput... output) { this.outputItem = output; return this; }
 	public GenericRecipe outputFluids(FluidStack... output) { this.outputFluid = output; return this; }
-	
+
 	private void checkStackLimit(AStack stack) {
 		int max = 64;
 		if(stack instanceof ComparableStack) {
@@ -136,13 +136,13 @@ public class GenericRecipe {
 		if(this.nameWrapper != null) name = I18nUtil.resolveKey(this.nameWrapper, name);
 		return name;
 	}
-	
+
 	public void printNEIExtras() {
 
 		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		String duration = BobMathUtil.getShortNumber(this.duration) + " ticks";
 		String consumption = BobMathUtil.getShortNumber(this.power) + "HE/t";
-		
+
 		int side = 164;
 		fontRenderer.drawString(duration, side - fontRenderer.getStringWidth(duration), 45, 0x404040);
 		fontRenderer.drawString(consumption, side - fontRenderer.getStringWidth(consumption), 57, 0x404040);
@@ -160,29 +160,29 @@ public class GenericRecipe {
 
 		return list;
 	}
-	
+
 	protected void header(List<String> list) {
 		list.add(EnumChatFormatting.YELLOW + this.getLocalizedName());
-		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) list.add(EnumChatFormatting.DARK_GRAY + "Internal: " + this.getInternalName());
+		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) list.add((EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("desc.misc.recipe.internal", this.getInternalName()));
 	}
-	
+
 	protected void autoSwitch(List<String> list) {
 		if(this.autoSwitchGroup != null) {
 			String[] lines = I18nUtil.resolveKeyArray("autoswitch", I18nUtil.resolveKey(this.autoSwitchGroup));
 			for(String line : lines) list.add(EnumChatFormatting.GOLD + line);
 		}
 	}
-	
+
 	protected void duration(List<String> list) {
 		if(duration > 0) {
 			double seconds = this.duration / 20D;
 			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.recipe.duration") + ": " + seconds + "s");
 		}
 	}
-	
+
 	protected void power(List<String> list) {
 		if(power > 0) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.recipe.consumption") + ": " + BobMathUtil.getShortNumber(power) + "HE/t");
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.misc.he_t", I18nUtil.resolveKey("gui.recipe.consumption"), BobMathUtil.getShortNumber(power)));
 		}
 	}
 
@@ -192,7 +192,7 @@ public class GenericRecipe {
 			ItemStack display = stack.extractForCyclingDisplay(20);
 			list.add("  " + EnumChatFormatting.GRAY + display.stackSize + "x " + display.getDisplayName());
 		}
-		if (inputFluid != null) for (FluidStack fluid : inputFluid) list.add("  " + EnumChatFormatting.BLUE + fluid.fill + "mB " + fluid.type.getLocalizedName() + (fluid.pressure == 0 ? "" : " " + I18nUtil.resolveKey("gui.recipe.atPressure") + " " + EnumChatFormatting.RED + fluid.pressure + " PU"));
+		if (inputFluid != null) for (FluidStack fluid : inputFluid) list.add(I18nUtil.resolveKey("desc.misc.recipe.mb", EnumChatFormatting.BLUE + String.valueOf(fluid.fill), fluid.type.getLocalizedName(), (fluid.pressure == 0 ? "" : " " + I18nUtil.resolveKey("gui.recipe.atPressure") + " " + EnumChatFormatting.RED + fluid.pressure + I18nUtil.resolveKey("gui.recipe.pu"))));
 	}
 
 	protected void output(List<String> list) {
@@ -202,7 +202,7 @@ public class GenericRecipe {
 		if(outputFluid != null) for(FluidStack fluid : outputFluid) {
 			String pressurePart = fluid.pressure == 0 ? "" :
 				" " + I18nUtil.resolveKey("gui.recipe.atPressure") + " " + EnumChatFormatting.RED + fluid.pressure + " PU";
-			list.add("  " + EnumChatFormatting.BLUE + fluid.fill + "mB " + fluid.type.getLocalizedName() + pressurePart);
+			list.add(I18nUtil.resolveKey("desc.misc.recipe.mb", EnumChatFormatting.BLUE + String.valueOf(fluid.fill), fluid.type.getLocalizedName(), pressurePart));
 		}
 	}
 

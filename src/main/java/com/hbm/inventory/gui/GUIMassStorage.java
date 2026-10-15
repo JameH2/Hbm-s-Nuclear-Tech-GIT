@@ -17,6 +17,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import com.hbm.util.i18n.I18nUtil;
 
 public class GUIMassStorage extends GuiInfoContainer {
 
@@ -26,21 +27,21 @@ public class GUIMassStorage extends GuiInfoContainer {
 	public GUIMassStorage(InventoryPlayer invPlayer, TileEntityMassStorage tile) {
 		super(new ContainerMassStorage(invPlayer, tile));
 		storage = tile;
-		
+
 		this.xSize = 176;
 		this.ySize = 221;
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
-		
+
 		String percent = (((int) (storage.getStockpile() * 1000D / (double) storage.getCapacity())) / 10D) + "%";
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 96, guiTop + 16, 18, 90, mouseX, mouseY, new String[]
 				{ String.format(Locale.US, "%,d", storage.getStockpile()) + " / " + String.format(Locale.US, "%,d", storage.getCapacity()), percent });
 
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 62, guiTop + 72, 14, 14, mouseX, mouseY, new String[] { "Click: Provide one", "Shift-click: Provide stack" });
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 80, guiTop + 72, 14, 14, mouseX, mouseY, new String[] { "Toggle output" });
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 62, guiTop + 72, 14, 14, mouseX, mouseY, new String[] { I18nUtil.resolveKey("gui.mass_storage.click_provide_one"), I18nUtil.resolveKey("gui.mass_storage.shift_click_provide_stack") });
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 80, guiTop + 72, 14, 14, mouseX, mouseY, new String[] { I18nUtil.resolveKey("gui.mass_storage.toggle_output") });
 	}
 
 	@Override
@@ -63,11 +64,11 @@ public class GUIMassStorage extends GuiInfoContainer {
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, storage.xCoord, storage.yCoord, storage.zCoord));
 		}
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.storage.hasCustomInventoryName() ? this.storage.getInventoryName() : I18n.format(this.storage.getInventoryName());
-		
+
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}
@@ -77,10 +78,10 @@ public class GUIMassStorage extends GuiInfoContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
+
 		int gauge = storage.getStockpile() * 88 / storage.getCapacity();
 		drawTexturedModalRect(guiLeft + 97, guiTop + 105 - gauge, 176, 88 - gauge, 16, gauge);
-		
+
 		if(storage.output)
 			drawTexturedModalRect(guiLeft + 80, guiTop + 72, 192, 0, 14, 14);
 	}

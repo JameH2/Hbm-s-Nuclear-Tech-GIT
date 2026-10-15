@@ -12,9 +12,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -52,19 +52,20 @@ public class CraneBoxer extends BlockCraneBase implements IEnterableBlock {
 
     @Override
 	public boolean canItemEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorItem entity) {
-		return getInputSide(world, x, y, z) == dir;
+		if(getInputSide(world, x, y, z) != dir || entity == null) return false;
+
+		TileEntity te = world.getTileEntity(x, y, z);
+		if(!(te instanceof TileEntityCraneBoxer)) return false;
+
+		TileEntityCraneBoxer boxer = (TileEntityCraneBoxer) te;
+		return CraneInserter.canAddAllToInventory(boxer, boxer.getAccessibleSlotsFromSide(dir.ordinal()), dir.ordinal(), entity.getItemStack());
 	}
 
 	@Override
 	public void onItemEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorItem entity) {
 		TileEntityCraneBoxer boxer = (TileEntityCraneBoxer) world.getTileEntity(x, y, z);
 		
-		ItemStack remainder = CraneInserter.addToInventory(boxer, boxer.getAccessibleSlotsFromSide(dir.ordinal()), entity.getItemStack(), dir.ordinal());
-		
-		if(remainder != null && remainder.stackSize > 0) {
-			EntityItem drop = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, remainder.copy());
-			world.spawnEntityInWorld(drop);
-		}
+		CraneInserter.addToInventory(boxer, boxer.getAccessibleSlotsFromSide(dir.ordinal()), entity.getItemStack(), dir.ordinal());
 	}
 	
 	@Override
@@ -85,7 +86,12 @@ public class CraneBoxer extends BlockCraneBase implements IEnterableBlock {
 
 	@Override
 	public boolean canPackageEnter(World world, int x, int y, int z, ForgeDirection dir, IConveyorPackage entity) {
-		return true;
+		TileEntity te = world.getTileEntity(x, y, z);
+		if(!(te instanceof TileEntityCraneBoxer) || entity == null) return false;
+
+		TileEntityCraneBoxer boxer = (TileEntityCraneBoxer) te;
+		ForgeDirection accessedSide = getOutputSide(world, x, y, z).getOpposite();
+		return CraneInserter.canAddAllToInventory(boxer, boxer.getAccessibleSlotsFromSide(accessedSide.ordinal()), accessedSide.ordinal(), entity.getItemStacks());
 	}
 
 	@Override
@@ -94,12 +100,7 @@ public class CraneBoxer extends BlockCraneBase implements IEnterableBlock {
 		ForgeDirection accessedSide = getOutputSide(world, x, y, z).getOpposite();
 
 		for(ItemStack stack : entity.getItemStacks()) {
-			ItemStack remainder = CraneInserter.addToInventory(unboxer, unboxer.getAccessibleSlotsFromSide(accessedSide.ordinal()), stack, accessedSide.ordinal());
-			
-			if(remainder != null && remainder.stackSize > 0) {
-				EntityItem drop = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, remainder.copy());
-				world.spawnEntityInWorld(drop);
-			}
+			if(stack != null) CraneInserter.addToInventory(unboxer, unboxer.getAccessibleSlotsFromSide(accessedSide.ordinal()), stack, accessedSide.ordinal());
 		}
 	}
 }

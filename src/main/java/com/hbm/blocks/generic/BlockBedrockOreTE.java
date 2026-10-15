@@ -72,17 +72,17 @@ public class BlockBedrockOreTE extends BlockContainer implements ILookOverlay, I
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i, float fx, float fy, float fz) {
-		
+
 		ItemStack stack = player.getHeldItem();
 		if(stack == null) return false;
 		if(!player.capabilities.isCreativeMode) return false;
 		if(world.isRemote) return true;
 
 		TileEntity te = world.getTileEntity(x, y, z);
-		
+
 		if(te instanceof TileEntityBedrockOre) {
 			TileEntityBedrockOre ore = (TileEntityBedrockOre) te;
-			
+
 			if(stack.getItem() == ModItems.drillbit) {
 				EnumDrillType type = EnumUtil.grabEnumSafely(EnumDrillType.class, stack.getItemDamage());
 				ore.tier = type.tier;
@@ -100,15 +100,15 @@ public class BlockBedrockOreTE extends BlockContainer implements ILookOverlay, I
 				ore.resource = stack.copy();
 				ore.shape = world.rand.nextInt(10);
 			}
-			
+
 			ore.markDirty();
 		}
-		
+
 		world.markBlockForUpdate(x, y, z);
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public int getRenderType(){
 		return IBlockMultiPass.getRenderType();
@@ -124,22 +124,22 @@ public class BlockBedrockOreTE extends BlockContainer implements ILookOverlay, I
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister reg) {
-		
+
 		this.blockIcon = reg.registerIcon("bedrock");
 		for(int i = 0; i < overlays.length; i++) {
 			overlays[i] = reg.registerIcon(RefStrings.MODID + ":ore_random_" + (i + 1));
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-		
+
 		if(RenderBlockMultipass.currentPass == 0)
 			return Blocks.bedrock.getIcon(0, 0);
 
 		TileEntity te = world.getTileEntity(x, y, z);
-		
+
 		if(te instanceof TileEntityBedrockOre) {
 			TileEntityBedrockOre ore = (TileEntityBedrockOre) te;
 			int index = ore.shape % overlays.length;
@@ -154,7 +154,7 @@ public class BlockBedrockOreTE extends BlockContainer implements ILookOverlay, I
 
 		if(RenderBlockMultipass.currentPass == 0)
 			return Blocks.bedrock.getIcon(0, 0);
-		
+
 		int index = meta % overlays.length;
 		return overlays[index];
 	}
@@ -162,53 +162,53 @@ public class BlockBedrockOreTE extends BlockContainer implements ILookOverlay, I
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
-		
+
 		if(RenderBlockMultipass.currentPass == 0)
 			return 0xffffff;
 
 		TileEntity te = world.getTileEntity(x, y, z);
-		
+
 		if(te instanceof TileEntityBedrockOre) {
 			TileEntityBedrockOre ore = (TileEntityBedrockOre) te;
 			return ore.color;
 		}
-		
+
 		return super.colorMultiplier(world, x, y, z);
 	}
 
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
-		
+
 		TileEntity te = world.getTileEntity(x, y, z);
-		
+
 		if(!(te instanceof TileEntityBedrockOre))
 			return;
-		
+
 		TileEntityBedrockOre ore = (TileEntityBedrockOre) te;
 
 		List<String> text = new ArrayList();
-		
+
 		if(ore.resource != null) {
 			text.add(ore.resource.getDisplayName());
 		}
-		
-		text.add("Tier: " + ore.tier);
-		
+
+		text.add(I18nUtil.resolveKey("overlay.bedrock_ore_te.tier", ore.tier));
+
 		if(ore.acidRequirement != null) {
-			text.add("Requires: " + ore.acidRequirement.fill + "mB " + ore.acidRequirement.type.getLocalizedName());
+			text.add(I18nUtil.resolveKey("overlay.bedrock_ore_te.requires_mb", ore.acidRequirement.fill, ore.acidRequirement.type.getLocalizedName()));
 		}
-		
+
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
-	
+
 	public static class TileEntityBedrockOre extends TileEntity {
-		
+
 		public ItemStack resource;
 		public FluidStack acidRequirement;
 		public int tier;
 		public int color;
 		public int shape;
-		
+
 		public TileEntityBedrockOre setStyle(int color, int shape) {
 			this.color = color;
 			this.shape = shape;
@@ -219,17 +219,17 @@ public class BlockBedrockOreTE extends BlockContainer implements ILookOverlay, I
 		public boolean canUpdate() {
 			return false;
 		}
-		
+
 		@Override
 		public void readFromNBT(NBTTagCompound nbt) {
 			super.readFromNBT(nbt);
-			
+
 			this.resource = new ItemStack(Item.getItemById(nbt.getInteger("0id")), nbt.getByte("size"), nbt.getShort("meta"));
-			
+
 			if(this.resource.getItem() == null) this.resource = new ItemStack(ModItems.powder_iron);
-			
+
 			FluidType type = Fluids.fromID(nbt.getInteger("fluid"));
-			
+
 			if(type != Fluids.NONE) {
 				this.acidRequirement = new FluidStack(type, nbt.getInteger("amount"));
 			}
@@ -238,17 +238,17 @@ public class BlockBedrockOreTE extends BlockContainer implements ILookOverlay, I
 			this.color = nbt.getInteger("color");
 			this.shape = nbt.getInteger("shape");
 		}
-		
+
 		@Override
 		public void writeToNBT(NBTTagCompound nbt) {
 			super.writeToNBT(nbt);
-			
+
 			if(this.resource != null) {
 				nbt.setInteger("0id", Item.getIdFromItem(this.resource.getItem()));
 				nbt.setByte("size", (byte) this.resource.stackSize);
 				nbt.setShort("meta", (short) this.resource.getItemDamage());
 			}
-			
+
 			if(this.acidRequirement != null) {
 				nbt.setInteger("fluid", this.acidRequirement.type.getID());
 				nbt.setInteger("amount", this.acidRequirement.fill);
@@ -265,11 +265,11 @@ public class BlockBedrockOreTE extends BlockContainer implements ILookOverlay, I
 			this.writeToNBT(nbt);
 			return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
 		}
-		
+
 		@Override
 		public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 			this.readFromNBT(pkt.func_148857_g());
-			
+
 			if(color == 0) {
 				this.color = MainRegistry.proxy.getStackColor(resource, true);
 			}

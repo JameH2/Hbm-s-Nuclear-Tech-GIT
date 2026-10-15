@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hbm.entity.mob.siege.SiegeTier;
 import com.hbm.lib.RefStrings;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,10 +19,10 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 
 public class ItemSiegeCoin extends Item {
-	
+
 	@SideOnly(Side.CLIENT)
 	private IIcon[] icons;
-	
+
 	public ItemSiegeCoin() {
 		this.hasSubtypes = true;
 		this.setMaxDamage(0);
@@ -37,9 +38,9 @@ public class ItemSiegeCoin extends Item {
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister p_94581_1_) {
 		this.itemIcon = Items.stick.getIconFromDamage(0);
-		
+
 		icons = new IIcon[SiegeTier.getLength()];
-		
+
 		for(int i = 0; i < SiegeTier.getLength(); i++) {
 			icons[i] = p_94581_1_.registerIcon(RefStrings.MODID + ":coin_siege_" + SiegeTier.tiers[i].name);
 		}
@@ -53,7 +54,7 @@ public class ItemSiegeCoin extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tab, List list) {
-		
+
 		for(int i = 0; i < SiegeTier.getLength(); i++) {
 			list.add(new ItemStack(item, 1, i));
 		}
@@ -64,6 +65,6 @@ public class ItemSiegeCoin extends Item {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		super.addInformation(stack, player, list, bool);
-		list.add(EnumChatFormatting.YELLOW + "Tier " + (stack.getItemDamage() + 1));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.siege_coin.desc1", (stack.getItemDamage() + 1)));
 	}
 }

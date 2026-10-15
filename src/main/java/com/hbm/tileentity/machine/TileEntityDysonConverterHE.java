@@ -1,11 +1,12 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.IDysonConverter;
 import com.hbm.tileentity.TileEntityMachineBase;
-import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.tileentity.TilePort.PortDef;
 
 import api.hbm.energymk2.IEnergyProviderMK2;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -23,8 +24,12 @@ public class TileEntityDysonConverterHE extends TileEntityMachineBase implements
 	public boolean isConverting;
 	private int cooldown;
 
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityDysonConverterHE() {
 		super(0);
+		
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 
 	@Override
@@ -35,11 +40,10 @@ public class TileEntityDysonConverterHE extends TileEntityMachineBase implements
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote) {
+			modulePowerPorts.update(getPorts());
+
 			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getOpposite();
 			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-
-			DirPos output = new DirPos(xCoord + dir.offsetX * 5, yCoord, zCoord + dir.offsetZ * 5, dir);
-			tryProvide(worldObj, output.getX(), output.getY(), output.getZ(), output.getDir());
 
 			isConverting = power > 0;
 
@@ -63,6 +67,20 @@ public class TileEntityDysonConverterHE extends TileEntityMachineBase implements
 
 			networkPackNT(250);
 		}
+	}
+	
+	protected PortDef[] cachedPorts;
+
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getOpposite();
+
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord + dir.offsetX * 4, yCoord, zCoord + dir.offsetZ * 4, dir),
+			};
+		}
+		
+		return cachedPorts;
 	}
 
 	@Override

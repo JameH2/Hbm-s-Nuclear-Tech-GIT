@@ -27,6 +27,7 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
+import com.hbm.util.i18n.I18nUtil;
 
 @NotableComments
 public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler implements ICompatNHNEI {
@@ -39,7 +40,7 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 	public final String displayName;
 	public final GenericRecipes recipeSet;
 	public final ItemStack[] machines;
-	
+
 	public NEIGenericRecipeHandler(String displayName, GenericRecipes recipeSet, Block... machines) {
 		ItemStack[] machineStacks = new ItemStack[machines.length];
 		for(int i = 0; i < machines.length; i++) machineStacks[i] = new ItemStack(machines[i]);
@@ -47,13 +48,13 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 		this.recipeSet = recipeSet;
 		this.machines = machineStacks;
 	}
-	
+
 	public NEIGenericRecipeHandler(String displayName, GenericRecipes recipeSet, ItemStack... machines) {
 		this.displayName = displayName;
 		this.recipeSet = recipeSet;
 		this.machines = machines;
 	}
-	
+
 	public class RecipeSet extends TemplateRecipeHandler.CachedRecipe {
 
 		protected GenericRecipe recipe;
@@ -61,7 +62,7 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 		protected PositionedStack[] output;
 		protected PositionedStack machine;
 		protected PositionedStack template;
-		
+
 		public RecipeSet(GenericRecipe recipe) {
 			this.recipe = recipe;
 			int inputSize = 0;
@@ -79,7 +80,7 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 			this.input = new PositionedStack[inputSize];
 			int[][] inPos = getInputSlotPositions(inputSize);
 			inputSize = 0; // just gonna reuse this because fuck it why not
-			
+
 			if(recipe.inputItem != null) for(int i = 0; i < recipe.inputItem.length; i++) {
 				this.input[i] = new PositionedStack(recipe.inputItem[i].extractForNEI(), inPos[i][0] + inputOffset, inPos[i][1]);
 				inputSize = i + 1;
@@ -91,7 +92,7 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 			int[][] outPos = getOutputSlotPositions(outputSize);
 			this.output = new PositionedStack[outputSize];
 			outputSize = 0;
-			
+
 			if(recipe.outputItem != null) for(int i = 0; i < recipe.outputItem.length; i++) {
 				this.output[i] = new PositionedStack(recipe.outputItem[i].getAllPossibilities(), outPos[i][0] + outputOffset, outPos[i][1]);
 				outputSize = i + 1;
@@ -99,14 +100,14 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 			if(recipe.outputFluid != null) for(int i = 0; i < recipe.outputFluid.length; i++) {
 				this.output[outputSize + i] = new PositionedStack(ItemFluidIcon.make(recipe.outputFluid[i]), outPos[outputSize + i][0] + outputOffset, outPos[outputSize + i][1]);
 			}
-			
+
 			if(recipe.isPooled()) {
 				String[] pools = recipe.getPools();
 				ItemStack[] blueprints = new ItemStack[pools.length];
 				for(int i = 0; i < pools.length; i++) blueprints[i] = ItemBlueprints.make(pools[i]);
 				this.template = new PositionedStack(blueprints, 75 + machineOffset, 10);
 			}
-			
+
 			ItemStack[] machineStacks = getMachines(recipe);
 			this.machine = new PositionedStack(machineStacks, 75 + machineOffset, template == null ? 31 : 38);
 		}
@@ -124,7 +125,7 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 		}
 	}
 
-	@Override public String getRecipeName() { return this.displayName; }
+	@Override public String getRecipeName() { return I18nUtil.resolveKey(this.displayName); }
 	@Override public ItemStack[] getMachinesForRecipe() { return machines; }
 	@Override public String getGuiTexture() { return RefStrings.MODID + ":textures/gui/nei/gui_nei.png"; }
 
@@ -132,7 +133,7 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 	public int getOutputXOffset(GenericRecipe recipe, int outputCount) { return 0; }
 	public int getMachineXOffset(GenericRecipe recipe) { return 0; }
 	public ItemStack[] getMachines(GenericRecipe recipe) { return this.machines; }
-	
+
 	// ✨ magic number vomit land ✨
 	public int[][] getInputSlotPositions(int count) {
 
@@ -142,18 +143,18 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 		if(count == 4) return new int[][] { {30, 15}, {48, 15}, {30, 33}, {48, 33} };
 		if(count == 5) return new int[][] { {12, 15}, {30, 15}, {48, 15}, {12, 33}, {30, 33} };
 		if(count == 6) return new int[][] { {12, 15}, {30, 15}, {48, 15}, {12, 33}, {30, 33}, {48, 33} };
-		
+
 		int[][] slots = new int[count][2];
 		int cols = (count + 2) / 3;
-		
+
 		for(int i = 0; i < count; i++) {
 			slots[i][0] = 12 + (i % cols) * 18 - (cols == 4 ? 18 : 0);
 			slots[i][1] = 6 + (i / cols) * 18;
 		}
-		
+
 		return slots;
 	}
-	
+
 	public int[][] getOutputSlotPositions(int count) {
 		switch(count) {
 		case 1: return new int[][] {
@@ -207,12 +208,12 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 			GenericRecipe recipe = (GenericRecipe) o;
 			boolean hasMatch = false;
 			boolean hide = ClientConfig.NEI_HIDE_SECRETS.get();
-			
+
 			if(hide && recipe.isPooled()) {
 				String[] pools = recipe.getPools();
 				for(String pool : pools) if(pool.startsWith(GenericRecipes.POOL_PREFIX_SECRET)) continue outer;
 			}
-			
+
 			if(hide && recipe.inputItem != null) for(AStack astack : recipe.inputItem) for(ItemStack stack : astack.extractForNEI()) {
 				if(ModItems.excludeNEI.contains(stack.getItem())) continue outer;
 			}
@@ -223,34 +224,34 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 			if(recipe.outputFluid != null) for(FluidStack fluid : recipe.outputFluid) {
 				if(areItemsAndMetaEqual(ItemFluidIcon.make(fluid), result)) hasMatch = true;
 			}
-			
+
 			if(hasMatch) this.arecipes.add(new RecipeSet(recipe));
 		}
 	}
-	
+
 	/** load all */
 	@Override
 	public void loadCraftingRecipes(String outputId, Object... results) {
-		
+
 		if(outputId.equals(getRecipeID())) {
-			
+
 			outer: for(Object o : this.recipeSet.recipeOrderedList) {
 				GenericRecipe recipe = (GenericRecipe) o;
 				boolean hide = ClientConfig.NEI_HIDE_SECRETS.get();
-				
+
 				if(hide && recipe.isPooled()) {
 					String[] pools = recipe.getPools();
 					for(String pool : pools) if(pool.startsWith(GenericRecipes.POOL_PREFIX_SECRET)) continue outer;
 				}
-				
+
 				if(hide && recipe.inputItem != null) for(AStack astack : recipe.inputItem) for(ItemStack stack : astack.extractForNEI())
 					if(ModItems.excludeNEI.contains(stack.getItem())) continue outer;
 				if(hide && recipe.outputItem != null) for(IOutput output : recipe.outputItem) for(ItemStack stack : output.getAllPossibilities())
 					if(ModItems.excludeNEI.contains(stack.getItem())) continue outer;
-				
+
 				this.arecipes.add(new RecipeSet(recipe));
 			}
-			
+
 		} else {
 			super.loadCraftingRecipes(outputId, results);
 		}
@@ -272,12 +273,12 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 			GenericRecipe recipe = (GenericRecipe) o;
 			boolean hasMatch = false;
 			boolean hide = ClientConfig.NEI_HIDE_SECRETS.get();
-			
+
 			if(hide && recipe.isPooled()) {
 				String[] pools = recipe.getPools();
 				for(String pool : pools) if(pool.startsWith(GenericRecipes.POOL_PREFIX_SECRET)) continue outer;
 			}
-			
+
 			if(recipe.inputItem != null) for(AStack astack : recipe.inputItem) for(ItemStack stack : astack.extractForNEI()) {
 				if(hide && ModItems.excludeNEI.contains(stack.getItem())) continue outer;
 				if(NEIServerUtils.areStacksSameTypeCrafting(stack, ingredient)) hasMatch = true;
@@ -288,7 +289,7 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 			if(hide && recipe.outputItem != null) for(IOutput output : recipe.outputItem) for(ItemStack stack : output.getAllPossibilities()) {
 				if(ModItems.excludeNEI.contains(stack.getItem())) continue outer;
 			}
-			
+
 			if(hasMatch) this.arecipes.add(new RecipeSet(recipe));
 		}
 	}
@@ -296,7 +297,7 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 	public static boolean areItemsAndMetaEqual(ItemStack sta1, ItemStack sta2) {
 		return sta1.getItem() == sta2.getItem() && sta1.getItemDamage() == sta2.getItemDamage();
 	}
-	
+
 	@Override
 	public void loadTransferRects() {
 		transferRectsGui = new LinkedList<RecipeTransferRect>();
@@ -308,12 +309,12 @@ public abstract class NEIGenericRecipeHandler extends TemplateRecipeHandler impl
 	@Override
 	public void drawBackground(int recipe) {
 		super.drawBackground(recipe);
-		
+
 		RecipeSet rec = (RecipeSet) this.arecipes.get(recipe);
 
 		for(PositionedStack pos : rec.input) drawTexturedModalRect(pos.relx - 1, pos.rely - 1, 5, 87, 18, 18);
 		for(PositionedStack pos : rec.output) drawTexturedModalRect(pos.relx - 1, pos.rely - 1, 5, 87, 18, 18);
-		
+
 		if(rec.template == null) {
 			drawTexturedModalRect(74 + this.getMachineXOffset(rec.recipe), 14, 59, 87, 18, 36);
 		} else {

@@ -7,6 +7,7 @@ import com.hbm.handler.ArmorModHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
+import com.hbm.util.i18n.I18nUtil;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,9 +31,9 @@ public class ItemModKnife extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.RED + "Pain.");
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_knife.desc1"));
 		list.add("");
-		list.add(EnumChatFormatting.RED + "Hurts, doesn't it?");
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_knife.desc2"));
 
 		list.add("");
 		super.addInformation(stack, player, list, bool);

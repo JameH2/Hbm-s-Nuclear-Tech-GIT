@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
+import com.hbm.util.i18n.I18nUtil;
 
 public class MachineMiningLaser extends BlockDummyable implements ITooltipProvider {
 
@@ -46,7 +47,16 @@ public class MachineMiningLaser extends BlockDummyable implements ITooltipProvid
 	public int getHeightOffset() {
 		return -1;
 	}
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, 0, ForgeDirection.EAST.ordinal()},
+			{-1, 0, 0, ForgeDirection.WEST.ordinal()},
+			{0, 0, 1, ForgeDirection.SOUTH.ordinal()},
+			{0, 0, -1, ForgeDirection.NORTH.ordinal()},
+			{0, 1, 0, ForgeDirection.UP.ordinal()}
+		}, dir);
+	}
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 
@@ -70,20 +80,14 @@ public class MachineMiningLaser extends BlockDummyable implements ITooltipProvid
 
 		super.fillSpace(world, x, y, z, dir, o);
 
-		x += dir.offsetX * o;
-		z += dir.offsetZ * o;
-
-		this.makeExtra(world, x + 1, y, z);
-		this.makeExtra(world, x - 1, y, z);
-		this.makeExtra(world, x, y, z + 1);
-		this.makeExtra(world, x, y, z - 1);
-
-		this.makeExtra(world, x, y + 1, z);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add("3x3x3 Multiblock");
-		list.add("Only placeable on a ceiling.");
+		list.add(I18nUtil.resolveKey("tile.mining_laser.3x3x3_multiblock"));
+		list.add(I18nUtil.resolveKey("tile.placeable_ceiling"));
 	}
 }

@@ -57,7 +57,7 @@ public class FluidCounterValve extends FluidDuctBase implements ILookOverlay, IT
 
 		List<String> text = new ArrayList<>();
 		text.add("&[" + duct.getType().getColor() + "&]" + duct.getType().getLocalizedName());
-		text.add("Counter: " + duct.getCounter());
+		text.add(I18nUtil.resolveKey("overlay.fluid_counter_valve.counter", duct.getCounter()));
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 

@@ -44,7 +44,7 @@ public class RadioTorchController extends RadioTorchBase {
 		if(te instanceof TileEntityRadioTorchController) {
 			TileEntityRadioTorchController radio = (TileEntityRadioTorchController) te;
 			List<String> text = new ArrayList();
-			text.add(EnumChatFormatting.AQUA + "Freq: " + radio.channel);
+			text.add((EnumChatFormatting.AQUA) + I18nUtil.resolveKey("overlay.radio_torch_controller.freq", radio.channel));
 			ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 		}
 	}

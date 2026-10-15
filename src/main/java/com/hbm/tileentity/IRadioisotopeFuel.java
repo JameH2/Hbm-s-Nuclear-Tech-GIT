@@ -39,7 +39,7 @@ public interface IRadioisotopeFuel
 	{
 		return (short) Math.ceil(fuel.getHeat() * (fuel.getLifespan(stack) * fuel.getMaxLifespan()));
 	}
-	
+
 	@CheckForNull
 	public static IRadioisotopeFuel getInstance(Item item)
 	{
@@ -50,7 +50,7 @@ public interface IRadioisotopeFuel
 	{
 		return stack == null ? null : getInstance(stack.getItem());
 	}
-	
+
 	public default void decay(ItemStack stack)
 	{
 		if (stack != null && stack.getItem() instanceof IRadioisotopeFuel)
@@ -66,7 +66,7 @@ public interface IRadioisotopeFuel
 			}
 		}
 	}
-	
+
 	public default long getLifespan(ItemStack stack)
 	{
 		if (stack != null && stack.getItem() instanceof IRadioisotopeFuel)
@@ -135,20 +135,20 @@ public interface IRadioisotopeFuel
 		tooltip.add(I18nUtil.resolveKey("desc.item.rtgHeat", instance.getDoesDecay() && VersatileConfig.scaleRTGPower() ? getScaledPower(instance, stack) : instance.getHeat()));
 		if (instance.getDoesDecay())
 		{
-			tooltip.add(I18nUtil.resolveKey("desc.item.rtgDecay", I18nUtil.resolveKey(instance.getDecayItem().getUnlocalizedName() + ".name"), instance.getDecayItem().stackSize));
+			tooltip.add(I18nUtil.resolveKey("desc.item.rtgDecay", I18nUtil.resolveKey(instance.getDecayItem().getUnlocalizedName() + ".name")));
 			tooltip.add(BobMathUtil.toPercentage(instance.getLifespan(stack), instance.getMaxLifespan()));
 			if (showAdv)
 			{
-				tooltip.add("EXTENDED INFO:");
-				tooltip.add(String.format(Locale.US, "%s / %s ticks", instance.getLifespan(stack), instance.getMaxLifespan()));
+				tooltip.add(I18nUtil.resolveKey("gui.rtg_fuel.extended_info"));
+				tooltip.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtg_fuel.ticks"), instance.getLifespan(stack), instance.getMaxLifespan()));
 				final String[] timeLeft = BobMathUtil.ticksToDate(instance.getLifespan(stack));
 				final String[] maxLife = BobMathUtil.ticksToDate(instance.getMaxLifespan());
-				tooltip.add(String.format(Locale.US, "Time remaining: %s y, %s d, %s h", (Object[]) timeLeft));
-				tooltip.add(String.format(Locale.US, "Maximum life: %s y, %s d, %s h", (Object[]) maxLife));
+				tooltip.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtg_fuel.time_remaining_y_d_h"), (Object[]) timeLeft));
+				tooltip.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtg_fuel.maximum_life_y_d_h"), (Object[]) maxLife));
 			}
 		}
 	}
-	
+
 	public static double getDuraBar(ItemStack stack)
 	{
 		final IRadioisotopeFuel instance = (IRadioisotopeFuel) stack.getItem();

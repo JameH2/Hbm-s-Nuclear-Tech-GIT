@@ -2,6 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.BlockMulti;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.extprop.HbmPlayerProps;
 import com.hbm.lib.RefStrings;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -9,7 +10,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -42,6 +45,21 @@ public class BlockScaffold extends BlockMulti {
 	@Override
 	public boolean renderAsNormalBlock() {
 		return false;
+	}
+
+	@Override
+	public boolean isLadder(IBlockAccess world, int x, int y, int z, EntityLivingBase entity) {
+		// The fourth metadata bit marks the horizontal scaffold orientations.
+		return (world.getBlockMetadata(x, y, z) & 4) == 0;
+	}
+
+	@Override
+	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+		if(entity instanceof EntityPlayer && isLadder(world, x, y, z, (EntityLivingBase) entity)) {
+			// The collision plane can keep a player's feet outside the block, so
+			// Forge's normal ladder check alone is not enough when climbing its face.
+			HbmPlayerProps.getData((EntityPlayer) entity).isOnLadder = true;
+		}
 	}
 
 	@Override

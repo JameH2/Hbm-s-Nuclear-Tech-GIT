@@ -18,7 +18,7 @@ import net.minecraft.item.ItemStack;
 public class GrenadeRecipeHandler  extends NEIUniversalHandler {
 
 	public GrenadeRecipeHandler() {
-		super("Grenade Crafting", Blocks.crafting_table, new ArrayList());
+		super("nei.grenade.name", Blocks.crafting_table, new ArrayList());
 	}
 
 	@Override
@@ -28,16 +28,16 @@ public class GrenadeRecipeHandler  extends NEIUniversalHandler {
 
 	@Override
 	public void loadCraftingRecipes(String outputId, Object... results) {
-		
+
 		if(outputId.equals(getKey())) {
-			
+
 			for(EnumGrenadeShell shell : EnumGrenadeShell.values()) for(EnumGrenadeFilling filling : EnumGrenadeFilling.values()) {
 				if(filling.compatibleShells.contains(shell)) for(EnumGrenadeFuze fuze : EnumGrenadeFuze.values()) {
 					addRecipe(shell, filling, fuze, null);
 					for(EnumGrenadeExtra extra : EnumGrenadeExtra.values()) addRecipe(shell, filling, fuze, extra);
 				}
 			}
-			
+
 		} else {
 			super.loadCraftingRecipes(outputId, results);
 		}
@@ -45,7 +45,7 @@ public class GrenadeRecipeHandler  extends NEIUniversalHandler {
 
 	@Override
 	public void loadUsageRecipes(ItemStack ingredient) {
-		
+
 		if(ingredient.getItem() == ModItems.grenade_shell) {
 			EnumGrenadeShell shell = EnumUtil.grabEnumSafely(EnumGrenadeShell.class, ingredient.getItemDamage());
 			for(EnumGrenadeFilling filling : EnumGrenadeFilling.values()) {
@@ -55,7 +55,7 @@ public class GrenadeRecipeHandler  extends NEIUniversalHandler {
 				}
 			}
 		}
-		
+
 		if(ingredient.getItem() == ModItems.grenade_filling) {
 			EnumGrenadeFilling filling = EnumUtil.grabEnumSafely(EnumGrenadeFilling.class, ingredient.getItemDamage());
 			for(EnumGrenadeShell shell : EnumGrenadeShell.values()) {
@@ -65,7 +65,7 @@ public class GrenadeRecipeHandler  extends NEIUniversalHandler {
 				}
 			}
 		}
-		
+
 		if(ingredient.getItem() == ModItems.grenade_fuze) {
 			EnumGrenadeFuze fuze = EnumUtil.grabEnumSafely(EnumGrenadeFuze.class, ingredient.getItemDamage());
 			for(EnumGrenadeShell shell : EnumGrenadeShell.values()) for(EnumGrenadeFilling filling : EnumGrenadeFilling.values()) {
@@ -75,7 +75,7 @@ public class GrenadeRecipeHandler  extends NEIUniversalHandler {
 				}
 			}
 		}
-		
+
 		if(ingredient.getItem() == ModItems.grenade_extra) {
 			EnumGrenadeExtra extra = EnumUtil.grabEnumSafely(EnumGrenadeExtra.class, ingredient.getItemDamage());
 			for(EnumGrenadeShell shell : EnumGrenadeShell.values()) for(EnumGrenadeFilling filling : EnumGrenadeFilling.values()) {
@@ -96,15 +96,15 @@ public class GrenadeRecipeHandler  extends NEIUniversalHandler {
 		EnumGrenadeExtra extra = ItemGrenadeUniversal.getExtra(result);
 		addRecipe(shell, filling, fuze, extra);
 	}
-	
+
 	public void addRecipe(EnumGrenadeShell shell, EnumGrenadeFilling filling, EnumGrenadeFuze fuze, EnumGrenadeExtra extra) {
-		
+
 		ItemStack[][] ins = new ItemStack[extra != null ? 4 : 3][1];
 		ins[0][0] = DictFrame.fromOne(ModItems.grenade_shell, shell);
 		ins[1][0] = DictFrame.fromOne(ModItems.grenade_filling, filling);
 		ins[2][0] = DictFrame.fromOne(ModItems.grenade_fuze, fuze);
 		if(extra != null) ins[3][0] = DictFrame.fromOne(ModItems.grenade_extra, extra);
-		
+
 		ItemStack[][] outs = new ItemStack[][] {{ItemGrenadeUniversal.make(shell, filling, fuze, extra)}};
 		this.arecipes.add(new RecipeSet(ins, outs, null));
 	}

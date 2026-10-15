@@ -21,9 +21,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
 public class GUIMachineRadarNT extends GuiScreen {
-	
+
 	public static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_radar_nt.png");
-	
+
 	protected TileEntityMachineRadarNT radar;
 	protected int xSize = 216;
 	protected int ySize = 234;
@@ -32,7 +32,7 @@ public class GUIMachineRadarNT extends GuiScreen {
 
 	public int lastMouseX;
 	public int lastMouseY;
-	
+
 	public GUIMachineRadarNT(TileEntityMachineRadarNT tile) {
 		this.radar = tile;
 	}
@@ -47,7 +47,7 @@ public class GUIMachineRadarNT extends GuiScreen {
 	@Override
 	protected void mouseClicked(int x, int y, int i) {
 		super.mouseClicked(x, y, i);
-		
+
 		String cmd = null;
 
 		if(checkClick(x, y, -10, 88, 8, 8)) cmd = "missiles";
@@ -58,7 +58,7 @@ public class GUIMachineRadarNT extends GuiScreen {
 		if(checkClick(x, y, -10, 138, 8, 8)) cmd = "map";
 		if(checkClick(x, y, -10, 158, 8, 8)) cmd = "gui1";
 		if(checkClick(x, y, -10, 178, 8, 8)) cmd = "clear";
-		
+
 		if(cmd != null) {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
@@ -82,7 +82,7 @@ public class GUIMachineRadarNT extends GuiScreen {
 	private void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 
 		if(checkClick(mouseX, mouseY, 8, 221, 200, 7)) this.func_146283_a(Arrays.asList(BobMathUtil.getShortNumber(radar.power) + "/" + BobMathUtil.getShortNumber(radar.maxPower) + "HE"), mouseX, mouseY);
-		
+
 		if(checkClick(mouseX, mouseY, -10, 88, 8, 8)) this.func_146283_a(Arrays.asList(I18nUtil.resolveKeyArray("radar.detectMissiles")), mouseX, mouseY);
 		if(checkClick(mouseX, mouseY, -10, 98, 8, 8)) this.func_146283_a(Arrays.asList(I18nUtil.resolveKeyArray("radar.detectShells")), mouseX, mouseY);
 		if(checkClick(mouseX, mouseY, -10, 108, 8, 8)) this.func_146283_a(Arrays.asList(I18nUtil.resolveKeyArray("radar.detectPlayers")), mouseX, mouseY);
@@ -96,10 +96,10 @@ public class GUIMachineRadarNT extends GuiScreen {
 			for(RadarEntry m : radar.entries) {
 				int x = guiLeft + (int)((m.posX - radar.xCoord) / ((double) radar.getRange() * 2 + 1) * (200D - 8D)) + 108;
 				int z = guiTop + (int)((m.posZ - radar.zCoord) / ((double) radar.getRange() * 2 + 1) * (200D - 8D)) + 117;
-				
+
 				if(mouseX + 5 > x && mouseX - 4 <= x && mouseY + 5 > z && mouseY - 4 <= z) {
 
-					String[] text = new String[] { I18nUtil.resolveKey(m.unlocalizedName), m.posX + " / " + m.posZ, "Alt.: " + m.posY };
+					String[] text = new String[] { I18nUtil.resolveKey(m.unlocalizedName), m.posX + " / " + m.posZ, I18nUtil.resolveKey("gui.radar_nt.alt") + m.posY };
 					this.func_146283_a(Arrays.asList(text), x, z);
 					return;
 				}
@@ -119,21 +119,21 @@ public class GUIMachineRadarNT extends GuiScreen {
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		drawTexturedModalRect(guiLeft - 14, guiTop + 84, 224, 0, 14, 66);
 		drawTexturedModalRect(guiLeft - 14, guiTop + 154, 224, 66, 14, 36);
-		
+
 		if(radar.power > 0) {
 			int i = (int) (radar.power * 200 / radar.maxPower);
 			drawTexturedModalRect(guiLeft + 8, guiTop + 221, 0, 234, i, 16);
 		}
-		
+
 		if(radar.scanMissiles ^ (radar.jammed && radar.getWorldObj().rand.nextBoolean())) drawTexturedModalRect(guiLeft - 10, guiTop + 88, 238, 4, 8, 8);
 		if(radar.scanShells ^ (radar.jammed && radar.getWorldObj().rand.nextBoolean())) drawTexturedModalRect(guiLeft - 10, guiTop + 98, 238, 14, 8, 8);
 		if(radar.scanPlayers ^ (radar.jammed && radar.getWorldObj().rand.nextBoolean())) drawTexturedModalRect(guiLeft - 10, guiTop + 108, 238, 24, 8, 8);
 		if(radar.smartMode ^ (radar.jammed && radar.getWorldObj().rand.nextBoolean())) drawTexturedModalRect(guiLeft - 10, guiTop + 118, 238, 34, 8, 8);
 		if(radar.redMode ^ (radar.jammed && radar.getWorldObj().rand.nextBoolean())) drawTexturedModalRect(guiLeft - 10, guiTop + 128, 238, 44, 8, 8);
 		if(radar.showMap ^ (radar.jammed && radar.getWorldObj().rand.nextBoolean())) drawTexturedModalRect(guiLeft - 10, guiTop + 138, 238, 54, 8, 8);
-		
+
 		if(radar.power < radar.consumption) return;
-		
+
 		if(radar.jammed) {
 			for(int i = 0; i < 5; i++) {
 				for(int j = 0; j < 5; j++) {
@@ -142,7 +142,7 @@ public class GUIMachineRadarNT extends GuiScreen {
 			}
 			return;
 		}
-		
+
 		if(radar.showMap) {
 			Tessellator tess = Tessellator.instance;
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -171,7 +171,7 @@ public class GUIMachineRadarNT extends GuiScreen {
 		tr.rotateAroundZ(rot);
 		tl.rotateAroundZ(rot + 0.25F);
 		bl.rotateAroundZ(rot);
-		
+
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -187,7 +187,7 @@ public class GUIMachineRadarNT extends GuiScreen {
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glShadeModel(GL11.GL_FLAT);
-		
+
 		if(!radar.entries.isEmpty()) {
 			for(RadarEntry m : radar.entries) {
 				double x = (m.posX - radar.xCoord) / ((double) radar.getRange() * 2 + 1) * (200D - 8D) - 4D;
@@ -197,7 +197,7 @@ public class GUIMachineRadarNT extends GuiScreen {
 			}
 		}
 	}
-	
+
 	public void drawTexturedModalRectDouble(double x, double y, int sourceX, int sourceY, int sizeX, int sizeY) {
 		float f = 0.00390625F;
 		float f1 = 0.00390625F;
@@ -209,11 +209,11 @@ public class GUIMachineRadarNT extends GuiScreen {
 		tessellator.addVertexWithUV(x,			y,			this.zLevel,	(sourceX + 0) * f,		(sourceY + 0) * f1);
 		tessellator.draw();
 	}
-	
+
 	protected boolean checkClick(int x, int y, int left, int top, int sizeX, int sizeY) {
 		return guiLeft + left <= x && guiLeft + left + sizeX > x && guiTop + top < y && guiTop + top + sizeY >= y;
 	}
-	
+
 	@Override
 	protected void keyTyped(char c, int key) {
 		if(key == 1 || key == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
@@ -221,9 +221,9 @@ public class GUIMachineRadarNT extends GuiScreen {
 		}
 
 		if(checkClick(lastMouseX, lastMouseY, 8, 17, 200, 200) && c >= '1' && c <= '8') {
-			
+
 			int id = c - '1';
-	
+
 			if(!radar.entries.isEmpty()) {
 				for(RadarEntry m : radar.entries) {
 					int x = guiLeft + (int) ((m.posX - radar.xCoord) / ((double) radar.getRange() * 2 + 1) * (200D - 8D)) + 108;
@@ -248,7 +248,7 @@ public class GUIMachineRadarNT extends GuiScreen {
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, radar.xCoord, radar.yCoord, radar.zCoord));
 		}
 	}
-	
+
 	@Override
 	public boolean doesGuiPauseGame() {
 		return false;

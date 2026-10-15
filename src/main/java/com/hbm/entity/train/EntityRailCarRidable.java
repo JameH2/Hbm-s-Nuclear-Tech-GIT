@@ -14,12 +14,13 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import com.hbm.util.i18n.I18nUtil;
 
 public abstract class EntityRailCarRidable extends EntityRailCarCargo {
-	
+
 	public double engineSpeed;
 	public SeatDummyEntity[] passengerSeats;
-	
+
 	public EntityRailCarRidable(World world) {
 		super(world);
 		this.passengerSeats = new SeatDummyEntity[this.getPassengerSeats().length];
@@ -37,7 +38,7 @@ public abstract class EntityRailCarRidable extends EntityRailCarCargo {
 	public abstract boolean canAccelerate();
 	/** Called every tick if acceleration is successful */
 	public void consumeFuel() { }
-	
+
 	/** An additive to the engine's speed yielding the total speed, caused by uneven surfaces */
 	public double getGravitySpeed() {
 		return 0D;
@@ -45,11 +46,11 @@ public abstract class EntityRailCarRidable extends EntityRailCarCargo {
 
 	@Override
 	public double getCurrentSpeed() { // in its current form, only call once per tick
-		
+
 		if(this.riddenByEntity instanceof EntityPlayer) {
-			
+
 			EntityPlayer player = (EntityPlayer) this.riddenByEntity;
-			
+
 			if(this.canAccelerate()) {
 				if(player.moveForward > 0) {
 					engineSpeed += this.getPoweredAcceleration();
@@ -67,25 +68,25 @@ public abstract class EntityRailCarRidable extends EntityRailCarCargo {
 			} else {
 				engineSpeed *= this.getPassivBrake();
 			}
-			
+
 		} else {
 			engineSpeed *= this.getPassivBrake();
 		}
-		
+
 		double maxSpeed = this.getMaxPoweredSpeed();
 		engineSpeed = MathHelper.clamp_double(engineSpeed, -maxSpeed, maxSpeed);
-		
+
 		return engineSpeed + this.getGravitySpeed();
 	}
 
 	@Override
 	public boolean interactFirst(EntityPlayer player) {
-		
+
 		if(super.interactFirst(player)) return true;
 		if(worldObj.isRemote) return true;
-		
+
 		int nearestSeat = this.getNearestSeat(player);
-		
+
 		if(nearestSeat == -1) {
 			player.mountEntity(this);
 		} else if(nearestSeat >= 0) {
@@ -103,24 +104,24 @@ public abstract class EntityRailCarRidable extends EntityRailCarCargo {
 
 		return true;
 	}
-	
+
 	public int getNearestSeat(EntityPlayer player) {
-		
+
 		double nearestDist = Double.POSITIVE_INFINITY;
 		int nearestSeat = -3;
-		
+
 		Vec3[] seats = getPassengerSeats();
 		Vec3 look = player.getLook(2);
 		look.xCoord += player.posX;
 		look.yCoord += player.posY + player.eyeHeight - player.yOffset;
 		look.zCoord += player.posZ;
-		
+
 		for(int i = 0; i < seats.length; i++) {
-			
+
 			Vec3 seat = seats[i];
 			if(seat == null) continue;
 			if(passengerSeats[i] != null) continue;
-			
+
 			seat.rotateAroundY((float) (-this.rotationYaw * Math.PI / 180));
 			double x = renderX + seat.xCoord;
 			double y = renderY + seat.yCoord;
@@ -128,7 +129,7 @@ public abstract class EntityRailCarRidable extends EntityRailCarCargo {
 
 			Vec3 delta = Vec3.createVectorHelper(look.xCoord - x, look.yCoord - y, look.zCoord - z);
 			double dist = delta.lengthVector();
-			
+
 			if(dist < nearestDist) {
 				nearestDist = dist;
 				nearestSeat = i;
@@ -144,24 +145,24 @@ public abstract class EntityRailCarRidable extends EntityRailCarCargo {
 
 			Vec3 delta = Vec3.createVectorHelper(look.xCoord - x, look.yCoord - y, look.zCoord - z);
 			double dist = delta.lengthVector();
-	
+
 			if(dist < nearestDist) {
 				nearestDist = dist;
 				nearestSeat = -1;
 			}
 		}
-		
+
 		if(nearestDist > 180) return -2;
-		
+
 		return nearestSeat;
 	}
-	
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		
+
 		if(!worldObj.isRemote) {
-			
+
 			Vec3[] seats = this.getPassengerSeats();
 			for(int i = 0; i < passengerSeats.length; i++) {
 				SeatDummyEntity seat = passengerSeats[i];
@@ -186,11 +187,11 @@ public abstract class EntityRailCarRidable extends EntityRailCarCargo {
 
 	@Override
 	public void updateRiderPosition() {
-		
+
 		Vec3 offset = getRiderSeatPosition();
 		offset.rotateAroundX((float) (this.rotationPitch * Math.PI / 180));
 		offset.rotateAroundY((float) (-this.rotationYaw * Math.PI / 180));
-		
+
 		if(this.riddenByEntity != null) {
 			this.riddenByEntity.setPosition(this.renderX + offset.xCoord, this.renderY + offset.yCoord, this.renderZ + offset.zCoord);
 		}
@@ -198,9 +199,9 @@ public abstract class EntityRailCarRidable extends EntityRailCarCargo {
 
 	/** Returns a Vec3 showing the relative position from the driver to the core */
 	public abstract Vec3 getRiderSeatPosition();
-	
+
 	public abstract Vec3[] getPassengerSeats();
-	
+
 	/** Dynamic seats generated when a player clicks near a seat-spot, moves and rotates with the train as one would expect. */
 	public static class SeatDummyEntity extends Entity {
 
@@ -217,19 +218,19 @@ public abstract class EntityRailCarRidable extends EntityRailCarCargo {
 			if(train != null) this.dataWatcher.updateObject(3, train.getEntityId());
 			this.dataWatcher.updateObject(4, index);
 		}
-		
+
 		@Override protected void entityInit() { this.dataWatcher.addObject(3, new Integer(0)); this.dataWatcher.addObject(4, new Integer(0)); }
 		@Override protected void writeEntityToNBT(NBTTagCompound nbt) { }
 		@Override public boolean writeToNBTOptional(NBTTagCompound nbt) { return false; }
 		@Override public void readEntityFromNBT(NBTTagCompound nbt) { this.setDead(); }
-		
+
 		@Override public void onUpdate() {
 			if(!worldObj.isRemote) {
 				if(this.train == null || this.train.isDead) {
 					this.setDead();
 				}
 			} else {
-				
+
 				if(this.turnProgress > 0) {
 					this.prevRotationYaw = this.rotationYaw;
 					double x = this.posX + (this.trainX - this.posX) / (double) this.turnProgress;
@@ -242,7 +243,7 @@ public abstract class EntityRailCarRidable extends EntityRailCarCargo {
 				}
 			}
 		}
-		
+
 		@Override @SideOnly(Side.CLIENT) public void setPositionAndRotation2(double posX, double posY, double posZ, float yaw, float pitch, int turnProg) {
 			this.trainX = posX;
 			this.trainY = posY;
@@ -253,7 +254,7 @@ public abstract class EntityRailCarRidable extends EntityRailCarCargo {
 		@Override
 		public void updateRiderPosition() {
 			if(this.riddenByEntity != null) {
-				
+
 				if(train == null) {
 					int eid = this.dataWatcher.getWatchableObjectInt(3);
 					Entity entity = worldObj.getEntityByID(eid);
@@ -261,13 +262,13 @@ public abstract class EntityRailCarRidable extends EntityRailCarCargo {
 						train = (EntityRailCarRidable) entity;
 					}
 				}
-				
+
 				//fallback for when train is null
 				if(train == null) {
 					this.riddenByEntity.setPosition(posX, posY + 1, posZ);
 					return;
 				}
-				
+
 				//doing it like this instead of with the position directly removes any discrepancies caused by entity tick order
 				//mmhmhmhm silky smooth
 				int index = this.dataWatcher.getWatchableObjectInt(4);
@@ -281,15 +282,15 @@ public abstract class EntityRailCarRidable extends EntityRailCarCargo {
 			}
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void printHook(RenderGameOverlayEvent.Pre event, World world, int x, int y, int z) {
 		List<String> text = new ArrayList();
-		/*text.add("LTU: " + this.ltu);
-		text.add("Front: " + this.coupledFront);
-		text.add("Back: " + this.coupledBack);*/
-		text.add("Nearest seat: " + this.getNearestSeat(MainRegistry.proxy.me()));
+		/*text.add(I18nUtil.resolveKey("overlay.entity_rail_car_ridable.ltu", this.ltu));
+		text.add(I18nUtil.resolveKey("overlay.entity_rail_car_ridable.front", this.coupledFront));
+		text.add(I18nUtil.resolveKey("overlay.entity_rail_car_ridable.back", this.coupledBack));*/
+		text.add(I18nUtil.resolveKey("overlay.entity_rail_car_ridable.nearest_seat", this.getNearestSeat(MainRegistry.proxy.me())));
 		//ILookOverlay.printGeneric(event, this.getClass().getSimpleName() + " " + this.hashCode(), 0xffff00, 0x404000, text);
 	}
 }

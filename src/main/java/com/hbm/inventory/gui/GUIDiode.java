@@ -1,8 +1,12 @@
 package com.hbm.inventory.gui;
 
+import java.util.Locale;
+
+import com.hbm.util.i18n.I18nUtil;
+
 import org.lwjgl.input.Keyboard;
 
-import com.hbm.blocks.network.CableDiode.TileEntityDiode;
+import com.hbm.blocks.network.BlockNetworkSeparator.TileEntityNetworkSeparator;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.util.EnumUtil;
@@ -20,13 +24,13 @@ import net.minecraft.util.ResourceLocation;
 @SideOnly(Side.CLIENT)
 public class GUIDiode extends GuiScreen {
 
-	protected final TileEntityDiode diode;
+	protected final TileEntityNetworkSeparator diode;
 
 	private GuiTextField textThroughput;
 	private GuiButton buttonPriority;
 	private int priority;
 
-	public GUIDiode(TileEntityDiode diode) {
+	public GUIDiode(TileEntityNetworkSeparator diode) {
 		this.diode = diode;
 		this.priority = diode.priority.ordinal();
 	}
@@ -36,21 +40,21 @@ public class GUIDiode extends GuiScreen {
 		Keyboard.enableRepeatEvents(true);
 
 		textThroughput = new GuiTextField(fontRendererObj, this.width / 2 - 150, 100, 90, 20);
-		textThroughput.setText("" + diode.limit);
+		textThroughput.setText("" + diode.configuredLimit);
 		textThroughput.setMaxStringLength(11);
 
-		buttonPriority = new GuiButton(0, this.width / 2 + 20, 100, 90, 20, diode.priority.name());
+		buttonPriority = new GuiButton(0, this.width / 2 + 20, 100, 90, 20, I18nUtil.resolveKey("gui.connection_priority." + diode.priority.name().toLowerCase(Locale.US)));
 	}
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
 
-		drawString(fontRendererObj, "Throughput:", this.width / 2 - 150, 80, 0xA0A0A0);
-		drawString(fontRendererObj, "(max. 10,000,000,000 HE)", this.width / 2 - 150, 90, 0xA0A0A0);
+		drawString(fontRendererObj, I18nUtil.resolveKey("gui.diode.throughput"), this.width / 2 - 150, 80, 0xA0A0A0);
+		drawString(fontRendererObj, I18nUtil.resolveKey("gui.diode.max_10_000_000_000_he"), this.width / 2 - 150, 90, 0xA0A0A0);
 		textThroughput.drawTextBox();
 
-		drawString(fontRendererObj, "Priority:", this.width / 2 + 20, 80, 0xA0A0A0);
+		drawString(fontRendererObj, I18nUtil.resolveKey("gui.diode.priority"), this.width / 2 + 20, 80, 0xA0A0A0);
 		buttonPriority.drawButton(mc, mouseX, mouseY);
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
@@ -86,7 +90,7 @@ public class GUIDiode extends GuiScreen {
 		if(buttonPriority.mousePressed(mc, mouseX, mouseY)) {
 			this.priority++;
 			if(priority >= ConnectionPriority.values().length) priority = 0;
-			buttonPriority.displayString = EnumUtil.grabEnumSafely(ConnectionPriority.class, priority).name();
+			buttonPriority.displayString = I18nUtil.resolveKey("gui.connection_priority." + EnumUtil.grabEnumSafely(ConnectionPriority.class, priority).name().toLowerCase(Locale.US));
 			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 		}
 	}

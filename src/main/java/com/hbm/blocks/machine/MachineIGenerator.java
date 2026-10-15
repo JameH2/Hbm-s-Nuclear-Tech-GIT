@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.common.util.ForgeDirection;
+import com.hbm.util.i18n.I18nUtil;
 
 public class MachineIGenerator extends BlockDummyable implements ILookOverlay {
 
@@ -23,13 +24,13 @@ public class MachineIGenerator extends BlockDummyable implements ILookOverlay {
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		
+
 		if(meta >= 12)
 			return new TileEntityMachineIGenerator();
-		
+
 		if(meta >= extra)
 			return new TileEntityProxyCombo(false, true, true);
-		
+
 		return new TileEntityProxyCombo(true, false, false);
 	}
 
@@ -47,23 +48,23 @@ public class MachineIGenerator extends BlockDummyable implements ILookOverlay {
 	public boolean renderAsNormalBlock() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(world.isRemote) {
 			return true;
 		} else if(!player.isSneaking()) {
-			
+
 			int[] pos = this.findCore(world, x, y, z);
-			
+
 			if(pos == null)
 				return false;
-			
+
 			//TileEntityMachineIGenerator gen = (TileEntityMachineIGenerator)world.getTileEntity(pos[0], pos[1], pos[2]);
-			
+
 			//if(gen != null) FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, pos[0], pos[1], pos[2]);
-			
+
 			return true;
 		} else {
 			return false;
@@ -94,7 +95,7 @@ public class MachineIGenerator extends BlockDummyable implements ILookOverlay {
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
 		List<String> text = new ArrayList();
-		text.add("In memory of all that we have lost");
-		ILookOverlay.printGeneric(event, "Industrial Generator Memorial", 0xff8000, 0x804000, text);
+		text.add(I18nUtil.resolveKey("overlay.igenerator.memory_we_lost"));
+		ILookOverlay.printGeneric(event, I18nUtil.resolveKey("gui.igenerator.industrial_generator_memorial"), 0xff8000, 0x804000, text);
 	}
 }

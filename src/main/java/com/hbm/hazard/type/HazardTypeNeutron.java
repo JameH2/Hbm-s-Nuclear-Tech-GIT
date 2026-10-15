@@ -78,10 +78,10 @@ public class HazardTypeNeutron extends HazardTypeBase {
 
 		list.add(EnumChatFormatting.BLUE + "[" + I18nUtil.resolveKey("trait.neutron") + "]");
 		String neut = "" + (Math.floor(level* 1000) / 1000);
-		list.add(EnumChatFormatting.LIGHT_PURPLE+ (neut + "RAD/s^2"));
+		list.add(EnumChatFormatting.LIGHT_PURPLE+ (neut + I18nUtil.resolveKey("gui.hazard_neutron.rad_2")));
 
 		if(stack.stackSize > 1) {
-			list.add(EnumChatFormatting.LIGHT_PURPLE + "Stack: " + ((Math.floor(level * 1000 * stack.stackSize) / 1000) + "RAD/s^2"));
+			list.add((EnumChatFormatting.LIGHT_PURPLE) + I18nUtil.resolveKey("desc.item.hazard_neutron.stack", ((Math.floor(level * 1000 * stack.stackSize) / 1000) + I18nUtil.resolveKey("gui.hazard_neutron.rad_2"))));
 		}
 	}
 

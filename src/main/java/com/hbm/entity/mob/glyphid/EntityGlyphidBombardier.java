@@ -18,7 +18,7 @@ public class EntityGlyphidBombardier extends EntityGlyphid {
 	}
 	
 	public ResourceLocation getSkin() {
-		return ResourceManager.glyphid_bombardier_tex;
+		return isTamed() ? ResourceManager.glyphid_bombardier_tame_tex : ResourceManager.glyphid_bombardier_tex;
 	}
 	
 	protected Entity lastTarget;

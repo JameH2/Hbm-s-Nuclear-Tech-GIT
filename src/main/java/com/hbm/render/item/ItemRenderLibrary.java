@@ -14,7 +14,6 @@ import com.hbm.render.tileentity.RenderBobble;
 import com.hbm.render.tileentity.RenderDemonLamp;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -75,9 +74,8 @@ public class ItemRenderLibrary {
 			}
 
 			public void renderCommon() {
-				bindTexture(ResourceManager.epress_body_tex); ResourceManager.epress_body.renderAll();
-				GL11.glTranslated(0, 1.5, 0);
-				bindTexture(ResourceManager.epress_head_tex); ResourceManager.epress_head.renderAll();
+				bindTexture(ResourceManager.electric_press_tex); ResourceManager.electric_press.renderPart("Press");
+				bindTexture(ResourceManager.electric_press_tex); ResourceManager.electric_press.renderPart("Piston");
 			}});
 
 		renderers.put(Item.getItemFromBlock(ModBlocks.machine_reactor_breeding), new ItemRenderBase() {
@@ -172,25 +170,6 @@ public class ItemRenderLibrary {
 				GL11.glColor3f(1F, 1F, 1F);
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				GL11.glShadeModel(GL11.GL_FLAT);
-			}});
-
-		renderers.put(Item.getItemFromBlock(ModBlocks.machine_fensu), new ItemRenderBase() {
-			public void renderInventory() {
-				GL11.glRotated(90, 0, 1, 0);
-				GL11.glTranslated(0, -2, 0);
-				GL11.glScaled(2.5, 2.5, 2.5);
-			}
-			public void renderCommon() {
-		        GL11.glShadeModel(GL11.GL_SMOOTH);
-		        bindTexture(ResourceManager.fensu_tex); ResourceManager.fensu.renderPart("Base"); ResourceManager.fensu.renderPart("Disc");
-		        GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-		        GL11.glDisable(GL11.GL_LIGHTING);
-		        GL11.glDisable(GL11.GL_CULL_FACE);
-		        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-		        ResourceManager.fensu.renderPart("Lights");
-		        GL11.glEnable(GL11.GL_LIGHTING);
-		        GL11.glPopAttrib();
-		        GL11.glShadeModel(GL11.GL_FLAT);
 			}});
 
 		renderers.put(Item.getItemFromBlock(ModBlocks.machine_well), new ItemRenderBase() {
@@ -503,6 +482,7 @@ public class ItemRenderLibrary {
 			public void renderCommon() {
 				GL11.glDisable(GL11.GL_CULL_FACE);
 				bindTexture(ResourceManager.radar_base_tex); ResourceManager.radar.renderPart("Base");
+				GL11.glRotated(System.currentTimeMillis() % 3600 * 0.1D, 0, -1, 0);
 				GL11.glTranslated(-0.125, 0, 0);
 				bindTexture(ResourceManager.radar_dish_tex); ResourceManager.radar.renderPart("Dish");
 				GL11.glEnable(GL11.GL_CULL_FACE);

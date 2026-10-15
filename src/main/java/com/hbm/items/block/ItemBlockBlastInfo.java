@@ -1,5 +1,7 @@
 package com.hbm.items.block;
 
+import com.hbm.util.i18n.I18nUtil;
+
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -12,10 +14,10 @@ public class ItemBlockBlastInfo extends ItemBlockBase {
 	public ItemBlockBlastInfo(Block block) {
 		super(block);
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		super.addInformation(stack, player, list, bool);
-		list.add(EnumChatFormatting.GOLD + "Blast Resistance: " + field_150939_a.getExplosionResistance(null));
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("desc.item.block_blast_info.blast_resistance", field_150939_a.getExplosionResistance(null)));
 	}
 }

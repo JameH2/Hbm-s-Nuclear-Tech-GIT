@@ -26,7 +26,7 @@ public class EntityGlyphidBehemoth extends EntityGlyphid {
 	
 	@Override
 	public ResourceLocation getSkin() {
-		return ResourceManager.glyphid_behemoth_tex;
+		return isTamed() ? ResourceManager.glyphid_behemoth_tame_tex : ResourceManager.glyphid_behemoth_tex;
 	}
 
 	@Override

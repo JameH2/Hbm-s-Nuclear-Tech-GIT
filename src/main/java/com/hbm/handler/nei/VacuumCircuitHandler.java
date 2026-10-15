@@ -15,14 +15,14 @@ import net.minecraft.item.ItemStack;
 public class VacuumCircuitHandler extends NEIUniversalHandler {
 
     public VacuumCircuitHandler() {
-		super("Vacuum Solderer", ModBlocks.machine_vacuum_circuit, VacuumCircuitRecipes.getRecipes());
+		super("nei.vacuum_circuit.name", ModBlocks.machine_vacuum_circuit, VacuumCircuitRecipes.getRecipes());
 	}
 
 	@Override
 	public String getKey() {
 		return "ntmVacuumCircuit";
 	}
-	
+
 	@Override
 	public void loadTransferRects() {
 		super.loadTransferRects();
@@ -36,11 +36,11 @@ public class VacuumCircuitHandler extends NEIUniversalHandler {
 
 		RecipeSet rec = (RecipeSet) this.arecipes.get(recipe);
 		ItemStack output = rec.output[0].item;
-		
+
 		for(VacuumCircuitRecipe sol : VacuumCircuitRecipes.recipes) {
-			
+
 			//TODO: rethink this concept, checks only use the output and if two things output the same thing it'll break
-			
+
 			if(ItemStack.areItemStacksEqual(sol.output, output)) {
 
 				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
@@ -53,5 +53,5 @@ public class VacuumCircuitHandler extends NEIUniversalHandler {
 			}
 		}
 	}
-    
+
 }
