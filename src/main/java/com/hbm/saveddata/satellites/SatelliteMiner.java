@@ -12,6 +12,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 
 import java.util.HashMap;
 
@@ -22,6 +23,7 @@ public class SatelliteMiner extends SatelliteBase {
 	
 	public double progress;
 	public static final double SPEED = 1D / (15 * 60 * 20); // 15 minutes
+	private long lastUpdateTick = -1L;
 
 	public SatelliteMiner() { }
 
@@ -40,9 +42,36 @@ public class SatelliteMiner extends SatelliteBase {
 
 	@Override
 	public void onUpdateTick(World world) {
+		updateProgress(world);
+	}
+
+	@Override
+	public void onOrbit(World world, double x, double y, double z) {
+		super.onOrbit(world, x, y, z);
+		this.lastUpdateTick = getMiningTime(world);
+	}
+
+	@Override
+	public boolean tryRequestItems(World world, int x, int y, int z) {
+		updateProgress(world);
+		// Persist catch-up progress even if the resource dimension unloads before its next tick.
+		this.markDirty();
+		return super.tryRequestItems(world, x, y, z);
+	}
+
+	private static long getMiningTime(World world) {
+		World overworld = DimensionManager.getWorld(0);
+		return overworld != null ? overworld.getTotalWorldTime() : world.getTotalWorldTime();
+	}
+
+	private void updateProgress(World world) {
+		// Use a shared clock so unloaded mining dimensions catch up without counting a tick twice.
+		long time = getMiningTime(world);
+		long elapsed = this.lastUpdateTick < 0L ? 1L : Math.max(0L, time - this.lastUpdateTick);
+		this.lastUpdateTick = time;
 		
 		if(this.requestableSlots.length <= 0) {
-			this.progress += SPEED;
+			this.progress += elapsed * SPEED;
 			
 			if(this.progress >= 1D) {
 				this.progress = 0D;
@@ -59,7 +88,7 @@ public class SatelliteMiner extends SatelliteBase {
 				this.markDirty();
 			}
 			
-			if(world.getTotalWorldTime() % 1200 == 0) this.markDirty(); // force a save every minute
+			if(time % 1200 == 0) this.markDirty(); // force a save every minute
 		}
 	}
 
@@ -67,12 +96,14 @@ public class SatelliteMiner extends SatelliteBase {
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setDouble("progress", progress);
+		nbt.setLong("lastUpdateTick", lastUpdateTick);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		this.progress = nbt.getDouble("progress");
+		this.lastUpdateTick = nbt.hasKey("lastUpdateTick") ? nbt.getLong("lastUpdateTick") : -1L;
 	}
 
 	/**

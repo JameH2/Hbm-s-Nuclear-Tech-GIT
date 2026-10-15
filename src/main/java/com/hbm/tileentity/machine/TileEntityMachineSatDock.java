@@ -67,10 +67,13 @@ public class TileEntityMachineSatDock extends TileEntityMachineBase implements I
 			if(time % 20 == 0 && slots[15] != null && slots[15].getItem() == ModItems.sat_chip) {
 				int freq = ISatChip.getFreqS(slots[15]);
 				
-				SatelliteSavedData data = SatelliteSavedData.getData(worldObj, xCoord, zCoord);
+				SatelliteSavedData data = SatelliteSavedData.getDataFromFreq(worldObj, xCoord, zCoord, freq);
 				SatelliteBase sat = data.getSatFromFreq(freq);
 				
-				if(sat != null) sat.tryRequestItems(worldObj, xCoord, yCoord, zCoord);
+				if(sat != null) {
+					sat.tryRequestItems(worldObj, xCoord, yCoord, zCoord);
+					if(sat.isDirty) data.markDirty();
+				}
 			}
 		}
 	}
