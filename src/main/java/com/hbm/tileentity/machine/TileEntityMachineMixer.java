@@ -21,6 +21,7 @@ import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
+import api.ntm1of90.compat.fluid.adapter.AutoForgeFluidAdapter;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -31,8 +32,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 
-public class TileEntityMachineMixer extends TileEntityMachineBase implements IControlReceiver, IGUIProvider, IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IUpgradeInfoProvider, IFluidCopiable {
+public class TileEntityMachineMixer extends TileEntityMachineBase implements IControlReceiver, IGUIProvider, IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IUpgradeInfoProvider, IFluidCopiable, IFluidHandler {
 
 	public long power;
 	public static final long maxPower = 10_000;
@@ -277,6 +283,44 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ICo
 	@Override
 	public FluidTank[] getReceivingTanks() {
 		return new FluidTank[] {tanks[0], tanks[1]};
+	}
+
+	// The mixer's sockets are on the core block, not proxy tiles: expose the Forge handler here.
+	private IFluidHandler forgeAdapter;
+
+	private IFluidHandler getForgeAdapter() {
+		if(forgeAdapter == null) forgeAdapter = new AutoForgeFluidAdapter(this, this);
+		return forgeAdapter;
+	}
+
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+		return getForgeAdapter().fill(from, resource, doFill);
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+		return getForgeAdapter().drain(from, resource, doDrain);
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+		return getForgeAdapter().drain(from, maxDrain, doDrain);
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+		return getForgeAdapter().canFill(from, fluid);
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+		return getForgeAdapter().canDrain(from, fluid);
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+		return getForgeAdapter().getTankInfo(from);
 	}
 
 	@Override
