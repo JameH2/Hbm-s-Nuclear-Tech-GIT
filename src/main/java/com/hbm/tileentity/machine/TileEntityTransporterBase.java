@@ -11,6 +11,7 @@ import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BufferUtil;
@@ -46,14 +47,11 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 		super(slotCount + tankCount / 2 + extraSlots + extraTanks);
 
 		tanks = new FluidTank[tankCount + extraTanks];
-		FluidTank[] fuelTanks = new FluidTank[extraTanks];
-
 		for(int i = 0; i < tankCount; i++) {
 			tanks[i] = new FluidTank(Fluids.NONE, tankSize);
 		}
 		for(int i = 0; i < extraTanks; i++) {
 			tanks[i + tankCount] = new FluidTank(Fluids.NONE, extraTankSize);
-			fuelTanks[i] = tanks[i + tankCount];
 		}
 
 		inputSlotMax = slotCount / 2;
@@ -63,7 +61,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 		outputTankMax = tankCount;
 
 		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks()).setOutputTanks(getSendingTanks());
-		moduleFuelPorts = new ModulePortManFluidAdaptive(fuelReceiver).setInputTanks(fuelTanks);
+		moduleFuelPorts = new ModulePortManFluidAdaptive(fuelReceiver).setInputTanks(fuelReceiver.getReceivingTanks());
 	}
 
 	// The transporter we're sending our contents to
@@ -89,7 +87,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 		if(worldObj.isRemote) return;
 
 		moduleFluidPorts.update(getFluidPorts());
-		moduleFluidPorts.update(getFuelPorts());
+		moduleFuelPorts.update(getFuelPorts());
 
 		// Set tank types and split fills
 		for(int i = 0; i < inputTankMax; i++) {
@@ -260,18 +258,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 
 	FuelReceiver fuelReceiver = new FuelReceiver();
 
-	private class FuelReceiver extends TileEntityMachineBase implements IFluidStandardReceiverMK2 {
-
-		public FuelReceiver() {
-			super(0);
-		}
-
-		boolean valid = true;
-
-		@Override
-		public boolean isLoaded() {
-			return valid && TileEntityTransporterBase.this.isLoaded();
-		}
+	private class FuelReceiver extends TileEntityLoadedBase implements IFluidStandardReceiverMK2 {
 
 		@Override
 		public FluidTank[] getAllTanks() {
@@ -288,20 +275,6 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 			return ConnectionPriority.HIGH;
 		}
 
-		@Override
-		public String getName() {
-			return "thisisstupid";
-		}
-
-		@Override
-		public void updateEntity() {}
-
-	}
-
-	@Override
-	public void invalidate() {
-		super.invalidate();
-		fuelReceiver.valid = false;
 	}
 
 	// splitting is commutative, order don't matter
