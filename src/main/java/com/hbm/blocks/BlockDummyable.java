@@ -5,6 +5,7 @@ import com.hbm.handler.ThreeInts;
 import com.hbm.interfaces.ICopiable;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IPersistentNBT;
+import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.Clock;
 import com.hbm.util.EntityDamageUtil;
 import com.hbm.util.fauxpointtwelve.BlockPos;
@@ -80,11 +81,19 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		overrideTileMeta = 0;
 	}
 
+	/** Enable only when every cached redstone input belongs to this multiblock. */
+	protected boolean usesRedstoneCache() { return false; }
+
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
 		super.onNeighborBlockChange(world, x, y, z, block);
 
 		if(safeRem) return;
+
+		if(!world.isRemote && usesRedstoneCache()) {
+			int[] core = findCore(world, x, y, z);
+			if(core != null) TileEntityLoadedBase.invalidateRedstone(world, core[0], core[1], core[2]);
+		}
 
 		if(!internalPlayers.isEmpty()) {
 			boolean anyStillInside = false;

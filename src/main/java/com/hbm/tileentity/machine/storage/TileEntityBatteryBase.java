@@ -165,10 +165,16 @@ public abstract class TileEntityBatteryBase extends TileEntityMachineBase implem
 
 	public short getRelevantMode(boolean useCache) {
 		if(useCache) return this.modeCache;
-		boolean powered = false;
-		for(BlockPos pos : getPortPos()) if(worldObj.isBlockIndirectlyGettingPowered(pos.getX(), pos.getY(), pos.getZ())) { powered = true; break; }
-		this.modeCache = powered ? this.redHigh : this.redLow;
+		this.modeCache = isRedstonePowered() ? this.redHigh : this.redLow;
 		return this.modeCache;
+	}
+
+	@Override
+	protected boolean queryRedstonePower() {
+		for(BlockPos pos : getPortPos()) {
+			if(worldObj.isBlockIndirectlyGettingPowered(pos.getX(), pos.getY(), pos.getZ())) return true;
+		}
+		return false;
 	}
 
 	@Override public boolean hasPermission(EntityPlayer player) { return this.isUseableByPlayer(player); }

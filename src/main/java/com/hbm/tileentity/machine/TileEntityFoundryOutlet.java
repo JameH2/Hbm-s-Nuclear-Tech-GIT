@@ -27,17 +27,24 @@ public class TileEntityFoundryOutlet extends TileEntityFoundryBase{
 	/** inverts redstone behavior, i.e. when TRUE, the outlet will be blocked by default and only open with redstone */
 	public boolean invertRedstone = false;
 	public boolean lastClosed = false;
+	private boolean syncedRedstonePowered;
 
 	/** if TRUE, prevents all fluids from flowing through the outlet and renders a small barrier */
 	public boolean isClosed() {
-		return invertRedstone ^ this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+		return invertRedstone ^ (worldObj.isRemote ? syncedRedstonePowered : isRedstonePowered());
 	}
 
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
 
-		if(worldObj.isRemote) {
+		if(!worldObj.isRemote) {
+			boolean powered = isRedstonePowered();
+			if(powered != syncedRedstonePowered) {
+				syncedRedstonePowered = powered;
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			}
+		} else {
 			boolean isClosed = isClosed();
 			if(this.lastClosed != isClosed || this.filter != this.lastFilter) {
 				this.lastFilter = this.filter;
@@ -113,6 +120,7 @@ public class TileEntityFoundryOutlet extends TileEntityFoundryBase{
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		this.invertRedstone = nbt.getBoolean("invert");
+		this.syncedRedstonePowered = nbt.getBoolean("redstonePowered");
 		this.invertFilter = nbt.getBoolean("invertFilter");
 		this.filter = Mats.matById.get((int) nbt.getShort("filter"));
 	}
@@ -121,6 +129,7 @@ public class TileEntityFoundryOutlet extends TileEntityFoundryBase{
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setBoolean("invert", this.invertRedstone);
+		nbt.setBoolean("redstonePowered", this.syncedRedstonePowered);
 		nbt.setBoolean("invertFilter", this.invertFilter);
 		nbt.setShort("filter", this.filter == null ? -1 : (short) this.filter.id);
 	}

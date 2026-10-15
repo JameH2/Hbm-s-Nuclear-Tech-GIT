@@ -2,14 +2,14 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.ModBlocks;
 
-import net.minecraft.tileentity.TileEntity;
+import com.hbm.tileentity.TileEntityLoadedBase;
 
-public class TileEntityChlorineSeal extends TileEntity {
+public class TileEntityChlorineSeal extends TileEntityLoadedBase {
 	
 	@Override
 	public void updateEntity() {
 		
-		if(!worldObj.isRemote && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
+		if(!worldObj.isRemote && isRedstonePowered())
 			spread(xCoord, yCoord, zCoord, 0);
 	}
 	

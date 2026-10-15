@@ -20,10 +20,10 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
+import com.hbm.tileentity.TileEntityLoadedBase;
 import net.minecraft.world.World;
 
-public class TileEntityMachineSiren extends TileEntity implements ISidedInventory, IGUIProvider {
+public class TileEntityMachineSiren extends TileEntityLoadedBase implements ISidedInventory, IGUIProvider {
 
 	private ItemStack slots[];
 	
@@ -204,7 +204,7 @@ public class TileEntityMachineSiren extends TileEntity implements ISidedInventor
 				return;
 			}
 			
-			boolean active = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+			boolean active = isRedstonePowered();
 			
 			if(getCurrentType().getType().name().equals(SoundType.LOOP.name())) {
 				

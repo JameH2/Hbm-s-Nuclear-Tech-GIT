@@ -110,7 +110,7 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
 				this.destroyAllPorts();
 			}
 			
-			if(this.isCompressor() && (!this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) ^ this.redstone)) {
+			if(this.isCompressor() && (!isRedstonePowered() ^ this.redstone)) {
 
 				int randTime = Math.abs((int) (worldObj.getTotalWorldTime() + this.getIdentifier(xCoord, yCoord, zCoord)));
 								

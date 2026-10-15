@@ -1,5 +1,8 @@
 package com.hbm.blocks.generic;
 
+import com.hbm.tileentity.TileEntityLoadedBase;
+import net.minecraft.block.Block;
+
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityChlorineSeal;
 
@@ -13,6 +16,12 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 public class BlockClorineSeal extends BlockContainer {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
+	}
 
 	@SideOnly(Side.CLIENT)
 	private IIcon iconTop;

@@ -39,6 +39,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockNetworkSeparator extends BlockDummyable implements ILookOverlay, IGUIProvider {
 
+	@Override
+	protected boolean usesRedstoneCache() { return true; }
+
 	public BlockNetworkSeparator() {
 		super(Material.iron);
 	}
@@ -165,15 +168,20 @@ public class BlockNetworkSeparator extends BlockDummyable implements ILookOverla
 				this.deltaTracker = 0;
 				this.deltaSecond = total;
 				
-				ForgeDirection dir = this.getDir(false);
-				this.redstone = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) ||
-						worldObj.isBlockIndirectlyGettingPowered(xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ) ||
-						worldObj.isBlockIndirectlyGettingPowered(xCoord - dir.offsetX, yCoord, zCoord - dir.offsetZ);
+				this.redstone = isRedstonePowered();
 				
 				this.networkPackNT(15);
 			}
 		}
 		
+		@Override
+		protected boolean queryRedstonePower() {
+			ForgeDirection dir = this.getDir(false);
+			return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) ||
+					worldObj.isBlockIndirectlyGettingPowered(xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ) ||
+					worldObj.isBlockIndirectlyGettingPowered(xCoord - dir.offsetX, yCoord, zCoord - dir.offsetZ);
+		}
+
 		@Override
 		public void usePower(long power) {
 			this.setPower(this.getPower() - power);

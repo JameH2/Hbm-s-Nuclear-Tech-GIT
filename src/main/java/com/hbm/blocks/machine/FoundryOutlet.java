@@ -1,5 +1,8 @@
 package com.hbm.blocks.machine;
 
+import com.hbm.tileentity.TileEntityLoadedBase;
+import net.minecraft.block.Block;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +37,12 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class FoundryOutlet extends BlockContainer implements ICrucibleAcceptor, ILookOverlay, IToolable {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
+	}
 
 	@SideOnly(Side.CLIENT) public IIcon iconTop;
 	@SideOnly(Side.CLIENT) public IIcon iconSide;

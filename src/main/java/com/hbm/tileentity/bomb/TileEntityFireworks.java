@@ -6,9 +6,9 @@ import com.hbm.packet.toclient.AuxParticlePacketNT;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import com.hbm.tileentity.TileEntityLoadedBase;
 
-public class TileEntityFireworks extends TileEntity {
+public class TileEntityFireworks extends TileEntityLoadedBase {
 
 	public int color = 0xff0000;
 	public String message = "NUCLEAR TECH";
@@ -22,7 +22,7 @@ public class TileEntityFireworks extends TileEntity {
 
 		if(!worldObj.isRemote) {
 
-			if(worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && !message.isEmpty() && charges > 0) {
+			if(isRedstonePowered() && !message.isEmpty() && charges > 0) {
 
 				delay--;
 

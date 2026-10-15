@@ -111,7 +111,8 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		};
 	}
 
-	private boolean isMultiblockRedstonePowered() {
+	@Override
+	protected boolean queryRedstonePower() {
 		for (DirPos conPos : getConPos()) {
 			BlockPos pos = conPos.offset(conPos.getDir().getOpposite());
 			if(this.worldObj.isBlockIndirectlyGettingPowered(pos.getX(), pos.getY(), pos.getZ())) {
@@ -149,7 +150,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 			lastTargetZ = targetZ;
 
 			boolean prevRedstone = this.redstonePowered;
-			this.redstonePowered = this.isMultiblockRedstonePowered();
+			this.redstonePowered = this.isRedstonePowered();
 
 			if(prevRedstone != this.redstonePowered) {
 				this.markDirty();

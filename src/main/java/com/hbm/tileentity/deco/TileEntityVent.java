@@ -8,15 +8,15 @@ import com.hbm.entity.particle.EntityCloudFX;
 import com.hbm.entity.particle.EntityPinkCloudFX;
 
 import net.minecraft.block.Block;
-import net.minecraft.tileentity.TileEntity;
+import com.hbm.tileentity.TileEntityLoadedBase;
 
-public class TileEntityVent extends TileEntity {
+public class TileEntityVent extends TileEntityLoadedBase {
 	
 	Random rand = new Random();
 
 	public void updateEntity() {
 		
-		if(!worldObj.isRemote && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {
+		if(!worldObj.isRemote && isRedstonePowered()) {
 			Block b = worldObj.getBlock(xCoord, yCoord, zCoord);
 
 			if(b == ModBlocks.vent_chlorine) {

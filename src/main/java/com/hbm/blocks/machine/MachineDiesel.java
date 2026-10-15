@@ -1,5 +1,8 @@
 package com.hbm.blocks.machine;
 
+import com.hbm.tileentity.TileEntityLoadedBase;
+import net.minecraft.block.Block;
+
 import java.util.List;
 import java.util.Random;
 
@@ -20,6 +23,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.hbm.util.i18n.I18nUtil;
 
 public class MachineDiesel extends BlockMachineBase implements ITooltipProvider, IBlockSealable {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
+	}
 
 	public MachineDiesel() {
 		super(Material.iron, 0);

@@ -43,6 +43,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class FlowControlPump extends BlockDummyable implements ILookOverlay, IGUIProvider {
 
+	@Override
+	protected boolean usesRedstoneCache() { return true; }
+
 	public FlowControlPump() {
 		super(Material.iron);
 	}
@@ -176,10 +179,7 @@ public class FlowControlPump extends BlockDummyable implements ILookOverlay, IGU
 					this.tank[0].changeTankSize(nextBuffer);
 				}
 
-				ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getRotation(ForgeDirection.DOWN);
-				this.redstone = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) ||
-						worldObj.isBlockIndirectlyGettingPowered(xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ) ||
-						worldObj.isBlockIndirectlyGettingPowered(xCoord - dir.offsetX, yCoord, zCoord - dir.offsetZ);
+				this.redstone = isRedstonePowered();
 				
 				this.networkPackNT(50);
 				this.isWorking = false;
@@ -220,6 +220,14 @@ public class FlowControlPump extends BlockDummyable implements ILookOverlay, IGU
 		
 		public boolean bufferMismatch() {
 			return this.bufferSize != this.tank[0].getMaxFill();
+		}
+
+		@Override
+		protected boolean queryRedstonePower() {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getRotation(ForgeDirection.DOWN);
+			return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) ||
+					worldObj.isBlockIndirectlyGettingPowered(xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ) ||
+					worldObj.isBlockIndirectlyGettingPowered(xCoord - dir.offsetX, yCoord, zCoord - dir.offsetZ);
 		}
 
 		@Override

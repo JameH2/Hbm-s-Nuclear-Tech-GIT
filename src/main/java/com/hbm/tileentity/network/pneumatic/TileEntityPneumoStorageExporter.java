@@ -65,7 +65,7 @@ public class TileEntityPneumoStorageExporter extends TileEntityPneumaticMachineB
 				if(slotDelay[i] > 0) slotDelay[i]--;
 			}
 
-			boolean redstone = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+			boolean redstone = isRedstonePowered();
 
 			if(continuousRequest) {
 				this.doRequest(false);

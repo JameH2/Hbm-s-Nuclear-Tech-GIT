@@ -24,6 +24,9 @@ import com.hbm.util.i18n.I18nUtil;
 
 public class MachineBatteryREDD extends BlockDummyable implements IPersistentInfoProvider {
 
+	@Override
+	protected boolean usesRedstoneCache() { return true; }
+
 	public MachineBatteryREDD() {
 		super(Material.iron);
 	}

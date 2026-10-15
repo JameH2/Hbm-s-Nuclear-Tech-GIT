@@ -201,16 +201,7 @@ public class TileEntityCompactLauncher extends TileEntityLoadedBase implements I
 			else
 				PacketDispatcher.wrapper.sendToAllAround(new TEMissileMultipartPacket(xCoord, yCoord, zCoord, new MissileStruct()), new TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 250));
 
-			outer:
-			for(int x = -1; x <= 1; x++) {
-				for(int z = -1; z <= 1; z++) {
-
-					if(worldObj.isBlockIndirectlyGettingPowered(xCoord + x, yCoord, zCoord + z) && canLaunch()) {
-						launchFromDesignator();
-						break outer;
-					}
-				}
-			}
+			if(isRedstonePowered() && canLaunch()) launchFromDesignator();
 		} else {
 
 			List<Entity> entities = worldObj.getEntitiesWithinAABBExcludingEntity(null, AxisAlignedBB.getBoundingBox(xCoord - 0.5, yCoord, zCoord - 0.5, xCoord + 1.5, yCoord + 10, zCoord + 1.5));
@@ -271,6 +262,16 @@ public class TileEntityCompactLauncher extends TileEntityLoadedBase implements I
 				new DirPos(xCoord - 1, yCoord - 1, zCoord + 1, Library.NEG_Y),
 				new DirPos(xCoord - 1, yCoord - 1, zCoord - 1, Library.NEG_Y)
 		};
+	}
+
+	@Override
+	protected boolean queryRedstonePower() {
+		for(int x = -1; x <= 1; x++) {
+			for(int z = -1; z <= 1; z++) {
+				if(worldObj.isBlockIndirectlyGettingPowered(xCoord + x, yCoord, zCoord + z)) return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean canLaunch() {

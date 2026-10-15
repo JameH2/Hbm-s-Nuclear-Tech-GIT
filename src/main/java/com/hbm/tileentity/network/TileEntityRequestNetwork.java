@@ -41,7 +41,7 @@ public abstract class TileEntityRequestNetwork extends TileEntityLoadedBase {
 				BlockPos pos = getCoord();
 
 				PathNode newNode = createNode(pos);
-				if(this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) newNode.active = false;
+				if(isRedstonePowered()) newNode.active = false;
 				else newNode.active = true;
 				// push new node
 				push(worldObj, newNode);

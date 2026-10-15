@@ -1,5 +1,7 @@
 package com.hbm.blocks.bomb;
 
+import com.hbm.tileentity.TileEntityLoadedBase;
+
 import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
@@ -26,6 +28,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class CompactLauncher extends BlockContainer implements IMultiblock, IBomb {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
+	}
 
 	public CompactLauncher(Material p_i45386_1_) {
 		super(p_i45386_1_);
