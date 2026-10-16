@@ -34,6 +34,7 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 
 	// Client-side synced data for HUD overlay
 	public int clientTankMax = 0;
+	private TilePort regulatorPort;
 	private ForgeDirection portTankDirection = ForgeDirection.UNKNOWN;
 
 	public int getTargetPercentage() {
@@ -161,24 +162,43 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 
 	private void updateRegulatorPort(TankRef ref) {
 		ForgeDirection tankDirection = ref == null ? ForgeDirection.UNKNOWN : ref.dir;
-		if (fluidInPorts == null || portTankDirection != tankDirection) {
-			if (fluidInPorts != null) fluidInPorts[0].disableIfPresent(worldObj);
+		if (regulatorPort == null || portTankDirection != tankDirection) {
+			destroyRegulatorPort();
 			List<ForgeDirection> directions = new ArrayList<>();
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 				if (dir != tankDirection) directions.add(dir);
 			}
-			fluidInPorts = TilePort.manyToMany(this, PortDef.make(xCoord, yCoord, zCoord,
+			regulatorPort = new TilePort().setupOwner(this).setupPort(PortDef.make(xCoord, yCoord, zCoord,
 					directions.toArray(new ForgeDirection[0])));
 			portTankDirection = tankDirection;
 		}
 
 		FluidType regType = getRegulatedType(ref);
-		TilePort port = fluidInPorts[0];
+		TilePort port = regulatorPort;
 		port.setupType(regType.getNetworkProvider());
 		port.update(worldObj);
 		// Register both roles persistently; demand and availability enforce the threshold.
 		port.checkSubscribe(worldObj);
 		port.checkProvide(worldObj);
+	}
+
+	private void destroyRegulatorPort() {
+		if (regulatorPort != null) {
+			regulatorPort.disableIfPresent(worldObj);
+			regulatorPort = null;
+		}
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		if (destroyPortsOnInvalidate) destroyRegulatorPort();
+	}
+
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		destroyRegulatorPort();
 	}
 
 	@Override
