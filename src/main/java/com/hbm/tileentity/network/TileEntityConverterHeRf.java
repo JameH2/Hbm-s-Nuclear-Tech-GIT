@@ -25,7 +25,8 @@ public class TileEntityConverterHeRf extends TileEntityLoadedBase implements IEn
 	//Thanks to the great people of Fusion Warfare for helping me with the original implementation of the RF energy API
 
 	public long power;
-	private static final long[] POWER_LIMITS = {5_000_000, 4_000_000, 3_000_000, 2_000_000, 1_000_000, 100_000};
+	private static final long[] HE_LIMITS = {5_000_000, 4_000_000, 3_000_000, 2_000_000, 1_000_000, 100_000};
+	private static final int[] RF_LIMITS = {1_000_000, 800_000, 600_000, 400_000, 200_000, 20_000};
 	private int maxPowerIndex = 0;
 	public static long heInput = 5;
 	public static long rfOutput = 1;
@@ -82,7 +83,7 @@ public class TileEntityConverterHeRf extends TileEntityLoadedBase implements IEn
 
 	@Override public void setPower(long i) { power = i; }
 	@Override public long getPower() { return power; }
-	@Override public long getMaxPower() { return POWER_LIMITS[maxPowerIndex]; }
+	@Override public long getMaxPower() { return HE_LIMITS[maxPowerIndex]; }
 	@Override public ConnectionPriority getPriority() { return ConnectionPriority.LOW; }
 
 	@Override
@@ -92,22 +93,22 @@ public class TileEntityConverterHeRf extends TileEntityLoadedBase implements IEn
 	}
 
 	public void adjustMaxPower(boolean decrease) {
-		maxPowerIndex = Math.max(0, Math.min(POWER_LIMITS.length - 1, maxPowerIndex + (decrease ? 1 : -1)));
+		maxPowerIndex = Math.max(0, Math.min(HE_LIMITS.length - 1, maxPowerIndex + (decrease ? 1 : -1)));
 		updateRfLimits();
 		markDirty();
 		networkPackNT(15);
 	}
 
 	private void updateRfLimits() {
-		int maxRf = (int) (getMaxPower() * rfOutput / heInput);
+		int maxRf = RF_LIMITS[maxPowerIndex];
 		storage.setCapacity(maxRf);
 		storage.setMaxTransfer(maxRf);
 	}
 
 	private void setMaxPower(long limit) {
-		maxPowerIndex = POWER_LIMITS.length - 1;
-		for(int i = 0; i < POWER_LIMITS.length; i++) {
-			if(POWER_LIMITS[i] <= limit) {
+		maxPowerIndex = HE_LIMITS.length - 1;
+		for(int i = 0; i < HE_LIMITS.length; i++) {
+			if(HE_LIMITS[i] <= limit) {
 				maxPowerIndex = i;
 				break;
 			}
@@ -118,7 +119,7 @@ public class TileEntityConverterHeRf extends TileEntityLoadedBase implements IEn
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		setMaxPower(nbt.hasKey("maxPower") ? nbt.getLong("maxPower") : POWER_LIMITS[0]);
+		setMaxPower(nbt.hasKey("maxPower") ? nbt.getLong("maxPower") : HE_LIMITS[0]);
 		this.power = nbt.getLong("power");
 		updateRfLimits();
 		storage.readFromNBT(nbt);
