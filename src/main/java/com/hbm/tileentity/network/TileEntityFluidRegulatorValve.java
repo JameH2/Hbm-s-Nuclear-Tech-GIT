@@ -3,20 +3,23 @@ package com.hbm.tileentity.network;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hbm.blocks.network.FluidRegulatorValve;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.TilePort;
 import com.hbm.tileentity.TilePort.PortDef;
 
 import api.hbm.energymk2.IEnergyReceiverMK2.ConnectionPriority;
 import api.hbm.fluidmk2.IFluidConnectorMK2;
 import api.hbm.fluidmk2.IFluidPipeMK2;
+import api.hbm.fluidmk2.IFluidProviderMK2;
 import api.hbm.fluidmk2.IFluidReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardSenderMK2;
 import api.hbm.fluidmk2.IFluidUserMK2;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -128,7 +131,7 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 
 			// If placed between 2 or more tanks, break itself and drop as an item
 			if (tanks.size() >= 2) {
-				FluidRegulatorValve.explode(worldObj, xCoord, yCoord, zCoord);
+				this.explode();
 				return;
 			}
 
@@ -138,6 +141,22 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 				this.networkPackNT(25);
 			}
 		}
+	}
+
+	private void explode() {
+		worldObj.playSoundEffect(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, "hbm:block.fart_reverb", 1.0F, 1.0F);
+
+		NBTTagCompound data = new NBTTagCompound();
+		data.setString("type", "vanillaExt");
+		data.setString("mode", "largeexplode");
+		data.setFloat("size", 4.0F);
+		data.setByte("count", (byte) 4);
+		PacketDispatcher.wrapper.sendToAllAround(
+			new AuxParticlePacketNT(data, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5),
+			new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 100)
+		);
+
+		worldObj.func_147480_a(xCoord, yCoord, zCoord, true);
 	}
 
 	private void updateRegulatorPort(TankRef ref) {
@@ -175,29 +194,35 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 
 	// ===== IFluidReceiverMK2 (Inflow when tank < target) =====
 
+	private long getDemand(TankRef ref, FluidType type, int pressure) {
+		if (!permitsTransfer(ref, type, pressure, true)) return 0;
+		IFluidReceiverMK2 receiver = (IFluidReceiverMK2) ref.tile;
+		long needed = getTargetAmount(ref.tank.getMaxFill()) - ref.tank.getFill();
+		return Math.max(0, Math.min(needed, Math.min(receiver.getDemand(type, pressure), receiver.getReceiverSpeed(type, pressure))));
+	}
+
 	@Override
 	public long getDemand(FluidType type, int pressure) {
-		TankRef ref = getTankRef();
-		if (!permitsTransfer(ref, type, pressure, true))
-			return 0;
+		return getDemand(getTankRef(), type, pressure);
+	}
 
-		return Math.max(0, getTargetAmount(ref.tank.getMaxFill()) - ref.tank.getFill());
+	@Override
+	public long getReceiverSpeed(FluidType type, int pressure) {
+		TankRef ref = getTankRef();
+		return permitsTransfer(ref, type, pressure, true)
+				? Math.max(0, ((IFluidReceiverMK2) ref.tile).getReceiverSpeed(type, pressure)) : 0;
 	}
 
 	@Override
 	public long transferFluid(FluidType type, int pressure, long amount) {
+		if (amount <= 0) return amount;
 		TankRef ref = getTankRef();
-		if (!permitsTransfer(ref, type, pressure, true))
-			return amount;
+		long toAccept = Math.min(amount, getDemand(ref, type, pressure));
+		if (toAccept <= 0) return amount;
 
-		long needed = Math.max(0, getTargetAmount(ref.tank.getMaxFill()) - ref.tank.getFill());
-		long toAccept = Math.min(amount, needed);
-		if (toAccept <= 0)
-			return amount;
-
-		int accepted = Math.min((int) toAccept, ref.tank.getMaxFill() - ref.tank.getFill());
-		ref.tank.setFill(ref.tank.getFill() + accepted);
-		ref.tile.markDirty();
+		long remainder = ((IFluidReceiverMK2) ref.tile).transferFluid(type, pressure, toAccept);
+		long accepted = toAccept - remainder;
+		if (accepted > 0) ref.tile.markDirty();
 		return amount - accepted;
 	}
 
@@ -236,24 +261,33 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 		return new FluidTank[0];
 	}
 
+	private long getFluidAvailable(TankRef ref, FluidType type, int pressure) {
+		if (!permitsTransfer(ref, type, pressure, false)) return 0;
+		IFluidProviderMK2 provider = (IFluidProviderMK2) ref.tile;
+		long excess = ref.tank.getFill() - getTargetAmount(ref.tank.getMaxFill());
+		return Math.max(0, Math.min(excess, Math.min(provider.getFluidAvailable(type, pressure), provider.getProviderSpeed(type, pressure))));
+	}
+
 	@Override
 	public long getFluidAvailable(FluidType type, int pressure) {
-		TankRef ref = getTankRef();
-		if (!permitsTransfer(ref, type, pressure, false))
-			return 0;
+		return getFluidAvailable(getTankRef(), type, pressure);
+	}
 
-		return Math.max(0, ref.tank.getFill() - getTargetAmount(ref.tank.getMaxFill()));
+	@Override
+	public long getProviderSpeed(FluidType type, int pressure) {
+		TankRef ref = getTankRef();
+		return permitsTransfer(ref, type, pressure, false)
+				? Math.max(0, ((IFluidProviderMK2) ref.tile).getProviderSpeed(type, pressure)) : 0;
 	}
 
 	@Override
 	public void useUpFluid(FluidType type, int pressure, long amount) {
+		if (amount <= 0) return;
 		TankRef ref = getTankRef();
-		if (amount <= 0 || !permitsTransfer(ref, type, pressure, false)) return;
-		long available = Math.max(0, ref.tank.getFill() - getTargetAmount(ref.tank.getMaxFill()));
-		int toRemove = (int) Math.min(amount, available);
+		long toRemove = Math.min(amount, getFluidAvailable(ref, type, pressure));
 		if (toRemove <= 0) return;
 
-		ref.tank.setFill(ref.tank.getFill() - toRemove);
+		((IFluidProviderMK2) ref.tile).useUpFluid(type, pressure, toRemove);
 		ref.tile.markDirty();
 	}
 

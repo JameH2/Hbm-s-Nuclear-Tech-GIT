@@ -4,30 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hbm.blocks.ILookOverlay;
+import com.hbm.blocks.ITooltipProvider;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.network.TileEntityFluidRegulatorValve;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.block.IToolable;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 
-public class FluidRegulatorValve extends FluidDuctBase implements ILookOverlay, IToolable {
+public class FluidRegulatorValve extends FluidDuctBase implements ILookOverlay, IToolable, ITooltipProvider {
 
 	public FluidRegulatorValve(Material mat) {
 		super(mat);
@@ -50,22 +47,6 @@ public class FluidRegulatorValve extends FluidDuctBase implements ILookOverlay, 
 		return new TileEntityFluidRegulatorValve();
 	}
 
-	public static void explode(World world, int x, int y, int z) {
-		world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "hbm:block.fart_reverb", 1.0F, 1.0F);
-
-		NBTTagCompound data = new NBTTagCompound();
-		data.setString("type", "vanillaExt");
-		data.setString("mode", "largeexplode");
-		data.setFloat("size", 4.0F);
-		data.setByte("count", (byte) 4);
-		PacketDispatcher.wrapper.sendToAllAround(
-			new AuxParticlePacketNT(data, x + 0.5, y + 0.5, z + 0.5),
-			new TargetPoint(world.provider.dimensionId, x + 0.5, y + 0.5, z + 0.5, 100)
-		);
-
-		world.func_147480_a(x, y, z, true);
-	}
-
 	@Override
 	public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, int side, float fX, float fY, float fZ, ToolType tool) {
 		if(tool == ToolType.SCREWDRIVER) {
@@ -74,11 +55,15 @@ public class FluidRegulatorValve extends FluidDuctBase implements ILookOverlay, 
 			if(te instanceof TileEntityFluidRegulatorValve) {
 				TileEntityFluidRegulatorValve valve = (TileEntityFluidRegulatorValve) te;
 				valve.cycleThreshold(player.isSneaking());
-				player.addChatComponentMessage(new ChatComponentTranslation("chat.fluid_regulator_valve.threshold", valve.getTargetPercentage()));
 				return true;
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
+		this.addStandardInfo(stack, player, list, ext);
 	}
 
 	@Override
