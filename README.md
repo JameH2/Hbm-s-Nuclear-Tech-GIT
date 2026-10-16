@@ -23,6 +23,7 @@
 - Added ForgeFluids <-> NTM Fluids compat
 - Glyphid taming
 - Baubles compat
+- Migrated to the GTNH Gradle build system with JDK 25 and JVM Downgrader, preserving Java 8 compatibility
 
 Hi, i am memeing things into existence, dont mind me! im just the bent fork at the end of the table -JamesH_2
 
@@ -81,7 +82,7 @@ dependencies {
 Tired of waiting until the next version comes out? Here is a tutorial on how to compile the very newest version yourself:
 Please note that these installation instructions are assuming you're running Microsoft Windows operating system. Linux users should know what to do by looking at the same guide.
 
- 1. Make sure you have a JDK installed. JDK 25 is recommended and can be downloaded from [adoptium.net](https://adoptium.net/temurin/releases?version=25), but JDK 8 can also be used to build the mod. The build still produces Java 8-compatible mod classes.
+ 1. Install [JDK 25](https://adoptium.net/temurin/releases?version=25) (recommended), or use any JDK 8+ to launch Gradle; it automatically locates or downloads JDK 25 for the build. The resulting mod remains Java 8-compatible.
  2. If you don't have git installed, download&install it from [here](https://git-scm.com/downloads).
  3. Open up "Git Bash":
     * Press Windows Button, type "Git Bash" and press ENTER
