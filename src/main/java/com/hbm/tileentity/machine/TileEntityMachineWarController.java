@@ -54,12 +54,6 @@ public class TileEntityMachineWarController extends TileEntityMachineBase implem
 	}
 
 	@Override
-	public boolean isLoaded() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new ContainerMachineWarController(player.inventory, this);
 	}
@@ -92,7 +86,7 @@ public class TileEntityMachineWarController extends TileEntityMachineBase implem
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("xcoord") && data.hasKey("zcoord")) {
 			updateDriveCoords(data.getInteger("xcoord"), data.getInteger("zcoord"));
 		}

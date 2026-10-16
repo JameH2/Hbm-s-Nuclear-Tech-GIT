@@ -8,8 +8,11 @@ import com.hbm.items.ItemVOTVdrive;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemCircuit.EnumCircuitType;
 import com.hbm.lib.Library;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
+import com.hbm.tileentity.TilePortShapes;
 import com.hbm.util.BufferUtil;
 import com.hbm.util.EnumUtil;
 
@@ -23,7 +26,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityMachineDriveProcessor extends TileEntityMachineBase implements IGUIProvider, IControlReceiver, IEnergyReceiverMK2 {
 
@@ -39,17 +41,23 @@ public class TileEntityMachineDriveProcessor extends TileEntityMachineBase imple
 
 	private int lastTier;
 
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityMachineDriveProcessor() {
 		super(4);
+		
+		modulePowerPorts = new ModulePortManPower(this);
 	}
+	
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.around(xCoord, yCoord, zCoord); return cachedPorts; }
 
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote) {
+			modulePowerPorts.update(getPorts());
 
 			power = Library.chargeTEFromItems(slots, 3, power, maxPower);
-			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-				trySubscribe(worldObj, xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ, dir);
 
 			if(power < maxPower * 0.75) {
 				isProcessing = false;
@@ -184,7 +192,7 @@ public class TileEntityMachineDriveProcessor extends TileEntityMachineBase imple
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("process")) {
 			processDrive(data.getBoolean("process"));
 		}

@@ -8,11 +8,12 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BobMathUtil;
 
-import api.hbm.fluid.IFluidStandardReceiver;
 import api.hbm.fluidmk2.IFillableItem;
 import baubles.api.BaublesApi;
+import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -23,7 +24,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 import xonin.backhand.api.core.BackhandUtils;
 
-public class TileEntityRefueler extends TileEntityLoadedBase implements IFluidStandardReceiver {
+public class TileEntityRefueler extends TileEntityLoadedBase implements IFluidStandardReceiverMK2 {
 
 	public double fillLevel;
 	public double prevFillLevel;
@@ -38,6 +39,18 @@ public class TileEntityRefueler extends TileEntityLoadedBase implements IFluidSt
 		tank = new FluidTank(Fluids.KEROSENE, 100);
 	}
 
+	protected PortDef[] cachedPorts;
+	
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite();
+			cachedPorts = new PortDef[] {
+					PortDef.make(xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ, dir),
+			};
+		}
+		return cachedPorts;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateEntity() {
@@ -45,7 +58,9 @@ public class TileEntityRefueler extends TileEntityLoadedBase implements IFluidSt
 		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 
 		if(!worldObj.isRemote) {
-			trySubscribe(tank.getTankType(), worldObj, xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ, dir);
+			
+			this.setupFluidPorts(getPorts());
+			this.updatePortFIFO();
 
 			isOperating = false;
 

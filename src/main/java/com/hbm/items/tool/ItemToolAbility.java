@@ -18,6 +18,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockRichOre;
 import com.hbm.config.ClientConfig;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.handler.ability.AvailableAbilities;
@@ -307,6 +308,10 @@ public class ItemToolAbility extends ItemTool implements IDepthRockTool, IGUIPro
 
 		Block block = world.getBlock(x, y, z);
 		int meta = world.getBlockMetadata(x, y, z);
+
+		// Rich deposits are mined only at the selected block, never as vein/AOE extras.
+		if((x != refX || y != refY || z != refZ) &&
+				(block instanceof BlockRichOre || world.getBlock(refX, refY, refZ) instanceof BlockRichOre)) return;
 
 		if(!(canHarvestBlock(block, stack) ||
 				canShearBlock(block, stack, world, x, y, z)) ||

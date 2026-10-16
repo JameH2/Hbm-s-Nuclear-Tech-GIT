@@ -1,5 +1,8 @@
 package com.hbm.tileentity.network;
 
+import java.util.Locale;
+
+import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.gui.GUIScreenRadioAUTOCAL;
 import com.hbm.module.IParse;
@@ -10,9 +13,14 @@ import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityTickingBase;
 import com.hbm.util.BufferUtil;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,7 +29,8 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
-public class TileEntityRadioAUTOCAL extends TileEntityTickingBase implements IControlReceiver, IGUIProvider {
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
+public class TileEntityRadioAUTOCAL extends TileEntityTickingBase implements IControlReceiver, IGUIProvider, SimpleComponent, CompatHandler.OCComponent {
 
 	public boolean isOn = false;
 	public boolean ignoreError = false;
@@ -69,9 +78,18 @@ public class TileEntityRadioAUTOCAL extends TileEntityTickingBase implements ICo
 						if(ret == EnumStatementReturn.SHUTDOWN) this.stop("gui.autocal.error.shutdown_requested");
 						if(!this.ignoreError) {
 							if(ret == EnumStatementReturn.UNRECOGNIZED_COMMAND) this.stop("gui.autocal.error.unrecognized_command");
-							if(ret == EnumStatementReturn.PARAMETER_ERROR) this.stop("gui.autocal.error.parameter");
+							if(ret == EnumStatementReturn.PARAMETER_MISSING) this.stop("gui.autocal.error.parameter_missing");
+							if(ret == EnumStatementReturn.PARAMETER_OOB) this.stop("gui.autocal.error.parameter_oob");
+							if(ret == EnumStatementReturn.PARAMETER_PARSE_ERROR) this.stop("gui.autocal.error.parameter_parse_error");
+							if(ret == EnumStatementReturn.NO_DESTINATION) this.stop("gui.autocal.error.no_destination");
+							if(ret == EnumStatementReturn.ARITHMETIC_EXCEPTION) this.stop("gui.autocal.error.arithmetic_exception");
+							if(ret == EnumStatementReturn.BUFFER_EMPTY) this.stop("gui.autocal.error.buffer_empty");
 							if(ret == EnumStatementReturn.UNDEFINED) this.stop("gui.autocal.error.undefined_behavior");
 							if(ret == EnumStatementReturn.STACK_EXCEEDED) this.stop("gui.autocal.error.stack_exceeded");
+						} else {
+							if(ret.error) {
+								this.ctx.variables.setString("last_error", ret.name().toLowerCase(Locale.US));
+							}
 						}
 						if(ret == EnumStatementReturn.SKIP) i--;
 					} catch(Exception ex) {
@@ -161,7 +179,7 @@ public class TileEntityRadioAUTOCAL extends TileEntityTickingBase implements ICo
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("on")) {
 			if(this.isOn) stop("gui.autocal.error.user_shutdown");
 			else this.isOn = true;
@@ -194,5 +212,101 @@ public class TileEntityRadioAUTOCAL extends TileEntityTickingBase implements ICo
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared() {
 		return 65536.0D;
+	}
+
+	// yay opencomputer stuff
+	@Override
+	@Optional.Method(modid = "OpenComputers")
+	public String getComponentName() {
+		return "radio_autocal";
+	}
+
+	@Callback(direct = true, limit = 4, doc = "function(buffer: string):boolean -- Changes buffer. This can allow for inter-computer communication. Returns false if buffer was truncated")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] setBuffer(Context context, Arguments args) {
+		if (ctx != null)
+			return new Object[] { ctx.writeBuffer(args.checkString(0)) };
+		return new Object[] {};
+	}
+
+	@Callback(direct = true, limit = 4, doc = "function():string -- Reads current buffer")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getBuffer(Context context, Arguments args) {
+		if (ctx == null)
+			return new Object[] { "" };
+		return new Object[] { ctx.readBuffer() };
+	}
+
+	@Callback(direct = true, limit = 1, doc = "function(script: string) -- Changes the script")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] setScript(Context context, Arguments args) {
+		String data = args.checkString(0);
+		this.ctx.jmp.clear();
+		this.script = data.split("\n");
+		for(int i = 0; i < script.length; i++) {
+			script[i] = script[i].trim();
+			this.msesv1ext.generateJumpPoints(ctx, script[i], i);
+		}
+		if(this.isOn) stop("Script has changed");
+		return new Object[] {};
+	}
+
+	@Callback(direct = true, limit = 1, doc = "function():string -- Returns current script")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getScript(Context context, Arguments args) {
+		String joinedScript = "";
+		for(int i = 0; i < script.length; i++) {
+			joinedScript = joinedScript + script[i] + "\n";
+		}
+		return new Object[] { joinedScript };
+	}
+
+	@Callback(direct = true, limit = 4, doc = "function(state: boolean) -- Turns on or off the machine")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] setState(Context context, Arguments args) {
+		boolean state = args.checkBoolean(0);
+		if (state) isOn = true;
+		else stop("User requested shutdown");
+		return new Object[] {};
+	}
+
+	@Callback(direct = true, doc = "function():boolean -- Whenever the machine is currently on")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getState(Context context, Arguments args) {
+		return new Object[] { isOn };
+	}
+
+	@Callback(direct = true, limit = 4, doc = "function(ignore: boolean) -- Makes the machine ignore errors")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] setIgnoreError(Context context, Arguments args) {
+		ignoreError = args.checkBoolean(0);
+		return new Object[] {};
+	}
+
+	@Callback(direct = true, doc = "function():boolean -- Whenever the machine is currently ignoring errors")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getIgnoreError(Context context, Arguments args) {
+		return new Object[] { ignoreError };
+	}
+
+	@Callback(direct = true, limit = 4, doc = "function(auto: boolean) -- Makes the machine automatically reboot")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] setAutoReboot(Context context, Arguments args) {
+		autoReboot = args.checkBoolean(0);
+		return new Object[] {};
+	}
+
+	@Callback(direct = true, doc = "function():boolean -- Whenever the machine automatically reboots")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getAutoReboot(Context context, Arguments args) {
+		return new Object[] { autoReboot };
+	}
+
+	@Callback(direct = true, limit = 4, doc = "function(index: number):string -- Returns a line in history")
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getHistory(Context context, Arguments args) {
+		int index = args.checkInteger(0);
+		if (index >= 0 && index < history.length) return new Object[] { history[index] };
+		else return new Object[] {};
 	}
 }

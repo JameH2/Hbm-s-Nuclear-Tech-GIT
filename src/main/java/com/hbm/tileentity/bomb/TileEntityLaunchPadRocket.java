@@ -24,8 +24,11 @@ import com.hbm.items.ItemVOTVdrive.Target;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemCustomRocket;
 import com.hbm.lib.Library;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IBatteryItem;
@@ -68,10 +71,16 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 	public RocketStruct rocket;
 	public int height;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityLaunchPadRocket() {
 		super(5); // 0 rocket, 1 drive, 2 battery, 3/4 liquid/solid fuel in/out
 		tanks = new FluidTank[RocketStruct.MAX_STAGES * 2]; // enough tanks for any combination of rocket stages
 		for(int i = 0; i < tanks.length; i++) tanks[i] = new FluidTank(Fluids.NONE, 64_000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks());
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 
 	@Override
@@ -86,24 +95,13 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 
 		if(!worldObj.isRemote) {
+			moduleFluidPorts.update(getPorts());
+			modulePowerPorts.update(getPorts());
+
 			ItemVOTVdrive.getTarget(slots[1], worldObj);
 
 			// Setup tanks required for the current rocket
 			updateTanks();
-
-			// Connections
-			if(worldObj.getTotalWorldTime() % 20 == 0) {
-				for(DirPos pos : getConPos()) {
-					trySubscribe(worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-
-					if(hasRocket()) {
-						for(FluidTank tank : tanks) {
-							if(tank.getTankType() == Fluids.NONE) continue;
-							trySubscribe(tank.getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-						}
-					}
-				}
-			}
 
 			// Fills, note that the liquid input also takes solid fuel
 			power = Library.chargeTEFromItems(slots, 2, power, maxPower);
@@ -244,11 +242,11 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 		return false;
 	}
 
-	private DirPos[] conPos;
+	protected PortDef[] cachedPorts;
 
-	public DirPos[] getConPos() {
-		if(conPos == null) {
-			conPos = new DirPos[13]; // 12 + 1 inputs
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			cachedPorts = new PortDef[13]; // 12 + 1 inputs
 
 			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
 			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
@@ -257,13 +255,13 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 
 			for(int or = 1; or < 5; or++) {
 				for(int oy = 0; oy < 3; oy++) {
-					conPos[i++] = new DirPos(xCoord - rot.offsetX * or - dir.offsetX * 8, yCoord + oy, zCoord - rot.offsetZ * or - dir.offsetZ * 8, dir.getOpposite());
+					cachedPorts[i++] = PortDef.make(xCoord - rot.offsetX * or - dir.offsetX * 7, yCoord + oy, zCoord - rot.offsetZ * or - dir.offsetZ * 7, dir.getOpposite());
 				}
 			}
-			conPos[i++] = new DirPos(xCoord + rot.offsetX * 3 - dir.offsetX * 8, yCoord, zCoord + rot.offsetZ * 3 - dir.offsetZ * 8, dir.getOpposite());
+			cachedPorts[i++] = PortDef.make(xCoord + rot.offsetX * 3 - dir.offsetX * 7, yCoord, zCoord + rot.offsetZ * 3 - dir.offsetZ * 7, dir.getOpposite());
 		}
 
-		return conPos;
+		return cachedPorts;
 	}
 
 	public void launch(EntityPlayer player) {
@@ -545,9 +543,6 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 	public boolean hasPermission(EntityPlayer player) {
 		return this.isUseableByPlayer(player);
 	}
-
-	@Override
-	public void receiveControl(NBTTagCompound data) { }
 
 	@Override
 	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
