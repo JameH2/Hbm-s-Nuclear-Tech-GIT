@@ -19,6 +19,7 @@
 	"misc.spincharge": {"category": "block", "sounds": [{"name": "misc/spincharge", "stream": false}]},
 
 	"block.crateBreak": {"category": "block", "sounds": ["block/crateBreak1", "block/crateBreak2", "block/crateBreak3", "block/crateBreak4", "block/crateBreak5"]},
+	"block.fart_reverb": {"category": "block", "sounds": [{"name": "block/fart_reverb", "stream": false}]},
 	"block.shutdown": {"category": "block", "sounds": [{"name": "block/shutdown", "stream": true}]},
 	"block.minerOperate": {"category": "block", "sounds": [{"name": "block/minerOperate", "stream": true}]},
 	"block.assemblerOperate": {"category": "block", "sounds": [{"name": "block/assemblerOperate", "stream": true}]},

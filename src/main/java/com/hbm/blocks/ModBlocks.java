@@ -901,6 +901,7 @@ public class ModBlocks {
 	public static Block fluid_valve;
 	public static Block fluid_switch;
 	public static Block fluid_counter_valve;
+	public static Block fluid_regulator_valve;
 	@Deprecated public static Block fluid_pump;
 	public static Block flow_control_pump;
 	public static Block machine_drain;
@@ -2221,6 +2222,7 @@ public class ModBlocks {
 		fluid_valve = new FluidValve(Material.iron).setBlockName("fluid_valve").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 		fluid_switch = new FluidSwitch(Material.iron).setBlockName("fluid_switch").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 		fluid_counter_valve = new FluidCounterValve(Material.iron).setBlockName("fluid_counter_valve").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+		fluid_regulator_valve = new FluidRegulatorValve(Material.iron).setBlockName("fluid_regulator_valve").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 		fluid_pump = new FluidPump(Material.iron).setBlockName("fluid_pump").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		flow_control_pump = new FlowControlPump().setBlockName("flow_control_pump").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		machine_drain = new MachineDrain(Material.iron).setBlockName("machine_drain").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":concrete");
@@ -3733,6 +3735,7 @@ public class ModBlocks {
 		register(fluid_duct_gauge);
 		register(fluid_valve);
 		register(fluid_counter_valve);
+		register(fluid_regulator_valve);
 		register(fluid_switch);
 		register(fluid_pump);
 		register(flow_control_pump);
