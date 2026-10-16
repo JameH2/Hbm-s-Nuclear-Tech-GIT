@@ -7,6 +7,8 @@ import com.hbm.blocks.network.FluidRegulatorValve;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.tileentity.TilePort;
+import com.hbm.tileentity.TilePort.PortDef;
 
 import api.hbm.energymk2.IEnergyReceiverMK2.ConnectionPriority;
 import api.hbm.fluidmk2.IFluidConnectorMK2;
@@ -29,6 +31,7 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 
 	// Client-side synced data for HUD overlay
 	public int clientTankMax = 0;
+	private ForgeDirection portTankDirection = ForgeDirection.UNKNOWN;
 
 	public int getTargetPercentage() {
 		return LEVELS[MathHelper.clamp_int(levelIndex, 0, LEVELS.length - 1)];
@@ -129,37 +132,34 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 				return;
 			}
 
-			if (tanks.size() == 1) {
-				TankRef ref = tanks.get(0);
-				if (ref.tank.getMaxFill() > 0) {
-					FluidType regType = getRegulatedType(ref);
-					if (regType != Fluids.NONE) {
-						long targetMb = getTargetAmount(ref.tank.getMaxFill());
-						int pressure = ref.tank.getPressure();
-
-						for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-							if (dir == ref.dir)
-								continue;
-
-							int nx = xCoord + dir.offsetX;
-							int ny = yCoord + dir.offsetY;
-							int nz = zCoord + dir.offsetZ;
-
-							if (ref.tank.getFill() < targetMb && permitsTransfer(ref, regType, pressure, true)) {
-								this.trySubscribe(regType, worldObj, nx, ny, nz, dir);
-							}
-							if (ref.tank.getFill() > targetMb && permitsTransfer(ref, regType, pressure, false)) {
-								this.tryProvide(regType, pressure, worldObj, nx, ny, nz, dir);
-							}
-						}
-					}
-				}
-			}
+			updateRegulatorPort(tanks.isEmpty() ? null : tanks.get(0));
 
 			if (worldObj.getTotalWorldTime() % 10 == 0) {
 				this.networkPackNT(25);
 			}
 		}
+	}
+
+	private void updateRegulatorPort(TankRef ref) {
+		ForgeDirection tankDirection = ref == null ? ForgeDirection.UNKNOWN : ref.dir;
+		if (fluidInPorts == null || portTankDirection != tankDirection) {
+			if (fluidInPorts != null) fluidInPorts[0].disableIfPresent(worldObj);
+			List<ForgeDirection> directions = new ArrayList<>();
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+				if (dir != tankDirection) directions.add(dir);
+			}
+			fluidInPorts = TilePort.manyToMany(this, PortDef.make(xCoord, yCoord, zCoord,
+					directions.toArray(new ForgeDirection[0])));
+			portTankDirection = tankDirection;
+		}
+
+		FluidType regType = getRegulatedType(ref);
+		TilePort port = fluidInPorts[0];
+		port.setupType(regType.getNetworkProvider());
+		port.update(worldObj);
+		// Register both roles persistently; demand and availability enforce the threshold.
+		port.checkSubscribe(worldObj);
+		port.checkProvide(worldObj);
 	}
 
 	@Override
