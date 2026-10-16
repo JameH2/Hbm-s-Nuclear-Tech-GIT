@@ -34,8 +34,8 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 
 	// Client-side synced data for HUD overlay
 	public int clientTankMax = 0;
-	private TilePort regulatorPort;
-	private ForgeDirection portTankDirection = ForgeDirection.UNKNOWN;
+	private final TilePort regulatorPort = new TilePort().setupOwner(this);
+	private ForgeDirection portTankDirection;
 
 	public int getTargetPercentage() {
 		return LEVELS[MathHelper.clamp_int(levelIndex, 0, LEVELS.length - 1)];
@@ -162,43 +162,32 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 
 	private void updateRegulatorPort(TankRef ref) {
 		ForgeDirection tankDirection = ref == null ? ForgeDirection.UNKNOWN : ref.dir;
-		if (regulatorPort == null || portTankDirection != tankDirection) {
-			destroyRegulatorPort();
+		if (portTankDirection != tankDirection) {
 			List<ForgeDirection> directions = new ArrayList<>();
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 				if (dir != tankDirection) directions.add(dir);
 			}
-			regulatorPort = new TilePort().setupOwner(this).setupPort(PortDef.make(xCoord, yCoord, zCoord,
+			regulatorPort.setupPort(PortDef.make(xCoord, yCoord, zCoord,
 					directions.toArray(new ForgeDirection[0])));
 			portTankDirection = tankDirection;
 		}
 
-		FluidType regType = getRegulatedType(ref);
-		TilePort port = regulatorPort;
-		port.setupType(regType.getNetworkProvider());
-		port.update(worldObj);
-		// Register both roles persistently; demand and availability enforce the threshold.
-		port.checkSubscribe(worldObj);
-		port.checkProvide(worldObj);
-	}
-
-	private void destroyRegulatorPort() {
-		if (regulatorPort != null) {
-			regulatorPort.disableIfPresent(worldObj);
-			regulatorPort = null;
-		}
+		regulatorPort.setupType(getRegulatedType(ref).getNetworkProvider());
+		regulatorPort.update(worldObj);
+		regulatorPort.checkSubscribe(worldObj);
+		regulatorPort.checkProvide(worldObj);
 	}
 
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		if (destroyPortsOnInvalidate) destroyRegulatorPort();
+		if (destroyPortsOnInvalidate) regulatorPort.disableIfPresent(worldObj);
 	}
 
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
-		destroyRegulatorPort();
+		regulatorPort.disableIfPresent(worldObj);
 	}
 
 	@Override
