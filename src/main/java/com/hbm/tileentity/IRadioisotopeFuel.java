@@ -1,7 +1,6 @@
 package com.hbm.tileentity;
 
 import java.util.List;
-import java.util.Locale;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -140,11 +139,11 @@ public interface IRadioisotopeFuel
 			if (showAdv)
 			{
 				tooltip.add(I18nUtil.resolveKey("gui.rtg_fuel.extended_info"));
-				tooltip.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtg_fuel.ticks"), instance.getLifespan(stack), instance.getMaxLifespan()));
+				tooltip.add(I18nUtil.resolveKey("gui.rtg_fuel.ticks", instance.getLifespan(stack), instance.getMaxLifespan()));
 				final String[] timeLeft = BobMathUtil.ticksToDate(instance.getLifespan(stack));
 				final String[] maxLife = BobMathUtil.ticksToDate(instance.getMaxLifespan());
-				tooltip.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtg_fuel.remaining"), (Object[]) timeLeft));
-				tooltip.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtg_fuel.lifetime"), (Object[]) maxLife));
+				tooltip.add(I18nUtil.resolveKey("gui.rtg_fuel.remaining", (Object[]) timeLeft));
+				tooltip.add(I18nUtil.resolveKey("gui.rtg_fuel.lifetime", (Object[]) maxLife));
 			}
 		}
 	}

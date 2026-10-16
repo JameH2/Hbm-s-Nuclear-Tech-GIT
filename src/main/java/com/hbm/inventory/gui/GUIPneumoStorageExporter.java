@@ -39,7 +39,7 @@ public class GUIPneumoStorageExporter extends GuiInfoContainer {
 
 		if(this.importer.rorConfiguredMode) {
 			String[] label = new String[10];
-			label[0] = I18nUtil.resolveKey("gui.pneumo_exporter.ror_configured", EnumChatFormatting.YELLOW + "RoR configured");
+			label[0] = I18nUtil.resolveKey("gui.pneumo_exporter.ror_configured", EnumChatFormatting.YELLOW);
 			for(int i = 0; i < 9; i++) {
 				boolean hasFilter = this.importer.rorFilters[i][0] != 0 && this.importer.rorFilters[i][2] > 0;
 				label[i + 1] = !hasFilter ? I18nUtil.resolveKey("gui.pneumo_exporter.empty_slot", i + 1) : I18nUtil.resolveKey("gui.pneumo_exporter.slot_filter", i + 1, this.importer.rorFilters[i][0], this.importer.rorFilters[i][1], this.importer.rorFilters[i][2]);
