@@ -14,9 +14,13 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.main.MainRegistry;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
+import com.hbm.tileentity.TilePortShapes;
 
-import api.hbm.fluid.IFluidStandardReceiver;
+import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import cpw.mods.fml.common.Optional;
 import io.netty.buffer.ByteBuf;
 import li.cil.oc.api.machine.Arguments;
@@ -28,7 +32,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
-public class TileEntityAirPump extends TileEntityMachineBase implements IFluidStandardReceiver, IAtmosphereProvider, SimpleComponent, CompatHandler.OCComponent {
+public class TileEntityAirPump extends TileEntityMachineBase implements IFluidStandardReceiverMK2, IAtmosphereProvider, SimpleComponent, CompatHandler.OCComponent {
 
 	private int onTicks = 0;
 	private boolean registered = false;
@@ -53,10 +57,17 @@ public class TileEntityAirPump extends TileEntityMachineBase implements IFluidSt
 
 	private TileEntityAirScrubber scrubber;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+
 	public TileEntityAirPump() {
 		super(1);
 		tank = new FluidTank(Fluids.OXYGEN, 16000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks());
 	}
+	
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.around(xCoord, yCoord, zCoord); return cachedPorts; }
 
 	@Override
 	public World getWorld() {
@@ -86,6 +97,8 @@ public class TileEntityAirPump extends TileEntityMachineBase implements IFluidSt
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote) {
+			moduleFluidPorts.update(getPorts());
+
 			if(onTicks > 0) onTicks--;
 			if(registerWait > 0) registerWait--;
 
@@ -156,8 +169,6 @@ public class TileEntityAirPump extends TileEntityMachineBase implements IFluidSt
 			if(worldObj.getTotalWorldTime() % 5 == 0) {
 				currentAtmosphere = ChunkAtmosphereManager.proxy.getAtmosphere(worldObj, xCoord, yCoord, zCoord);
 			}
-
-			subscribeToAllAround(tank.getTankType(), this);
 
 			this.networkPackNT(100);
 

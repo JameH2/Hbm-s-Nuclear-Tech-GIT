@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import com.hbm.util.i18n.I18nUtil;
 
-@Deprecated
 public class MachineBigAssTank9000 extends BlockDummyable implements IPersistentInfoProvider {
 
 	public MachineBigAssTank9000(Material mat) {

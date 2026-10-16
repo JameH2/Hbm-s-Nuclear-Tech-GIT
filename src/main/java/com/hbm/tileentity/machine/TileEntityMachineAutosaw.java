@@ -22,6 +22,8 @@ import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.Compat;
 
 import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
@@ -37,7 +39,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -98,10 +99,16 @@ public class TileEntityMachineAutosaw extends TileEntityLoadedBase implements IB
 		this.tank = new FluidTank(Fluids.WOODOIL, 100);
 	}
 
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.around(xCoord, yCoord, zCoord); return cachedPorts; }
+
 	@Override
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
+
+			this.setupFluidPorts(getPorts());
+			this.updatePortFIFO();
 
 			if(!isSuspended && worldObj.getTotalWorldTime() % 20 == 0) {
 				if(tank.getFill() > 0) {
@@ -109,10 +116,6 @@ public class TileEntityMachineAutosaw extends TileEntityLoadedBase implements IB
 					this.isOn = true;
 				} else {
 					this.isOn = false;
-				}
-
-				for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-					if(dir != ForgeDirection.UP) trySubscribe(tank.getTankType(), worldObj, xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ, dir);
 				}
 			}
 
@@ -307,6 +310,7 @@ public class TileEntityMachineAutosaw extends TileEntityLoadedBase implements IB
 	}
 
 	protected void tryInteract(int x, int y, int z) {
+
 		Block b = worldObj.getBlock(x, y, z);
 		int meta = worldObj.getBlockMetadata(x, y, z);
 

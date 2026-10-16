@@ -9,14 +9,17 @@ import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.gui.GUIMachineCryoDistill;
 import com.hbm.inventory.recipes.CryoRecipes;
 import com.hbm.lib.Library;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.Tuple.Quartet;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
-import api.hbm.fluid.IFluidStandardTransceiver;
+import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -27,12 +30,16 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityMachineCryoDistill extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiver, IPersistentNBT, IGUIProvider {
+public class TileEntityMachineCryoDistill extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IPersistentNBT, IGUIProvider {
 
 	public long power;
 	public static final long maxPower = 1_000_000;
 
 	public FluidTank[] tanks;
+
+	protected ModulePortManFluidAdaptive inputFluidPorts;
+	protected ModulePortManFluidAdaptive outputFluidPorts;
+	protected ModulePortManPower modulePowerPorts;
 
 	public TileEntityMachineCryoDistill() {
 		super(11);
@@ -43,6 +50,10 @@ public class TileEntityMachineCryoDistill extends TileEntityMachineBase implemen
 		this.tanks[2] = new FluidTank(Fluids.OXYGEN, 24_000);
 		this.tanks[3] = new FluidTank(Fluids.KRYPTON, 24_000);
 		this.tanks[4] = new FluidTank(Fluids.CARBONDIOXIDE, 24_000);
+
+		inputFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks());
+		outputFluidPorts = new ModulePortManFluidAdaptive(this).setOutputTanks(getSendingTanks());
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 
 	@Override
@@ -54,16 +65,12 @@ public class TileEntityMachineCryoDistill extends TileEntityMachineBase implemen
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
+			inputFluidPorts.update(getInputFluidPorts());
+			outputFluidPorts.update(getOutputFluidPorts());
+			modulePowerPorts.update(getPowerPorts());
+
 			power = Library.chargeTEFromItems(slots, 0, power, maxPower);
 			tanks[0].setType(7, slots);
-
-			DirPos[] con = getConPos();
-
-			// Subscribe to powernet
-			trySubscribe(worldObj, con[5].getX(), con[5].getY(), con[5].getZ(), con[5].getDir());
-
-			// Subscribe input tank
-			trySubscribe(tanks[0].getTankType(), worldObj, con[0].getX(), con[0].getY(), con[0].getZ(), con[0].getDir());
 
 			distill();
 
@@ -71,14 +78,6 @@ public class TileEntityMachineCryoDistill extends TileEntityMachineBase implemen
 			tanks[2].unloadTank(3, 4, slots);
 			tanks[3].unloadTank(5, 6, slots);
 			tanks[4].unloadTank(8, 9, slots);
-
-			for(int i = 1; i < 5; i++) {
-				for(int o = 1; o < 5; o++) {
-					if(tanks[i].getFill() > 0) {
-						this.sendFluid(tanks[i], worldObj, con[o].getX(), con[o].getY(), con[o].getZ(), con[o].getDir());
-					}
-				}
-			}
 
 			networkPackNT(15);
 		}
@@ -148,6 +147,54 @@ public class TileEntityMachineCryoDistill extends TileEntityMachineBase implemen
 			// Power
 			new DirPos(xCoord + dir.offsetX * -2 + rot.offsetX * -3, yCoord - 2, zCoord + dir.offsetZ * -2 + rot.offsetZ * -3, rot.getOpposite()),
 		};
+	}
+
+	protected PortDef[] cachedInputFluidPorts;
+
+	public PortDef[] getInputFluidPorts() {
+		if(cachedInputFluidPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+
+			cachedInputFluidPorts = new PortDef[] {
+				PortDef.make(xCoord + dir.offsetX * -1 + rot.offsetX * -2, yCoord - 2, zCoord + dir.offsetZ * -1 + rot.offsetZ * -2, rot.getOpposite()),
+			};
+		}
+
+		return cachedInputFluidPorts;
+	}
+
+	protected PortDef[] cachedOutputFluidPorts;
+
+	public PortDef[] getOutputFluidPorts() {
+		if(cachedOutputFluidPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+
+			cachedOutputFluidPorts = new PortDef[] {
+				PortDef.make(xCoord + dir.offsetX * 3 + rot.offsetX * -2, yCoord - 2, zCoord + dir.offsetZ * 3 + rot.offsetZ * -2, dir),
+				PortDef.make(xCoord + dir.offsetX * 3 + rot.offsetX * -1, yCoord - 2, zCoord + dir.offsetZ * 3 + rot.offsetZ * -1, dir),
+				PortDef.make(xCoord + dir.offsetX * 3 + rot.offsetX * 1, yCoord - 2, zCoord + dir.offsetZ * 3 + rot.offsetZ * 1, dir),
+				PortDef.make(xCoord + dir.offsetX * 3 + rot.offsetX * 2, yCoord - 2, zCoord + dir.offsetZ * 3 + rot.offsetZ * 2, dir),
+			};
+		}
+
+		return cachedOutputFluidPorts;
+	}
+
+	protected PortDef[] cachedPowerPorts;
+
+	public PortDef[] getPowerPorts() {
+		if(cachedPowerPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+
+			cachedPowerPorts = new PortDef[] {
+				PortDef.make(xCoord + dir.offsetX * -2 + rot.offsetX * -2, yCoord - 2, zCoord + dir.offsetZ * -2 + rot.offsetZ * -2, rot.getOpposite()),
+			};
+		}
+
+		return cachedPowerPorts;
 	}
 
 	@Override

@@ -31,6 +31,7 @@ import com.hbm.util.i18n.I18nUtil;
 
 public class FluidTank implements Cloneable {
 
+	public static final FluidTank NONE_TANK = new FluidTank(Fluids.NONE, 1_000);
 	public static final FluidTank[] EMPTY_ARRAY = new FluidTank[0];
 
 	public static final List<FluidLoadingHandler> loadingHandlers = new ArrayList<FluidLoadingHandler>();

@@ -7,13 +7,19 @@ import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.network.TileEntityPylonBase;
 import com.hbm.util.i18n.I18nUtil;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.util.ChatComponentTranslation;
@@ -112,15 +118,48 @@ public class ItemWiring extends Item {
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean inhand) {
 
-		if(world.isRemote) {
-			if(stack.stackTagCompound != null) {
-				Vec3 vec = Vec3.createVectorHelper(
-						entity.posX - stack.stackTagCompound.getInteger("x"),
-						entity.posY - stack.stackTagCompound.getInteger("y"),
-						entity.posZ - stack.stackTagCompound.getInteger("z"));
+		if(world.isRemote && inhand && stack.stackTagCompound != null) {
+			displayWireDistance(stack, world, entity);
+		}
+	}
 
-				MainRegistry.proxy.displayTooltip(stack.getDisplayName() + ": " + ((int) vec.lengthVector()) + "m", MainRegistry.proxy.ID_CABLE);
+	@SideOnly(Side.CLIENT)
+	private void displayWireDistance(ItemStack stack, World world, Entity entity) {
+		TileEntity start = world.getTileEntity(stack.stackTagCompound.getInteger("x"),
+				stack.stackTagCompound.getInteger("y"), stack.stackTagCompound.getInteger("z"));
+		if(!(start instanceof TileEntityPylonBase)) return;
+		TileEntityPylonBase first = (TileEntityPylonBase) start;
+
+		MovingObjectPosition target = Minecraft.getMinecraft().objectMouseOver;
+		if(target != null && target.typeOfHit == MovingObjectType.BLOCK) {
+			int x = target.blockX;
+			int y = target.blockY;
+			int z = target.blockZ;
+			Block block = world.getBlock(x, y, z);
+			if(block instanceof BlockDummyable) {
+				int[] core = ((BlockDummyable) block).findCore(world, x, y, z);
+				if(core != null) {
+					x = core[0];
+					y = core[1];
+					z = core[2];
+				}
+			}
+
+			TileEntity end = world.getTileEntity(x, y, z);
+			if(end instanceof TileEntityPylonBase) {
+				TileEntityPylonBase second = (TileEntityPylonBase) end;
+				double distance = TileEntityPylonBase.getWireDistance(first, second);
+				double limit = Math.min(first.getMaxWireLength(), second.getMaxWireLength());
+				EnumChatFormatting color = TileEntityPylonBase.canConnect(first, second) == 0 ? EnumChatFormatting.GREEN : EnumChatFormatting.RED;
+				// Round up so an over-range connection never appears within the displayed limit.
+				MainRegistry.proxy.displayTooltip(stack.getDisplayName() + ": " + color + (int) Math.ceil(distance) + "m / " + (int) limit + "m", MainRegistry.proxy.ID_CABLE);
+				return;
 			}
 		}
+
+		// Without a target pylon, only an approximate distance to the player is available.
+		Vec3 point = first.getConnectionPoint();
+		double distance = point.distanceTo(Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ));
+		MainRegistry.proxy.displayTooltip(stack.getDisplayName() + ": ~" + (int) Math.ceil(distance) + "m", MainRegistry.proxy.ID_CABLE);
 	}
 }

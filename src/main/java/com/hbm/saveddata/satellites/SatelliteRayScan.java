@@ -5,9 +5,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.hbm.items.ModItems;
 import com.hbm.util.fauxpointtwelve.DimPos;
 
 import api.hbm.redstoneoverradio.IRORInteractive;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
 public class SatelliteRayScan extends SatelliteBase {
@@ -24,6 +28,13 @@ public class SatelliteRayScan extends SatelliteBase {
 	public SatelliteRayScan() { }
 
 	@Override public String getType() { return "NB_RAY_SCANNER"; }
+	
+	@Override
+	public IChatComponent[] getInfo(World world) {
+		return new IChatComponent[] {
+				new ChatComponentTranslation(ModItems.sat_ray_scan.getUnlocalizedName(new ItemStack(ModItems.sat_ray_scan)) + ".name")
+		};
+	}
 	
 	@Override
 	public void onCommandImpl(World world, String... cmd) {

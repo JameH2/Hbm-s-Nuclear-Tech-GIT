@@ -29,6 +29,7 @@ import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.CompatEnergyControl;
 import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.world.gen.nbt.INBTTileEntityTransformable;
 
 import api.hbm.energymk2.IEnergyProviderMK2;
@@ -43,6 +44,7 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -69,6 +71,9 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 	public static int inputTankSize = 1_000_000_000;
 	public static int outputTankSize = 1_000_000_000;
 	public static double efficiency = 0.85D;
+	
+	protected PortDef[] fluidPorts;
+	protected PortDef[] powerPorts;
 
 	public boolean damaged;
 	public Explosion lastExplosion;
@@ -109,6 +114,10 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 
 		if(!worldObj.isRemote) {
 			
+			this.setupPowerPorts(getPowerPorts());
+			this.setupFluidPorts(getFluidPorts());
+			this.updatePortPOFIFO();
+			
 			this.powerBuffer = 0;
 			this.info = new double[3];
 
@@ -140,14 +149,6 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 			}
 
 			if(!valid) tanks[1].setTankType(Fluids.NONE);
-
-			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-			this.tryProvide(worldObj, xCoord - dir.offsetX * 11, yCoord, zCoord - dir.offsetZ * 11, dir.getOpposite());
-
-			for(DirPos pos : this.getConPos()) {
-				this.tryProvide(tanks[1], worldObj, pos);
-				this.trySubscribe(tanks[0].getTankType(), worldObj, pos);
-			}
 
 			turnTimer--;
 
@@ -203,6 +204,31 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 				}
 			}
 		}
+	}
+	
+	public PortDef[] getFluidPorts() {
+		if(fluidPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+			
+			fluidPorts = new PortDef[] {
+					PortDef.make(xCoord + dir.offsetX * 4, yCoord + 2, zCoord + dir.offsetZ * 4, dir),
+					PortDef.make(xCoord + rot.offsetX * 2, yCoord, zCoord + rot.offsetZ * 2, rot),
+					PortDef.make(xCoord - rot.offsetX * 2, yCoord, zCoord - rot.offsetZ * 2, rot.getOpposite()),
+			};
+		}
+		return fluidPorts;
+	}
+
+	public PortDef[] getPowerPorts() {
+		if(powerPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			
+			powerPorts = new PortDef[] {
+					PortDef.make(xCoord - dir.offsetX * 10, yCoord, zCoord - dir.offsetZ * 10, dir.getOpposite()),
+			};
+		}
+		return powerPorts;
 	}
 
 	public DirPos[] getConPos() {
@@ -419,7 +445,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 	}
 
 	@Override
-	public void repair() {
+	public void repair(EntityPlayer player) {
 		damaged = false;
 		markDirty();
 	}

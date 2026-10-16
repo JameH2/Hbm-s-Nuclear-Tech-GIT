@@ -42,9 +42,9 @@ public class MachineDiesel extends BlockMachineBase implements ITooltipProvider,
 
 		if(tile instanceof TileEntityMachineDiesel) {
 			TileEntityMachineDiesel diesel = (TileEntityMachineDiesel) tile;
-
-			if(diesel.hasAcceptableFuel() && diesel.tank.getFill() > 0) {
-
+			
+			if(diesel.isOn == true && diesel.hasAcceptableFuel() && diesel.tank.getFill() > 0) {
+				
 				ForgeDirection dir = ForgeDirection.getOrientation(tile.getBlockMetadata());
 				ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 				world.spawnParticle("smoke", x + 0.5 - dir.offsetX * 0.6 + rot.offsetX * 0.1875, y + 0.3125, z + 0.5 - dir.offsetZ * 0.6 + rot.offsetZ * 0.1875, 0, 0, 0);
