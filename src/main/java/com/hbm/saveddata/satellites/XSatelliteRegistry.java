@@ -37,6 +37,7 @@ public class XSatelliteRegistry {
 		registerSatellite(SatellitePrecisionLaser.class, ModItems.sat_precision_laser, 0.221F, 1.0F, 0.663F);
 		registerSatellite(SatelliteDetector.class, ModItems.sat_detector, 0.1F, 0.2F, 0.3F);
 		registerSatellite(SatelliteRayScan.class, ModItems.sat_ray_scan, 0.1F, 0.2F, 0.3F);
+		registerSatellite(SatelliteScience.class, ModItems.sat_science, 0.2F, 0.64F, 0.8F);
 
 	}
 

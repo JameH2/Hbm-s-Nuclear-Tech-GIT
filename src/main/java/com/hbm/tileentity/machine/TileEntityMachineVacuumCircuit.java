@@ -15,13 +15,14 @@ import com.hbm.inventory.recipes.VacuumCircuitRecipes.VacuumCircuitRecipe;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.Library;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.i18n.I18nUtil;
-import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -54,8 +55,12 @@ public class TileEntityMachineVacuumCircuit extends TileEntityMachineBase implem
 
 	public UpgradeManagerNT upgradeManager = new UpgradeManagerNT();
 
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityMachineVacuumCircuit() {
 		super(8);
+
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 
 
@@ -77,11 +82,12 @@ public class TileEntityMachineVacuumCircuit extends TileEntityMachineBase implem
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
+			modulePowerPorts.update(getPorts());
+
 			CBT_Atmosphere atmosphere = ChunkAtmosphereManager.proxy.getAtmosphere(worldObj, xCoord, yCoord, zCoord);
 			canOperate = atmosphere == null || atmosphere.getPressure() <= 0.001;
 
 			this.power = Library.chargeTEFromItems(slots, 5, this.getPower(), this.getMaxPower());
-			this.updateConnections();
 			recipe = VacuumCircuitRecipes.getRecipe(new ItemStack[] {slots[0], slots[1], slots[2], slots[3]});
 			long intendedMaxPower;
 
@@ -150,11 +156,7 @@ public class TileEntityMachineVacuumCircuit extends TileEntityMachineBase implem
 
 		return true;
 	}
-	private void updateConnections() {
-		for(DirPos pos : getConPos()) {
-			this.trySubscribe(worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-		}
-	}
+
 	public void consumeItems(VacuumCircuitRecipe recipe) {
 
 		for(AStack aStack : recipe.wafer) {
@@ -195,17 +197,23 @@ public class TileEntityMachineVacuumCircuit extends TileEntityMachineBase implem
 		return new int[] { 0, 1, 2, 3, 4 };
 	}
 
-	public DirPos[] getConPos() {
-		return new DirPos[] {
-				new DirPos(xCoord + 2, yCoord, zCoord + 1, Library.POS_X),
-				new DirPos(xCoord + 2, yCoord, zCoord - 1, Library.POS_X),
-				new DirPos(xCoord - 2, yCoord, zCoord + 1, Library.NEG_X),
-				new DirPos(xCoord - 2, yCoord, zCoord - 1, Library.NEG_X),
-				new DirPos(xCoord + 1, yCoord, zCoord + 2, Library.POS_Z),
-				new DirPos(xCoord - 1, yCoord, zCoord + 2, Library.POS_Z),
-				new DirPos(xCoord + 1, yCoord, zCoord - 2, Library.NEG_Z),
-				new DirPos(xCoord - 1, yCoord, zCoord - 2, Library.NEG_Z)
-		};
+	protected PortDef[] cachedPorts;
+
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord + 1, yCoord, zCoord + 1, Library.POS_X),
+				PortDef.make(xCoord + 1, yCoord, zCoord - 1, Library.POS_X),
+				PortDef.make(xCoord - 1, yCoord, zCoord + 1, Library.NEG_X),
+				PortDef.make(xCoord - 1, yCoord, zCoord - 1, Library.NEG_X),
+				PortDef.make(xCoord + 1, yCoord, zCoord + 1, Library.POS_Z),
+				PortDef.make(xCoord - 1, yCoord, zCoord + 1, Library.POS_Z),
+				PortDef.make(xCoord + 1, yCoord, zCoord - 1, Library.NEG_Z),
+				PortDef.make(xCoord - 1, yCoord, zCoord - 1, Library.NEG_Z)
+			};
+		}
+
+		return cachedPorts;
 	}
 
 	@Override

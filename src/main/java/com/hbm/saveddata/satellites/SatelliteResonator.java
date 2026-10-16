@@ -1,7 +1,12 @@
 package com.hbm.saveddata.satellites;
 
+import com.hbm.items.ModItems;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
 public class SatelliteResonator extends SatelliteBase {
@@ -9,6 +14,13 @@ public class SatelliteResonator extends SatelliteBase {
 	public SatelliteResonator() { }
 
 	@Override public String getType() { return "XEN_RELAY"; }
+	
+	@Override
+	public IChatComponent[] getInfo(World world) {
+		return new IChatComponent[] {
+				new ChatComponentTranslation(ModItems.sat_resonator.getUnlocalizedName(new ItemStack(ModItems.sat_resonator)) + ".name")
+		};
+	}
 	
 	public void onCoordAction(World world, EntityPlayer player, int x, int y, int z) {
 

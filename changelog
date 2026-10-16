@@ -1,3 +1,6 @@
+## Changed
+* HTRF4 for the old fusion reactor has been removed
+* Titanium bedrock ore on all planets changed to ilmenite, except for Tekto, which still provides pure titanium!
 ## Added
 * Depletable rich iron and copper ores: metadata tracks richness, final unit turns the block to stone, no silk harvest
 * Rich ore chunks (smelt/shred/centrifuge exactly like regular ores: x1/x2/x3)
@@ -8,3 +11,6 @@
 * Fixed the pollution detector's localization being broken
 * Fixed an exploit achievable via packet manipulation
 * Fixed assembly factory and chemical factory RoR reader index offset
+
+## Fixed
+* Solar panel ports inconsistent and don't match model

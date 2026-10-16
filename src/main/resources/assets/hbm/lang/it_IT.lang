@@ -543,7 +543,6 @@ cannery.schottky.6=La particella scelta subisce un collasso della funzione d'ond
 cannery.schottky.7=Se una qualsiasi particella virtuale incontra segmenti malformati, tutte le particelle virtuali verranno scartate e la particella che ha generato l'errore verrà collassata
 cannery.schottky.8=Nota che le particelle virtuali non utilizzeranno mai la stessa uscita del Diodo due volte. I loop infiniti falliranno, ma rientrare in un Diodo è comunque accettabile
 cannery.schottky.9=Il tuo Diodo di Particelle Schottky deve essere correttamente racchiuso, con percorsi liberi per ciascuna uscita dell'intersezione
-=======
 book_lore.book_iodine.page.0=alright you will not believe this, but old man weathervane finally managed to show up again since he left two weeks ago and what's more surprising is the fact that he actually decided to spill the beans on what they were doing in the canyon:
 book_lore.book_iodine.page.1=apparently the morons from R&D discovered a compound that is mostly inorganic, pretty much like a toxin in nature, but get this: the dying cells will reproduce said toxin and excrete it through the skin, creating an aerosol that is highly contagious.
 book_lore.book_iodine.page.2=it's just like a virus, but not a virus. the composition is weird, you can mix it in any household bottle but you do have to get the order right. the doc told me that the first ingredient which is just powdered iodine crystals goes into slot %d

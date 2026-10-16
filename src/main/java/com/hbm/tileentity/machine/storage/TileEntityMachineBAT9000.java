@@ -1,13 +1,12 @@
 package com.hbm.tileentity.machine.storage;
 
 import com.hbm.lib.Library;
-import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.tileentity.TilePort.PortDef;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.AxisAlignedBB;
 
-@Deprecated
 public class TileEntityMachineBAT9000 extends TileEntityBarrel {
 
 	public TileEntityMachineBAT9000() {
@@ -29,17 +28,20 @@ public class TileEntityMachineBAT9000 extends TileEntityBarrel {
 	}
 	
 	@Override
-	protected DirPos[] getConPos() {
-		return new DirPos[] {
-				new DirPos(xCoord + 1, yCoord, zCoord + 3, Library.POS_Z),
-				new DirPos(xCoord - 1, yCoord, zCoord + 3, Library.POS_Z),
-				new DirPos(xCoord + 1, yCoord, zCoord - 3, Library.NEG_Z),
-				new DirPos(xCoord - 1, yCoord, zCoord - 3, Library.NEG_Z),
-				new DirPos(xCoord + 3, yCoord, zCoord + 1, Library.POS_X),
-				new DirPos(xCoord - 3, yCoord, zCoord + 1, Library.NEG_X),
-				new DirPos(xCoord + 3, yCoord, zCoord - 1, Library.POS_X),
-				new DirPos(xCoord - 3, yCoord, zCoord - 1, Library.NEG_X)
-		};
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			cachedPorts = new PortDef[] {
+					PortDef.make(xCoord + 1, yCoord, zCoord + 2, Library.POS_Z),
+					PortDef.make(xCoord - 1, yCoord, zCoord + 2, Library.POS_Z),
+					PortDef.make(xCoord + 1, yCoord, zCoord - 2, Library.NEG_Z),
+					PortDef.make(xCoord - 1, yCoord, zCoord - 2, Library.NEG_Z),
+					PortDef.make(xCoord + 2, yCoord, zCoord + 1, Library.POS_X),
+					PortDef.make(xCoord - 2, yCoord, zCoord + 1, Library.NEG_X),
+					PortDef.make(xCoord + 2, yCoord, zCoord - 1, Library.POS_X),
+					PortDef.make(xCoord - 2, yCoord, zCoord - 1, Library.NEG_X)
+			};
+		}
+		return cachedPorts;
 	}
 
 	AxisAlignedBB bb = null;

@@ -9,6 +9,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.FT_Rocket;
 import com.hbm.inventory.gui.GUITransporterRocket;
 import com.hbm.items.ItemVOTVdrive.Target;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.ParticleUtil;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
@@ -69,6 +70,8 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
 	// Check that we have enough fuel to send to our destination
 	@Override
 	protected boolean canSend(TileEntityTransporterBase linkedTransporter) {
+		if(!(linkedTransporter instanceof TileEntityTransporterRocket)) return false;
+		if(linkedTransporter.getWorldObj() == null) return false;
 		if(launchTicks > -20) return false;
 		if(((TileEntityTransporterRocket)linkedTransporter).launchTicks < 100) return false;
 		if(!hasRocket) return false;
@@ -91,17 +94,22 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
 
 	@Override
 	protected void hasSent(TileEntityTransporterBase linkedTransporter, int quantitySent) {
+		if(!(linkedTransporter instanceof TileEntityTransporterRocket)) return;
+		if(linkedTransporter.getWorldObj() == null) return;
+
 		// Recalculate send cost from what was actually successfully sent
 		FT_Rocket fuelStats = tanks[8].getTankType().getTrait(FT_Rocket.class);
 		if(fuelStats == null) fuelStats = tanks[9].getTankType().getTrait(FT_Rocket.class);
 
-		Target from = CelestialBody.getTarget(worldObj, xCoord, zCoord);
-		Target to = CelestialBody.getTarget(linkedTransporter.getWorldObj(), linkedTransporter.xCoord, linkedTransporter.zCoord);
+		if(fuelStats != null) {
+			Target from = CelestialBody.getTarget(worldObj, xCoord, zCoord);
+			Target to = CelestialBody.getTarget(linkedTransporter.getWorldObj(), linkedTransporter.xCoord, linkedTransporter.zCoord);
 
-		int sendCost = Math.min(64_000, SolarSystem.getCostBetween(from.body, to.body, quantitySent * MASS_MULT, (int)fuelStats.getThrust(), fuelStats.getISP(), from.inOrbit, to.inOrbit));
+			int sendCost = Math.min(64_000, SolarSystem.getCostBetween(from.body, to.body, quantitySent * MASS_MULT, (int)fuelStats.getThrust(), fuelStats.getISP(), from.inOrbit, to.inOrbit));
 
-		tanks[8].setFill(tanks[8].getFill() - sendCost);
-		tanks[9].setFill(tanks[9].getFill() - sendCost);
+			tanks[8].setFill(tanks[8].getFill() - sendCost);
+			tanks[9].setFill(tanks[9].getFill() - sendCost);
+		}
 
 		hasRocket = false;
 		((TileEntityTransporterRocket)linkedTransporter).hasRocket = true;
@@ -109,6 +117,7 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
 
 	@Override
 	protected void hasConnected(TileEntityTransporterBase linkedTransporter) {
+		if(!(linkedTransporter instanceof TileEntityTransporterRocket)) return;
 		hasRocket = true;
 		((TileEntityTransporterRocket)linkedTransporter).hasRocket = false;
 	}
@@ -160,32 +169,40 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
 	}
 
 	@Override
-	protected DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	protected PortDef[] getFluidPorts() {
+		if(cachedFluidPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	
+			cachedFluidPorts = new PortDef[] {
+				PortDef.make(xCoord + dir.offsetX - rot.offsetX, yCoord, zCoord + dir.offsetZ - rot.offsetZ, dir),
+				PortDef.make(xCoord + dir.offsetX + rot.offsetX, yCoord, zCoord + dir.offsetZ + rot.offsetZ, dir),
+				PortDef.make(xCoord - dir.offsetX - rot.offsetX, yCoord, zCoord - dir.offsetZ - rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX + rot.offsetX, yCoord, zCoord - dir.offsetZ + rot.offsetZ, dir.getOpposite()),
+	
+				PortDef.make(xCoord + dir.offsetX - rot.offsetX, yCoord, zCoord + dir.offsetZ - rot.offsetZ, ForgeDirection.UP),
+				PortDef.make(xCoord + dir.offsetX + rot.offsetX, yCoord, zCoord + dir.offsetZ + rot.offsetZ, ForgeDirection.UP),
+				PortDef.make(xCoord - dir.offsetX - rot.offsetX, yCoord, zCoord - dir.offsetZ - rot.offsetZ, ForgeDirection.UP),
+				PortDef.make(xCoord - dir.offsetX + rot.offsetX, yCoord, zCoord - dir.offsetZ + rot.offsetZ, ForgeDirection.UP),
+			};
+		}
 
-		return new DirPos[] {
-			new DirPos(xCoord + dir.offsetX * 2 - rot.offsetX, yCoord, zCoord + dir.offsetZ * 2 - rot.offsetZ, dir.getOpposite()),
-			new DirPos(xCoord + dir.offsetX * 2 + rot.offsetX, yCoord, zCoord + dir.offsetZ * 2 + rot.offsetZ, dir.getOpposite()),
-			new DirPos(xCoord - dir.offsetX * 2 - rot.offsetX, yCoord, zCoord - dir.offsetZ * 2 - rot.offsetZ, dir),
-			new DirPos(xCoord - dir.offsetX * 2 + rot.offsetX, yCoord, zCoord - dir.offsetZ * 2 + rot.offsetZ, dir),
-
-			new DirPos(xCoord + dir.offsetX - rot.offsetX, yCoord + 1, zCoord + dir.offsetZ - rot.offsetZ, ForgeDirection.UP),
-			new DirPos(xCoord + dir.offsetX + rot.offsetX, yCoord + 1, zCoord + dir.offsetZ + rot.offsetZ, ForgeDirection.UP),
-			new DirPos(xCoord - dir.offsetX - rot.offsetX, yCoord + 1, zCoord - dir.offsetZ - rot.offsetZ, ForgeDirection.UP),
-			new DirPos(xCoord - dir.offsetX + rot.offsetX, yCoord + 1, zCoord - dir.offsetZ + rot.offsetZ, ForgeDirection.UP),
-		};
+		return cachedFluidPorts;
 	}
 
 	@Override
-	protected DirPos[] getTankPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	protected PortDef[] getFuelPorts() {
+		if(cachedFuelPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	
+			cachedFuelPorts = new PortDef[] {
+				PortDef.make(xCoord + dir.offsetX - rot.offsetX * 2, yCoord, zCoord + dir.offsetZ - rot.offsetZ * 2, rot.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX - rot.offsetX * 2, yCoord, zCoord - dir.offsetZ - rot.offsetZ * 2, rot.getOpposite()),
+			};
+		}
 
-		return new DirPos[] {
-			new DirPos(xCoord + dir.offsetX - rot.offsetX * 3, yCoord, zCoord + dir.offsetZ - rot.offsetZ * 3, rot),
-			new DirPos(xCoord - dir.offsetX - rot.offsetX * 3, yCoord, zCoord - dir.offsetZ - rot.offsetZ * 3, rot),
-		};
+		return cachedFuelPorts;
 	}
 
 	@Override
@@ -207,8 +224,8 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound nbt) {
-		super.receiveControl(nbt);
+	public void receiveControl(EntityPlayer player, NBTTagCompound nbt) {
+		super.receiveControl(player, nbt);
 		if(nbt.hasKey("threshold"))
 			threshold = nbt.getInteger("threshold");
 	}

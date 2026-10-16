@@ -3,24 +3,33 @@ package com.hbm.tileentity.machine;
 import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
+import com.hbm.tileentity.TilePortShapes;
 
-import api.hbm.fluid.IFluidStandardTransceiver;
+import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityAlgaeFilm extends TileEntityMachineBase implements IFluidStandardTransceiver {
+public class TileEntityAlgaeFilm extends TileEntityMachineBase implements IFluidStandardTransceiverMK2 {
 
 	public FluidTank[] tanks;
 	public boolean canOperate;
+
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
 
 	public TileEntityAlgaeFilm() {
 		super(0);
 		tanks = new FluidTank[2];
 		tanks[0] = new FluidTank(Fluids.CARBONDIOXIDE, 8_000);
 		tanks[1] = new FluidTank(Fluids.OXYGEN, 8_000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks()).setOutputTanks(getSendingTanks());
 	}
+	
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.horizontal(xCoord, yCoord, zCoord); return cachedPorts; }
 
 	@Override
 	public String getName() {
@@ -30,6 +39,8 @@ public class TileEntityAlgaeFilm extends TileEntityMachineBase implements IFluid
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote) {
+			moduleFluidPorts.update(getPorts());
+
 			canOperate = worldObj.provider instanceof WorldProviderOrbit;
 
 			if(canOperate && worldObj.rand.nextBoolean()) {
@@ -37,14 +48,6 @@ public class TileEntityAlgaeFilm extends TileEntityMachineBase implements IFluid
 					tanks[0].setFill(tanks[0].getFill() - 1);
 					tanks[1].setFill(tanks[1].getFill() + 1);
 				}
-			}
-
-			ForgeDirection d = ForgeDirection.getOrientation(this.getBlockMetadata()).getRotation(ForgeDirection.UP);
-			ForgeDirection[] dirs = new ForgeDirection[] { d, d.getOpposite() };
-
-			for(ForgeDirection dir : dirs) {
-				trySubscribe(tanks[0].getTankType(), worldObj, xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ, dir);
-				sendFluid(tanks[1], worldObj, xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ, dir);
 			}
 
 			networkPackNT(20);

@@ -8,11 +8,12 @@ import com.hbm.explosion.ExplosionLarge;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.lib.Library;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.ParticleUtil;
-import com.hbm.util.fauxpointtwelve.DirPos;
 
-import api.hbm.fluid.IFluidStandardTransceiver;
+import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -20,7 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 
-public class TileEntityMachineGasDock extends TileEntityMachineBase implements IFluidStandardTransceiver {
+public class TileEntityMachineGasDock extends TileEntityMachineBase implements IFluidStandardTransceiverMK2 {
 
 	public FluidTank[] tanks;
 
@@ -29,12 +30,16 @@ public class TileEntityMachineGasDock extends TileEntityMachineBase implements I
 
 	private AxisAlignedBB renderBoundingBox;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+
 	public TileEntityMachineGasDock() {
 		super(0);
 		this.tanks = new FluidTank[3];
 		this.tanks[0] = new FluidTank(Fluids.JOOLGAS, 64_000);
 		this.tanks[1] = new FluidTank(Fluids.HYDROGEN, 32_000);
 		this.tanks[2] = new FluidTank(Fluids.OXYGEN, 32_000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks()).setOutputTanks(getSendingTanks());
 	}
 
 	@Override
@@ -60,13 +65,7 @@ public class TileEntityMachineGasDock extends TileEntityMachineBase implements I
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote) {
-			updateConnections();
-
-			for(DirPos pos : getConPos()) {
-				if(tanks[0].getFill() > 0) {
-					this.sendFluid(tanks[0], worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-				}
-			}
+			moduleFluidPorts.update(getPorts());
 
 			CelestialBody planet = CelestialBody.getPlanet(worldObj);
 
@@ -108,16 +107,6 @@ public class TileEntityMachineGasDock extends TileEntityMachineBase implements I
 		super.deserialize(buf);
 		hasRocket = buf.readBoolean();
 		for(int i = 0; i < tanks.length; i++) tanks[i].deserialize(buf);
-	}
-
-	private void updateConnections() {
-		for(DirPos pos : getConPos()) {
-			for(int i = 1; i < tanks.length; i++) {
-				if(tanks[i].getTankType() != Fluids.NONE) {
-					trySubscribe(tanks[i].getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-				}
-			}
-		}
 	}
 
 	private void collectGas() {
@@ -172,32 +161,31 @@ public class TileEntityMachineGasDock extends TileEntityMachineBase implements I
 	}
 
 
-	private DirPos[] conPos;
+	protected PortDef[] cachedPorts;
 
-
-	protected DirPos[] getConPos() {
-		if(conPos == null) {
-			List<DirPos> list = new ArrayList<>();
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			List<PortDef> list = new ArrayList<>();
 
 			// Below
 			for(int x = -1; x <= 1; x++) {
 				for(int z = -1; z <= 1; z++) {
-					list.add(new DirPos(xCoord + x, yCoord - 1, zCoord + z, Library.NEG_Y));
+					list.add(PortDef.make(xCoord + x, yCoord, zCoord + z, Library.NEG_Y));
 				}
 			}
 
 			// Sides
 			for(int i = -1; i <= 1; i++) {
-				list.add(new DirPos(xCoord + i, yCoord, zCoord + 2, Library.POS_Z));
-				list.add(new DirPos(xCoord + i, yCoord, zCoord - 2, Library.NEG_Z));
-				list.add(new DirPos(xCoord + 2, yCoord, zCoord + i, Library.POS_X));
-				list.add(new DirPos(xCoord - 2, yCoord, zCoord + i, Library.NEG_X));
+				list.add(PortDef.make(xCoord + i, yCoord, zCoord + 1, Library.POS_Z));
+				list.add(PortDef.make(xCoord + i, yCoord, zCoord - 1, Library.NEG_Z));
+				list.add(PortDef.make(xCoord + 1, yCoord, zCoord + i, Library.POS_X));
+				list.add(PortDef.make(xCoord - 1, yCoord, zCoord + i, Library.NEG_X));
 			}
 
-			conPos = list.toArray(new DirPos[0]);
+			cachedPorts = list.toArray(new PortDef[0]);
 		}
 
-		return conPos;
+		return cachedPorts;
 	}
 
 	@Override

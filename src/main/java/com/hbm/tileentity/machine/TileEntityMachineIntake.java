@@ -13,7 +13,8 @@ import com.hbm.main.MainRegistry;
 import com.hbm.main.NTMSounds;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.TileEntityLoadedBase;
-import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardSenderMK2;
@@ -35,11 +36,17 @@ public class TileEntityMachineIntake extends TileEntityLoadedBase implements IEn
 	public TileEntityMachineIntake() {
 		this.compair = new FluidTank(Fluids.AIR, 1_000);
 	}
+	
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.solderer(xCoord, yCoord, zCoord, this.getBlockMetadata()); return cachedPorts; }
 
 	@Override
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
+
+			this.setupAllPorts(getPorts());
+			this.updatePortPIFIFO();
 
 			if(this.power >= this.getMaxPower() / 20) {
 				if(canCompress()) {
@@ -48,12 +55,7 @@ public class TileEntityMachineIntake extends TileEntityLoadedBase implements IEn
 
 				this.power -= this.getMaxPower() / 20;
 			}
-
-			for(DirPos pos : getConPos()) {
-				if(this.compair.getFill() > 0) this.tryProvide(compair, worldObj, pos);
-				this.trySubscribe(worldObj, pos);
-			}
-
+			
 			this.networkPackNT(50);
 
 		} else {
@@ -118,29 +120,12 @@ public class TileEntityMachineIntake extends TileEntityLoadedBase implements IEn
 		return false;
 	}
 
-	public DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		return new DirPos[] {
-				new DirPos(xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ, dir),
-				new DirPos(xCoord + dir.offsetX + rot.offsetX, yCoord, zCoord + dir.offsetZ + rot.offsetZ, dir),
-
-				new DirPos(xCoord - dir.offsetX * 2, yCoord, zCoord - dir.offsetZ * 2, dir.getOpposite()),
-				new DirPos(xCoord - dir.offsetX * 2 + rot.offsetX, yCoord, zCoord - dir.offsetZ * 2 + rot.offsetZ, dir.getOpposite()),
-
-				new DirPos(xCoord + rot.offsetX * 2, yCoord, zCoord + rot.offsetZ * 2, rot),
-				new DirPos(xCoord + rot.offsetX * 2 - dir.offsetX, yCoord, zCoord + rot.offsetZ * 2 - dir.offsetZ, rot),
-
-				new DirPos(xCoord - rot.offsetX, yCoord, zCoord - rot.offsetZ, rot.getOpposite()),
-				new DirPos(xCoord - rot.offsetX - dir.offsetX, yCoord, zCoord - rot.offsetZ - dir.offsetZ, rot.getOpposite())
-		};
-	}
-
 	@Override public AudioWrapper createAudioLoop() {
 		return MainRegistry.proxy.getLoopedSound(NTMSounds.ELECTRIC_MOTOR_LOOP, xCoord, yCoord, zCoord, 0.25F, 10F, 1.0F, 20);
 	}
 
 	@Override public void onChunkUnload() {
+		super.onChunkUnload();
 		if(audio != null) { audio.stopSound(); audio = null; }
 	}
 

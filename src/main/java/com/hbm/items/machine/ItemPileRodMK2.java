@@ -41,7 +41,9 @@ public class ItemPileRodMK2 extends ItemEnumMulti {
 		/* 3 */ NU(		1D, 25_000D, 0.25D, 4),
 		/* 4 */ PU239(	1D,    500D, 0.5D,  5),
 		/* 5 */ RGP(	1D,  1_000D, 0.5D,  6),
-		/* 6 */ WASTE(	1D,      0D, 1.5D,  6);
+		/* 6 */ WASTE(	1D,      0D, 1.5D,  6),
+		/* 7 */ THORIUM(1D, 35_000D, 0.25D, 8),
+		/* 8 */ THORIUM_FUEL(1D,  2_000D, 0.5D,  6);
 
 		public double reactionMult = 1.0D;
 		public double life = 1_000D;

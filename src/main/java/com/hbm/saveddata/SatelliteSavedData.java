@@ -1,6 +1,7 @@
 package com.hbm.saveddata;
 
 import com.hbm.dim.CelestialBody;
+import com.hbm.dim.SolarSystem;
 import com.hbm.dim.orbit.OrbitalStation;
 import com.hbm.saveddata.satellites.SatelliteBase;
 import com.hbm.saveddata.satellites.XSatelliteRegistry;
@@ -110,6 +111,11 @@ public class SatelliteSavedData extends WorldSavedData {
 
 		for(CelestialBody body : CelestialBody.getLandableBodies()) {
 			World bodyWorld = DimensionManager.getWorld(body.dimensionId);
+			// Mining satellites live at their resource body, even when the landing pad is elsewhere.
+			if(!worldObj.isRemote && bodyWorld == null && (body.dimensionId == SolarSystem.Body.DRES.getDimensionId() || body.dimensionId == SolarSystem.Body.MUN.getDimensionId())) {
+				DimensionManager.initDimension(body.dimensionId);
+				bodyWorld = DimensionManager.getWorld(body.dimensionId);
+			}
 			if(bodyWorld == null) continue;
 
 			SatelliteSavedData bodyData = getData(bodyWorld);
