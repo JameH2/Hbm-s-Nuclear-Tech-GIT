@@ -24,10 +24,10 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up JDK 25
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           java-version: "25"
           distribution: "temurin" # Temurin because it's default :P
@@ -52,16 +52,29 @@ jobs:
       # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
       # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Build with Gradle Wrapper
         run: ./gradlew build
 
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4.6.0
+      - name: Upload release JAR
+        uses: actions/upload-artifact@v7
         with:
-          # Upload the built jars instead of the raw build/libs directory (which would get zipped)
-          path: ./build/libs/*.jar
+          path: |
+            ./build/libs/HBM-NTM-*.jar
+            !./build/libs/*-sources.jar
+            !./build/libs/*-dev.jar
+            !./build/libs/*-predowngrade.jar
+            !./build/libs/*-api.jar
+          archive: false
+          if-no-files-found: error
+
+      - name: Upload dev JAR
+        uses: actions/upload-artifact@v7
+        with:
+          path: ./build/libs/HBM-NTM-*-dev.jar
+          archive: false
+          if-no-files-found: error
 
       # A release is only made when the mod was built from the space-travel-twopointfive branch
       - name: Calculate release tag
