@@ -38,7 +38,7 @@ public class ItemModTesla extends ItemArmorMod {
 
 	@SideOnly(Side.CLIENT)
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.mod_tesla.zaps_nearby_entities", stack.getDisplayName()));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.mod_tesla.desc2", stack.getDisplayName()));
 	}
 
 	@Override

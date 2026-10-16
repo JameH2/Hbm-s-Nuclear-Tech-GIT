@@ -52,10 +52,12 @@ public class ItemDiscord extends Item {
 		list.add(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("item.discord.desc1"));
 		list.add(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("item.discord.desc2"));
 		list.add("");
-		list.add(EnumChatFormatting.RED + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("item.discord.desc3"));
-		list.add(EnumChatFormatting.RED + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.item.discord.imagine_getting_coiled_worm_bosses"));
+		for(String line : I18nUtil.resolveKeyArray("item.discord.desc3")) {
+			list.add(EnumChatFormatting.RED + "" + EnumChatFormatting.ITALIC + line);
+		}
 		list.add("");
-		list.add(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.item.discord.oh_mean_terraria_item"));
-		list.add(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.item.discord.idk_about_thing"));
+		for(String line : I18nUtil.resolveKeyArray("item.discord.desc5")) {
+			list.add(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + line);
+		}
 	}
 }

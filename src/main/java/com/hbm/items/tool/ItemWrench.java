@@ -71,9 +71,9 @@ public class ItemWrench extends ItemSword {
 								second.addConnection(x1, y1, z1);
 								player.addChatMessage(new ChatComponentTranslation("chat.wrench.pipe_end"));
 								break;
-							case 1: player.addChatMessage(new ChatComponentTranslation("chat.wrench.pipe_error_pipes_not_same")); break;
+							case 1: player.addChatMessage(new ChatComponentTranslation("chat.wrench.incompatible_pipes")); break;
 							case 2: player.addChatMessage(new ChatComponentTranslation("chat.wrench.4")); break;
-							case 3: player.addChatMessage(new ChatComponentTranslation("chat.wrench.pipe_error_pipe_anchor_far")); break;
+							case 3: player.addChatMessage(new ChatComponentTranslation("chat.wrench.out_of_range")); break;
 							case 4: player.addChatMessage(new ChatComponentTranslation("chat.wrench.6")); break;
 						}
 
@@ -119,7 +119,7 @@ public class ItemWrench extends ItemSword {
 			list.add(I18nUtil.resolveKey("item.wrench.desc2", itemstack.stackTagCompound.getInteger("y")));
 			list.add(I18nUtil.resolveKey("item.wrench.desc3", itemstack.stackTagCompound.getInteger("z")));
 		} else {
-			list.add(I18nUtil.resolveKey("desc.item.wrench.right_click_anchor_connect"));
+			list.add(I18nUtil.resolveKey("item.wrench.desc4"));
 		}
 	}
 

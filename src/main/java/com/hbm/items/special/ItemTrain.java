@@ -34,10 +34,10 @@ public class ItemTrain extends ItemEnumMulti {
 
 		if(train.engine != null) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.train.desc1", EnumChatFormatting.RESET + String.valueOf(I18nUtil.resolveKey(train.engine))));
 		list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.train.desc2", EnumChatFormatting.RESET + String.valueOf(I18nUtil.resolveKey(train.gauge))));
-		if(train.maxSpeed != null) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("desc.item.train.max_speed", EnumChatFormatting.RESET + String.valueOf(I18nUtil.resolveKey(train.maxSpeed))));
+		if(train.maxSpeed != null) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.train.desc3", EnumChatFormatting.RESET + String.valueOf(I18nUtil.resolveKey(train.maxSpeed))));
 		if(train.acceleration != null) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.train.desc4", EnumChatFormatting.RESET + String.valueOf(train.acceleration)));
-		if(train.brakeThreshold != null) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("desc.item.train.engine_brake_threshold", EnumChatFormatting.RESET + String.valueOf(train.brakeThreshold)));
-		if(train.parkingBrake != null) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("desc.item.train.parking_brake", EnumChatFormatting.RESET + String.valueOf(I18nUtil.resolveKey(train.parkingBrake))));
+		if(train.brakeThreshold != null) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.train.desc5", EnumChatFormatting.RESET + String.valueOf(train.brakeThreshold)));
+		if(train.parkingBrake != null) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.train.desc6", EnumChatFormatting.RESET + String.valueOf(I18nUtil.resolveKey(train.parkingBrake))));
 	}
 
 	public static enum EnumTrainType {

@@ -101,8 +101,8 @@ public class GUIPneumoStorageAccess extends GuiInfoContainer {
 		this.drawCustomInfoStat(x, y, guiLeft + 7, guiTop + 43, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_access.sorting") + EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.pneumo_storage_access.name"));
 		this.drawCustomInfoStat(x, y, guiLeft + 7, guiTop + 61, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_access.sorting") + EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.pneumo_storage_access.internal_name"));
 
-		this.drawCustomInfoStat(x, y, guiLeft + 7, guiTop + 79, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_access.focus_search_by_default") + (this.startFocussed ? EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on") : EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off")));
-		this.drawCustomInfoStat(x, y, guiLeft + 7, guiTop + 97, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_access.inlude_tooltips_in_search") + (this.container.detailedSearch ? EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on") : EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off")));
+		this.drawCustomInfoStat(x, y, guiLeft + 7, guiTop + 79, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_access.focus_search") + (this.startFocussed ? EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on") : EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off")));
+		this.drawCustomInfoStat(x, y, guiLeft + 7, guiTop + 97, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_access.search_tooltips") + (this.container.detailedSearch ? EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on") : EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off")));
 	}
 
 	@Override

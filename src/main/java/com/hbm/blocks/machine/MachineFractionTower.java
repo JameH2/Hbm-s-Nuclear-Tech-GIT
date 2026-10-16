@@ -68,7 +68,7 @@ public class MachineFractionTower extends BlockDummyable implements ILookOverlay
 				TileEntityMachineFractionTower frac = (TileEntityMachineFractionTower) te;
 
 				if(world.getTileEntity(pos[0], pos[1] - 3, pos[2]) instanceof TileEntityMachineFractionTower) {
-					player.addChatComponentMessage(new ChatComponentTranslation("chat.fraction_tower.line.01").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
+					player.addChatComponentMessage(new ChatComponentTranslation("chat.fraction_tower.bottom_only").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 				} else {
 					FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, pos[0], pos[1], pos[2], player.getHeldItem());
 					frac.tanks[0].setTankType(type);

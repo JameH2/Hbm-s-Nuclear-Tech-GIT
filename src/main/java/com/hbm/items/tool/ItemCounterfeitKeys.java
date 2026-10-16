@@ -50,7 +50,7 @@ public class ItemCounterfeitKeys extends Item {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.resolveKey("item.counterfeit_keys.desc1"));
+		list.add(I18nUtil.resolveKey("item.counterfeit_keys.desc"));
 	}
 
 }

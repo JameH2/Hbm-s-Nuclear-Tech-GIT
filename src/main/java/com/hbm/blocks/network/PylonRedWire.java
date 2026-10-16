@@ -30,8 +30,8 @@ public class PylonRedWire extends BlockDummyable implements ITooltipProvider {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_type_single.desc4", EnumChatFormatting.YELLOW + "Single"));
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_range_25m", EnumChatFormatting.YELLOW + "25m"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.tooltip.connection_single", EnumChatFormatting.YELLOW));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.tooltip.connection_range", EnumChatFormatting.YELLOW + "25m"));
 	}
 
 	@Override

@@ -71,7 +71,7 @@ public class JetpackRegular extends JetpackFueledBase {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 
-		list.add(I18nUtil.resolveKey("desc.item.jetpack_regular.simple_upwards_momentum"));
+		list.add(I18nUtil.resolveKey("item.jetpack_regular.desc"));
 
 		super.addInformation(stack, player, list, ext);
 	}

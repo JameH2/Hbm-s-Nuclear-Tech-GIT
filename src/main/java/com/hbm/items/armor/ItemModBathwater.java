@@ -30,7 +30,7 @@ public class ItemModBathwater extends ItemArmorMod {
 		if(this == ModItems.bathwater_mk2)
 			color = "" + (System.currentTimeMillis() % 1000 < 500 ? EnumChatFormatting.GREEN : EnumChatFormatting.YELLOW);
 
-		list.add(color + I18nUtil.resolveKey("desc.item.mod_bathwater.inflicts_poison_attacker"));
+		list.add(color + I18nUtil.resolveKey("item.mod_bathwater.desc1"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
@@ -43,7 +43,7 @@ public class ItemModBathwater extends ItemArmorMod {
 		if(this == ModItems.bathwater_mk2)
 			color = "" + (System.currentTimeMillis() % 1000 < 500 ? EnumChatFormatting.GREEN : EnumChatFormatting.YELLOW);
 
-		list.add(color + I18nUtil.resolveKey("desc.item.mod_bathwater.poisons_attackers", stack.getDisplayName()));
+		list.add(color + I18nUtil.resolveKey("item.mod_bathwater.desc2", stack.getDisplayName()));
 	}
 
 	@Override

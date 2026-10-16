@@ -22,9 +22,9 @@ public class ItemPrototypeBlock extends ItemBlock {
 		list.add("");
 		list.add(I18nUtil.resolveKey("item.prototype_block.desc2"));
 
-		/*list.add(I18nUtil.resolveKey("desc.item.memory_euphemia"));
+		/*list.add(I18nUtil.resolveKey("item.prototype.desc1"));
 		list.add("");
-		list.add(I18nUtil.resolveKey("desc.item.rest_spaghetti_never_forgetti"));*/
+		list.add(I18nUtil.resolveKey("item.prototype.desc2"));*/
 	}
 
 }

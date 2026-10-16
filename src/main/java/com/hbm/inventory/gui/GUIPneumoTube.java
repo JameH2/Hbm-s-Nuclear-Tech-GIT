@@ -46,7 +46,7 @@ public class GUIPneumoTube extends GuiInfoContainer {
 			this.drawCustomInfoStat(x, y, guiLeft + 6, guiTop + 36, 20, 8, x, y, I18nUtil.resolveKey("gui.pneumo_tube.compressor") + tube.compair.getPressure() + I18nUtil.resolveKey("gui.pneumo_tube.pu"), I18nUtil.resolveKey("gui.pneumo_tube.max_range") + tube.getRangeFromPressure(tube.compair.getPressure()) + "m");
 
 			this.drawCustomInfoStat(x, y, guiLeft + 151, guiTop + 16, 18, 18, x, y, EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.pneumo_tube.receiver_order"), tube.receiveOrder == PneumaticNetwork.RECEIVE_ROBIN ? I18nUtil.resolveKey("gui.pneumo_tube.round_robin") : I18nUtil.resolveKey("gui.pneumo_tube.random"));
-			this.drawCustomInfoStat(x, y, guiLeft + 151, guiTop + 52, 18, 18, x, y, EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.pneumo_tube.provider_slot_order"), tube.sendOrder == PneumaticNetwork.SEND_FIRST ? I18nUtil.resolveKey("gui.pneumo_tube.first_to_last") : tube.sendOrder == PneumaticNetwork.SEND_LAST ? I18nUtil.resolveKey("gui.pneumo_tube.last_to_first") : I18nUtil.resolveKey("gui.pneumo_tube.random"));
+			this.drawCustomInfoStat(x, y, guiLeft + 151, guiTop + 52, 18, 18, x, y, EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.pneumo_tube.slot_order"), tube.sendOrder == PneumaticNetwork.SEND_FIRST ? I18nUtil.resolveKey("gui.pneumo_tube.ascending") : tube.sendOrder == PneumaticNetwork.SEND_LAST ? I18nUtil.resolveKey("gui.pneumo_tube.descending") : I18nUtil.resolveKey("gui.pneumo_tube.random"));
 		}
 
 		if(this.mc.thePlayer.inventory.getItemStack() == null) {

@@ -536,7 +536,7 @@ public class ArmorUtil {
 		ItemStack filter = ((IGasMask)mask.getItem()).getFilter(mask, player);
 
 		if(filter == null) {
-			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.misc.armor_util.no_filter_installed"));
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("misc.armor_util.no_filter"));
 			return;
 		}
 

@@ -126,7 +126,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
 		if(turbinegas.temp >= 20)
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 133, guiTop + 23, 8, 72, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.turbine_gas.temperature") + (turbinegas.temp) + "°C"});
 		else
-			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 133, guiTop + 23, 8, 72, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.turbine_gas.temperature_20_c")});
+			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 133, guiTop + 23, 8, 72, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.turbine_gas.ambient_temperature")});
 
 		turbinegas.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 16, 16, 48);
 		turbinegas.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 70, 16, 32);

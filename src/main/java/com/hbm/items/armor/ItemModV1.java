@@ -32,7 +32,7 @@ public class ItemModV1 extends ItemArmorMod implements IArmorModDash {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.mod_v1.blood_fuel"));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_v1.desc1"));
 		list.add("");
 		super.addInformation(stack, player, list, bool);
 	}

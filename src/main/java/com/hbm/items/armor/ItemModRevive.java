@@ -25,18 +25,18 @@ public class ItemModRevive extends ItemArmorMod {
 			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_revive.desc2"));
 		}
 		if(this == ModItems.wild_p) {
-			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("desc.item.mod_revive.explosive_reactive_plot_armor", EnumChatFormatting.RED + "Reactive " + EnumChatFormatting.DARK_GRAY + "Plot " + EnumChatFormatting.RED + "Armor"));
+			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.mod_revive.desc3", EnumChatFormatting.RED, EnumChatFormatting.DARK_GRAY, EnumChatFormatting.RED));
 		}
 
-		/*list.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("desc.item.mod_revive.in_the_news"));
-		list.add(("" + EnumChatFormatting.RED + EnumChatFormatting.BOLD) + I18nUtil.resolveKey("desc.item.man_literally_too_angry_die"));
+		/*list.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("item.mod_revive.desc6"));
+		list.add(("" + EnumChatFormatting.RED + EnumChatFormatting.BOLD) + I18nUtil.resolveKey("item.mod_revive.desc7"));
 		list.add("");
-		list.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("desc.item.mod_revive.i_ain_t_got_time"));
-		list.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("desc.item.mod_revive.man_after_ripping_physical"));
-		list.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("desc.item.disaster_itself_half"));*/
+		for(String line : I18nUtil.resolveKeyArray("item.mod_revive.desc8")) {
+			list.add((EnumChatFormatting.ITALIC) + line);
+		}*/
 
 		list.add("");
-		list.add(EnumChatFormatting.GOLD + "" + I18nUtil.resolveKey("desc.item.mod_revive.revives_left", (stack.getMaxDamage() - stack.getItemDamage())));
+		list.add(EnumChatFormatting.GOLD + "" + I18nUtil.resolveKey("item.mod_revive.desc4", (stack.getMaxDamage() - stack.getItemDamage())));
 		list.add("");
 		super.addInformation(stack, player, list, bool);
 	}

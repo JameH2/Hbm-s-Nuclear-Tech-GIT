@@ -211,7 +211,7 @@ public class ModEventHandler {
 
 				if(HTTPHandler.newVersion) {
 					event.player.addChatMessage(
-							new ChatComponentTranslation("chat.mod_event.new_version_is_available_click", HTTPHandler.versionNumber)
+							new ChatComponentTranslation("chat.mod_event.update_available", HTTPHandler.versionNumber)
 							.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))
 							.appendSibling(new ChatComponentTranslation("chat.mod_event.here")
 									.setChatStyle(new ChatStyle()
@@ -226,7 +226,7 @@ public class ModEventHandler {
 			}
 
 			if(MobConfig.enableDucks && event.player instanceof EntityPlayerMP && !event.player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("hasDucked"))
-				PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.startTranslation("info.common.press_o_to_duck").flush(), ServerProxy.ID_DUCK, 30_000), (EntityPlayerMP) event.player);
+				PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(ChatBuilder.startTranslation("info.common.duck_hint").flush(), ServerProxy.ID_DUCK, 30_000), (EntityPlayerMP) event.player);
 
 
 			/*if(GeneralConfig.enableGuideBook) {
@@ -1456,7 +1456,7 @@ public class ModEventHandler {
 			/// GHOST FIX START ///
 
 			if(!Float.isFinite(player.getHealth()) || !Float.isFinite(player.getAbsorptionAmount())) {
-				player.addChatComponentMessage(new ChatComponentTranslation("chat.mod_event.your_health_has_been_restored"));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.mod_event.healed"));
 				player.worldObj.playSoundAtEntity(player, "hbm:item.syringe", 1.0F, 1.0F);
 				player.setHealth(player.getMaxHealth());
 				player.setAbsorptionAmount(0);
@@ -1655,7 +1655,7 @@ public class ModEventHandler {
 		CelestialBody body = CelestialBody.getTarget(world, pos.posX, pos.posZ).body;
 		CBT_Weather weather = CBT_Weather.ensureTrait(body);
 		if(weather == null || !CBT_Weather.supportsWeather(body)) {
-			sender.addChatMessage(new ChatComponentTranslation("commands.mod_event.celestial_body_no_weather_cycle"));
+			sender.addChatMessage(new ChatComponentTranslation("commands.mod_event.no_weather"));
 			return;
 		}
 

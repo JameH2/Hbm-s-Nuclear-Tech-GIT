@@ -30,7 +30,7 @@ public class ItemLaserDetonator extends Item implements IHoldableWeapon {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.resolveKey("desc.item.laser_detonator.aim_click_detonate"));
+		list.add(I18nUtil.resolveKey("item.laser_detonator.desc"));
 	}
 
 	@Override

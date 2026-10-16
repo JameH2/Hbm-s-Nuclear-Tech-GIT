@@ -35,7 +35,7 @@ public class GUIMachineLargeTurbine extends GuiInfoContainer {
 
 		if(turbine.tanks[1].getTankType().name().equals(Fluids.NONE.name())) {
 
-			String[] text2 = new String[] { I18nUtil.resolveKey("gui.large_turbine.error_invalid_fluid") };
+			String[] text2 = new String[] { I18nUtil.resolveKey("gui.large_turbine.invalid_fluid") };
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36 + 32, 16, 16, guiLeft - 8, guiTop + 36 + 16 + 32, text2);
 		}
 

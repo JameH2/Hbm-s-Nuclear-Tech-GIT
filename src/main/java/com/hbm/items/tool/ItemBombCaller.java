@@ -74,7 +74,7 @@ public class ItemBombCaller extends Item {
 			world.playSoundAtEntity(player, NTMSounds.TECH_BLEEP, 1.0F, 1.0F);
 
 			if(b2) {
-				player.addChatMessage(new ChatComponentTranslation("chat.bomb_caller.rerouted_civilian_traffic"));
+				player.addChatMessage(new ChatComponentTranslation("chat.bomb_caller.traffic_rerouted"));
 			} else {
 				player.addChatMessage(new ChatComponentTranslation("chat.bomb_caller.called_airstrike"));
 			}

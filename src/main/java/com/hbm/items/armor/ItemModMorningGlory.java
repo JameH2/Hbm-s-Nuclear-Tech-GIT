@@ -29,7 +29,7 @@ public class ItemModMorningGlory extends ItemArmorMod {
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("desc.item.mod_morning_glory.resistance_wither_immunity", stack.getDisplayName()));
+		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.mod_morning_glory.desc2", stack.getDisplayName()));
 	}
 
 	@Override

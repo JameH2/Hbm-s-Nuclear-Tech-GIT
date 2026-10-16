@@ -89,7 +89,7 @@ public class ItemReactorSensor extends Item {
 			list.add(I18nUtil.resolveKey("item.reactor_sensor.desc2", itemstack.stackTagCompound.getInteger("y")));
 			list.add(I18nUtil.resolveKey("item.reactor_sensor.desc3", itemstack.stackTagCompound.getInteger("z")));
 		} else {
-			list.add(I18nUtil.resolveKey("desc.item.reactor_sensor.no_reactor_selected"));
+			list.add(I18nUtil.resolveKey("item.reactor_sensor.desc4"));
 		}
 	}
 }

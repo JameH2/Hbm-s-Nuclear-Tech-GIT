@@ -284,9 +284,9 @@ public class ItemVOTVdrive extends ItemEnumMulti {
 				Destination target = new Destination(CelestialBody.getEnum(world), x, z);
 
 				if(station.recallPod(target)) {
-					player.addChatMessage(new ChatComponentTranslation("chat.votvdrive.recalling_drop_pod_coordinates", x, z).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW).setItalic(true)));
+					player.addChatMessage(new ChatComponentTranslation("chat.votvdrive.recalling", x, z).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW).setItalic(true)));
 				} else {
-					player.addChatMessage(new ChatComponentTranslation("chat.votvdrive.could_not_recall_drop_pod").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW).setItalic(true)));
+					player.addChatMessage(new ChatComponentTranslation("chat.votvdrive.recall_failed").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW).setItalic(true)));
 				}
 			}
 

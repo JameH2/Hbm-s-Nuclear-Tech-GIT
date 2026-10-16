@@ -58,7 +58,7 @@ public class FT_Rocket extends FluidTrait {
 		info.add(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.ft_rocket.thrust_power"));
 
 		if(thrust > 0)
-			info.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.ft_rocket.provides") + EnumChatFormatting.RED + "" + BobMathUtil.getShortNumber(thrust) + " N " + EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.ft_rocket.of_thrust_per_bucket"));
+			info.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.ft_rocket.provides") + EnumChatFormatting.RED + "" + BobMathUtil.getShortNumber(thrust) + " N " + EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.ft_rocket.thrust_rate"));
 	}
 
 	@Override

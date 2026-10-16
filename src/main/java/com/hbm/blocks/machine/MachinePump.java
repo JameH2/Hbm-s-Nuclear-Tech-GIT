@@ -106,7 +106,7 @@ public class MachinePump extends BlockDummyable implements ITooltipProvider, ILo
 		}
 
 		if(!((TileEntityMachinePumpBase) te).onGround) {
-			text.add(I18nUtil.resolveKey("overlay.pump.no_valid_ground", (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00)));
+			text.add(I18nUtil.resolveKey("overlay.pump.invalid_ground", (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00)));
 		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);

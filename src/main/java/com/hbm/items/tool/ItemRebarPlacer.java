@@ -113,7 +113,7 @@ public class ItemRebarPlacer extends Item implements IGUIProvider {
 			player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)
 					.nextTranslation(this.getUnlocalizedName() + ".name").color(EnumChatFormatting.DARK_AQUA)
 					.next("] ").color(EnumChatFormatting.DARK_AQUA)
-					.nextTranslation("chat.rebar_placer.no_valid_concrete_type").color(EnumChatFormatting.RED).flush());
+					.nextTranslation("chat.rebar_placer.invalid_concrete").color(EnumChatFormatting.RED).flush());
 			return true;
 		}
 

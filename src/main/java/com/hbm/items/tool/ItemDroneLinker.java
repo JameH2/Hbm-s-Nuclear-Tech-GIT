@@ -57,7 +57,7 @@ public class ItemDroneLinker extends Item {
 						player.addChatMessage(ChatBuilder.start("[").color(EnumChatFormatting.DARK_AQUA)
 								.nextTranslation(this.getUnlocalizedName() + ".name").color(EnumChatFormatting.DARK_AQUA)
 								.next("] ").color(EnumChatFormatting.DARK_AQUA)
-								.nextTranslation("chat.drone_linker.previous_link_lost").color(EnumChatFormatting.RED).flush());
+								.nextTranslation("chat.drone_linker.link_lost").color(EnumChatFormatting.RED).flush());
 					}
 
 					stack.stackTagCompound.setInteger("x", x);

@@ -133,7 +133,7 @@ public class MachineHTR3 extends BlockDummyable implements ILookOverlay, IToolti
 			}
 
 			if(world.getTileEntity(x, y, z) instanceof TileEntityProxyCombo) {
-				text.add(I18nUtil.resolveKey("overlay.htr3.connect_to_pwr_from_here"));
+				text.add(I18nUtil.resolveKey("overlay.htr3.reactor_connection"));
 			}
 		}
 

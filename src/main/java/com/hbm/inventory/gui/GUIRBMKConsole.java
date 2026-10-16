@@ -92,7 +92,7 @@ public class GUIRBMKConsole extends GuiScreen {
 			}
 		}
 
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 61, guiTop + 70, 10, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_console.select_all_control_rods") } );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 61, guiTop + 70, 10, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_console.select_rods") } );
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 72, guiTop + 70, 10, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_console.deselect_all") } );
 
 		for(int i = 0; i < 3; i++) {
@@ -103,11 +103,11 @@ public class GUIRBMKConsole extends GuiScreen {
 			}
 		}
 
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 6, guiTop + 70, 10, 10, mouseX, mouseY, new String[]{ EnumChatFormatting.RED + I18nUtil.resolveKey("gui.rbmk_console.left_click_select_red_group"), EnumChatFormatting.RED + I18nUtil.resolveKey("gui.rbmk_console.right_click_assign_red_group") } );
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 17, guiTop + 70, 10, 10, mouseX, mouseY, new String[]{ EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.rbmk_console.left_click_select_yellow_group"), EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.rbmk_console.right_click_assign_yellow_group") } );
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 28, guiTop + 70, 10, 10, mouseX, mouseY, new String[]{ EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.rbmk_console.left_click_select_green_group"), EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.rbmk_console.right_click_assign_green_group") } );
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 39, guiTop + 70, 10, 10, mouseX, mouseY, new String[]{ EnumChatFormatting.BLUE + I18nUtil.resolveKey("gui.rbmk_console.left_click_select_blue_group"), EnumChatFormatting.BLUE + I18nUtil.resolveKey("gui.rbmk_console.right_click_assign_blue_group") } );
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 50, guiTop + 70, 10, 10, mouseX, mouseY, new String[]{ EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("gui.rbmk_console.left_click_select_purple_group"), EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("gui.rbmk_console.right_click_assign_purple_group") } );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 6, guiTop + 70, 10, 10, mouseX, mouseY, new String[]{ EnumChatFormatting.RED + I18nUtil.resolveKey("gui.rbmk_console.red_select"), EnumChatFormatting.RED + I18nUtil.resolveKey("gui.rbmk_console.red_assign") } );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 17, guiTop + 70, 10, 10, mouseX, mouseY, new String[]{ EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.rbmk_console.yellow_select"), EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.rbmk_console.yellow_assign") } );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 28, guiTop + 70, 10, 10, mouseX, mouseY, new String[]{ EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.rbmk_console.green_select"), EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.rbmk_console.green_assign") } );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 39, guiTop + 70, 10, 10, mouseX, mouseY, new String[]{ EnumChatFormatting.BLUE + I18nUtil.resolveKey("gui.rbmk_console.blue_select"), EnumChatFormatting.BLUE + I18nUtil.resolveKey("gui.rbmk_console.blue_assign") } );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 50, guiTop + 70, 10, 10, mouseX, mouseY, new String[]{ EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("gui.rbmk_console.purple_select"), EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("gui.rbmk_console.purple_assign") } );
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 70, guiTop + 82, 12, 12, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_console.cycle_compressor") } );
 	}
 

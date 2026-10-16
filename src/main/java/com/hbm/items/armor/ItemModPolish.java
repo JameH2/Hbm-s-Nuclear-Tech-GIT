@@ -19,7 +19,7 @@ public class ItemModPolish extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("desc.item.mod_polish.chance_nullify_damage"));
+		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.mod_polish.desc1"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}

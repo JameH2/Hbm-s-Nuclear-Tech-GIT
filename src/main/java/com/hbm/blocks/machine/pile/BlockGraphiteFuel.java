@@ -70,12 +70,12 @@ public class BlockGraphiteFuel extends BlockGraphiteDrilledTE implements IToolab
 
 			if(tool == ToolType.HAND_DRILL) {
 				TileEntityPileFuel pile = (TileEntityPileFuel) world.getTileEntity(x, y, z);
-				player.addChatComponentMessage(new ChatComponentTranslation("chat.graphite_fuel.cp1_fuel_assembly", x, y, z).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.graphite_fuel.assembly", x, y, z).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));
 				player.addChatComponentMessage(new ChatComponentTranslation("chat.graphite_fuel.heat", pile.heat, pile.maxHeat).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 				player.addChatComponentMessage(new ChatComponentTranslation("chat.graphite_fuel.depletion", pile.progress, pile.maxProgress).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 				player.addChatComponentMessage(new ChatComponentTranslation("chat.graphite_fuel.flux", pile.lastNeutrons).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 				if((meta & 8) == 8)
-					player.addChatComponentMessage(new ChatComponentTranslation("chat.graphite_fuel.pu_239_rich").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_GREEN)));
+					player.addChatComponentMessage(new ChatComponentTranslation("chat.graphite_fuel.plutonium").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_GREEN)));
 			}
 		}
 

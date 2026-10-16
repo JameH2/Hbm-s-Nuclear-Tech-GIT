@@ -102,9 +102,9 @@ public class AvailableAbilities {
 				list.add("  " + EnumChatFormatting.GOLD + ability.getFullName(level));
 			});
 
-			list.add(I18nUtil.resolveKey("desc.misc.right_click_cycle_presets"));
-			list.add(I18nUtil.resolveKey("desc.misc.sneak_click_go_first_preset"));
-			list.add(I18nUtil.resolveKey("desc.misc.alt_click_open_customization_gui"));
+			list.add(I18nUtil.resolveKey("misc.tooltip.cycle_presets"));
+			list.add(I18nUtil.resolveKey("misc.tooltip.first_preset"));
+			list.add(I18nUtil.resolveKey("misc.tooltip.customize"));
 		}
 
 		List<Map.Entry<IBaseAbility, Integer>> weaponAbilities = abilities.entrySet().stream().filter(entry -> (entry.getKey() instanceof IWeaponAbility && entry.getKey() != IWeaponAbility.NONE))

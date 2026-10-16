@@ -51,7 +51,7 @@ public abstract class CommandReloadConfig extends CommandBase {
 
 		if("reload".equals(operator)) {
 			reload();
-			sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.variables_loaded_config_file").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+			sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.loaded").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 			return;
 		}
 
@@ -62,7 +62,7 @@ public abstract class CommandReloadConfig extends CommandBase {
 		if("get".equals(operator)) {
 			ConfigWrapper wrapper = getConfigMap().get(key);
 			if(wrapper == null) {
-				sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.key_does_not_exist"));
+				sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.missing_key"));
 				return;
 			}
 			sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + key + ": " + EnumChatFormatting.YELLOW + wrapper.value));
@@ -76,7 +76,7 @@ public abstract class CommandReloadConfig extends CommandBase {
 		if("set".equals(operator)) {
 			ConfigWrapper wrapper = getConfigMap().get(key);
 			if(wrapper == null) {
-				sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.key_does_not_exist"));
+				sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.missing_key"));
 				return;
 			}
 
@@ -85,7 +85,7 @@ public abstract class CommandReloadConfig extends CommandBase {
 				refresh();
 				sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.value_updated").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 			} catch(Exception ex) {
-				sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.error_parsing_type_for", wrapper.value.getClass().getSimpleName(), ex.getLocalizedMessage()));
+				sender.addChatMessage(new ChatComponentTranslation("commands.reload_config.parse_error", wrapper.value.getClass().getSimpleName(), ex.getLocalizedMessage()));
 			}
 
 			return;

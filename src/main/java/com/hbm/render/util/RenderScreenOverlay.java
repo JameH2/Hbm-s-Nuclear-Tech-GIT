@@ -391,15 +391,15 @@ public class RenderScreenOverlay {
 
 		if(minutes < 10) {
 			if(seconds < 10) {
-				Minecraft.getMinecraft().fontRenderer.drawString(I18nUtil.resolveKey("gui.hud.remaining_time_to_impact_0_0", hours, minutes, seconds), left, top, color);
+				Minecraft.getMinecraft().fontRenderer.drawString(I18nUtil.resolveKey("gui.hud.impact_time3", hours, minutes, seconds), left, top, color);
 			} else {
-				Minecraft.getMinecraft().fontRenderer.drawString(I18nUtil.resolveKey("gui.hud.remaining_time_to_impact_0", hours, minutes, seconds), left, top, color);
+				Minecraft.getMinecraft().fontRenderer.drawString(I18nUtil.resolveKey("gui.hud.impact_time2", hours, minutes, seconds), left, top, color);
 			}
 		} else {
 			if(seconds < 10) {
-				Minecraft.getMinecraft().fontRenderer.drawString(I18nUtil.resolveKey("gui.hud.remaining_time_impact_0", hours, minutes, seconds), left, top, color);
+				Minecraft.getMinecraft().fontRenderer.drawString(I18nUtil.resolveKey("gui.hud.impact_time1", hours, minutes, seconds), left, top, color);
 			} else {
-				Minecraft.getMinecraft().fontRenderer.drawString(I18nUtil.resolveKey("gui.hud.remaining_time_to_impact", hours, minutes, seconds), left, top, color);
+				Minecraft.getMinecraft().fontRenderer.drawString(I18nUtil.resolveKey("gui.hud.impact_time", hours, minutes, seconds), left, top, color);
 			}
 		}
 

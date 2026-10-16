@@ -145,16 +145,16 @@ public class ItemWatzPellet extends ItemEnumMulti {
 		String reset = EnumChatFormatting.RESET + "";
 
 		if(num.passive > 0){
-			list.add(color + I18nUtil.resolveKey("desc.item.watz_pellet.base_fission_rate", reset, num.passive));
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.watz_pellet.self_igniting"));
+			list.add(color + I18nUtil.resolveKey("item.watz_pellet.desc1", reset, num.passive));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.watz_pellet.desc2"));
 		}
-		if(num.heatEmission > 0) list.add(color + I18nUtil.resolveKey("desc.item.pwr_fuel.heat_per_flux_tu", reset, num.heatEmission));
+		if(num.heatEmission > 0) list.add(color + I18nUtil.resolveKey("item.pwr_fuel.desc1", reset, num.heatEmission));
 		if(num.burnFunc != null) {
-			list.add(color + I18nUtil.resolveKey("desc.item.pwr_fuel.reaction_function", reset, num.burnFunc.getLabelForFuel()));
-			list.add(color + I18nUtil.resolveKey("desc.item.pwr_fuel.fuel_type", reset, num.burnFunc.getDangerFromFuel()));
+			list.add(color + I18nUtil.resolveKey("item.pwr_fuel.desc2", reset, num.burnFunc.getLabelForFuel()));
+			list.add(color + I18nUtil.resolveKey("item.pwr_fuel.desc3", reset, num.burnFunc.getDangerFromFuel()));
 		}
-		if(num.heatDiv != null) list.add(color + I18nUtil.resolveKey("desc.item.watz_pellet.thermal_multiplier_tu", reset, num.heatDiv.getLabelForFuel()));
-		if(num.absorbFunc != null) list.add(color + I18nUtil.resolveKey("desc.item.watz_pellet.flux_capture", reset, num.absorbFunc.getLabelForFuel()));
+		if(num.heatDiv != null) list.add(color + I18nUtil.resolveKey("item.watz_pellet.desc3", reset, num.heatDiv.getLabelForFuel()));
+		if(num.absorbFunc != null) list.add(color + I18nUtil.resolveKey("item.watz_pellet.desc4", reset, num.absorbFunc.getLabelForFuel()));
 	}
 
 	@Override

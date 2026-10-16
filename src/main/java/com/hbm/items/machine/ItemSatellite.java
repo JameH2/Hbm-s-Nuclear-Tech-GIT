@@ -79,7 +79,7 @@ public class ItemSatellite extends ItemCustomMissilePart implements ISatChip, IG
 			list.add(formatTooltipEntry(I18nUtil.resolveKey("item.sat.desc.color"), getHexColor(itemstack)));
 		} else {
 			list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.hold_prefix") + EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.lshift_key") + EnumChatFormatting.DARK_GRAY
-					+ "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.more_info_suffix"));
+					+ "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("misc.tooltip.more_info"));
 		}
 
 		if(this == ModItems.sat_foeq)
@@ -148,7 +148,7 @@ public class ItemSatellite extends ItemCustomMissilePart implements ISatChip, IG
 
 			XSatelliteRegistry.orbit(targetWorld, stack, getFreq(stack), player.posX, player.posY, player.posZ);
 
-			player.addChatMessage(new ChatComponentTranslation("chat.satellite.satellite_launched_successfully"));
+			player.addChatMessage(new ChatComponentTranslation("chat.satellite.launched"));
 		}
 
 		stack.stackSize--;

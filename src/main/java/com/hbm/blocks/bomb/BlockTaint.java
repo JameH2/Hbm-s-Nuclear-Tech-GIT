@@ -115,6 +115,6 @@ public class BlockTaint extends Block implements ITooltipProvider {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(I18nUtil.resolveKey("tile.touch_breathe_stare"));
+		list.add(I18nUtil.resolveKey("tile.tooltip.taint_lore"));
 	}
 }

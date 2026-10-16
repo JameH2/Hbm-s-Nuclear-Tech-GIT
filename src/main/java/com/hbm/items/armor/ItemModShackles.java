@@ -23,7 +23,7 @@ public class ItemModShackles extends ItemArmorMod {
 		list.add(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.mod_shackles.desc3"));
 
 		list.add("");
-		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("desc.item.mod_shackles.revives_left"));
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_shackles.desc4"));
 		list.add("");
 		super.addInformation(stack, player, list, bool);
 	}

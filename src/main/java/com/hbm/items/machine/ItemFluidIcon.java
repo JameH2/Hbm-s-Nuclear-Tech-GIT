@@ -50,7 +50,7 @@ public class ItemFluidIcon extends Item {
 
 			if(getPressure(stack) > 0) {
 				list.add(EnumChatFormatting.RED + "" + I18nUtil.resolveKey("item.fluid_icon.desc3", getPressure(stack)));
-				list.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_RED) + I18nUtil.resolveKey("desc.item.fluid_icon.pressurized_compressor"));
+				list.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_RED) + I18nUtil.resolveKey("item.fluid_icon.desc4"));
 			}
 		}
 

@@ -50,7 +50,7 @@ public class GUICombustionEngine extends GuiInfoContainer {
 		}
 
 		if(isMouseLocked || (guiLeft + 80 <= x && guiLeft + 80 + 34 > x && guiTop + 38 < y && guiTop + 38 + 8 >= y)) {
-			drawCreativeTabHoveringText(((setting * 2) / 10D) + I18nUtil.resolveKey("gui.combustion_engine.m_b_t"), MathHelper.clamp_int(x, guiLeft + 80, guiLeft + 114), MathHelper.clamp_int(y, guiTop + 38, guiTop + 46));
+			drawCreativeTabHoveringText(((setting * 2) / 10D) + I18nUtil.resolveKey("gui.combustion_engine.consumption"), MathHelper.clamp_int(x, guiLeft + 80, guiLeft + 114), MathHelper.clamp_int(y, guiTop + 38, guiTop + 46));
 		}
 
 		if(engine.slots[2] != null && engine.slots[2].getItem() == ModItems.piston_set) {

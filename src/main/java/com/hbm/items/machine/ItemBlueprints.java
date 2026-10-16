@@ -116,9 +116,9 @@ public class ItemBlueprints extends Item {
 			return;
 		}
 		if(poolName.startsWith(GenericRecipes.POOL_PREFIX_SECRET)) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.blueprints.cannot_copied"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.blueprints.desc1"));
 		} else {
-			list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.blueprints.right_click_copy_requires_paper"));
+			list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.blueprints.desc2"));
 		}
 
 		for(String name : pool) {

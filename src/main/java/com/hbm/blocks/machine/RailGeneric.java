@@ -86,11 +86,11 @@ public class RailGeneric extends BlockRailBase implements ITooltipProvider {
 		}
 
 		if(!flexible) {
-			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("tile.cannot_used_turns"));
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("tile.tooltip.no_turns"));
 		}
 
 		if(!slopable) {
-			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("tile.cannot_used_slopes"));
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("tile.tooltip.no_slopes"));
 		}
 	}
 }

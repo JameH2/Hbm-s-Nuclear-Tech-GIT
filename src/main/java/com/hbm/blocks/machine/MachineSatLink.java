@@ -75,7 +75,7 @@ public class MachineSatLink extends BlockDummyable implements ILookOverlay {
 				TileEntityMachineSatLink link = (TileEntityMachineSatLink) te;
 
 				link.freq = ISatChip.getFreqS(player.getHeldItem());
-				player.addChatComponentMessage(new ChatComponentTranslation("chat.sat_link.set_frequency_to", link.freq).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.sat_link.frequency_set", link.freq).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 				world.playSoundAtEntity(player, NTMSounds.TECH_BLEEP, 1F, 1F);
 
 				return true;

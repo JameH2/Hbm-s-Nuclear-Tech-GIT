@@ -64,9 +64,9 @@ public class ItemSettingsTool extends Item {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.resolveKey("item.settings_tool.desc1"));
-		list.add(I18nUtil.resolveKey("desc.item.settings_tool.shift_right_click_copy_right"));
-		list.add(I18nUtil.resolveKey("item.settings_tool.desc3"));
+		for(String line : I18nUtil.resolveKeyArray("item.settings_tool.desc1")) {
+			list.add(line);
+		}
 		if(stack.stackTagCompound != null) {
 			NBTTagCompound nbt = stack.stackTagCompound;
 			if (nbt.hasKey("tileName")){

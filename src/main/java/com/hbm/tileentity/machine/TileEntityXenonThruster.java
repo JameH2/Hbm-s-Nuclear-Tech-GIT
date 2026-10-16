@@ -199,12 +199,12 @@ public class TileEntityXenonThruster extends TileEntityMachineBase implements IP
 	@Override
 	public void addErrors(List<String> errors) {
 		if(power < fuelCost * POWER_COST_MULTIPLIER) {
-			errors.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.xenon_thruster.insufficient_power_needs_he", BobMathUtil.getShortNumber(fuelCost * POWER_COST_MULTIPLIER)));
+			errors.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.xenon_thruster.insufficient_power", BobMathUtil.getShortNumber(fuelCost * POWER_COST_MULTIPLIER)));
 		}
 
 		for(FluidTank tank : tanks) {
 			if(tank.getFill() < fuelCost) {
-				errors.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.xenon_thruster.insufficient_fuel_needs_m_b", fuelCost));
+				errors.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.xenon_thruster.insufficient_fuel", fuelCost));
 			}
 		}
 	}

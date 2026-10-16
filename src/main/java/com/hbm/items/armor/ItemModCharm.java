@@ -21,16 +21,17 @@ public class ItemModCharm extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("desc.item.mod_charm.feel_blessed"));
+		list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("item.mod_charm.desc1"));
 
 		if(this == ModItems.protection_charm) {
-			list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("desc.item.mod_charm.diverts_meteors_away_player"));
-			list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("desc.item.mod_charm.meteors_no_longer_destroy_blocks"));
-			list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("desc.item.mod_charm.halves_broadcaster_damage"));
+			for(String line : I18nUtil.resolveKeyArray("item.mod_charm.desc2")) {
+				list.add(EnumChatFormatting.AQUA + line);
+			}
 		}
 		if(this == ModItems.meteor_charm) {
-			list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("desc.item.mod_charm.disables_meteorite_spawning"));
-			list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("desc.item.mod_charm.negates_broadcaster_damage"));
+			for(String line : I18nUtil.resolveKeyArray("item.mod_charm.desc5")) {
+				list.add(EnumChatFormatting.AQUA + line);
+			}
 		}
 
 		super.addInformation(stack, player, list, bool);

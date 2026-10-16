@@ -33,48 +33,48 @@ public class GUINukeCustom extends GuiInfoContainer {
 
 		String[] text;
 
-		text = new String[] { EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.nuke_custom.conventional_explosives_level") + testNuke.tnt + "/" + Math.min(testNuke.tnt, NukeCustom.maxTnt) + ")",
+		text = new String[] { EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.nuke_custom.conventional") + testNuke.tnt + "/" + Math.min(testNuke.tnt, NukeCustom.maxTnt) + ")",
 				I18nUtil.resolveKey("gui.nuke_custom.caps_at") + NukeCustom.maxTnt,
-				I18nUtil.resolveKey("gui.nuke_custom.n_like_above_level_75"),
+				I18nUtil.resolveKey("gui.nuke_custom.conventional_lore"),
 				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.goes_boom") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 16, guiTop + 89, 18, 18, mouseX, mouseY, text);
 
 		text = new String[] { EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.nuke_custom.nuclear_level") + testNuke.nuke + "/" + testNuke.getNukeAdj() + ")",
-				I18nUtil.resolveKey("gui.nuke_custom.requires_tnt_level_16"),
+				I18nUtil.resolveKey("gui.nuke_custom.tnt_requirement"),
 				I18nUtil.resolveKey("gui.nuke_custom.caps_at") + NukeCustom.maxNuke,
 				I18nUtil.resolveKey("gui.nuke_custom.has_fallout"),
-				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.i_am_become_death_destroyer") };
+				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.nuclear") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 34, guiTop + 89, 18, 18, mouseX, mouseY, text);
 
 		text = new String[] { EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.nuke_custom.thermonuclear_level") + testNuke.hydro + "/" + testNuke.getHydroAdj() + ")",
-				I18nUtil.resolveKey("gui.nuke_custom.requires_nuclear_level_100"),
+				I18nUtil.resolveKey("gui.nuke_custom.nuclear_requirement"),
 				I18nUtil.resolveKey("gui.nuke_custom.caps_at") + NukeCustom.maxHydro,
-				I18nUtil.resolveKey("gui.nuke_custom.reduces_added_fallout_salted_sta"),
-				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.and_for_my_next_trick_i_ll_make"),
-				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.the_island_of_elugelab_disappear") };
+				I18nUtil.resolveKey("gui.nuke_custom.fallout_reduction"),
+				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.thermonuclear_lore1"),
+				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.thermonuclear_lore2") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 52, guiTop + 89, 18, 18, mouseX, mouseY, text);
 
 		text = new String[] { EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.nuke_custom.antimatter_level") + testNuke.amat + "/" + testNuke.getAmatAdj() + ")",
 				I18nUtil.resolveKey("gui.nuke_custom.caps_at") + NukeCustom.maxAmat,
-				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.antimatter_balefire_whatever") };
+				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.exotic") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 70, guiTop + 89, 18, 18, mouseX, mouseY, text);
 
 		text = new String[] { EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.nuke_custom.salted_level") + testNuke.dirty + "/" + Math.min(testNuke.dirty, 100) + ")",
-				I18nUtil.resolveKey("gui.nuke_custom.extends_fallout_of_nuclear_and"),
+				I18nUtil.resolveKey("gui.nuke_custom.fallout_extension"),
 				I18nUtil.resolveKey("gui.nuke_custom.thermonuclear_stages"),
-				I18nUtil.resolveKey("gui.nuke_custom.caps_at_100"),
+				I18nUtil.resolveKey("gui.nuke_custom.fallout_limit"),
 				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.confused_tablesalt") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 88, guiTop + 89, 18, 18, mouseX, mouseY, text);
 
 		text = new String[] { EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.nuke_custom.schrabidium_level") + testNuke.schrab + "/" + testNuke.getSchrabAdj() + ")",
-				I18nUtil.resolveKey("gui.nuke_custom.requires_nuclear_level_50"),
+				I18nUtil.resolveKey("gui.nuke_custom.nuclear_requirement50"),
 				I18nUtil.resolveKey("gui.nuke_custom.caps_at") + NukeCustom.maxSchrab,
-				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.for_the_hundredth_time"),
-				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.you_can_t_bypass_these_caps") };
+				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.cap_warning1"),
+				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.cap_warning2") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 106, guiTop + 89, 18, 18, mouseX, mouseY, text);
 
-		text = new String[] { EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.nuke_custom.ice_cream_level_unknown"),
-				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.probably_ice_cream_but_label") };
+		text = new String[] { EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.nuke_custom.ice_cream"),
+				EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.nuke_custom.ice_cream_lore") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 142, guiTop + 89, 18, 18, mouseX, mouseY, text);
 	}
 

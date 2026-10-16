@@ -58,7 +58,7 @@ public class ItemBlockLore extends ItemBlockBase {
 			list.add(I18nUtil.resolveKey("item.block_lore.desc13"));
 			list.add(I18nUtil.resolveKey("item.block_lore.desc14"));
 			list.add("");
-			list.add(I18nUtil.resolveKey("item.line.desc01"));
+			list.add(I18nUtil.resolveKey("item.block_lore.desc15"));
 		}
 	}
 

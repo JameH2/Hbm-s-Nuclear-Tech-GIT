@@ -110,7 +110,7 @@ public class ItemScraps extends ItemAutogen {
 			list.add(Mats.formatAmount(contents.amount, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
 
 			if(stack.hasTagCompound() && stack.stackTagCompound.getBoolean("liquid")) {
-				if(contents.material.smeltable == contents.material.smeltable.ADDITIVE) list.add(EnumChatFormatting.DARK_RED + I18nUtil.resolveKey("desc.item.scraps.additive_not_castable"));
+				if(contents.material.smeltable == contents.material.smeltable.ADDITIVE) list.add(EnumChatFormatting.DARK_RED + I18nUtil.resolveKey("item.scraps.desc"));
 			}
 		}
 	}

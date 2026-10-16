@@ -137,10 +137,10 @@ public abstract class BlockTNTBase extends BlockDetonatable implements IToolable
 
 			if(meta == 0) {
 				world.setBlockMetadataWithNotify(x, y, z, 1, 3);
-				player.addChatComponentMessage(ChatBuilder.startTranslation("chat.tntbase.ignite_on_break_enabled").color(EnumChatFormatting.RED).flush());
+				player.addChatComponentMessage(ChatBuilder.startTranslation("chat.tntbase.break_ignite_on").color(EnumChatFormatting.RED).flush());
 			} else {
 				world.setBlockMetadataWithNotify(x, y, z, 0, 3);
-				player.addChatComponentMessage(ChatBuilder.startTranslation("chat.tntbase.ignite_on_break_disabled").color(EnumChatFormatting.GOLD).flush());
+				player.addChatComponentMessage(ChatBuilder.startTranslation("chat.tntbase.break_ignite_off").color(EnumChatFormatting.GOLD).flush());
 			}
 		}
 

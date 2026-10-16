@@ -259,7 +259,7 @@ public class TileEntityMachineHTR3 extends TileEntityMachineBase implements IPro
 	public void addErrors(List<String> errors) {
 		for(FluidTank tank : tanks) {
 			if(tank.getFill() < fuelCost) {
-				errors.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.htr3.insufficient_fuel_needs_m_b", fuelCost));
+				errors.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.htr3.insufficient_fuel", fuelCost));
 			}
 		}
 	}

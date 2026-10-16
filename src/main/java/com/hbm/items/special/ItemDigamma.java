@@ -48,7 +48,7 @@ public class ItemDigamma extends Item {
 		float d = ((int) ((1000F / digamma) * 200F)) / 10F;
 
 		list.add(EnumChatFormatting.RED + "[" + I18nUtil.resolveKey("trait.digamma") + "]");
-		list.add(EnumChatFormatting.DARK_RED + "" + I18nUtil.resolveKey("item.digamma.desc1", d));
+		list.add(EnumChatFormatting.DARK_RED + "" + I18nUtil.resolveKey("item.digamma.desc", d));
 
 		list.add(EnumChatFormatting.RED + "[" + I18nUtil.resolveKey("trait.drop") + "]");
 	}

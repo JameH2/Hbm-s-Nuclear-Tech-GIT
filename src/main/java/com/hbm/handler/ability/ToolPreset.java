@@ -29,7 +29,7 @@ public class ToolPreset {
 
 	public ChatComponentText getMessage() {
 		if(isNone()) {
-			return ChatBuilder.startTranslation("chat.tool_preset.tool_ability_deactivated").color(EnumChatFormatting.GOLD).flush();
+			return ChatBuilder.startTranslation("chat.tool_preset.deactivated").color(EnumChatFormatting.GOLD).flush();
 		}
 
 		boolean hasArea = areaAbility != IToolAreaAbility.NONE;

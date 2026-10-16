@@ -286,9 +286,9 @@ public class MachineBattery extends BlockContainer implements ILookOverlay, IPer
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.battery.stores_up_to_he", BobMathUtil.getShortNumber(this.maxPower)));
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.battery.charge_speed_he", BobMathUtil.getShortNumber(this.maxPower / 200)));
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.battery.discharge_speed_he", BobMathUtil.getShortNumber(this.maxPower / 600)));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.battery.desc1", BobMathUtil.getShortNumber(this.maxPower)));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.battery.desc2", BobMathUtil.getShortNumber(this.maxPower / 200)));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.battery.desc3", BobMathUtil.getShortNumber(this.maxPower / 600)));
 	}
 
 }

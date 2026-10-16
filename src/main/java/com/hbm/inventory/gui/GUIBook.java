@@ -23,7 +23,7 @@ public class GUIBook extends GuiContainer {
 
 	protected void drawGuiContainerForegroundLayer(int mX, int mY) {
 
-		Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(I18nUtil.resolveKey("gui.book.extended_4_slot_crafting"), 28, 6, 4210752);
+		Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(I18nUtil.resolveKey("gui.book.extended_crafting"), 28, 6, 4210752);
 		Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(I18nUtil.resolveKey("gui.book.standard_inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}
 

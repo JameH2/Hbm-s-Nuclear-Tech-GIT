@@ -87,9 +87,9 @@ public class MachineMagma extends BlockDummyable implements ILookOverlay, IToolt
 		CelestialBody body = CelestialBody.getBody(world);
 
 		if(body.name != "moho") {
-			text.add(I18nUtil.resolveKey("overlay.magma.must_be_on_moho", (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00)));
+			text.add(I18nUtil.resolveKey("overlay.magma.moho_required", (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00)));
 		} else if(!drill.validPosition) {
-			text.add(I18nUtil.resolveKey("overlay.magma.insufficient_lava_found", (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00)));
+			text.add(I18nUtil.resolveKey("overlay.magma.insufficient_lava", (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00)));
 		} else {
 			text.add(((drill.power < drill.consumption ? EnumChatFormatting.RED : EnumChatFormatting.GREEN)) + I18nUtil.resolveKey("overlay.common.power", BobMathUtil.getShortNumber(drill.power)));
 

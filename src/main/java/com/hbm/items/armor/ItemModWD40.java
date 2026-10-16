@@ -28,7 +28,7 @@ public class ItemModWD40 extends ItemArmorMod {
 
 		String color = "" + (System.currentTimeMillis() % 1000 < 500 ? EnumChatFormatting.BLUE : EnumChatFormatting.YELLOW);
 
-		list.add(color + I18nUtil.resolveKey("desc.item.mod_wd40.highly_reduces_damage_taken_armor"));
+		list.add(color + I18nUtil.resolveKey("item.mod_wd40.desc1"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
@@ -38,7 +38,7 @@ public class ItemModWD40 extends ItemArmorMod {
 
 		String color = "" + (System.currentTimeMillis() % 1000 < 500 ? EnumChatFormatting.BLUE : EnumChatFormatting.YELLOW);
 
-		list.add(color + I18nUtil.resolveKey("desc.item.mod_wd40.armor_wear_hp", stack.getDisplayName()));
+		list.add(color + I18nUtil.resolveKey("item.mod_wd40.desc2", stack.getDisplayName()));
 	}
 
 	@Override

@@ -330,7 +330,7 @@ public class BlockStorageCrate extends BlockContainer implements IBlockMulti, IL
 				if(stack.stackTagCompound.hasKey("lock")) {
 					list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("tile.container_locked"));
 				}
-				list.add(("" + EnumChatFormatting.GRAY + EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("tile.skittering_emanates_within")); // lamo
+				list.add(("" + EnumChatFormatting.GRAY + EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("tile.tooltip.infestation_lore")); // lamo
 				return;
 			}
 
@@ -340,11 +340,11 @@ public class BlockStorageCrate extends BlockContainer implements IBlockMulti, IL
 				for(int i = 0; i < 104; i++) {
 					ItemStack content = ItemStack.loadItemStackFromNBT(stack.stackTagCompound.getCompoundTag("slot" + i));
 					if(content != null) {
-						list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.storage_crate.it_feels_heavy"));
+						list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.storage_crate.desc1"));
 						return;
 					}
 				}
-				list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.storage_crate.it_feels_empty"));
+				list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.storage_crate.desc2"));
 				return;
 			}
 

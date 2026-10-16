@@ -78,12 +78,12 @@ public class ItemInfiniteFluid extends Item implements net.minecraftforge.fluids
 			list.add(I18nUtil.resolveKey("item.infinite_fluid.desc2"));
 		}
 
-		list.add(I18nUtil.resolveKey("desc.item.infinite_fluid.requires_table", type.getLocalizedName()));
+		list.add(I18nUtil.resolveKey("item.infinite_fluid.desc3", type.getLocalizedName()));
 
 		if(currentFluid == Fluids.NONE) {
 			list.add(I18nUtil.resolveKey("item.infinite_fluid.desc4"));
 		} else {
-			list.add(I18nUtil.resolveKey("desc.item.infinite_fluid.current_environment_table", currentFluid.getLocalizedName()));
+			list.add(I18nUtil.resolveKey("item.infinite_fluid.desc5", currentFluid.getLocalizedName()));
 		}
 	}
 

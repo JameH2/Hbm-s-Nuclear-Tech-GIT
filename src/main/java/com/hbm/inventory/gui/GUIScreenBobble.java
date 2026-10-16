@@ -97,7 +97,10 @@ public class GUIScreenBobble extends GuiScreen {
 
 			nextLevel += 10;
 
-			String[] list = I18nUtil.resolveKey(this.bobble.type.inscription).split("\\$");
+			String inscription = this.bobble.type == BobbleType.BOB
+					? I18nUtil.resolveKey(this.bobble.type.inscription, System.getProperty("user.name"))
+					: I18nUtil.resolveKey(this.bobble.type.inscription);
+			String[] list = inscription.split("\\$");
 			for(String text : list) {
 				this.fontRendererObj.drawStringWithShadow(text, (int)(left + sizeX / 2 - this.fontRendererObj.getStringWidth(text) / 2), nextLevel, 0x009900);
 				nextLevel += 10;

@@ -64,10 +64,10 @@ public class GUIHeaterHeatex extends GuiInfoContainer {
 		heater.tanks[1].renderTankInfo(this, x, y, guiLeft + 116, guiTop + 36, 16, 52);
 
 		if(guiLeft + 70 <= x && guiLeft + 70 + 36 > x && guiTop + 26 < y && guiTop + 26 + 18 >= y) {
-			func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.heater_heatex.amount_per_cycle") }), x, y);
+			func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.heater_heatex.cycle_amount") }), x, y);
 		}
 		if(guiLeft + 70 <= x && guiLeft + 70 + 36 > x && guiTop + 44 < y && guiTop + 44 + 18 >= y) {
-			func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.heater_heatex.cycle_tick_delay") }), x, y);
+			func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.heater_heatex.cycle_delay") }), x, y);
 		}
 	}
 

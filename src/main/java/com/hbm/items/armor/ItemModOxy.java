@@ -50,7 +50,7 @@ public class ItemModOxy extends ItemArmorMod implements IFillableItem {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_oxy.desc1", stack.getDisplayName(), fuel.getLocalizedName(), getFuel(stack), this.maxFuel));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_oxy.desc", stack.getDisplayName(), fuel.getLocalizedName(), getFuel(stack), this.maxFuel));
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public class ItemFusionCore extends Item {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.fusion_core.charges_worn_armor_pieces_he", BobMathUtil.getShortNumber(charge)));
-		list.add(I18nUtil.resolveKey("desc.item.fusion_core.requires_full_electric_worn"));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.fusion_core.desc1", BobMathUtil.getShortNumber(charge)));
+		list.add(I18nUtil.resolveKey("item.fusion_core.desc2"));
 	}
 }

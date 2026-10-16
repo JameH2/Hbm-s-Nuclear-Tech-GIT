@@ -29,9 +29,9 @@ public class ItemPlateFuel extends ItemFuelRod {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.plate_fuel.research_reactor_plate_fuel"));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.plate_fuel.desc1"));
 		list.add(EnumChatFormatting.DARK_AQUA + "   " + getFunctionDesc());
-		list.add(EnumChatFormatting.DARK_AQUA + I18nUtil.resolveKey("desc.item.plate_fuel.yield_events", BobMathUtil.getShortNumber(lifeTime)));
+		list.add(EnumChatFormatting.DARK_AQUA + I18nUtil.resolveKey("item.plate_fuel.desc2", BobMathUtil.getShortNumber(lifeTime)));
 
 		super.addInformation(itemstack, player, list, bool);
 	}

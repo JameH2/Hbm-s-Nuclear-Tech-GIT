@@ -20,7 +20,7 @@ public class ItemModQuartz extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("desc.item.mod_quartz.taking_damage_removes_rad"));
+		list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.mod_quartz.desc1"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}

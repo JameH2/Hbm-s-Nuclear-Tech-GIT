@@ -26,7 +26,7 @@ public class ItemTurretBiometry extends Item {
 		addName(stack, player.getDisplayName());
 
 		if(world.isRemote)
-			player.addChatMessage(new ChatComponentTranslation("chat.turret_biometry.added_player_data"));
+			player.addChatMessage(new ChatComponentTranslation("chat.turret_biometry.player_added"));
 
 		world.playSoundAtEntity(player, "hbm:item.techBleep", 1.0F, 1.0F);
 

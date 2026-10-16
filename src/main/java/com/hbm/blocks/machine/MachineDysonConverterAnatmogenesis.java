@@ -69,7 +69,7 @@ public class MachineDysonConverterAnatmogenesis extends BlockDummyable implement
 
 		List<String> text = new ArrayList<String>();
 
-		text.add(I18nUtil.resolveKey("overlay.dyson_converter.current_rate_atm_per_hour", ((double)converter.gasProduced * 20 * 60 * 60 / AstronomyUtil.MB_PER_ATM)));
+		text.add(I18nUtil.resolveKey("overlay.dyson_converter.rate", ((double)converter.gasProduced * 20 * 60 * 60 / AstronomyUtil.MB_PER_ATM)));
 		text.add(I18nUtil.resolveKey("overlay.dyson_converter.current_gas", converter.fluid.getLocalizedName(), pressure));
 		text.add(I18nUtil.resolveKey("overlay.dyson_converter.current_mode", (converter.isEmitting ? I18nUtil.resolveKey("gui.dyson_converter.emitting") : I18nUtil.resolveKey("gui.dyson_converter.capturing"))));
 

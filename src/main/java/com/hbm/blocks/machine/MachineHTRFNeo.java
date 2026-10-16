@@ -90,7 +90,7 @@ public class MachineHTRFNeo extends BlockDummyable implements ILookOverlay, IToo
 		if(!thruster.isFacingPrograde()) {
 			text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! " + I18nUtil.resolveKey("atmosphere.engineFacing") + " ! ! !");
 		} else {
-			text.add(I18nUtil.resolveKey("overlay.htrfneo.plasma_energy_tu", (thruster.plasmaEnergy == 0 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + String.valueOf(BobMathUtil.getShortNumber(thruster.plasmaEnergy))));
+			text.add(I18nUtil.resolveKey("overlay.htrfneo.plasma", (thruster.plasmaEnergy == 0 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + String.valueOf(BobMathUtil.getShortNumber(thruster.plasmaEnergy))));
 
 			text.add(I18nUtil.resolveKey("overlay.htrfneo.power_he", (thruster.power < thruster.getMaxPower() ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + String.valueOf(BobMathUtil.getShortNumber(thruster.power))));
 
@@ -105,7 +105,7 @@ public class MachineHTRFNeo extends BlockDummyable implements ILookOverlay, IToo
 
 			if(world.getTileEntity(x, y, z) instanceof TileEntityProxyCombo) {
 				if(pos[0] == x || pos[2] == z) {
-					text.add(I18nUtil.resolveKey("overlay.htrfneo.connect_fusion_reactor_here"));
+					text.add(I18nUtil.resolveKey("overlay.htrfneo.reactor_connection"));
 				}
 			}
 		}

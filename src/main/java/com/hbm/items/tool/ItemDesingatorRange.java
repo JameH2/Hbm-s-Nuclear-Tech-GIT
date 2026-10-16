@@ -22,11 +22,11 @@ public class ItemDesingatorRange extends Item implements IDesignatorItem {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		if(itemstack.stackTagCompound != null) {
-			list.add(I18nUtil.resolveKey("desc.item.desingator.target_coordinates"));
+			list.add(I18nUtil.resolveKey("item.desingator.desc1"));
 			list.add(I18nUtil.resolveKey("item.tele_link.desc1", itemstack.stackTagCompound.getInteger("xCoord")));
 			list.add(I18nUtil.resolveKey("item.tele_link.desc3", itemstack.stackTagCompound.getInteger("zCoord")));
 		} else {
-			list.add(I18nUtil.resolveKey("desc.item.desingator.please_select_target"));
+			list.add(I18nUtil.resolveKey("item.desingator.desc2"));
 		}
 	}
 
@@ -46,7 +46,7 @@ public class ItemDesingatorRange extends Item implements IDesignatorItem {
 			stack.stackTagCompound.setInteger("zCoord", z);
 
 			if(world.isRemote) {
-				player.addChatMessage(new ChatComponentTranslation("chat.desingator_range.1", x, z));
+				player.addChatMessage(new ChatComponentTranslation("chat.designator_range.position_set", x, z));
 			}
 
 			world.playSoundAtEntity(player, NTMSounds.TECH_BLEEP, 1.0F, 1.0F);

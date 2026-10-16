@@ -19,14 +19,14 @@ public class ItemModBandaid extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.mod_bandaid.chance_full_heal_damaged"));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_bandaid.desc1"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.mod_bandaid.chance_full_heal", stack.getDisplayName()));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_bandaid.desc2", stack.getDisplayName()));
 	}
 
 	@Override

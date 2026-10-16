@@ -238,12 +238,12 @@ public class ItemRenderFolly extends ItemRenderWeaponBase {
 		long now = System.currentTimeMillis();
 		int time = (int)((now - timeAiming));
 		if(time < 3000) {
-			if(time > 250) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.post_successful_code_0"));
-			if(time > 500) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.8_388_608_bytes_of_ram_installed"));
-			if(time > 500) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.5_187_427_bytes_available"));
+			if(time > 250) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.post"));
+			if(time > 500) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.memory_total"));
+			if(time > 500) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.memory_available"));
 			if(time > 750) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.reticulating_splines"));
-			if(time > 1500) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.no_keyboard_found"));
-			if(time > 2000) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.booting_from_dev_sda1"));
+			if(time > 1500) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.no_keyboard"));
+			if(time > 2000) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.boot_device"));
 		}
 		if(time > 5000) {
 			EntityPlayer player = MainRegistry.proxy.me();

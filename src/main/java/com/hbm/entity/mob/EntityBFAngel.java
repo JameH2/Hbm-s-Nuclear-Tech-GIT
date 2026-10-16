@@ -420,7 +420,7 @@ public class EntityBFAngel extends EntityFlying implements IMob, IBossDisplayDat
 			List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.boundingBox.expand(200, 200, 200));
 
 			for(EntityPlayer player : players) {
-				player.addChatComponentMessage(new ChatComponentTranslation("chat.entity_bfangel.stars_are_starting_to_flicker").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.entity_bfangel.stars").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 			}
 
 			CelestialBody body = CelestialBody.getBody(worldObj);

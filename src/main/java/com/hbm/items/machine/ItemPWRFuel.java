@@ -58,8 +58,8 @@ public class ItemPWRFuel extends ItemEnumMulti {
 		String color = EnumChatFormatting.GOLD + "";
 		String reset = EnumChatFormatting.RESET + "";
 
-		list.add(color + I18nUtil.resolveKey("desc.item.pwr_fuel.heat_per_flux_tu", reset, num.heatEmission));
-		list.add(color + I18nUtil.resolveKey("desc.item.pwr_fuel.reaction_function", reset, num.function.getLabelForFuel()));
-		list.add(color + I18nUtil.resolveKey("desc.item.pwr_fuel.fuel_type", reset, num.function.getDangerFromFuel()));
+		list.add(color + I18nUtil.resolveKey("item.pwr_fuel.desc1", reset, num.heatEmission));
+		list.add(color + I18nUtil.resolveKey("item.pwr_fuel.desc2", reset, num.function.getLabelForFuel()));
+		list.add(color + I18nUtil.resolveKey("item.pwr_fuel.desc3", reset, num.function.getDangerFromFuel()));
 	}
 }

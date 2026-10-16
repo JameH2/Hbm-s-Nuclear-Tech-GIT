@@ -59,7 +59,7 @@ public class MachineIndustrialTurbine extends BlockDummyable implements ITooltip
 							world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "hbm:block.chungusLever", 1.5F, 1.0F);
 							entity.onLeverPull();
 						} else {
-							player.addChatComponentMessage(new ChatComponentTranslation("chat.industrial_turbine.line.01").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
+							player.addChatComponentMessage(new ChatComponentTranslation("chat.industrial_turbine.running").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 						}
 					}
 					return true;

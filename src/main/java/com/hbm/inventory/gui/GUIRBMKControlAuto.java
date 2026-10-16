@@ -79,14 +79,14 @@ public class GUIRBMKControlAuto extends GuiInfoContainer {
 		}
 
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 58, guiTop + 26, 28, 19, mouseX, mouseY, new String[]{ func } );
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 61, guiTop + 48, 22, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.select_linear_interpolation") } );
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 61, guiTop + 59, 22, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.select_quadratic_interpolation") } );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 61, guiTop + 48, 22, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.linear") } );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 61, guiTop + 59, 22, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.quadratic") } );
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 61, guiTop + 70, 22, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.inverse_quadratic") } );
 
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 28, guiTop + 26, 30, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.level_at_max_heat"), I18nUtil.resolveKey("gui.rbmk_control_auto.should_smaller_level_min_heat") } );
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 28, guiTop + 37, 30, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.level_at_min_heat"), I18nUtil.resolveKey("gui.rbmk_control_auto.should_larger_level_max_heat") } );
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 28, guiTop + 48, 30, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.max_heat"), I18nUtil.resolveKey("gui.rbmk_control_auto.must_be_larger_than_min_heat") } );
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 28, guiTop + 59, 30, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.min_heat"), I18nUtil.resolveKey("gui.rbmk_control_auto.must_be_smaller_than_max_heat") } );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 28, guiTop + 26, 30, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.level_max_heat"), I18nUtil.resolveKey("gui.rbmk_control_auto.level_max_hint") } );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 28, guiTop + 37, 30, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.level_min_heat"), I18nUtil.resolveKey("gui.rbmk_control_auto.level_min_hint") } );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 28, guiTop + 48, 30, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.max_heat"), I18nUtil.resolveKey("gui.rbmk_control_auto.min_heat_hint") } );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 28, guiTop + 59, 30, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.min_heat"), I18nUtil.resolveKey("gui.rbmk_control_auto.max_heat_hint") } );
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 28, guiTop + 70, 30, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.save_parameters") } );
 	}
 

@@ -54,7 +54,7 @@ public class ItemGunNI4NI extends ItemGunBaseNT implements ICustomizable {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 		list.add(I18nUtil.resolveKey("item.gun_ni4ni.desc1"));
-		list.add(I18nUtil.resolveKey("item.gun_ni4ni.desc2", EnumChatFormatting.RED + "fucking hate " + EnumChatFormatting.GRAY + "this game."));
+		list.add(I18nUtil.resolveKey("item.gun_ni4ni.desc2", EnumChatFormatting.RED, EnumChatFormatting.GRAY));
 		list.add(I18nUtil.resolveKey("item.gun_ni4ni.desc3"));
 		super.addInformation(stack, player, list, ext);
 	}
@@ -70,7 +70,7 @@ public class ItemGunNI4NI extends ItemGunBaseNT implements ICustomizable {
 
 		if(args.length != 3) {
 			resetColors(stack);
-			player.addChatComponentMessage(ChatBuilder.startTranslation("chat.gun_ni4ni.requires_hexadecimal_colors").color(EnumChatFormatting.RED).flush());
+			player.addChatComponentMessage(ChatBuilder.startTranslation("chat.gun_ni4ni.hex_required").color(EnumChatFormatting.RED).flush());
 			return;
 		}
 
@@ -80,7 +80,7 @@ public class ItemGunNI4NI extends ItemGunBaseNT implements ICustomizable {
 			int grip = Integer.parseInt(args[2], 16);
 
 			if(dark < 0 || dark > 0xffffff || light < 0 || light > 0xffffff || grip < 0 || grip > 0xffffff) {
-				player.addChatComponentMessage(ChatBuilder.startTranslation("chat.gun_ni4ni.colors_must_range_ffffff").color(EnumChatFormatting.RED).flush());
+				player.addChatComponentMessage(ChatBuilder.startTranslation("chat.gun_ni4ni.color_range").color(EnumChatFormatting.RED).flush());
 				return;
 			}
 

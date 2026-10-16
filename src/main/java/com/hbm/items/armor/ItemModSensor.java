@@ -26,15 +26,16 @@ public class ItemModSensor extends ItemArmorMod implements IBauble {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.mod_sensor.beeps_near_hazardous_gasses"));
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.mod_sensor.works_inventory_applied_armor"));
+		for(String line : I18nUtil.resolveKeyArray("item.mod_sensor.desc1")) {
+			list.add(EnumChatFormatting.YELLOW + line);
+		}
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.mod_sensor.detects_gasses", stack.getDisplayName()));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.mod_sensor.desc3", stack.getDisplayName()));
 	}
 
 	@Override

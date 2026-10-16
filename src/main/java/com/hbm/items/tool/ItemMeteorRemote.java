@@ -24,7 +24,7 @@ public class ItemMeteorRemote extends Item {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.resolveKey("desc.item.meteor_remote.right_click_summon_meteorite"));
+		list.add(I18nUtil.resolveKey("item.meteor_remote.desc"));
 	}
 
 	@Override

@@ -46,8 +46,8 @@ public class ItemDrillbit extends ItemEnumMulti {
 		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.drillbit.desc1", ((int) (type.speed * 100))));
 		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.drillbit.desc2", type.tier));
 		if(type.fortune > 0) list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.drillbit.desc3", type.fortune));
-		if(type.vein) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("desc.item.drillbit.vein_miner"));
-		if(type.silk) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("desc.item.drillbit.silk_touch"));
+		if(type.vein) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.drillbit.desc4"));
+		if(type.silk) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.drillbit.desc5"));
 	}
 
 	public static enum EnumDrillType {

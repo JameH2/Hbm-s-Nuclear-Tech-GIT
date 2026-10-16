@@ -21,8 +21,9 @@ public class ModSword extends ItemSword {
 			list.add(I18nUtil.resolveKey("item.mod_sword.desc1"));
 
 		if(this == ModItems.reer_graar) {
-			list.add(I18nUtil.resolveKey("desc.item.mod_sword.call_now"));
-			list.add(I18nUtil.resolveKey("desc.item.mod_sword.zx7_infinite"));
+			for(String line : I18nUtil.resolveKeyArray("item.mod_sword.desc2")) {
+				list.add(line);
+			}
 		}
 	}
 }

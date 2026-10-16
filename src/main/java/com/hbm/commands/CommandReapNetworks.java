@@ -39,7 +39,7 @@ public class CommandReapNetworks extends CommandBase {
 
 		} catch(Exception ex) {
 			sender.addChatMessage(ChatBuilder.start("----------------------------------").color(EnumChatFormatting.GRAY).flush());
-			sender.addChatMessage(ChatBuilder.startTranslation("commands.reap_networks.text.01").color(EnumChatFormatting.RED).flush());
+			sender.addChatMessage(ChatBuilder.startTranslation("commands.reap_networks.error").color(EnumChatFormatting.RED).flush());
 			sender.addChatMessage(ChatBuilder.start(ex.getLocalizedMessage()).color(EnumChatFormatting.RED).flush());
 			sender.addChatMessage(ChatBuilder.start(ex.getStackTrace()[0].toString()).color(EnumChatFormatting.RED).flush());
 			sender.addChatMessage(ChatBuilder.start("----------------------------------").color(EnumChatFormatting.GRAY).flush());

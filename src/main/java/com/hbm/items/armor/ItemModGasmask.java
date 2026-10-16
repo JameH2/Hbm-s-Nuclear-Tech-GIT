@@ -40,7 +40,7 @@ public class ItemModGasmask extends ItemArmorMod implements IGasMask {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("desc.item.mod_gasmask.gas_protection"));
+		list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.mod_gasmask.desc1"));
 
 		list.add("");
 		super.addInformation(stack, player, list, bool);
@@ -50,7 +50,7 @@ public class ItemModGasmask extends ItemArmorMod implements IGasMask {
 		List<HazardClass> haz = getBlacklist(stack, player);
 
 		if(!haz.isEmpty()) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.mod_gasmask.never_protect_against"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_gasmask.desc2"));
 
 			for(HazardClass clazz : haz) {
 				list.add(EnumChatFormatting.DARK_RED + " -" + I18nUtil.resolveKey(clazz.lang));

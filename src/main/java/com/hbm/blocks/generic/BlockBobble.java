@@ -214,7 +214,7 @@ public class BlockBobble extends BlockContainer implements IGUIProvider, INBTBlo
 		INTELLIGENCE(	"Intelligence",						"Intelligence",	null,														"bobble.intelligence.contribution",						false,	ScrapType.BRIDGE_BUS),
 		AGILITY(		"Agility",							"Agility",		null,														"bobble.agility.contribution",													false,	ScrapType.BRIDGE_CHIPSET),
 		LUCK(			"Luck",								"Luck",			null,														"bobble.luck.contribution",																false,	ScrapType.BRIDGE_CMOS),
-		BOB(			"Robert \"The Bobcat\" Katzinsky",	"HbMinecraft",	"bobble.bob.contribution",									"bobble.bob.inscription" + System.getProperty("user.name"),										false,	ScrapType.CPU_SOCKET),
+		BOB(			"Robert \"The Bobcat\" Katzinsky",	"HbMinecraft",	"bobble.bob.contribution",									"bobble.bob.inscription",										false,	ScrapType.CPU_SOCKET),
 		FRIZZLE(		"Frooz",							"Frooz",		"bobble.frizzle.contribution",											"bobble.frizzle.inscription",																					true,	ScrapType.CPU_CLOCK),
 		PU238(			"Pu-238",							"Pu-238",		"bobble.pu238.contribution",							null,																								false,	ScrapType.CPU_REGISTER),
 		VT(				"VT-6/24",							"VT-6/24",		"bobble.vt.contribution",			"bobble.vt.inscription",																		true,	ScrapType.CPU_EXT),

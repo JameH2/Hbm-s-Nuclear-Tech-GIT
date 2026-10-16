@@ -21,14 +21,14 @@ public class ItemModIron extends ItemArmorMod {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.WHITE + I18nUtil.resolveKey("desc.item.mod_iron.knockback_resistance"));
+		list.add(EnumChatFormatting.WHITE + I18nUtil.resolveKey("item.mod_iron.desc1"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.WHITE + I18nUtil.resolveKey("desc.item.mod_iron.knockback_resistence", stack.getDisplayName()));
+		list.add(EnumChatFormatting.WHITE + I18nUtil.resolveKey("item.mod_iron.desc2", stack.getDisplayName()));
 	}
 
 	@Override

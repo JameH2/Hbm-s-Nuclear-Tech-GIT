@@ -16,8 +16,9 @@ public class ItemStructureSingle extends ItemStructureTool {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 		super.addInformation(stack, player, list, ext);
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.structure_single.desc1"));
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.structure_single.line_targted_block_metadata"));
+		for(String line : I18nUtil.resolveKeyArray("item.structure_single.desc")) {
+			list.add(EnumChatFormatting.YELLOW + line);
+		}
 	}
 
 	@Override

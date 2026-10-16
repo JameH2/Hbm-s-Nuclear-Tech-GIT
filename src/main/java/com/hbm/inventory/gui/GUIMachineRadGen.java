@@ -36,7 +36,7 @@ public class GUIMachineRadGen extends GuiInfoContainer {
 
 			this.drawCustomInfo(this, mouseX, mouseY, guiLeft + 65, guiTop + 18 + i * 5, 46, 5, new String[] {
 					I18nUtil.resolveKey("gui.rad_gen.slot") + (i + 1) + ":",
-					radgen.production[i] + I18nUtil.resolveKey("gui.rad_gen.he_t_for"),
+					radgen.production[i] + I18nUtil.resolveKey("gui.rad_gen.output"),
 					(radgen.maxProgress[i] - radgen.progress[i]) + I18nUtil.resolveKey("gui.rad_gen.ticks") + ((radgen.maxProgress[i] - radgen.progress[i]) * 100 / radgen.maxProgress[i]) + "%)"
 			});
 		}

@@ -16,14 +16,14 @@ public class ItemKeyPin extends Item {
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool)
 	{
 		if(getPins(itemstack) != 0)
-			list.add(I18nUtil.resolveKey("desc.item.key_pin.pin_configuration", getPins(itemstack)));
+			list.add(I18nUtil.resolveKey("item.key_pin.desc1", getPins(itemstack)));
 		else
-			list.add(I18nUtil.resolveKey("desc.item.key_pin.pins_not"));
+			list.add(I18nUtil.resolveKey("item.key_pin.desc2"));
 
 		if(this == ModItems.key_fake) {
 
 			list.add("");
-			list.add(I18nUtil.resolveKey("desc.item.key_pin.pins_neither_changed_nor_copied"));
+			list.add(I18nUtil.resolveKey("item.key_pin.desc3"));
 		}
 	}
 

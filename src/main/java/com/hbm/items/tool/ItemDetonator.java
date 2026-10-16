@@ -24,7 +24,7 @@ public class ItemDetonator extends Item {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		list.add(I18nUtil.resolveKey("item.drop.desc26"));
-		list.add(I18nUtil.resolveKey("desc.item.detonator.right_click_detonate"));
+		list.add(I18nUtil.resolveKey("item.detonator.desc"));
 		if(itemstack.getTagCompound() == null) {
 			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.misc.noPos"));
 		} else {

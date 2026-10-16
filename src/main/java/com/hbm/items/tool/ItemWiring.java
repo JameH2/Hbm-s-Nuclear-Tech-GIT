@@ -75,13 +75,13 @@ public class ItemWiring extends Item {
 								player.addChatMessage(new ChatComponentTranslation("chat.wiring.wire_end"));
 								break;
 							case 1:
-								player.addChatMessage(new ChatComponentTranslation("chat.wiring.wire_error_pylons_not_same"));
+								player.addChatMessage(new ChatComponentTranslation("chat.wiring.incompatible_pylons"));
 								break;
 							case 2:
-								player.addChatMessage(new ChatComponentTranslation("chat.wiring.wire_error_cannot_connect_same"));
+								player.addChatMessage(new ChatComponentTranslation("chat.wiring.same_pylon"));
 								break;
 							case 3:
-								player.addChatMessage(new ChatComponentTranslation("chat.wiring.wire_error_pylon_far_away"));
+								player.addChatMessage(new ChatComponentTranslation("chat.wiring.out_of_range"));
 								break;
 						}
 
@@ -111,7 +111,7 @@ public class ItemWiring extends Item {
 			list.add(I18nUtil.resolveKey("item.wiring.desc2", itemstack.stackTagCompound.getInteger("y")));
 			list.add(I18nUtil.resolveKey("item.wiring.desc3", itemstack.stackTagCompound.getInteger("z")));
 		} else {
-			list.add(I18nUtil.resolveKey("desc.item.wiring.right_click_poles_connect"));
+			list.add(I18nUtil.resolveKey("item.wiring.desc4"));
 		}
 	}
 

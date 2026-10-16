@@ -827,7 +827,7 @@ public class ModEventHandlerClient {
 
 				list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC +I18nUtil.resolveKey("gui.armor_mod.hold") +
 						EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.lshift") +
-						EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.to_display_protection_info"));
+						EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.protection_hint"));
 			}
 		}
 
@@ -843,7 +843,7 @@ public class ModEventHandlerClient {
 
 				list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC +I18nUtil.resolveKey("gui.armor_mod.hold") +
 						EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.lshift") +
-						EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.to_display_installed_armor_mods"));
+						EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.mods_hint"));
 
 			} else {
 
@@ -906,10 +906,10 @@ public class ModEventHandlerClient {
 					list.add("");
 
 				if(entry.entry == EnumEntryType.ADD)
-					list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("desc.misc.adds_custom_nuke_stage", entry.value, entry.type));
+					list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("misc.tooltip.nuke_stage", entry.value, entry.type));
 
 				if(entry.entry == EnumEntryType.MULT)
-					list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("desc.misc.armor_mod.line.01", entry.value, entry.type));
+					list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("misc.tooltip.nuke_multiplier", entry.value, entry.type));
 			}
 		}
 
@@ -924,7 +924,7 @@ public class ModEventHandlerClient {
 				qmawTimestamp = Clock.get_ms();
 			}
 		} catch(Exception ex) {
-			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.misc.error_loading_cannery", ex.getLocalizedMessage()));
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("misc.tooltip.cannery_error", ex.getLocalizedMessage()));
 		}
 
 		try {
@@ -935,7 +935,7 @@ public class ModEventHandlerClient {
 				canneryTimestamp = Clock.get_ms();
 			}
 		} catch(Exception ex) {
-			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.misc.error_loading_cannery", ex.getLocalizedMessage()));
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("misc.tooltip.cannery_error", ex.getLocalizedMessage()));
 		}
 
 		/*ItemStack copy = stack.copy();
@@ -1076,7 +1076,7 @@ public class ModEventHandlerClient {
 			}
 
 			if(ArmorUtil.isWearingEmptyMask(mc.thePlayer)) {
-				MainRegistry.proxy.displayTooltip(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.armor_mod.your_mask_has_no_filter"), ServerProxy.ID_FILTER);
+				MainRegistry.proxy.displayTooltip(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.armor_mod.no_filter"), ServerProxy.ID_FILTER);
 			}
 
 			//prune other entities' muzzle flashes

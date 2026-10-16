@@ -20,7 +20,7 @@ public class ItemModInk extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("desc.item.mod_ink.chance_nullify_damage"));
+		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.mod_ink.desc1"));
 		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.mod_ink.desc2"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);

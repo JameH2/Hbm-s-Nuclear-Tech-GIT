@@ -43,14 +43,14 @@ public class GUIMachineLaunchTable extends GuiInfoContainer {
 		launcher.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 36, 16, 34);
 		this.drawCustomInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 88 - 52, 16, 52, new String[] { I18nUtil.resolveKey("gui.launch_table.solid_fuel") + launcher.solid + "l" });
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 113, 34, 6, launcher.power, launcher.maxPower);
-		this.drawCustomInfo(this, mouseX, mouseY, guiLeft + 7, guiTop + 98, 18, 18, new String[] { I18nUtil.resolveKey("gui.launch_table.size_10_10_15") });
-		this.drawCustomInfo(this, mouseX, mouseY, guiLeft + 25, guiTop + 98, 18, 18, new String[] { I18nUtil.resolveKey("gui.launch_table.size_15_15_20") });
+		this.drawCustomInfo(this, mouseX, mouseY, guiLeft + 7, guiTop + 98, 18, 18, new String[] { I18nUtil.resolveKey("gui.launch_table.size_small") });
+		this.drawCustomInfo(this, mouseX, mouseY, guiLeft + 25, guiTop + 98, 18, 18, new String[] { I18nUtil.resolveKey("gui.launch_table.size_large") });
 		this.drawCustomInfo(this, mouseX, mouseY, guiLeft + 43, guiTop + 98, 18, 18, new String[] { I18nUtil.resolveKey("gui.launch_table.size_20") });
 
-		String[] text = new String[] { I18nUtil.resolveKey("gui.launch_table.accepts_custom_missiles"), I18nUtil.resolveKey("gui.launch_table.of_all_sizes_as_long_as_the"), I18nUtil.resolveKey("gui.launch_table.correct_size_setting_is_selected") };
+		String[] text = new String[] { I18nUtil.resolveKey("gui.launch_table.missile_type"), I18nUtil.resolveKey("gui.launch_table.missile_size"), I18nUtil.resolveKey("gui.launch_table.size_setting") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36, 16, 16, guiLeft - 8, guiTop + 36 + 16, text);
 
-		String[] text1 = new String[] { I18nUtil.resolveKey("gui.launch_table.detonator_trigger_center_block") };
+		String[] text1 = new String[] { I18nUtil.resolveKey("gui.launch_table.detonation") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36 + 16, 16, 16, guiLeft - 8, guiTop + 36 + 16, text1);
 	}
 

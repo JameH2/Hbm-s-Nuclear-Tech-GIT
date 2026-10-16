@@ -237,10 +237,10 @@ public class BlockOre extends Block implements IBlockMultiPass, IBlockMulti, ITo
 		if(spawnsOn.isEmpty()) return;
 
 		if(spawnsOn.size() == SolarSystem.Body.values().length) {
-			list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("tile.ore.can_be_found_anywhere"));
+			list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("tile.ore.desc1"));
 			return;
 		} else if(spawnsOn.size() == SolarSystem.Body.values().length - 1) {
-			list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("tile.ore.can_be_found_anywhere_except"));
+			list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("tile.ore.desc2"));
 			for(SolarSystem.Body body : SolarSystem.Body.values()) {
 				if(spawnsOn.contains(body)) continue;
 				list.add(EnumChatFormatting.RED + " - " + I18nUtil.resolveKey("body." + body.name));
@@ -248,7 +248,7 @@ public class BlockOre extends Block implements IBlockMultiPass, IBlockMulti, ITo
 			return;
 		}
 
-		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("tile.ore.can_be_found_on"));
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("tile.ore.desc3"));
 		for(SolarSystem.Body body : spawnsOn) {
 			list.add(EnumChatFormatting.AQUA + " - " + I18nUtil.resolveKey("body." + body.name));
 		}

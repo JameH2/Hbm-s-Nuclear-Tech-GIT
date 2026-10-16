@@ -60,7 +60,7 @@ public class GUIMachinePlasmaForge extends GuiInfoContainer {
 		if(recipe != null) {
 			drawCustomInfoStat(mouseX, mouseY, guiLeft + 25, guiTop + 115, 18, 18, mouseX, mouseY, EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(forge.plasmaEnergySync) + I18nUtil.resolveKey("gui.plasma_forge.tu") + BobMathUtil.getShortNumber(recipe.ignitionTemp) + "TU");
 		} else {
-			drawCustomInfoStat(mouseX, mouseY, guiLeft + 25, guiTop + 115, 18, 18, mouseX, mouseY, I18nUtil.resolveKey("gui.plasma_forge.0_tu_0_tu"));
+			drawCustomInfoStat(mouseX, mouseY, guiLeft + 25, guiTop + 115, 18, 18, mouseX, mouseY, I18nUtil.resolveKey("gui.plasma_forge.plasma"));
 		}
 
 		if(this.isMouseOverSlot(this.inventorySlots.getSlot(2), mouseX, mouseY) && forge.slots[2] == null && this.mc.thePlayer.inventory.getItemStack() == null) {

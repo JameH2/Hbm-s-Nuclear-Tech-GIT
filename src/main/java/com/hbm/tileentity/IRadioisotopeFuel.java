@@ -143,8 +143,8 @@ public interface IRadioisotopeFuel
 				tooltip.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtg_fuel.ticks"), instance.getLifespan(stack), instance.getMaxLifespan()));
 				final String[] timeLeft = BobMathUtil.ticksToDate(instance.getLifespan(stack));
 				final String[] maxLife = BobMathUtil.ticksToDate(instance.getMaxLifespan());
-				tooltip.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtg_fuel.time_remaining_y_d_h"), (Object[]) timeLeft));
-				tooltip.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtg_fuel.maximum_life_y_d_h"), (Object[]) maxLife));
+				tooltip.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtg_fuel.remaining"), (Object[]) timeLeft));
+				tooltip.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtg_fuel.lifetime"), (Object[]) maxLife));
 			}
 		}
 	}
