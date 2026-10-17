@@ -1,4 +1,5 @@
 package com.hbm.inventory.container;
+import com.hbm.inventory.SlotUpgrade;
 
 import com.hbm.inventory.SlotCraftingOutput;
 import com.hbm.inventory.SlotTakeOnly;
@@ -25,8 +26,8 @@ public class ContainerMachineExposureChamber extends Container {
 		this.addSlotToContainer(new Slot(tedf, 3, 80, 36));
 		this.addSlotToContainer(new SlotCraftingOutput(invPlayer.player, tedf, 4, 116, 36));
 		this.addSlotToContainer(new Slot(tedf, 5, 152, 54));
-		this.addSlotToContainer(new Slot(tedf, 6, 44, 54));
-		this.addSlotToContainer(new Slot(tedf, 7, 62, 54));
+		this.addSlotToContainer(new SlotUpgrade(tedf, 6, 44, 54));
+		this.addSlotToContainer(new SlotUpgrade(tedf, 7, 62, 54));
 
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {

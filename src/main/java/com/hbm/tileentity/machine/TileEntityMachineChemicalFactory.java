@@ -151,7 +151,7 @@ public class TileEntityMachineChemicalFactory extends TileEntityMachineBase impl
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		if(slot == 0) return true; // battery
 		for(int i = 0; i < 4; i++) if(slot == 4 + i * 7 && stack.getItem() == ModItems.blueprints) return true;
-		if(slot >= 1 && slot <= 3 && stack.getItem() instanceof ItemMachineUpgrade) return true; // upgrades
+		if(slot >= 1 && slot <= 3) return this.isUpgradeValid(stack);
 		for(int i = 0; i < 4; i++) if(this.chemplantModule[i].isItemValid(slot, stack)) return true; // recipe input crap
 		return false;
 	}

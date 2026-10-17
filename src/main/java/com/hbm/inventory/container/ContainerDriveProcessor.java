@@ -3,6 +3,7 @@ package com.hbm.inventory.container;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import com.hbm.inventory.SlotNonRetarded;
 
 public class ContainerDriveProcessor extends ContainerBase {
 
@@ -19,7 +20,7 @@ public class ContainerDriveProcessor extends ContainerBase {
 		addSlotToContainer(new Slot(machine, 0, 30, 18));
 		addSlotToContainer(new Slot(machine, 1, 50, 38));
 
-		addSlotToContainer(new Slot(machine, 2, 81, 24));
+		addSlotToContainer(new SlotNonRetarded(machine, 2, 81, 24));
 
 		addSlotToContainer(new Slot(machine, 3, 134, 72));
 

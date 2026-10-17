@@ -324,6 +324,12 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 	@Override public long getPower() { return power; }
 	@Override public long getMaxPower() { return maxPower; }
 
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+		if(slot == 6) return stack != null && stack.getItem() == ModItems.upgrade_gc_speed;
+		return super.isItemValidForSlot(slot, stack);
+	}
+
 	public int getProcessingSpeed() {
 		if(slots[6] != null && slots[6].getItem() == ModItems.upgrade_gc_speed) {
 			return processingSpeed - 70;

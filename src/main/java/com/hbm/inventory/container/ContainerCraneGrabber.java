@@ -27,8 +27,8 @@ public class ContainerCraneGrabber extends ContainerBase {
 		}
 		
 		//upgrades
-		this.addSlotToContainer(new SlotUpgrade(grabber, 9, 121, 23));
-		this.addSlotToContainer(new SlotUpgrade(grabber, 10, 121, 47));
+		this.addSlotToContainer(new SlotUpgrade(grabber, 9, 121, 23, ModItems.upgrade_stack));
+		this.addSlotToContainer(new SlotUpgrade(grabber, 10, 121, 47, ModItems.upgrade_ejector));
 
 		playerInv(invPlayer, 8, 103, 161);
 	}

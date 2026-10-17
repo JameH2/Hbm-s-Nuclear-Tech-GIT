@@ -1,6 +1,7 @@
 package com.hbm.inventory.container;
 
 import com.hbm.inventory.SlotUpgrade;
+import com.hbm.items.ModItems;
 import com.hbm.tileentity.network.TileEntityCraneUnboxer;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,8 +24,8 @@ public class ContainerCraneUnboxer extends Container {
 		}
 		
 		//upgrades
-		this.addSlotToContainer(new SlotUpgrade(unboxer, 21, 152, 23));
-		this.addSlotToContainer(new SlotUpgrade(unboxer, 22, 152, 47));
+		this.addSlotToContainer(new SlotUpgrade(unboxer, 21, 152, 23, ModItems.upgrade_stack));
+		this.addSlotToContainer(new SlotUpgrade(unboxer, 22, 152, 47, ModItems.upgrade_ejector));
 
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {

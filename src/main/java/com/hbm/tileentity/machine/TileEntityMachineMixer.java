@@ -223,6 +223,7 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ICo
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+		if(i >= 3 && i <= 4) return isUpgradeValid(itemStack);
 
 		MixerRecipe[] recipes = MixerRecipes.getOutput(tanks[2].getTankType());
 		if(recipes == null || recipes.length <= 0) return false;

@@ -1,4 +1,5 @@
 package com.hbm.inventory.container;
+import com.hbm.inventory.SlotUpgrade;
 
 import com.hbm.inventory.SlotNonRetarded;
 import com.hbm.inventory.recipes.ArcFurnaceRecipes;
@@ -28,7 +29,7 @@ public class ContainerMachineArcFurnaceLarge extends Container {
 		//Battery
 		this.addSlotToContainer(new Slot(tile, 3, 8, 108));
 		//Upgrade
-		this.addSlotToContainer(new Slot(tile, 4, 152, 108));
+		this.addSlotToContainer(new SlotUpgrade(tile, 4, 152, 108));
 		//Inputs
 		for(int i = 0; i < 4; i++) for(int j = 0; j < 5; j++) this.addSlotToContainer(new SlotArcFurnace(tile, 5 + j + i * 5, 44 + j * 18, 54 + i * 18));
 		//IO

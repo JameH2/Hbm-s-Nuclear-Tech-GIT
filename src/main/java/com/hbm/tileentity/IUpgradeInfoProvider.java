@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
+import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 public interface IUpgradeInfoProvider {
@@ -15,6 +17,13 @@ public interface IUpgradeInfoProvider {
 	public boolean canProvideInfo(UpgradeType type, int level, boolean extendedInfo);
 	public void provideInfo(UpgradeType type, int level, List<String> info, boolean extendedInfo);
 	public HashMap<UpgradeType, Integer> getValidUpgrades();
+
+	/** Use the same compatibility list for insertion as for upgrade processing. Tiers are capped by the manager. */
+	public default boolean isUpgradeValid(ItemStack stack) {
+		if(stack == null || !(stack.getItem() instanceof ItemMachineUpgrade)) return false;
+		HashMap<UpgradeType, Integer> upgrades = getValidUpgrades();
+		return upgrades != null && upgrades.containsKey(((ItemMachineUpgrade) stack.getItem()).type);
+	}
 
 	public static String getStandardLabel(Block block) {
 		return EnumChatFormatting.GREEN.YELLOW + ">>> " + I18nUtil.resolveKey(block.getUnlocalizedName() + ".name") + " <<<";

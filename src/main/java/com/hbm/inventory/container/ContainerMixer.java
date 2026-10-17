@@ -1,4 +1,5 @@
 package com.hbm.inventory.container;
+import com.hbm.inventory.SlotUpgrade;
 
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -25,8 +26,8 @@ public class ContainerMixer extends Container {
 		// Fluid ID
 		this.addSlotToContainer(new Slot(mixer, 2, 126, 72));
 		// Upgrades
-		this.addSlotToContainer(new Slot(mixer, 3, 148, 18));
-		this.addSlotToContainer(new Slot(mixer, 4, 148, 36));
+		this.addSlotToContainer(new SlotUpgrade(mixer, 3, 148, 18));
+		this.addSlotToContainer(new SlotUpgrade(mixer, 4, 148, 36));
 
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {

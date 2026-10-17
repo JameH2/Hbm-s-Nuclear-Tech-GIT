@@ -93,7 +93,7 @@ public class TileEntityMachineVacuumCircuit extends TileEntityMachineBase implem
 
 
 
-			upgradeManager.checkSlots(this, slots, 4, 4);
+			upgradeManager.checkSlots(this, slots, 6, 7);
 			int redLevel = upgradeManager.getLevel(UpgradeType.SPEED);
 			int blueLevel = upgradeManager.getLevel(UpgradeType.POWER);
 

@@ -74,6 +74,19 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 	}
 
 	@Override
+	public boolean isUpgradeValid(ItemStack stack) {
+		if(stack == null) return false;
+		return stack.getItem() == ModItems.upgrade_5g || stack.getItem() == ModItems.upgrade_screm
+				|| IUpgradeInfoProvider.super.isUpgradeValid(stack);
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+		if(slot >= 1 && slot <= 9) return isUpgradeValid(stack);
+		return super.isItemValidForSlot(slot, stack);
+	}
+
+	@Override
 	public boolean canProvideInfo(UpgradeType type, int level, boolean extendedInfo) {
 		return type == UpgradeType.SPEED || type == UpgradeType.EFFECT || type == UpgradeType.POWER || type == UpgradeType.AFTERBURN || type == UpgradeType.OVERDRIVE;
 	}

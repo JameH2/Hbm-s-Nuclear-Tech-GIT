@@ -29,8 +29,8 @@ public class ContainerCraneExtractor extends ContainerBase {
 		addSlots(extractor, 9, 8, 17, 3, 3);
 
 		//upgrades
-		this.addSlotToContainer(new SlotUpgrade(extractor, 18, 152, 23));
-		this.addSlotToContainer(new SlotUpgrade(extractor, 19, 152, 47));
+		this.addSlotToContainer(new SlotUpgrade(extractor, 18, 152, 23, ModItems.upgrade_stack));
+		this.addSlotToContainer(new SlotUpgrade(extractor, 19, 152, 47, ModItems.upgrade_ejector));
 
 		playerInv(invPlayer, 26, 103, 161);
 

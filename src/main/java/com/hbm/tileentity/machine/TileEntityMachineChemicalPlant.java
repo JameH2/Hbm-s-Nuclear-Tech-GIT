@@ -230,7 +230,7 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		if(slot == 0) return true; // battery
 		if(slot == 1 && stack.getItem() == ModItems.blueprints) return true;
-		if(slot >= 2 && slot <= 3 && stack.getItem() instanceof ItemMachineUpgrade) return true; // upgrades
+		if(slot >= 2 && slot <= 3) return this.isUpgradeValid(stack);
 		if(slot >= 10 && slot <= 12) return true; // input fluid
 		if(slot >= 16 && slot <= 18) return true; // output fluid
 		if(this.chemplantModule.isItemValid(slot, stack)) return true; // recipe input crap
