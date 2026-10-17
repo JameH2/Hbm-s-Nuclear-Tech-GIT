@@ -43,11 +43,11 @@ public class ItemDrillbit extends ItemEnumMulti {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 		EnumDrillType type = EnumUtil.grabEnumSafely(theEnum, stack.getItemDamage());
 
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.drillbit.desc1", ((int) (type.speed * 100))));
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.drillbit.desc2", type.tier));
-		if(type.fortune > 0) list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.drillbit.desc3", type.fortune));
-		if(type.vein) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.drillbit.desc4"));
-		if(type.silk) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.drillbit.desc5"));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.drillbit.speed", ((int) (type.speed * 100))));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.drillbit.tier", type.tier));
+		if(type.fortune > 0) list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.drillbit.fortune", type.fortune));
+		if(type.vein) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.drillbit.vein_miner"));
+		if(type.silk) list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.drillbit.silk_touch"));
 	}
 
 	public static enum EnumDrillType {
