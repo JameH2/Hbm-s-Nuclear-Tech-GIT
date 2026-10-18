@@ -25,7 +25,7 @@ public class ItemModMedal extends ItemArmorMod {
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_medal.summary", stack.getDisplayName()));
+		list.add(EnumChatFormatting.GOLD + "  " + I18nUtil.resolveKey("item.mod_medal.summary", stack.getDisplayName()));
 	}
 
 	@Override

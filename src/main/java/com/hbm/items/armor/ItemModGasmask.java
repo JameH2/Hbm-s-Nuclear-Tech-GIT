@@ -61,7 +61,7 @@ public class ItemModGasmask extends ItemArmorMod implements IGasMask {
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
 
-		list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.mod_gasmask.summary", stack.getDisplayName()));
+		list.add(EnumChatFormatting.GREEN + "  " + I18nUtil.resolveKey("item.mod_gasmask.summary", stack.getDisplayName()));
 		ArmorUtil.addGasMaskTooltip(stack, MainRegistry.proxy.me(), list, false);
 	}
 

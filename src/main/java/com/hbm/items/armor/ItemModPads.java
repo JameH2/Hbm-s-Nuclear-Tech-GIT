@@ -39,9 +39,9 @@ public class ItemModPads extends ItemArmorMod {
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
 
 		if(this == ModItems.pads_static)
-			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_pads.static_summary", stack.getDisplayName(), Math.round((1F - damageMod) * 100)));
+			list.add(EnumChatFormatting.DARK_PURPLE + "  " + I18nUtil.resolveKey("item.mod_pads.static_summary", stack.getDisplayName(), Math.round((1F - damageMod) * 100)));
 		else
-			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_pads.summary", stack.getDisplayName(), Math.round((1F - damageMod) * 100)));
+			list.add(EnumChatFormatting.DARK_PURPLE + "  " + I18nUtil.resolveKey("item.mod_pads.summary", stack.getDisplayName(), Math.round((1F - damageMod) * 100)));
 	}
 
 	@Override

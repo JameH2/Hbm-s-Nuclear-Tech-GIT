@@ -26,7 +26,7 @@ public class ItemModBandaid extends ItemArmorMod {
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_bandaid.summary", stack.getDisplayName()));
+		list.add(EnumChatFormatting.RED + "  " + I18nUtil.resolveKey("item.mod_bandaid.summary", stack.getDisplayName()));
 	}
 
 	@Override

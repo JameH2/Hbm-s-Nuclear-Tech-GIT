@@ -29,6 +29,6 @@ public class ItemModShield extends ItemArmorMod {
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
 		String color = "" + (System.currentTimeMillis() % 1000 < 500 ? EnumChatFormatting.YELLOW : EnumChatFormatting.GOLD);
-		list.add(color + I18nUtil.resolveKey("item.mod_shield.summary", stack.getDisplayName(), (Math.round(shield * 10) * 0.1)));
+		list.add(color + "  " + I18nUtil.resolveKey("item.mod_shield.summary", stack.getDisplayName(), (Math.round(shield * 10) * 0.1)));
 	}
 }

@@ -40,7 +40,7 @@ public class ItemModMilk extends ItemArmorMod {
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.WHITE + I18nUtil.resolveKey("item.mod_milk.summary", stack.getDisplayName()));
+		list.add(EnumChatFormatting.WHITE + "  " + I18nUtil.resolveKey("item.mod_milk.summary", stack.getDisplayName()));
 	}
 
 	@Override

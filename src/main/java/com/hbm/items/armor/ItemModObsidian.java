@@ -24,6 +24,6 @@ public class ItemModObsidian extends ItemArmorMod {
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_obsidian.summary", stack.getDisplayName()));
+		list.add(EnumChatFormatting.DARK_PURPLE + "  " + I18nUtil.resolveKey("item.mod_obsidian.summary", stack.getDisplayName()));
 	}
 }

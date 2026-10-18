@@ -28,6 +28,6 @@ public class ItemModCladding extends ItemArmorMod {
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.mod_cladding.summary", stack.getDisplayName(), rad));
+		list.add(EnumChatFormatting.YELLOW + "  " + I18nUtil.resolveKey("item.mod_cladding.summary", stack.getDisplayName(), rad));
 	}
 }

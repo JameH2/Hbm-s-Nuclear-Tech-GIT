@@ -44,6 +44,6 @@ public class ItemModRevive extends ItemArmorMod {
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
 
-		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_revive.summary", stack.getDisplayName(), (stack.getMaxDamage() - stack.getItemDamage())));
+		list.add(EnumChatFormatting.GOLD + "  " + I18nUtil.resolveKey("item.mod_revive.summary", stack.getDisplayName(), (stack.getMaxDamage() - stack.getItemDamage())));
 	}
 }

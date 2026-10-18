@@ -83,7 +83,7 @@ public class ItemModInsert extends ItemArmorMod {
 
 		String join = String.join(" / ", desc);
 
-		list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_insert.summary", stack.getDisplayName(), join, (stack.getMaxDamage() - stack.getItemDamage())));
+		list.add(EnumChatFormatting.DARK_PURPLE + "  " + I18nUtil.resolveKey("item.mod_insert.summary", stack.getDisplayName(), join, (stack.getMaxDamage() - stack.getItemDamage())));
 	}
 
 	@Override

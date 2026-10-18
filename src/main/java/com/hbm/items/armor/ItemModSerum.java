@@ -28,7 +28,7 @@ public class ItemModSerum extends ItemArmorMod {
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.mod_serum.summary", stack.getDisplayName()));
+		list.add(EnumChatFormatting.BLUE + "  " + I18nUtil.resolveKey("item.mod_serum.summary", stack.getDisplayName()));
 	}
 
 	@Override

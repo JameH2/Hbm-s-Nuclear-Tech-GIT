@@ -108,7 +108,7 @@ public class BlockWandLoot extends BlockContainer implements ILookOverlay, ITool
 
 		List<String> text = new ArrayList<String>();
 		text.add(I18nUtil.resolveKey("overlay.wand_loot.replacement", loot.replaceBlock.getUnlocalizedName()));
-		text.add(I18nUtil.resolveKey("overlay.wand_loot.meta", loot.replaceMeta));
+		text.add("   " + I18nUtil.resolveKey("overlay.wand_loot.meta", loot.replaceMeta));
 		text.add(I18nUtil.resolveKey("overlay.wand_loot.loot_pool", loot.poolName));
 		if(loot.replaceBlock != ModBlocks.deco_loot) {
 			text.add(I18nUtil.resolveKey("overlay.wand_loot.minimum_items", loot.minItems));

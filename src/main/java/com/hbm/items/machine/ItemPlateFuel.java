@@ -31,7 +31,7 @@ public class ItemPlateFuel extends ItemFuelRod {
 
 		list.add(EnumChatFormatting.YELLOW + "[" + I18nUtil.resolveKey("item.plate_fuel.category") + "]");
 		list.add(EnumChatFormatting.DARK_AQUA + getFunctionDesc());
-		list.add(EnumChatFormatting.DARK_AQUA + I18nUtil.resolveKey("item.plate_fuel.yield", BobMathUtil.getShortNumber(lifeTime)));
+		list.add(EnumChatFormatting.DARK_AQUA + "   " + I18nUtil.resolveKey("item.plate_fuel.yield", BobMathUtil.getShortNumber(lifeTime)));
 
 		super.addInformation(itemstack, player, list, bool);
 	}

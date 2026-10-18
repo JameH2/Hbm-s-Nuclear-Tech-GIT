@@ -38,7 +38,7 @@ public class ItemModWD40 extends ItemArmorMod {
 
 		String color = "" + (System.currentTimeMillis() % 1000 < 500 ? EnumChatFormatting.BLUE : EnumChatFormatting.YELLOW);
 
-		list.add(color + I18nUtil.resolveKey("item.mod_wd40.summary", stack.getDisplayName()));
+		list.add(color + "  " + I18nUtil.resolveKey("item.mod_wd40.summary", stack.getDisplayName()));
 	}
 
 	@Override

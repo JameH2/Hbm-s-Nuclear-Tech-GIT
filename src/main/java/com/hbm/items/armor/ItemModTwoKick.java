@@ -26,6 +26,6 @@ public class ItemModTwoKick extends ItemArmorMod {
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.mod_two_kick.summary", stack.getDisplayName()));
+		list.add(EnumChatFormatting.YELLOW + "  " + I18nUtil.resolveKey("item.mod_two_kick.summary", stack.getDisplayName()));
 	}
 }

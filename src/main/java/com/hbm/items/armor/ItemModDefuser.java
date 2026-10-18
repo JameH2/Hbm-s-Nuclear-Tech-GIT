@@ -33,7 +33,7 @@ public class ItemModDefuser extends ItemArmorMod {
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.mod_defuser.summary", stack.getDisplayName()));
+		list.add(EnumChatFormatting.YELLOW + "  " + I18nUtil.resolveKey("item.mod_defuser.summary", stack.getDisplayName()));
 	}
 
 	@Override

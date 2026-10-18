@@ -116,9 +116,9 @@ public class ItemCassette extends Item {
 		if(!(stack.getItem() instanceof ItemCassette)) return;
 
 		list.add(I18nUtil.resolveKey("item.cassette.header"));
-		list.add(I18nUtil.resolveKey("item.cassette.track_name", TrackType.getEnum(stack.getItemDamage()).getTrackTitle()));
-		list.add(I18nUtil.resolveKey("item.cassette.type", I18nUtil.resolveKey("item.cassette.sound_type." + TrackType.getEnum(stack.getItemDamage()).getType().name().toLowerCase(Locale.US))));
-		list.add(I18nUtil.resolveKey("item.cassette.volume", TrackType.getEnum(stack.getItemDamage()).getVolume()));
+		list.add("   " + I18nUtil.resolveKey("item.cassette.track_name", TrackType.getEnum(stack.getItemDamage()).getTrackTitle()));
+		list.add("   " + I18nUtil.resolveKey("item.cassette.type", I18nUtil.resolveKey("item.cassette.sound_type." + TrackType.getEnum(stack.getItemDamage()).getType().name().toLowerCase(Locale.US))));
+		list.add("   " + I18nUtil.resolveKey("item.cassette.volume", TrackType.getEnum(stack.getItemDamage()).getVolume()));
 	}
 
 	public static TrackType getType(ItemStack stack) {

@@ -28,7 +28,7 @@ public class ItemModIron extends ItemArmorMod {
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.WHITE + I18nUtil.resolveKey("item.mod_iron.summary", stack.getDisplayName()));
+		list.add(EnumChatFormatting.WHITE + "  " + I18nUtil.resolveKey("item.mod_iron.summary", stack.getDisplayName()));
 	}
 
 	@Override

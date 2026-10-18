@@ -38,7 +38,7 @@ public abstract class JetpackFueledBase extends JetpackBase implements IFillable
 		if(jetpack == null)
 			return;
 
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.jetpack_fueled_base.summary", stack.getDisplayName(), fuel.getLocalizedName(), this.getFuel(jetpack), this.maxFuel));
+		list.add(EnumChatFormatting.RED + "  " + I18nUtil.resolveKey("item.jetpack_fueled_base.summary", stack.getDisplayName(), fuel.getLocalizedName(), this.getFuel(jetpack), this.maxFuel));
 	}
 
 	protected void useUpFuel(EntityPlayer player, ItemStack stack, int rate) {

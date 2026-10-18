@@ -31,6 +31,6 @@ public class ItemModShackles extends ItemArmorMod {
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
 
-		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_shackles.summary", stack.getDisplayName()));
+		list.add(EnumChatFormatting.GOLD + "  " + I18nUtil.resolveKey("item.mod_shackles.summary", stack.getDisplayName()));
 	}
 }
