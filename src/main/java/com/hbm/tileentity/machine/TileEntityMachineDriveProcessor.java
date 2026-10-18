@@ -22,6 +22,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
@@ -146,6 +147,13 @@ public class TileEntityMachineDriveProcessor extends TileEntityMachineBase imple
 	@Override
 	public boolean hasPermission(EntityPlayer player) {
 		return isUseableByPlayer(player);
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+		if(slot != 2 || stack == null || stack.getItem() != ModItems.circuit) return false;
+		EnumCircuitType type = EnumUtil.grabEnumSafely(EnumCircuitType.class, stack.getItemDamage());
+		return type == EnumCircuitType.PROCESST1 || type == EnumCircuitType.PROCESST2 || type == EnumCircuitType.PROCESST3;
 	}
 
 	private int getProcessingTier() {

@@ -14,7 +14,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerElectricFurnace extends Container {
+public class ContainerElectricFurnace extends ContainerValidated {
 
 	private TileEntityMachineElectricFurnace diFurnace;
 

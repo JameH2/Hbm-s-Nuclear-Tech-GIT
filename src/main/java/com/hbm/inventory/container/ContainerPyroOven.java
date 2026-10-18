@@ -1,6 +1,7 @@
 package com.hbm.inventory.container;
 
 import com.hbm.inventory.SlotCraftingOutput;
+import com.hbm.inventory.SlotUpgrade;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -13,7 +14,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerPyroOven extends Container {
+public class ContainerPyroOven extends ContainerValidated {
 
 	private TileEntityMachinePyroOven pyro;
 	
@@ -29,8 +30,8 @@ public class ContainerPyroOven extends Container {
 		//Fluid ID
 		this.addSlotToContainer(new Slot(tedf, 3, 8, 72));
 		//Upgrades
-		this.addSlotToContainer(new Slot(tedf, 4, 71, 72));
-		this.addSlotToContainer(new Slot(tedf, 5, 89, 72));
+		this.addSlotToContainer(new SlotUpgrade(tedf, 4, 71, 72));
+		this.addSlotToContainer(new SlotUpgrade(tedf, 5, 89, 72));
 		
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {

@@ -9,7 +9,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerSolidifier extends Container {
+public class ContainerSolidifier extends ContainerValidated {
 	
 	private TileEntityMachineSolidifier solidifier;
 

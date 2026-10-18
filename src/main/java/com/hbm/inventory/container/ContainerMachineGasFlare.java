@@ -1,4 +1,5 @@
 package com.hbm.inventory.container;
+import com.hbm.inventory.SlotUpgrade;
 
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.machine.IItemFluidIdentifier;
@@ -13,7 +14,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMachineGasFlare extends Container {
+public class ContainerMachineGasFlare extends ContainerValidated {
 
 	private TileEntityMachineGasFlare testNuke;
 
@@ -30,8 +31,8 @@ public class ContainerMachineGasFlare extends Container {
 		//Fluid ID
 		this.addSlotToContainer(new Slot(tedf, 3, 35, 71));
 		//Upgrades
-		this.addSlotToContainer(new Slot(tedf, 4, 80, 71));
-		this.addSlotToContainer(new Slot(tedf, 5, 98, 71));
+		this.addSlotToContainer(new SlotUpgrade(tedf, 4, 80, 71));
+		this.addSlotToContainer(new SlotUpgrade(tedf, 5, 98, 71));
 		
 		int offset = 37;
 

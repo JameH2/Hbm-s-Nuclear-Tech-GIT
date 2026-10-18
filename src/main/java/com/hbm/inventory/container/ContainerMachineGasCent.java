@@ -1,4 +1,5 @@
 package com.hbm.inventory.container;
+import com.hbm.inventory.SlotUpgrade;
 
 import com.hbm.inventory.SlotCraftingOutput;
 import com.hbm.items.ModItems;
@@ -14,7 +15,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMachineGasCent extends Container {
+public class ContainerMachineGasCent extends ContainerValidated {
 	
 	private TileEntityMachineGasCent gasCent;
 	
@@ -34,7 +35,7 @@ public class ContainerMachineGasCent extends Container {
 		//Fluid ID IO
 		this.addSlotToContainer(new Slot(tedf, 5, 91, 15));
 		//upgrade
-		this.addSlotToContainer(new Slot(tedf, 6, 69, 15));
+		this.addSlotToContainer(new SlotUpgrade(tedf, 6, 69, 15, ModItems.upgrade_gc_speed));
 		
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {

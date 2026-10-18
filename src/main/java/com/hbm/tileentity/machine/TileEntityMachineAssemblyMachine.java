@@ -255,7 +255,7 @@ public class TileEntityMachineAssemblyMachine extends TileEntityMachineBase impl
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		if(slot == 0) return true; // battery
 		if(slot == 1 && stack.getItem() == ModItems.blueprints) return true;
-		if(slot >= 2 && slot <= 3 && stack.getItem() instanceof ItemMachineUpgrade) return true; // upgrades
+		if(slot >= 2 && slot <= 3) return this.isUpgradeValid(stack);
 		if(this.assemblerModule.isItemValid(slot, stack)) return true; // recipe input crap
 		return false;
 	}
@@ -325,6 +325,7 @@ public class TileEntityMachineAssemblyMachine extends TileEntityMachineBase impl
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(KEY_CONSUMPTION, "-" + (level * 25) + "%"));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
+			IUpgradeInfoProvider.addOverdriveInfo(info, extendedInfo, 1 + Math.min(level, 3), 1 + Math.min(level, 3) * 10D / 3D);
 			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}

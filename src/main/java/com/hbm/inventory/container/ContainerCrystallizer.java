@@ -14,7 +14,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerCrystallizer extends Container {
+public class ContainerCrystallizer extends ContainerValidated {
 
 	private TileEntityMachineCrystallizer diFurnace;
 
