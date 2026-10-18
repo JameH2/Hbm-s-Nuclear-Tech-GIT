@@ -24,7 +24,7 @@ public class ItemMeteorRemote extends Item {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.resolveKey("item.meteor_remote.desc"));
+		list.add(I18nUtil.resolveKey("item.meteor_remote.usage"));
 	}
 
 	@Override

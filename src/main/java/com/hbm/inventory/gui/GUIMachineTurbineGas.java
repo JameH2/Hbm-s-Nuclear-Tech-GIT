@@ -117,14 +117,14 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
 
 		if(turbinegas.state == 1) {
 			double consumption = turbinegas.fuelMaxCons.containsKey(turbinegas.tanks[0].getTankType()) ? turbinegas.fuelMaxCons.get(turbinegas.tanks[0].getTankType()) : 5D;
-			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 36, guiTop + 36, 16, 66, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.turbine_gas.fuel_consumption") + 20 * (consumption * 0.05D + consumption * turbinegas.throttle / 100) + I18nUtil.resolveKey("gui.turbine_gas.mb")});
+			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 36, guiTop + 36, 16, 66, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.turbine_gas.fuel_consumption", 20 * (consumption * 0.05D + consumption * turbinegas.throttle / 100), I18nUtil.resolveKey("gui.turbine_gas.mb"))});
 		}
 		else {
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 36, guiTop + 36, 16, 66, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.turbine_gas.generator_offline")});
 		}
 
 		if(turbinegas.temp >= 20)
-			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 133, guiTop + 23, 8, 72, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.turbine_gas.temperature") + (turbinegas.temp) + "°C"});
+			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 133, guiTop + 23, 8, 72, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.turbine_gas.temperature", turbinegas.temp)});
 		else
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 133, guiTop + 23, 8, 72, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.turbine_gas.ambient_temperature")});
 

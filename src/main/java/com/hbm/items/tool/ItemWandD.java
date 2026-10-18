@@ -124,15 +124,15 @@ public class ItemWandD extends Item {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.resolveKey("item.wand_d.desc1"));
+		list.add(I18nUtil.resolveKey("item.wand_d.purpose"));
 
 		if(stack.stackTagCompound != null) {
 			int targetId = stack.stackTagCompound.getInteger("dim");
 			if(targetId == 0) {
-				list.add(I18nUtil.resolveKey("item.wand_d.desc2"));
+				list.add(I18nUtil.resolveKey("item.wand_d.orbit"));
 			} else {
 				SolarSystem.Body target = SolarSystem.Body.values()[targetId];
-				list.add(I18nUtil.resolveKey("item.wand_d.desc3", target.getBody().getUnlocalizedName()));
+				list.add(I18nUtil.resolveKey("item.wand_d.target", target.getBody().getUnlocalizedName()));
 			}
 		}
 	}

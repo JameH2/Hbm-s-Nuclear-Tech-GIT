@@ -73,12 +73,12 @@ public class ItemTeleLink extends Item {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		if (itemstack.stackTagCompound != null) {
-			list.add(I18nUtil.resolveKey("item.tele_link.desc1", itemstack.stackTagCompound.getInteger("x")));
-			list.add(I18nUtil.resolveKey("item.tele_link.desc2", itemstack.stackTagCompound.getInteger("y")));
-			list.add(I18nUtil.resolveKey("item.tele_link.desc3", itemstack.stackTagCompound.getInteger("z")));
-			list.add(I18nUtil.resolveKey("item.tele_link.desc4", itemstack.stackTagCompound.getInteger("dim")));
+			list.add(I18nUtil.resolveKey("item.tele_link.x", itemstack.stackTagCompound.getInteger("x")));
+			list.add(I18nUtil.resolveKey("item.tele_link.y", itemstack.stackTagCompound.getInteger("y")));
+			list.add(I18nUtil.resolveKey("item.tele_link.z", itemstack.stackTagCompound.getInteger("z")));
+			list.add(I18nUtil.resolveKey("item.tele_link.dimension", itemstack.stackTagCompound.getInteger("dim")));
 		} else {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.tele_link.desc5"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.tele_link.no_exit"));
 		}
 	}
 

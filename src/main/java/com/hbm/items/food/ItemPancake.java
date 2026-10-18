@@ -51,11 +51,11 @@ public class ItemPancake extends ItemFood {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		for(String line : I18nUtil.resolveKeyArray("item.pancake.desc1")) {
+		for(String line : I18nUtil.resolveKeyArray("item.pancake.desc")) {
 			list.add(line);
 		}
 		list.add("");
-		list.add(I18nUtil.resolveKey("item.pancake.desc3"));
+		list.add(I18nUtil.resolveKey("item.pancake.flavor"));
 	}
 
 }

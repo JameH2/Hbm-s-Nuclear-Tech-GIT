@@ -41,7 +41,7 @@ public class ItemModOxy extends ItemArmorMod implements IFillableItem {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.jetpack_fueled_base.desc1", fuel.getLocalizedName(), getFuel(itemstack), this.maxFuel));
+		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.jetpack_fueled_base.fuel", fuel.getLocalizedName(), getFuel(itemstack), this.maxFuel));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 		list.add(EnumChatFormatting.GOLD + I18n.format("armor.mustSeal"));
@@ -50,7 +50,7 @@ public class ItemModOxy extends ItemArmorMod implements IFillableItem {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_oxy.desc", stack.getDisplayName(), fuel.getLocalizedName(), getFuel(stack), this.maxFuel));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_oxy.summary", stack.getDisplayName(), fuel.getLocalizedName(), getFuel(stack), this.maxFuel));
 	}
 
 	@Override

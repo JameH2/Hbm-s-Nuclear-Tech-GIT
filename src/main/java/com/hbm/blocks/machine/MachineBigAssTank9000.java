@@ -106,7 +106,7 @@ public class MachineBigAssTank9000 extends BlockDummyable implements IPersistent
 
 					trialEntity.tank.setTankType(type);
 					trialEntity.markDirty();
-					player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+					player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 				}
 			}
 

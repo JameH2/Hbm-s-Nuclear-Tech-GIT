@@ -85,7 +85,7 @@ public class HeaterHeatex extends BlockDummyable implements ILookOverlay, IToolt
 
 						trialEntity.tanks[0].setTankType(type);
 						trialEntity.markDirty();
-						player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+						player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 						return true;
 					}
 				}

@@ -192,7 +192,7 @@ public class GenericRecipe {
 			ItemStack display = stack.extractForCyclingDisplay(20);
 			list.add("  " + EnumChatFormatting.GRAY + display.stackSize + "x " + display.getDisplayName());
 		}
-		if (inputFluid != null) for (FluidStack fluid : inputFluid) list.add(I18nUtil.resolveKey("desc.misc.recipe.mb", EnumChatFormatting.BLUE + String.valueOf(fluid.fill), fluid.type.getLocalizedName(), (fluid.pressure == 0 ? "" : " " + I18nUtil.resolveKey("gui.recipe.atPressure") + " " + EnumChatFormatting.RED + fluid.pressure + I18nUtil.resolveKey("gui.recipe.pu"))));
+		if (inputFluid != null) for (FluidStack fluid : inputFluid) list.add(I18nUtil.resolveKey("desc.misc.recipe.mb", EnumChatFormatting.BLUE + String.valueOf(fluid.fill), fluid.type.getLocalizedName(), (fluid.pressure == 0 ? "" : " " + I18nUtil.resolveKey("gui.recipe.atPressure") + " " + EnumChatFormatting.RED + fluid.pressure + " " + I18nUtil.resolveKey("gui.recipe.pu"))));
 	}
 
 	protected void output(List<String> list) {

@@ -22,12 +22,12 @@ public class ItemModCard extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		if(this == ModItems.card_aos) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_card.desc1"));
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_card.desc2"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.card_aos.motto"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.card_aos.effect"));
 		}
 		if(this == ModItems.card_qos) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_card.desc3"));
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_card.desc4"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.card_qos.motto"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.card_qos.effect"));
 		}
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);

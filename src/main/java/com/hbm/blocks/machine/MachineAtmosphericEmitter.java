@@ -73,7 +73,7 @@ public class MachineAtmosphericEmitter extends BlockDummyable implements ILookOv
 				if(type.hasTrait(FT_Gaseous.class) || type.hasTrait(FT_Gaseous_ART.class)) {
 					drain.tank.setTankType(type);
 					drain.markDirty();
-					player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+					player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 				}
 
 				return true;

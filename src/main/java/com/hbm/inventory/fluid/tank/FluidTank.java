@@ -258,11 +258,11 @@ public class FluidTank implements Cloneable {
 
 			List<String> list = new ArrayList();
 			list.add(this.type.getLocalizedName());
-			list.add(I18nUtil.resolveKey("item.fluid_tank.desc1", fluid, maxFluid));
+			list.add(I18nUtil.resolveKey("item.fluid_tank.amount", fluid, maxFluid));
 
 			if(this.pressure != 0) {
-				list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("item.fluid_tank.desc2", this.pressure));
-				list.add(((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_RED)) + I18nUtil.resolveKey("item.fluid_tank.desc3"));
+				list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("item.fluid_tank.pressure", this.pressure));
+				list.add(((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_RED)) + I18nUtil.resolveKey("item.fluid_tank.pressurized"));
 			}
 
 			type.addInfo(list);

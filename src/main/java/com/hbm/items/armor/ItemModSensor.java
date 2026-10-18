@@ -26,7 +26,7 @@ public class ItemModSensor extends ItemArmorMod implements IBauble {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		for(String line : I18nUtil.resolveKeyArray("item.mod_sensor.desc1")) {
+		for(String line : I18nUtil.resolveKeyArray("item.mod_sensor.desc")) {
 			list.add(EnumChatFormatting.YELLOW + line);
 		}
 		list.add("");
@@ -35,7 +35,7 @@ public class ItemModSensor extends ItemArmorMod implements IBauble {
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.mod_sensor.desc3", stack.getDisplayName()));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.mod_sensor.summary", stack.getDisplayName()));
 	}
 
 	@Override

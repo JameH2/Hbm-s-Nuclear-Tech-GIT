@@ -101,41 +101,42 @@ public class ItemAmmoArty extends Item {
 
 		switch(stack.getItemDamage()) {
 		case NORMAL:
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc1"));
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc2"));
-			list.add(b + I18nUtil.resolveKey("item.ammo_arty.desc3"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.strength", 10));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.damage_modifier", 3));
+			list.add(b + I18nUtil.resolveKey("item.ammo_arty.preserves_blocks"));
 			break;
 		case CLASSIC:
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc4"));
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc5"));
-			list.add(b + I18nUtil.resolveKey("item.ammo_arty.desc3"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.strength", 15));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.damage_modifier", 5));
+			list.add(b + I18nUtil.resolveKey("item.ammo_arty.preserves_blocks"));
 			break;
 		case EXPLOSIVE:
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc4"));
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc2"));
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc6"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.strength", 15));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.damage_modifier", 3));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.destroys_blocks"));
 			break;
 		case PHOSPHORUS:
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc1"));
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc2"));
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc7"));
-			list.add(b + I18nUtil.resolveKey("item.ammo_arty.desc3"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.strength", 10));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.damage_modifier", 3));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.phosphorus"));
+			list.add(b + I18nUtil.resolveKey("item.ammo_arty.preserves_blocks"));
 			break;
 		case PHOSPHORUS_MULTI:
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc8"));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.splits", 10));
 			break;
 		case MINI_NUKE:
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc9"));
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc10"));
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc6"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.strength", 20));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.nuclear_damage"));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.destroys_blocks"));
 			break;
 		case MINI_NUKE_MULTI:
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc11"));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.splits", 5));
 			break;
 		case NUKE:
 			list.add(r + "☠");
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc12"));
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc13"));
+			for(String line : I18nUtil.resolveKeyArray("item.ammo_arty.desc")) {
+				list.add(r + line);
+			}
 			break;
 		case CARGO:
 
@@ -143,7 +144,7 @@ public class ItemAmmoArty extends Item {
 				ItemStack cargo = ItemStack.loadItemStackFromNBT(stack.stackTagCompound.getCompoundTag("cargo"));
 				list.add(y + cargo.getDisplayName());
 			} else {
-				list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc14"));
+				list.add(r + I18nUtil.resolveKey("item.ammo_arty.empty"));
 			}
 			break;
 		}

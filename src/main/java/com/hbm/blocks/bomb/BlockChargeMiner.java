@@ -41,7 +41,7 @@ public class BlockChargeMiner extends BlockChargeBase {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 		super.addInformation(stack, player, list, ext);
 		list.add((EnumChatFormatting.BLUE) + I18nUtil.resolveKey("tile.charge_miner.drops"));
-		list.add((EnumChatFormatting.BLUE) + I18nUtil.resolveKey("tile.charge_miner.desc"));
+		list.add((EnumChatFormatting.BLUE) + I18nUtil.resolveKey("tile.charge_miner.no_damage"));
 	}
 
 }

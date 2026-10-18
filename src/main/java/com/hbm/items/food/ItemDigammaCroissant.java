@@ -38,7 +38,7 @@ public class ItemDigammaCroissant extends ItemFood {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.DARK_RED + I18nUtil.resolveKey("item.digamma_croissant.desc"));
+		list.add(EnumChatFormatting.DARK_RED + I18nUtil.resolveKey("item.digamma_croissant.rate"));
 		super.addInformation(stack, player, list, bool);
 	}
 }

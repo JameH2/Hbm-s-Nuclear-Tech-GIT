@@ -37,7 +37,7 @@ public class GUICompressor extends GuiInfoContainer {
 		compressor.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 107, guiTop + 18, 16, 52);
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 18, 16, 52, compressor.power, compressor.maxPower);
 
-		for(int j = 0; j < 5; j++) drawCustomInfoStat(mouseX, mouseY, guiLeft + 43 + j * 11, guiTop + 46, 8, 14, mouseX, mouseY, j + I18nUtil.resolveKey("gui.compressor.pu") + (j + 1) + I18nUtil.resolveKey("gui.compressor.pu_2"));
+		for(int j = 0; j < 5; j++) drawCustomInfoStat(mouseX, mouseY, guiLeft + 43 + j * 11, guiTop + 46, 8, 14, mouseX, mouseY, j + " " + I18nUtil.resolveKey("gui.compressor.pu") + " -> " + (j + 1) + " " + I18nUtil.resolveKey("gui.compressor.pu_2"));
 	}
 
 	@Override

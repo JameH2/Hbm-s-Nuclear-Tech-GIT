@@ -183,10 +183,10 @@ public class ItemICFPellet extends Item {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		boolean muon = stack.hasTagCompound() && stack.stackTagCompound.getBoolean("muon");
-		list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.pile_rod_mk2.desc2", String.format(Locale.US, "%.1f", getDurabilityForDisplay(stack) * 100D)));
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.icf_pellet.desc4", I18nUtil.resolveKey("icffuel." + getType(stack, true).name().toLowerCase(Locale.US)), I18nUtil.resolveKey("icffuel." + getType(stack, false).name().toLowerCase(Locale.US))));
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.icf_pellet.desc1", BobMathUtil.getShortNumber(this.getFusingDifficulty(stack))));
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.icf_pellet.desc2", (int) (getType(stack, true).reactionMult * getType(stack, false).reactionMult * 100) / 100D));
-		if(muon) list.add(EnumChatFormatting.DARK_AQUA + I18nUtil.resolveKey("item.icf_pellet.desc3"));
+		list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.pile_rod_mk2.depletion", String.format(Locale.US, "%.1f", getDurabilityForDisplay(stack) * 100D)));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.icf_pellet.fuel", I18nUtil.resolveKey("icffuel." + getType(stack, true).name().toLowerCase(Locale.US)), I18nUtil.resolveKey("icffuel." + getType(stack, false).name().toLowerCase(Locale.US))));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.icf_pellet.heat_required", BobMathUtil.getShortNumber(this.getFusingDifficulty(stack))));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.icf_pellet.reactivity", (int) (getType(stack, true).reactionMult * getType(stack, false).reactionMult * 100) / 100D));
+		if(muon) list.add(EnumChatFormatting.DARK_AQUA + I18nUtil.resolveKey("item.icf_pellet.muon"));
 	}
 }

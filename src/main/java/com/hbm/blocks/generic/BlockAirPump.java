@@ -123,7 +123,7 @@ public class BlockAirPump extends BlockContainer implements ILookOverlay, IBlock
 			if(type.hasTrait(FT_Gaseous.class) || type.hasTrait(FT_Gaseous_ART.class)) {
 				pump.tank.setTankType(type);
 				pump.markDirty();
-				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 			}
 		}
 
@@ -135,4 +135,3 @@ public class BlockAirPump extends BlockContainer implements ILookOverlay, IBlock
 		return false;
 	}
 }
-

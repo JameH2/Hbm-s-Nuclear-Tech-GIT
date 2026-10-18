@@ -261,14 +261,14 @@ public class ItemCustomMissilePart extends Item {
 					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.part.type") + ": " + EnumChatFormatting.GRAY + getWarhead());
 					if(attributes[0] != WarheadType.APOLLO && attributes[0] != WarheadType.SATELLITE)
 						list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.part.strength") + ": " + EnumChatFormatting.GRAY + (Float)attributes[1]);
-					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.desc1", I18nUtil.resolveKey("item.missile.part.mass"), EnumChatFormatting.GRAY + String.valueOf(mass)));
+					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.mass", I18nUtil.resolveKey("item.missile.part.mass"), EnumChatFormatting.GRAY + String.valueOf(mass)));
 					break;
 				case FUSELAGE:
 					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.part.topSize") + ": " + EnumChatFormatting.GRAY + getSize(top));
 					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.part.bottomSize") + ": " + EnumChatFormatting.GRAY + getSize(bottom));
 					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.part.fuelType") + ": " + EnumChatFormatting.GRAY + getFuelName());
-					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.desc2", I18nUtil.resolveKey("item.missile.part.fuelAmount"), EnumChatFormatting.GRAY + String.valueOf(getTankSize())));
-					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.desc1", I18nUtil.resolveKey("item.missile.part.mass"), EnumChatFormatting.GRAY + String.valueOf(mass)));
+					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.fuel", I18nUtil.resolveKey("item.missile.part.fuelAmount"), EnumChatFormatting.GRAY + String.valueOf(getTankSize())));
+					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.mass", I18nUtil.resolveKey("item.missile.part.mass"), EnumChatFormatting.GRAY + String.valueOf(mass)));
 					break;
 				case FINS:
 					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.part.size") + ": " + EnumChatFormatting.GRAY + getSize(top));
@@ -277,11 +277,11 @@ public class ItemCustomMissilePart extends Item {
 				case THRUSTER:
 					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.part.size") + ": " + EnumChatFormatting.GRAY + getSize(top));
 					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.part.fuelType") + ": " + EnumChatFormatting.GRAY + getFuelName());
-					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.desc3", I18nUtil.resolveKey("item.missile.part.fuelConsumption"), EnumChatFormatting.GRAY + String.valueOf((Float)attributes[1])));
-					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.desc1", I18nUtil.resolveKey("item.missile.part.maxPayload"), EnumChatFormatting.GRAY + String.valueOf((Float)attributes[2])));
-					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.desc4", I18nUtil.resolveKey("item.missile.part.thrust"), EnumChatFormatting.GRAY + String.valueOf((Integer)attributes[3])));
-					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.desc5", I18nUtil.resolveKey("item.missile.part.isp"), EnumChatFormatting.GRAY + String.valueOf((Integer)attributes[4])));
-					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.desc1", I18nUtil.resolveKey("item.missile.part.mass"), EnumChatFormatting.GRAY + String.valueOf(mass)));
+					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.consumption", I18nUtil.resolveKey("item.missile.part.fuelConsumption"), EnumChatFormatting.GRAY + String.valueOf((Float)attributes[1])));
+					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.mass", I18nUtil.resolveKey("item.missile.part.maxPayload"), EnumChatFormatting.GRAY + String.valueOf((Float)attributes[2])));
+					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.thrust", I18nUtil.resolveKey("item.missile.part.thrust"), EnumChatFormatting.GRAY + String.valueOf((Integer)attributes[3])));
+					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.isp", I18nUtil.resolveKey("item.missile.part.isp"), EnumChatFormatting.GRAY + String.valueOf((Integer)attributes[4])));
+					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.mass", I18nUtil.resolveKey("item.missile.part.mass"), EnumChatFormatting.GRAY + String.valueOf(mass)));
 					break;
 			}
 		} catch(Exception ex) {

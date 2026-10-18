@@ -43,7 +43,7 @@ public class GUIPASource extends GuiInfoContainer {
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 18, 16, 52, source.power, source.getMaxPower());
 
 		List<String> info = new ArrayList();
-		info.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("gui.pasource.last_momentum") + EnumChatFormatting.RESET + String.format(Locale.US, "%,d", source.lastSpeed));
+		info.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("gui.pasource.last_momentum", EnumChatFormatting.RESET + String.format(Locale.US, "%,d", source.lastSpeed)));
 		String[] message = I18nUtil.resolveKeyArray("pa." + this.source.state.name().toLowerCase(Locale.US) + ".desc");
 		for(String s : message) info.add(EnumChatFormatting.YELLOW + s);
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 105, guiTop + 16, 10, 10, mouseX, mouseY, info);

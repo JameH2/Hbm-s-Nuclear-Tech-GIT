@@ -62,7 +62,7 @@ public class GUICombustionEngine extends GuiInfoContainer {
 				power = setting * 0.2 * trait.getCombustionEnergy() / 1_000D * piston.eff[trait.getGrade().ordinal()];
 			}
 			String c = EnumChatFormatting.YELLOW + "";
-			drawCustomInfoStat(x, y, guiLeft + 79, guiTop + 50, 35, 14, x, y, c + String.format(Locale.US, "%,d", (int)(power)) + I18nUtil.resolveKey("gui.combustion_engine.he_t"), c + String.format(Locale.US, "%,d", (int)(power * 20)) + I18nUtil.resolveKey("gui.combustion_engine.he"));
+			drawCustomInfoStat(x, y, guiLeft + 79, guiTop + 50, 35, 14, x, y, c + String.format(Locale.US, "%,d", (int)(power)) + " " + I18nUtil.resolveKey("gui.combustion_engine.he_t"), c + String.format(Locale.US, "%,d", (int)(power * 20)) + " " + I18nUtil.resolveKey("gui.combustion_engine.he"));
 		}
 
 		drawCustomInfoStat(x, y, guiLeft + 79, guiTop + 13, 35, 15, x, y, I18nUtil.resolveKey("gui.combustion_engine.ignition"));

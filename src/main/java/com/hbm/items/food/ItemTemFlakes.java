@@ -41,15 +41,15 @@ public class ItemTemFlakes extends ItemFood {
 	{
 		if(itemstack.getItemDamage() == 0)
 		{
-			list.add(I18nUtil.resolveKey("item.tem_flakes.desc1"));
+			list.add(I18nUtil.resolveKey("item.tem_flakes.discount"));
 		}
 		if(itemstack.getItemDamage() == 1)
 		{
-			list.add(I18nUtil.resolveKey("item.tem_flakes.desc2"));
+			list.add(I18nUtil.resolveKey("item.tem_flakes.regular"));
 		}
 		if(itemstack.getItemDamage() == 2)
 		{
-			list.add(I18nUtil.resolveKey("item.tem_flakes.desc3"));
+			list.add(I18nUtil.resolveKey("item.tem_flakes.expensive"));
 		}
 	}
 

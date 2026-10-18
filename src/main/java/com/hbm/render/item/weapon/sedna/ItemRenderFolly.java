@@ -248,12 +248,12 @@ public class ItemRenderFolly extends ItemRenderWeaponBase {
 		if(time > 5000) {
 			EntityPlayer player = MainRegistry.proxy.me();
 			MovingObjectPosition mop = EntityDamageUtil.getMouseOver(player, 250);
-			String target = I18nUtil.resolveKey("item.folly.target");
-			if(mop.typeOfHit == mop.typeOfHit.MISS) target += "N/A";
-			if(mop.typeOfHit == mop.typeOfHit.BLOCK) target += mop.blockX + "/" + mop.blockY + "/" + mop.blockZ;
-			if(mop.typeOfHit == mop.typeOfHit.ENTITY) target += mop.entityHit.getCommandSenderName();
-			tty.add(target);
-			tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.angle") + ((int)(-player.rotationPitch * 100) / 100D));
+			String target = "";
+			if(mop.typeOfHit == mop.typeOfHit.MISS) target = "N/A";
+			if(mop.typeOfHit == mop.typeOfHit.BLOCK) target = mop.blockX + "/" + mop.blockY + "/" + mop.blockZ;
+			if(mop.typeOfHit == mop.typeOfHit.ENTITY) target = mop.entityHit.getCommandSenderName();
+			tty.add(I18nUtil.resolveKey("item.folly.target", target));
+			tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.angle", (int)(-player.rotationPitch * 100) / 100D));
 		}
 		return tty;
 	}

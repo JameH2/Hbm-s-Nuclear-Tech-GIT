@@ -42,10 +42,10 @@ public class ItemPACoil extends ItemEnumMulti {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		EnumCoilType type = EnumUtil.grabEnumSafely(theEnum, stack.getItemDamage());
-		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.pa_coil.desc1", EnumChatFormatting.RESET, String.format(Locale.US, "%,d", type.quadMin), String.format(Locale.US, "%,d", type.quadMax)));
-		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.pa_coil.desc2", EnumChatFormatting.RESET, String.format(Locale.US, "%,d", type.diMin), String.format(Locale.US, "%,d", type.diMax)));
-		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.pa_coil.desc3", EnumChatFormatting.RESET, type.diDistMin));
-		for(String line : I18nUtil.resolveKeyArray("item.pa_coil.desc4")) {
+		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.pa_coil.quadrupole_range", EnumChatFormatting.RESET, String.format(Locale.US, "%,d", type.quadMin), String.format(Locale.US, "%,d", type.quadMax)));
+		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.pa_coil.dipole_range", EnumChatFormatting.RESET, String.format(Locale.US, "%,d", type.diMin), String.format(Locale.US, "%,d", type.diMax)));
+		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.pa_coil.dipole_length", EnumChatFormatting.RESET, type.diDistMin));
+		for(String line : I18nUtil.resolveKeyArray("item.pa_coil.desc")) {
 			list.add(EnumChatFormatting.RED + line);
 		}
 	}

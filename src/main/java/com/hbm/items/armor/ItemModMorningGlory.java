@@ -22,14 +22,14 @@ public class ItemModMorningGlory extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.mod_morning_glory.desc1"));
+		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.mod_morning_glory.effect"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.mod_morning_glory.desc2", stack.getDisplayName()));
+		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.mod_morning_glory.summary", stack.getDisplayName()));
 	}
 
 	@Override

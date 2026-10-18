@@ -80,7 +80,7 @@ public class ItemDroneLinker extends Item {
 				int x = stack.stackTagCompound.getInteger("x");
 				int y = stack.stackTagCompound.getInteger("y");
 				int z = stack.stackTagCompound.getInteger("z");
-				MainRegistry.proxy.displayTooltip(I18nUtil.resolveKey("gui.drone_linker.prev_pos") + x + " / " + y + " / " + z, MainRegistry.proxy.ID_DRONE);
+				MainRegistry.proxy.displayTooltip(I18nUtil.resolveKey("gui.drone_linker.prev_pos", x, y, z), MainRegistry.proxy.ID_DRONE);
 			}
 		}
 	}

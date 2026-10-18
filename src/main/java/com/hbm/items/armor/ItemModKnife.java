@@ -31,9 +31,9 @@ public class ItemModKnife extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_knife.desc1"));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_knife.pain"));
 		list.add("");
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_knife.desc2"));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_knife.taunt"));
 
 		list.add("");
 		super.addInformation(stack, player, list, bool);

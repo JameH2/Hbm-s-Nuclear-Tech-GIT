@@ -22,7 +22,7 @@ public class ItemModFlippers extends ItemArmorMod {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.mod_flippers.desc1"));
+		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.mod_flippers.effect"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
@@ -30,7 +30,7 @@ public class ItemModFlippers extends ItemArmorMod {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_flippers.desc2", stack.getDisplayName()));
+		list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_flippers.summary", stack.getDisplayName()));
 	}
 
 	@Override
