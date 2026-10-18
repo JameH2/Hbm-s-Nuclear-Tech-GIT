@@ -9,7 +9,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerForceField extends ContainerWithUpgradeSlots {
+public class ContainerForceField extends ContainerValidated {
 	
 	private TileEntityForceField diFurnace;
 	

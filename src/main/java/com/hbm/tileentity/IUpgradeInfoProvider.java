@@ -18,7 +18,6 @@ public interface IUpgradeInfoProvider {
 	public void provideInfo(UpgradeType type, int level, List<String> info, boolean extendedInfo);
 	public HashMap<UpgradeType, Integer> getValidUpgrades();
 
-	/** Use the same compatibility list for insertion as for upgrade processing. Tiers are capped by the manager. */
 	public default boolean isUpgradeValid(ItemStack stack) {
 		if(stack == null || !(stack.getItem() instanceof ItemMachineUpgrade)) return false;
 		HashMap<UpgradeType, Integer> upgrades = getValidUpgrades();
@@ -40,7 +39,6 @@ public interface IUpgradeInfoProvider {
 	public static final String KEY_FORTUNE = "upgrade.fortune";
 	public static final String KEY_RANGE = "upgrade.range";
 
-	/** Nominal standalone multipliers; recipe rounding and other upgrades can change the final result. */
 	public static void addOverdriveInfo(List<String> info, boolean extendedInfo, double speed, double consumption) {
 		if(!extendedInfo) {
 			info.add(I18nUtil.resolveKey("desc.misc.lshift", ""));

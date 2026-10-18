@@ -61,11 +61,10 @@ public class ContainerCraneExtractor extends ContainerBase {
 				} else if(var3.getItem() == ModItems.upgrade_ejector) {
 					 if(!this.mergeItemStack(var5, 19, 20, false))
 						 return null;
-				} else if(!this.mergeItemStack(var5, 9, extractor.getSizeInventory(), false)) {
+				} else if(!this.mergeItemStack(var5, 9, 18, false)) {
 					 return null;
 				}
 				
-				return null;
 			}
 
 			if(var5.stackSize == 0) {

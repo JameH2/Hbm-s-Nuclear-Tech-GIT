@@ -17,7 +17,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMachineSolderingStation extends ContainerWithUpgradeSlots {
+public class ContainerMachineSolderingStation extends ContainerValidated {
 	
 	private TileEntityMachineSolderingStation solderer;
 

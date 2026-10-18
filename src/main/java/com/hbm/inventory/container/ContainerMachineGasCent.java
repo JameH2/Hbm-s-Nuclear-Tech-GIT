@@ -15,7 +15,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMachineGasCent extends ContainerWithUpgradeSlots {
+public class ContainerMachineGasCent extends ContainerValidated {
 	
 	private TileEntityMachineGasCent gasCent;
 	

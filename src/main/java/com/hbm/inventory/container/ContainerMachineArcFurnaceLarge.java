@@ -17,7 +17,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMachineArcFurnaceLarge extends ContainerWithUpgradeSlots {
+public class ContainerMachineArcFurnaceLarge extends ContainerValidated {
 	
 	private TileEntityMachineArcFurnaceLarge furnace;
 

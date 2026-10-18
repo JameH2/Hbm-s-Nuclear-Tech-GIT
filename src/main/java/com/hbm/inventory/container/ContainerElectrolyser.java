@@ -10,7 +10,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerElectrolyser extends ContainerWithUpgradeSlots {
+public class ContainerElectrolyser extends ContainerValidated {
 	
 	TileEntityElectrolyser electrolyser;
 	
