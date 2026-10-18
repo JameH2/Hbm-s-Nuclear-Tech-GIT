@@ -258,6 +258,7 @@ public abstract class TileEntityMachineCompressorBase extends TileEntityMachineB
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(this.KEY_CONSUMPTION, "-" + (100 - 100 / (level + 1)) + "%"));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
+			IUpgradeInfoProvider.addOverdriveInfo(info, extendedInfo, level + 1, level * 2 + 1);
 			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}

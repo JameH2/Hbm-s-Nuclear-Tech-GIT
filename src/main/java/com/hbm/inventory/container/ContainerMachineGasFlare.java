@@ -14,7 +14,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMachineGasFlare extends Container {
+public class ContainerMachineGasFlare extends ContainerWithUpgradeSlots {
 
 	private TileEntityMachineGasFlare testNuke;
 

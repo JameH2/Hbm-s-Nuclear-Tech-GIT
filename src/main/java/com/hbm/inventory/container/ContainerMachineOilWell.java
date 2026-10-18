@@ -11,7 +11,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMachineOilWell extends Container {
+public class ContainerMachineOilWell extends ContainerWithUpgradeSlots {
 
 	private TileEntityOilDrillBase well;
 

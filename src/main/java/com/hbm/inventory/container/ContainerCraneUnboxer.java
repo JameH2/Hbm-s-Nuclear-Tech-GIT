@@ -10,7 +10,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerCraneUnboxer extends Container {
+public class ContainerCraneUnboxer extends ContainerWithUpgradeSlots {
 	
 	protected TileEntityCraneUnboxer unboxer;
 	

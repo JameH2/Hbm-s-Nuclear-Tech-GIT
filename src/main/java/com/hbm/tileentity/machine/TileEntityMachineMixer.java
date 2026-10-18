@@ -379,6 +379,7 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ICo
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(this.KEY_CONSUMPTION, "-" + (level * 25) + "%"));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
+			IUpgradeInfoProvider.addOverdriveInfo(info, extendedInfo, level + 1, level * 3 + 1);
 			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}

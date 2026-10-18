@@ -50,8 +50,9 @@ public class ItemMachineUpgrade extends Item {
 				IInventory inv = (IInventory) first.inventory;
 				if(inv instanceof IUpgradeInfoProvider) {
 					IUpgradeInfoProvider provider = (IUpgradeInfoProvider) inv;
-					if(provider.canProvideInfo(this.type, this.tier, bool)) {
-						provider.provideInfo(this.type, this.tier, list, bool);
+					boolean extendedInfo = this.type == UpgradeType.OVERDRIVE ? GuiScreen.isShiftKeyDown() : bool;
+					if(provider.canProvideInfo(this.type, this.tier, extendedInfo)) {
+						provider.provideInfo(this.type, this.tier, list, extendedInfo);
 						return;
 					}
 				}

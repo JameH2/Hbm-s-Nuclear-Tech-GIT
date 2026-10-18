@@ -14,7 +14,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerPyroOven extends Container {
+public class ContainerPyroOven extends ContainerWithUpgradeSlots {
 
 	private TileEntityMachinePyroOven pyro;
 	

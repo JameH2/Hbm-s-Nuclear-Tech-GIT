@@ -372,6 +372,7 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(KEY_CONSUMPTION, "-" + (level * 25) + "%"));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
+			IUpgradeInfoProvider.addOverdriveInfo(info, extendedInfo, 1 + Math.min(level, 3), 1 + Math.min(level, 3) * 10D / 3D);
 			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}

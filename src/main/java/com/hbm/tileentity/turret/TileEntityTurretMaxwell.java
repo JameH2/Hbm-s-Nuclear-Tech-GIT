@@ -107,6 +107,8 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.turret_maxwell.afterburn_3s"));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
+			IUpgradeInfoProvider.addOverdriveInfo(info, extendedInfo, 0, 1);
+			if(extendedInfo) info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("desc.item.gun.damageAlt", "+" + (level * 10 * getBaseDamage())));
 			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}

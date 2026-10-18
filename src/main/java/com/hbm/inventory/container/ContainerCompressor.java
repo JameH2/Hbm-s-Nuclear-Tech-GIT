@@ -11,7 +11,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerCompressor extends Container {
+public class ContainerCompressor extends ContainerWithUpgradeSlots {
 	
 	private TileEntityMachineCompressorBase compressor;
 

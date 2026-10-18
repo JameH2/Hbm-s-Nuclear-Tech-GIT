@@ -39,4 +39,19 @@ public interface IUpgradeInfoProvider {
 	public static final String KEY_PRODUCTIVITY = "upgrade.productivity";
 	public static final String KEY_FORTUNE = "upgrade.fortune";
 	public static final String KEY_RANGE = "upgrade.range";
+
+	/** Nominal standalone multipliers; recipe rounding and other upgrades can change the final result. */
+	public static void addOverdriveInfo(List<String> info, boolean extendedInfo, double speed, double consumption) {
+		if(!extendedInfo) {
+			info.add(I18nUtil.resolveKey("desc.misc.lshift", ""));
+			return;
+		}
+		info.add(EnumChatFormatting.GRAY + I18nUtil.resolveKey("upgrade.overdrive.desc"));
+		if(speed > 0) info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(KEY_SPEED, formatMultiplier(speed)));
+		info.add(EnumChatFormatting.RED + I18nUtil.resolveKey(KEY_CONSUMPTION, formatMultiplier(consumption)));
+	}
+
+	public static String formatMultiplier(double value) {
+		return "x" + java.math.BigDecimal.valueOf(value).setScale(2, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();
+	}
 }

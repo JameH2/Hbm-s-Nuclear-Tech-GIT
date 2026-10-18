@@ -14,7 +14,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerOreSlopper extends Container {
+public class ContainerOreSlopper extends ContainerWithUpgradeSlots {
 	
 	public TileEntityMachineOreSlopper slopper;
 

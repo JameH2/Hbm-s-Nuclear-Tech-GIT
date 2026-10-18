@@ -11,7 +11,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerTurretBase extends Container {
+public class ContainerTurretBase extends ContainerWithUpgradeSlots {
 
 	private TileEntityTurretBaseNT turret;
 

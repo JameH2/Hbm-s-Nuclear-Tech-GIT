@@ -14,7 +14,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMachineTurbofan extends Container {
+public class ContainerMachineTurbofan extends ContainerWithUpgradeSlots {
 	
 	private TileEntityMachineTurbofan diFurnace;
 	private int afterburner;

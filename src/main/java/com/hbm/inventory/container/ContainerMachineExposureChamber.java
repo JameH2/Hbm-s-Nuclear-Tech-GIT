@@ -14,7 +14,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMachineExposureChamber extends Container {
+public class ContainerMachineExposureChamber extends ContainerWithUpgradeSlots {
 
 	private TileEntityMachineExposureChamber chamber;
 
