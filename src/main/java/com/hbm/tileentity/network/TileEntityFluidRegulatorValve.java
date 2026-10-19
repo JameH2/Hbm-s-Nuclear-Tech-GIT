@@ -86,7 +86,6 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 			TileEntity tile = getAdjacentTile(dir);
 			if (tile == null || tile == this || tile instanceof IFluidPipeMK2) continue;
-			if (!(tile instanceof IFluidUserMK2)) continue;
 			if (!(tile instanceof IFluidStandardReceiverMK2)
 					&& !(tile instanceof IFluidStandardSenderMK2)) continue;
 
@@ -172,8 +171,7 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 	}
 
 	private boolean canAccess(TankRef ref, FluidType type) {
-		return !(ref.tile instanceof IFluidConnectorMK2)
-				|| ((IFluidConnectorMK2) ref.tile).canConnect(type, ref.dir.getOpposite());
+		return ((IFluidConnectorMK2) ref.tile).canConnect(type, ref.dir.getOpposite());
 	}
 
 	private boolean containsTank(FluidTank[] tanks, FluidTank target) {
@@ -202,7 +200,7 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 				|| !hasIsolatedTransfers(ref.tile, ref.tank)) return false;
 		return receiving
 				? ref.tile instanceof IFluidStandardReceiverMK2 && containsTank(((IFluidStandardReceiverMK2) ref.tile).getReceivingTanks(), ref.tank)
-				: ref.tile instanceof IFluidStandardSenderMK2 && ref.tank.getTankType() == type && containsTank(((IFluidStandardSenderMK2) ref.tile).getSendingTanks(), ref.tank);
+				: ref.tile instanceof IFluidStandardSenderMK2 && containsTank(((IFluidStandardSenderMK2) ref.tile).getSendingTanks(), ref.tank);
 	}
 
 	@Override
@@ -281,7 +279,6 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 		return regType != Fluids.NONE && type == regType;
 	}
 
-
 	// ===== IFluidReceiverMK2 (Inflow when tank < target) =====
 
 	private long getDemand(TankRef ref, FluidType type, int pressure) {
@@ -338,7 +335,6 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 		return ConnectionPriority.NORMAL;
 	}
 
-
 	// ===== IFluidProviderMK2 (Outflow when tank > target) =====
 
 	@Override
@@ -389,7 +385,6 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 	public int[] getProvidingPressureRange(FluidType type) {
 		return getTankPressureRange();
 	}
-
 
 	// ===== Network Sync & NBT =====
 
