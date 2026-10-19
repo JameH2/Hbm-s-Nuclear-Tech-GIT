@@ -8947,7 +8947,6 @@ chat.cbt_invasion.ended=The Invasion Is Over!
 chat.cbt_invasion.wave=Wave %s
 chat.cbt_invasion.wave_starting=Wave %s is starting!
 chat.common.changed_type=Changed type to 
-chat.fluid_regulator_valve.threshold=Regulator target set to %s%%
 chat.contamination_util.drx= %s DRX
 chat.contamination_util.not_available= N/A
 chat.contamination_util.rad=%s%s RAD
