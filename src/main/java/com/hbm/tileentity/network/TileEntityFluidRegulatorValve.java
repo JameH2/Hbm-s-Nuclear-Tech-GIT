@@ -12,6 +12,8 @@ import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.TilePort;
 import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.tileentity.machine.storage.TileEntityBarrel;
+import com.hbm.util.fauxpointtwelve.BlockPos;
+import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IEnergyReceiverMK2.ConnectionPriority;
 import api.hbm.fluidmk2.IFluidConnectorMK2;
@@ -76,11 +78,12 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 			TileEntity te = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 			if (te instanceof TileEntityProxyCombo) {
 				TileEntityProxyCombo proxy = (TileEntityProxyCombo) te;
-				// Honor the physical port's fluid/side restrictions, but use the core for both transfer directions.
+				// This checks fluid capability; the PortDefs below determine the physical connection faces.
 				if (!proxy.canConnect(this.type, dir.getOpposite())) continue;
 				te = proxy.getTile();
 				// General machine proxies may have input/output roles not exposed by canConnect().
 				if (!(te instanceof TileEntityBarrel)) continue;
+				if (!isStoragePortConnected((TileEntityBarrel) te, proxy, dir)) continue;
 			}
 			if (te == null || te == this)
 				continue;
@@ -96,7 +99,7 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 					ref.tile = te;
 					ref.dir = dir;
 					ref.tank = tank;
-					if (canAccess(ref, this.type)) list.add(ref);
+					if (canAccess(ref, this.type) && !containsTankRef(list, ref)) list.add(ref);
 					break;
 				}
 			}
@@ -104,6 +107,33 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 		}
 
 		return list;
+	}
+
+	private boolean isStoragePortConnected(TileEntityBarrel core, TileEntityProxyCombo proxy, ForgeDirection dir) {
+		PortDef[] ports = core.getPorts();
+		if (ports == null) return false;
+		for (PortDef port : ports) {
+			if (port == null || port.portPositions == null || port.portConnections == null) continue;
+			boolean containsProxy = false;
+			for (BlockPos pos : port.portPositions) {
+				if (pos.compare(proxy.xCoord, proxy.yCoord, proxy.zCoord)) {
+					containsProxy = true;
+					break;
+				}
+			}
+			if (!containsProxy) continue;
+			for (DirPos connection : port.portConnections) {
+				if (connection.compare(xCoord, yCoord, zCoord) && connection.getDir() == dir.getOpposite()) return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean containsTankRef(List<TankRef> refs, TankRef target) {
+		for (TankRef ref : refs) {
+			if (ref.tile == target.tile && ref.tank == target.tank) return true;
+		}
+		return false;
 	}
 
 	public TankRef getTankRef() {
