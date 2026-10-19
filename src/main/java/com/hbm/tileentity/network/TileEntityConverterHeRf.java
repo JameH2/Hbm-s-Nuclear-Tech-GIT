@@ -86,11 +86,14 @@ public class TileEntityConverterHeRf extends TileEntityLoadedBase implements IEn
 	@Override public long getMaxPower() { return HE_LIMITS[maxPowerIndex]; }
 	@Override public ConnectionPriority getPriority() { return ConnectionPriority.LOW; }
 
-	public void adjustMaxPower(boolean decrease) {
-		maxPowerIndex = Math.max(0, Math.min(HE_LIMITS.length - 1, maxPowerIndex + (decrease ? 1 : -1)));
+	public boolean adjustMaxPower(boolean decrease) {
+		int nextIndex = Math.max(0, Math.min(HE_LIMITS.length - 1, maxPowerIndex + (decrease ? 1 : -1)));
+		if(nextIndex == maxPowerIndex) return false;
+		maxPowerIndex = nextIndex;
 		updateRfLimits();
 		markDirty();
 		networkPackNT(15);
+		return true;
 	}
 
 	private void updateRfLimits() {

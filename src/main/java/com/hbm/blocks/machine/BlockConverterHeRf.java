@@ -36,9 +36,9 @@ public class BlockConverterHeRf extends BlockContainer implements ILookOverlay, 
 		if(!(tile instanceof TileEntityConverterHeRf)) return false;
 		if(!world.isRemote) {
 			TileEntityConverterHeRf converter = (TileEntityConverterHeRf) tile;
-			converter.adjustMaxPower(!player.isSneaking());
+			return converter.adjustMaxPower(!player.isSneaking());
 		}
-		return true;
+		return false;
 	}
 
 	@Override
