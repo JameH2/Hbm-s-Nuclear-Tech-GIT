@@ -7,10 +7,12 @@ import com.hbm.blocks.IPersistentInfoProvider;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.generic.BlockMetalFence;
 import com.hbm.tileentity.IPersistentNBT;
+import com.hbm.util.NetworkPlacer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemBlock;
@@ -18,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 
 public class ItemBlockBase extends ItemBlock {
 	
@@ -30,6 +33,22 @@ public class ItemBlockBase extends ItemBlock {
 		}
 	}
 	
+	@Override
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float fx, float fy, float fz) {
+
+		if(NetworkPlacer.handle(stack, player, world, x, y, z, side, this.field_150939_a, this.getMetadata(stack.getItemDamage()), 0)) return true;
+
+		return super.onItemUse(stack, player, world, x, y, z, side, fx, fy, fz);
+	}
+
+	@Override
+	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean inHand) {
+
+		super.onUpdate(stack, world, entity, slot, inHand);
+
+		if(entity instanceof EntityPlayer) NetworkPlacer.update(stack, (EntityPlayer) entity, inHand);
+	}
+
 	@Override
 	public int getMetadata(int meta) {
 		if(field_150939_a instanceof IBlockMulti)

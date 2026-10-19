@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+import org.lwjgl.util.vector.Vector2f;
 
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.lib.RefStrings;
@@ -221,6 +222,60 @@ public class GUIElements {
 		}
 		tess.addVertexWithUV(xDraw + xTarget + xMid, yDraw - yTarget + yMid, zDraw, (float) (xStart + xTarget + xMid) * var7, (float) (yStart - yTarget + yMid) * var8);
 		tess.draw();
+	}
+
+	public static void drawHollowCircle(int x, int y, double z, float r, int segments, int color) {
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		Tessellator tess = Tessellator.instance;
+		tess.startDrawing(GL11.GL_LINE_LOOP);
+		tess.setColorOpaque_I(color);
+
+		for (int i = 0; i < segments; i++) {
+			float theta = (float) (2F * Math.PI * (double) i / (double) segments);
+			tess.addVertex(x + r * Math.cos(theta), y + r * Math.sin(theta), z);
+		}
+
+		tess.draw();
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+
+	public static void drawGraphAxes(int x, int y, int w, int h, double z, int color) {
+		int ox = x + 3;
+		int oy = y + h - 3;
+		drawArrowVector(ox, oy, (float) z, new Vector2f(ox, y + 4), 2F, color);
+		drawArrowVector(ox, oy, (float) z, new Vector2f(x + w - 4, oy), 2F, color);
+	}
+
+	public static void drawArrowVector(int x, int y, float z, Vector2f vector, float minDist, int color) {
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		Tessellator tess = Tessellator.instance;
+		tess.startDrawing(GL11.GL_LINE_LOOP);
+		tess.setColorOpaque_I(color);
+
+		Vector2f delta = new Vector2f(vector.x - x, vector.y - y);
+		Vector2f segment = new Vector2f();
+		// if the delta length is smaller than the minimum it's ok, if not we use the unit vector
+		// this allows for having a fixed dimension arrowhead but dynamically smaller at shorter range so to not overlap the origin
+		if (delta.length() * 0.1F > minDist) {
+			float deltaM = delta.length();
+			segment.x = minDist * delta.x / deltaM;
+			segment.y = minDist * delta.y / deltaM;
+		} else {
+			segment.x = 0.1F * delta.x;
+			segment.y = 0.1F * delta.y;
+		}
+
+		tess.addVertex(x, y, z);
+		tess.addVertex(x + delta.x - segment.x, y + delta.y - segment.y, z);
+		tess.addVertex(x + delta.x - segment.x - segment.y, y + delta.y - segment.y + segment.x, z);
+		tess.addVertex(x + delta.x, y + delta.y, z);
+		tess.addVertex(x + delta.x - segment.x + segment.y, y + delta.y - segment.y - segment.x, z);
+		tess.addVertex(x + delta.x - segment.x, y + delta.y - segment.y, z);
+
+		tess.draw();
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
 	public static final int STANDARD_COLOR_BACKGROUND = -0xFEFFFF0;

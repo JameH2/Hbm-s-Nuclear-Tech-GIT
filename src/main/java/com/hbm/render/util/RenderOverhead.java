@@ -30,6 +30,7 @@ import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 public class RenderOverhead {
@@ -382,7 +383,23 @@ public class RenderOverhead {
 
 	private static boolean clearPreview;
 
+	private static MovingObjectPosition lastMop;
+	private static float lastYaw;
+	private static int lastSide;
+
+	/** Deduplication helper so the preview is only recomputed when the aimed block, side or yaw actually changes. */
+	public static boolean targetChanged(MovingObjectPosition mop, float yaw, int side) {
+
+		if(lastMop != null && mop.blockX == lastMop.blockX && mop.blockY == lastMop.blockY && mop.blockZ == lastMop.blockZ && side == lastSide && Math.abs(lastYaw - yaw) < 15) return false;
+
+		lastMop = mop;
+		lastYaw = yaw;
+		lastSide = side;
+		return true;
+	}
+
 	public static void setActionPreview(WorldInAJar wiaj, int x, int y, int z, boolean canAction) {
+		clearPreview = false;
 		actionPreviewWorld = wiaj;
 		offsetX = x;
 		offsetY = y;

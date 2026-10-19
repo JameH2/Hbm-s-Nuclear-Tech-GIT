@@ -1,4 +1,5 @@
 {
+	"block.nukeCharge": {"category": "block", "sounds": [{"name": "block/nukeCharge", "stream": false}]},
 	"misc.nullChopper": {"category": "player", "sounds": [{"name": "misc/null", "stream": false}]},
 	"misc.nullCrashing": {"category": "player", "sounds": [{"name": "misc/null", "stream": false}]},
 	"misc.nullMine": {"category": "player", "sounds": [{"name": "misc/null", "stream": false}]},
