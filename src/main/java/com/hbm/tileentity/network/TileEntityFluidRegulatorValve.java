@@ -8,6 +8,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
+import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.TilePort;
 import com.hbm.tileentity.TilePort.PortDef;
 
@@ -72,6 +73,12 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 			TileEntity te = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			if (te instanceof TileEntityProxyCombo) {
+				TileEntityProxyCombo proxy = (TileEntityProxyCombo) te;
+				// Honor the physical port's fluid/side restrictions, but use the core for both transfer directions.
+				if (!proxy.canConnect(this.type, dir.getOpposite())) continue;
+				te = proxy.getTile();
+			}
 			if (te == null || te == this)
 				continue;
 			if (te instanceof IFluidPipeMK2)
