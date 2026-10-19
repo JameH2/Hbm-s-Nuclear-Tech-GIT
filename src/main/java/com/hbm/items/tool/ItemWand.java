@@ -19,18 +19,19 @@ public class ItemWand extends Item {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.resolveKey("item.wand.desc1"));
-		list.add(I18nUtil.resolveKey("item.wand.desc2"));
-		list.add(I18nUtil.resolveKey("item.wand.desc3"));
-		list.add(I18nUtil.resolveKey("item.wand.desc4"));
+		list.add(I18nUtil.resolveKey("item.wand.creative_only"));
+		list.add(I18nUtil.resolveKey("item.wand.motto"));
+		for(String line : I18nUtil.resolveKeyArray("item.wand.desc")) {
+			list.add(line);
+		}
 
 		if(stack.stackTagCompound != null && !(stack.stackTagCompound.getInteger("x") == 0 && stack.stackTagCompound.getInteger("y") == 0 && stack.stackTagCompound.getInteger("z") == 0)) {
-			list.add(I18nUtil.resolveKey("item.wand.desc5", stack.stackTagCompound.getInteger("x"), stack.stackTagCompound.getInteger("y"), stack.stackTagCompound.getInteger("z")));
+			list.add(I18nUtil.resolveKey("item.wand.position", stack.stackTagCompound.getInteger("x"), stack.stackTagCompound.getInteger("y"), stack.stackTagCompound.getInteger("z")));
 		} else {
-			list.add(I18nUtil.resolveKey("item.wand.desc6"));
+			list.add(I18nUtil.resolveKey("item.wand.unset"));
 		}
 		if(stack.stackTagCompound != null)
-			list.add(I18nUtil.resolveKey("item.wand.desc7", Block.getBlockById(stack.stackTagCompound.getInteger("block")).getUnlocalizedName()));
+			list.add(I18nUtil.resolveKey("item.wand.block", Block.getBlockById(stack.stackTagCompound.getInteger("block")).getUnlocalizedName()));
 	}
 
 	@Override

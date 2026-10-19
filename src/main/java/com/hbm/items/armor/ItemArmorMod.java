@@ -53,7 +53,7 @@ public class ItemArmorMod extends Item {
 			if(boots)
 				list.add("  " + I18nUtil.resolveKey("armorMod.boots"));
 		}
-		list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.armor_mod.desc"));
+		list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.armor_mod.slot"));
 
 		switch(this.type) {
 		case ArmorModHandler.helmet_only: list.add("  " + I18nUtil.resolveKey("armorMod.type.helmet")); break;

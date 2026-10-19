@@ -31,7 +31,7 @@ public abstract class JetpackBase extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		super.addInformation(itemstack, player, list, bool);
-		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_heavy_boots.desc3"));
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_heavy_boots.standalone"));
 	}
 
 	@Override

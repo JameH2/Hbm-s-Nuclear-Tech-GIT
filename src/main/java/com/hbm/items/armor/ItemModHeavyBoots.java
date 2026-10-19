@@ -31,13 +31,13 @@ public class ItemModHeavyBoots extends ItemArmorMod {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		for(String line : I18nUtil.resolveKeyArray("item.mod_heavy_boots.desc1")) {
+		for(String line : I18nUtil.resolveKeyArray("item.mod_heavy_boots.desc")) {
 			list.add(EnumChatFormatting.BLUE + line);
 		}
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
-		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_heavy_boots.desc3"));
-		for(String line : I18nUtil.resolveKeyArray("item.mod_heavy_boots.desc4")) {
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_heavy_boots.standalone"));
+		for(String line : I18nUtil.resolveKeyArray("item.mod_heavy_boots.disclaimer.desc")) {
 			list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + line);
 		}
 	}

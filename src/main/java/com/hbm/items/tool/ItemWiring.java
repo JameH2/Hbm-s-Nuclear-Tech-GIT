@@ -107,11 +107,11 @@ public class ItemWiring extends Item {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		if(itemstack.stackTagCompound != null) {
-			list.add(I18nUtil.resolveKey("item.wiring.desc1", itemstack.stackTagCompound.getInteger("x")));
-			list.add(I18nUtil.resolveKey("item.wiring.desc2", itemstack.stackTagCompound.getInteger("y")));
-			list.add(I18nUtil.resolveKey("item.wiring.desc3", itemstack.stackTagCompound.getInteger("z")));
+			list.add(I18nUtil.resolveKey("item.wiring.x", itemstack.stackTagCompound.getInteger("x")));
+			list.add(I18nUtil.resolveKey("item.wiring.y", itemstack.stackTagCompound.getInteger("y")));
+			list.add(I18nUtil.resolveKey("item.wiring.z", itemstack.stackTagCompound.getInteger("z")));
 		} else {
-			list.add(I18nUtil.resolveKey("item.wiring.desc4"));
+			list.add(I18nUtil.resolveKey("item.wiring.connect"));
 		}
 	}
 

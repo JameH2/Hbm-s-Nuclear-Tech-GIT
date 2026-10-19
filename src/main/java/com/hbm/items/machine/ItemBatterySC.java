@@ -58,7 +58,7 @@ public class ItemBatterySC extends ItemEnumMulti implements IBatteryItem {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		EnumBatterySC pack = EnumUtil.grabEnumSafely(EnumBatterySC.class, stack.getItemDamage());
-		if(pack.power > 0) list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.battery.desc3", BobMathUtil.getShortNumber(pack.power)));
+		if(pack.power > 0) list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.battery.discharge_rate", BobMathUtil.getShortNumber(pack.power)));
 
 		for(String line : I18nUtil.resolveKeyArray(this.getUnlocalizedName() + ".desc")) {
 			list.add(EnumChatFormatting.RED + line);

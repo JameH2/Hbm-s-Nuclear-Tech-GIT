@@ -29,7 +29,7 @@ public class FT_Combustible extends FluidTrait {
 		info.add(EnumChatFormatting.GOLD + "[" + I18nUtil.resolveKey("hbmfluid.trait.combustible") + "]");
 
 		if(combustionEnergy > 0) {
-			info.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("hbmfluid.trait.provides") + " " + EnumChatFormatting.RED + "" + BobMathUtil.getShortNumber(combustionEnergy) + I18nUtil.resolveKey("gui.ft_combustible.he") + EnumChatFormatting.GOLD + I18nUtil.resolveKey("hbmfluid.trait.perBucket"));
+			info.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("gui.ft_combustible.energy", EnumChatFormatting.RED, BobMathUtil.getShortNumber(combustionEnergy), EnumChatFormatting.GOLD));
 			info.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("hbmfluid.trait.fuelGrade") + ": " + EnumChatFormatting.RED + this.fuelGrade.getLocalizedName());
 		}
 	}

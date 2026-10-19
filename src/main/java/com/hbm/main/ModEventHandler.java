@@ -213,6 +213,7 @@ public class ModEventHandler {
 					event.player.addChatMessage(
 							new ChatComponentTranslation("chat.mod_event.update_available", HTTPHandler.versionNumber)
 							.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))
+							.appendSibling(new ChatComponentText(" "))
 							.appendSibling(new ChatComponentTranslation("chat.mod_event.here")
 									.setChatStyle(new ChatStyle()
 										.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/JameH2/Hbm-s-Nuclear-Tech-GIT/releases"))
@@ -220,6 +221,7 @@ public class ModEventHandler {
 										.setColor(EnumChatFormatting.RED)
 									)
 								)
+							.appendSibling(new ChatComponentText(" "))
 							.appendSibling(new ChatComponentTranslation("chat.mod_event.to_download").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)))
 							);
 				}

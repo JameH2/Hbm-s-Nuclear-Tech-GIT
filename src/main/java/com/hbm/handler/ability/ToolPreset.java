@@ -35,7 +35,7 @@ public class ToolPreset {
 		boolean hasArea = areaAbility != IToolAreaAbility.NONE;
 		boolean hasHarvest = harvestAbility != IToolHarvestAbility.NONE;
 
-		ChatBuilder builder = ChatBuilder.startTranslation("chat.tool_preset.enabled");
+		ChatBuilder builder = ChatBuilder.startTranslation("chat.tool_preset.enabled").next(" ");
 
 		if(hasArea) {
 			builder.nextTranslation(areaAbility.getName());

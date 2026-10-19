@@ -29,51 +29,32 @@ public class ItemAMSCore extends Item {
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
 		if (this == ModItems.ams_core_sing) {
-			list.add(I18nUtil.resolveKey("item.ams_core.desc1"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc2"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc3"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc4"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc5"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc6"));
+			for(String line : I18nUtil.resolveKeyArray("item.ams_core_sing.desc")) {
+				list.add(line);
+			}
 		}
 
 		if (this == ModItems.ams_core_wormhole) {
-			list.add(I18nUtil.resolveKey("item.ams_core.desc7"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc8"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc9"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc10"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc11"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc12"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc13"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc14"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc15"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc16"));
+			for(String line : I18nUtil.resolveKeyArray("item.ams_core_wormhole.desc")) {
+				list.add(line);
+			}
 		}
 
 		if (this == ModItems.ams_core_eyeofharmony) {
-			list.add(I18nUtil.resolveKey("item.ams_core.desc17"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc18"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc19"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc20"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc21"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc22"));
-			list.add(I18nUtil.resolveKey("item.ams_core.desc23"));
+			for(String line : I18nUtil.resolveKeyArray("item.ams_core_eyeofharmony.desc")) {
+				list.add(line);
+			}
 		}
 
 		if (this == ModItems.ams_core_thingy) {
 			if(MainRegistry.polaroidID == 11) {
-				list.add(I18nUtil.resolveKey("item.ams_core.desc24"));
+				list.add(I18nUtil.resolveKey("item.ams_core_thingy.recognition"));
 			} else {
 				list.add("...");
 				list.add("...");
-				list.add(I18nUtil.resolveKey("item.ams_core.desc25"));
-				list.add(I18nUtil.resolveKey("item.ams_core.desc26"));
-				list.add(I18nUtil.resolveKey("item.ams_core.desc27"));
-				list.add(I18nUtil.resolveKey("item.ams_core.desc28"));
-				list.add(I18nUtil.resolveKey("item.ams_core.desc29"));
-				list.add(I18nUtil.resolveKey("item.ams_core.desc30"));
-				list.add(I18nUtil.resolveKey("item.ams_core.desc31"));
-				list.add(I18nUtil.resolveKey("item.ams_core.desc32"));
+				for(String line : I18nUtil.resolveKeyArray("item.ams_core_thingy.desc")) {
+					list.add(line);
+				}
 			}
 		}
 	}

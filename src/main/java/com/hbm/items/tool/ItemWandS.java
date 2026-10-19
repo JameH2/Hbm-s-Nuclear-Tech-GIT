@@ -24,10 +24,11 @@ public class ItemWandS extends Item {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.resolveKey("item.wand.desc1"));
-		list.add(I18nUtil.resolveKey("item.wand_s.desc1"));
-		list.add(I18nUtil.resolveKey("item.wand_s.desc2"));
-		list.add(I18nUtil.resolveKey("item.wand_s.desc3"));
+		list.add(I18nUtil.resolveKey("item.wand.creative_only"));
+		list.add(I18nUtil.resolveKey("item.wand_s.motto"));
+		for(String line : I18nUtil.resolveKeyArray("item.wand_s.desc")) {
+			list.add(line);
+		}
 
 		if(stack.stackTagCompound != null) {
 			int px = stack.stackTagCompound.getInteger("x");
@@ -35,15 +36,15 @@ public class ItemWandS extends Item {
 			int pz = stack.stackTagCompound.getInteger("z");
 
 			if(px != 0 || py != 0 || pz != 0) {
-				list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("item.wand_s.desc4", px, py, pz));
+				list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("item.wand_s.position", px, py, pz));
 			} else {
-				list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("item.wand_s.desc5"));
+				list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("item.wand_s.unset"));
 			}
 
 			Set<Pair<Block, Integer>> blocks = getBlocks(stack);
 
 			if(blocks.size() > 0) {
-				list.add(I18nUtil.resolveKey("item.wand_s.desc6"));
+				list.add(I18nUtil.resolveKey("item.wand_s.blacklist"));
 				for(Pair<Block, Integer> block : blocks) {
 					list.add(EnumChatFormatting.RED + "- " + block.key.getUnlocalizedName());
 				}

@@ -26,10 +26,10 @@ public class ItemModPads extends ItemArmorMod {
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
 		if(damageMod != 1F)
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_pads.desc1", Math.round((1F - damageMod) * 100)));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_pads.fall_damage", Math.round((1F - damageMod) * 100)));
 
 		if(this == ModItems.pads_static)
-			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_pads.desc2"));
+			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_pads.charging"));
 
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
@@ -39,9 +39,9 @@ public class ItemModPads extends ItemArmorMod {
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
 
 		if(this == ModItems.pads_static)
-			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_pads.desc3", stack.getDisplayName(), Math.round((1F - damageMod) * 100)));
+			list.add(EnumChatFormatting.DARK_PURPLE + "  " + I18nUtil.resolveKey("item.mod_pads.static_summary", stack.getDisplayName(), Math.round((1F - damageMod) * 100)));
 		else
-			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_pads.desc4", stack.getDisplayName(), Math.round((1F - damageMod) * 100)));
+			list.add(EnumChatFormatting.DARK_PURPLE + "  " + I18nUtil.resolveKey("item.mod_pads.summary", stack.getDisplayName(), Math.round((1F - damageMod) * 100)));
 	}
 
 	@Override

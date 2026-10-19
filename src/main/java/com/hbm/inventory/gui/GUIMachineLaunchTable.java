@@ -41,7 +41,7 @@ public class GUIMachineLaunchTable extends GuiInfoContainer {
 
 		launcher.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 116, guiTop + 36, 16, 34);
 		launcher.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 36, 16, 34);
-		this.drawCustomInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 88 - 52, 16, 52, new String[] { I18nUtil.resolveKey("gui.launch_table.solid_fuel") + launcher.solid + "l" });
+		this.drawCustomInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 88 - 52, 16, 52, new String[] { I18nUtil.resolveKey("gui.launch_table.solid_fuel", launcher.solid) });
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 113, 34, 6, launcher.power, launcher.maxPower);
 		this.drawCustomInfo(this, mouseX, mouseY, guiLeft + 7, guiTop + 98, 18, 18, new String[] { I18nUtil.resolveKey("gui.launch_table.size_small") });
 		this.drawCustomInfo(this, mouseX, mouseY, guiLeft + 25, guiTop + 98, 18, 18, new String[] { I18nUtil.resolveKey("gui.launch_table.size_large") });

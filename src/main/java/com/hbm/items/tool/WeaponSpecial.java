@@ -244,55 +244,56 @@ public class WeaponSpecial extends ItemSword {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		if(this == ModItems.schrabidium_hammer) {
-			list.add(I18nUtil.resolveKey("item.weapon_special.desc1"));
-			list.add(I18nUtil.resolveKey("item.weapon_special.desc2"));
+			for(String line : I18nUtil.resolveKeyArray("item.schrabidium_hammer.desc")) {
+				list.add(line);
+			}
 		}
 		if(this == ModItems.ullapool_caber) {
-			list.add(I18nUtil.resolveKey("item.weapon_special.desc3"));
-			list.add(I18nUtil.resolveKey("item.weapon_special.desc4"));
+			for(String line : I18nUtil.resolveKeyArray("item.ullapool_caber.desc")) {
+				list.add(line);
+			}
 		}
 		if(this == ModItems.bottle_opener) {
-			list.add(I18nUtil.resolveKey("item.weapon_special.desc5"));
-			list.add(I18nUtil.resolveKey("item.weapon_special.desc6"));
+			for(String line : I18nUtil.resolveKeyArray("item.bottle_opener.desc")) {
+				list.add(line);
+			}
 		}
 		if(this == ModItems.shimmer_sledge) {
 			if(MainRegistry.polaroidID == 11) {
-				list.add(I18nUtil.resolveKey("item.weapon_special.desc7"));
-				list.add(I18nUtil.resolveKey("item.weapon_special.desc8"));
-				list.add(I18nUtil.resolveKey("item.weapon_special.desc9"));
-				list.add(I18nUtil.resolveKey("item.weapon_special.desc7"));
-				list.add(I18nUtil.resolveKey("item.weapon_special.desc10"));
+				for(String line : I18nUtil.resolveKeyArray("item.shimmer_sledge.warning.desc")) {
+					list.add(line);
+				}
 			} else {
-				list.add(I18nUtil.resolveKey("item.weapon_special.desc11"));
+				list.add(I18nUtil.resolveKey("item.shimmer_sledge.effect"));
 			}
 		}
 		if(this == ModItems.shimmer_axe) {
 			if(MainRegistry.polaroidID == 11) {
-				list.add(I18nUtil.resolveKey("item.weapon_special.desc12"));
+				list.add(I18nUtil.resolveKey("item.shimmer_axe.lore"));
 			} else {
-				list.add(I18nUtil.resolveKey("item.weapon_special.desc13"));
+				list.add(I18nUtil.resolveKey("item.shimmer_axe.motto"));
 			}
 		}
 		if(this == ModItems.wrench_flipped) {
-			list.add(I18nUtil.resolveKey("item.weapon_special.desc14"));
+			list.add(I18nUtil.resolveKey("item.wrench_flipped.motto"));
 		}
 		if(this == ModItems.memespoon) {
-			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.weapon_special.desc15"));
-			list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("item.weapon_special.desc16"));
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.weapon_special.desc17"));
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.weapon_special.desc18"));
+			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.memespoon.level"));
+			list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("item.memespoon.airborne_crits"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.memespoon.firing_speed"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.memespoon.no_random_crits"));
 		}
 
 		if(this == ModItems.wood_gavel) {
-			list.add(I18nUtil.resolveKey("item.weapon_special.desc19"));
+			list.add(I18nUtil.resolveKey("item.wood_gavel.motto"));
 		}
 		if(this == ModItems.lead_gavel) {
-			list.add(I18nUtil.resolveKey("item.weapon_special.desc20"));
+			list.add(I18nUtil.resolveKey("item.lead_gavel.motto"));
 		}
 		if(this == ModItems.diamond_gavel) {
-			list.add(I18nUtil.resolveKey("item.weapon_special.desc21"));
+			list.add(I18nUtil.resolveKey("item.diamond_gavel.motto"));
 			list.add("");
-			list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.weapon_special.desc22"));
+			list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.diamond_gavel.damage"));
 		}
 	}
 

@@ -340,11 +340,11 @@ public class BlockStorageCrate extends BlockContainer implements IBlockMulti, IL
 				for(int i = 0; i < 104; i++) {
 					ItemStack content = ItemStack.loadItemStackFromNBT(stack.stackTagCompound.getCompoundTag("slot" + i));
 					if(content != null) {
-						list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.storage_crate.desc1"));
+						list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.storage_crate.heavy"));
 						return;
 					}
 				}
-				list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.storage_crate.desc2"));
+				list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.storage_crate.empty"));
 				return;
 			}
 

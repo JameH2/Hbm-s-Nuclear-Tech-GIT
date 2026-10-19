@@ -45,7 +45,7 @@ public class ItemPistons extends ItemEnumMulti {
 		EnumPistonType type = EnumUtil.grabEnumSafely(theEnum, stack.getItemDamage());
 
 
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.pistons.desc"));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.pistons.efficiency"));
 		for(int i = 0; i < type.eff.length; i++) {
 			list.add(EnumChatFormatting.YELLOW + "-" + FuelGrade.values()[i].getLocalizedName() + ": " + EnumChatFormatting.RED + "" + (int)(type.eff[i] * 100) + "%");
 		}

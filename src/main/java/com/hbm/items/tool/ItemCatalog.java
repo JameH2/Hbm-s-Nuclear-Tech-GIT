@@ -29,8 +29,9 @@ public class ItemCatalog extends Item implements IGUIProvider {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
 		if(this == ModItems.bobmazon_hidden) {
-			list.add(I18nUtil.resolveKey("item.catalog.desc1"));
-			list.add(I18nUtil.resolveKey("item.catalog.desc2"));
+			for(String line : I18nUtil.resolveKeyArray("item.catalog.desc")) {
+				list.add(line);
+			}
 		}
 	}
 

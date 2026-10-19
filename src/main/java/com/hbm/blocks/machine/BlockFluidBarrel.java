@@ -106,7 +106,7 @@ public class BlockFluidBarrel extends BlockContainer implements ITooltipProvider
 
 				mileEntity.tank.setTankType(type);
 				mileEntity.markDirty();
-				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 				}
 			return true;
 
@@ -228,7 +228,7 @@ public class BlockFluidBarrel extends BlockContainer implements ITooltipProvider
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 
 		if(this == ModBlocks.barrel_plastic) {
-			list.add((EnumChatFormatting.AQUA) + I18nUtil.resolveKey("tile.fluid_barrel.desc1"));
+			list.add((EnumChatFormatting.AQUA) + I18nUtil.resolveKey("tile.fluid_barrel.capacity", "12,000"));
 			list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.tooltip.no_hot_fluids"));
 			list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.tooltip.no_corrosives"));
 			list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.tooltip.no_antimatter"));
@@ -236,26 +236,26 @@ public class BlockFluidBarrel extends BlockContainer implements ITooltipProvider
 
 		if(this == ModBlocks.barrel_corroded) {
 			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("tile.fluid_barrel.leaky"));
-			list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("tile.fluid_barrel.desc2"));
+			list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("tile.fluid_barrel.capacity", "16,000"));
 		}
 
 		if(this == ModBlocks.barrel_steel) {
-			list.add((EnumChatFormatting.AQUA) + I18nUtil.resolveKey("tile.fluid_barrel.desc2"));
+			list.add((EnumChatFormatting.AQUA) + I18nUtil.resolveKey("tile.fluid_barrel.capacity", "16,000"));
 			list.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("tile.tooltip.hot_fluids"));
 			list.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("tile.tooltip.corrosives"));
-			list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.fluid_barrel.desc3"));
+			list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.fluid_barrel.weak_corrosives"));
 			list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.tooltip.no_antimatter"));
 		}
 
 		if(this == ModBlocks.barrel_antimatter) {
-			list.add((EnumChatFormatting.AQUA) + I18nUtil.resolveKey("tile.fluid_barrel.desc2"));
+			list.add((EnumChatFormatting.AQUA) + I18nUtil.resolveKey("tile.fluid_barrel.capacity", "16,000"));
 			list.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("tile.tooltip.hot_fluids"));
 			list.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("tile.tooltip.strong_corrosives"));
 			list.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("tile.store_antimatter"));
 		}
 
 		if(this == ModBlocks.barrel_tcalloy) {
-			list.add((EnumChatFormatting.AQUA) + I18nUtil.resolveKey("tile.fluid_barrel.desc4"));
+			list.add((EnumChatFormatting.AQUA) + I18nUtil.resolveKey("tile.fluid_barrel.capacity", "24,000"));
 			list.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("tile.tooltip.hot_fluids"));
 			list.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("tile.tooltip.strong_corrosives"));
 			list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.tooltip.no_antimatter"));

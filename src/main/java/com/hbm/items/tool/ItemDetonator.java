@@ -23,12 +23,13 @@ public class ItemDetonator extends Item {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.resolveKey("item.drop.desc26"));
-		list.add(I18nUtil.resolveKey("item.detonator.desc"));
+		for(String line : I18nUtil.resolveKeyArray("item.detonator.desc")) {
+			list.add(line);
+		}
 		if(itemstack.getTagCompound() == null) {
 			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.misc.noPos"));
 		} else {
-			list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.designator_arty_range.desc2", itemstack.stackTagCompound.getInteger("x"), itemstack.stackTagCompound.getInteger("y"), itemstack.stackTagCompound.getInteger("z")));
+			list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.designator_arty_range.linked", itemstack.stackTagCompound.getInteger("x"), itemstack.stackTagCompound.getInteger("y"), itemstack.stackTagCompound.getInteger("z")));
 		}
 	}
 

@@ -30,12 +30,12 @@ public class GUIPneumoStorageExporter extends GuiInfoContainer {
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
 
-		this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 16, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_exporter.request_mode") + EnumChatFormatting.YELLOW + (this.importer.continuousRequest ? I18nUtil.resolveKey("gui.pneumo_storage_exporter.continuous") : I18nUtil.resolveKey("gui.pneumo_storage_exporter.by_request")));
+		this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 16, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_exporter.request_mode", EnumChatFormatting.YELLOW + (this.importer.continuousRequest ? I18nUtil.resolveKey("gui.pneumo_storage_exporter.continuous") : I18nUtil.resolveKey("gui.pneumo_storage_exporter.by_request"))));
 
-		this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 34, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_exporter.request_type") + EnumChatFormatting.YELLOW + (
+		this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 34, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_exporter.request_type", EnumChatFormatting.YELLOW + (
 				this.importer.requestMode == this.importer.MODE_AS_MUCH_AS_POSSIBLE ? I18nUtil.resolveKey("gui.pneumo_storage_exporter.partial_stacks") :
 				this.importer.requestMode == this.importer.MODE_FULL_STACK ? I18nUtil.resolveKey("gui.pneumo_storage_exporter.full_stacks") : I18nUtil.resolveKey("gui.pneumo_storage_exporter.full_requests")
-		));
+		)));
 
 		if(this.importer.rorConfiguredMode) {
 			String[] label = new String[10];
@@ -46,7 +46,7 @@ public class GUIPneumoStorageExporter extends GuiInfoContainer {
 			}
 			this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 52, 18, 18, x, y, label);
 		} else {
-			this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 52, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_exporter.filter_type") + EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.pneumo_storage_exporter.manually_configured"));
+			this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 52, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_exporter.filter_type", EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.pneumo_storage_exporter.manually_configured")));
 		}
 	}
 

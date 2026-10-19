@@ -50,15 +50,15 @@ public class FT_Rocket extends FluidTrait {
 	public void addInfo(List<String> info) {
 		super.addInfo(info);
 
-		info.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("gui.ft_rocket.rocket_grade"));
+		info.add(EnumChatFormatting.LIGHT_PURPLE + "[" + I18nUtil.resolveKey("gui.ft_rocket.rocket_grade") + "]");
 
 		if(isp > 0)
-			info.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.ft_rocket.provides") + EnumChatFormatting.RED + "" + BobMathUtil.getShortNumber(isp) + I18nUtil.resolveKey("gui.ft_rocket.isp") + EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.ft_rocket.per_bucket"));
+			info.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.ft_rocket.isp", EnumChatFormatting.RED, BobMathUtil.getShortNumber(isp), EnumChatFormatting.YELLOW));
 
-		info.add(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.ft_rocket.thrust_power"));
+		info.add(EnumChatFormatting.RED + "[" + I18nUtil.resolveKey("gui.ft_rocket.thrust_power") + "]");
 
 		if(thrust > 0)
-			info.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.ft_rocket.provides") + EnumChatFormatting.RED + "" + BobMathUtil.getShortNumber(thrust) + " N " + EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.ft_rocket.thrust_rate"));
+			info.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.ft_rocket.thrust_rate", EnumChatFormatting.RED, BobMathUtil.getShortNumber(thrust), EnumChatFormatting.YELLOW));
 	}
 
 	@Override

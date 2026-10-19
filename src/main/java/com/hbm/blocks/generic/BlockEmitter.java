@@ -243,6 +243,6 @@ public class BlockEmitter extends BlockContainer implements IToolable, ITooltipP
 		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.tooltip.widen_beam"));
 		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.tooltip.narrow_beam"));
 		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.tooltip.cycle_effects"));
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.emitter.desc"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.emitter.dye_hint"));
 	}
 }

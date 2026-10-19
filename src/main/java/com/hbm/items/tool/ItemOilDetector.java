@@ -23,8 +23,9 @@ public class ItemOilDetector extends Item {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.format(this.getUnlocalizedName() + ".desc1"));
-		list.add(I18nUtil.format(this.getUnlocalizedName() + ".desc2"));
+		for(String line : I18nUtil.resolveKeyArray(this.getUnlocalizedName() + ".desc")) {
+			list.add(line);
+		}
 	}
 
 	@Override
