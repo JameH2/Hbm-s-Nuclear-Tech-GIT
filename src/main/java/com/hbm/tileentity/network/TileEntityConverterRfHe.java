@@ -26,7 +26,7 @@ public class TileEntityConverterRfHe extends TileEntityLoadedBase implements IEn
 	public static long heOutput = 5;
 	public static double inputDecay = 0.0;
 
-	public EnergyStorage storage = new ConverterEnergyStorage(1_000_000);
+	public EnergyStorage storage = new EnergyStorage(1_000_000);
 
 	protected PortDef[] cachedPorts;
 	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.around(xCoord, yCoord, zCoord); return cachedPorts; }
@@ -44,7 +44,7 @@ public class TileEntityConverterRfHe extends TileEntityLoadedBase implements IEn
 			this.updateAllPorts();
 			this.providePower();
 
-			long rfCreated = Math.min(storage.getEnergyStored(), Math.max(0, getMaxPower() - power) * rfInput / heOutput);
+			long rfCreated = Math.min(storage.getEnergyStored(), (getMaxPower() - power) * rfInput / heOutput);
 			storage.setEnergyStored((int) (storage.getEnergyStored() - rfCreated));
 			power += rfCreated * heOutput / rfInput;
 			if(storage.getEnergyStored() > 0) storage.extractEnergy((int) Math.ceil(storage.getEnergyStored() * inputDecay), false);
@@ -72,6 +72,7 @@ public class TileEntityConverterRfHe extends TileEntityLoadedBase implements IEn
 	}
 
 	private void updateRfLimits() {
+		power = Math.min(power, getMaxPower());
 		int maxRf = RF_LIMITS[maxPowerIndex];
 		storage.setCapacity(maxRf);
 		storage.setMaxTransfer(maxRf);

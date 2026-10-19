@@ -31,7 +31,7 @@ public class TileEntityConverterHeRf extends TileEntityLoadedBase implements IEn
 	public static long heInput = 5;
 	public static long rfOutput = 1;
 	public static double inputDecay = 0.0;
-	public EnergyStorage storage = new ConverterEnergyStorage(1_000_000);
+	public EnergyStorage storage = new EnergyStorage(1_000_000);
 
 	protected PortDef[] cachedPorts;
 	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.around(xCoord, yCoord, zCoord); return cachedPorts; }
@@ -49,7 +49,7 @@ public class TileEntityConverterHeRf extends TileEntityLoadedBase implements IEn
 			this.updateAllPorts();
 			this.receivePower();
 
-			long rfCreated = Math.min(Math.max(0, storage.getMaxEnergyStored() - storage.getEnergyStored()), power / heInput * rfOutput);
+			long rfCreated = Math.min(storage.getMaxEnergyStored() - storage.getEnergyStored(), power / heInput * rfOutput);
 			this.power -= rfCreated * heInput / rfOutput;
 			this.storage.setEnergyStored((int) (storage.getEnergyStored() + rfCreated));
 			if(power > 0) this.power *= (1D - inputDecay);
@@ -86,12 +86,6 @@ public class TileEntityConverterHeRf extends TileEntityLoadedBase implements IEn
 	@Override public long getMaxPower() { return HE_LIMITS[maxPowerIndex]; }
 	@Override public ConnectionPriority getPriority() { return ConnectionPriority.LOW; }
 
-	@Override
-	public long transferPower(long incoming) {
-		if(power >= getMaxPower()) return incoming;
-		return IEnergyReceiverMK2.super.transferPower(incoming);
-	}
-
 	public void adjustMaxPower(boolean decrease) {
 		maxPowerIndex = Math.max(0, Math.min(HE_LIMITS.length - 1, maxPowerIndex + (decrease ? 1 : -1)));
 		updateRfLimits();
@@ -100,6 +94,7 @@ public class TileEntityConverterHeRf extends TileEntityLoadedBase implements IEn
 	}
 
 	private void updateRfLimits() {
+		power = Math.min(power, getMaxPower());
 		int maxRf = RF_LIMITS[maxPowerIndex];
 		storage.setCapacity(maxRf);
 		storage.setMaxTransfer(maxRf);
