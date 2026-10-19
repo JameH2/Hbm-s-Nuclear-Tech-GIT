@@ -23,6 +23,7 @@ import api.hbm.fluidmk2.IFluidReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardSenderMK2;
 import api.hbm.fluidmk2.IFluidUserMK2;
+import api.hbm.tile.ILoadedTile;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,13 +34,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 		implements IFluidReceiverMK2, IFluidStandardSenderMK2 {
 
-	public static final int[] LEVELS = new int[] { 1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 99 };
-	public int levelIndex = 5; // default 50%
+	private static final int[] LEVELS = { 1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 99 };
+
+	private int levelIndex = 5;
 
 	// Client-side synced data for HUD overlay
 	public int clientTankMax = 0;
 	private final TilePort regulatorPort = new TilePort().setupOwner(this);
 	private ForgeDirection portTankDirection;
+	private TankRef tankRef;
 
 	public int getTargetPercentage() {
 		return LEVELS[MathHelper.clamp_int(levelIndex, 0, LEVELS.length - 1)];
@@ -63,50 +66,60 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 		this.networkPackNT(25);
 	}
 
-	public static class TankRef {
-		public TileEntity tile;
-		public ForgeDirection dir;
-		public FluidTank tank;
+	private static class TankRef {
+		final TileEntity tile;
+		final ForgeDirection dir;
+		final FluidTank tank;
+
+		private TankRef(TileEntity tile, ForgeDirection dir, FluidTank tank) {
+			this.tile = tile;
+			this.dir = dir;
+			this.tank = tank;
+		}
 	}
 
-	public List<TankRef> getConnectedTanks() {
+	private List<TankRef> getConnectedTanks() {
 		List<TankRef> list = new ArrayList<>();
 		if (worldObj == null || this.type == Fluids.NONE)
 			return list;
 
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-			TileEntity te = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
-			if (te instanceof TileEntityProxyCombo) {
-				TileEntityProxyCombo proxy = (TileEntityProxyCombo) te;
-				// This checks fluid capability; the PortDefs below determine the physical connection faces.
-				if (!proxy.canConnect(this.type, dir.getOpposite())) continue;
-				te = proxy.getTile();
-				// General machine proxies may have input/output roles not exposed by canConnect().
-				if (!(te instanceof TileEntityBarrel)) continue;
-				if (!isStoragePortConnected((TileEntityBarrel) te, proxy, dir)) continue;
-			}
-			if (te == null || te == this)
-				continue;
-			if (te instanceof IFluidPipeMK2)
-				continue;
+			TileEntity tile = getAdjacentTile(dir);
+			if (tile == null || tile == this || tile instanceof IFluidPipeMK2) continue;
+			if (!(tile instanceof IFluidUserMK2)) continue;
+			if (!(tile instanceof IFluidStandardReceiverMK2)
+					&& !(tile instanceof IFluidStandardSenderMK2)) continue;
 
-			if (te instanceof IFluidStandardReceiverMK2 || te instanceof IFluidStandardSenderMK2) {
-				FluidTank[] tanks = ((IFluidUserMK2) te).getAllTanks();
-				if (tanks == null) continue;
-				for (FluidTank tank : tanks) {
-					if (tank == null || tank.getTankType() != this.type || !hasIsolatedTransfers(te, tank)) continue;
-					TankRef ref = new TankRef();
-					ref.tile = te;
-					ref.dir = dir;
-					ref.tank = tank;
-					if (canAccess(ref, this.type) && !containsTankRef(list, ref)) list.add(ref);
-					break;
-				}
+			FluidTank[] tanks = ((IFluidUserMK2) tile).getAllTanks();
+			if (tanks == null) continue;
+			for (FluidTank tank : tanks) {
+				if (!isRegulatableTank(tile, tank)) continue;
+				TankRef ref = new TankRef(tile, dir, tank);
+				if (canAccess(ref, this.type) && !containsTankRef(list, ref)) list.add(ref);
+				break;
 			}
-
 		}
 
 		return list;
+	}
+
+	private TileEntity getAdjacentTile(ForgeDirection dir) {
+		TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+		if (tile != null && tile.isInvalid()) return null;
+		if (tile instanceof ILoadedTile && !((ILoadedTile) tile).isLoaded()) return null;
+		if (!(tile instanceof TileEntityProxyCombo)) return tile;
+
+		TileEntityProxyCombo proxy = (TileEntityProxyCombo) tile;
+		if (!proxy.canConnect(this.type, dir.getOpposite())) return null;
+
+		TileEntity core = proxy.getTile();
+		if (!(core instanceof TileEntityBarrel)) return null;
+		if (!isStoragePortConnected((TileEntityBarrel) core, proxy, dir)) return null;
+		return core;
+	}
+
+	private boolean isRegulatableTank(TileEntity tile, FluidTank tank) {
+		return tank != null && tank.getTankType() == this.type && hasIsolatedTransfers(tile, tank);
 	}
 
 	private boolean isStoragePortConnected(TileEntityBarrel core, TileEntityProxyCombo proxy, ForgeDirection dir) {
@@ -136,12 +149,24 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 		return false;
 	}
 
-	public TankRef getTankRef() {
-		List<TankRef> list = getConnectedTanks();
-		return list.isEmpty() ? null : list.get(0);
+	private TankRef getTankRef() {
+		if (worldObj != null && worldObj.isRemote) {
+			List<TankRef> tanks = getConnectedTanks();
+			return tanks.isEmpty() ? null : tanks.get(0);
+		}
+		return tankRef;
 	}
 
-	public FluidType getRegulatedType(TankRef ref) {
+	private boolean isTankConnected(TankRef ref) {
+		if (worldObj == null || isInvalid() || ref.tile.isInvalid()) return false;
+		if (ref.tile instanceof ILoadedTile && !((ILoadedTile) ref.tile).isLoaded()) return false;
+		if (!worldObj.blockExists(ref.tile.xCoord, ref.tile.yCoord, ref.tile.zCoord)
+				|| !worldObj.blockExists(xCoord + ref.dir.offsetX, yCoord + ref.dir.offsetY, zCoord + ref.dir.offsetZ)) return false;
+		return worldObj.getTileEntity(ref.tile.xCoord, ref.tile.yCoord, ref.tile.zCoord) == ref.tile
+				&& getAdjacentTile(ref.dir) == ref.tile;
+	}
+
+	private FluidType getRegulatedType(TankRef ref) {
 		if (ref == null || ref.tank.getTankType() != this.type) return Fluids.NONE;
 		return this.type;
 	}
@@ -165,7 +190,6 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 	}
 
 	private boolean hasIsolatedTransfers(TileEntity tile, FluidTank tank) {
-		// Core transfer methods address every tank of a type/pressure, so ambiguous tanks are unsupported.
 		return (!(tile instanceof IFluidStandardReceiverMK2)
 				|| !hasOtherMatchingTank(((IFluidStandardReceiverMK2) tile).getReceivingTanks(), tank))
 				&& (!(tile instanceof IFluidStandardSenderMK2)
@@ -174,7 +198,7 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 
 	private boolean permitsTransfer(TankRef ref, FluidType type, int pressure, boolean receiving) {
 		if (ref == null || ref.tank.getMaxFill() <= 0 || type == Fluids.NONE || type != getRegulatedType(ref)
-				|| pressure != ref.tank.getPressure() || !canAccess(ref, type)
+				|| pressure != ref.tank.getPressure() || !isTankConnected(ref) || !canAccess(ref, type)
 				|| !hasIsolatedTransfers(ref.tile, ref.tank)) return false;
 		return receiving
 				? ref.tile instanceof IFluidStandardReceiverMK2 && containsTank(((IFluidStandardReceiverMK2) ref.tile).getReceivingTanks(), ref.tank)
@@ -187,13 +211,14 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 		if (!worldObj.isRemote) {
 			List<TankRef> tanks = getConnectedTanks();
 
-			// If placed between 2 or more tanks, break itself and drop as an item
 			if (tanks.size() >= 2) {
+				tankRef = null;
 				this.explode();
 				return;
 			}
 
-			updateRegulatorPort(tanks.isEmpty() ? null : tanks.get(0));
+			tankRef = tanks.isEmpty() ? null : tanks.get(0);
+			updateRegulatorPort(tankRef);
 
 			if (worldObj.getTotalWorldTime() % 10 == 0) {
 				this.networkPackNT(25);
@@ -237,12 +262,14 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 
 	@Override
 	public void invalidate() {
+		tankRef = null;
 		super.invalidate();
 		if (destroyPortsOnInvalidate) regulatorPort.disableIfPresent(worldObj);
 	}
 
 	@Override
 	public void onChunkUnload() {
+		tankRef = null;
 		super.onChunkUnload();
 		regulatorPort.disableIfPresent(worldObj);
 	}
@@ -250,13 +277,10 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 	@Override
 	public boolean canConnect(FluidType type, ForgeDirection dir) {
 		if (dir == ForgeDirection.UNKNOWN) return false;
-		TankRef ref = getTankRef();
-		if (ref != null && dir == ref.dir) {
-			return false; // Isolate the tank from direct pipe network bridging
-		}
-		FluidType regType = getRegulatedType(ref);
+		FluidType regType = getRegulatedType(getTankRef());
 		return regType != Fluids.NONE && type == regType;
 	}
+
 
 	// ===== IFluidReceiverMK2 (Inflow when tank < target) =====
 
@@ -294,12 +318,15 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 
 	@Override
 	public int[] getReceivingPressureRange(FluidType type) {
+		return getTankPressureRange();
+	}
+
+	private int[] getTankPressureRange() {
 		TankRef ref = getTankRef();
-		if (ref != null) {
-			int pressure = ref.tank.getPressure();
-			return new int[] { pressure, pressure };
-		}
-		return DEFAULT_PRESSURE_RANGE;
+		if (ref == null) return DEFAULT_PRESSURE_RANGE;
+
+		int pressure = ref.tank.getPressure();
+		return new int[] { pressure, pressure };
 	}
 
 	@Override
@@ -310,6 +337,7 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 		}
 		return ConnectionPriority.NORMAL;
 	}
+
 
 	// ===== IFluidProviderMK2 (Outflow when tank > target) =====
 
@@ -359,13 +387,9 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 
 	@Override
 	public int[] getProvidingPressureRange(FluidType type) {
-		TankRef ref = getTankRef();
-		if (ref != null) {
-			int pressure = ref.tank.getPressure();
-			return new int[] { pressure, pressure };
-		}
-		return DEFAULT_PRESSURE_RANGE;
+		return getTankPressureRange();
 	}
+
 
 	// ===== Network Sync & NBT =====
 
