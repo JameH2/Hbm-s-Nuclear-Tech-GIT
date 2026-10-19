@@ -11,6 +11,7 @@ import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.TilePort;
 import com.hbm.tileentity.TilePort.PortDef;
+import com.hbm.tileentity.machine.storage.TileEntityBarrel;
 
 import api.hbm.energymk2.IEnergyReceiverMK2.ConnectionPriority;
 import api.hbm.fluidmk2.IFluidConnectorMK2;
@@ -78,6 +79,8 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 				// Honor the physical port's fluid/side restrictions, but use the core for both transfer directions.
 				if (!proxy.canConnect(this.type, dir.getOpposite())) continue;
 				te = proxy.getTile();
+				// General machine proxies may have input/output roles not exposed by canConnect().
+				if (!(te instanceof TileEntityBarrel)) continue;
 			}
 			if (te == null || te == this)
 				continue;
@@ -88,7 +91,7 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 				FluidTank[] tanks = ((IFluidUserMK2) te).getAllTanks();
 				if (tanks == null) continue;
 				for (FluidTank tank : tanks) {
-					if (tank == null || tank.getTankType() != this.type) continue;
+					if (tank == null || tank.getTankType() != this.type || !hasIsolatedTransfers(te, tank)) continue;
 					TankRef ref = new TankRef();
 					ref.tile = te;
 					ref.dir = dir;
@@ -123,9 +126,26 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 		return false;
 	}
 
+	private boolean hasOtherMatchingTank(FluidTank[] tanks, FluidTank target) {
+		if (tanks != null) for (FluidTank tank : tanks) {
+			if (tank != null && tank != target && tank.getTankType() == target.getTankType()
+					&& tank.getPressure() == target.getPressure()) return true;
+		}
+		return false;
+	}
+
+	private boolean hasIsolatedTransfers(TileEntity tile, FluidTank tank) {
+		// Core transfer methods address every tank of a type/pressure, so ambiguous tanks are unsupported.
+		return (!(tile instanceof IFluidStandardReceiverMK2)
+				|| !hasOtherMatchingTank(((IFluidStandardReceiverMK2) tile).getReceivingTanks(), tank))
+				&& (!(tile instanceof IFluidStandardSenderMK2)
+				|| !hasOtherMatchingTank(((IFluidStandardSenderMK2) tile).getSendingTanks(), tank));
+	}
+
 	private boolean permitsTransfer(TankRef ref, FluidType type, int pressure, boolean receiving) {
 		if (ref == null || ref.tank.getMaxFill() <= 0 || type == Fluids.NONE || type != getRegulatedType(ref)
-				|| pressure != ref.tank.getPressure() || !canAccess(ref, type)) return false;
+				|| pressure != ref.tank.getPressure() || !canAccess(ref, type)
+				|| !hasIsolatedTransfers(ref.tile, ref.tank)) return false;
 		return receiving
 				? ref.tile instanceof IFluidStandardReceiverMK2 && containsTank(((IFluidStandardReceiverMK2) ref.tile).getReceivingTanks(), ref.tank)
 				: ref.tile instanceof IFluidStandardSenderMK2 && ref.tank.getTankType() == type && containsTank(((IFluidStandardSenderMK2) ref.tile).getSendingTanks(), ref.tank);
