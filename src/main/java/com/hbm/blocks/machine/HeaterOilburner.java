@@ -103,11 +103,11 @@ public class HeaterOilburner extends BlockDummyable implements ILookOverlay, ITo
 		TileEntityHeaterOilburner heater = (TileEntityHeaterOilburner) te;
 
 		List<String> text = new ArrayList();
-		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.heater_oilburner.consumption", heater.setting));
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + ("" + (heater.setting) + " mB/t"));
 		FluidType type = heater.tank.getTankType();
 		if(type.hasTrait(FT_Flammable.class)) {
 			int heat = (int)(type.getTrait(FT_Flammable.class).getHeatEnergy() * heater.setting / 1000);
-			text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.heater_oilburner.tu_t", String.format(Locale.US, "%,d", heat)));
+			text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + ("" + (String.format(Locale.US, "%,d", heat)) + " TU/t"));
 		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);

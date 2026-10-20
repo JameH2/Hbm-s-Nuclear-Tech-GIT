@@ -215,7 +215,7 @@ public class BlockWandStructure extends BlockContainer implements IBlockMulti, I
 			fileText.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getParentFile().getAbsolutePath()));
 			fileText.getChatStyle().setUnderlined(true);
 
-			player.addChatMessage(new ChatComponentTranslation("chat.wand_structure.saved").appendSibling(fileText));
+			player.addChatMessage(new ChatComponentTranslation("chat.wand_structure.saved", fileText));
 		}
 
 		public void loadStructure(EntityPlayer player) {

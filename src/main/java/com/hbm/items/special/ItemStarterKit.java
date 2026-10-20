@@ -417,7 +417,7 @@ public class ItemStarterKit extends Item {
 				this == ModItems.solinium_kit ||
 				this == ModItems.missile_kit ||
 				this == ModItems.multi_kit) {
-			list.add(I18nUtil.resolveKey("item.starter_kit.desc1"));
+			list.add(I18nUtil.resolveKey("item.starter_kit.empty_inventory"));
 		}
 		if(this == ModItems.nuke_starter_kit ||
 				this == ModItems.nuke_advanced_kit ||
@@ -431,7 +431,7 @@ public class ItemStarterKit extends Item {
 				this == ModItems.fleija_kit ||
 				this == ModItems.solinium_kit ||
 				this == ModItems.hazmat_kit) {
-			list.add(I18nUtil.resolveKey("item.starter_kit.desc2"));
+			list.add(I18nUtil.resolveKey("item.starter_kit.replace_armor"));
 		}
 	}
 

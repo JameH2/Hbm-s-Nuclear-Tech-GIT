@@ -60,54 +60,55 @@ public class ItemMachineUpgrade extends Item {
 		}
 
 		if(this == ModItems.upgrade_radius) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.desc1"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc2"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc3"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.upgrade_radius.category"));
+			list.add(I18nUtil.resolveKey("item.upgrade_radius.stats", 16, 500));
+			list.add(I18nUtil.resolveKey("item.machine_upgrade.stack_limit", 16));
 		}
 
 		if(this == ModItems.upgrade_health) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.desc4"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc5"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc3"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.upgrade_health.category"));
+			list.add(I18nUtil.resolveKey("item.upgrade_health.stats", 50, 250));
+			list.add(I18nUtil.resolveKey("item.machine_upgrade.stack_limit", 16));
 		}
 
 		if(this == ModItems.upgrade_smelter) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.desc6"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc7"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.mining_laser"));
+			list.add(I18nUtil.resolveKey("item.upgrade_smelter.effect"));
 		}
 
 		if(this == ModItems.upgrade_shredder) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.desc6"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc8"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.mining_laser"));
+			list.add(I18nUtil.resolveKey("item.upgrade_shredder.effect"));
 		}
 
 		if(this == ModItems.upgrade_centrifuge) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.desc6"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc9"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.mining_laser"));
+			list.add(I18nUtil.resolveKey("item.upgrade_centrifuge.lore"));
 		}
 
 		if(this == ModItems.upgrade_crystallizer) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.desc6"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc10"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.mining_laser"));
+			list.add(I18nUtil.resolveKey("item.upgrade_crystallizer.lore"));
 		}
 
 		if(this == ModItems.upgrade_screm) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.desc6"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc11"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc12"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc13"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.mining_laser"));
+			for(String line : I18nUtil.resolveKeyArray("item.upgrade_screm.desc")) {
+				list.add(line);
+			}
 		}
 
 		if(this == ModItems.upgrade_nullifier) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.desc6"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc14"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc15"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.mining_laser"));
+			for(String line : I18nUtil.resolveKeyArray("item.upgrade_nullifier.desc")) {
+				list.add(line);
+			}
 		}
 
 		if(this == ModItems.upgrade_gc_speed) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.machine_upgrade.desc16"));
-			list.add(I18nUtil.resolveKey("item.machine_upgrade.desc17"));
-			list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.machine_upgrade.desc18"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.upgrade_gc_speed.category"));
+			list.add(I18nUtil.resolveKey("item.upgrade_gc_speed.effect"));
+			list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.upgrade_gc_speed.lore"));
 		}
 	}
 

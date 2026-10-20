@@ -68,16 +68,16 @@ public class ItemCanteen extends Item {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack p_77624_1_, EntityPlayer p_77624_2_, List list, boolean p_77624_4_) {
 		if(this == ModItems.canteen_vodka) {
-			for(String line : I18nUtil.resolveKeyArray("item.canteen.desc1")) {
+			for(String line : I18nUtil.resolveKeyArray("item.canteen_vodka.desc")) {
 				list.add(line);
 			}
 			list.add("");
 
 			if(MainRegistry.polaroidID == 11)
-				// list.add(I18nUtil.resolveKey("item.canteen.desc4"));
-				list.add(I18nUtil.resolveKey("item.canteen.desc6"));
+				// list.add(I18nUtil.resolveKey("item.canteen_vodka.motto"));
+				list.add(I18nUtil.resolveKey("item.canteen_vodka.toast"));
 			else
-				list.add(I18nUtil.resolveKey("item.canteen.desc5"));
+				list.add(I18nUtil.resolveKey("item.canteen_vodka.flavor"));
 		}
 	}
 

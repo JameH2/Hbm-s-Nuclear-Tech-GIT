@@ -63,22 +63,22 @@ public class ItemMineralOre extends Item {
 
 		switch(stack.getItemDamage()) {
 		case CLUMP_PEROXIDE:
-			list.add(y + I18nUtil.resolveKey("item.mineral_ore.desc1"));
+			list.add(y + "[" + I18nUtil.resolveKey("item.mineral_ore.peroxide") + "]");
 			break;
 		case CLUMP_NITRIC:
-			list.add(o + I18nUtil.resolveKey("item.mineral_ore.desc2"));
+			list.add(o + "[" + I18nUtil.resolveKey("item.mineral_ore.nitric") + "]");
 			break;
 		case CLUMP_SULFURIC:
-			list.add(y + I18nUtil.resolveKey("item.mineral_ore.desc3"));
+			list.add(y + "[" + I18nUtil.resolveKey("item.mineral_ore.sulfuric") + "]");
 			break;
 		case CLUMP_SOLVENT:
-			list.add(r + I18nUtil.resolveKey("item.mineral_ore.desc4"));
+			list.add(r + "[" + I18nUtil.resolveKey("item.mineral_ore.solvent") + "]");
 			break;
 		case CLUMP_HYDROCHLORIC:
-			list.add(g + I18nUtil.resolveKey("item.mineral_ore.desc5"));
+			list.add(g + "[" + I18nUtil.resolveKey("item.mineral_ore.chloric") + "]");
 			break;
 		case CLUMP_SCHRABIDIC:
-			list.add(b + I18nUtil.resolveKey("item.mineral_ore.desc6"));
+			list.add(b + "[" + I18nUtil.resolveKey("item.mineral_ore.schrabidic") + "]");
 			break;
 		}
 	}

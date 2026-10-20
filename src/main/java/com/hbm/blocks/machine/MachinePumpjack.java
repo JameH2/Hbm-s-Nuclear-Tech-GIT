@@ -112,11 +112,11 @@ public class MachinePumpjack extends BlockDummyable implements IPersistentInfoPr
 
 	@Override
 	public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {
-		list.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("overlay.common.energy_value", BobMathUtil.getShortNumber(persistentTag.getLong("power"))));
+		list.add((EnumChatFormatting.GREEN) + ("" + (BobMathUtil.getShortNumber(persistentTag.getLong("power"))) + "HE"));
 		for(int i = 0; i < 2; i++) {
 			FluidTank tank = new FluidTank(Fluids.NONE, 0);
 			tank.readFromNBT(persistentTag, "t" + i);
-			list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.pumpjack.mb", tank.getFill(), tank.getMaxFill(), tank.getTankType().getLocalizedName()));
+			list.add((EnumChatFormatting.YELLOW) + ("" + (tank.getFill()) + "/" + (tank.getMaxFill()) + "mB " + (tank.getTankType().getLocalizedName())));
 		}
 	}
 }

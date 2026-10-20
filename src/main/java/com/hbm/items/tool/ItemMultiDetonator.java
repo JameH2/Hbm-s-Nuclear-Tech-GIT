@@ -24,9 +24,11 @@ public class ItemMultiDetonator extends Item {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.resolveKey("item.multi_detonator.desc1"));
-		list.add(I18nUtil.resolveKey("item.detonator.desc"));
-		list.add(I18nUtil.resolveKey("item.multi_detonator.desc2"));
+		list.add(I18nUtil.resolveKey("item.multi_detonator.add_position"));
+		for(String line : I18nUtil.resolveKeyArray("item.detonator.desc")) {
+			list.add(line);
+		}
+		list.add(I18nUtil.resolveKey("item.multi_detonator.clear_positions"));
 
 		if(itemstack.getTagCompound() == null || getLocations(itemstack) == null) {
 			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.misc.noPos"));

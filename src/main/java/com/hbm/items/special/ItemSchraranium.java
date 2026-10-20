@@ -41,6 +41,6 @@ public class ItemSchraranium extends ItemCustomLore {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		if(GeneralConfig.enableLBSM) list.add(I18nUtil.resolveKey("item.schraranium.desc"));
+		if(GeneralConfig.enableLBSM) list.add(I18nUtil.resolveKey("item.schraranium.flavor"));
 	}
 }

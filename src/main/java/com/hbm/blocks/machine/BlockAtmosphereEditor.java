@@ -48,10 +48,9 @@ public class BlockAtmosphereEditor extends BlockContainer implements IToolable, 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.atmosphere_editor.desc1"));
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.atmosphere_editor.desc2"));
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.atmosphere_editor.desc3"));
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.atmosphere_editor.desc4"));
+		for(String line : I18nUtil.resolveKeyArray("tile.atmosphere_editor.desc")) {
+			list.add(EnumChatFormatting.GOLD + line);
+		}
 	}
 
 	@Override
@@ -124,7 +123,7 @@ public class BlockAtmosphereEditor extends BlockContainer implements IToolable, 
 			FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, x, y, z, player.getHeldItem());
 			editor.fluid = type;
 			editor.markDirty();
-			player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+			player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
 			return true;
 		}

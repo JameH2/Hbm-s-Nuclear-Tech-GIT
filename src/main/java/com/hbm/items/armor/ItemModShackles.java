@@ -18,12 +18,12 @@ public class ItemModShackles extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_shackles.desc1"));
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_shackles.desc2"));
-		list.add(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.mod_shackles.desc3"));
+		for(String line : I18nUtil.resolveKeyArray("item.mod_shackles.desc", EnumChatFormatting.BOLD)) {
+			list.add(EnumChatFormatting.RED + line);
+		}
 
 		list.add("");
-		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_shackles.desc4"));
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_shackles.remaining"));
 		list.add("");
 		super.addInformation(stack, player, list, bool);
 	}
@@ -31,6 +31,6 @@ public class ItemModShackles extends ItemArmorMod {
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
 
-		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_shackles.desc5", stack.getDisplayName()));
+		list.add(EnumChatFormatting.GOLD + "  " + I18nUtil.resolveKey("item.mod_shackles.summary", stack.getDisplayName()));
 	}
 }

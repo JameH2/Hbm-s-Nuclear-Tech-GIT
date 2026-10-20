@@ -51,7 +51,7 @@ public class ItemClaude extends ItemMachineUpgrade {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		super.addInformation(stack, player, list, bool);
-		String unloc = this.getUnlocalizedName() + ".desc";
+		String unloc = this.getUnlocalizedName() + ".flavor";
 		String loc = I18nUtil.resolveKey(unloc);
 
 		if(!unloc.equals(loc)) {

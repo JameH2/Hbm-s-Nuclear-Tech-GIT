@@ -32,14 +32,14 @@ public class ItemModV1 extends ItemArmorMod implements IArmorModDash {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_v1.desc1"));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_v1.motto"));
 		list.add("");
 		super.addInformation(stack, player, list, bool);
 	}
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_v1.desc2", stack.getDisplayName()));
+		list.add(EnumChatFormatting.RED + "  " + I18nUtil.resolveKey("item.mod_v1.summary", stack.getDisplayName()));
 	}
 
 	public int getDashes() {

@@ -158,8 +158,8 @@ public abstract class BlockChargeBase extends BlockContainerBase implements IBom
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.tooltip.timer_hint"));
-		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.charge_base.desc1"));
-		list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("tile.charge_base.desc2"));
+		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.charge_base.arm"));
+		list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("tile.charge_base.disarm"));
 	}
 
 	@Override

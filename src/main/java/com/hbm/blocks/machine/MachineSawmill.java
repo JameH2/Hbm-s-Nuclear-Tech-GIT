@@ -201,7 +201,7 @@ public class MachineSawmill extends BlockDummyable implements ILookOverlay, IToo
 		TileEntitySawmill stirling = (TileEntitySawmill) te;
 
 		List<String> text = new ArrayList();
-		text.add(I18nUtil.resolveKey("overlay.sawmill.tu_t", stirling.heat));
+		text.add(("" + (stirling.heat) + "TU/t"));
 
 		double percent = (double) stirling.heat / (double) 300;
 		int color = ((int) (0xFF - 0xFF * percent)) << 16 | ((int)(0xFF * percent) << 8);

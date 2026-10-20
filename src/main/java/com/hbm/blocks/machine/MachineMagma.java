@@ -94,7 +94,7 @@ public class MachineMagma extends BlockDummyable implements ILookOverlay, IToolt
 			text.add(((drill.power < drill.consumption ? EnumChatFormatting.RED : EnumChatFormatting.GREEN)) + I18nUtil.resolveKey("overlay.common.power", BobMathUtil.getShortNumber(drill.power)));
 
 			for(int i = 0; i < drill.tanks.length; i++)
-				text.add(I18nUtil.resolveKey("overlay.common.tank", (i == 0 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET, drill.tanks[i].getTankType().getLocalizedName(), drill.tanks[i].getFill(), drill.tanks[i].getMaxFill()));
+				text.add(("" + ((i == 0 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET) + (drill.tanks[i].getTankType().getLocalizedName()) + ": " + (drill.tanks[i].getFill()) + "/" + (drill.tanks[i].getMaxFill()) + "mB"));
 
 			for(MaterialStack sta : drill.liquids) {
 				text.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey(sta.material.getUnlocalizedName()) + ": " + Mats.formatAmount(sta.amount, false));

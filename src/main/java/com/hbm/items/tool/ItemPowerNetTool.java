@@ -85,9 +85,9 @@ public class ItemPowerNetTool extends Item {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		for(String line : I18nUtil.resolveKeyArray("item.power_net_tool.desc1")) {
+		for(String line : I18nUtil.resolveKeyArray("item.power_net_tool.desc")) {
 			list.add(EnumChatFormatting.RED + line);
 		}
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.power_net_tool.desc7", radius));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.power_net_tool.particle_radius", radius));
 	}
 }

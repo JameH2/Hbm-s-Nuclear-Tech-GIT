@@ -22,11 +22,11 @@ public class ItemDesingatorRange extends Item implements IDesignatorItem {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		if(itemstack.stackTagCompound != null) {
-			list.add(I18nUtil.resolveKey("item.desingator.desc1"));
-			list.add(I18nUtil.resolveKey("item.tele_link.desc1", itemstack.stackTagCompound.getInteger("xCoord")));
-			list.add(I18nUtil.resolveKey("item.tele_link.desc3", itemstack.stackTagCompound.getInteger("zCoord")));
+			list.add(I18nUtil.resolveKey("item.desingator.target"));
+			list.add(I18nUtil.resolveKey("item.tele_link.x", itemstack.stackTagCompound.getInteger("xCoord")));
+			list.add(I18nUtil.resolveKey("item.tele_link.z", itemstack.stackTagCompound.getInteger("zCoord")));
 		} else {
-			list.add(I18nUtil.resolveKey("item.desingator.desc2"));
+			list.add(I18nUtil.resolveKey("item.desingator.unset"));
 		}
 	}
 

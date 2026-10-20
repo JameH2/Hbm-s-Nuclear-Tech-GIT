@@ -41,7 +41,7 @@ public class GUIMachineSolderingStation extends GuiInfoContainer {
 
 
 		this.drawCustomInfoStat(x, y, guiLeft + 5, guiTop + 66, 10, 10, x, y,
-				I18nUtil.resolveKey("gui.soldering_station.collision_prevention") + (solderer.collisionPrevention ? EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on") : EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off")),
+				I18nUtil.resolveKey("gui.soldering_station.collision_prevention", solderer.collisionPrevention ? EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on") : EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off")),
 				I18nUtil.resolveKey("gui.soldering_station.fluid_priority"),
 				I18nUtil.resolveKey("gui.soldering_station.fluid_priority_detail"));
 	}

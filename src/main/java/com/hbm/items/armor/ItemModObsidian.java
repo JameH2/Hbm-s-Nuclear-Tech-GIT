@@ -17,13 +17,13 @@ public class ItemModObsidian extends ItemArmorMod {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_obsidian.desc1"));
+		list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_obsidian.effect"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_obsidian.desc2", stack.getDisplayName()));
+		list.add(EnumChatFormatting.DARK_PURPLE + "  " + I18nUtil.resolveKey("item.mod_obsidian.summary", stack.getDisplayName()));
 	}
 }

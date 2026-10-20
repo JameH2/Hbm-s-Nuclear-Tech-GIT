@@ -34,7 +34,7 @@ public class ItemLens extends Item {
 		long damage = getLensDamage(stack);
 		int percent = (int) ((maxDamage - damage) * 100 / maxDamage);
 
-		list.add(I18nUtil.resolveKey("item.lens.desc", (maxDamage - damage), maxDamage, percent));
+		list.add(I18nUtil.resolveKey("item.lens.durability", (maxDamage - damage), maxDamage, percent));
 	}
 
 	public static void setLensDamage(ItemStack stack, long damage) {

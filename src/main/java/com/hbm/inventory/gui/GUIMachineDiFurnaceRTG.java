@@ -58,9 +58,8 @@ public class GUIMachineDiFurnaceRTG extends GuiInfoContainer {
 
 				if(this.isMouseOverSlot(slot, mouseX, mouseY)) {
 
-					String label = EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.furnace.accepts_from");
 					byte dir = i == 0 ? bFurnace.sideUpper : bFurnace.sideLower;
-					label += ForgeDirection.getOrientation(dir);
+					String label = EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.furnace.accepts_from", ForgeDirection.getOrientation(dir));
 
 					this.func_146283_a(Arrays.asList(new String[] { label }), mouseX, mouseY - (slot.getHasStack() ? 15 : 0));
 

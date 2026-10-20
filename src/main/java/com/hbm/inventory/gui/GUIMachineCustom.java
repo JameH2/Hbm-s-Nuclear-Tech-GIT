@@ -75,7 +75,7 @@ public class GUIMachineCustom extends GuiInfoContainer {
 			if(x >= matX && x < matX + 16 && y >= matY && y < matY + 34) {
 				List<String> tip = new ArrayList();
 				tip.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("gui.custom.material_pool"));
-				tip.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.custom.total") + custom.getTotalMaterialAmount() + " / " + custom.config.materialInCap + I18nUtil.resolveKey("gui.custom.quanta"));
+				tip.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.custom.total", custom.getTotalMaterialAmount(), custom.config.materialInCap, I18nUtil.resolveKey("gui.custom.quanta")));
 				for(Mats.MaterialStack ms : custom.materials) {
 					if(ms.amount > 0 && ms.material != null) {
 						tip.add("  " + I18nUtil.resolveKey(ms.material.getUnlocalizedName()) + ": " + Mats.formatAmount(ms.amount, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));

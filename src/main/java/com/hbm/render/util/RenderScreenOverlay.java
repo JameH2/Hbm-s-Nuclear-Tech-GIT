@@ -75,9 +75,9 @@ public class RenderScreenOverlay {
 		else if(radiation >= 10) gui.drawTexturedModalRect(posX + length + 2, posY - 18, 18, 36, 18, 18);
 		else if(radiation >= 2.5) gui.drawTexturedModalRect(posX + length + 2, posY - 18, 0, 36, 18, 18);
 
-		if(radiation > 1000) Minecraft.getMinecraft().fontRenderer.drawString(I18nUtil.resolveKey("gui.hud.1000_rad"), posX, posY - 8, 0xFF0000);
-		else if(radiation >= 1) Minecraft.getMinecraft().fontRenderer.drawString(I18nUtil.resolveKey("gui.hud.rad", ((int) Math.round(radiation))), posX, posY - 8, 0xFF0000);
-		else if(radiation > 0) Minecraft.getMinecraft().fontRenderer.drawString(I18nUtil.resolveKey("gui.hud.1_rad"), posX, posY - 8, 0xFF0000);
+		if(radiation > 1000) Minecraft.getMinecraft().fontRenderer.drawString(">1000 RAD/s", posX, posY - 8, 0xFF0000);
+		else if(radiation >= 1) Minecraft.getMinecraft().fontRenderer.drawString(("" + (((int) Math.round(radiation))) + " RAD/s"), posX, posY - 8, 0xFF0000);
+		else if(radiation > 0) Minecraft.getMinecraft().fontRenderer.drawString("<1 RAD/s", posX, posY - 8, 0xFF0000);
 
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(true);

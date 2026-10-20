@@ -108,7 +108,7 @@ public class BlockWandLoot extends BlockContainer implements ILookOverlay, ITool
 
 		List<String> text = new ArrayList<String>();
 		text.add(I18nUtil.resolveKey("overlay.wand_loot.replacement", loot.replaceBlock.getUnlocalizedName()));
-		text.add(I18nUtil.resolveKey("overlay.wand_loot.meta", loot.replaceMeta));
+		text.add("   " + I18nUtil.resolveKey("overlay.wand_loot.meta", loot.replaceMeta));
 		text.add(I18nUtil.resolveKey("overlay.wand_loot.loot_pool", loot.poolName));
 		if(loot.replaceBlock != ModBlocks.deco_loot) {
 			text.add(I18nUtil.resolveKey("overlay.wand_loot.minimum_items", loot.minItems));
@@ -126,7 +126,7 @@ public class BlockWandLoot extends BlockContainer implements ILookOverlay, ITool
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(I18nUtil.resolveKey("tile.wand_loot.desc"));
+		list.add(I18nUtil.resolveKey("tile.wand_loot.usage"));
 		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_loot.minimum_hint"));
 		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_loot.maximum_hint"));
 		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.tooltip.cycle_loot"));

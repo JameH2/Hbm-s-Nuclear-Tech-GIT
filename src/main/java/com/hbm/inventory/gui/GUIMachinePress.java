@@ -31,7 +31,7 @@ public class GUIMachinePress extends GuiInfoContainer {
 		super.drawScreen(mouseX, mouseY, f);
 
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 25, guiTop + 16, 18, 18, mouseX, mouseY, (press.speed * 100 / press.maxSpeed) + "%");
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 25, guiTop + 34, 18, 18, mouseX, mouseY, (press.burnTime / 200) + I18nUtil.resolveKey("gui.press.operations_left"));
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 25, guiTop + 34, 18, 18, mouseX, mouseY, I18nUtil.resolveKey("gui.press.operations_left", press.burnTime / 200));
 	}
 
 	@Override

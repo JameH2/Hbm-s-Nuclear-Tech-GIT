@@ -87,7 +87,7 @@ public class MachineAlkylation extends BlockDummyable implements ILookOverlay {
 
 		for(int i = 0; i < alkylation.tanks.length; i++) {
 			if(alkylation.tanks[i].getTankType() == Fluids.NONE) continue;
-			text.add(I18nUtil.resolveKey("overlay.common.tank", (i < 2 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET, alkylation.tanks[i].getTankType().getLocalizedName(), alkylation.tanks[i].getFill(), alkylation.tanks[i].getMaxFill()));
+			text.add(("" + ((i < 2 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET) + (alkylation.tanks[i].getTankType().getLocalizedName()) + ": " + (alkylation.tanks[i].getFill()) + "/" + (alkylation.tanks[i].getMaxFill()) + "mB"));
 		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
@@ -113,7 +113,7 @@ public class MachineAlkylation extends BlockDummyable implements ILookOverlay {
 				FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, pos[0], pos[1], pos[2], player.getHeldItem());
 				alkylation.tanks[0].setTankType(type);
 				alkylation.markDirty();
-				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
 				return true;
 			}

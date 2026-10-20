@@ -44,7 +44,8 @@ public class GUITransporterRocket extends GuiInfoContainer {
 		transporterName.setTextColor(0x00ff00);
 		transporterName.setDisabledTextColour(0x00ff00);
 		transporterName.setEnableBackgroundDrawing(false);
-		transporterName.setText(I18nUtil.resolveKey(transporter.getTransporterName()));
+		String name = transporter.getTransporterName();
+		transporterName.setText("container.transporter".equals(name) ? I18nUtil.resolveKey("container.transporter") : name);
 	}
 
 	@Override

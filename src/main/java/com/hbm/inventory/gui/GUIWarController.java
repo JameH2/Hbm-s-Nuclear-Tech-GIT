@@ -129,7 +129,7 @@ public class GUIWarController extends GuiInfoContainer {
 			int zValue = Integer.parseInt(zValueStr);
 
 			addCommandHistory("> " + command);
-			addCommandHistory(I18nUtil.resolveKey("gui.war_controller.coordinates") + xValue + ", Z=" + zValue);
+			addCommandHistory(I18nUtil.resolveKey("gui.war_controller.coordinates", xValue, zValue));
 
 			data.setInteger("xcoord", xValue);
 			data.setInteger("zcoord", zValue);
@@ -139,12 +139,12 @@ public class GUIWarController extends GuiInfoContainer {
 
 		case "health":
 			addCommandHistory("> " + command);
-			addCommandHistory(I18nUtil.resolveKey("gui.war_controller.requesting") + cmd + "...");
+			addCommandHistory(I18nUtil.resolveKey("gui.war_controller.requesting", cmd));
 
 			if(sat == null) {
 				addCommandHistory(I18nUtil.resolveKey("gui.war_controller.not_orbiting"), EnumChatFormatting.RED);
 			} else {
-				addCommandHistory(I18nUtil.resolveKey("gui.war_controller.health") + sat.health);
+				addCommandHistory(I18nUtil.resolveKey("gui.war_controller.health", sat.health));
 			}
 
 			break;
@@ -168,12 +168,12 @@ public class GUIWarController extends GuiInfoContainer {
 			if(sucker.slots[2] == null) {
 				addCommandHistory(I18nUtil.resolveKey("gui.war_controller.missing_chip"), EnumChatFormatting.RED);
 			} else {
-				addCommandHistory(I18nUtil.resolveKey("gui.war_controller.request_id") + satId);
+				addCommandHistory(I18nUtil.resolveKey("gui.war_controller.request_id", satId));
 
 				if(sat == null) {
 					addCommandHistory(I18nUtil.resolveKey("gui.war_controller.not_orbiting"), EnumChatFormatting.RED);
 				} else {
-					addCommandHistory(I18nUtil.resolveKey("gui.war_controller.satellite") + sat.getClass().getSimpleName());
+					addCommandHistory(I18nUtil.resolveKey("gui.war_controller.satellite", sat.getClass().getSimpleName()));
 				}
 			}
 			break;

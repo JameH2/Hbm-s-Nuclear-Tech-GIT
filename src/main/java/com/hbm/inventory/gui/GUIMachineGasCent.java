@@ -31,14 +31,14 @@ public class GUIMachineGasCent extends GuiInfoContainer {
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
 
-		String[] inTankInfo = new String[] {gasCent.inputTank.getTankType().getName(), gasCent.inputTank.getFill() + " / " + gasCent.inputTank.getMaxFill() + I18nUtil.resolveKey("gui.gas_cent.m_b")};
+		String[] inTankInfo = new String[] {gasCent.inputTank.getTankType().getName(), gasCent.inputTank.getFill() + " / " + gasCent.inputTank.getMaxFill() + " mB"};
 		if(gasCent.inputTank.getTankType().getIfHighSpeed()) {
 			if(gasCent.getProcessingSpeed() > gasCent.processingSpeed - 70)
 				inTankInfo[0] = EnumChatFormatting.DARK_RED + inTankInfo[0];
 			else
 				inTankInfo[0] = EnumChatFormatting.GOLD + inTankInfo[0];
 		}
-		String[] outTankInfo = new String[] {gasCent.outputTank.getTankType().getName(), gasCent.outputTank.getFill() + " / " + gasCent.outputTank.getMaxFill() + I18nUtil.resolveKey("gui.gas_cent.m_b")};
+		String[] outTankInfo = new String[] {gasCent.outputTank.getTankType().getName(), gasCent.outputTank.getFill() + " / " + gasCent.outputTank.getMaxFill() + " mB"};
 		if(gasCent.outputTank.getTankType().getIfHighSpeed())
 			outTankInfo[0] = EnumChatFormatting.GOLD + outTankInfo[0];
 

@@ -85,7 +85,7 @@ public class HeaterHeatex extends BlockDummyable implements ILookOverlay, IToolt
 
 						trialEntity.tanks[0].setTankType(type);
 						trialEntity.markDirty();
-						player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+						player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 						return true;
 					}
 				}
@@ -113,7 +113,7 @@ public class HeaterHeatex extends BlockDummyable implements ILookOverlay, IToolt
 		TileEntityHeaterHeatex heater = (TileEntityHeaterHeatex) te;
 
 		List<String> text = new ArrayList();
-		text.add(I18nUtil.resolveKey("overlay.heater_heatex.tu", String.format(Locale.US, "%,d", heater.heatEnergy)));
+		text.add(("" + (String.format(Locale.US, "%,d", heater.heatEnergy)) + " TU"));
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 

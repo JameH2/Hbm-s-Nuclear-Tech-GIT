@@ -64,7 +64,7 @@ public class ItemSettingsTool extends Item {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		for(String line : I18nUtil.resolveKeyArray("item.settings_tool.desc1")) {
+		for(String line : I18nUtil.resolveKeyArray("item.settings_tool.desc")) {
 			list.add(line);
 		}
 		if(stack.stackTagCompound != null) {
@@ -72,7 +72,7 @@ public class ItemSettingsTool extends Item {
 			if (nbt.hasKey("tileName")){
 				list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey(nbt.getString("tileName") + ".name"));
 			} else {
-				list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.settings_tool.desc4"));
+				list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.settings_tool.empty"));
 			}
 
 		}

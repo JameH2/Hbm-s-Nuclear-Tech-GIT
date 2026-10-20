@@ -88,7 +88,7 @@ public class MachineHephaestus extends BlockDummyable implements ILookOverlay {
 				FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, pos[0], pos[1], pos[2], player.getHeldItem());
 				heatex.input.setTankType(type);
 				heatex.markDirty();
-				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
 
 				return true;
@@ -115,11 +115,11 @@ public class MachineHephaestus extends BlockDummyable implements ILookOverlay {
 		TileEntityMachineHephaestus heatex = (TileEntityMachineHephaestus) te;
 
 		List<String> text = new ArrayList();
-		text.add(I18nUtil.resolveKey("overlay.hephaestus.tu", String.format(Locale.US, "%,d", heatex.bufferedHeat)));
+		text.add(("" + (String.format(Locale.US, "%,d", heatex.bufferedHeat)) + " TU"));
 
 		for(int i = 0; i < heatex.getAllTanks().length; i++) {
 			FluidTank tank = heatex.getAllTanks()[i];
-			text.add(I18nUtil.resolveKey("overlay.common.tank", (i == 0 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET, tank.getTankType().getLocalizedName(), tank.getFill(), tank.getMaxFill()));
+			text.add(("" + ((i == 0 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET) + (tank.getTankType().getLocalizedName()) + ": " + (tank.getFill()) + "/" + (tank.getMaxFill()) + "mB"));
 		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);

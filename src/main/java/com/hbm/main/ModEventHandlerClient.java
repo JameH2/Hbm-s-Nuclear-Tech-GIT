@@ -1152,7 +1152,7 @@ public class ModEventHandlerClient {
 					ItemFluidDuct.class
 				);
 
-				String prefix = I18nUtil.resolveKey("gui.wiki_render.gun_prefix");
+				String prefix = I18nUtil.resolveKey("gui.wiki_render.gun_prefix") + " ";
 				//int gunScale = 16;
 				//int defaultScale = 1;
 				int slotScale = 16;

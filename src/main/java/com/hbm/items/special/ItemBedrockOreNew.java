@@ -122,11 +122,11 @@ public class ItemBedrockOreNew extends Item {
 		}
 
 		if(grade == BedrockOreGrade.BASE) {
-			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.bedrock_ore_new.desc1"));
-			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.bedrock_ore_new.desc2", EnumChatFormatting.GRAY + String.valueOf(I18nUtil.resolveKey(type.primary.mat.getUnlocalizedName()))));
-			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.bedrock_ore_new.desc3", EnumChatFormatting.GRAY + String.valueOf(I18nUtil.resolveKey(type.byproductAcid.mat.getUnlocalizedName()))));
-			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.bedrock_ore_new.desc4", EnumChatFormatting.GRAY + String.valueOf(I18nUtil.resolveKey(type.byproductSolvent.mat.getUnlocalizedName()))));
-			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.bedrock_ore_new.desc5", EnumChatFormatting.GRAY + String.valueOf(I18nUtil.resolveKey(type.byproductRad.mat.getUnlocalizedName()))));
+			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.bedrock_ore_new.outputs"));
+			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.bedrock_ore_new.primary", EnumChatFormatting.GRAY + String.valueOf(I18nUtil.resolveKey(type.primary.mat.getUnlocalizedName()))));
+			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.bedrock_ore_new.sulfuric", EnumChatFormatting.GRAY + String.valueOf(I18nUtil.resolveKey(type.byproductAcid.mat.getUnlocalizedName()))));
+			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.bedrock_ore_new.solvent", EnumChatFormatting.GRAY + String.valueOf(I18nUtil.resolveKey(type.byproductSolvent.mat.getUnlocalizedName()))));
+			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.bedrock_ore_new.hps", EnumChatFormatting.GRAY + String.valueOf(I18nUtil.resolveKey(type.byproductRad.mat.getUnlocalizedName()))));
 		}
 	}
 

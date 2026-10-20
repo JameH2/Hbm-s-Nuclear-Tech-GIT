@@ -70,7 +70,7 @@ public class GUIRBMKControlAuto extends GuiInfoContainer {
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 136, guiTop + 21, 16, 16, mouseX, mouseY, new String[]{ BobMathUtil.getShortNumber(rod.power) + " / " + BobMathUtil.getShortNumber(rod.maxPower) + "HE" } );
 		}
 
-		String func = I18nUtil.resolveKey("gui.rbmk_control.function");
+		String func = "";
 
 		switch(rod.function) {
 		case LINEAR: func += I18nUtil.resolveKey("gui.rbmk_control.linear"); break;
@@ -78,7 +78,7 @@ public class GUIRBMKControlAuto extends GuiInfoContainer {
 		case QUAD_DOWN: func += I18nUtil.resolveKey("gui.rbmk_control.inverse_quadratic"); break;
 		}
 
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 58, guiTop + 26, 28, 19, mouseX, mouseY, new String[]{ func } );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 58, guiTop + 26, 28, 19, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control.function", func) } );
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 61, guiTop + 48, 22, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.linear") } );
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 61, guiTop + 59, 22, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.quadratic") } );
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 61, guiTop + 70, 22, 10, mouseX, mouseY, new String[]{ I18nUtil.resolveKey("gui.rbmk_control_auto.inverse_quadratic") } );

@@ -143,11 +143,11 @@ public class ItemBatteryPack extends ItemEnumMulti implements IBatteryItem {
 
 		if(itemstack.hasTagCompound()) charge = getCharge(itemstack);
 
-		list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.battery_pack.desc1", BobMathUtil.getShortNumber(charge), BobMathUtil.getShortNumber(maxCharge), (charge * 1000 / maxCharge / 10D)));
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.battery.desc2", BobMathUtil.getShortNumber(chargeRate)));
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.battery.desc3", BobMathUtil.getShortNumber(dischargeRate)));
-		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.battery_pack.desc2", (maxCharge / chargeRate / 20 / 60D)));
-		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.battery_pack.desc3", (maxCharge / dischargeRate / 20 / 60D)));
+		list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.battery_pack.energy", BobMathUtil.getShortNumber(charge), BobMathUtil.getShortNumber(maxCharge), (charge * 1000 / maxCharge / 10D)));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.battery.charge_rate", BobMathUtil.getShortNumber(chargeRate)));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.battery.discharge_rate", BobMathUtil.getShortNumber(dischargeRate)));
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.battery_pack.charge_time", (maxCharge / chargeRate / 20 / 60D)));
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.battery_pack.discharge_time", (maxCharge / dischargeRate / 20 / 60D)));
 	}
 
 	public static ItemStack makeEmptyBattery(ItemStack stack) {

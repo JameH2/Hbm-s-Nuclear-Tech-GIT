@@ -49,14 +49,15 @@ public class ItemDiscord extends Item {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("item.discord.desc1"));
-		list.add(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("item.discord.desc2"));
+		for(String line : I18nUtil.resolveKeyArray("item.discord.opinion.desc")) {
+			list.add(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + line);
+		}
 		list.add("");
-		for(String line : I18nUtil.resolveKeyArray("item.discord.desc3")) {
+		for(String line : I18nUtil.resolveKeyArray("item.discord.reply.desc")) {
 			list.add(EnumChatFormatting.RED + "" + EnumChatFormatting.ITALIC + line);
 		}
 		list.add("");
-		for(String line : I18nUtil.resolveKeyArray("item.discord.desc5")) {
+		for(String line : I18nUtil.resolveKeyArray("item.discord.clarification.desc")) {
 			list.add(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + line);
 		}
 	}

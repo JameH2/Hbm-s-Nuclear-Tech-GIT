@@ -21,15 +21,15 @@ public class ItemModCharm extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("item.mod_charm.desc1"));
+		list.add(EnumChatFormatting.AQUA + I18nUtil.resolveKey("item.mod_charm.blessing"));
 
 		if(this == ModItems.protection_charm) {
-			for(String line : I18nUtil.resolveKeyArray("item.mod_charm.desc2")) {
+			for(String line : I18nUtil.resolveKeyArray("item.protection_charm.desc")) {
 				list.add(EnumChatFormatting.AQUA + line);
 			}
 		}
 		if(this == ModItems.meteor_charm) {
-			for(String line : I18nUtil.resolveKeyArray("item.mod_charm.desc5")) {
+			for(String line : I18nUtil.resolveKeyArray("item.meteor_charm.desc")) {
 				list.add(EnumChatFormatting.AQUA + line);
 			}
 		}

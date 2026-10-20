@@ -18,6 +18,6 @@ public class ItemExpensive extends ItemEnumMulti {
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.expensive.desc"));
+		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.expensive.mode"));
 	}
 }

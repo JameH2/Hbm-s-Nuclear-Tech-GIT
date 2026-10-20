@@ -65,6 +65,6 @@ public class ItemSiegeCoin extends Item {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		super.addInformation(stack, player, list, bool);
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.siege_coin.desc", (stack.getItemDamage() + 1)));
+		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.siege_coin.tier", (stack.getItemDamage() + 1)));
 	}
 }

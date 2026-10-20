@@ -99,7 +99,7 @@ public class GUIMachineRadarNT extends GuiScreen {
 
 				if(mouseX + 5 > x && mouseX - 4 <= x && mouseY + 5 > z && mouseY - 4 <= z) {
 
-					String[] text = new String[] { I18nUtil.resolveKey(m.unlocalizedName), m.posX + " / " + m.posZ, I18nUtil.resolveKey("gui.radar_nt.alt") + m.posY };
+					String[] text = new String[] { I18nUtil.resolveKey(m.unlocalizedName), m.posX + " / " + m.posZ, I18nUtil.resolveKey("gui.radar_nt.alt", m.posY) };
 					this.func_146283_a(Arrays.asList(text), x, z);
 					return;
 				}
