@@ -120,7 +120,7 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 	}
 
 	private boolean isRegulatableTank(TileEntity tile, FluidTank tank) {
-		return tank != null && tank.getTankType() == this.type && hasIsolatedTransfers(tile, tank);
+		return tile instanceof TileEntityBarrel && tank != null && tank.getTankType() == this.type && hasIsolatedTransfers(tile, tank);
 	}
 
 	private boolean isStoragePortConnected(TileEntityBarrel core, TileEntityProxyCombo proxy, ForgeDirection dir) {
@@ -205,10 +205,14 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 			for (DirPos connection : port.portConnections) {
 				if (connection == null || connection.compare(xCoord, yCoord, zCoord)) continue;
 				TileEntity tile = worldObj.getTileEntity(connection.getX(), connection.getY(), connection.getZ());
-				if (tile instanceof TileEntityFluidRegulatorValve && !tile.isInvalid()) {
+				if (tile instanceof TileEntityFluidRegulatorValve) {
 					TileEntityFluidRegulatorValve other = (TileEntityFluidRegulatorValve) tile;
-					if (other.isLoaded() && other.type == this.type
+					if (!other.isInvalid() && other.isLoaded() && other.type == this.type
 							&& other.getAdjacentTile(connection.getDir().getOpposite()) == ref.tile) return true;
+				} else if (tile instanceof IFluidConnectorMK2 && !tile.isInvalid()
+						&& (!(tile instanceof ILoadedTile) || ((ILoadedTile) tile).isLoaded())
+						&& ((IFluidConnectorMK2) tile).canConnect(this.type, connection.getDir().getOpposite())) {
+					return true;
 				}
 				GenNode<?> node = UniNodespace.getNode(worldObj, connection.getX(), connection.getY(), connection.getZ(),
 						this.type.getNetworkProvider());
