@@ -42,7 +42,7 @@ public class ItemFluidIcon extends Item {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		if(stack.hasTagCompound()) {
 			if(getQuantity(stack) > 0) {
-				list.add(I18nUtil.resolveKey("item.fluid_icon.amount", getQuantity(stack)));
+				list.add(("" + (getQuantity(stack)) + "mB"));
 			} else if(getAtmospheres(stack) > 0) {
 				double pressure = BobMathUtil.roundDecimal(getAtmospheres(stack), 3);
 				list.add(I18nUtil.resolveKey("item.fluid_icon.atmospheres", pressure));

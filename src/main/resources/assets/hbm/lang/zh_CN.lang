@@ -6104,7 +6104,6 @@ gui.sat.settings.tooltip.owner_assign=点击将自己指定为该卫星使用者
 gui.sat.settings.tooltip.switch_settings_list=切换设置列表
 gui.sat.settings.label.orbital_phase=轨道相位
 gui.sat.settings.unit.km=km
-gui.sat.settings.unit.km_per_second=km/s
 gui.sat.settings.unit.seconds=s
 gui.sat.settings.tooltip.scroll_speed=滚动鼠标滚轮可改变卫星在轨速度
 gui.sat.settings.tooltip.scroll_altitude=滚动鼠标滚轮可改变高度

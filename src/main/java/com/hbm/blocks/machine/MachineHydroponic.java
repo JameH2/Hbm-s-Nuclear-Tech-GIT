@@ -135,8 +135,8 @@ public class MachineHydroponic extends BlockDummyable implements ILookOverlay, I
 
 		text.add(((hydro.getPower() <= 200 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN)) + I18nUtil.resolveKey("overlay.common.power", BobMathUtil.getShortNumber(hydro.getPower())));
 
-		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_input", hydro.tanks[0].getTankType().getLocalizedName(), hydro.tanks[0].getFill(), hydro.tanks[0].getMaxFill()));
-		text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_output", hydro.tanks[1].getTankType().getLocalizedName(), hydro.tanks[1].getFill(), hydro.tanks[1].getMaxFill()));
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + ("" + (hydro.tanks[0].getTankType().getLocalizedName()) + ": " + (hydro.tanks[0].getFill()) + "/" + (hydro.tanks[0].getMaxFill()) + "mB"));
+		text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + ("" + (hydro.tanks[1].getTankType().getLocalizedName()) + ": " + (hydro.tanks[1].getFill()) + "/" + (hydro.tanks[1].getMaxFill()) + "mB"));
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}

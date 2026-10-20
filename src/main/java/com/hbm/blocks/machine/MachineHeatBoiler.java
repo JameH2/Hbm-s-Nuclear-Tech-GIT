@@ -183,9 +183,9 @@ public class MachineHeatBoiler extends BlockDummyable implements ILookOverlay, I
 		if(boiler.hasExploded) return;
 
 		List<String> text = new ArrayList();
-		text.add(I18nUtil.resolveKey("overlay.heat_boiler.tu", String.format(Locale.US, "%,d", boiler.heat)));
-		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.heat_boiler.mb", boiler.tanks[0].getTankType().getLocalizedName(), String.format(Locale.US, "%,d", boiler.tanks[0].getFill()), String.format(Locale.US, "%,d", boiler.tanks[0].getMaxFill())));
-		text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.heat_boiler.mb.2", boiler.tanks[1].getTankType().getLocalizedName(), String.format(Locale.US, "%,d", boiler.tanks[1].getFill()), String.format(Locale.US, "%,d", boiler.tanks[1].getMaxFill())));
+		text.add(("" + (String.format(Locale.US, "%,d", boiler.heat)) + "TU"));
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + ("" + (boiler.tanks[0].getTankType().getLocalizedName()) + ": " + (String.format(Locale.US, "%,d", boiler.tanks[0].getFill())) + " / " + (String.format(Locale.US, "%,d", boiler.tanks[0].getMaxFill())) + "mB"));
+		text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + ("" + (boiler.tanks[1].getTankType().getLocalizedName()) + ": " + (String.format(Locale.US, "%,d", boiler.tanks[1].getFill())) + " / " + (String.format(Locale.US, "%,d", boiler.tanks[1].getMaxFill())) + "mB"));
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}

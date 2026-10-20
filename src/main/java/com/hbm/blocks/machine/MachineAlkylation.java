@@ -87,7 +87,7 @@ public class MachineAlkylation extends BlockDummyable implements ILookOverlay {
 
 		for(int i = 0; i < alkylation.tanks.length; i++) {
 			if(alkylation.tanks[i].getTankType() == Fluids.NONE) continue;
-			text.add(I18nUtil.resolveKey("overlay.common.tank", (i < 2 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET, alkylation.tanks[i].getTankType().getLocalizedName(), alkylation.tanks[i].getFill(), alkylation.tanks[i].getMaxFill()));
+			text.add(("" + ((i < 2 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET) + (alkylation.tanks[i].getTankType().getLocalizedName()) + ": " + (alkylation.tanks[i].getFill()) + "/" + (alkylation.tanks[i].getMaxFill()) + "mB"));
 		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);

@@ -124,9 +124,9 @@ public class MachineIndustrialTurbine extends BlockDummyable implements ITooltip
 		int color = ((int) (0xFF - 0xFF * chungus.spin)) << 16 | ((int)(0xFF * chungus.spin) << 8);
 		int time = (int) ((world.getTotalWorldTime() / 4) % 4);
 
-		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_input", inputType.getLocalizedName(), String.format(Locale.US, "%,d", tankInput.getFill()), String.format(Locale.US, "%,d", tankInput.getMaxFill())));
-		text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_output", outputType.getLocalizedName(), String.format(Locale.US, "%,d", tankOutput.getFill()), String.format(Locale.US, "%,d", tankOutput.getMaxFill())));
-		text.add("&[" + color + "&]" + EnumChatFormatting.RED + "<- " + EnumChatFormatting.WHITE + BobMathUtil.getShortNumber(chungus.powerBuffer) + I18nUtil.resolveKey("gui.industrial_turbine.he") +
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + ("" + (inputType.getLocalizedName()) + ": " + (String.format(Locale.US, "%,d", tankInput.getFill())) + "/" + (String.format(Locale.US, "%,d", tankInput.getMaxFill())) + "mB"));
+		text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + ("" + (outputType.getLocalizedName()) + ": " + (String.format(Locale.US, "%,d", tankOutput.getFill())) + "/" + (String.format(Locale.US, "%,d", tankOutput.getMaxFill())) + "mB"));
+		text.add("&[" + color + "&]" + EnumChatFormatting.RED + "<- " + EnumChatFormatting.WHITE + BobMathUtil.getShortNumber(chungus.powerBuffer) + "HE (" +
 				EnumChatFormatting.RESET + blocks[chungus.powerBuffer <= 0 ? 0 : time] + (int) Math.round(chungus.spin * 100) + "%" + EnumChatFormatting.WHITE + ")");
 
 

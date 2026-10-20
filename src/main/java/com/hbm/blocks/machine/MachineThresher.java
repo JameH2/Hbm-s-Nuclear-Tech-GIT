@@ -99,7 +99,7 @@ public class MachineThresher extends BlockContainer implements ILookOverlay, ITo
 		TileEntityMachineThresher saw = (TileEntityMachineThresher) te;
 
 		List<String> text = new ArrayList();
-		text.add(I18nUtil.resolveKey("overlay.thresher.mb", saw.tank.getTankType().getLocalizedName(), saw.tank.getFill(), saw.tank.getMaxFill()));
+		text.add(("" + (saw.tank.getTankType().getLocalizedName()) + ": " + (saw.tank.getFill()) + "/" + (saw.tank.getMaxFill()) + "mB"));
 
 		if(saw.isSuspended) {
 			text.add(EnumChatFormatting.RED + "! " + I18nUtil.resolveKey(getUnlocalizedName() + ".suspended") + " !");

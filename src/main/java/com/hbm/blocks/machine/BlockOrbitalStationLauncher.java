@@ -121,7 +121,7 @@ public class BlockOrbitalStationLauncher extends BlockOrbitalStation implements 
 		for(int i = 0; i < pad.tanks.length; i++) {
 			FluidTank tank = pad.tanks[i];
 			if(tank.getTankType() == Fluids.NONE) continue;
-			text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_input", tank.getTankType().getLocalizedName(), tank.getFill(), tank.getMaxFill()));
+			text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + ("" + (tank.getTankType().getLocalizedName()) + ": " + (tank.getFill()) + "/" + (tank.getMaxFill()) + "mB"));
 		}
 
 		if(pad.solidFuel.max > 0) {

@@ -54,7 +54,7 @@ public class GUIFusionTorus extends GuiInfoContainer {
 			drawCustomInfoStat(mouseX, mouseY, guiLeft + 115, guiTop + 115, 18, 18, mouseX, mouseY, lines);
 		} else {
 			drawCustomInfoStat(mouseX, mouseY, guiLeft + 43, guiTop + 115, 18, 18, mouseX, mouseY, I18nUtil.resolveKey("gui.fusion_torus.energy"));
-			drawCustomInfoStat(mouseX, mouseY, guiLeft + 79, guiTop + 115, 18, 18, mouseX, mouseY, I18nUtil.resolveKey("gui.fusion_torus.plasma"));
+			drawCustomInfoStat(mouseX, mouseY, guiLeft + 79, guiTop + 115, 18, 18, mouseX, mouseY, "0TU / 0TU");
 		}
 
 		if(guiLeft + 43 <= mouseX && guiLeft + 43 + 18 > mouseX && guiTop + 80 < mouseY && guiTop + 80 + 18 >= mouseY) {

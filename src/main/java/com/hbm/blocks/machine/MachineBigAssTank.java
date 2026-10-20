@@ -157,6 +157,6 @@ public class MachineBigAssTank extends BlockDummyable implements IPersistentInfo
 	public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {
 		FluidTank tank = new FluidTank(Fluids.NONE, 0);
 		tank.readFromNBT(persistentTag, "tank");
-		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.big_ass_tank.mb", tank.getFill(), tank.getMaxFill(), tank.getTankType().getLocalizedName()));
+		list.add((EnumChatFormatting.YELLOW) + ("" + (tank.getFill()) + "/" + (tank.getMaxFill()) + "mB " + (tank.getTankType().getLocalizedName())));
 	}
 }

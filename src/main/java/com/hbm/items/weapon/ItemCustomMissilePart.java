@@ -267,7 +267,7 @@ public class ItemCustomMissilePart extends Item {
 					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.part.topSize") + ": " + EnumChatFormatting.GRAY + getSize(top));
 					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.part.bottomSize") + ": " + EnumChatFormatting.GRAY + getSize(bottom));
 					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.missile.part.fuelType") + ": " + EnumChatFormatting.GRAY + getFuelName());
-					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.fuel", I18nUtil.resolveKey("item.missile.part.fuelAmount"), EnumChatFormatting.GRAY + String.valueOf(getTankSize())));
+					list.add(EnumChatFormatting.BOLD + ("" + (I18nUtil.resolveKey("item.missile.part.fuelAmount")) + ": " + (EnumChatFormatting.GRAY + String.valueOf(getTankSize())) + "mB"));
 					list.add(EnumChatFormatting.BOLD + I18nUtil.resolveKey("item.custom_missile_part.mass", I18nUtil.resolveKey("item.missile.part.mass"), EnumChatFormatting.GRAY + String.valueOf(mass)));
 					break;
 				case FINS:

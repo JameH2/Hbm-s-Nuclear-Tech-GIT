@@ -45,7 +45,7 @@ public class GUIMachineSelenium extends GuiInfoContainer {
 			long energy = selenium.getHEFromFuel(type);
 
 			if(energy > 0)
-				text.add("  " + I18nUtil.resolveKey("overlay.selenium.he_t", type.getLocalizedName(), BobMathUtil.getShortNumber(energy)));
+				text.add("  " + ("" + type.getLocalizedName() + " (" + (BobMathUtil.getShortNumber(energy)) + "HE/t)"));
 		}
 
 		text.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("overlay.selenium.base_values"));
@@ -55,8 +55,8 @@ public class GUIMachineSelenium extends GuiInfoContainer {
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36, 16, 16, guiLeft - 8, guiTop + 36 + 16, text.toArray(new String[0]));
 
 		String[] text1 = new String[] { I18nUtil.resolveKey("gui.selenium.consumption_label"),
-				"  " + I18nUtil.resolveKey("gui.selenium.consumption"),
-				"  " + I18nUtil.resolveKey("gui.selenium.20_mb"),
+				"  1 mB/t",
+				"  20 mB/s",
 				I18nUtil.resolveKey("gui.selenium.piston_consumption") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36 + 16, 16, 16, guiLeft - 8, guiTop + 36 + 16, text1);
 

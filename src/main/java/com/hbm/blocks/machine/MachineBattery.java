@@ -230,7 +230,7 @@ public class MachineBattery extends BlockContainer implements ILookOverlay, IPer
 		TileEntityMachineBattery battery = (TileEntityMachineBattery) te;
 
 		List<String> text = new ArrayList();
-		text.add(I18nUtil.resolveKey("overlay.common.energy", BobMathUtil.getShortNumber(battery.getPower()), BobMathUtil.getShortNumber(battery.getMaxPower())));
+		text.add(("" + (BobMathUtil.getShortNumber(battery.getPower())) + " / " + (BobMathUtil.getShortNumber(battery.getMaxPower())) + "HE"));
 
 		double percent = (double) battery.getPower() / (double) battery.getMaxPower();
 		int charge = (int) Math.floor(percent * 10_000D);
@@ -281,7 +281,7 @@ public class MachineBattery extends BlockContainer implements ILookOverlay, IPer
 
 	@Override
 	public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {
-		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.battery.he", BobMathUtil.getShortNumber(persistentTag.getLong("power")), BobMathUtil.getShortNumber(this.maxPower)));
+		list.add((EnumChatFormatting.YELLOW) + ("" + (BobMathUtil.getShortNumber(persistentTag.getLong("power"))) + "/" + (BobMathUtil.getShortNumber(this.maxPower)) + "HE"));
 	}
 
 	@Override

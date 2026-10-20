@@ -97,7 +97,7 @@ public class MachineAtmosphericEmitter extends BlockDummyable implements ILookOv
 		List<String> text = new ArrayList<>();
 
 		text.add(((drain.power < Math.max(drain.tank.getFill() / 2, 1) * 10 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN)) + I18nUtil.resolveKey("overlay.common.power", BobMathUtil.getShortNumber(drain.power)));
-		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_input", drain.tank.getTankType().getLocalizedName(), drain.tank.getFill(), drain.tank.getMaxFill()));
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + ("" + (drain.tank.getTankType().getLocalizedName()) + ": " + (drain.tank.getFill()) + "/" + (drain.tank.getMaxFill()) + "mB"));
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 

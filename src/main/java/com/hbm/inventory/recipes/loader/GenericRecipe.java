@@ -182,7 +182,7 @@ public class GenericRecipe {
 
 	protected void power(List<String> list) {
 		if(power > 0) {
-			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.misc.he_t", I18nUtil.resolveKey("gui.recipe.consumption"), BobMathUtil.getShortNumber(power)));
+			list.add((EnumChatFormatting.RED) + ("" + I18nUtil.resolveKey("gui.recipe.consumption") + ": " + (BobMathUtil.getShortNumber(power)) + "HE/t"));
 		}
 	}
 
@@ -192,7 +192,7 @@ public class GenericRecipe {
 			ItemStack display = stack.extractForCyclingDisplay(20);
 			list.add("  " + EnumChatFormatting.GRAY + display.stackSize + "x " + display.getDisplayName());
 		}
-		if (inputFluid != null) for (FluidStack fluid : inputFluid) list.add(I18nUtil.resolveKey("desc.misc.recipe.mb", EnumChatFormatting.BLUE + String.valueOf(fluid.fill), fluid.type.getLocalizedName(), (fluid.pressure == 0 ? "" : " " + I18nUtil.resolveKey("gui.recipe.atPressure") + " " + EnumChatFormatting.RED + fluid.pressure + " " + I18nUtil.resolveKey("gui.recipe.pu"))));
+		if (inputFluid != null) for (FluidStack fluid : inputFluid) list.add(("" + (EnumChatFormatting.BLUE + String.valueOf(fluid.fill)) + "mB " + (fluid.type.getLocalizedName()) + ((fluid.pressure == 0 ? "" : " " + I18nUtil.resolveKey("gui.recipe.atPressure") + " " + EnumChatFormatting.RED + fluid.pressure + " " + I18nUtil.resolveKey("gui.recipe.pu")))));
 	}
 
 	protected void output(List<String> list) {
@@ -202,7 +202,7 @@ public class GenericRecipe {
 		if(outputFluid != null) for(FluidStack fluid : outputFluid) {
 			String pressurePart = fluid.pressure == 0 ? "" :
 				" " + I18nUtil.resolveKey("gui.recipe.atPressure") + " " + EnumChatFormatting.RED + fluid.pressure + " PU";
-			list.add(I18nUtil.resolveKey("desc.misc.recipe.mb", EnumChatFormatting.BLUE + String.valueOf(fluid.fill), fluid.type.getLocalizedName(), pressurePart));
+			list.add(("" + (EnumChatFormatting.BLUE + String.valueOf(fluid.fill)) + "mB " + (fluid.type.getLocalizedName()) + (pressurePart)));
 		}
 	}
 

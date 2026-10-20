@@ -56,7 +56,7 @@ public class ItemModInsert extends ItemArmorMod {
 			list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.mod_insert.speed", Math.round((1F - speed) * 100)));
 
 		if(this == ModItems.insert_polonium)
-			list.add(EnumChatFormatting.DARK_RED + I18nUtil.resolveKey("item.mod_insert.radiation"));
+			list.add(EnumChatFormatting.DARK_RED + "+100 RAD/s");
 
 		list.add(I18nUtil.resolveKey("item.mod_insert.durability", (stack.getMaxDamage() - stack.getItemDamage()), stack.getMaxDamage()));
 
@@ -79,7 +79,7 @@ public class ItemModInsert extends ItemArmorMod {
 			desc.add(I18nUtil.resolveKey("item.mod_insert.speed", Math.round((1F - speed) * 100)));
 
 		if(this == ModItems.insert_polonium)
-			desc.add(I18nUtil.resolveKey("item.mod_insert.radiation"));
+			desc.add("+100 RAD/s");
 
 		String join = String.join(" / ", desc);
 
