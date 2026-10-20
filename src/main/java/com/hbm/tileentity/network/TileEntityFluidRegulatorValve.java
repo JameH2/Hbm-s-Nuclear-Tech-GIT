@@ -12,6 +12,8 @@ import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.TilePort;
 import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.tileentity.machine.storage.TileEntityBarrel;
+import com.hbm.uninos.GenNode;
+import com.hbm.uninos.UniNodespace;
 import com.hbm.util.fauxpointtwelve.BlockPos;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
@@ -194,6 +196,28 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 				|| !hasOtherMatchingTank(((IFluidStandardSenderMK2) tile).getSendingTanks(), tank));
 	}
 
+	private boolean hasOtherTankConnection(TankRef ref) {
+		if (ref == null || !(ref.tile instanceof TileEntityBarrel)) return false;
+		PortDef[] ports = ((TileEntityBarrel) ref.tile).getPorts();
+		if (ports == null) return false;
+		for (PortDef port : ports) {
+			if (port == null || port.portConnections == null) continue;
+			for (DirPos connection : port.portConnections) {
+				if (connection == null || connection.compare(xCoord, yCoord, zCoord)) continue;
+				TileEntity tile = worldObj.getTileEntity(connection.getX(), connection.getY(), connection.getZ());
+				if (tile instanceof TileEntityFluidRegulatorValve && !tile.isInvalid()) {
+					TileEntityFluidRegulatorValve other = (TileEntityFluidRegulatorValve) tile;
+					if (other.isLoaded() && other.type == this.type
+							&& other.getAdjacentTile(connection.getDir().getOpposite()) == ref.tile) return true;
+				}
+				GenNode<?> node = UniNodespace.getNode(worldObj, connection.getX(), connection.getY(), connection.getZ(),
+						this.type.getNetworkProvider());
+				if (node != null && !node.expired && UniNodespace.checkConnection(node, connection, false)) return true;
+			}
+		}
+		return false;
+	}
+
 	private boolean permitsTransfer(TankRef ref, FluidType type, int pressure, boolean receiving) {
 		if (ref == null || ref.tank.getMaxFill() <= 0 || type == Fluids.NONE || type != getRegulatedType(ref)
 				|| pressure != ref.tank.getPressure() || !isTankConnected(ref) || !canAccess(ref, type)
@@ -216,6 +240,13 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 			}
 
 			tankRef = tanks.isEmpty() ? null : tanks.get(0);
+
+			if (hasOtherTankConnection(tankRef)) {
+				tankRef = null;
+				this.explode();
+				return;
+			}
+
 			updateRegulatorPort(tankRef);
 
 			if (worldObj.getTotalWorldTime() % 10 == 0) {
