@@ -137,6 +137,11 @@ public class ItemFluidDuct extends Item {
 	}
 
 	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
+		NetworkPlacer.addInformation(list);
+	}
+
+	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean inHand) {
 
 		super.onUpdate(stack, world, entity, slot, inHand);

@@ -20,7 +20,7 @@ import java.util.List;
 
 public class EntityRailgunProjectile extends EntityThrowableNT implements IChunkLoader, IRadarDetectableNT {
 	public boolean sabotSeparation = false;
-	// runtime-only: the fluid this railgun shot is carrying (filled fluid sabot)
+	// The fluid this railgun shot is carrying (filled fluid sabot).
 	public com.hbm.inventory.fluid.FluidType fluidType = com.hbm.inventory.fluid.Fluids.NONE;
 	public short fluidFill = 0;
 
@@ -135,6 +135,8 @@ public class EntityRailgunProjectile extends EntityThrowableNT implements IChunk
 		super.writeEntityToNBT(nbt);
 
 		nbt.setInteger("type", this.dataWatcher.getWatchableObjectInt(10));
+		nbt.setString("fluidType", this.fluidType.getName());
+		nbt.setShort("fluidFill", this.fluidFill);
 	}
 
 	@Override
@@ -142,6 +144,8 @@ public class EntityRailgunProjectile extends EntityThrowableNT implements IChunk
 		super.readEntityFromNBT(nbt);
 
 		this.dataWatcher.updateObject(10, nbt.getInteger("type"));
+		this.fluidType = com.hbm.inventory.fluid.Fluids.fromName(nbt.getString("fluidType"));
+		this.fluidFill = nbt.getShort("fluidFill");
 	}
 
 	@Override

@@ -347,10 +347,10 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 		this.power = nbt.getLong("power");
 		this.charge = nbt.getLong("charge");
 		this.charging = nbt.getBoolean("charging");
-		this.targetVector = new Vector2d(
+		this.targetVector = nbt.hasKey("targetX", 99) && nbt.hasKey("targetZ", 99) ? new Vector2d(
 			nbt.getDouble("targetX"),
 			nbt.getDouble("targetZ")
-		);
+		) : null;
 		this.rotationPitch = nbt.getDouble("rotationPitch");
 		this.rotationYaw = nbt.getDouble("rotationYaw");
 		this.theta = nbt.getDouble("theta");
@@ -368,6 +368,9 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 		if (this.targetVector != null) {
 			nbt.setDouble("targetX", this.targetVector.x);
 			nbt.setDouble("targetZ", this.targetVector.y);
+		} else {
+			nbt.removeTag("targetX");
+			nbt.removeTag("targetZ");
 		}
 		nbt.setDouble("rotationPitch", this.rotationPitch);
 		nbt.setDouble("rotationYaw", this.rotationYaw);

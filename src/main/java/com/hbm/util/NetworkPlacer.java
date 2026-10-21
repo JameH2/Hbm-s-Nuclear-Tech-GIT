@@ -16,12 +16,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Conveyor-like placement for fluid ducts and cables.
- * Clicks set a start position, then click again elsewhere to build a whole line
+ * Sneak-click to set a start position, then click again elsewhere to build a whole line
  * along the path between them (stepping over obstacles), consuming items from the inventory.
  * Adapted from the IQ edition; pipe anchors and other span blocks are intentionally not supported.
  */
@@ -40,6 +41,7 @@ public class NetworkPlacer {
 				if(world.isRemote) player.addChatMessage(new ChatComponentText("Selection cleared"));
 				return true;
 			}
+		} else if(!hasPending(stack)) {
 			return false;
 		}
 
@@ -144,6 +146,12 @@ public class NetworkPlacer {
 
 	public static boolean hasPending(ItemStack stack) {
 		return stack.stackTagCompound != null && stack.stackTagCompound.getBoolean(SET);
+	}
+
+	public static void addInformation(List list) {
+		list.add(StatCollector.translateToLocal("desc.network_placer.start"));
+		list.add(StatCollector.translateToLocal("desc.network_placer.finish"));
+		list.add(StatCollector.translateToLocal("desc.network_placer.cancel"));
 	}
 
 	private static void clearPending(ItemStack stack) {

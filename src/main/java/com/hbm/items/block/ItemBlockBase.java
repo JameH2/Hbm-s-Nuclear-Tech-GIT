@@ -82,6 +82,7 @@ public class ItemBlockBase extends ItemBlock {
 	
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
+		if(NetworkPlacer.isLine(this.field_150939_a)) NetworkPlacer.addInformation(list);
 		
 		if(field_150939_a instanceof ITooltipProvider) {
 			((ITooltipProvider) field_150939_a).addInformation(stack, player, list, bool);

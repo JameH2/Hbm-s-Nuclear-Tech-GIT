@@ -23,6 +23,10 @@ import net.minecraft.world.World;
  * line that would be placed, anchored to the player's aim (mc.objectMouseOver).
  */
 public class NetworkPlacerClient {
+	private static World previewWorld;
+	private static Block previewBlock;
+	private static NBTTagCompound previewSelection;
+	private static long previewTick;
 
 	public static void preview(ItemStack stack, EntityPlayer player) {
 
@@ -51,6 +55,16 @@ public class NetworkPlacerClient {
 		int fluid = nbt.getInteger("nw_itemFluid") > 0 ? nbt.getInteger("nw_itemFluid") : nbt.getInteger("nw_fluid");
 
 		Block block = NetworkPlacer.blockOf(stack);
+		boolean targetChanged = RenderOverhead.targetChanged(mop, player.rotationYaw, side);
+		long tick = world.getTotalWorldTime();
+		// Include the selection and world, not just the aim. Periodically refresh for
+		// obstacles placed/removed while aiming at the same block.
+		if(!targetChanged && previewWorld == world && previewBlock == block && nbt.equals(previewSelection)
+				&& tick >= previewTick && tick - previewTick < 10) return;
+		previewWorld = world;
+		previewBlock = block;
+		previewSelection = (NBTTagCompound) nbt.copy();
+		previewTick = tick;
 		BlockPos end = NetworkPlacer.placePos(world, block, mop.blockX, mop.blockY, mop.blockZ, side);
 		List<BlockPos> path = NetworkPlacer.calcRoute(world, sx, sy, sz, end.getX(), end.getY(), end.getZ(), 0);
 
@@ -120,6 +134,9 @@ public class NetworkPlacerClient {
 	}
 
 	public static void clear() {
+		previewWorld = null;
+		previewBlock = null;
+		previewSelection = null;
 		RenderOverhead.clearActionPreview();
 	}
 }

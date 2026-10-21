@@ -410,6 +410,7 @@ public class RenderOverhead {
 	// Prevents thread unsafe null exception
 	public static void clearActionPreview() {
 		clearPreview = true;
+		lastMop = null;
 	}
 
 	public static void renderActionPreview(float partialTicks) {

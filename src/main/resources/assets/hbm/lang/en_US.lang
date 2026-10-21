@@ -1468,6 +1468,12 @@ desc.item.wasteCooling=Cool in a Spent Fuel Pool Drum
 desc.item.zirnoxBreedingRod=§2[ZIRNOX Breeding Rod]$§ePlace next to fuel rods to breed$§eLasts %d ticks
 desc.item.zirnoxRod=§a[ZIRNOX Fuel Rod]$§eGenerates %1$d heat per tick$§eLasts %2$d ticks
 
+desc.fuel.graphLegend=§aFlux (x) -> output (y)   §9Depletion (x) -> multiplier (y)
+desc.fuel.graphLegendFlux=§aFlux (x) -> output (y)
+desc.network_placer.start=Sneak-right-click to start a cable or duct line
+desc.network_placer.finish=Right-click again to build the selected line
+desc.network_placer.cancel=Sneak-right-click again to cancel the selection
+
 desc.gui.upgrade=§lAcceptable Upgrades:§r
 desc.gui.upgrade.afterburner=* §dAfterburner§r: Stacks to level 3
 desc.gui.upgrade.effectiveness=* §aEffectiveness§r: Stacks to level 3
@@ -8054,6 +8060,8 @@ tile.turret_howard.name=Goalkeeper Twin Chaingun CIWS "Howard"
 tile.turret_howard_damaged.name=Goalkeeper Twin Chaingun CIWS "Methusalem"
 tile.turret_jeremy.name=Autocannon Turret "Jeremy"
 tile.turret_maxwell.name=High-Energy MASER Turret "Maxwell"
+tile.turret_railgun.name=Railgun Turret "Louis"
+tile.turret_railgun.desc=Rail cannon. Accelerates conductive projectiles to very high velocities.$Needs a lot of power in order to operate.
 tile.turret_richard.name=Rocket Launcher Turret "Richard"
 tile.turret_sentry.name=Sentry Turret "Brown"
 tile.turret_sentry_damaged.name=Sentry Turret "Edwin"
