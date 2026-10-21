@@ -170,6 +170,7 @@ public class TileMappings {
 		put(TileEntityMachineGasDock.class, "tileentity_gas_dock");
 		put(TileEntityMachineEPress.class, "tileentity_electric_press");
 		put(TileEntityConveyorPress.class, "tileentity_conveyor_press");
+		put(TileEntityConveyorCombinator.class, "tileentity_conveyor_combinator");
 		put(TileEntityCoreEmitter.class, "tileentity_v0_emitter");
 		put(TileEntityCoreReceiver.class, "tileentity_v0_receiver");
 		put(TileEntityCoreInjector.class, "tileentity_v0_injector");
@@ -320,6 +321,7 @@ public class TileMappings {
 		put(TileEntityTurretHowardDamaged.class, "tileentity_turret_howard_damaged");
 		put(TileEntityTurretMaxwell.class, "tileentity_turret_maxwell");
 		put(TileEntityTurretFritz.class, "tileentity_turret_fritz");
+		put(TileEntityTurretRailgun.class, "tileentity_turret_railgun");
 		put(TileEntityTurretArty.class, "tileentity_turret_arty");
 		put(TileEntityTurretHIMARS.class, "tileentity_turret_himars");
 		put(TileEntityTurretSentry.class, "tileentity_turret_sentry");

@@ -47,6 +47,7 @@ import com.hbm.items.tool.ItemToolAbility.EnumToolType;
 import com.hbm.items.weapon.BSword;
 import com.hbm.items.weapon.GunB92;
 import com.hbm.items.weapon.GunB92Cell;
+import com.hbm.items.weapon.ItemAmmoRailgun;
 import com.hbm.items.weapon.ItemAmmo;
 import com.hbm.items.weapon.ItemAmmoArty;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
@@ -1598,6 +1599,7 @@ public class ModItems {
 	public static ItemEnumMulti ammo_fireext;
 
 	public static Item ammo_dgk;
+	public static Item ammo_railgun;
 	public static Item ammo_arty;
 	public static Item ammo_himars;
 
@@ -4086,6 +4088,7 @@ public class ModItems {
 
 		ammo_shell = (ItemEnumMulti) new ItemAmmo(Ammo240Shell.class).setCreativeTab(MainRegistry.weaponTab).setUnlocalizedName("ammo_shell");
 		ammo_dgk = new ItemCustomLore().setUnlocalizedName("ammo_dgk").setMaxStackSize(4).setCreativeTab(MainRegistry.weaponTab);
+		ammo_railgun = new ItemAmmoRailgun().setUnlocalizedName("ammo_railgun");
 		ammo_fireext = (ItemEnumMulti) new ItemAmmo(AmmoFireExt.class).setCreativeTab(MainRegistry.weaponTab).setUnlocalizedName("ammo_fireext");
 		ammo_misc = new ItemAmmo(AmmoMisc.class).setUnlocalizedName("ammo_misc");
 		ammo_arty = new ItemAmmoArty().setUnlocalizedName("ammo_arty");
@@ -6514,6 +6517,7 @@ public class ModItems {
 		GameRegistry.registerItem(ammo_fireext, ammo_fireext.getUnlocalizedName());
 		GameRegistry.registerItem(ammo_shell, ammo_shell.getUnlocalizedName());
 		GameRegistry.registerItem(ammo_dgk, ammo_dgk.getUnlocalizedName());
+		GameRegistry.registerItem(ammo_railgun, ammo_railgun.getUnlocalizedName());
 		GameRegistry.registerItem(ammo_arty, ammo_arty.getUnlocalizedName());
 		GameRegistry.registerItem(ammo_himars, ammo_himars.getUnlocalizedName());
 

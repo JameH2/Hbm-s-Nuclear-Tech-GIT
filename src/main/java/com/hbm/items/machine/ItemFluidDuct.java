@@ -4,10 +4,12 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
+import com.hbm.util.NetworkPlacer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -85,6 +87,9 @@ public class ItemFluidDuct extends Item {
 	}
 
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int i, float f0, float f1, float f2) {
+
+		if(NetworkPlacer.handle(stack, player, world, x, y, z, i, ModBlocks.fluid_duct_neo, 0, stack.getItemDamage())) return true;
+
 		if(world.getBlock(x, y, z) != Blocks.snow_layer) {
 			if(i == 0) {
 				--y;
@@ -129,6 +134,19 @@ public class ItemFluidDuct extends Item {
 
 			return true;
 		}
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
+		NetworkPlacer.addInformation(list);
+	}
+
+	@Override
+	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean inHand) {
+
+		super.onUpdate(stack, world, entity, slot, inHand);
+
+		if(entity instanceof EntityPlayer) NetworkPlacer.update(stack, (EntityPlayer) entity, inHand);
 	}
 
 }

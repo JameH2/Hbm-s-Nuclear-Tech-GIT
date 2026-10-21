@@ -1,8 +1,10 @@
 package api.hbm.fluidmk2;
 
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.Fluids;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 public interface IFillableItem {
 
@@ -18,4 +20,19 @@ public interface IFillableItem {
 	public FluidType getFirstFluidType(ItemStack stack);
 	/** Returns the fillstate for the specified fluid. Currently only used for setting bedrock ores */
 	public int getFill(ItemStack stack);
+
+	/** Type/Fill logic imported from the old pipette class, used for Syringes and stuff now.. **/
+	public static FluidType getFluidType(ItemStack stack) {
+		if(!stack.hasTagCompound()) return Fluids.NONE;
+		return Fluids.fromID(stack.stackTagCompound.getShort("type"));
+	}
+	public static short getFluidFill(ItemStack stack) {
+		if(!stack.hasTagCompound()) return 0;
+		return stack.stackTagCompound.getShort("fill");
+	}
+	public static void setFluidFill(ItemStack stack, FluidType type, short fill) {
+		if(!stack.hasTagCompound()) stack.stackTagCompound = new NBTTagCompound();
+		stack.stackTagCompound.setShort("type", (short) type.getID());
+		stack.stackTagCompound.setShort("fill", fill);
+	}
 }
