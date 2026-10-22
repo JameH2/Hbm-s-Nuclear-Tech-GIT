@@ -2,9 +2,7 @@ package com.hbm.entity.mob.botprime;
 
 import java.util.List;
 
-import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
@@ -37,14 +35,6 @@ public abstract class EntityWormBaseNT extends EntityBurrowingNT {
 	protected double maxBodySpeed;
 	protected double segmentDistance;
 	protected double knockbackDivider;
-
-	public static final IEntitySelector wormSelector = new IEntitySelector() {
-
-		@Override
-		public boolean isEntityApplicable(Entity target) {
-			return target instanceof EntityWormBaseNT;
-		}
-	};
 
 	public EntityWormBaseNT(World world) {
 		super(world);
@@ -193,7 +183,7 @@ public abstract class EntityWormBaseNT extends EntityBurrowingNT {
 		}
 		
 		if((this.ticksExisted % 60 == 0 || this.ticksExisted == 1) && (this.targetedEntity == null || this.followed == null)) {
-			findEntityToFollow(this.worldObj.selectEntitiesWithinAABB(EntityLiving.class, this.boundingBox.expand(this.rangeForParts, this.rangeForParts, this.rangeForParts), EntityWormBaseNT.wormSelector));
+			findEntityToFollow(this.worldObj.getEntitiesWithinAABB(EntityWormBaseNT.class, this.boundingBox.expand(this.rangeForParts, this.rangeForParts, this.rangeForParts)));
 		}
 		
 		double deltaX = this.waypointX - this.posX;

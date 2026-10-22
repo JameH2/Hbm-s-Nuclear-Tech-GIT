@@ -1,0 +1,9 @@
+* text=auto eol=crlf
+
+*.info text eol=lf
+*.mcmeta text eol=lf
+*.cfg text eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
+gradlew text eol=lf
+*.jar binary

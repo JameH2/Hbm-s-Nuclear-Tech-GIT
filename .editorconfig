@@ -28,5 +28,5 @@ ij_java_case_statement_on_separate_line = false
 [{*.info,*.json,*.mcmeta,*.md,*.cfg,*.yml,*.toml}]
 tab_width = 2
 
-[{*.info,*.mcmeta,*.cfg}]
+[{*.info,*.mcmeta,*.cfg,*.sh,gradlew}]
 end_of_line = lf
