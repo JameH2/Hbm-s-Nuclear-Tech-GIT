@@ -24,6 +24,11 @@
 - Glyphid taming
 - Baubles compat
 - Migrated to the GTNH Gradle build system with JDK 25 and JVM Downgrader, preserving Java 8 compatibility
+- Regulator valve
+- Louis the railgun
+- Full I18n-ization
+- RBMK and PWR fuel rods graph functions
+- Conveyor combinator
 
 Hi, i am memeing things into existence, dont mind me! im just the bent fork at the end of the table -JamesH_2
 
