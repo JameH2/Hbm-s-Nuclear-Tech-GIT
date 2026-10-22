@@ -2807,6 +2807,7 @@ overlay.bedrock_ore_te.requires_mb=Requires: %smB %s
 overlay.bedrock_ore_te.tier=Tier: %s
 overlay.chemical_factory.recipe_field=Recipe field [%s]
 overlay.common.power=Power: %sHE
+overlay.converter.max_buffer=Max buffer: %sHE (use a screwdriver to change)
 overlay.converter_he_rf.rf=%sRF
 overlay.converter_rf_he.rf=%sRF
 overlay.conveyor_press.installed_stamp=Installed stamp: %s
