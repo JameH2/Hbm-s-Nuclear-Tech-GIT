@@ -80,7 +80,7 @@ public class MachineOrbus extends BlockDummyable implements IPersistentInfoProvi
 
 				kyleEntity.tank.setTankType(type);
 				kyleEntity.markDirty();
-				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 				}
 			}
 
@@ -120,6 +120,6 @@ public class MachineOrbus extends BlockDummyable implements IPersistentInfoProvi
 	public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {
 		FluidTank tank = new FluidTank(Fluids.NONE, 0);
 		tank.readFromNBT(persistentTag, "tank");
-		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.orbus.mb", tank.getFill(), tank.getMaxFill(), tank.getTankType().getLocalizedName()));
+		list.add((EnumChatFormatting.YELLOW) + ("" + (tank.getFill()) + "/" + (tank.getMaxFill()) + "mB " + (tank.getTankType().getLocalizedName())));
 	}
 }

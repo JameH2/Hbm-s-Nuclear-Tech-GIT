@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -90,7 +91,7 @@ public class ItemPipette extends Item implements IFillableItem, net.minecraftfor
 				else
 					a = !player.isSneaking() ? Math.min(this.getContainerCapacity(stack) + 50, 1_000) : Math.max(this.getContainerCapacity(stack) - 50, 50);
 				stack.stackTagCompound.setShort("capacity", (short) a);
-				player.addChatMessage(new ChatComponentTranslation("chat.pipette.1", a, this.getMaxFill()));
+				player.addChatMessage(new ChatComponentText(a + "/" + this.getMaxFill() + "mB"));
 			} else {
 				player.addChatMessage(new ChatComponentTranslation("desc.item.pipette.noEmpty"));
 			}
@@ -108,8 +109,8 @@ public class ItemPipette extends Item implements IFillableItem, net.minecraftfor
 			list.add(I18nUtil.resolveKey("desc.item.pipette.corrosive"));
 		if(this == ModItems.pipette)
 			list.add(I18nUtil.resolveKey("desc.item.pipette.noCorrosive"));
-		list.add(I18nUtil.resolveKey("item.pipette.desc1", this.getType(stack).getLocalizedName()));
-		list.add(I18nUtil.resolveKey("desc.item.pipette.amount_mb_mb", this.getFill(stack), this.getContainerCapacity(stack), this.getMaxFill()));
+		list.add(I18nUtil.resolveKey("item.pipette.fluid", this.getType(stack).getLocalizedName()));
+		list.add(I18nUtil.resolveKey("item.pipette.amount", this.getFill(stack), this.getContainerCapacity(stack), this.getMaxFill()));
 	}
 
 	@Override

@@ -16,9 +16,9 @@ public class ItemWandTime extends Item {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.resolveKey("desc.item.wand.creative_item"));
-		list.add(EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.item.wand_time.wibbly_wobbly_timey_wimey_stuff"));
-		list.add(I18nUtil.resolveKey("item.wand_time.desc2"));
+		list.add(I18nUtil.resolveKey("item.wand.creative_only"));
+		list.add(EnumChatFormatting.ITALIC + I18nUtil.resolveKey("item.wand_time.motto"));
+		list.add(I18nUtil.resolveKey("item.wand_time.server_warning"));
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class ItemWandTime extends Item {
 			AstronomyUtil.TIME_MULTIPLIER *= 2;
 		}
 
-		player.addChatMessage(new ChatComponentTranslation("chat.wand_time.celestial_time_multiplier", AstronomyUtil.TIME_MULTIPLIER));
+		player.addChatMessage(new ChatComponentTranslation("chat.wand_time.multiplier", AstronomyUtil.TIME_MULTIPLIER));
 
 		return true;
 	}

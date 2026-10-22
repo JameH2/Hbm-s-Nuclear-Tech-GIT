@@ -82,45 +82,45 @@ public class ItemAmmoHIMARS extends Item {
 
 		switch(stack.getItemDamage()) {
 		case SMALL:
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc9"));
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc2"));
-			list.add(b + I18nUtil.resolveKey("item.ammo_arty.desc3"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.strength", 20));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.damage_modifier", 3));
+			list.add(b + I18nUtil.resolveKey("item.ammo_arty.preserves_blocks"));
 			break;
 		case SMALL_HE:
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc9"));
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc2"));
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc6"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.strength", 20));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.damage_modifier", 3));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.destroys_blocks"));
 			break;
 		case SMALL_WP:
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc9"));
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc2"));
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc7"));
-			list.add(b + I18nUtil.resolveKey("item.ammo_arty.desc3"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.strength", 20));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.damage_modifier", 3));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.phosphorus"));
+			list.add(b + I18nUtil.resolveKey("item.ammo_arty.preserves_blocks"));
 			break;
 		case SMALL_TB:
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc9"));
-			list.add(y + I18nUtil.resolveKey("desc.item.ammo_himars.damage_modifier_10x"));
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc6"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.strength", 20));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.damage_modifier", 10));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.destroys_blocks"));
 			break;
 		case SMALL_MINI_NUKE:
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc9"));
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc10"));
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc6"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.strength", 20));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.nuclear_damage"));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.destroys_blocks"));
 			break;
 		case SMALL_LAVA:
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc9"));
-			list.add(r + I18nUtil.resolveKey("desc.item.ammo_himars.creates_volcanic_lava"));
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc6"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.strength", 20));
+			list.add(r + I18nUtil.resolveKey("item.ammo_himars.lava"));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.destroys_blocks"));
 			break;
 		case LARGE:
-			list.add(y + I18nUtil.resolveKey("item.ammo_himars.desc3"));
-			list.add(y + I18nUtil.resolveKey("item.ammo_arty.desc5"));
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc6"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.strength", 50));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.damage_modifier", 5));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.destroys_blocks"));
 			break;
 		case LARGE_TB:
-			list.add(y + I18nUtil.resolveKey("item.ammo_himars.desc3"));
-			list.add(y + I18nUtil.resolveKey("desc.item.ammo_himars.damage_modifier_12x"));
-			list.add(r + I18nUtil.resolveKey("item.ammo_arty.desc6"));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.strength", 50));
+			list.add(y + I18nUtil.resolveKey("item.ammo_arty.damage_modifier", 12));
+			list.add(r + I18nUtil.resolveKey("item.ammo_arty.destroys_blocks"));
 			break;
 		}
 	}

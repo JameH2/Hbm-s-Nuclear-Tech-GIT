@@ -383,6 +383,7 @@ public class TileEntityMachineArcWelder extends TileEntityMachineBase implements
 			info.add(EnumChatFormatting.RED + I18nUtil.resolveKey(this.KEY_DELAY, "+" + (level * 100 / 3) + "%"));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
+			IUpgradeInfoProvider.addOverdriveInfo(info, extendedInfo, level + 1, Math.pow(2, level));
 			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}

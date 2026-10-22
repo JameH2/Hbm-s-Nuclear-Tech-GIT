@@ -21,7 +21,7 @@ public class ItemBook extends Item implements IGUIProvider {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(I18nUtil.resolveKey("desc.item.book.edition_gold_lined_pages"));
+		list.add(I18nUtil.resolveKey("item.book.edition"));
 	}
 
 	@Override

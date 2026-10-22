@@ -259,7 +259,7 @@ public class FluidType {
 		if(!hidden.isEmpty() && !shiftHeld) {
 			info.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC +I18nUtil.resolveKey("desc.misc.hold_prefix") +
 					EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.lshift_key") +
-					EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.more_info_suffix"));
+					EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("misc.tooltip.more_info"));
 		}
 	}
 	public static enum ExtContainer {

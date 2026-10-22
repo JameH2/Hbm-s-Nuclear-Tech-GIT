@@ -17,7 +17,7 @@ public class CommandRadiation extends CommandBase {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "commands.radiation.ntmrad_set_clear";
+		return "commands.radiation.usage";
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class CommandRadiation extends CommandBase {
 
 		if(args.length == 1 && "clear".equals(args[0])) {
 			ChunkRadiationManager.proxy.clearSystem(sender.getEntityWorld());
-			sender.addChatMessage(new ChatComponentTranslation("commands.radiation.cleared_radiation_data"));
+			sender.addChatMessage(new ChatComponentTranslation("commands.radiation.cleared"));
 			return;
 		}
 

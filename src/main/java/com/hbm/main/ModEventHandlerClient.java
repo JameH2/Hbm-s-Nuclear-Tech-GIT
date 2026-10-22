@@ -827,7 +827,7 @@ public class ModEventHandlerClient {
 
 				list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC +I18nUtil.resolveKey("gui.armor_mod.hold") +
 						EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.lshift") +
-						EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.to_display_protection_info"));
+						EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.protection_hint"));
 			}
 		}
 
@@ -843,7 +843,7 @@ public class ModEventHandlerClient {
 
 				list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC +I18nUtil.resolveKey("gui.armor_mod.hold") +
 						EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.lshift") +
-						EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.to_display_installed_armor_mods"));
+						EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.armor_mod.mods_hint"));
 
 			} else {
 
@@ -906,10 +906,10 @@ public class ModEventHandlerClient {
 					list.add("");
 
 				if(entry.entry == EnumEntryType.ADD)
-					list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("desc.misc.adds_custom_nuke_stage", entry.value, entry.type));
+					list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("misc.tooltip.nuke_stage", entry.value, entry.type));
 
 				if(entry.entry == EnumEntryType.MULT)
-					list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("desc.misc.armor_mod.line.01", entry.value, entry.type));
+					list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("misc.tooltip.nuke_multiplier", entry.value, entry.type));
 			}
 		}
 
@@ -924,7 +924,7 @@ public class ModEventHandlerClient {
 				qmawTimestamp = Clock.get_ms();
 			}
 		} catch(Exception ex) {
-			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.misc.error_loading_cannery", ex.getLocalizedMessage()));
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("misc.tooltip.cannery_error", ex.getLocalizedMessage()));
 		}
 
 		try {
@@ -935,7 +935,7 @@ public class ModEventHandlerClient {
 				canneryTimestamp = Clock.get_ms();
 			}
 		} catch(Exception ex) {
-			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("desc.misc.error_loading_cannery", ex.getLocalizedMessage()));
+			list.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("misc.tooltip.cannery_error", ex.getLocalizedMessage()));
 		}
 
 		/*ItemStack copy = stack.copy();
@@ -960,6 +960,35 @@ public class ModEventHandlerClient {
 					list.add(EnumChatFormatting.AQUA + " - " + I18nUtil.resolveKey("body.kerbin"));
 				}
 			}
+		}
+
+		com.hbm.render.util.TooltipRenderer.reserve(stack, list);
+		com.hbm.render.util.TooltipRenderer.setPending(stack, list);
+	}
+
+	@SubscribeEvent
+	public void drawScreenPost(net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent.Post event) {
+		boolean nei = Loader.isModLoaded("NotEnoughItems") && event.gui instanceof GuiContainer;
+		if(nei) {
+			// NEI draws graphs inline, after assembling and positioning its tooltip.
+			com.hbm.render.util.TooltipRenderer.clear();
+			return;
+		}
+
+		ItemStack pending = com.hbm.render.util.TooltipRenderer.peek();
+		if(pending == null) return;
+
+		// The graph stash is also set by ItemTooltipEvent calls that don't produce a real
+		// tooltip (NEI panel reads, dragged-stack reads). Only paint the pending graph when the
+		// stashed stack still matches the stack actually under the player's cursor; otherwise the
+		// last stashed fuel tooltip gets blitted into the inventory for a single frame.
+		ItemStack hovered = getMouseOverStack();
+		boolean valid = hovered != null && hovered.getItem() == pending.getItem() && hovered.getItemDamage() == pending.getItemDamage();
+
+		if(valid) {
+			com.hbm.render.util.TooltipRenderer.renderPending(Minecraft.getMinecraft().fontRenderer, event.gui.width, event.gui.height, event.mouseX, event.mouseY, 300D, nei);
+		} else {
+			com.hbm.render.util.TooltipRenderer.clear();
 		}
 	}
 
@@ -1076,7 +1105,7 @@ public class ModEventHandlerClient {
 			}
 
 			if(ArmorUtil.isWearingEmptyMask(mc.thePlayer)) {
-				MainRegistry.proxy.displayTooltip(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.armor_mod.your_mask_has_no_filter"), ServerProxy.ID_FILTER);
+				MainRegistry.proxy.displayTooltip(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.armor_mod.no_filter"), ServerProxy.ID_FILTER);
 			}
 
 			//prune other entities' muzzle flashes
@@ -1152,7 +1181,7 @@ public class ModEventHandlerClient {
 					ItemFluidDuct.class
 				);
 
-				String prefix = I18nUtil.resolveKey("gui.wiki_render.gun_prefix");
+				String prefix = I18nUtil.resolveKey("gui.wiki_render.gun_prefix") + " ";
 				//int gunScale = 16;
 				//int defaultScale = 1;
 				int slotScale = 16;

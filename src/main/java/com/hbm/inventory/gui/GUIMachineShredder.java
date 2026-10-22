@@ -37,7 +37,7 @@ public class GUIMachineShredder extends GuiInfoContainer {
 		if(diFurnace.getGearRight() == 0 || diFurnace.getGearRight() == 3) flag = true;
 
 		if(flag) {
-			String[] text = new String[] { I18nUtil.resolveKey("gui.shredder.error_shredder_blades_broken_missing") };
+			String[] text = new String[] { I18nUtil.resolveKey("gui.shredder.missing_blades") };
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36, 16, 16, guiLeft - 8, guiTop + 36 + 16, text);
 		}
 	}

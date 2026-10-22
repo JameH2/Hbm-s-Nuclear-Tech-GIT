@@ -223,6 +223,7 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ICo
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+		if(i >= 3 && i <= 4) return isUpgradeValid(itemStack);
 
 		MixerRecipe[] recipes = MixerRecipes.getOutput(tanks[2].getTankType());
 		if(recipes == null || recipes.length <= 0) return false;
@@ -378,6 +379,7 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ICo
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(this.KEY_CONSUMPTION, "-" + (level * 25) + "%"));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
+			IUpgradeInfoProvider.addOverdriveInfo(info, extendedInfo, level + 1, level * 3 + 1);
 			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}

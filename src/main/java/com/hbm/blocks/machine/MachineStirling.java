@@ -169,8 +169,8 @@ public class MachineStirling extends BlockDummyable implements ILookOverlay, ITo
 		TileEntityStirling stirling = (TileEntityStirling) te;
 
 		List<String> text = new ArrayList();
-		text.add(I18nUtil.resolveKey("overlay.stirling.tu_t", stirling.heat));
-		text.add(I18nUtil.resolveKey("overlay.stirling.he_t", (stirling.hasCog ? stirling.powerBuffer : 0)));
+		text.add(("" + (stirling.heat) + "TU/t"));
+		text.add(("" + ((stirling.hasCog ? stirling.powerBuffer : 0)) + "HE/t"));
 
 		if(this != ModBlocks.machine_stirling_creative) {
 			int maxHeat = stirling.maxHeat();

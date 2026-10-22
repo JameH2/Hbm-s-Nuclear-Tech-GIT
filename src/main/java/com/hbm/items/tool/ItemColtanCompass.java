@@ -34,9 +34,9 @@ public class ItemColtanCompass extends Item implements IBauble {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(I18nUtil.resolveKey("desc.item.coltan_compass.points_towards_coltan_deposit"));
-		list.add(I18nUtil.resolveKey("item.coltan_compass.desc2"));
-		list.add(I18nUtil.resolveKey("item.coltan_compass.desc3"));
+		for(String line : I18nUtil.resolveKeyArray("item.coltan_compass.desc")) {
+			list.add(line);
+		}
 	}
 
 	@Override

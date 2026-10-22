@@ -27,19 +27,19 @@ public class ItemBombCaller extends Item {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.resolveKey("item.bomb_caller.desc1"));
+		list.add(I18nUtil.resolveKey("item.bomb_caller.usage"));
 
 		switch (stack.getItemDamage()) {
-			case 0: list.add(I18nUtil.resolveKey("item.bomb_caller.desc2")); break;
-			case 1: list.add(I18nUtil.resolveKey("item.bomb_caller.desc3")); break;
-			case 2: list.add(I18nUtil.resolveKey("item.bomb_caller.desc4")); break;
-			case 3: list.add(I18nUtil.resolveKey("item.bomb_caller.desc5")); break;
-			case 4: list.add(I18nUtil.resolveKey("item.bomb_caller.desc6")); break;
-			case 5: list.add(I18nUtil.resolveKey("item.bomb_caller.desc7")); break;
-			case 6: list.add(I18nUtil.resolveKey("item.bomb_caller.desc8")); break;
-			case 7: list.add(I18nUtil.resolveKey("item.bomb_caller.desc9")); break;
-			case 8: list.add(I18nUtil.resolveKey("item.bomb_caller.desc10")); break;
-			default: list.add(I18nUtil.resolveKey("item.bomb_caller.desc11"));
+			case 0: list.add(I18nUtil.resolveKey("item.bomb_caller.carpet")); break;
+			case 1: list.add(I18nUtil.resolveKey("item.bomb_caller.napalm")); break;
+			case 2: list.add(I18nUtil.resolveKey("item.bomb_caller.poison")); break;
+			case 3: list.add(I18nUtil.resolveKey("item.bomb_caller.agent_orange")); break;
+			case 4: list.add(I18nUtil.resolveKey("item.bomb_caller.atomic")); break;
+			case 5: list.add(I18nUtil.resolveKey("item.bomb_caller.stinger")); break;
+			case 6: list.add(I18nUtil.resolveKey("item.bomb_caller.pip")); break;
+			case 7: list.add(I18nUtil.resolveKey("item.bomb_caller.cloud")); break;
+			case 8: list.add(I18nUtil.resolveKey("item.bomb_caller.airliner")); break;
+			default: list.add(I18nUtil.resolveKey("item.bomb_caller.invalid"));
 
 		}
 	}
@@ -74,7 +74,7 @@ public class ItemBombCaller extends Item {
 			world.playSoundAtEntity(player, NTMSounds.TECH_BLEEP, 1.0F, 1.0F);
 
 			if(b2) {
-				player.addChatMessage(new ChatComponentTranslation("chat.bomb_caller.rerouted_civilian_traffic"));
+				player.addChatMessage(new ChatComponentTranslation("chat.bomb_caller.traffic_rerouted"));
 			} else {
 				player.addChatMessage(new ChatComponentTranslation("chat.bomb_caller.called_airstrike"));
 			}

@@ -73,7 +73,7 @@ public class BlockAirPump extends BlockContainer implements ILookOverlay, IBlock
 
 		List<String> text = new ArrayList<>();
 
-		text.add(I18nUtil.resolveKey("overlay.air_pump.mb", I18nUtil.resolveKey("hbmfluid." + pump.tank.getTankType().getName().toLowerCase()), pump.tank.getFill(), pump.tank.getMaxFill()));
+		text.add(("" + (I18nUtil.resolveKey("hbmfluid." + pump.tank.getTankType().getName().toLowerCase())) + ": " + (pump.tank.getFill()) + "/" + (pump.tank.getMaxFill()) + "mB"));
 
 		if(pump.tank.getFill() <= 10) {
 			text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! " + I18nUtil.resolveKey("atmosphere.noTank") + " ! ! !");
@@ -123,7 +123,7 @@ public class BlockAirPump extends BlockContainer implements ILookOverlay, IBlock
 			if(type.hasTrait(FT_Gaseous.class) || type.hasTrait(FT_Gaseous_ART.class)) {
 				pump.tank.setTankType(type);
 				pump.markDirty();
-				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 			}
 		}
 
@@ -135,4 +135,3 @@ public class BlockAirPump extends BlockContainer implements ILookOverlay, IBlock
 		return false;
 	}
 }
-

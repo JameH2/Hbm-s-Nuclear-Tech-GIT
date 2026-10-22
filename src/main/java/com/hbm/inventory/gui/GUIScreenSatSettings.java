@@ -132,7 +132,7 @@ public class GUIScreenSatSettings extends GuiScreen {
 			drawBatterySlice();
 			drawOrbitPreview(held, partialTicks);
 			if(detailsMode == 0) {
-				drawLeftAligned(10, 130, 140, I18nUtil.resolveKey("item.sat.desc.speed") + ": " + formatOrbitSpeed(editAltitude) + I18nUtil.resolveKey("gui.sat.settings.unit.km_per_second"), 0x00FF00);
+				drawLeftAligned(10, 130, 140, I18nUtil.resolveKey("item.sat.desc.speed") + ": " + formatOrbitSpeed(editAltitude) + "km/s", 0x00FF00);
 				drawLeftAligned(10, 145, 155, I18nUtil.resolveKey("item.sat.desc.altitude") + ": " + formatValue(editAltitude) + I18nUtil.resolveKey("gui.sat.settings.unit.km"), 0x00FF00);
 				drawLeftAligned(10, 160, 170, I18nUtil.resolveKey("item.sat.desc.inclination") + ": " + formatValue(editInclination) + "\u00B0", 0x00FF00);
 			} else {

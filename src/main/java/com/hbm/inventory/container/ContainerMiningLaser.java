@@ -9,7 +9,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMiningLaser extends Container {
+public class ContainerMiningLaser extends ContainerValidated {
 	
 	private TileEntityMachineMiningLaser diFurnace;
 	

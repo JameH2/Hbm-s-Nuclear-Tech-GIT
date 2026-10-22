@@ -85,11 +85,11 @@ public class ItemReactorSensor extends Item {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		if (itemstack.stackTagCompound != null) {
-			list.add(I18nUtil.resolveKey("item.reactor_sensor.desc1", itemstack.stackTagCompound.getInteger("x")));
-			list.add(I18nUtil.resolveKey("item.reactor_sensor.desc2", itemstack.stackTagCompound.getInteger("y")));
-			list.add(I18nUtil.resolveKey("item.reactor_sensor.desc3", itemstack.stackTagCompound.getInteger("z")));
+			list.add(I18nUtil.resolveKey("item.reactor_sensor.x", itemstack.stackTagCompound.getInteger("x")));
+			list.add(I18nUtil.resolveKey("item.reactor_sensor.y", itemstack.stackTagCompound.getInteger("y")));
+			list.add(I18nUtil.resolveKey("item.reactor_sensor.z", itemstack.stackTagCompound.getInteger("z")));
 		} else {
-			list.add(I18nUtil.resolveKey("desc.item.reactor_sensor.no_reactor_selected"));
+			list.add(I18nUtil.resolveKey("item.reactor_sensor.no_reactor"));
 		}
 	}
 }

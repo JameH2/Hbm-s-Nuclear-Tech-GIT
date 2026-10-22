@@ -66,9 +66,9 @@ public abstract class ItemCoordinateBase extends Item {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
 		if(stack.hasTagCompound()) {
-			list.add(I18nUtil.resolveKey("item.tele_link.desc1", stack.stackTagCompound.getInteger("posX")));
-			if(includeY()) list.add(I18nUtil.resolveKey("item.tele_link.desc2", stack.stackTagCompound.getInteger("posY")));
-			list.add(I18nUtil.resolveKey("item.tele_link.desc3", stack.stackTagCompound.getInteger("posZ")));
+			list.add(I18nUtil.resolveKey("item.tele_link.x", stack.stackTagCompound.getInteger("posX")));
+			if(includeY()) list.add(I18nUtil.resolveKey("item.tele_link.y", stack.stackTagCompound.getInteger("posY")));
+			list.add(I18nUtil.resolveKey("item.tele_link.z", stack.stackTagCompound.getInteger("posZ")));
 		} else {
 			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.misc.noPos"));
 		}

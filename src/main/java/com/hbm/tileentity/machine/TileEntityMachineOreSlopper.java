@@ -410,7 +410,7 @@ public class TileEntityMachineOreSlopper extends TileEntityMachineBase implement
 			info.add(EnumChatFormatting.RED + I18nUtil.resolveKey(this.KEY_CONSUMPTION, "+" + (level * 100) + "%"));
 		}
 		if(type == UpgradeType.CLAUDE) {
-			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.ore_slopper.2x_slop_output"));
+			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.ore_slopper.output_multiplier"));
 		}
 	}
 

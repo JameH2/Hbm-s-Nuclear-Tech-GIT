@@ -37,6 +37,7 @@ import com.hbm.items.machine.ItemPileRodMK2.EnumPileRod;
 import com.hbm.items.machine.ItemPistons.EnumPistonType;
 import com.hbm.items.special.ItemSatellite.EnumSatType;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
+import com.hbm.items.weapon.ItemAmmoRailgun;
 import com.hbm.items.weapon.grenade.ItemGrenadeFuze.EnumGrenadeFuze;
 import com.hbm.items.weapon.grenade.ItemGrenadeShell.EnumGrenadeShell;
 import com.hbm.items.weapon.sedna.factory.GunFactory.EnumAmmo;
@@ -816,6 +817,22 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 				.inputItems(new OreDictStack(STEEL.plate(), 24), new OreDictStack(ANY_HARDPLASTIC.ingot(), 12), new ComparableStack(ModItems.rocket_fuel, 36), new ComparableStack(ModItems.ball_tatb, 16), new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ADVANCED)));
 		this.register(new GenericRecipe("ass.himarslargetb").setup(200, 100).outputItems(new ItemStack(ModItems.ammo_himars, 1, ItemAmmoHIMARS.LARGE_TB))
 				.inputItems(new OreDictStack(STEEL.plate(), 24), new OreDictStack(ANY_HARDPLASTIC.ingot(), 12), new ComparableStack(ModItems.rocket_fuel, 36), new ComparableStack(ModItems.ball_tatb, 24), new OreDictStack(Fluids.KEROSENE_REFORM.getDict(1_000), 16), new OreDictStack(Fluids.PEROXIDE.getDict(1_000), 16), new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ADVANCED)));
+
+		this.register(new GenericRecipe("ass.railgun").setup(1_600, 100).outputItems(new ItemStack(ModBlocks.turret_railgun, 1))
+				.inputItems(new ComparableStack(ModItems.battery_pack, 1, EnumBatteryPack.BATTERY_LITHIUM), new ComparableStack(ModItems.battery_pack, 1, EnumBatteryPack.CAPACITOR_BISMUTH), new OreDictStack(STAINLESS.ingot(), 64), new ComparableStack(ModBlocks.concrete, 16), new ComparableStack(ModItems.motor_bismuth, 3), new ComparableStack(ModItems.circuit, 8, EnumCircuitType.ADVANCED), new OreDictStack(WEAPONSTEEL.mechanism(), 20), new ComparableStack(ModBlocks.machine_radar, 1), new ComparableStack(ModItems.crt_display, 2), new ComparableStack(ModItems.coil_copper, 16))
+				.setPools528(GenericRecipes.POOL_PREFIX_528 + "arty"));
+		this.register(new GenericRecipe("ass.railguntungsten").setup(200, 100).outputItems(new ItemStack(ModItems.ammo_railgun, 1, ItemAmmoRailgun.TUNGSTEN))
+				.inputItems(new OreDictStack(STAINLESS.plate(), 3), new OreDictStack(W.block(), 2), new OreDictStack(W.bolt(), 16)));
+		this.register(new GenericRecipe("ass.railgundu").setup(200, 100).outputItems(new ItemStack(ModItems.ammo_railgun, 1, ItemAmmoRailgun.DU))
+				.inputItems(new OreDictStack(STAINLESS.plate(), 3), new OreDictStack(U238.block(), 1), new OreDictStack(W.block(), 1), new OreDictStack(W.bolt(), 16)));
+		this.register(new GenericRecipe("ass.railgunnuke").setup(800, 100).outputItems(new ItemStack(ModItems.ammo_railgun, 1, ItemAmmoRailgun.NUKE))
+				.inputItems(new OreDictStack(STAINLESS.plate(), 3), new ComparableStack(ModItems.warhead_nuclear, 1), new ComparableStack(ModItems.cell_sas3, 1), new OreDictStack(W.block(), 2), new OreDictStack(W.bolt(), 16)));
+		this.register(new GenericRecipe("ass.railgundesh").setup(200, 100).outputItems(new ItemStack(ModItems.ammo_railgun, 1, ItemAmmoRailgun.DESH))
+				.inputItems(new OreDictStack(STAINLESS.plate(), 3), new OreDictStack(DESH.block(), 2), new OreDictStack(W.bolt(), 16)));
+		this.register(new GenericRecipe("ass.railgunstarmetal").setup(200, 100).outputItems(new ItemStack(ModItems.ammo_railgun, 1, ItemAmmoRailgun.STARMETAL))
+				.inputItems(new OreDictStack(STAINLESS.plate(), 3), new OreDictStack(STAR.block(), 2), new OreDictStack(W.bolt(), 16)));
+		this.register(new GenericRecipe("ass.railgunfluid").setup(200, 100).outputItems(new ItemStack(ModItems.ammo_railgun, 1, ItemAmmoRailgun.FLUID))
+				.inputItems(new OreDictStack(STAINLESS.plate(), 3), new OreDictStack(W.block(), 2), new OreDictStack(W.bolt(), 16), new ComparableStack(ModItems.fluid_tank_lead_empty, 1)));
 
 		// missile parts
 		this.register(new GenericRecipe("ass.missileassembly").setup(200, 100).outputItems(new ItemStack(ModItems.missile_assembly, 1))

@@ -42,7 +42,7 @@ public class GUILaunchPadRusted extends GuiInfoContainer {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
-		drawCustomInfoStat(mouseX, mouseY, guiLeft + 26, guiTop + 36, 16, 16, mouseX, mouseY, EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.launch_pad_rusted.release_missile"), I18nUtil.resolveKey("gui.launch_pad_rusted.missile_locked_lauch_position"), I18nUtil.resolveKey("gui.launch_pad_rusted.releasing_may_cause_damage_missile"), I18nUtil.resolveKey("gui.launch_pad_rusted.damaged_missile_put_back"), I18nUtil.resolveKey("gui.launch_pad_rusted.into_launching_position"));
+		drawCustomInfoStat(mouseX, mouseY, guiLeft + 26, guiTop + 36, 16, 16, mouseX, mouseY, EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.launch_pad_rusted.release_missile"), I18nUtil.resolveKey("gui.launch_pad_rusted.locked"), I18nUtil.resolveKey("gui.launch_pad_rusted.release_warning"), I18nUtil.resolveKey("gui.launch_pad_rusted.damage_warning"), I18nUtil.resolveKey("gui.launch_pad_rusted.launch_position"));
 	}
 
 	@Override

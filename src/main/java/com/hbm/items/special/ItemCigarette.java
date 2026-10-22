@@ -128,10 +128,9 @@ public class ItemCigarette extends Item {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 
 		if (this == ModItems.cigarette) {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.cigarette.asbestos_filter"));
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.cigarette.high_tar"));
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.cigarette.tobacco_contains_polonium"));
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.cigarette.desc4"));
+			for(String line : I18nUtil.resolveKeyArray("item.cigarette.desc")) {
+				list.add(EnumChatFormatting.RED + "✓ " + line);
+			}
 		} else if (this == ModItems.crackpipe) {
 			String[] colors = new String[] {
 					EnumChatFormatting.RED + "",
@@ -144,10 +143,9 @@ public class ItemCigarette extends Item {
 					EnumChatFormatting.LIGHT_PURPLE + "",
 			};
 			int len = 2000;
-			list.add(I18nUtil.resolveKey("gui.cigarette.t_good_me_but_i")
-					+ colors[(int) (System.currentTimeMillis() % len * colors.length / len)] + I18nUtil.resolveKey("gui.cigarette.great"));
+			list.add(I18nUtil.resolveKey("gui.cigarette.feeling", colors[(int) (System.currentTimeMillis() % len * colors.length / len)]));
 		} else if (this == ModItems.joint) {
-			list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.cigarette.desc5"));
+			list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.joint.flavor"));
 		}
 	}
 }

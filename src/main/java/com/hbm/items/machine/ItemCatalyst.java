@@ -39,8 +39,9 @@ public class ItemCatalyst extends Item {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool)
 	{
-		list.add(I18nUtil.resolveKey("desc.item.catalyst.adds_spice_core"));
-		list.add(I18nUtil.resolveKey("desc.item.catalyst.look_those_colors"));
+		for(String line : I18nUtil.resolveKeyArray("item.catalyst.desc")) {
+			list.add(line);
+		}
 	}
 
 	public static long getPowerAbs(ItemStack stack) {

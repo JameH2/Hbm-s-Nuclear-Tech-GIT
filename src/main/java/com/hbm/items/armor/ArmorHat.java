@@ -25,7 +25,7 @@ public class ArmorHat extends ArmorModel implements IAttackHandler, IDamageHandl
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.armor_hat.desc1"));
+		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("item.armor_hat.damage_threshold"));
 	}
 
 	@Override

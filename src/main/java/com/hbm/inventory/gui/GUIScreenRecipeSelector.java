@@ -159,7 +159,7 @@ public class GUIScreenRecipeSelector extends GuiScreen {
 		}
 
 		if(guiLeft + 8 <= mouseX && guiLeft + 8 + 16 > mouseX && guiTop + 108 < mouseY && guiTop + 108 + 16 >= mouseY) {
-			this.drawCreativeTabHoveringText(EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.recipe_selector.press_enter_to_toggle_focus"), mouseX, mouseY);
+			this.drawCreativeTabHoveringText(EnumChatFormatting.ITALIC + I18nUtil.resolveKey("gui.recipe_selector.focus_hint"), mouseX, mouseY);
 		}
 	}
 

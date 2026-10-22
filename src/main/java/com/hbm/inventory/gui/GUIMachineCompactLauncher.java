@@ -34,13 +34,13 @@ public class GUIMachineCompactLauncher extends GuiInfoContainer {
 
 		launcher.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 116, guiTop + 36, 16, 34);
 		launcher.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 36, 16, 34);
-		this.drawCustomInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 88 - 52, 16, 52, new String[] { I18nUtil.resolveKey("gui.compact_launcher.solid_fuel") + launcher.solid + "l" });
+		this.drawCustomInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 88 - 52, 16, 52, new String[] { I18nUtil.resolveKey("gui.compact_launcher.solid_fuel", launcher.solid) });
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 113, 34, 6, launcher.power, launcher.maxPower);
 
-		String[] text = new String[] { I18nUtil.resolveKey("gui.compact_launcher.only_accepts_custom_missiles"), I18nUtil.resolveKey("gui.compact_launcher.of_size_10_and_10_15") };
+		String[] text = new String[] { I18nUtil.resolveKey("gui.compact_launcher.missile_type"), I18nUtil.resolveKey("gui.compact_launcher.missile_size") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36, 16, 16, guiLeft - 8, guiTop + 36 + 16, text);
 
-		String[] text1 = new String[] { I18nUtil.resolveKey("gui.compact_launcher.detonator_trigger_center_block") };
+		String[] text1 = new String[] { I18nUtil.resolveKey("gui.compact_launcher.detonation") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36 + 16, 16, 16, guiLeft - 8, guiTop + 36 + 16, text1);
 	}
 

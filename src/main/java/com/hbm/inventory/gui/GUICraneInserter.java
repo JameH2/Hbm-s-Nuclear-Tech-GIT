@@ -37,7 +37,7 @@ public class GUICraneInserter extends GuiInfoContainer {
 		super.drawScreen(x, y, interp);
 
 		if(guiLeft + 151 <= x && guiLeft + 151 + 18 > x && guiTop + 34 < y && guiTop + 34 + 18 >= y) {
-			this.func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.crane_inserter.destroy_overflow") + (inserter.destroyer ? EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on") : EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off")) }), x, y);
+			this.func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.crane_inserter.destroy_overflow", inserter.destroyer ? EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on") : EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off")) }), x, y);
 		}
 	}
 

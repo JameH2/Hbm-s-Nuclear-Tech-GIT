@@ -103,6 +103,7 @@ public class NTMSounds {
 	public static final String BLOCK_FALLOUT_3_POPUP = "hbm:block.bobble";
 	public static final String LEVER_START = "hbm:block.leverStart";
 	public static final String LEVER_STOP = "hbm:block.leverStop";
+	public static final String NUKE_CHARGE = "hbm:block.nukeCharge"; // cool charging sound
 	public static final String SPARK = "hbm:block.spark";
 	
 	/// MACHINE SOUNDS, MOSTLY LOOPS ///

@@ -37,6 +37,7 @@ public class NEIConfig implements IConfigureNEI {
 
 	@Override
 	public void loadConfig() {
+		codechicken.nei.guihook.GuiContainerManager.addTooltipHandler(new com.hbm.handler.nei.FuelGraphTooltipHandler());
 		for (TemplateRecipeHandler handler: NEIRegistry.listAllHandlers()) {
 			registerHandler(handler);
 		}

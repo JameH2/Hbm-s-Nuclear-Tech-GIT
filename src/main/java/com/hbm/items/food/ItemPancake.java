@@ -44,17 +44,18 @@ public class ItemPancake extends ItemFood {
     	}
 
     	if(!world.isRemote)
-    		player.addChatComponentMessage(new ChatComponentTranslation("chat.pancake.teeth_soft_eat").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+    		player.addChatComponentMessage(new ChatComponentTranslation("chat.pancake.soft_teeth").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
     	return stack;
     }
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(I18nUtil.resolveKey("desc.item.pancake.eaten_recharge_lunar_cybernetic_armor"));
-		list.add(I18nUtil.resolveKey("desc.item.pancake.not_people_weak_molars"));
+		for(String line : I18nUtil.resolveKeyArray("item.pancake.desc")) {
+			list.add(line);
+		}
 		list.add("");
-		list.add(I18nUtil.resolveKey("desc.item.pancake.half_burnt_smells_horrible"));
+		list.add(I18nUtil.resolveKey("item.pancake.flavor"));
 	}
 
 }

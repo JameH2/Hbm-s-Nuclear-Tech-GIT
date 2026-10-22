@@ -31,7 +31,7 @@ public class GUIPneumoStorageClutter extends GuiInfoContainer {
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
 
-		this.drawCustomInfoStat(x, y, guiLeft + 174, guiTop + 36, 20, 8, x, y, I18nUtil.resolveKey("gui.pneumo_storage_clutter.compressor") + storage.compair.getPressure() + I18nUtil.resolveKey("gui.pneumo_storage_clutter.pu"), I18nUtil.resolveKey("gui.pneumo_storage_clutter.max_range") + TileEntityPneumoTube.getRangeFromPressure(storage.compair.getPressure()) + "m");
+		this.drawCustomInfoStat(x, y, guiLeft + 174, guiTop + 36, 20, 8, x, y, I18nUtil.resolveKey("gui.pneumo_storage_clutter.compressor", storage.compair.getPressure(), I18nUtil.resolveKey("gui.pneumo_storage_clutter.pu")), I18nUtil.resolveKey("gui.pneumo_storage_clutter.max_range", TileEntityPneumoTube.getRangeFromPressure(storage.compair.getPressure())));
 	}
 
 	@Override

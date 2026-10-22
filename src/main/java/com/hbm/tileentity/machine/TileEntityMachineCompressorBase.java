@@ -72,7 +72,7 @@ public abstract class TileEntityMachineCompressorBase extends TileEntityMachineB
 			this.tanks[0].setType(0, slots);
 			this.setupTanks();
 
-			upgradeManager.checkSlots(this, slots, 1, 3);
+			upgradeManager.checkSlots(this, slots, 2, 3);
 
 			int speedLevel = upgradeManager.getLevel(UpgradeType.SPEED);
 			int powerLevel = upgradeManager.getLevel(UpgradeType.POWER);
@@ -251,13 +251,14 @@ public abstract class TileEntityMachineCompressorBase extends TileEntityMachineB
 	public void provideInfo(UpgradeType type, int level, List<String> info, boolean extendedInfo) {
 		info.add(IUpgradeInfoProvider.getStandardLabel(ModBlocks.machine_compressor));
 		if(type == UpgradeType.SPEED) {
-			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.compressor_base.generic_compression")+ I18nUtil.resolveKey(this.KEY_DELAY, "-" + (level == 3 ? 90 : level == 2 ? 80 : level == 1 ? 40 : 0) + "%"));
-			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.compressor_base.recipe")+ I18nUtil.resolveKey(this.KEY_DELAY, "-" + (100 - 100 / (level + 1)) + "%"));
+			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.compressor_base.generic_compression", I18nUtil.resolveKey(this.KEY_DELAY, "-" + (level == 3 ? 90 : level == 2 ? 80 : level == 1 ? 40 : 0) + "%")));
+			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.compressor_base.recipe", I18nUtil.resolveKey(this.KEY_DELAY, "-" + (100 - 100 / (level + 1)) + "%")));
 		}
 		if(type == UpgradeType.POWER) {
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(this.KEY_CONSUMPTION, "-" + (100 - 100 / (level + 1)) + "%"));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
+			IUpgradeInfoProvider.addOverdriveInfo(info, extendedInfo, level + 1, level * 2 + 1);
 			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}

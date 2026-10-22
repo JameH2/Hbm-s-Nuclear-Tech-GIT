@@ -14,7 +14,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMachineEPress extends Container {
+public class ContainerMachineEPress extends ContainerValidated {
 
 private TileEntityMachineEPress nukeBoy;
 

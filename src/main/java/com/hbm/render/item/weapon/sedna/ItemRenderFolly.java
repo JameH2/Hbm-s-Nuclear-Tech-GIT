@@ -238,22 +238,22 @@ public class ItemRenderFolly extends ItemRenderWeaponBase {
 		long now = System.currentTimeMillis();
 		int time = (int)((now - timeAiming));
 		if(time < 3000) {
-			if(time > 250) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.post_successful_code_0"));
-			if(time > 500) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.8_388_608_bytes_of_ram_installed"));
-			if(time > 500) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.5_187_427_bytes_available"));
+			if(time > 250) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.post"));
+			if(time > 500) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.memory_total"));
+			if(time > 500) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.memory_available"));
 			if(time > 750) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.reticulating_splines"));
-			if(time > 1500) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.no_keyboard_found"));
-			if(time > 2000) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.booting_from_dev_sda1"));
+			if(time > 1500) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.no_keyboard"));
+			if(time > 2000) tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.boot_device"));
 		}
 		if(time > 5000) {
 			EntityPlayer player = MainRegistry.proxy.me();
 			MovingObjectPosition mop = EntityDamageUtil.getMouseOver(player, 250);
-			String target = I18nUtil.resolveKey("item.folly.target");
-			if(mop.typeOfHit == mop.typeOfHit.MISS) target += "N/A";
-			if(mop.typeOfHit == mop.typeOfHit.BLOCK) target += mop.blockX + "/" + mop.blockY + "/" + mop.blockZ;
-			if(mop.typeOfHit == mop.typeOfHit.ENTITY) target += mop.entityHit.getCommandSenderName();
-			tty.add(target);
-			tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.angle") + ((int)(-player.rotationPitch * 100) / 100D));
+			String target = "";
+			if(mop.typeOfHit == mop.typeOfHit.MISS) target = "N/A";
+			if(mop.typeOfHit == mop.typeOfHit.BLOCK) target = mop.blockX + "/" + mop.blockY + "/" + mop.blockZ;
+			if(mop.typeOfHit == mop.typeOfHit.ENTITY) target = mop.entityHit.getCommandSenderName();
+			tty.add(I18nUtil.resolveKey("item.folly.target", target));
+			tty.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.folly.angle", (int)(-player.rotationPitch * 100) / 100D));
 		}
 		return tty;
 	}

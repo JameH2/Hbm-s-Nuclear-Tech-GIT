@@ -16,8 +16,9 @@ public class ItemStructureRandomly extends ItemStructureTool {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 		super.addInformation(stack, player, list, ext);
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.structure_randomly.click_print"));
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("desc.item.structure_randomly.line_targeted_block"));
+		for(String line : I18nUtil.resolveKeyArray("item.structure_randomly.desc")) {
+			list.add(EnumChatFormatting.YELLOW + line);
+		}
 	}
 
 	@Override

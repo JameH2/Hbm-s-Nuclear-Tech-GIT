@@ -22,7 +22,7 @@ public class CommandDebugChunkLoad extends CommandBase {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "commands.debug_chunk_load.ntmloadchunk_x_z";
+		return "commands.debug_chunk_load.usage";
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class CommandDebugChunkLoad extends CommandBase {
 					if(prov.chunkExists(cX, cZ)) {
 						Chunk chunk = sender.getEntityWorld().getChunkFromChunkCoords(cX, cZ);
 						if(chunk.isChunkLoaded) {
-							sender.addChatMessage(new ChatComponentTranslation("commands.debug_chunk_load.chunk_currently_loaded").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
+							sender.addChatMessage(new ChatComponentTranslation("commands.debug_chunk_load.loaded").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 							return;
 						}
 					}
@@ -64,7 +64,7 @@ public class CommandDebugChunkLoad extends CommandBase {
 					if(tagList != null) {
 
 						if(tagList.tagCount() <= 0) {
-							sender.addChatMessage(new ChatComponentTranslation("commands.debug_chunk_load.tag_list_empty").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
+							sender.addChatMessage(new ChatComponentTranslation("commands.debug_chunk_load.empty_tags").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 						}
 
 						for(int i1 = 0; i1 < tagList.tagCount(); ++i1) {
@@ -97,17 +97,17 @@ public class CommandDebugChunkLoad extends CommandBase {
 							}
 						}
 					} else {
-						sender.addChatMessage(new ChatComponentTranslation("commands.debug_chunk_load.tag_list_null").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
+						sender.addChatMessage(new ChatComponentTranslation("commands.debug_chunk_load.null_tags").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 					}
 
 				} catch(Exception e) {
 					sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "" + e.getLocalizedMessage()));
 				}
 			} else {
-				sender.addChatMessage(new ChatComponentTranslation("commands.debug_chunk_load.not_anvil_chunk_loader").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
+				sender.addChatMessage(new ChatComponentTranslation("commands.debug_chunk_load.invalid_loader").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 			}
 		} else {
-			sender.addChatMessage(new ChatComponentTranslation("commands.debug_chunk_load.not_chunk_provider_server").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
+			sender.addChatMessage(new ChatComponentTranslation("commands.debug_chunk_load.invalid_provider").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 		}
 	}
 }

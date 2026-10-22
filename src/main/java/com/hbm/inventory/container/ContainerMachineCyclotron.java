@@ -13,7 +13,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMachineCyclotron extends Container {
+public class ContainerMachineCyclotron extends ContainerValidated {
 
 	private TileEntityMachineCyclotron cyclotron;
 	

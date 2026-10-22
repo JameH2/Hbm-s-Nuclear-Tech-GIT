@@ -38,7 +38,7 @@ public class HazardTypeGlitch extends HazardTypeBase{
 	@Override
 	public void addHazardInformation(EntityPlayer player, List list, float level, ItemStack stack, List<HazardModifier> modifiers) {
 		if(player.worldObj.rand.nextInt(10) == 0) {
-			list.add((EnumChatFormatting.DARK_RED) + I18nUtil.resolveKey("desc.item.hazard_glitch.world"));
+			list.add((EnumChatFormatting.DARK_RED) + I18nUtil.resolveKey("item.hazard_glitch.world"));
 		} else {
 			Random rand = new Random(System.currentTimeMillis() / 500);
 

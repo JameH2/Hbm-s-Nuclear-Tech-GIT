@@ -74,6 +74,19 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 	}
 
 	@Override
+	public boolean isUpgradeValid(ItemStack stack) {
+		if(stack == null) return false;
+		return stack.getItem() == ModItems.upgrade_5g || stack.getItem() == ModItems.upgrade_screm
+				|| IUpgradeInfoProvider.super.isUpgradeValid(stack);
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+		if(slot >= 1 && slot <= 9) return isUpgradeValid(stack);
+		return super.isItemValidForSlot(slot, stack);
+	}
+
+	@Override
 	public boolean canProvideInfo(UpgradeType type, int level, boolean extendedInfo) {
 		return type == UpgradeType.SPEED || type == UpgradeType.EFFECT || type == UpgradeType.POWER || type == UpgradeType.AFTERBURN || type == UpgradeType.OVERDRIVE;
 	}
@@ -94,6 +107,8 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.turret_maxwell.afterburn_3s"));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
+			IUpgradeInfoProvider.addOverdriveInfo(info, extendedInfo, 0, 1);
+			if(extendedInfo) info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("desc.item.gun.damageAlt", "+" + (level * 10 * getBaseDamage())));
 			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}

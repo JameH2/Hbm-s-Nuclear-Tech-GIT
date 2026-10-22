@@ -103,7 +103,7 @@ public class ItemCrucible extends ItemSwordAbility implements IEquipReceiver, IA
 		} else {
 
 			if(!attacker.worldObj.isRemote && attacker instanceof EntityPlayer)
-				((EntityPlayer)attacker).addChatComponentMessage(new ChatComponentTranslation("chat.crucible.not_enough_energy").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+				((EntityPlayer)attacker).addChatComponentMessage(new ChatComponentTranslation("chat.crucible.insufficient_energy").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 			return false;
 		}
 	}

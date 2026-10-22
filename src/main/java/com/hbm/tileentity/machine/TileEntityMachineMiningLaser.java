@@ -676,6 +676,15 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	}
 
 	@Override
+	public boolean isUpgradeValid(ItemStack stack) {
+		if(stack == null) return false;
+		return stack.getItem() == ModItems.upgrade_nullifier || stack.getItem() == ModItems.upgrade_smelter
+				|| stack.getItem() == ModItems.upgrade_shredder || stack.getItem() == ModItems.upgrade_centrifuge
+				|| stack.getItem() == ModItems.upgrade_crystallizer || stack.getItem() == ModItems.upgrade_screm
+				|| IUpgradeInfoProvider.super.isUpgradeValid(stack);
+	}
+
+	@Override
 	public boolean canProvideInfo(UpgradeType type, int level, boolean extendedInfo) {
 		return type == UpgradeType.SPEED || type == UpgradeType.POWER || type == UpgradeType.OVERDRIVE || type == UpgradeType.EFFECT || type == UpgradeType.FORTUNE;
 	}
@@ -697,6 +706,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 			info.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey(this.KEY_FORTUNE, "+" + level));
 		}
 		if(type == UpgradeType.OVERDRIVE) {
+			IUpgradeInfoProvider.addOverdriveInfo(info, extendedInfo, level + 1, level + 1);
 			info.add((BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.DARK_GRAY) + I18nUtil.resolveKey("gui.common.yes_upper"));
 		}
 	}

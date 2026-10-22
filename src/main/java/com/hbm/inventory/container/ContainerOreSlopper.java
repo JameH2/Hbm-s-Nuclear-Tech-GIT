@@ -1,4 +1,5 @@
 package com.hbm.inventory.container;
+import com.hbm.inventory.SlotUpgrade;
 
 import com.hbm.inventory.SlotCraftingOutput;
 import com.hbm.items.ModItems;
@@ -13,7 +14,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerOreSlopper extends Container {
+public class ContainerOreSlopper extends ContainerValidated {
 	
 	public TileEntityMachineOreSlopper slopper;
 
@@ -34,8 +35,8 @@ public class ContainerOreSlopper extends Container {
 		this.addSlotToContainer(new SlotCraftingOutput(player.player, slopper, 7, 134, 54));
 		this.addSlotToContainer(new SlotCraftingOutput(player.player, slopper, 8, 152, 54));
 		//Upgrades
-		this.addSlotToContainer(new Slot(slopper, 9, 62, 72));
-		this.addSlotToContainer(new Slot(slopper, 10, 80, 72));
+		this.addSlotToContainer(new SlotUpgrade(slopper, 9, 62, 72));
+		this.addSlotToContainer(new SlotUpgrade(slopper, 10, 80, 72));
 		
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {

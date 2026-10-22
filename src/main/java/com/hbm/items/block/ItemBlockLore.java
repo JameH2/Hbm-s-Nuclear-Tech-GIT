@@ -35,30 +35,17 @@ public class ItemBlockLore extends ItemBlockBase {
 		}
 
 		if(this.field_150939_a instanceof RedBarrel) {
-			list.add(I18nUtil.resolveKey("item.block_lore.desc1"));
+			list.add(I18nUtil.resolveKey("item.block_lore.static_barrel"));
 		}
 
 		if(this.field_150939_a == ModBlocks.meteor_battery) {
-			list.add(I18nUtil.resolveKey("item.block_lore.desc2"));
+			list.add(I18nUtil.resolveKey("tile.meteor_battery.charging"));
 		}
 
 		if(this.field_150939_a == ModBlocks.gravel_diamond) {
-			list.add(I18nUtil.resolveKey("item.block_lore.desc3"));
-			list.add(I18nUtil.resolveKey("item.block_lore.desc4"));
-			list.add("");
-			list.add(I18nUtil.resolveKey("item.block_lore.desc5"));
-			list.add(I18nUtil.resolveKey("item.block_lore.desc6"));
-			list.add(I18nUtil.resolveKey("item.block_lore.desc7"));
-			list.add(I18nUtil.resolveKey("item.block_lore.desc8"));
-			list.add("");
-			list.add(I18nUtil.resolveKey("item.block_lore.desc9"));
-			list.add(I18nUtil.resolveKey("item.block_lore.desc10"));
-			list.add(I18nUtil.resolveKey("item.block_lore.desc11"));
-			list.add(I18nUtil.resolveKey("item.block_lore.desc12"));
-			list.add(I18nUtil.resolveKey("item.block_lore.desc13"));
-			list.add(I18nUtil.resolveKey("item.block_lore.desc14"));
-			list.add("");
-			list.add(I18nUtil.resolveKey("item.line.desc01"));
+			for(String line : I18nUtil.resolveKeyArray("tile.gravel_diamond.lore.desc")) {
+				list.add(line);
+			}
 		}
 	}
 

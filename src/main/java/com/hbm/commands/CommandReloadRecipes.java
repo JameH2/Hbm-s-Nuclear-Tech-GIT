@@ -45,7 +45,7 @@ public class CommandReloadRecipes extends CommandBase {
 			sender.addChatMessage(new ChatComponentTranslation("commands.reload_recipes.reload_complete").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 		} catch(Exception ex) {
 			sender.addChatMessage(ChatBuilder.start("----------------------------------").color(EnumChatFormatting.GRAY).flush());
-			sender.addChatMessage(ChatBuilder.startTranslation("commands.reload_recipes.text.01").color(EnumChatFormatting.RED).flush());
+			sender.addChatMessage(ChatBuilder.startTranslation("commands.reload_recipes.error").color(EnumChatFormatting.RED).flush());
 			sender.addChatMessage(ChatBuilder.start(ex.getLocalizedMessage()).color(EnumChatFormatting.RED).flush());
 			sender.addChatMessage(ChatBuilder.start(ex.getStackTrace()[0].toString()).color(EnumChatFormatting.RED).flush());
 			sender.addChatMessage(ChatBuilder.start("----------------------------------").color(EnumChatFormatting.GRAY).flush());

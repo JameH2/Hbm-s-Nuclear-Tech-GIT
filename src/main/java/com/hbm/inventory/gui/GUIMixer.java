@@ -57,7 +57,7 @@ public class GUIMixer extends GuiInfoContainer {
 			if(recipe.input1 != null) label.add("-" + recipe.input1.type.getLocalizedName());
 			if(recipe.input2 != null) label.add("-" + recipe.input2.type.getLocalizedName());
 			if(recipe.solidInput != null) label.add("-" + recipe.solidInput.extractForCyclingDisplay(20).getDisplayName());
-			label.add(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.mixer.click_to_change"));
+			label.add(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.mixer.change_hint"));
 			this.drawCustomInfoStat(x, y, guiLeft + 71, guiTop + 17, 12, 12, x, y, label);
 		}
 

@@ -1,6 +1,8 @@
 package com.hbm.inventory.container;
 
 import com.hbm.items.ModItems;
+import com.hbm.inventory.SlotNonRetarded;
+import com.hbm.tileentity.turret.TileEntityTurretMaxwell;
 import com.hbm.tileentity.turret.TileEntityTurretBaseNT;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,7 +11,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerTurretBase extends Container {
+public class ContainerTurretBase extends ContainerValidated {
 
 	private TileEntityTurretBaseNT turret;
 
@@ -21,7 +23,9 @@ public class ContainerTurretBase extends Container {
 
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 3; j++) {
-				this.addSlotToContainer(new Slot(te, 1 + i * 3 + j, 80 + j * 18, 63 + i * 18));
+				this.addSlotToContainer(te instanceof TileEntityTurretMaxwell
+						? new SlotNonRetarded(te, 1 + i * 3 + j, 80 + j * 18, 63 + i * 18)
+						: new Slot(te, 1 + i * 3 + j, 80 + j * 18, 63 + i * 18));
 			}
 		}
 		

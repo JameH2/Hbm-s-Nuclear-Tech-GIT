@@ -113,7 +113,7 @@ public class PneumoTube extends BlockContainer implements IToolable, ITooltipPro
 							if(canUse) {
 								tube.compair.setTankType(type);
 								tube.markDirty();
-								player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+								player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 							} else {
 								player.addChatComponentMessage(new ChatComponentTranslation("chat.pneumo_tube.invalid_gas").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 							}

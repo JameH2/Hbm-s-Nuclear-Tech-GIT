@@ -21,22 +21,22 @@ public class ItemModRevive extends ItemArmorMod {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
 		if(this == ModItems.scrumpy) {
-			list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_revive.desc1"));
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_revive.desc2"));
+			list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_revive.question"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.mod_revive.answer"));
 		}
 		if(this == ModItems.wild_p) {
-			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("desc.item.mod_revive.explosive_reactive_plot_armor", EnumChatFormatting.RED + "Reactive " + EnumChatFormatting.DARK_GRAY + "Plot " + EnumChatFormatting.RED + "Armor"));
+			list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.mod_revive.acronym", EnumChatFormatting.RED, EnumChatFormatting.DARK_GRAY, EnumChatFormatting.RED));
 		}
 
-		/*list.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("desc.item.mod_revive.in_the_news"));
-		list.add(("" + EnumChatFormatting.RED + EnumChatFormatting.BOLD) + I18nUtil.resolveKey("desc.item.man_literally_too_angry_die"));
+		/*list.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("item.mod_revive.headline"));
+		list.add(("" + EnumChatFormatting.RED + EnumChatFormatting.BOLD) + I18nUtil.resolveKey("item.mod_revive.title"));
 		list.add("");
-		list.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("desc.item.mod_revive.i_ain_t_got_time"));
-		list.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("desc.item.mod_revive.man_after_ripping_physical"));
-		list.add((EnumChatFormatting.ITALIC) + I18nUtil.resolveKey("desc.item.disaster_itself_half"));*/
+		for(String line : I18nUtil.resolveKeyArray("item.mod_revive.news.desc")) {
+			list.add((EnumChatFormatting.ITALIC) + line);
+		}*/
 
 		list.add("");
-		list.add(EnumChatFormatting.GOLD + "" + I18nUtil.resolveKey("desc.item.mod_revive.revives_left", (stack.getMaxDamage() - stack.getItemDamage())));
+		list.add(EnumChatFormatting.GOLD + "" + I18nUtil.resolveKey("item.mod_revive.remaining", (stack.getMaxDamage() - stack.getItemDamage())));
 		list.add("");
 		super.addInformation(stack, player, list, bool);
 	}
@@ -44,6 +44,6 @@ public class ItemModRevive extends ItemArmorMod {
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
 
-		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.mod_revive.desc5", stack.getDisplayName(), (stack.getMaxDamage() - stack.getItemDamage())));
+		list.add(EnumChatFormatting.GOLD + "  " + I18nUtil.resolveKey("item.mod_revive.summary", stack.getDisplayName(), (stack.getMaxDamage() - stack.getItemDamage())));
 	}
 }

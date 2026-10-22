@@ -95,7 +95,7 @@ public class MachineIGenerator extends BlockDummyable implements ILookOverlay {
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
 		List<String> text = new ArrayList();
-		text.add(I18nUtil.resolveKey("overlay.igenerator.memory_we_lost"));
-		ILookOverlay.printGeneric(event, I18nUtil.resolveKey("gui.igenerator.industrial_generator_memorial"), 0xff8000, 0x804000, text);
+		text.add(I18nUtil.resolveKey("overlay.igenerator.memorial"));
+		ILookOverlay.printGeneric(event, I18nUtil.resolveKey("gui.igenerator.memorial"), 0xff8000, 0x804000, text);
 	}
 }

@@ -48,7 +48,7 @@ public class GUICraneExtractor extends GuiInfoContainer {
 		}
 
 		if(guiLeft + 187 <= x && guiLeft + 187 + 18 > x && guiTop + 34 < y && guiTop + 34 + 18 >= y) {
-			this.func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.crane_extractor.only_take_maximum_possible") + (ejector.maxEject ? EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on") : EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off")) }), x, y);
+			this.func_146283_a(Arrays.asList(new String[] { I18nUtil.resolveKey("gui.crane_extractor.maximum_only", ejector.maxEject ? EnumChatFormatting.GREEN + I18nUtil.resolveKey("gui.common.on") : EnumChatFormatting.RED + I18nUtil.resolveKey("gui.common.off")) }), x, y);
 		}
 	}
 

@@ -179,62 +179,62 @@ public class ItemGlitch extends Item implements IBatteryItem {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool)
 	{
-		list.add(I18nUtil.resolveKey("item.glitch.desc1"));
+		list.add(I18nUtil.resolveKey("item.glitch.warning"));
 		list.add("");
 		switch(MainRegistry.polaroidID) {
 		case 1:
-			list.add(I18nUtil.resolveKey("item.glitch.desc2"));
+			list.add(I18nUtil.resolveKey("item.glitch.click"));
 			break;
 		case 2:
-			list.add(I18nUtil.resolveKey("item.glitch.desc3"));
+			list.add(I18nUtil.resolveKey("item.glitch.creak"));
 			break;
 		case 3:
-			list.add(I18nUtil.resolveKey("item.glitch.desc4"));
+			list.add(I18nUtil.resolveKey("item.glitch.buzz"));
 			break;
 		case 4:
-			list.add(I18nUtil.resolveKey("item.glitch.desc5"));
+			list.add(I18nUtil.resolveKey("item.glitch.stargazing"));
 			break;
 		case 5:
-			list.add(I18nUtil.resolveKey("item.glitch.desc6"));
+			list.add(I18nUtil.resolveKey("item.glitch.bang"));
 			break;
 		case 6:
-			list.add(I18nUtil.resolveKey("item.glitch.desc7"));
+			list.add(I18nUtil.resolveKey("item.glitch.whoop"));
 			break;
 		case 7:
-			list.add(I18nUtil.resolveKey("item.glitch.desc8"));
+			list.add(I18nUtil.resolveKey("item.glitch.pow"));
 			break;
 		case 8:
-			list.add(I18nUtil.resolveKey("item.glitch.desc9"));
+			list.add(I18nUtil.resolveKey("item.glitch.puff"));
 			break;
 		case 9:
-			list.add(I18nUtil.resolveKey("item.glitch.desc10"));
+			list.add(I18nUtil.resolveKey("item.glitch.encoded_stargazing"));
 			break;
 		case 10:
-			list.add(I18nUtil.resolveKey("item.glitch.desc11"));
+			list.add(I18nUtil.resolveKey("item.glitch.backup"));
 			break;
 		case 11:
-			list.add(I18nUtil.resolveKey("item.glitch.desc12"));
+			list.add(I18nUtil.resolveKey("item.glitch.twang"));
 			break;
 		case 12:
-			list.add(I18nUtil.resolveKey("item.glitch.desc13"));
+			list.add(I18nUtil.resolveKey("item.glitch.static"));
 			break;
 		case 13:
-			list.add(I18nUtil.resolveKey("item.glitch.desc14"));
+			list.add(I18nUtil.resolveKey("item.glitch.clatter"));
 			break;
 		case 14:
-			list.add(I18nUtil.resolveKey("item.glitch.desc15"));
+			list.add(I18nUtil.resolveKey("item.glitch.blast"));
 			break;
 		case 15:
-			list.add(I18nUtil.resolveKey("item.glitch.desc16"));
+			list.add(I18nUtil.resolveKey("item.glitch.plang"));
 			break;
 		case 16:
-			list.add(I18nUtil.resolveKey("item.glitch.desc17"));
+			list.add(I18nUtil.resolveKey("item.glitch.whistle"));
 			break;
 		case 17:
-			list.add(I18nUtil.resolveKey("item.glitch.desc18"));
+			list.add(I18nUtil.resolveKey("item.glitch.thump"));
 			break;
 		case 18:
-			list.add(I18nUtil.resolveKey("item.glitch.desc19"));
+			list.add(I18nUtil.resolveKey("item.glitch.train"));
 			break;
 		}
 	}

@@ -30,9 +30,9 @@ public class GUIMachineReactorBreeding extends GuiInfoContainer {
 		super.drawScreen(mouseX, mouseY, f);
 
 		String[] text = new String[] {
-				I18nUtil.resolveKey("gui.reactor_breeding.the_reactor_has_to_recieve"),
-				I18nUtil.resolveKey("gui.reactor_breeding.neutron_flux_from_adjacent"),
-				I18nUtil.resolveKey("gui.reactor_breeding.research_reactors_to_breed")
+				I18nUtil.resolveKey("gui.reactor_breeding.flux_required"),
+				I18nUtil.resolveKey("gui.reactor_breeding.flux_source"),
+				I18nUtil.resolveKey("gui.reactor_breeding.reactor_source")
 		};
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 16, 16, 16, guiLeft - 8, guiTop + 16 + 16, text);
 	}

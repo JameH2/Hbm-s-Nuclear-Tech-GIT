@@ -46,10 +46,10 @@ public class GUIScreenRBMKTerminal extends GuiScreen {
 		GL11.glScaled(0.5, 0.5, 1);
 		this.fontRendererObj.drawString(I18nUtil.resolveKey("gui.rbmk_terminal.esc_quit"), 2, 2, 0xffffff);
 		this.fontRendererObj.drawString(I18nUtil.resolveKey("gui.rbmk_terminal.chan_set"), 2, 12, 0xffffff);
-		this.fontRendererObj.drawString(I18nUtil.resolveKey("gui.rbmk_terminal.text.01"), 2, 22, 0xffffff);
-		this.fontRendererObj.drawString(I18nUtil.resolveKey("gui.rbmk_terminal.text.02"), 2, 32, 0xffffff);
-		this.fontRendererObj.drawString(I18nUtil.resolveKey("gui.rbmk_terminal.stop_stop_continuous_sending"), 2, 42, 0xffffff);
-		this.fontRendererObj.drawString(I18nUtil.resolveKey("gui.rbmk_terminal.clear_delete_command_history"), 2, 52, 0xffffff);
+		this.fontRendererObj.drawString(I18nUtil.resolveKey("gui.rbmk_terminal.send_hint"), 2, 22, 0xffffff);
+		this.fontRendererObj.drawString(I18nUtil.resolveKey("gui.rbmk_terminal.start_hint"), 2, 32, 0xffffff);
+		this.fontRendererObj.drawString(I18nUtil.resolveKey("gui.rbmk_terminal.stop_hint"), 2, 42, 0xffffff);
+		this.fontRendererObj.drawString(I18nUtil.resolveKey("gui.rbmk_terminal.clear_hint"), 2, 52, 0xffffff);
 	}
 	
 	@Override

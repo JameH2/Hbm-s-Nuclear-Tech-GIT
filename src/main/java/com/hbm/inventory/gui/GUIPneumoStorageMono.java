@@ -33,7 +33,7 @@ public class GUIPneumoStorageMono extends GuiInfoContainer {
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
 
-		this.drawCustomInfoStat(x, y, guiLeft + 174, guiTop + 36, 20, 8, x, y, I18nUtil.resolveKey("gui.pneumo_storage_mono.compressor") + storage.compair.getPressure() + I18nUtil.resolveKey("gui.pneumo_storage_mono.pu"), I18nUtil.resolveKey("gui.pneumo_storage_mono.max_range") + TileEntityPneumoTube.getRangeFromPressure(storage.compair.getPressure()) + "m");
+		this.drawCustomInfoStat(x, y, guiLeft + 174, guiTop + 36, 20, 8, x, y, I18nUtil.resolveKey("gui.pneumo_storage_mono.compressor", storage.compair.getPressure(), I18nUtil.resolveKey("gui.pneumo_storage_mono.pu")), I18nUtil.resolveKey("gui.pneumo_storage_mono.max_range", TileEntityPneumoTube.getRangeFromPressure(storage.compair.getPressure())));
 	}
 
 	@Override

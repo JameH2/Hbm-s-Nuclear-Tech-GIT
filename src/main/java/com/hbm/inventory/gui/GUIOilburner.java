@@ -36,10 +36,10 @@ public class GUIOilburner extends GuiInfoContainer {
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
 
-		this.drawCustomInfoStat(x, y, guiLeft + 116, guiTop + 17, 16, 52, x, y, new String[] { String.format(Locale.US, "%,d", Math.min(diFurnace.heatEnergy, diFurnace.maxHeatEnergy)) + " / " + String.format(Locale.US, "%,d", diFurnace.maxHeatEnergy) + I18nUtil.resolveKey("gui.oilburner.tu") });
+		this.drawCustomInfoStat(x, y, guiLeft + 116, guiTop + 17, 16, 52, x, y, new String[] { String.format(Locale.US, "%,d", Math.min(diFurnace.heatEnergy, diFurnace.maxHeatEnergy)) + " / " + String.format(Locale.US, "%,d", diFurnace.maxHeatEnergy) + " TU" });
 
 		if(diFurnace.tank.getTankType().hasTrait(FT_Flammable.class)) {
-			this.drawCustomInfoStat(x, y, guiLeft + 79, guiTop + 34, 18, 18, x, y, new String[] { diFurnace.setting + I18nUtil.resolveKey("gui.oilburner.m_b_t"), String.format(Locale.US, "%,d", (int)(diFurnace.tank.getTankType().getTrait(FT_Flammable.class).getHeatEnergy() / 1000) * diFurnace.setting) + I18nUtil.resolveKey("gui.oilburner.tu_t") });
+			this.drawCustomInfoStat(x, y, guiLeft + 79, guiTop + 34, 18, 18, x, y, new String[] { diFurnace.setting + " mB/t", String.format(Locale.US, "%,d", (int)(diFurnace.tank.getTankType().getTrait(FT_Flammable.class).getHeatEnergy() / 1000) * diFurnace.setting) + " TU/t" });
 		}
 
 		diFurnace.tank.renderTankInfo(this, x, y, guiLeft + 44, guiTop + 17, 16, 52);

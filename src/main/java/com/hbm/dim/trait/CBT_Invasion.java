@@ -318,7 +318,7 @@ public class CBT_Invasion extends CelestialBodyTrait implements IBossDisplayData
 			for(Object obj : entity.worldObj.playerEntities) {
 				if(obj instanceof EntityPlayer) {
 					EntityPlayer player = (EntityPlayer) obj;
-					player.addChatComponentMessage(new ChatComponentTranslation("chat.cbt_invasion.the_invasion_is_over").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+					player.addChatComponentMessage(new ChatComponentTranslation("chat.cbt_invasion.ended").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 				}
 			}
 

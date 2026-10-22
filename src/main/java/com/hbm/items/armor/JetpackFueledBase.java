@@ -25,7 +25,7 @@ public abstract class JetpackFueledBase extends JetpackBase implements IFillable
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
-		list.add(EnumChatFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("item.jetpack_fueled_base.desc1", fuel.getLocalizedName(), this.getFuel(itemstack), this.maxFuel));
+		list.add(EnumChatFormatting.LIGHT_PURPLE + ("" + (fuel.getLocalizedName()) + ": " + (this.getFuel(itemstack)) + "mB / " + (this.maxFuel) + "mB"));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
@@ -38,7 +38,7 @@ public abstract class JetpackFueledBase extends JetpackBase implements IFillable
 		if(jetpack == null)
 			return;
 
-		list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.jetpack_fueled_base.desc2", stack.getDisplayName(), fuel.getLocalizedName(), this.getFuel(jetpack), this.maxFuel));
+		list.add(EnumChatFormatting.RED + "  " + ("" + (stack.getDisplayName()) + " (" + (fuel.getLocalizedName()) + ": " + (this.getFuel(jetpack)) + "mB / " + (this.maxFuel) + "mB)"));
 	}
 
 	protected void useUpFuel(EntityPlayer player, ItemStack stack, int rate) {

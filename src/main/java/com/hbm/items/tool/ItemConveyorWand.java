@@ -98,7 +98,7 @@ public class ItemConveyorWand extends Item implements ILookOverlay {
 			}
 		} else {
 			list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.hold_prefix") + EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.lshift_key") + EnumChatFormatting.DARK_GRAY
-					+ "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.misc.more_info_suffix"));
+					+ "" + EnumChatFormatting.ITALIC + I18nUtil.resolveKey("misc.tooltip.more_info"));
 		}
 	}
 
@@ -210,9 +210,9 @@ public class ItemConveyorWand extends Item implements ILookOverlay {
 
 					player.addChatMessage(new ChatComponentTranslation("chat.conveyor_wand.conveyor_built"));
 				} else if(constructCount == 0) {
-					player.addChatMessage(new ChatComponentTranslation("chat.conveyor_wand.not_enough_conveyors_build_cancelled"));
+					player.addChatMessage(new ChatComponentTranslation("chat.conveyor_wand.insufficient_conveyors"));
 				} else {
-					player.addChatMessage(new ChatComponentTranslation("chat.conveyor_wand.conveyor_obstructed_build_cancelled"));
+					player.addChatMessage(new ChatComponentTranslation("chat.conveyor_wand.obstructed"));
 				}
 			} else {
 				RenderOverhead.clearActionPreview();
@@ -511,7 +511,7 @@ public class ItemConveyorWand extends Item implements ILookOverlay {
 		Block block = world.getBlock(x, y, z);
 		if(block instanceof BlockConveyorBase) {
 			List<String> text = new ArrayList<>();
-			text.add(I18nUtil.resolveKey("desc.item.conveyor_wand.break_whole_conveyor_line"));
+			text.add(I18nUtil.resolveKey("item.conveyor_wand.break_line"));
 			ILookOverlay.printGeneric(event, I18nUtil.resolveKey(block.getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 		}
 	}

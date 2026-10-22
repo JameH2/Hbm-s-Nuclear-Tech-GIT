@@ -45,7 +45,7 @@ public class GUIPump extends GuiScreen {
 		textPlacementPriority.setText("" + pump.bufferSize);
 		textPlacementPriority.setMaxStringLength(5);
 
-		buttonPressure = new GuiButton(0, this.width / 2 - 50, 100, 90, 20, pressure + I18nUtil.resolveKey("gui.pump.pu"));
+		buttonPressure = new GuiButton(0, this.width / 2 - 50, 100, 90, 20, pressure + " " + I18nUtil.resolveKey("gui.pump.pu"));
 
 		buttonPriority = new GuiButton(1, this.width / 2 + 50, 100, 90, 20, I18nUtil.resolveKey("gui.connection_priority." + pump.priority.name().toLowerCase(Locale.US)));
 	}
@@ -55,7 +55,7 @@ public class GUIPump extends GuiScreen {
 		drawDefaultBackground();
 
 		drawString(fontRendererObj, I18nUtil.resolveKey("gui.pump.throughput"), this.width / 2 - 150, 80, 0xA0A0A0);
-		drawString(fontRendererObj, I18nUtil.resolveKey("gui.pump.max_10_000m_b"), this.width / 2 - 150, 90, 0xA0A0A0);
+		drawString(fontRendererObj, I18nUtil.resolveKey("gui.pump.capacity"), this.width / 2 - 150, 90, 0xA0A0A0);
 		textPlacementPriority.drawTextBox();
 
 		drawString(fontRendererObj, I18nUtil.resolveKey("gui.pump.pressure"), this.width / 2 - 50, 80, 0xA0A0A0);

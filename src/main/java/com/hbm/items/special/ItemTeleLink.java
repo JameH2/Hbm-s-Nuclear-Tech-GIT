@@ -34,7 +34,7 @@ public class ItemTeleLink extends Item {
 				stack.stackTagCompound.setInteger("z", z);
 				stack.stackTagCompound.setInteger("dim", player.dimension);
 				world.playSoundAtEntity(player, "hbm:item.techBleep", 1.0F, 1.0F);
-				player.addChatMessage(new ChatComponentTranslation("chat.tele_link.telelink_teleporter_exit", x, y, z).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.AQUA)));
+				player.addChatMessage(new ChatComponentTranslation("chat.tele_link.exit", x, y, z).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.AQUA)));
 				player.swingItem();
 
 				return true;
@@ -43,7 +43,7 @@ public class ItemTeleLink extends Item {
 
 				if(!stack.hasTagCompound()) {
 					world.playSoundAtEntity(player, "hbm:item.techBoop", 1.0F, 1.0F);
-					player.addChatMessage(new ChatComponentTranslation("chat.tele_link.telelink_no_destination").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
+					player.addChatMessage(new ChatComponentTranslation("chat.tele_link.no_destination").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.RED)));
 					return false;
 				}
 
@@ -73,12 +73,12 @@ public class ItemTeleLink extends Item {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		if (itemstack.stackTagCompound != null) {
-			list.add(I18nUtil.resolveKey("item.tele_link.desc1", itemstack.stackTagCompound.getInteger("x")));
-			list.add(I18nUtil.resolveKey("item.tele_link.desc2", itemstack.stackTagCompound.getInteger("y")));
-			list.add(I18nUtil.resolveKey("item.tele_link.desc3", itemstack.stackTagCompound.getInteger("z")));
-			list.add(I18nUtil.resolveKey("item.tele_link.desc4", itemstack.stackTagCompound.getInteger("dim")));
+			list.add(I18nUtil.resolveKey("item.tele_link.x", itemstack.stackTagCompound.getInteger("x")));
+			list.add(I18nUtil.resolveKey("item.tele_link.y", itemstack.stackTagCompound.getInteger("y")));
+			list.add(I18nUtil.resolveKey("item.tele_link.z", itemstack.stackTagCompound.getInteger("z")));
+			list.add(I18nUtil.resolveKey("item.tele_link.dimension", itemstack.stackTagCompound.getInteger("dim")));
 		} else {
-			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.tele_link.select_exit_location_first"));
+			list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("item.tele_link.no_exit"));
 		}
 	}
 
