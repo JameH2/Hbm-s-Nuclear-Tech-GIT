@@ -21,10 +21,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 
 public class FluidRegulatorValve extends FluidDuctBase implements ILookOverlay, IToolable, ITooltipProvider {
+
+	@SideOnly(Side.CLIENT) private IIcon[] levelIcons;
+	@SideOnly(Side.CLIENT) private static final int[] levelIconsMap = { 0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5 };
 
 	public FluidRegulatorValve(Material mat) {
 		super(mat);
@@ -34,11 +38,26 @@ public class FluidRegulatorValve extends FluidDuctBase implements ILookOverlay, 
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister) {
 		this.blockIcon = iconRegister.registerIcon(RefStrings.MODID + ":fluid_regulator_valve");
+		this.levelIcons = new IIcon[6];
+		for(int i = 0; i < this.levelIcons.length; i++) {
+			this.levelIcons[i] = iconRegister.registerIcon(RefStrings.MODID + ":fluid_regulator_valve_" + i);
+		}
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int metadata) {
+		return blockIcon;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
+		TileEntity te = world.getTileEntity(x, y, z);
+		if(te instanceof TileEntityFluidRegulatorValve) {
+			TileEntityFluidRegulatorValve valve = (TileEntityFluidRegulatorValve) te;
+			return this.levelIcons[levelIconsMap[valve.levelIndex]];
+		}
 		return blockIcon;
 	}
 

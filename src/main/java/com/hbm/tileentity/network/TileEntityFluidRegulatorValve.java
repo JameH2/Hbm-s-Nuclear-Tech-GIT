@@ -38,7 +38,8 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 
 	private static final int[] LEVELS = { 1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 99 };
 
-	private int levelIndex = 5;
+	public int levelIndex = 5;
+	public int lastLevelIndex = 5;
 
 	// Client-side synced data for HUD overlay
 	public int clientTankMax = 0;
@@ -234,6 +235,10 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
+		if (worldObj.isRemote && lastLevelIndex != levelIndex) {
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			lastLevelIndex = levelIndex;
+		}
 		if (!worldObj.isRemote) {
 			List<TankRef> tanks = getConnectedTanks();
 
