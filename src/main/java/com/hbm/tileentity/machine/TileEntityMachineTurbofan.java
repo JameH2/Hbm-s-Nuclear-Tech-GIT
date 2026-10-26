@@ -30,7 +30,7 @@ import com.hbm.tileentity.TileEntityMachinePolluting;
 import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.Compat;
 import com.hbm.util.CompatEnergyControl;
-import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.util.fauxpointtwelve.BlockPos;
 import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.energymk2.IEnergyProviderMK2;
@@ -109,17 +109,15 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 		return (power * i) / maxPower;
 	}
 
-	protected DirPos[] getConPos() {
-
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10).getRotation(ForgeDirection.UP);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
-
-		return new DirPos[] {
-				new DirPos(this.xCoord + rot.offsetX * 2, this.yCoord, this.zCoord + rot.offsetZ * 2, rot),
-				new DirPos(this.xCoord + rot.offsetX * 2 - dir.offsetX, this.yCoord, this.zCoord + rot.offsetZ * 2 - dir.offsetZ, rot),
-				new DirPos(this.xCoord - rot.offsetX * 2, this.yCoord, this.zCoord - rot.offsetZ * 2, rot.getOpposite()),
-				new DirPos(this.xCoord - rot.offsetX * 2 - dir.offsetX, this.yCoord, this.zCoord - rot.offsetZ * 2 - dir.offsetZ, rot.getOpposite())
-		};
+	@Override
+	protected boolean queryRedstonePower() {
+		for(PortDef port : getPorts()) {
+			for(BlockPos pos : port.portPositions) {
+				if(!Compat.isPositionLoaded(worldObj, pos.getX(), pos.getZ())) continue;
+				if(worldObj.isBlockIndirectlyGettingPowered(pos.getX(), pos.getY(), pos.getZ())) return true;
+			}
+		}
+		return false;
 	}
 	
 	protected PortDef[] cachedPorts;
@@ -187,15 +185,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 			long burnValue = 0;
 			int amount = 1 + this.afterburner;
 
-			boolean redstone = false;
-
-			for(DirPos pos : getConPos()) {
-				if(!Compat.isPositionLoaded(worldObj, pos.getX(), pos.getZ())) continue;
-				if(this.worldObj.isBlockIndirectlyGettingPowered(pos.getX(), pos.getY(), pos.getZ())) {
-					redstone = true;
-					break;
-				}
-			}
+			boolean redstone = isRedstonePowered();
 
 			int amountToBurn = 0;
 

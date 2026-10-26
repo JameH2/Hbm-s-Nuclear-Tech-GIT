@@ -15,7 +15,6 @@ import com.hbm.tileentity.machine.albion.TileEntityPASource.PAState;
 import com.hbm.tileentity.machine.albion.TileEntityPASource.Particle;
 import com.hbm.util.EnumUtil;
 import com.hbm.util.fauxpointtwelve.BlockPos;
-import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.redstoneoverradio.IRORValueProvider;
 import api.hbm.redstoneoverradio.IRORInteractive;
@@ -140,8 +139,15 @@ public class TileEntityPADipole extends TileEntityCooledBase implements IGUIProv
 	}
 
 	public boolean checkRedstone() {
+		return isRedstonePowered();
+	}
+
+	@Override
+	protected boolean queryRedstonePower() {
 		for(PortDef port : this.getPorts()) {
-			for(DirPos pos : port.portConnections) if(worldObj.isBlockIndirectlyGettingPowered(pos.getX(), pos.getY(), pos.getZ())) return true;
+			for(BlockPos pos : port.portPositions) {
+				if(worldObj.isBlockIndirectlyGettingPowered(pos.getX(), pos.getY(), pos.getZ())) return true;
+			}
 		}
 		return false;
 	}
