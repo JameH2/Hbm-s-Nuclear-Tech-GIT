@@ -64,7 +64,6 @@ public class TileEntityFluidRegulatorValve extends TileEntityPipeBaseNT
 		int nextIndex = MathHelper.clamp_int(levelIndex + (backwards ? -1 : 1), 0, LEVELS.length - 1);
 		if (nextIndex == levelIndex) return;
 		levelIndex = nextIndex;
-		worldObj.playSoundEffect(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, "hbm:item.screwdriver", 1.0F, 1.0F);
 		this.markDirty();
 		this.networkPackNT(25);
 	}
