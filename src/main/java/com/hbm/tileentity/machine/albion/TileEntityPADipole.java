@@ -133,13 +133,9 @@ public class TileEntityPADipole extends TileEntityCooledBase implements IGUIProv
 
 	public ForgeDirection getExitDir(Particle particle) {
 		int dit = particle.momentum < this.threshold
-			? dirLower : checkRedstone()
+			? dirLower : isRedstonePowered()
 			? dirRedstone : dirUpper;
 		return ditToForgeDir(dit);
-	}
-
-	public boolean checkRedstone() {
-		return isRedstonePowered();
 	}
 
 	@Override
