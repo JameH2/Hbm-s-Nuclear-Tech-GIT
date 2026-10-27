@@ -55,6 +55,7 @@ public class TileEntityMachineAlkylation extends TileEntityMachineBase implement
 		
 		if(!worldObj.isRemote) {
 			moduleFluidPorts.update(getPorts());
+			modulePowerPorts.update(getPorts());
 			
 			if(worldObj.getTotalWorldTime() % 2 == 0) alkylate();
 			
