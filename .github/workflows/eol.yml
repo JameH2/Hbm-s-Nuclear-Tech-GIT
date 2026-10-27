@@ -1,0 +1,96 @@
+name: Normalize line endings
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eol-${{ github.event_name }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check committed line endings
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout trusted tooling
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - name: Checkout PR contents for inspection
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: pr
+          persist-credentials: false
+
+      - name: Check raw Git blobs
+        run: python3 .github/scripts/normalize_eol.py --root pr --check
+
+  fix:
+    name: Open stacked EOL fix PR
+    if: >-
+      github.event_name == 'pull_request_target' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      !startsWith(github.event.pull_request.head.ref, 'eol-fixes/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout trusted tooling
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - name: Checkout PR branch for normalization
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: pr
+
+      - name: Normalize raw Git blobs without executing PR code
+        run: |
+          python3 .github/scripts/normalize_eol.py --root pr --from-index
+          git -C pr -c core.safecrlf=false add --renormalize .
+
+      - name: Verify the PR still points to this revision
+        id: revision
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          current_head=$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
+            --json headRefOid,state --jq 'select(.state == "OPEN") | .headRefOid')
+          if [[ "$current_head" == "$EXPECTED_HEAD" ]]; then
+            echo "current=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "PR was updated or closed; skipping fixes for this revision."
+          fi
+
+      - name: Create or update stacked fix PR
+        if: steps.revision.outputs.current == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          path: pr
+          base: ${{ github.event.pull_request.head.ref }}
+          branch: eol-fixes/pr-${{ github.event.pull_request.number }}
+          delete-branch: true
+          commit-message: Normalize line endings
+          title: 'Normalize line endings for #${{ github.event.pull_request.number }}'
+          body: |
+            Automatic line-ending fixes for #${{ github.event.pull_request.number }}.
+
+            Merge this PR into the original PR branch to apply the fixes.
+            Applies the existing .gitattributes rules: CRLF by default,
+            with LF for .info, .mcmeta, .cfg, .sh, and gradlew working copies.
