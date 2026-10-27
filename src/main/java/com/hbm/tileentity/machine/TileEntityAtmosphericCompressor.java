@@ -211,17 +211,12 @@ public class TileEntityAtmosphericCompressor extends TileEntityMachineBase imple
 			ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
 	
 			cachedPorts = new PortDef[] {
-				PortDef.make(xCoord - dir.offsetX, yCoord, zCoord - dir.offsetZ, dir.getOpposite()),
-				PortDef.make(xCoord - dir.offsetX + rot.offsetX, yCoord, zCoord - dir.offsetZ + rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX, yCoord, zCoord - dir.offsetZ, dir.getOpposite(), rot.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX + rot.offsetX, yCoord, zCoord - dir.offsetZ + rot.offsetZ, dir.getOpposite(), rot),
 
-				PortDef.make(xCoord, yCoord, zCoord, dir),
-				PortDef.make(xCoord + rot.offsetX, yCoord, zCoord + rot.offsetZ, dir),
+				PortDef.make(xCoord, yCoord, zCoord, dir, rot.getOpposite()),
+				PortDef.make(xCoord + rot.offsetX, yCoord, zCoord + rot.offsetZ, dir, rot),
 
-				PortDef.make(xCoord, yCoord, zCoord, rot.getOpposite()),
-				PortDef.make(xCoord - dir.offsetX, yCoord, zCoord - dir.offsetZ, rot.getOpposite()),
-
-				PortDef.make(xCoord + rot.offsetX, yCoord, zCoord + rot.offsetZ, rot),
-				PortDef.make(xCoord - dir.offsetX + rot.offsetX, yCoord, zCoord - dir.offsetZ + rot.offsetZ, rot),
 			};
 		}
 
