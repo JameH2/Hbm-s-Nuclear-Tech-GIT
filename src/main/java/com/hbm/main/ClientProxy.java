@@ -177,10 +177,6 @@ public class ClientProxy extends ServerProxy {
 		registerClientEventHandler(new EventHandlerParticleEngine());
 		registerClientEventHandler(theInfoSystem);
 		registerClientEventHandler(new com.hbm.handler.overlay.FluidDuctHover());
-		registerClientEventHandler(new com.hbm.handler.overlay.MachineHover());
-		registerClientEventHandler(new com.hbm.handler.overlay.HudOverlayManager()
-				.register(new com.hbm.handler.overlay.FluidDuctOverlay())
-				.register(new com.hbm.handler.overlay.MachineOverlay()));
 
 		registerTileEntitySpecialRenderer();
 		registerItemRenderer();

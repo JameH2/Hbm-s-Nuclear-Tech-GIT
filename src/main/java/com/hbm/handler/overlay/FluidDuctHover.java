@@ -3,11 +3,9 @@ package com.hbm.handler.overlay;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -17,7 +15,6 @@ import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import com.hbm.tileentity.TileEntityProxyBase;
 import com.hbm.util.fauxpointtwelve.BlockPos;
 
-import api.hbm.fluidmk2.IFluidUserMK2;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
@@ -53,7 +50,6 @@ public class FluidDuctHover {
 
 	public static FluidType hoveredType;
 	public static final List<Duct> network = new ArrayList<>();
-	public static int machineCount;
 	private static int revealStart;
 
 	@SubscribeEvent
@@ -64,12 +60,12 @@ public class FluidDuctHover {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayer player = mc.thePlayer;
 
-		if(player == null || mc.currentScreen != null || !Display.isActive() || !HudOverlay.interactionsEnabled()) {
+		if(player == null || mc.theWorld == null || mc.currentScreen != null || !Display.isActive() || mc.gameSettings.hideGUI) {
 			clear();
 			return;
 		}
 
-		MovingObjectPosition mop = HoverRay.raycast(mc, 128D);
+		MovingObjectPosition mop = mc.objectMouseOver;
 
 		if(mop == null || mop.typeOfHit != MovingObjectType.BLOCK) {
 			clear();
@@ -105,7 +101,6 @@ public class FluidDuctHover {
 	private static void clear() {
 		hoveredType = null;
 		network.clear();
-		machineCount = 0;
 	}
 
 	private static boolean inNetwork(BlockPos pos) {
@@ -119,7 +114,6 @@ public class FluidDuctHover {
 
 		network.clear();
 		Map<BlockPos, Integer> dist = new HashMap<>();
-		Set<BlockPos> machines = new HashSet<>();
 		ArrayDeque<BlockPos> open = new ArrayDeque<>();
 		dist.put(start, 0);
 		open.add(start);
@@ -139,8 +133,6 @@ public class FluidDuctHover {
 				if(te instanceof TileEntityPipeBaseNT && ((TileEntityPipeBaseNT) te).getType() == type) {
 					dist.put(next, d + 1);
 					open.add(next);
-				} else if(te instanceof IFluidUserMK2 && ((IFluidUserMK2) te).canConnect(type, dir.getOpposite())) {
-					machines.add(new BlockPos(te.xCoord, te.yCoord, te.zCoord));
 				}
 			}
 		}
@@ -159,8 +151,6 @@ public class FluidDuctHover {
 
 			network.add(new Duct(pos, mask, entry.getValue()));
 		}
-
-		machineCount = machines.size();
 	}
 
 	private static int bit(ForgeDirection dir) {
@@ -182,9 +172,9 @@ public class FluidDuctHover {
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event) {
 
-		if(hoveredType == null || network.isEmpty() || !HudOverlay.interactionsEnabled()) return;
-
 		Minecraft mc = Minecraft.getMinecraft();
+		if(hoveredType == null || network.isEmpty() || mc.theWorld == null || mc.thePlayer == null || mc.currentScreen != null || mc.gameSettings.hideGUI) return;
+
 		EntityPlayer player = mc.thePlayer;
 		double cx = player.prevPosX + (player.posX - player.prevPosX) * event.partialTicks;
 		double cy = player.prevPosY + (player.posY - player.prevPosY) * event.partialTicks;
