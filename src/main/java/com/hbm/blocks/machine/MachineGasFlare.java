@@ -71,12 +71,12 @@ public class MachineGasFlare extends BlockDummyable implements ITooltipProvider 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.burn_fluids_vent_gasses"));
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.gas_flare.burns_up_to_s10m_b_t", EnumChatFormatting.RED + "10mB/t"));
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.gas_flare.vents_up_to_s50m_b_t", EnumChatFormatting.RED + "50mB/t"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.tooltip.vent_fluids"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.gas_flare.burn_rate", EnumChatFormatting.RED + "10mB/t"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.gas_flare.vent_rate", EnumChatFormatting.RED + "50mB/t"));
 		list.add("");
 		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.gas_flare.fuel_efficiency"));
-		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.gas_flare.flammable_gasses_s20", EnumChatFormatting.RED + "20%"));
-		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.gas_flare.flammable_liquids_s10", EnumChatFormatting.RED + "10%"));
+		list.add(EnumChatFormatting.YELLOW + "-" + I18nUtil.resolveKey("tile.gas_flare.gas_efficiency", EnumChatFormatting.RED + "20%"));
+		list.add(EnumChatFormatting.YELLOW + "-" + I18nUtil.resolveKey("tile.gas_flare.liquid_efficiency", EnumChatFormatting.RED + "10%"));
 	}
 }

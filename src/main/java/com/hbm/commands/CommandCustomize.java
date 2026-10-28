@@ -34,14 +34,14 @@ public class CommandCustomize extends CommandBase {
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
 		if(!(sender instanceof EntityPlayer)) {
-			sender.addChatMessage(new ChatComponentTranslation("commands.customize.customization_available_players").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+			sender.addChatMessage(new ChatComponentTranslation("commands.customize.players_only").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 			return;
 		}
 
 		EntityPlayer player = (EntityPlayer) sender;
 
 		if(player.getHeldItem() == null || !(player.getHeldItem().getItem() instanceof ICustomizable)) {
-			sender.addChatMessage(new ChatComponentTranslation("commands.customize.text.02").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+			sender.addChatMessage(new ChatComponentTranslation("commands.customize.item_required").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 			return;
 		}
 

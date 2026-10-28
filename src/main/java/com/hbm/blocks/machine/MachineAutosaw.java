@@ -51,7 +51,7 @@ public class MachineAutosaw extends BlockContainer implements ILookOverlay, IToo
 				if(saw.acceptedFuels.contains(type)) {
 					saw.tank.setTankType(type);
 					saw.markDirty();
-					player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+					player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 					return true;
 				}
 			}
@@ -86,7 +86,7 @@ public class MachineAutosaw extends BlockContainer implements ILookOverlay, IToo
 		TileEntityMachineAutosaw saw = (TileEntityMachineAutosaw) te;
 
 		List<String> text = new ArrayList();
-		text.add(I18nUtil.resolveKey("overlay.autosaw.mb", saw.tank.getTankType().getLocalizedName(), saw.tank.getFill(), saw.tank.getMaxFill()));
+		text.add(("" + (saw.tank.getTankType().getLocalizedName()) + ": " + (saw.tank.getFill()) + "/" + (saw.tank.getMaxFill()) + "mB"));
 
 		if(saw.isSuspended) {
 			text.add(EnumChatFormatting.RED + "! " + I18nUtil.resolveKey(getUnlocalizedName() + ".suspended") + " !");

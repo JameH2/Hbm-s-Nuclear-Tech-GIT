@@ -47,8 +47,8 @@ public class ItemVOTVdrive extends ItemEnumMulti {
 
 			if(identifier.equals("")) identifier = "0x" + Integer.toHexString(new ChunkCoordIntPair(destination.x, destination.z).hashCode()).toUpperCase();
 
-			list.add(I18nUtil.resolveKey("item.votvdrive.desc1"));
-			list.add(I18nUtil.resolveKey("item.votvdrive.desc2", identifier));
+			list.add(I18nUtil.resolveKey("item.votvdrive.orbital_station"));
+			list.add(I18nUtil.resolveKey("item.votvdrive.station", identifier));
 
 			if(player.worldObj.provider.dimensionId != destination.body.getDimensionId()) {
 				for(String s : I18nUtil.resolveKey("item.hard_drive_full.orbit.desc").split("\\$")) {
@@ -61,19 +61,19 @@ public class ItemVOTVdrive extends ItemEnumMulti {
 
 		int processingLevel = destination.body.getProcessingLevel(CelestialBody.getBody(player.worldObj));
 
-		list.add(I18nUtil.resolveKey("item.votvdrive.desc8", EnumChatFormatting.AQUA + String.valueOf(I18nUtil.resolveKey("body." + destination.body.name))));
+		list.add(I18nUtil.resolveKey("item.votvdrive.destination", EnumChatFormatting.AQUA + String.valueOf(I18nUtil.resolveKey("body." + destination.body.name))));
 
 		if(destination.x == 0 && destination.z == 0) {
-			list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.votvdrive.desc3"));
+			list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.votvdrive.no_coordinates"));
 		} else if(!getProcessed(stack)) {
 			// Display processing level info if not processed
-			list.add(I18nUtil.resolveKey("item.votvdrive.desc4", processingLevel));
-			list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.votvdrive.desc5"));
-			list.add(I18nUtil.resolveKey("item.votvdrive.desc6", destination.x, destination.z));
+			list.add(I18nUtil.resolveKey("item.votvdrive.process_level", processingLevel));
+			list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.votvdrive.unprocessed"));
+			list.add(I18nUtil.resolveKey("item.votvdrive.coordinates", destination.x, destination.z));
 		} else {
 			// Display destination info if processed
-			list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.votvdrive.desc7"));
-			list.add(I18nUtil.resolveKey("item.votvdrive.desc6", destination.x, destination.z));
+			list.add(EnumChatFormatting.GREEN + I18nUtil.resolveKey("item.votvdrive.processed"));
+			list.add(I18nUtil.resolveKey("item.votvdrive.coordinates", destination.x, destination.z));
 		}
 
 		if(player.worldObj.provider.dimensionId == destination.body.getDimensionId()) {
@@ -284,9 +284,9 @@ public class ItemVOTVdrive extends ItemEnumMulti {
 				Destination target = new Destination(CelestialBody.getEnum(world), x, z);
 
 				if(station.recallPod(target)) {
-					player.addChatMessage(new ChatComponentTranslation("chat.votvdrive.recalling_drop_pod_coordinates", x, z).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW).setItalic(true)));
+					player.addChatMessage(new ChatComponentTranslation("chat.votvdrive.recalling", x, z).setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW).setItalic(true)));
 				} else {
-					player.addChatMessage(new ChatComponentTranslation("chat.votvdrive.could_not_recall_drop_pod").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW).setItalic(true)));
+					player.addChatMessage(new ChatComponentTranslation("chat.votvdrive.recall_failed").setChatStyle(new net.minecraft.util.ChatStyle().setColor(EnumChatFormatting.YELLOW).setItalic(true)));
 				}
 			}
 

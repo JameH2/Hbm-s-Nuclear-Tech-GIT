@@ -37,7 +37,7 @@ public class GUILaunchPadRocket extends GuiInfoContainer {
 
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 167, guiTop + 36, 16, 52, machine.power, machine.maxPower);
 
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 56, guiTop + 20, 18, 17, mouseX, mouseY, new String[]{I18nUtil.resolveKey("gui.launch_pad_rocket.commit_to_launch")} );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 56, guiTop + 20, 18, 17, mouseX, mouseY, new String[]{I18nUtil.resolveKey("gui.launch_pad_rocket.launch")} );
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class ItemToolAbilityFueled extends ItemToolAbility implements IFillableI
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 
-		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.tool_ability_fueled.desc1", this.getFill(stack), this.maxFuel));
+		list.add(EnumChatFormatting.GOLD + I18nUtil.resolveKey("item.tool_ability_fueled.fuel", this.getFill(stack), this.maxFuel));
 
 		for(FluidType type : acceptedFuels) {
 			list.add(EnumChatFormatting.YELLOW + "- " + type.getLocalizedName());

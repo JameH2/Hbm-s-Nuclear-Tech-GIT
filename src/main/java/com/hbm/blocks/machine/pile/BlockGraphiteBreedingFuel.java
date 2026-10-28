@@ -52,7 +52,7 @@ public class BlockGraphiteBreedingFuel extends BlockGraphiteDrilledTE implements
 
 			if(tool == ToolType.HAND_DRILL) {
 				TileEntityPileBreedingFuel pile = (TileEntityPileBreedingFuel) world.getTileEntity(x, y, z);
-				player.addChatComponentMessage(new ChatComponentTranslation("chat.graphite_breeding_fuel.cp1_fuel_assembly", x, y, z).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.graphite_breeding_fuel.assembly", x, y, z).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));
 				player.addChatComponentMessage(new ChatComponentTranslation("chat.graphite_breeding_fuel.depletion", pile.progress, pile.maxProgress).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 				player.addChatComponentMessage(new ChatComponentTranslation("chat.graphite_breeding_fuel.flux", pile.lastNeutrons).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 			}

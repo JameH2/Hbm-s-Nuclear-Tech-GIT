@@ -116,7 +116,7 @@ public class GUITransporterLinker extends GuiScreen {
 
 		String coordinates = "x: " + linkFromTransporter.x + ", z: " + linkFromTransporter.z;
 		int width = fontRendererObj.getStringWidth(coordinates);
-		fontRendererObj.drawStringWithShadow(I18nUtil.resolveKey(linkFromTransporter.name), textLeftX, guiTop + 13, 0x00ff00);
+		fontRendererObj.drawStringWithShadow("container.transporter".equals(linkFromTransporter.name) ? I18nUtil.resolveKey("container.transporter") : linkFromTransporter.name, textLeftX, guiTop + 13, 0x00ff00);
 		fontRendererObj.drawStringWithShadow(coordinates, textRightX - width, guiTop + 23, 0x00ff00);
 
 		// Draw linkable transporters
@@ -130,7 +130,7 @@ public class GUITransporterLinker extends GuiScreen {
 
 			coordinates = "x: " + transporter.x + ", z: " + transporter.z;
 			width = fontRendererObj.getStringWidth(coordinates);
-			fontRendererObj.drawStringWithShadow(I18nUtil.resolveKey(transporter.name), textLeftX, y - 1, 0x00ff00);
+			fontRendererObj.drawStringWithShadow("container.transporter".equals(transporter.name) ? I18nUtil.resolveKey("container.transporter") : transporter.name, textLeftX, y - 1, 0x00ff00);
 			fontRendererObj.drawStringWithShadow(coordinates, textRightX - width, y + 9, 0x00ff00);
 		}
 	}
@@ -261,7 +261,8 @@ public class GUITransporterLinker extends GuiScreen {
 		for(TransporterInfo transporter : transporters) {
 			if(transporter.equals(linkFromTransporter)) continue;
 			if(transporter.linkedTo != null && !transporter.linkedTo.equals(linkFromTransporter)) continue;
-			if(I18nUtil.resolveKey(transporter.name).toLowerCase(Locale.US).contains(subs)) {
+			String name = "container.transporter".equals(transporter.name) ? I18nUtil.resolveKey("container.transporter") : transporter.name;
+			if(name.toLowerCase(Locale.US).contains(subs)) {
 				visibleTransporters.add(transporter);
 			}
 		}

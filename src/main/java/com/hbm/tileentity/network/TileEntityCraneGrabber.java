@@ -48,6 +48,14 @@ public class TileEntityCraneGrabber extends TileEntityCraneBase implements IGUIP
 	}
 
 	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+		if(stack == null) return false;
+		if(slot == 9) return stack.getItem() == ModItems.upgrade_stack;
+		if(slot == 10) return stack.getItem() == ModItems.upgrade_ejector;
+		return super.isItemValidForSlot(slot, stack);
+	}
+
+	@Override
 	public String getName() {
 		return "container.craneGrabber";
 	}

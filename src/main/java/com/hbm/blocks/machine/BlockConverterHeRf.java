@@ -8,6 +8,8 @@ import com.hbm.tileentity.network.TileEntityConverterHeRf;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.i18n.I18nUtil;
 
+import api.hbm.block.IToolable;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
@@ -16,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class BlockConverterHeRf extends BlockContainer implements ILookOverlay {
+public class BlockConverterHeRf extends BlockContainer implements ILookOverlay, IToolable {
 
 	public BlockConverterHeRf(Material mat) {
 		super(mat);
@@ -28,6 +30,18 @@ public class BlockConverterHeRf extends BlockContainer implements ILookOverlay {
 	}
 
 	@Override
+	public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, int side, float fX, float fY, float fZ, ToolType tool) {
+		if(tool != ToolType.SCREWDRIVER) return false;
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(!(tile instanceof TileEntityConverterHeRf)) return false;
+		if(!world.isRemote) {
+			TileEntityConverterHeRf converter = (TileEntityConverterHeRf) tile;
+			return converter.adjustMaxPower(!player.isSneaking());
+		}
+		return false;
+	}
+
+	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 
@@ -36,8 +50,10 @@ public class BlockConverterHeRf extends BlockContainer implements ILookOverlay {
 		TileEntityConverterHeRf converter = (TileEntityConverterHeRf) tile;
 		List<String> text = new ArrayList<>();
 
-		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.converter_he_rf.he", BobMathUtil.getShortNumber(converter.getPower())));
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + ("" + (BobMathUtil.getShortNumber(converter.getPower())) + "HE"));
 		text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.converter_he_rf.rf", BobMathUtil.getShortNumber(converter.getEnergyStored(ForgeDirection.UNKNOWN))));
+
+		text.add(I18nUtil.resolveKey("overlay.converter.max_buffer", BobMathUtil.getShortNumber(converter.getMaxPower())));
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}

@@ -35,10 +35,10 @@ public class GUIMiningLaser extends GuiInfoContainer {
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 106 - 88, 16, 88, laser.power, laser.maxPower);
 
 		String[] text = new String[] { I18nUtil.resolveKey("gui.mining_laser.acceptable_upgrades"),
-				I18nUtil.resolveKey("gui.mining_laser.speed_stacks_to_level_12"),
-				I18nUtil.resolveKey("gui.mining_laser.effectiveness_stacks_to_level_12"),
-				I18nUtil.resolveKey("gui.mining_laser.overdrive_stacks_to_level_3"),
-				I18nUtil.resolveKey("gui.mining_laser.fortune_stacks_to_level_3"),
+				I18nUtil.resolveKey("gui.mining_laser.speed_limit"),
+				I18nUtil.resolveKey("gui.mining_laser.efficiency_limit"),
+				I18nUtil.resolveKey("gui.mining_laser.overdrive_limit"),
+				I18nUtil.resolveKey("gui.mining_laser.fortune_limit"),
 				I18nUtil.resolveKey("gui.mining_laser.smelter_exclusive"),
 				I18nUtil.resolveKey("gui.mining_laser.shredder_exclusive"),
 				I18nUtil.resolveKey("gui.mining_laser.centrifuge_exclusive"),

@@ -2004,7 +2004,7 @@ public class GUIMachineStardar extends GuiInfoContainer {
 		String owner = satellite.owner != null && !satellite.owner.isEmpty() ? satellite.owner : SatelliteBase.DEFAULT_OWNER;
 		List<String> tooltip = new ArrayList<String>(5);
 		tooltip.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.sat.desc.owner") + ": " + EnumChatFormatting.GOLD + owner);
-		tooltip.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.sat.desc.speed") + ": " + EnumChatFormatting.GOLD + formatOrbitSpeed(satellite.altitude) + I18nUtil.resolveKey("gui.sat.settings.unit.km_per_second"));
+		tooltip.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.sat.desc.speed") + ": " + EnumChatFormatting.GOLD + formatOrbitSpeed(satellite.altitude) + "km/s");
 		tooltip.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.sat.desc.altitude") + ": " + EnumChatFormatting.GOLD + formatValue(satellite.altitude) + I18nUtil.resolveKey("gui.sat.settings.unit.km"));
 		tooltip.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.sat.desc.inclination") + ": " + EnumChatFormatting.GOLD + formatValue(satellite.inclination) + "\u00B0");
 		tooltip.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("item.sat.desc.phase") + ": " + EnumChatFormatting.GOLD + formatPhaseOffset(satellite.phaseOffset) + "\u00B0");

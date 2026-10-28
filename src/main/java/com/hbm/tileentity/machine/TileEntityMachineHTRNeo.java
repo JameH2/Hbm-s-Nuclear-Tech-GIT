@@ -251,7 +251,7 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 	@Override
 	public void addErrors(List<String> errors) {
 		if(plasmaEnergySync < fuelCost) {
-			errors.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.htrneo.insufficient_plasma_energy_needs_tu", BobMathUtil.getShortNumber(fuelCost)));
+			errors.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.htrneo.insufficient_plasma", BobMathUtil.getShortNumber(fuelCost)));
 		}
 
 		if(power < maxPower) {
@@ -259,7 +259,7 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements IPr
 		}
 
 		if(!isCool()) {
-			errors.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.htrneo.coolant_loop_not_operational"));
+			errors.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.htrneo.coolant_failure"));
 		}
 	}
 

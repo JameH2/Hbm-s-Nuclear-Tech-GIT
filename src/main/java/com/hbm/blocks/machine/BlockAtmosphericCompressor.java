@@ -80,10 +80,10 @@ public class BlockAtmosphericCompressor extends BlockDummyable implements ILookO
 
 		List<String> text = new ArrayList<String>();
 		if(!CelestialBody.hasTrait(world, CBT_Atmosphere.class)) {
-			text.add(((EnumChatFormatting.RED + I18nUtil.resolveKey("gui.atmospheric_compressor.error"))) + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.atmospheric_compressor.cannot_collect_in_vacuum"));
+			text.add(EnumChatFormatting.RED + I18nUtil.resolveKey("gui.atmospheric_compressor.error", EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.atmospheric_compressor.vacuum")));
 		} else {
 			text.add(((tower.power < tower.getMaxPower() / 20 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN)) + I18nUtil.resolveKey("overlay.common.power", BobMathUtil.getShortNumber(tower.power)));
-			text.add(I18nUtil.resolveKey("overlay.common.tank", ((EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET, I18nUtil.resolveKey("hbmfluid." + tower.tank.getTankType().getName().toLowerCase()), tower.tank.getFill(), tower.tank.getMaxFill()));
+			text.add(("" + (((EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET) + (I18nUtil.resolveKey("hbmfluid." + tower.tank.getTankType().getName().toLowerCase())) + ": " + (tower.tank.getFill()) + "/" + (tower.tank.getMaxFill()) + "mB"));
 		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
@@ -131,7 +131,7 @@ public class BlockAtmosphericCompressor extends BlockDummyable implements ILookO
 			FluidType type = ((IItemFluidIdentifier) player.getHeldItem().getItem()).getType(world, x, y, z, player.getHeldItem());
 			if(compressor.switchGas(type)) {
 				compressor.markDirty();
-				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+				player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 			}
 
 			return true;

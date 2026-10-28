@@ -58,6 +58,6 @@ public class ItemMentholCrystal extends ItemFood {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add(EnumChatFormatting.GRAY + I18nUtil.resolveKey("item.menthol_crystal.desc1"));
+		list.add(EnumChatFormatting.GRAY + I18nUtil.resolveKey("item.menthol_crystal.flavor"));
 	}
 }

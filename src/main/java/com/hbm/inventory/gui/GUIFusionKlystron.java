@@ -53,9 +53,9 @@ public class GUIFusionKlystron extends GuiInfoContainer {
 
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 18, 16, 52, klystron.power, klystron.getMaxPower());
 
-		drawCustomInfoStat(mouseX, mouseY, guiLeft + 43, guiTop + 71, 18, 18, mouseX, mouseY, EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(klystron.output) + I18nUtil.resolveKey("gui.fusion_klystron.ky_u") + BobMathUtil.getShortNumber(klystron.outputTarget) + "KyU");
+		drawCustomInfoStat(mouseX, mouseY, guiLeft + 43, guiTop + 71, 18, 18, mouseX, mouseY, EnumChatFormatting.RED + "<- " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(klystron.output) + "KyU / " + BobMathUtil.getShortNumber(klystron.outputTarget) + "KyU");
 		klystron.compair.renderTankInfo(this, mouseX, mouseY, guiLeft + 76, guiTop + 71, 18, 18);
-		drawCustomInfoStat(mouseX, mouseY, guiLeft + 115, guiTop + 71, 18, 18, mouseX, mouseY, EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(klystron.output) + I18nUtil.resolveKey("gui.fusion_klystron.he") + BobMathUtil.getShortNumber(klystron.outputTarget) + "HE");
+		drawCustomInfoStat(mouseX, mouseY, guiLeft + 115, guiTop + 71, 18, 18, mouseX, mouseY, EnumChatFormatting.GREEN + "-> " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(klystron.output) + "HE / " + BobMathUtil.getShortNumber(klystron.outputTarget) + "HE");
 
 	}
 

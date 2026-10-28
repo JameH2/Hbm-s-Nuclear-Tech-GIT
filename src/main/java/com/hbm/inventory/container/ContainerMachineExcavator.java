@@ -1,4 +1,5 @@
 package com.hbm.inventory.container;
+import com.hbm.inventory.SlotUpgrade;
 
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.ModItems;
@@ -14,7 +15,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMachineExcavator extends Container {
+public class ContainerMachineExcavator extends ContainerValidated {
 	
 	TileEntityMachineExcavator excavator;
 
@@ -25,10 +26,12 @@ public class ContainerMachineExcavator extends Container {
 		this.addSlotToContainer(new Slot(tile, 0, 220, 72));
 		//Fluid ID: 1
 		this.addSlotToContainer(new Slot(tile, 1, 202, 72));
-		//Upgrades: 2-4
-		for(int i = 0; i < 3; i++) {
-			this.addSlotToContainer(new Slot(tile, 2 + i, 136 + i * 18, 75));
+		//Upgrades: 2-3
+		for(int i = 0; i < 2; i++) {
+			this.addSlotToContainer(new SlotUpgrade(tile, 2 + i, 136 + i * 18, 75));
 		}
+		//Drill bit: 4
+		this.addSlotToContainer(new Slot(tile, 4, 172, 75));
 		
 		//Buffer: 5-13
 		for(int i = 0; i < 3; i++) {

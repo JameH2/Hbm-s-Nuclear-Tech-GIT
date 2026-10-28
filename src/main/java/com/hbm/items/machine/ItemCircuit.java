@@ -93,18 +93,18 @@ public class ItemCircuit extends ItemEnumMulti {
 		/*List<String> lines = new ArrayList();
 
 		switch(stack.getItemDamage()) {
-		case 0: lines.add(I18nUtil.resolveKey("gui.circuit.we_taught_filament_how_think")); break;
+		case 0: lines.add(I18nUtil.resolveKey("gui.circuit.filament")); break;
 		case 1: lines.add("3300µF"); break;
-		case 2: lines.add(I18nUtil.resolveKey("gui.circuit.text.03")); break;
-		case 3: lines.add(I18nUtil.resolveKey("gui.circuit.laminated_sandwich_structure")); break;
-		case 4: lines.add(I18nUtil.resolveKey("gui.circuit.text.02")); break;
-		case 5: lines.add(I18nUtil.resolveKey("gui.circuit.less_tasty_than_it_sounds")); break;
-		case 6: lines.add(I18nUtil.resolveKey("gui.circuit.text.04")); break;
-		case 7: lines.add(I18nUtil.resolveKey("gui.circuit.one_final_act_of_goodwill")); lines.add(I18nUtil.resolveKey("gui.circuit.i_hear_words_interplay")); lines.add(I18nUtil.resolveKey("gui.circuit.objectively_better_one_time_i")); lines.add(I18nUtil.resolveKey("gui.circuit.up_chris_avellone_with_a_bazooka")); break;
-		case 8: lines.add(I18nUtil.resolveKey("gui.circuit.100_lead_solder_rohs_compliant")); break;
-		case 9: lines.add(I18nUtil.resolveKey("gui.circuit.red_means_better")); break;
-		case 10: lines.add(I18nUtil.resolveKey("gui.circuit.uses_exceptionally_stanky_90s_ye")); break;
-		case 11: lines.add(I18nUtil.resolveKey("gui.circuit.text.01")); break;
+		case 2: lines.add(I18nUtil.resolveKey("gui.circuit.capacitor")); break;
+		case 3: lines.add(I18nUtil.resolveKey("gui.circuit.laminate")); break;
+		case 4: lines.add(I18nUtil.resolveKey("gui.circuit.enchantment")); break;
+		case 5: lines.add(I18nUtil.resolveKey("gui.circuit.laminate_lore")); break;
+		case 6: lines.add(I18nUtil.resolveKey("gui.circuit.alu")); break;
+		case 7: lines.add(I18nUtil.resolveKey("gui.circuit.goodwill")); lines.add(I18nUtil.resolveKey("gui.circuit.interplay")); lines.add(I18nUtil.resolveKey("gui.circuit.avellone")); lines.add(I18nUtil.resolveKey("gui.circuit.avellone_lore")); break;
+		case 8: lines.add(I18nUtil.resolveKey("gui.circuit.solder")); break;
+		case 9: lines.add(I18nUtil.resolveKey("gui.circuit.red")); break;
+		case 10: lines.add(I18nUtil.resolveKey("gui.circuit.yeast")); break;
+		case 11: lines.add(I18nUtil.resolveKey("gui.circuit.multi_function")); break;
 		}
 
 		for(String line : lines) {

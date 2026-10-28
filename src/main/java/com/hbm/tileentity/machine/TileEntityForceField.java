@@ -175,12 +175,13 @@ public class TileEntityForceField extends TileEntityLoadedBase implements ISided
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+		if(itemStack == null) return false;
 		if(i == 0)
 			if(itemStack.getItem() instanceof IBatteryItem)
 				return true;
 
-		if(i == 1)
-			return true;
+		if(i == 1) return itemStack.getItem() == ModItems.upgrade_radius;
+		if(i == 2) return itemStack.getItem() == ModItems.upgrade_health;
 
 		return false;
 	}
@@ -385,7 +386,7 @@ public class TileEntityForceField extends TileEntityLoadedBase implements ISided
 		outside.clear();
 		inside.clear();
 
-		List<Object> list = worldObj.getEntitiesWithinAABBExcludingEntity(null, AxisAlignedBB.getBoundingBox(xCoord + 0.5 - (rad + 25), yCoord + 0.5 - (rad + 25), zCoord + 0.5 - (rad + 25), xCoord + 0.5 + (rad + 25), yCoord + 0.5 + (rad + 25), zCoord + 0.5 + (rad + 25)));
+		List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(null, AxisAlignedBB.getBoundingBox(xCoord + 0.5 - (rad + 25), yCoord + 0.5 - (rad + 25), zCoord + 0.5 - (rad + 25), xCoord + 0.5 + (rad + 25), yCoord + 0.5 + (rad + 25), zCoord + 0.5 + (rad + 25)));
 
 		for(Object o : list) {
 

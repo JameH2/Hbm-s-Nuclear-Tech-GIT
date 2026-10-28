@@ -1,4 +1,3 @@
-itemGroup.tabTest=Onglet Test du technicien nucléaire
 itemGroup.tabParts=Ressources NTM et parties
 itemGroup.tabBlocks=Blocs et machines NTM
 itemGroup.tabNuke=Bombes et engins NTM
@@ -126,11 +125,9 @@ death.attack.electrified =%1$s a été électrifié par %2$s.
 death.attack.flamethrower =%1$s a été incinéré par %2$s.
 death.attack.plasma =%1$s a été immolé par %2$s.
 death.attack.ice =%1$s a été transformé en popsicle par %2$s.
-death.attack.cheater=Les intestins de%1$s transformés en avoine. (???)
 death.attack.laser =%1$s a été transformé en cendres par %2$s.
 death.attack.rubble =%1$s a été écrasé par des débris.
 death.attack.shrapnel =%1$s a été déchiqueté par un shrapnel.
-death.attack.teleporter =%1$s a été téléporté dans le néant.
 death.attack.blackhole =%1$s a été spaghettisé.
 death.attack.blender =%1$s a été coupé en morceaux de petite taille.
 death.attack.meteorite =%1$s a été touché par une chute de roches de l'espace.
@@ -139,16 +136,7 @@ death.attack.broadcast =%1$s ont leur cerveau fondu.
 
 item.redstone_sword.name=Épée de Redstone
 item.big_sword.name=Grande Epee
-item.test_nuke_igniter.name=Allumeur
-item.test_nuke_propellant.name=propulseur
-item.test_nuke_tier1_shielding.name=Réflecteur de neutrons (niveau 1)
-item.test_nuke_tier2_shielding.name=Réflecteur de neutrons (niveau 2)
-item.test_nuke_tier1_bullet.name=Projectile d'U235 (Niveau 1)
-item.test_nuke_tier2_bullet.name=Projectile MOX (niveau 2)
-item.test_nuke_tier1_target.name=Cible d'U235 sous-critique (niveau 1)
-item.test_nuke_tier2_target.name=Cible MOX sous-critique (niveau 2)
 
-item.gadget_explosive.name=Agent propulseur
 item.gadget_explosive8.name=Paquet d'agent propulseur
 item.gadget_wireing.name=Câblage
 item.gadget_core.name=Noyau de plutonium
@@ -159,7 +147,6 @@ item.boy_bullet.name=Projectile d'U235
 item.boy_target.name=Cible d'U235 sous-critique
 item.boy_shielding.name=Blindage des neutrons
 
-item.man_explosive.name=Agent propulseur
 item.man_explosive8.name=Paquet d'agent propulseur
 item.man_igniter.name=Bombe allumeur
 item.man_core.name=Noyau de plutonium
@@ -195,7 +182,6 @@ tile.nuke_prototype.name=Le prototype
 tile.nuke_custom.name=Nuke personnalisé
 
 tile.bomb_multi.name=Bombe polyvalente
-tile.rejuvinator.name=Dispositif de recréation
 
 tile.flame_war.name=Flame War in a box
 tile.float_bomb.name=Bombe à lévitation
@@ -206,23 +192,12 @@ tile.emp_bomb.name=Bombe IEM
 tile.crashed_bomb.name=Dud
 tile.boxcar.name=Wagon
 
-tile.turret_light.name=Tourelle à mitrailleuse légère
-tile.turret_heavy.name=Tourelle à mitrailleuse lourde
-tile.turret_rocket.name=Tourelle lance roquettes
-tile.turret_flamer.name=Tourelle lance-flammes
-tile.turret_tau.name=Tourelle à Tauon
-tile.turret_spitfire.name=Tourelle Je n'ai pas de nom pour le moment [WIP]
-tile.turret_cwis.name=Phalanx Mk-15 CIWS
-tile.turret_cheapo.name=Sentinelle à minigun
 tile.machine_radar.name=Radar
 container.radar=Radar
 
-item.turret_control.name=Contrôleur de tourelle
 item.turret_chip.name=Puce AI pour tourelle
-item.turret_biometry.name=Carte de télémétrie pour tourelle
 
 tile.crate.name=Caisse de ravitaillement
-tile.marker_structure.name=Marqueur de structure multibloc
 
 tile.machine_difurnace_off.name=Four d'alliage
 tile.machine_difurnace_on.name=Four d'alliage
@@ -230,45 +205,29 @@ container.diFurnace=Four d'alliage
 tile.machine_centrifuge.name=Centrifugeuse
 container.centrifuge=Centrifugeuse
 tile.machine_uf6_tank.name=Réservoir d'hexafluorure d'uranium
-container.uf6_tank=Réservoir d'UF6
 tile.machine_puf6_tank.name=Réservoir d'hexafluorure de plutonium
-container.puf6_tank=Réservoir de PuF6
 tile.machine_reactor.name=Reacteur de fusion
 container.reactor=Réacteur de fusion
-tile.machine_nuke_furnace_off.name=Four à énergie nucléaire
-tile.machine_nuke_furnace_on.name=Four à énergie nucléaire
-container.nukeFurnace=Four à énergie nucléaire
 tile.machine_rtg_furnace_off.name=Four RTG
 tile.machine_rtg_furnace_on.name=Four RTG
 container.rtgFurnace=Four RTG
 tile.machine_electric_furnace_off.name=Four electrique
 tile.machine_electric_furnace_on.name=Four electrique
 container.electricFurnace=Four électrique
-tile.machine_generator.name=Réacteur nucléaire
-container.generator=Réacteur nucléaire
 tile.red_wire_coated.name=Câble en cuivre rouge isolé
 tile.machine_deuterium.name=Extracteur de deutérium
 container.machine_deuterium=Extracteur de deutérium
 tile.machine_battery.name=Bloc de stockage d'énergie
 container.battery=Bloc de stockage d'énergie
-tile.machine_coal_off.name=Générateur à charbon
-tile.machine_coal_on.name=Générateur à charbon
-container.machineCoal=Générateur à charbon
 tile.launch_pad.name=Base de lancement des missiles
 container.launchPad=Base de lancement des missiles
 tile.book_guide.name=Guide du petit ingénieur nucléaire par Hbm
-tile.machine_schrabidium_transmutator.name=Dispositif de transmutation de Schrabidium
-container.machine_schrabidium_transmutator=Dispositif de transmutation de Schrabidium
 tile.machine_diesel.name=Générateur diesel
 container.machineDiesel=Générateur diesel
 tile.machine_shredder.name=Broyeur
 container.machineShredder=Broyeur
-tile.machine_combine_factory.name=Usine en acier CMB
-container.machineCMB=Usine en acier CMB
 tile.machine_teleporter.name=Téléporteur
-container.teleporter=Téléporteur
 tile.machine_reix_mainframe.name=Mainframe Rei-X (WIP)
-container.reix=Mainframe Rei-X
 tile.machine_industrial_generator.name=Générateur industriel
 container.iGenerator=Générateur industriel
 tile.machine_cyclotron.name=Cyclotron
@@ -280,19 +239,8 @@ container.oilWell=Derrick
 container.pumpjack=Pumpjack
 tile.machine_refinery.name=Raffinerie de pétrole
 container.machineRefinery=Raffinerie de pétrole
-tile.oil_duct.name=Tuyau de pétrole
-tile.oil_duct_solid.name=Tuyau de pétrole isolé
 tile.machine_flare.name=Bruleur à gaz
 container.gasFlare=Bruleur à gaz
-tile.gas_duct.name=Tuyau de gaz
-tile.gas_duct_solid.name=Tuyau de gaz isolé
-tile.machine_drill.name=Foreuse minière automatique
-container.miningDrill=Foreuse minière automatique
-tile.drill_pipe.name=Tube de forage
-tile.machine_assembler.name=Machine d'assemblage
-container.assembler=Machine d'assemblage
-tile.machine_chemplant.name=Usine chimique
-container.chemplant=Usine chimique
 tile.fluid_duct.name=Tuyau de fluide universel
 tile.machine_fluidtank.name=Réservoir
 container.fluidtank=Réservoir
@@ -317,83 +265,34 @@ item.wiring_red_copper.name=Tambour de câble
 tile.rail_highspeed.name=Rail à haute vitesse
 tile.rail_booster.name=Rail d'accélération haute vitesse
 
-tile.factory_titanium_hull.name=Coque d'usine de base
-tile.factory_titanium_furnace.name=Trappe d'accès d'usine de base
-tile.factory_titanium_conductor.name=Port électrique d'usine de base
-tile.factory_titanium_core.name=Composant de base d'usine de base
-item.factory_core_titanium.name=Cluster d'énergie d'usine de base
-container.factoryTitanium=Usine de base
-tile.factory_advanced_hull.name=Coque d'usine avancée
-tile.factory_advanced_furnace.name=Trappe d'accès d'usine avancée
-tile.factory_advanced_conductor.name=Port électrique d'usine avancée
-tile.factory_advanced_core.name=Composant de base d'usine avancée
-item.factory_core_advanced.name=Cluster d'énergie d'usine avancée
-container.factoryAdvanced=Usine avancée
 
-tile.reactor_element.name=Chambre du reacteur
 tile.reactor_control.name=Tiges de contrôle
-tile.reactor_hatch.name=Trappe d'accès du réacteur
-tile.reactor_conductor.name=Port électrique du réacteur
-tile.reactor_computer.name=Panneau de contrôle du réacteur
 container.reactorMultiblock=Grand réacteur nucléaire
 
-tile.fusion_conductor.name=Aimant supraconducteur
-tile.fusion_center.name=Pièce d'aimant central
-tile.fusion_motor.name=Morceau de moteur à aimant
 tile.fusion_heater.name=Chauffeur de plasma
 tile.fusion_hatch.name=Trappe d'accès du réacteur de fusion
 tile.fusion_core.name=Contrôle du réacteur à fusion
 tile.plasma.name=Plasma
-container.fusionMultiblock=Grand réacteur à fusion
 
 tile.watz_element.name=Chambre à réaction Watz
-tile.watz_control.name=Barres de contrôle renforcé
 tile.watz_cooler.name=Super-refroidisseur de réacteur Watz
 tile.watz_end.name=Element de stabilite du reacteur Watz
-tile.watz_hatch.name=Trappe d'accès du réacteur Watz
-tile.watz_conductor.name=Port électrique Watz
-tile.watz_core.name=Contrôle du réacteur Watz
-container.watzPowerplant=Centrale électrique Watz
 
-tile.fwatz_conductor.name=Aimant supraconducteur 4000K
-tile.fwatz_cooler.name=Coque de liquide de refroidissement régénératif
-tile.fwatz_tank.name=Réservoir de liquide de refroidissement régénératif
-tile.fwatz_scaffold.name=Support structurel de l'usine à fusion Watz
-tile.fwatz_hatch.name=Trappe d'accès d'Usine à fusion Watz
-tile.fwatz_computer.name=Matrice de calcul du réacteur à fusion Watz
-tile.fwatz_core.name=Contrôle du réacteur à fusion Watz
-tile.fwatz_plasma.name=Plasma déstabiliser d'antischrabidium
 container.fusionaryWatzPlant=Usine à fusion Watz
 
 tile.machine_rtg_grey.name=Générateur RT
 container.rtg=Générateur RT
-tile.machine_rtg_red.name=Générateur électrique à explosion
-tile.machine_rtg_orange.name=Générateur RT puissant
-tile.machine_rtg_yellow.name=Réacteur à supercarburant d'Australium
-tile.machine_rtg_green.name=Générateur à Verticium
-tile.machine_rtg_cyan.name=Générateur à désintégration de Schrabidium (WIP)
-tile.machine_rtg_blue.name=Générateur à convection
-tile.machine_rtg_purple.name=Générateur à annihilation d'antimatière
 
-tile.machine_spp_bottom.name=Générateur de potentiel SPE (bas)
-tile.machine_spp_top.name=Générateur de potentiel SPE (en haut)
 
-tile.ams_limiter.name=Stabilisateur AMS [WIP]
 container.amsLimiter=Stabilisateur AMS [WIP]
-tile.ams_emitter.name=Emetteur AMS [WIP]
 container.amsEmitter=Emetteur AMS [WIP]
-tile.ams_base.name=Base AMS [WIP]
 container.amsBase=Base AMS [WIP]
 
 item.template_folder.name=Dossier de patrons
-item.fluid_identifier.name=Identifiant de fluide
-item.assembly_template.name=Modèle d'assemblage:
-item.chemistry_template.name=Modèle de chimie:
 item.siren_track.name=Alarme pour sirene
 
 item.fuse.name=Fusible
 
-tile.test_nuke.name=Nuke de test
 
 item.ingot_uranium.name=Lingot d'uranium
 item.ingot_u235.name=Lingot d'd'U235
@@ -419,12 +318,6 @@ item.plate_schrabidium.name=Plaque de schrabidium
 item.ingot_schrabidium.name=Lingot de Schrabidium
 item.nugget_schrabidium.name=Pépite de Schrabidium
 item.plate_copper.name=Plaque de cuivre
-item.board_copper.name=Panneau de cuivre
-item.ingot_advanced_alloy.name=Lingot d'alliage avanc \ u00e9
-item.plate_advanced_alloy.name=Plaque d'alliage avancée
-item.wire_advanced_alloy.name=Super conducteur
-item.coil_advanced_alloy.name=Bobine supraconductrice
-item.coil_advanced_torus.name=Bobine annulaire super conductrice
 item.coil_gold.name=Bobine d'or
 item.coil_gold_torus.name=Bobine d'anneau d'or
 item.lithium.name=Cube de lithium
@@ -441,21 +334,10 @@ item.bolt_dura_steel.name=Boulon en acier haute vitesse
 item.pipes_steel.name=Pipes en acier
 item.drill_titanium.name=Foret en titane
 item.bolt_tungsten.name=Boulon de tungstène
-item.bolt_compound.name=Arbre à turbine renforcé
 item.plate_polymer.name=Isolateur
 
 item.ingot_australium.name=Lingot d'australium
-item.ingot_weidanium.name=Lingot de Weidanium
-item.ingot_reiium.name=Lingot de reiium
-item.ingot_unobtainium.name=Lingot d'unobtainium
-item.ingot_daffergon.name=Lingot de daffergon
-item.ingot_verticium.name=Lingot de Verticium
 item.nugget_australium.name=Pépite d'australium
-item.nugget_weidanium.name=Pépite de Weidanium
-item.nugget_reiium.name=Pépite de reiium
-item.nugget_unobtainium.name=P \ u00e9node d'unobtainium
-item.nugget_daffergon.name=Pépite de Daffergon
-item.nugget_verticium.name=Pépite de Verticium
 
 item.ingot_desh.name=Lingot de desh
 item.nugget_desh.name=Pépite de Desh
@@ -489,12 +371,6 @@ item.wire_copper.name=Fil de cuivre
 item.wire_gold.name=Fil d'or
 item.wire_schrabidium.name=Fil de schrabidium
 
-item.circuit_raw.name=Assemblage de circuit de base
-item.circuit_aluminium.name=Circuit de base
-item.circuit_copper.name=Circuit amélioré
-item.circuit_red_copper.name=Circuit avancée
-item.circuit_gold.name=Circuit overclocké
-item.circuit_schrabidium.name=Circuit à haute performance
 
 tile.block_aluminium.name=Bloc d'aluminium
 tile.block_copper.name=Bloc de cuivre
@@ -511,15 +387,9 @@ tile.block_beryllium.name=Bloc de beryllium
 tile.block_waste.name=Bloc de dechets nucleaires
 tile.block_scrap.name=Bloc de féraille
 tile.block_electrical_scrap.name=Bloc de féraille électrique
-tile.block_advanced_alloy.name=Bloc d'alliage avancée
 tile.block_magnetized_tungsten.name=Bloc de tungstène magnétisé
 tile.block_combine_steel.name=Bloc d'acier CMB
 tile.block_australium.name=Bloc d'Australium
-tile.block_weidanium.name=Bloc de Weidanium
-tile.block_reiium.name=Bloc de Reiium
-tile.block_unobtainium.name=Bloc d'Unobtainium
-tile.block_daffergon.name=Bloc de Daffergon
-tile.block_verticium.name=Bloc de Verticium
 tile.block_desh.name=Bloc renforcé de Desh
 tile.block_yellowcake.name=Bloc de Yellowcake
 
@@ -544,11 +414,6 @@ tile.ore_nether_schrabidium.name=Minerais de Schrabidium
 tile.ore_tikite.name=Trixite
 
 tile.ore_australium.name=Minerais d'Australium
-tile.ore_weidanium.name=Weidite
-tile.ore_reiium.name=Reiite
-tile.ore_unobtainium.name=Minerai de Brightblende
-tile.ore_daffergon.name=Dellite
-tile.ore_verticium.name=Minerai vert du dollar
 tile.ore_rare.name=Minerai rare
 
 tile.ore_oil.name=Dépôt pétrolier
@@ -607,7 +472,6 @@ item.powder_steel.name=Poudre d'acier
 item.powder_magnetized_tungsten.name=Poudre de tungstene aimante
 item.powder_combine_steel.name=Poudre d'acier CMB
 item.powder_lithium.name=Poudre de lithium
-item.powder_advanced_alloy.name=Poudre d'alliage avancée
 item.powder_quartz.name=Poudre de quartz
 item.powder_power.name=Poudre d'énergie
 item.powder_iodine.name=Poudre d'iode
@@ -616,11 +480,6 @@ item.powder_neodymium.name=Poudre de neodymium
 item.powder_astatine.name=Poudre d'Astatine
 item.powder_caesium.name=Poudre de césium
 item.powder_australium.name=Poudre d'Australium
-item.powder_weidanium.name=Poudre de Weidanium
-item.powder_reiium.name=Poudre de reiium
-item.powder_unobtainium.name=Poudre d'Unobtainium
-item.powder_daffergon.name=Poudre de daffergon
-item.powder_verticium.name=Poudre de verticium
 item.powder_strontium.name=Poudre de strontium
 item.powder_cobalt.name=Poudre de cobalt
 item.powder_bromine.name=Poudre de brome
@@ -652,8 +511,6 @@ item.fragment_lanthanium.name=Fragment de lanthane
 item.fragment_actinium.name=Fragment d'actinium
 item.fragment_meteorite.name=Fragment de metite
 
-item.battery_generic.name=Batterie
-item.battery_advanced.name=Batterie avancée
 item.battery_lithium.name=Batterie ion-lithium
 item.battery_schrabidium.name=Batterie de Schrabidium
 item.battery_spark.name=Batterie spark
@@ -665,20 +522,6 @@ item.battery_su_l.name=Grande batterie SU
 item.battery_potato.name=Pile patate
 item.battery_potatos.name=potatOS
 
-item.battery_red_cell.name=Cellule d'alimentation de redstone
-item.battery_advanced_cell.name=Cellule d'alimentation avancée
-item.battery_lithium_cell.name=Pile ion-lithium
-item.battery_schrabidium_cell.name=Cellule d'alimentation de Schrabidium
-item.battery_red_cell_6.name=Sextuple cellule de puissance de Redstone
-item.battery_advanced_cell_4.name=Quadruple Advanced Power Cell
-item.battery_lithium_cell_3.name=Tripple pile ion-lithium
-item.battery_schrabidium_cell_2.name=Double pile de Schrabidium
-item.battery_red_cell_24.name=24-truple cellule de puissance de Redstone
-item.battery_advanced_cell_12.name=Douze cellule de puissance avancée
-item.battery_lithium_cell_6.name=Sextuple pile ions-lithium-ion
-item.battery_schrabidium_cell_4.name=Quadruple cellule d'alimentation de Schrabidium
-item.battery_spark_cell_6.name=Cellule d'alimentation spark
-item.battery_spark_cell_25.name=Cellule d'alimentation Spark Arcane
 
 item.upgrade_template.name=Amélioration de machine
 item.upgrade_speed_1.name=Amélioration rouge Mk.I
@@ -698,18 +541,7 @@ item.upgrade_afterburn_2.name=Amélioration rose Mk.II
 item.upgrade_afterburn_3.name=Amélioration rose Mk.III
 
 item.fusion_core.name=Noyau de fusion
-item.energy_core.name=Noyau d'énergie improvisé
-item.fusion_core_infinite.name=Noyau de fusion infinie
 
-item.dynosphere_base.name=Dynosphere vide
-item.dynosphere_desh.name=Dynosphère de Desh
-item.dynosphere_desh_charged.name=Dynosphère de Desh (Chargée)
-item.dynosphere_schrabidium.name=Dynosphere de Schrabidium
-item.dynosphere_schrabidium_charged.name=Dynosphère de Schrabidium (Chargé)
-item.dynosphere_euphemium.name=Dynosphère d'Euphemium
-item.dynosphere_euphemium_charged.name=Dynosphère d'euphemium (Chargé)
-item.dynosphere_dineutronium.name=Dynosphère de dineutronium
-item.dynosphere_dineutronium_charged.name=Dynosphère de dineutronium (Chargé)
 
 item.plate_iron.name=Plaque de fer
 item.plate_lead.name=Plaque de plomb
@@ -720,7 +552,6 @@ item.coil_tungsten.name=Bobine de tungstène
 item.tank_steel.name=Réservoir en acier
 item.motor.name=Moteur
 item.centrifuge_element.name=Élément de centrifugeuse
-item.centrifuge_tower.name=Tour de centrifugeuse
 item.reactor_core.name=Noyau du réacteur de fusion
 item.pellet_rtg.name=Granule de plutonium 238
 item.pellet_rtg_weak.name=Granule d'uranium RTG
@@ -728,18 +559,10 @@ item.rtg_unit.name=Unité RTG
 item.hazmat_cloth.name=Toile d'Hazmat
 item.asbestos_cloth.name=Tissu ignifuger
 item.filter_coal.name=Filtre au charbon actif
-item.tritium_deuterium_cake.name=Tritium-Deuterium-Cake
-item.telepad.name=Telepad
 item.entanglement_kit.name=Kit dimentionel
-item.toothpicks.name=Cure-dents
 item.ducttape.name=Ruban adhésif
-item.magnet_dee.name=Magnet dee
-item.magnet_circular.name=Aimant circulaire
-item.cyclotron_tower.name=Tour Cyclotron
 item.plate_dalekanium.name=Plaque de dalekanium
 item.biomass.name=Biomasse
-item.component_limiter.name=Composant du stabilisateur
-item.component_emitter.name=Composant de l'émetteur
 item.catalyst_clay.name=Catalyseur d'argile
 
 item.cell_empty.name=Cellule vide
@@ -758,38 +581,13 @@ item.crystal_xen.name=Cristal Xen artificiel
 item.pellet_antimatter.name=Granule antimatiere
 
 item.inf_water.name=Réservoir d'eau infini
-item.inf_deuterium.name=Réservoir de deutérium infini
-item.inf_tritium.name=Réservoir de tritium infini
-item.inf_coolant.name=Réservoir de liquide de refroidissement infini
-item.inf_sulfur.name=Cuve de soufre infinie
-item.inf_diesel.name=Réservoir diesel infini
-item.inf_antimatter.name=Réservoir d'antimatière infinie
-item.inf_antischrabidium.name=Réservoir infini d'antischrabidium
 
-item.oil_canola.name=Huile de canola brute
 
-item.pellet_coal.name=Granule de charbon dense
 
 item.canister_empty.name=Jerrican vide
-item.canister_smear.name=Jerrican d'huile industrielle
-item.canister_canola.name=Jerrican de lubrifiant pour moteur
-item.canister_oil.name=Jerrican d'huile brute
-item.canister_fuel.name=Jerrican diesel
-item.canister_kerosene.name=Jerrican de kérosène
-item.canister_reoil.name=Jerrican d'huile industrielle récupérée
-item.canister_petroil.name=Jerrican de pétrole
 item.canister_napalm.name=Jerrican de Napalm B
-item.canister_NITAN.name=Jerrican de super carburant NITAN © 100 Octane
-item.canister_heavyoil.name=Jerrican d'huile lourde
-item.canister_bitumen.name=Jerrican de bitume
-item.canister_heatingoil.name=Jerrican d'huile de chauffage
-item.canister_naphtha.name=Jerrican Naphtha
-item.canister_lightoil.name=Jerrican d'huile clairs
-item.canister_biofuel.name=Jerrican de biocarburant
 item.gas_empty.name=Bonbonne de gaz vide
 item.gas_full.name=Bonbonne de gaz
-item.gas_petroleum.name=Bonbonne de gaz de pétrole
-item.gas_biogas.name=Bonbonne de biogaz
 item.fluid_tank_empty.name=Bonbonne de fluide universel vide
 item.fluid_tank_full.name=Bonbonne de fluide universel:
 item.fluid_barrel_empty.name=Baril de fluide vide
@@ -797,64 +595,12 @@ item.fluid_barrel_full.name=Baril de fluide remplis:
 item.fluid_barrel_infinite.name=Baril de fluide infini
 
 item.rod_empty.name=Tige vide
-item.rod_uranium.name=Tige d'uranium
-item.rod_u235.name=Tige d'U235
-item.rod_u238.name=Tige d'U238
-item.rod_plutonium.name=Tige de plutonium
-item.rod_pu238.name=Tige de Pu238
-item.rod_pu239.name=Tige de Pu239
-item.rod_pu240.name=Tige de Pu240
-item.rod_neptunium.name=Tige de neptunium
-item.rod_lead.name=Tige de plomb
-item.rod_schrabidium.name=Tige de Schrabidium
-item.rod_euphemium.name=Tige d'Euphemium
-item.rod_australium.name=Tige d'Australium
-item.rod_weidanium.name=Tige de Weidanium
-item.rod_reiium.name=Tige de reiium
-item.rod_unobtainium.name=Tige d'Unobtainium
-item.rod_daffergon.name=Tige de Daffergon
-item.rod_verticium.name=Tige de Verticium
 
 item.rod_dual_empty.name=Double tige vide
-item.rod_dual_uranium.name=Double tige d'uranium
-item.rod_dual_u235.name=Double tige d'U235
-item.rod_dual_u238.name=Double tige d'U238
-item.rod_dual_plutonium.name=Double tige de plutonium
-item.rod_dual_pu238.name=Dougle tige de Pu238
-item.rod_dual_pu239.name=Double tige de Pu239
-item.rod_dual_pu240.name=Double tige de Pu240
-item.rod_dual_neptunium.name=Double tige de Neptunium
-item.rod_dual_lead.name=Double tige de plomb
-item.rod_dual_schrabidium.name=Double tige de Schrabidium
 
 item.rod_quad_empty.name=Quatruple tige vide
-item.rod_quad_uranium.name=Quatruple tige d'uranium
-item.rod_quad_u235.name=Quadruple tige d'U235
-item.rod_quad_u238.name=Quadruple tige d'U238
-item.rod_quad_plutonium.name=Quadruple tige de Plutonium
-item.rod_quad_pu238.name=Quadruple tige de Pu238
-item.rod_quad_pu239.name=Quadruple tige de Pu239
-item.rod_quad_pu240.name=Quadruple tige de Pu240
-item.rod_quad_neptunium.name=Quadruple tige de Neptunium
-item.rod_quad_lead.name=Quadruple tige de plomb
-item.rod_quad_schrabidium.name=Quadruple tige de Schrabidium
 
-item.rod_uranium_fuel_depleted.name=Tige de combustible d'uranium appauvri
-item.rod_dual_uranium_fuel_depleted.name=Double tige de combustible d'uranium appauvri
-item.rod_quad_uranium_fuel_depleted.name=Quadruple tige de combustible d'uranium appauvri
-item.rod_plutonium_fuel_depleted.name=Tige de combustible de plutonium appauvri
-item.rod_dual_plutonium_fuel_depleted.name=Double tige de combustible de Plutonium appauvri
-item.rod_quad_plutonium_fuel_depleted.name=Quadruple tige de combustible de plutonium appauvri
-item.rod_mox_fuel_depleted.name=Tige de combustible de MOX appauvri
-item.rod_dual_mox_fuel_depleted.name=Double ige de combustible de MOX épuisée
-item.rod_quad_mox_fuel_depleted.name=Quadruple tige de combustible de MOX épuisée
-item.rod_schrabidium_fuel_depleted.name=Tige de combustible de Schrabidium épuisée
-item.rod_dual_schrabidium_fuel_depleted.name=Double tige de combustible de Schrabidium épuisée
-item.rod_quad_schrabidium_fuel_depleted.name=Quadruple tige de combustible de Schrabidium épuisée
 
-item.rod_waste.name=Tige de dechets nucleaires
-item.rod_dual_waste.name=Double tige de dechets nucleaires
-item.rod_quad_waste.name=Quadruple tige de dechets nucleaires
 
 item.gun_rpg.name=Lance roquettes
 item.gun_rpg_ammo.name=Roquettes
@@ -890,7 +636,6 @@ item.grenade_kit.name=Kit de grenade
 item.nuke_electric_kit.name=Kit de l'ingenieur electronique
 item.prototype_kit.name=Kit du prototypes
 item.missile_kit.name=Kit de missiles
-item.t45_kit.name=Kit d'armure T45
 item.euphemium_kit.name=Kit Euphemium
 
 tile.waste_earth.name=Herbe morte
@@ -938,39 +683,14 @@ item.grenade_zomg.name=Grenade d'annihilation d'énergie négative
 item.grenade_black_hole.name=Grenade à trou noir
 item.ullapool_caber.name=Caber Ullapool
 
-item.rod_uranium_fuel.name=Tige de combustible d'uranium
-item.rod_dual_uranium_fuel.name=Double tige à combustible d'Uranium
-item.rod_quad_uranium_fuel.name=Quadruple tige de combustible d'Uranium
-item.rod_plutonium_fuel.name=Tige à combustible du plutonium
-item.rod_dual_plutonium_fuel.name=Double tige de combustible du plutonium
-item.rod_quad_plutonium_fuel.name=Quadruple tige de combustible de plutonium
-item.rod_mox_fuel.name=Tige à combustible MOX
-item.rod_dual_mox_fuel.name=Double tige de combustible de MOX
-item.rod_quad_mox_fuel.name=Quadruple tige de combustible de MOX
-item.rod_schrabidium_fuel.name=Tige à combustible de Schrabidium
-item.rod_dual_schrabidium_fuel.name=Double tige de Schrabidium
-item.rod_quad_schrabidium_fuel.name=Quadruple tige de combustible de Schrabidium
 
 item.rod_water.name=Tige d'eau
 item.rod_dual_water.name=Double tige d'eau
 item.rod_quad_water.name=Quadruple tige d'eau
 
-item.rod_coolant.name=Cellule de liquide de refroidissement
-item.rod_dual_coolant.name=Cellule de liquide de refroidissement double
-item.rod_quad_coolant.name=Cellule de liquide de refroidissement quadruple
 
-item.rod_lithium.name=Tige de lithium
-item.rod_dual_lithium.name=Double tige de lithium
-item.rod_quad_lithium.name=Quadruple tige de tithium
 
-item.rod_tritium.name=Tige de tritium
-item.rod_dual_tritium.name=Double tige de tritium
-item.rod_quad_tritium.name=Quadruple tige de tritium
 
-item.levitation_unit.name=Manipulateur de gravite
-item.thermo_unit_empty.name=Unité de distribution thermique
-item.thermo_unit_endo.name=Unité de distribution endothermique
-item.thermo_unit_exo.name=Unité de distribution exothermique
 
 item.bomb_waffle.name=Gaufre de destruction massive
 item.schnitzel_vegan.name=Schnitzel végétalien
@@ -1055,7 +775,6 @@ item.gun_xvl1456_ammo.name=Boîte d'uranium-235 appauvri
 item.gun_osipr_ammo.name=Boule d'impulsion d'énergie noir
 item.gun_osipr_ammo2.name=Balle de combine
 item.gun_immolator_ammo.name=Carburant de l'immolateur
-item.gun_cryolator_ammo.name=Liquide Cryogénique
 item.gun_mp_ammo.name=Petite balle sans propulsuer
 item.gun_emp_ammo.name=Cellule d'énergie
 item.gun_jack_ammo.name=Quadruple chevrotine
@@ -1066,44 +785,7 @@ item.gun_defabricator_ammo.name=Cellule d'énergie défabricatrice
 
 item.weaponized_starblaster_cell.name=§cRigged Star Blaster Energy Cell§r
 
-item.turret_light_ammo.name=Boîte de munitions de tourelle MG
-item.turret_heavy_ammo.name=Munition de tourelle MG lourde
-item.turret_rocket_ammo.name=Munition de fusil 2x4
-item.turret_flamer_ammo.name=Réservoirs de carburant de tourelle lance flame
-item.turret_tau_ammo.name=Munitions d'uranium de tourelle Tau
-item.turret_spitfire_ammo.name=AA-Shell
-item.turret_cwis_ammo.name=Tambour de munitions CIWS 20mm
-item.turret_cheapo_ammo.name=Munition de la tourelle Cheapo 6x24
 
-item.clip_revolver_iron.name=Boîte de balle en fer
-item.clip_revolver.name=Boîte de balle de .357
-item.clip_revolver_gold.name=Petit coffre de balles d'or
-item.clip_revolver_schrabidium.name=Conteneur de munitions de Schrabidium
-item.clip_rpg.name=Conteneur à roquettes
-item.clip_xvl1456.name=Grande boite isotopique
-item.clip_osipr.name=Chargeur d'AR2
-item.clip_immolator.name=Réservoir de carburant de l'immolator
-item.clip_cryolator.name=Réservoir de carburant du Cryolator
-item.clip_revolver_lead.name=Boîte de balle nucléaires
-item.clip_revolver_cursed.name=Chargeur militaire standard de Britania
-item.clip_fatman.name=Paquets de six Mini Nukes
-item.clip_mirv.name=Pack trois-en-un de mini-mirs
-item.clip_bf.name=Double paquet de chevrotine BF
-item.clip_mp.name=Chargeur de fusil d'assaut militaire de Britania
-item.clip_mp40.name=9mm SMG Magazine
-item.clip_uboinik.name=Boîte de chevrotine de 12x70
-item.clip_lever_action.name=Boîte de chevrotine de 12x74
-item.clip_bolt_action.name=Boîte de chevrotine 12x74
-item.clip_emp.name=Petit paquet de cellules d'énergie
-item.clip_revolver_nightmare.name=Sac de balles
-item.clip_revolver_nightmare2.name=Ceinture de balles laser
-item.clip_revolver_pip.name=Super-chargeur avec des balles contaminer
-item.clip_stinger.name=Paquet de roquettes Stinger
-item.clip_jack.name=Boîte de Quadruple chevrotine de 12x70
-item.clip_spark.name=Grande cartouche électromagnetique
-item.clip_hp.name=Réservoirs d'encre
-item.clip_euthanasia.name=Trousse de dernier secours
-item.clip_defabricator.name=Ceinture avec cellules d'energie Defabricator
 
 item.ammo_container.name=Conteneur de munitions
 
@@ -1122,23 +804,15 @@ item.pill_iodine.name=Pilule d'iode
 item.plan_c.name=Plan C
 item.med_ipecac.name=Sirop Ipecac
 item.med_ptsd.name=Médicament PTSD
-item.med_schiziphrenia.name=Médicament contre la schizophrénie
 
 item.stealth_boy.name=Module de furtiviter
 
 entity.hbm.entity_bullet.name=Balle
-entity.hbm.entity_rocket.name=Roquettes
-entity.hbm.entity_schrabnel.name=Shrapnel
 entity.hbm.entity_mob_nuclear_creeper.name=Creeper nucléaire
 entity.hbm.entity_mob_hunter_chopper.name=Hélicoptère de chasse
 entity.hbm.entity_cyber_crab.name=Cyber-crabe
 
 item.cap_aluminium.name=Capuchon en aluminium
-item.hull_small_steel.name=Petite coque en acier
-item.hull_small_aluminium.name=Petite coque en aluminium
-item.hull_big_steel.name=Grande coque en acier
-item.hull_big_aluminium.name=Grande coque en aluminium
-item.hull_big_titanium.name=Gande coque en titane
 item.fins_flat.name=Ailettes en acier
 item.fins_small_steel.name=Petites ailettes en acier
 item.fins_big_steel.name=Grandes ailettes en acier
@@ -1148,28 +822,18 @@ item.sphere_steel.name=Sphère d'acier
 item.pedestal_steel.name=Piédestal en acier
 item.dysfunctional_reactor.name=Reacteur nuclaire dysfonctionnel
 
-item.rotor_steel.name=Grand rotor en acier
-item.generator_steel.name=Corps du generateur
 item.blade_titanium.name=Lame en titane
 item.turbine_titanium.name=Turbine à vapeur en titane
-item.generator_front.name=Face avant du générateur
 item.blade_tungsten.name=Lame renforcée de tungstène
 item.turbine_tungsten.name=Lames de Turbofan renforcée
 
 item.combine_scrap.name=Ferraille CMB
-item.chopper_head.name=Cockpit d'hélicoptère
-item.chopper_gun.name=Emplacement d'armes
-item.chopper_torso.name=Corps d'hélicoptère
-item.chopper_tail.name=Queue d'hélicoptère
-item.chopper_wing.name=Aile d'hélicoptère
-item.chopper_blades.name=Lames de rotor d'hélicoptère
 
 item.igniter.name=Allumeur
 item.watch.name=Montre de poche brisée
 item.apple_euphemium.name=Pomme d'Euphemium
 item.ingot_euphemium.name=Lingot d'euphemium
 item.nugget_euphemium.name=Pépite d'Euphemium
-item.rod_quad_euphemium.name=Tige de carburant au Schrabidium
 item.plate_euphemium.name=Plaque d'euphemium
 item.plate_dineutronium.name=Plaque de dineutronium
 item.plate_desh.name=Plaque de desh
@@ -1223,8 +887,6 @@ item.missile_rain.name=Bomblet Rain
 item.missile_drill.name=Le craqueleur de béton
 item.missile_nuclear.name=Missile nucléaire
 item.missile_nuclear_cluster.name=Missile nucléaire MIRV
-item.missile_endo.name=Missile endothermique
-item.missile_exo.name=Missile exothermique
 item.missile_doomsday.name=Doomsday Missile
 item.missile_taint.name=Missile's contaminer
 item.missile_micro.name=Missile micro-nucleaire
@@ -1248,11 +910,6 @@ item.paa_boots.name=Bottes de protection PaA "good ol' shoes"
 
 item.goggles.name=Lunettes de protection
 item.gas_mask.name=Masque à gaz
-item.oxy_mask.name=Masque à oxygène
-item.t45_helmet.name=Casque d'armure T45
-item.t45_plate.name=Plastron d'armure T45
-item.t45_legs.name=Jambieres d'armure T45
-item.t45_boots.name=Bottes d'armure T45
 
 tile.mush.name=Champignon fluorescent
 tile.waste_mycelium.name=Mycélium fluorescent
@@ -1270,10 +927,7 @@ item.warhead_buster_small.name=Petite ogive de buse de bunker
 item.warhead_buster_medium.name=Ogive moyenne de Buster Buster
 item.warhead_buster_large.name=Grande ogive de Bunker Buster
 item.warhead_nuclear.name=Ogive nucléaire
-item.warhead_mirvlet.name=MIRV
 item.warhead_mirv.name=Ogive de MIRV
-item.warhead_thermo_endo.name=Ogive endothermique
-item.warhead_thermo_exo.name=Ogive exothermique
 item.fuel_tank_small.name=Petit réservoir de carburant
 item.fuel_tank_medium.name=Réservoir de carburant moyen
 item.fuel_tank_large.name=Grand réservoir de carburant
@@ -1286,7 +940,6 @@ item.wand_s.name=Baguette de structure
 item.wand_d.name=Baguette de débogage
 
 item.screwdriver.name=Tournevis
-item.overfuse.name=Overfuse
 
 item.steel_helmet.name=Casque en acier
 item.steel_plate.name=Plastron en acier
@@ -1343,14 +996,6 @@ tile.block_meteor_cobble.name=Pierre de météorites
 tile.block_meteor_molten.name=Pierre météorite chaude
 tile.block_meteor_treasure.name=Bloc au trésors de météorites
 
-item.cape_radiation.name=Cape (rayonnement)
-item.cape_gasmask.name=Cape (masque à gaz)
-item.cape_schrabidium.name=Cape (Schrabidic)
-item.cape_hbm.name=Cape de Hbm
-item.cape_dafnik.name=Cape de Dafnik
-item.cape_lpkukin.name=Cape de LPkukin
-item.cape_vertice.name=Cape de Lord Vertice
-item.cape_codered_.name=cape de codered_
 
 tile.machine_converter_he_rf.name=Convertisseur HE vers RF
 tile.machine_converter_rf_he.name=Convertisseur RF vers HE
@@ -1359,7 +1004,6 @@ tile.machine_transformer.name=Transformateur
 item.schrabidium_hammer.name=Marteau de Schrabidium
 item.shimmer_sledge.name=Masse scintillante
 item.shimmer_axe.name=Hache scintillante
-item.euphemium_stopper.name=Stopper
 item.matchstick.name=Allumettes
 item.remote.name=Télécomande cassé
 
@@ -1367,9 +1011,7 @@ item.shimmer_head.name=Tête de marteau lourd
 item.shimmer_axe_head.name=Tête de hache lourde
 item.shimmer_handle.name=Poignée en polymère renforcé
 
-item.redcoil_capacitor.name=Condenseur Redcoil
 item.detonator.name=Détonateur
-item.crate_caller.name=Demandeur de ravitaillement
 item.meteor_remote.name=Livreur de météorite
 
 item.ingot_hes.name=Lingot de carburant au Schrabidium hautement enrichi
@@ -1377,16 +1019,7 @@ item.ingot_les.name=Lingot de carburant au Schrabidium faiblement enrichi
 item.nugget_hes.name=Pépite de carburant au Schrabidium hautement enrichi
 item.nugget_les.name=Pépite de carburant au Schrabidium enrichi faible
 
-item.pellet_schrabidium.name=Pastille de Schrabidium Watz
-item.pellet_hes.name=Pastille de HES
-item.pellet_mes.name=Pastille de MES
-item.pellet_les.name=Pastille de LES
-item.pellet_beryllium.name=Pastille de beryllium
-item.pellet_neptunium.name=Pastille de neptunium
-item.pellet_lead.name=Pastille de plomb
-item.pellet_advanced.name=Améliorateur de performance Watz avancée
 
-item.titanium_filter.name=Filtre en titane
 
 tile.mud_block.name=Boue vénéneuse
 fluid.mud_fluid=Boue vénéneuse
@@ -1422,8 +1055,6 @@ item.bottle_sparkle.name=Bouteille de S~Cola
 item.bottle2_empty.name=Bouteille vide
 item.bottle2_korl.name=Korl
 item.bottle2_fritz.name=Fritz Cola
-item.bottle2_korl_special.name=The First Korl
-item.bottle2_fritz_special.name=The First Fritz Cola
 item.chocolate_milk.name=Lait chocolaté
 item.cap_nuka.name=Capsule de Nuka Cola
 item.cap_quantum.name=Capsule de Nuka Cola Quantum
@@ -1439,7 +1070,6 @@ item.blades_gold.name=Lames de broyeur en or
 item.blades_iron.name=Lames de broyeur en fer
 item.blades_steel.name=Lames de broyeur en acier
 item.blades_titanium.name=Lames de broyeur en titane
-item.blades_advanced_alloy.name=Lames de broyeur avancées
 item.blades_combine_steel.name=Lames de broyeur en acier CMB
 item.blades_schrabidium.name=Lames de broyeur en schrabidium
 
@@ -1498,11 +1128,7 @@ item.ams_catalyst_tungsten.name=Catalyseur de reaction en tungstene
 item.ams_catalyst_schrabidium.name=Catalyseur de reaction en Schrabidium
 item.ams_catalyst_dineutronium.name=Catalyseur de reaction en dineutronium
 
-item.ams_focus_blank.name=Focus du stabilisateur vide
-item.ams_focus_limiter.name=Focus de limitation du stabilisateur
-item.ams_focus_booster.name=Focus d'accélération du stabilisateur
 
-item.ams_muzzle.name=Ray-Emission Muzzle
 
 item.ams_core_sing.name=Singularité vibrante (AMS Core)
 item.ams_core_wormhole.name=Minuscule troue de verre (noyau AMS)
@@ -1510,7 +1136,6 @@ item.ams_core_eyeofharmony.name=Œil d'harmonie (AMS Core)
 item.ams_core_thingy.name=Thingy (AMS Core)
 
 item.crystal_energy.name=Cristal d'énergie
-item.pellet_coolant.name=Pastille de liquide de refroidissement
 
 item.linker.name=Telelinker
 item.oil_detector.name=Détecteur de réserve de pétrole
@@ -1520,30 +1145,12 @@ item.survey_scanner.name=Scanner d'investigation
 item.thermo_element.name=Elément thermoélectrique
 item.limiter.name=Limiteur du générateur
 
-item.multitool_dig.name=Poing de puissance (griffe de minage)
-item.multitool_silk.name=Poing de puissance (griffe de minage toucher de soie)
-item.multitool_ext.name=Poing de puissance (extracteur de minerai)
-item.multitool_miner.name=Poing de puissance (Laser de minage)
-item.multitool_hit.name=Poing de puissance (poing)
-item.multitool_beam.name=Poing de puissance (Zapper)
-item.multitool_sky.name=Poing de puissance (Crack the Sky)
-item.multitool_mega.name=Poing de puissance (Super Punch)
-item.multitool_joule.name=Poing de puissance (Giga Joule)
-item.multitool_decon.name=Poing de puissance (décontaminateur)
 
 item.australium_iii.name=Mark III Life Extender
-item.australium_iv.name=Mark IV Life Extender
-item.australium_v.name=Mark V Life Extender
 
-item.weapon_saw.name=Homicide assisté par le docteur
-item.weapon_bat.name=Défaut de Richard
-item.weapon_bat_nail.name=Le cliché
-item.weapon_golf_club.name=Club russe de Mobster's
-item.weapon_pipe_rusty.name=Ajusteur d'attitude
 item.weapon_pipe_lead.name=Le remplaçant manuel
 item.reer_graar.name=Le reer Graar
 
-item.letter.name=Courrier express
 item.polaroid.name=Le Polaroid
 item.glitch.name=Glitch
 item.book_secret.name=3-596-50802-9
@@ -1554,8 +1161,6 @@ item.crystal_charred.name=Cristal calciné
 item.ingot_lanthanium.name=Lingot de lanthanium semi-stable
 item.ingot_actinium.name=Lingot d'actinium semi-stable
 
-tile.dummy_block.name=Bloc factice
-tile.dummy_port.name=Bloc factice (port d''electricité)
 
 item.hélicoptère.name=Hélicoptère
 
@@ -1567,5 +1172,3 @@ tile.crystal_pulsar.name=Cristal pulsant
 
 tile.taint.name=Taint
 
-tile.cheater_virus.name=Euphemium gélifié
-tile.cheater_virus_seed.name=Bloc de schrabide Euphemium instable

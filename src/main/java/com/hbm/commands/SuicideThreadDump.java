@@ -44,7 +44,7 @@ public class SuicideThreadDump extends CommandBase {
 	public void processCommand(ICommandSender sender, String[] args) {
 
 		if(args.length != 1 || !(args[0].equals("dump") || args[0].equals("crash"))) {
-			sender.addChatMessage(new ChatComponentTranslation("commands.suicide_thread_dump.requires_argument_or_crash"));
+			sender.addChatMessage(new ChatComponentTranslation("commands.suicide_thread_dump.missing_argument"));
 			return;
 		}
 

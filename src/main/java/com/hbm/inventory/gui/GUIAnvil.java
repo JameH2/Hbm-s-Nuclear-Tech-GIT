@@ -339,7 +339,7 @@ public class GUIAnvil extends GuiInfoContainer {
 						list.add(EnumChatFormatting.RED + ">" + input.stacksize + "x " + inStack.getDisplayName());
 					}
 				} else {
-					list.add(I18nUtil.resolveKey("desc.misc.guianvil.i_am_error"));
+					list.add(I18nUtil.resolveKey("misc.guianvil.error"));
 				}
 			}
 		}
@@ -366,7 +366,7 @@ public class GUIAnvil extends GuiInfoContainer {
 		for(AStack stack : recipe.input) {
 			if(stack instanceof ComparableStack)  {
 				ItemStack input = ((ComparableStack) stack).toStack();
-				try { list.add(input.getDisplayName().toLowerCase(Locale.US)); } catch(Exception ex) { list.add(I18nUtil.resolveKey("gui.anvil.i_am_error")); }
+				try { list.add(input.getDisplayName().toLowerCase(Locale.US)); } catch(Exception ex) { list.add(I18nUtil.resolveKey("gui.anvil.error")); }
 
 			} else if(stack instanceof OreDictStack) {
 				OreDictStack input = (OreDictStack) stack;
@@ -374,7 +374,7 @@ public class GUIAnvil extends GuiInfoContainer {
 
 				if(ores.size() > 0) {
 					for(ItemStack ore : ores) {
-						try { list.add(ore.getDisplayName().toLowerCase(Locale.US)); } catch(Exception ex) { list.add(I18nUtil.resolveKey("gui.anvil.i_am_error")); }
+						try { list.add(ore.getDisplayName().toLowerCase(Locale.US)); } catch(Exception ex) { list.add(I18nUtil.resolveKey("gui.anvil.error")); }
 					}
 				}
 			}

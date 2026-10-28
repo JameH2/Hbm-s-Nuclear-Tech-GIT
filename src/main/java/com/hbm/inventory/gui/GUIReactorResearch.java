@@ -60,16 +60,16 @@ public class GUIReactorResearch extends GuiInfoContainer {
 		super.drawScreen(mouseX, mouseY, f);
 
 		String[] text = new String[] {
-				I18nUtil.resolveKey("gui.reactor_research.the_reactor_has_to_be_submerged"),
-				I18nUtil.resolveKey("gui.reactor_research.in_water_on_its_sides_to_cool"),
-				I18nUtil.resolveKey("gui.reactor_research.the_neutron_flux_is_provided_to"),
-				I18nUtil.resolveKey("gui.reactor_research.adjacent_breeding_reactors")
+				I18nUtil.resolveKey("gui.reactor_research.cooling1"),
+				I18nUtil.resolveKey("gui.reactor_research.cooling2"),
+				I18nUtil.resolveKey("gui.reactor_research.breeding1"),
+				I18nUtil.resolveKey("gui.reactor_research.breeding2")
 		};
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 14, guiTop + 23, 16, 16, guiLeft - 6, guiTop + 23 + 16, text);
 
 		String[] text2 = new String[] {
-				I18nUtil.resolveKey("gui.reactor_research.reactor_fueled_plate_fuel"),
-				I18nUtil.resolveKey("gui.reactor_research.reaction_needs_neutron_source_start")
+				I18nUtil.resolveKey("gui.reactor_research.fuel"),
+				I18nUtil.resolveKey("gui.reactor_research.neutron_source")
 		};
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 14, guiTop + 61, 16, 16, guiLeft - 6, guiTop + 61 + 16, text2);
 	}

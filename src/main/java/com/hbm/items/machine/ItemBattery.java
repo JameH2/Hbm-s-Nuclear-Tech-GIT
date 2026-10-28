@@ -33,9 +33,9 @@ public class ItemBattery extends Item implements IBatteryItem {
 		if(itemstack.hasTagCompound())
 			charge = getCharge(itemstack);
 
-		list.add(I18nUtil.resolveKey("desc.item.battery.energy_stored_he", BobMathUtil.getShortNumber(charge), BobMathUtil.getShortNumber(maxCharge)));
-		list.add(I18nUtil.resolveKey("item.battery.desc2", BobMathUtil.getShortNumber(chargeRate)));
-		list.add(I18nUtil.resolveKey("item.battery.desc3", BobMathUtil.getShortNumber(dischargeRate)));
+		list.add(I18nUtil.resolveKey("item.battery.energy", BobMathUtil.getShortNumber(charge), BobMathUtil.getShortNumber(maxCharge)));
+		list.add(I18nUtil.resolveKey("item.battery.charge_rate", BobMathUtil.getShortNumber(chargeRate)));
+		list.add(I18nUtil.resolveKey("item.battery.discharge_rate", BobMathUtil.getShortNumber(dischargeRate)));
 	}
 
 	public void chargeBattery(ItemStack stack, long i) {

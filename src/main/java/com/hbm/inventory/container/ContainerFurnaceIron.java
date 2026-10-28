@@ -10,7 +10,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerFurnaceIron extends Container {
+public class ContainerFurnaceIron extends ContainerValidated {
 	
 	protected TileEntityFurnaceIron furnace;
 	

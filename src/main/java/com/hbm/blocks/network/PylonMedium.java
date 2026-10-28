@@ -37,8 +37,8 @@ public class PylonMedium extends BlockDummyable implements ITooltipProvider {
 	*/
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_type_triple", EnumChatFormatting.YELLOW + "Triple"));
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.connection_range_45m", EnumChatFormatting.YELLOW + "45m"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.tooltip.connection_triple", EnumChatFormatting.YELLOW));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.tooltip.connection_range", EnumChatFormatting.YELLOW + "45m"));
 	}
 
 	@Override

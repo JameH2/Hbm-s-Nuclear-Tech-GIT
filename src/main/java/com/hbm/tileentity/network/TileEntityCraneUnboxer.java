@@ -104,6 +104,8 @@ public class TileEntityCraneUnboxer extends TileEntityCraneBase implements IGUIP
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+		if(i == 21) return itemStack != null && itemStack.getItem() == ModItems.upgrade_stack;
+		if(i == 22) return itemStack != null && itemStack.getItem() == ModItems.upgrade_ejector;
 		return true;
 	}
 

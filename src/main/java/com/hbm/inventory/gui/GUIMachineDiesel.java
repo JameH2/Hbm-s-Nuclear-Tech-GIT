@@ -36,15 +36,15 @@ public class GUIMachineDiesel extends GuiInfoContainer {
 		diesel.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 35, guiTop + 69 - 52, 16, 52);
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 141, guiTop + 69 - 52, 16, 52, diesel.power, diesel.powerCap);
 
-		String[] text = new String[] { I18nUtil.resolveKey("gui.diesel.fuel_consumption_rate"),
-				I18nUtil.resolveKey("gui.diesel.1_m_b_t"),
-				I18nUtil.resolveKey("gui.diesel.20_mb"),
-				I18nUtil.resolveKey("gui.diesel.consumption_rate_is_constant") };
+		String[] text = new String[] { I18nUtil.resolveKey("gui.diesel.consumption_label"),
+				"  1 mB/t",
+				"  20 mB/s",
+				I18nUtil.resolveKey("gui.diesel.constant_consumption") };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 8, guiTop + 36, 16, 16, guiLeft, guiTop + 36 + 16, text);
 
 		if(!diesel.hasAcceptableFuel()) {
-			String[] text2 = new String[] { I18nUtil.resolveKey("gui.diesel.error_currently_set_fuel_type"),
-					I18nUtil.resolveKey("gui.diesel.is_not_supported_by_this_engine") };
+			String[] text2 = new String[] { I18nUtil.resolveKey("gui.diesel.invalid_fuel"),
+					I18nUtil.resolveKey("gui.diesel.invalid_fuel_detail") };
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 8, guiTop + 36 + 32, 16, 16, guiLeft, guiTop + 36 + 16 + 32, text2);
 		}
 	}

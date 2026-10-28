@@ -37,9 +37,9 @@ public class ItemFusionShield extends Item {
 		long damage = getShieldDamage(stack);
 		int percent = (int) ((maxDamage - damage) * 100 / maxDamage);
 
-		list.add(I18nUtil.resolveKey("item.lens.desc1", (maxDamage - damage), maxDamage, percent));
+		list.add(I18nUtil.resolveKey("item.lens.durability", (maxDamage - damage), maxDamage, percent));
 
-		list.add(I18nUtil.resolveKey("item.fusion_shield.desc1", EnumChatFormatting.RED + String.valueOf(maxTemp)));
+		list.add(I18nUtil.resolveKey("item.fusion_shield.melting_point", EnumChatFormatting.RED + String.valueOf(maxTemp)));
 	}
 
 	public static void setShieldDamage(ItemStack stack, long damage) {

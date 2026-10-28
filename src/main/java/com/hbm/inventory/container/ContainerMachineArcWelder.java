@@ -14,7 +14,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMachineArcWelder extends Container {
+public class ContainerMachineArcWelder extends ContainerValidated {
 	
 	private TileEntityMachineArcWelder welder;
 

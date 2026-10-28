@@ -43,6 +43,6 @@ public class BlockRemap extends Block implements ILookOverlay {
 
 	@Override
 	public void printHook(Pre event, World world, int x, int y, int z) {
-		ILookOverlay.printGeneric(event, I18nUtil.resolveKey("gui.remap.compatibility_block_convert_upda"), 0xffff00, 0x404000, new ArrayList());
+		ILookOverlay.printGeneric(event, I18nUtil.resolveKey("gui.remap.compatibility"), 0xffff00, 0x404000, new ArrayList());
 	}
 }

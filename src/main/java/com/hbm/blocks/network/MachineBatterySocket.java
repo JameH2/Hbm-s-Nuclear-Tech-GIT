@@ -97,7 +97,7 @@ public class MachineBatterySocket extends BlockDummyable implements ITooltipProv
 		if(socket.syncStack == null) return;
 
 		List<String> text = new ArrayList();
-		text.add(I18nUtil.resolveKey("overlay.common.energy", BobMathUtil.getShortNumber(socket.syncPower), BobMathUtil.getShortNumber(socket.syncMaxPower)));
+		text.add(("" + (BobMathUtil.getShortNumber(socket.syncPower)) + " / " + (BobMathUtil.getShortNumber(socket.syncMaxPower)) + "HE"));
 
 		double percent = (double) socket.syncPower / socket.syncMaxPower;
 		int charge = (int) Math.floor(percent * 10_000D);

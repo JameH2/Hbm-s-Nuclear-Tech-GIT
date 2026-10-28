@@ -99,8 +99,8 @@ public class FluidDuctGauge extends FluidDuctBase implements IBlockMultiPass, IN
 
 		List<String> text = new ArrayList();
 		text.add("&[" + duct.getType().getColor() + "&]" + duct.getType().getLocalizedName());
-		text.add(I18nUtil.resolveKey("overlay.fluid_duct_gauge.m_b_t", String.format(Locale.US, "%,d", duct.deltaTick)));
-		text.add(I18nUtil.resolveKey("overlay.fluid_duct_gauge.m_b", String.format(Locale.US, "%,d", duct.deltaLastSecond)));
+		text.add(("" + (String.format(Locale.US, "%,d", duct.deltaTick)) + " mB/t"));
+		text.add(("" + (String.format(Locale.US, "%,d", duct.deltaLastSecond)) + " mB/s"));
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
 	}
 

@@ -29,15 +29,15 @@ public class ItemModLodestone extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
-		list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("desc.item.mod_lodestone.attracts_nearby_items"));
-		list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("desc.item.mod_lodestone.item_attraction_range", range));
+		list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.mod_lodestone.effect"));
+		list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("item.mod_lodestone.range", range));
 		list.add("");
 		super.addInformation(itemstack, player, list, bool);
 	}
 
 	@Override
 	public void addDesc(List list, ItemStack stack, ItemStack armor) {
-		list.add(EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("desc.item.mod_lodestone.magnetic_range", stack.getDisplayName(), range));
+		list.add(EnumChatFormatting.DARK_GRAY + "  " + I18nUtil.resolveKey("item.mod_lodestone.summary", stack.getDisplayName(), range));
 	}
 
 	@Override

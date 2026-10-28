@@ -1,0 +1,26 @@
+repositories {
+    maven {
+        name = 'GTNH Nexus'
+        url = 'https://nexus.gtnewhorizons.com/repository/public/'
+    }
+    maven {
+        name = 'Blerg'
+        url = 'https://maven.ntmr.dev/proxy/'
+    }
+    maven {
+        name = 'ModMaven'
+        url = 'https://modmaven.dev'
+    }
+    maven {
+        name = 'GregTech'
+        url = 'https://gregtech.mechaenetia.com/'
+    }
+    maven {
+        name = 'JitPack'
+        url = 'https://jitpack.io'
+    }
+    maven {
+        name = 'CurseMaven'
+        url = 'https://cursemaven.com'
+    }
+}

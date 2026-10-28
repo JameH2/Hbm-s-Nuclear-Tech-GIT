@@ -97,9 +97,9 @@ public class JetpackBreak extends JetpackFueledBase {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
 
-		list.add(I18nUtil.resolveKey("item.jetpack_break.desc1"));
-		list.add(I18nUtil.resolveKey("desc.item.jetpack_break.sneaking_stop_hover_mode"));
-		list.add(I18nUtil.resolveKey("item.jetpack_break.desc3"));
+		for(String line : I18nUtil.resolveKeyArray("item.jetpack_break.desc")) {
+			list.add(line);
+		}
 
 		super.addInformation(stack, player, list, ext);
 	}

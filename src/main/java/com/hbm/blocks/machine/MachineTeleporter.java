@@ -61,11 +61,11 @@ public class MachineTeleporter extends BlockContainer implements ILookOverlay {
 		List<String> text = new ArrayList();
 
 		if(tele.targetY == -1) {
-			text.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.teleporter.no_destination_set"));
+			text.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.teleporter.no_destination"));
 		} else {
 			text.add((tele.power >= tele.consumption ? EnumChatFormatting.GREEN : EnumChatFormatting.RED) + String.format("%,d", tele.power) + " / " + String.format("%,d", tele.maxPower));
 			if(world.provider.dimensionId != tele.targetDim) {
-				text.add(I18nUtil.resolveKey("overlay.teleporter.mb", I18nUtil.resolveKey("hbmfluid." + tele.tank.getTankType().getName().toLowerCase()), tele.tank.getFill(), tele.tank.getMaxFill()));
+				text.add(("" + (I18nUtil.resolveKey("hbmfluid." + tele.tank.getTankType().getName().toLowerCase())) + ": " + (tele.tank.getFill()) + "/" + (tele.tank.getMaxFill()) + "mB"));
 			}
 			text.add(I18nUtil.resolveKey("overlay.teleporter.destination_d", tele.targetX, tele.targetY, tele.targetZ, tele.targetDim));
 		}

@@ -1,0 +1,29 @@
+def mod_version = project.findProperty('mod_version') ?: '1.0.27'
+def mod_build_number = project.findProperty('mod_build_number') ?: ''
+
+def version_name = mod_version
+if (!mod_build_number.isEmpty()) {
+    version_name = "${mod_version}_X${mod_build_number}_NTNH"
+    version = "[${version_name}]"
+} else {
+    version = mod_version
+}
+
+ext.modVersion = version_name
+
+def capturedVersion = project.version
+tasks.register('version') {
+    doFirst {
+        println capturedVersion
+    }
+}
+
+gtnhToolchainModule.mcmodInfoProperties.put('credits', project.findProperty('credits') ?: '')
+
+tasks.named('processResources').configure {
+    doLast {
+        def mcmodInfo = new File(outputs.files.singleFile, 'mcmod.info')
+        mcmodInfo.text = mcmodInfo.getText('UTF-8')
+            .replace("[${version_name}]", version_name)
+    }
+}

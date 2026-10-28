@@ -90,7 +90,7 @@ public class MachineHTRFNeo extends BlockDummyable implements ILookOverlay, IToo
 		if(!thruster.isFacingPrograde()) {
 			text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! " + I18nUtil.resolveKey("atmosphere.engineFacing") + " ! ! !");
 		} else {
-			text.add(I18nUtil.resolveKey("overlay.htrfneo.plasma_energy_tu", (thruster.plasmaEnergy == 0 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + String.valueOf(BobMathUtil.getShortNumber(thruster.plasmaEnergy))));
+			text.add(I18nUtil.resolveKey("overlay.htrfneo.plasma", (thruster.plasmaEnergy == 0 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + String.valueOf(BobMathUtil.getShortNumber(thruster.plasmaEnergy))));
 
 			text.add(I18nUtil.resolveKey("overlay.htrfneo.power_he", (thruster.power < thruster.getMaxPower() ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + String.valueOf(BobMathUtil.getShortNumber(thruster.power))));
 
@@ -98,14 +98,14 @@ public class MachineHTRFNeo extends BlockDummyable implements ILookOverlay, IToo
 			String label = (heat > 123 ? EnumChatFormatting.RED : EnumChatFormatting.AQUA) + "" + heat + "K";
 			text.add(I18nUtil.resolveKey("overlay.htrfneo.temperature", label));
 
-			text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_input", thruster.coolantTanks[0].getTankType().getLocalizedName(), thruster.coolantTanks[0].getFill(), thruster.coolantTanks[0].getMaxFill()));
-			text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.common.tank_output", thruster.coolantTanks[1].getTankType().getLocalizedName(), thruster.coolantTanks[1].getFill(), thruster.coolantTanks[1].getMaxFill()));
+			text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + ("" + (thruster.coolantTanks[0].getTankType().getLocalizedName()) + ": " + (thruster.coolantTanks[0].getFill()) + "/" + (thruster.coolantTanks[0].getMaxFill()) + "mB"));
+			text.add((EnumChatFormatting.RED) + "<- " + EnumChatFormatting.RESET + ("" + (thruster.coolantTanks[1].getTankType().getLocalizedName()) + ": " + (thruster.coolantTanks[1].getFill()) + "/" + (thruster.coolantTanks[1].getMaxFill()) + "mB"));
 
 			if(!thruster.isCool()) text.add(I18nUtil.resolveKey("overlay.htrfneo.insufficient_cooling", (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00)));
 
 			if(world.getTileEntity(x, y, z) instanceof TileEntityProxyCombo) {
 				if(pos[0] == x || pos[2] == z) {
-					text.add(I18nUtil.resolveKey("overlay.htrfneo.connect_fusion_reactor_here"));
+					text.add(I18nUtil.resolveKey("overlay.htrfneo.reactor_connection"));
 				}
 			}
 		}

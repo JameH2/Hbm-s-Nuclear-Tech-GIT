@@ -33,7 +33,7 @@ public class ItemMuchoMango extends ItemFood {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 		if(this == ModItems.mucho_mango) {
-			list.add(I18nUtil.resolveKey("desc.item.mucho_mango.comically_large"));
+			list.add(I18nUtil.resolveKey("item.mucho_mango.flavor"));
 		}
 	}
 

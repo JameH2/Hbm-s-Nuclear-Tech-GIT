@@ -50,7 +50,7 @@ public class GUICombustionEngine extends GuiInfoContainer {
 		}
 
 		if(isMouseLocked || (guiLeft + 80 <= x && guiLeft + 80 + 34 > x && guiTop + 38 < y && guiTop + 38 + 8 >= y)) {
-			drawCreativeTabHoveringText(((setting * 2) / 10D) + I18nUtil.resolveKey("gui.combustion_engine.m_b_t"), MathHelper.clamp_int(x, guiLeft + 80, guiLeft + 114), MathHelper.clamp_int(y, guiTop + 38, guiTop + 46));
+			drawCreativeTabHoveringText(((setting * 2) / 10D) + "mB/t", MathHelper.clamp_int(x, guiLeft + 80, guiLeft + 114), MathHelper.clamp_int(y, guiTop + 38, guiTop + 46));
 		}
 
 		if(engine.slots[2] != null && engine.slots[2].getItem() == ModItems.piston_set) {
@@ -62,7 +62,7 @@ public class GUICombustionEngine extends GuiInfoContainer {
 				power = setting * 0.2 * trait.getCombustionEnergy() / 1_000D * piston.eff[trait.getGrade().ordinal()];
 			}
 			String c = EnumChatFormatting.YELLOW + "";
-			drawCustomInfoStat(x, y, guiLeft + 79, guiTop + 50, 35, 14, x, y, c + String.format(Locale.US, "%,d", (int)(power)) + I18nUtil.resolveKey("gui.combustion_engine.he_t"), c + String.format(Locale.US, "%,d", (int)(power * 20)) + I18nUtil.resolveKey("gui.combustion_engine.he"));
+			drawCustomInfoStat(x, y, guiLeft + 79, guiTop + 50, 35, 14, x, y, c + String.format(Locale.US, "%,d", (int)(power)) + " HE/t", c + String.format(Locale.US, "%,d", (int)(power * 20)) + " HE/s");
 		}
 
 		drawCustomInfoStat(x, y, guiLeft + 79, guiTop + 13, 35, 15, x, y, I18nUtil.resolveKey("gui.combustion_engine.ignition"));

@@ -52,7 +52,7 @@ public class CableDiode extends BlockContainer implements IEnergyConnectorBlock,
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.cable_diode.limits_throughput_restricts_flow"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.cable_diode.effect"));
 	}
 
 	@Override

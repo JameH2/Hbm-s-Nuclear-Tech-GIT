@@ -32,7 +32,7 @@ public class FT_Flammable extends FluidTrait {
 		info.add(EnumChatFormatting.YELLOW + "[" + I18nUtil.resolveKey("hbmfluid.trait.flammable") + "]");
 
 		if(energy > 0)
-			info.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("hbmfluid.trait.provides") + " " + EnumChatFormatting.RED + "" + BobMathUtil.getShortNumber(energy) + I18nUtil.resolveKey("gui.ft_flammable.tu") + EnumChatFormatting.YELLOW + I18nUtil.resolveKey("hbmfluid.trait.perBucket"));
+			info.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.ft_flammable.energy", EnumChatFormatting.RED, BobMathUtil.getShortNumber(energy), EnumChatFormatting.YELLOW));
 	}
 
 	@Override

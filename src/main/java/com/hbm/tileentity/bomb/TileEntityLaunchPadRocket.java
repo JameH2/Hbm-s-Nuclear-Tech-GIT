@@ -397,27 +397,27 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 
 		if(solidFuel.max > 0) {
 			if(solidFuel.level < solidFuel.max) {
-				issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.launch_pad_rocket.solid_fuel_skg", solidFuel.level, solidFuel.max));
+				issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.launch_pad_rocket.solid_fuel", solidFuel.level, solidFuel.max));
 			} else {
-				issues.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("overlay.launch_pad_rocket.solid_fuel_skg", solidFuel.level, solidFuel.max));
+				issues.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("overlay.launch_pad_rocket.solid_fuel", solidFuel.level, solidFuel.max));
 			}
 		}
 	}
 
 	public static boolean findDriveIssues(List<String> issues, RocketStruct rocket, ItemStack drive) {
 		if(drive == null || !(drive.getItem() instanceof ItemVOTVdrive)) {
-			issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.launch_pad_rocket.no_destination_drive_installed"));
+			issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.launch_pad_rocket.missing_drive"));
 			return true;
 		}
 
 		if(!ItemVOTVdrive.getProcessed(drive)) {
-			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.destination_drive_needs"));
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.drive_required"));
 			return true;
 		}
 
 		SolarSystem.Body target = ItemVOTVdrive.getDestination(drive).body;
 		if(target == SolarSystem.Body.ORBIT && rocket.capsule.part != ModItems.rp_capsule_20 && rocket.capsule.part != ModItems.rp_station_core_20) {
-			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.satellite_target_must_planet"));
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.invalid_satellite"));
 			return true;
 		}
 
@@ -426,15 +426,15 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 
 	public static void findTravelIssues(List<String> issues, RocketStruct rocket, Target from, Target to) {
 		if(to.inOrbit && !to.isValid && rocket.capsule.part != ModItems.rp_station_core_20) {
-			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.station_not_yet_launched"));
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.unlaunched_station"));
 		}
 
 		if(to.inOrbit && to.isValid && rocket.capsule.part == ModItems.rp_station_core_20) {
-			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.station_already_launched"));
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.launched_station"));
 		}
 
 		if(!rocket.hasSufficientFuel(from.body, to.body, from.inOrbit, to.inOrbit)) {
-			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.line.04"));
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.unreachable"));
 		}
 	}
 
@@ -447,7 +447,7 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 		RocketStruct rocket = ItemCustomRocket.get(slots[0]);
 
 		if(!canSeeSky) {
-			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.pad_is_obstructed"));
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.launch_pad_rocket.obstructed"));
 		}
 
 		if(power < maxPower * 0.75) {

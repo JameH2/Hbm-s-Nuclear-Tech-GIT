@@ -68,8 +68,8 @@ public class BlockVolcano extends BlockContainer implements ITooltipProvider, IB
 			return;
 		}
 
-		list.add(BlockVolcano.isGrowing(meta) ? (EnumChatFormatting.RED + I18nUtil.resolveKey("gui.volcano.does_grow")) : (EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("gui.volcano.does_not_grow")));
-		list.add(BlockVolcano.isExtinguishing(meta) ? (EnumChatFormatting.RED + I18nUtil.resolveKey("gui.volcano.does_extinguish")) : (EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("gui.volcano.does_not_extinguish")));
+		list.add(BlockVolcano.isGrowing(meta) ? (EnumChatFormatting.RED + I18nUtil.resolveKey("gui.volcano.does_grow")) : (EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("gui.volcano.no_growth")));
+		list.add(BlockVolcano.isExtinguishing(meta) ? (EnumChatFormatting.RED + I18nUtil.resolveKey("gui.volcano.does_extinguish")) : (EnumChatFormatting.DARK_GRAY + I18nUtil.resolveKey("gui.volcano.no_extinguish")));
 	}
 
 	public static final int META_STATIC_ACTIVE = 0;

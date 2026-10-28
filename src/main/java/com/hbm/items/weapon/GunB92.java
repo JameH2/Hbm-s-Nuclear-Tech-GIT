@@ -184,25 +184,24 @@ public class GunB92 extends Item {
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
 		if(MainRegistry.polaroidID == 11) {
-			list.add(I18nUtil.resolveKey("item.gun_b92.desc1"));
-			list.add(I18nUtil.resolveKey("item.gun_b92.desc2"));
+			for(String line : I18nUtil.resolveKeyArray("item.gun_b92.origin.desc")) {
+				list.add(line);
+			}
 		} else if(MainRegistry.polaroidID == 18) {
-			list.add(I18nUtil.resolveKey("item.gun_b92.desc3"));
-			list.add(I18nUtil.resolveKey("item.gun_b92.desc4"));
+			for(String line : I18nUtil.resolveKeyArray("item.gun_b92.overload.desc")) {
+				list.add(line);
+			}
 		} else {
-			list.add(I18nUtil.resolveKey("item.gun_b92.desc5"));
+			list.add(I18nUtil.resolveKey("item.gun_b92.warning"));
 		}
 		list.add("");
-		list.add(I18nUtil.resolveKey("item.gun_b92.desc6"));
-		list.add(I18nUtil.resolveKey("item.gun_b92.desc7"));
-		list.add(I18nUtil.resolveKey("item.gun_b92.desc8"));
-		list.add(I18nUtil.resolveKey("item.gun_b92.desc9"));
-		list.add(I18nUtil.resolveKey("item.gun_b92.desc10"));
-		list.add(I18nUtil.resolveKey("item.gun_b92.desc11"));
+		for(String line : I18nUtil.resolveKeyArray("item.gun_b92.desc")) {
+			list.add(line);
+		}
 		list.add("");
-		list.add(I18nUtil.resolveKey("item.gun_b92.desc12"));
+		list.add(I18nUtil.resolveKey("item.gun_b92.motto"));
 		list.add("");
-		list.add(I18nUtil.resolveKey("item.gun_b92.desc13"));
+		list.add("[" + I18nUtil.resolveKey("item.gun_b92.rarity") + "]");
 	}
 
 	@Override

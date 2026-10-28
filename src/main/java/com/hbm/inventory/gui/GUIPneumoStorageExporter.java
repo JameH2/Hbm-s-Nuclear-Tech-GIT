@@ -30,23 +30,23 @@ public class GUIPneumoStorageExporter extends GuiInfoContainer {
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
 
-		this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 16, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_exporter.request_mode") + EnumChatFormatting.YELLOW + (this.importer.continuousRequest ? I18nUtil.resolveKey("gui.pneumo_storage_exporter.continuous") : I18nUtil.resolveKey("gui.pneumo_storage_exporter.by_request")));
+		this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 16, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_exporter.request_mode", EnumChatFormatting.YELLOW + (this.importer.continuousRequest ? I18nUtil.resolveKey("gui.pneumo_storage_exporter.continuous") : I18nUtil.resolveKey("gui.pneumo_storage_exporter.by_request"))));
 
-		this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 34, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_exporter.request_type") + EnumChatFormatting.YELLOW + (
-				this.importer.requestMode == this.importer.MODE_AS_MUCH_AS_POSSIBLE ? I18nUtil.resolveKey("gui.pneumo_storage_exporter.as_much_as_possible") :
-				this.importer.requestMode == this.importer.MODE_FULL_STACK ? I18nUtil.resolveKey("gui.pneumo_storage_exporter.only_full_stacks") : I18nUtil.resolveKey("gui.pneumo_storage_exporter.only_full_requests")
-		));
+		this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 34, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_exporter.request_type", EnumChatFormatting.YELLOW + (
+				this.importer.requestMode == this.importer.MODE_AS_MUCH_AS_POSSIBLE ? I18nUtil.resolveKey("gui.pneumo_storage_exporter.partial_stacks") :
+				this.importer.requestMode == this.importer.MODE_FULL_STACK ? I18nUtil.resolveKey("gui.pneumo_storage_exporter.full_stacks") : I18nUtil.resolveKey("gui.pneumo_storage_exporter.full_requests")
+		)));
 
 		if(this.importer.rorConfiguredMode) {
 			String[] label = new String[10];
-			label[0] = I18nUtil.resolveKey("gui.pneumo_exporter.ror_configured", EnumChatFormatting.YELLOW + "RoR configured");
+			label[0] = I18nUtil.resolveKey("gui.pneumo_exporter.ror_configured", EnumChatFormatting.YELLOW);
 			for(int i = 0; i < 9; i++) {
 				boolean hasFilter = this.importer.rorFilters[i][0] != 0 && this.importer.rorFilters[i][2] > 0;
 				label[i + 1] = !hasFilter ? I18nUtil.resolveKey("gui.pneumo_exporter.empty_slot", i + 1) : I18nUtil.resolveKey("gui.pneumo_exporter.slot_filter", i + 1, this.importer.rorFilters[i][0], this.importer.rorFilters[i][1], this.importer.rorFilters[i][2]);
 			}
 			this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 52, 18, 18, x, y, label);
 		} else {
-			this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 52, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_exporter.filter_type") + EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.pneumo_storage_exporter.manually_configured"));
+			this.drawCustomInfoStat(x, y, guiLeft + 142, guiTop + 52, 18, 18, x, y, I18nUtil.resolveKey("gui.pneumo_storage_exporter.filter_type", EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.pneumo_storage_exporter.manually_configured")));
 		}
 	}
 

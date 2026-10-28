@@ -157,12 +157,12 @@ public class ItemRTGPellet extends Item {
 			list.add(I18nUtil.resolveKey("desc.item.rtgDecay", I18nUtil.resolveKey(instance.getDecayItem().getUnlocalizedName() + ".name")));
 			list.add(BobMathUtil.toPercentage(instance.getLifespan(stack), instance.getMaxLifespan()));
 			if (bool) {
-				list.add(I18nUtil.resolveKey("desc.item.rtg_pellet.extended_info"));
-				list.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtgpellet.ticks"), instance.getLifespan(stack), instance.getMaxLifespan()));
+				list.add(I18nUtil.resolveKey("item.rtg_pellet.extended_info"));
+				list.add(I18nUtil.resolveKey("gui.rtgpellet.ticks", instance.getLifespan(stack), instance.getMaxLifespan()));
 				final String[] timeLeft = BobMathUtil.ticksToDate(instance.getLifespan(stack));
 				final String[] maxLife = BobMathUtil.ticksToDate(instance.getMaxLifespan());
-				list.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtgpellet.time_remaining_y_d_h"), (Object[]) timeLeft));
-				list.add(String.format(Locale.US, I18nUtil.resolveKey("gui.rtgpellet.maximum_life_y_d_h"), (Object[]) maxLife));
+				list.add(I18nUtil.resolveKey("gui.rtgpellet.remaining", (Object[]) timeLeft));
+				list.add(I18nUtil.resolveKey("gui.rtgpellet.lifetime", (Object[]) maxLife));
 			}
 		}
 	}

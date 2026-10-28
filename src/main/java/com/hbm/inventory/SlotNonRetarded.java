@@ -22,7 +22,7 @@ public class SlotNonRetarded extends Slot {
 	 */
 	@Override
 	public boolean isItemValid(ItemStack stack) {
-		return inventory.isItemValidForSlot(this.slotNumber, stack);
+		return stack != null && inventory.isItemValidForSlot(getSlotIndex(), stack);
 	}
 
 	/**

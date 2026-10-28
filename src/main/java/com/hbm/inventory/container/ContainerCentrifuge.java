@@ -13,7 +13,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerCentrifuge extends Container {
+public class ContainerCentrifuge extends ContainerValidated {
 
 	private TileEntityMachineCentrifuge centrifuge;
 

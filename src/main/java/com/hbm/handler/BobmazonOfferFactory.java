@@ -153,11 +153,11 @@ public class BobmazonOfferFactory {
 				), Requirement.HIDDEN, 64));
 
 		special.add(new Offer(I18nUtil.setItemName(ItemKitNBT.create(
-				I18nUtil.setItemName(new ItemStack(ModItems.rod_of_discord), "bobmazon.offer.cock_joke"),
-				I18nUtil.setItemName(ModItems.canned_conserve.stackFromEnum(64, EnumFoodType.SLIME), "bobmazon.offer.class_a_horse_semen"),
-				I18nUtil.setItemName(new ItemStack(ModItems.pipe_lead), "bobmazon.offer.get_nutted_dumbass"),
+				I18nUtil.setItemName(new ItemStack(ModItems.rod_of_discord), "bobmazon.offer.discord"),
+				I18nUtil.setItemName(ModItems.canned_conserve.stackFromEnum(64, EnumFoodType.SLIME), "bobmazon.offer.slime"),
+				I18nUtil.setItemName(new ItemStack(ModItems.pipe_lead), "bobmazon.offer.lead_pipe"),
 				new ItemStack(ModItems.gem_alexandrite)
-				), "bobmazon.offer.the_nut_bucket"), Requirement.HIDDEN, 64));
+				), "bobmazon.offer.bucket"), Requirement.HIDDEN, 64));
 
 		special.add(new Offer(I18nUtil.setItemName(ItemKitNBT.create(
 				new ItemStack(ModItems.rpa_helmet),

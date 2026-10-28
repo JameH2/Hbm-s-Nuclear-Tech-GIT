@@ -977,35 +977,35 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 
 		// Check if the stage can make the journey
 		if(state == RocketState.NEEDSFUEL) {
-			text.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket.rocket_has_no_fuel"));
+			text.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket.no_fuel"));
 		} else if(canLaunch && !rocket.hasSufficientFuel(from.body, to.body, from.inOrbit, to.inOrbit)) {
-			text.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket.rocket_can_t_reach_destination"));
+			text.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket.unreachable"));
 			canLaunch = false;
 		}
 
 		if(riddenByEntity == null) {
-			text.add(I18nUtil.resolveKey("overlay.rocket.interact_to_enter"));
+			text.add(I18nUtil.resolveKey("overlay.rocket.enter"));
 		} else if(riddenByEntity != player) {
 			text.add(I18nUtil.resolveKey("overlay.rocket.occupied"));
 		} else {
 			if(to.inOrbit) {
-				text.add(I18nUtil.resolveKey("overlay.rocket.destination_orbital_station"));
+				text.add(I18nUtil.resolveKey("overlay.rocket.station"));
 			} else if(to.body != null) {
 				text.add(I18nUtil.resolveKey("overlay.rocket.destination", I18nUtil.resolveKey("body." + to.body.name)));
 			} else {
-				text.add(I18nUtil.resolveKey("overlay.rocket.destination_no_drive_installed"));
+				text.add(I18nUtil.resolveKey("overlay.rocket.missing_drive"));
 			}
 
 			if(canLaunch) {
-				text.add(I18nUtil.resolveKey("overlay.rocket.jump_to_launch"));
+				text.add(I18nUtil.resolveKey("overlay.rocket.launch"));
 			} else if(state == RocketState.LANDED) {
-				text.add(I18nUtil.resolveKey("overlay.rocket.insert_next_drive_to_continue"));
+				text.add(I18nUtil.resolveKey("overlay.rocket.next_drive"));
 			}
 
 			ItemStack stack = player.getHeldItem();
 			if((state == RocketState.LANDED || state == RocketState.AWAITING) && stack != null && stack.getItem() instanceof ItemVOTVdrive) {
 				if(ItemVOTVdrive.getProcessed(stack)) {
-					text.add(I18nUtil.resolveKey("overlay.rocket.interact_to_swap_drive"));
+					text.add(I18nUtil.resolveKey("overlay.rocket.swap_drive"));
 				}
 			}
 		}

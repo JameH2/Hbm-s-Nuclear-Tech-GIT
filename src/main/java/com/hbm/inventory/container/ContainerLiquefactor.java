@@ -9,7 +9,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerLiquefactor extends Container {
+public class ContainerLiquefactor extends ContainerValidated {
 	
 	private TileEntityMachineLiquefactor liquefactor;
 

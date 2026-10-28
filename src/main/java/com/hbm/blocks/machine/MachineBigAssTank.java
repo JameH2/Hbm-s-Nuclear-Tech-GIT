@@ -115,7 +115,7 @@ public class MachineBigAssTank extends BlockDummyable implements IPersistentInfo
 
 					trialEntity.tank.setTankType(type);
 					trialEntity.markDirty();
-					player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)).appendSibling(new ChatComponentTranslation(type.getConditionalName())).appendSibling(new ChatComponentText("!")));
+					player.addChatComponentMessage(new ChatComponentTranslation("chat.common.changed_type", new ChatComponentTranslation(type.getConditionalName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 				}
 			}
 			return true;
@@ -157,6 +157,6 @@ public class MachineBigAssTank extends BlockDummyable implements IPersistentInfo
 	public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {
 		FluidTank tank = new FluidTank(Fluids.NONE, 0);
 		tank.readFromNBT(persistentTag, "tank");
-		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.big_ass_tank.mb", tank.getFill(), tank.getMaxFill(), tank.getTankType().getLocalizedName()));
+		list.add((EnumChatFormatting.YELLOW) + ("" + (tank.getFill()) + "/" + (tank.getMaxFill()) + "mB " + (tank.getTankType().getLocalizedName())));
 	}
 }

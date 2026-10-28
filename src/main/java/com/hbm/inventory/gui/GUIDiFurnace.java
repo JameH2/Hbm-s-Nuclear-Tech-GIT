@@ -42,9 +42,8 @@ public class GUIDiFurnace extends GuiContainer {
 
 				if(this.isMouseOverSlot(slot, x, y)) {
 
-					String label = EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.furnace.accepts_from");
 					byte dir = i == 0 ? diFurnace.sideUpper : i == 1 ? diFurnace.sideLower : diFurnace.sideFuel;
-					label += ForgeDirection.getOrientation(dir);
+					String label = EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.furnace.accepts_from", ForgeDirection.getOrientation(dir));
 
 					this.func_146283_a(Arrays.asList(new String[] { label }), x, y - (slot.getHasStack() ? 15 : 0));
 

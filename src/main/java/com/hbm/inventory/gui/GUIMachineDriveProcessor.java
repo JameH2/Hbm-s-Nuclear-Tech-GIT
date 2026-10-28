@@ -36,7 +36,7 @@ public class GUIMachineDriveProcessor extends GuiInfoContainer {
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 18, 16, 52, machine.power, machine.maxPower);
 
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 49, guiTop + 17, 18, 18, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.drive_processor.clone_drive")} );
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 38, guiTop + 61, 18, 18, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.drive_processor.start_drive_processing")} );
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 38, guiTop + 61, 18, 18, mouseX, mouseY, new String[] {I18nUtil.resolveKey("gui.drive_processor.start")} );
 	}
 
 	@Override

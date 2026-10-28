@@ -27,12 +27,12 @@ public class ItemModServos extends ItemArmorMod {
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean bool) {
 
 		if(this == ModItems.servo_set) {
-			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_servos.desc1"));
-			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_servos.desc2"));
+			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_servos.chestplate", "I", 50));
+			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_servos.leggings", 25, "II"));
 		}
 		if(this == ModItems.servo_set_desh) {
-			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_servos.desc3"));
-			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_servos.desc4"));
+			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_servos.chestplate", "III", 150));
+			list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_servos.leggings", 50, "III"));
 		}
 
 		list.add("");
@@ -47,20 +47,20 @@ public class ItemModServos extends ItemArmorMod {
 		if(item.armorType == 1) {
 
 			if(this == ModItems.servo_set) {
-				list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_servos.desc5", stack.getDisplayName()));
+				list.add(EnumChatFormatting.DARK_PURPLE + "  " + I18nUtil.resolveKey("item.mod_servos.chestplate_summary", stack.getDisplayName(), "I", 50));
 			}
 			if(this == ModItems.servo_set_desh) {
-				list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_servos.desc6", stack.getDisplayName()));
+				list.add(EnumChatFormatting.DARK_PURPLE + "  " + I18nUtil.resolveKey("item.mod_servos.chestplate_summary", stack.getDisplayName(), "III", 150));
 			}
 		}
 
 		if(item.armorType == 2) {
 
 			if(this == ModItems.servo_set) {
-				list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_servos.desc7", stack.getDisplayName()));
+				list.add(EnumChatFormatting.DARK_PURPLE + "  " + I18nUtil.resolveKey("item.mod_servos.leggings_summary", stack.getDisplayName(), 25, "II"));
 			}
 			if(this == ModItems.servo_set_desh) {
-				list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("item.mod_servos.desc8", stack.getDisplayName()));
+				list.add(EnumChatFormatting.DARK_PURPLE + "  " + I18nUtil.resolveKey("item.mod_servos.leggings_summary", stack.getDisplayName(), 50, "III"));
 			}
 		}
 	}

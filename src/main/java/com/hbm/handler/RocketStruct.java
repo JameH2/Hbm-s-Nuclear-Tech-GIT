@@ -98,13 +98,13 @@ public class RocketStruct {
 		if(capsule == null && stages.size() == 0) return issues;
 
 		if(capsule == null || (capsule.part.attributes[0] != WarheadType.APOLLO && capsule.part.attributes[0] != WarheadType.SATELLITE))
-			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.invalid_capsule_satellite"));
+			issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.invalid_payload"));
 
 		// Current stage stats
 		if(stageNum < stages.size()) {
 			RocketStage stage = stages.get(stageNum);
-			issues.add(I18nUtil.resolveKey("overlay.rocket_struct.dry_mass_skg", getLaunchMass(stageNum)));
-			issues.add(I18nUtil.resolveKey("overlay.rocket_struct.wet_mass_skg", getWetMass(stageNum)));
+			issues.add(I18nUtil.resolveKey("overlay.rocket_struct.dry_mass", getLaunchMass(stageNum)));
+			issues.add(I18nUtil.resolveKey("overlay.rocket_struct.wet_mass", getWetMass(stageNum)));
 			if(stage.thruster != null) {
 				issues.add(I18nUtil.resolveKey("overlay.rocket_struct.thrust_n", getThrust(stage)));
 				issues.add(I18nUtil.resolveKey("overlay.rocket_struct.isp_ss", getISP(stage)));
@@ -114,23 +114,23 @@ public class RocketStruct {
 		for(int i = 0; i < stages.size(); i++) {
 			RocketStage stage = stages.get(i);
 			if(stage.fuselage == null)
-				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.stage_missing_fuselage", (i + 1)));
+				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.missing_fuselage", (i + 1)));
 			if(stage.thruster == null)
-				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.stage_missing_thruster", (i + 1)));
+				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.missing_thruster", (i + 1)));
 
 			if(stage.fuselage == null || stage.thruster == null)
 				continue;
 
 			if(stage.thrusterCount > stage.fuselageCount)
-				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.stage_too_many_thrusters", (i + 1)));
+				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.excess_thrusters", (i + 1)));
 			if(stage.fuselageCount % stage.thrusterCount != 0)
-				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.stage_uneven_thrusters", (i + 1)));
+				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.uneven_thrusters", (i + 1)));
 
 			if(stage.fuselage.part.attributes[0] != FuelType.ANY && stage.fuselage.part.attributes[0] != stage.thruster.part.attributes[0])
-				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.stage_fuel_mismatch", (i + 1)));
+				issues.add((EnumChatFormatting.RED) + I18nUtil.resolveKey("overlay.rocket_struct.fuel_mismatch", (i + 1)));
 
 			if(i > 0 && stage.fins == null)
-				issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.rocket_struct.stage_lacks_landing_legs", (i + 1)));
+				issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.rocket_struct.missing_legs", (i + 1)));
 
 			// I was gonna add all sorts of realistic restrictions but then realised
 			// KSP lets you shit any part onto any part, and that's fun
@@ -145,9 +145,9 @@ public class RocketStruct {
 			if(fuelRequirement == Integer.MAX_VALUE) {
 				issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.rocket_struct.insufficient_thrust"));
 			} else if(fuelCapacity < fuelRequirement) {
-				issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.rocket_struct.insufficient_fuel_mb", fuelCapacity, fuelRequirement));
+				issues.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("overlay.rocket_struct.insufficient_fuel", fuelCapacity, fuelRequirement));
 			} else if(fuelCapacity > 0 && fuelRequirement > 0) {
-				issues.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("overlay.rocket_struct.trip_possible_mb", fuelCapacity, fuelRequirement));
+				issues.add((EnumChatFormatting.GREEN) + I18nUtil.resolveKey("overlay.rocket_struct.trip_possible", fuelCapacity, fuelRequirement));
 			}
 		}
 

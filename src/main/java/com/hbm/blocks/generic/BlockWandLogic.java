@@ -191,9 +191,9 @@ public class BlockWandLogic extends BlockContainer implements ILookOverlay, IToo
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean ext) {
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_logic.line.03"));
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_logic.line.01"));
-		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_logic.line.02"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_logic.action_hint"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_logic.condition_hint"));
+		list.add((EnumChatFormatting.GOLD) + I18nUtil.resolveKey("tile.wand_logic.interaction_hint"));
 		list.add((EnumChatFormatting.YELLOW) + I18nUtil.resolveKey("tile.detonator_transform"));
 	}
 

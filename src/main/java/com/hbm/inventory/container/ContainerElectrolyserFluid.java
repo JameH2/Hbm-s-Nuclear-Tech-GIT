@@ -1,4 +1,5 @@
 package com.hbm.inventory.container;
+import com.hbm.inventory.SlotUpgrade;
 
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.ModItems;
@@ -13,7 +14,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerElectrolyserFluid extends Container {
+public class ContainerElectrolyserFluid extends ContainerValidated {
 
 	private TileEntityElectrolyser electrolyser;
 
@@ -23,8 +24,8 @@ public class ContainerElectrolyserFluid extends Container {
 		//Battery
 		this.addSlotToContainer(new Slot(tedf, 0, 186, 109));
 		//Upgrades
-		this.addSlotToContainer(new Slot(tedf, 1, 186, 140));
-		this.addSlotToContainer(new Slot(tedf, 2, 186, 158));
+		this.addSlotToContainer(new SlotUpgrade(tedf, 1, 186, 140));
+		this.addSlotToContainer(new SlotUpgrade(tedf, 2, 186, 158));
 		//Fluid ID
 		this.addSlotToContainer(new Slot(tedf, 3, 6, 18));
 		this.addSlotToContainer(new SlotTakeOnly(tedf, 4, 6, 54));

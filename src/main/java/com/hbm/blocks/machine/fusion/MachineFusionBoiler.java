@@ -86,11 +86,11 @@ public class MachineFusionBoiler extends BlockDummyable implements ILookOverlay,
 		TileEntityFusionBoiler boiler = (TileEntityFusionBoiler) te;
 
 		List<String> text = new ArrayList();
-		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + I18nUtil.resolveKey("overlay.fusion_boiler.tu", BobMathUtil.format(boiler.plasmaEnergy)));
+		text.add((EnumChatFormatting.GREEN) + "-> " + EnumChatFormatting.RESET + ("" + (BobMathUtil.format(boiler.plasmaEnergy)) + " TU"));
 
 		for(int i = 0; i < boiler.getAllTanks().length; i++) {
 			FluidTank tank = boiler.getAllTanks()[i];
-			text.add(I18nUtil.resolveKey("overlay.common.tank", (i == 0 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET, tank.getTankType().getLocalizedName(), tank.getFill(), tank.getMaxFill()));
+			text.add(("" + ((i == 0 ? (EnumChatFormatting.GREEN + "-> ") : (EnumChatFormatting.RED + "<- ")) + EnumChatFormatting.RESET) + (tank.getTankType().getLocalizedName()) + ": " + (tank.getFill()) + "/" + (tank.getMaxFill()) + "mB"));
 		}
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);

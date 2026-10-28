@@ -1,10 +1,10 @@
 [
 {
-  "modid": "hbm",
-  "name": "NTM: Space",
+  "modid": "${modId}",
+  "name": "${modName}",
   "description": "A mod that adds weapons, nuclear themed stuff and space travel",
-  "version":"${version}",
-  "mcversion": "1.7.10",
+  "version":"${modVersion}",
+  "mcversion": "${minecraftVersion}",
   "url": "",
   "updateUrl": "",
   "credits": "${credits}",

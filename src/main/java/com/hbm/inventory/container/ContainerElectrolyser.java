@@ -1,6 +1,7 @@
 package com.hbm.inventory.container;
 
 import com.hbm.inventory.SlotCraftingOutput;
+import com.hbm.inventory.SlotUpgrade;
 import com.hbm.tileentity.machine.TileEntityElectrolyser;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,7 +10,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerElectrolyser extends Container {
+public class ContainerElectrolyser extends ContainerValidated {
 	
 	TileEntityElectrolyser electrolyser;
 	
@@ -31,8 +32,8 @@ public class ContainerElectrolyser extends Container {
 		
 		this.addSlotToContainer(new Slot(tile, 0, 186, 109));
 		
-		this.addSlotToContainer(new Slot(tile, 1, 186, 140));
-		this.addSlotToContainer(new Slot(tile, 2, 186, 158));
+		this.addSlotToContainer(new SlotUpgrade(tile, 1, 186, 140));
+		this.addSlotToContainer(new SlotUpgrade(tile, 2, 186, 158));
 		
 		this.addSlotToContainer(new Slot(tile, 3, 6, 18));
 		this.addSlotToContainer(new SlotCraftingOutput(invPlayer.player, tile, 4, 6, 54));
