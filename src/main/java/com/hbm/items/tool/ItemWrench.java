@@ -46,6 +46,10 @@ public class ItemWrench extends ItemSword {
 
 			if(te != null && te instanceof TileEntityPipelineBase) {
 
+				if(!stack.hasTagCompound()) {
+					stack.stackTagCompound = new NBTTagCompound();
+				}
+
 				if(!stack.stackTagCompound.hasKey("x")) {
 					stack.stackTagCompound.setInteger("x", x);
 					stack.stackTagCompound.setInteger("y", y);
