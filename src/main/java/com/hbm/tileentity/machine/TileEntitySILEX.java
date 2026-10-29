@@ -41,7 +41,7 @@ public class TileEntitySILEX extends TileEntityMachineBase implements IFluidStan
 	public FluidTank tank;
 	public ComparableStack current;
 	public int currentFill;
-	public static final int maxFill = 16000;
+	public static final int maxFill = 24000;
 	public int progress;
 	public final int processTime = 100;
 
