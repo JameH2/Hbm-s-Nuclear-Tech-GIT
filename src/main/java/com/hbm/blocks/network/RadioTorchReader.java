@@ -7,9 +7,9 @@ import com.hbm.blocks.ILookOverlay;
 import com.hbm.inventory.gui.GUIScreenRadioTorchReader;
 import com.hbm.tileentity.network.TileEntityRadioTorchReader;
 import com.hbm.util.Compat;
+import com.hbm.util.RORValueProviders;
 import com.hbm.util.i18n.I18nUtil;
 
-import api.hbm.redstoneoverradio.IRORValueProvider;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -35,7 +35,7 @@ public class RadioTorchReader extends RadioTorchBase {
 	@Override
 	public boolean canBlockStay(World world, int x, int y, int z, ForgeDirection dir, Block b) {
 		TileEntity tile = Compat.getTileStandard(world, x - dir.offsetX, y - dir.offsetY, z - dir.offsetZ);
-		return tile instanceof IRORValueProvider;
+		return RORValueProviders.getProvider(tile) != null;
 	}
 
 	@Override

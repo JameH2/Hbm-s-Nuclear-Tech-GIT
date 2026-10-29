@@ -12,6 +12,7 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.network.TileEntityRadioTorchReader;
 import com.hbm.util.Compat;
+import com.hbm.util.RORValueProviders;
 import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.redstoneoverradio.IRORValueProvider;
@@ -93,8 +94,8 @@ public class GUIScreenRadioTorchReader extends GuiScreen {
 		if(guiLeft + 29 <= x && guiLeft + 29 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
 			ForgeDirection dir = ForgeDirection.getOrientation(rtty.getBlockMetadata()).getOpposite();
 			TileEntity tile = Compat.getTileStandard(rtty.getWorldObj(), rtty.xCoord + dir.offsetX, rtty.yCoord + dir.offsetY, rtty.zCoord + dir.offsetZ);
-			if(tile instanceof IRORValueProvider) {
-				IRORValueProvider prov = (IRORValueProvider) tile;
+			IRORValueProvider prov = RORValueProviders.getProvider(tile);
+			if(prov != null) {
 				String[] info = prov.getFunctionInfo();
 				List<String> lines = new ArrayList();
 				lines.add(I18nUtil.resolveKey("gui.radio_torch_reader.readable_values"));

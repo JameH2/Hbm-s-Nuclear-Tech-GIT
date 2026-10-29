@@ -112,7 +112,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 	modid = RefStrings.MODID,
 	name = RefStrings.NAME,
 	version = RefStrings.VERSION,
-	dependencies = "required-after:backhand;required-after:appliedenergistics2;required-after:Baubles;required-after:Baubles|Expanded"
+	dependencies = "required-after:backhand;required-after:appliedenergistics2;required-after:Baubles;required-after:Baubles|Expanded;after:StorageDrawers"
 )
 public class MainRegistry {
 
