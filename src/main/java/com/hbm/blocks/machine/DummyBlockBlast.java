@@ -22,6 +22,13 @@ import net.minecraft.world.World;
 
 public class DummyBlockBlast extends BlockContainer implements IDummy, IBomb {
 
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile instanceof TileEntityDummy) ((TileEntityDummy) tile).invalidateTargetRedstone();
+	}
+
 	public static boolean safeBreak = false;
 
 	public DummyBlockBlast(Material p_i45386_1_) {

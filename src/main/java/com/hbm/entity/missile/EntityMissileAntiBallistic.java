@@ -1,9 +1,9 @@
 package com.hbm.entity.missile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
+import com.hbm.entity.logic.EntityChunkLoader;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.projectile.EntityThrowableInterp;
 import com.hbm.explosion.ExplosionLarge;
@@ -27,7 +27,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 
 public class EntityMissileAntiBallistic extends EntityThrowableInterp implements IChunkLoader, IRadarDetectable, IRadarDetectableNT {
 
-	private Ticket loaderTicket;
+	private EntityChunkLoader chunkLoader;
 	public Entity tracking;
 	public double velocity;
 	protected int activationTimer;
@@ -182,38 +182,16 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 
 	@Override
 	public void init(Ticket ticket) {
-		if(!worldObj.isRemote) {
-
-			if(ticket != null) {
-
-				if(loaderTicket == null) {
-
-					loaderTicket = ticket;
-					loaderTicket.bindEntity(this);
-					loaderTicket.getModData();
-				}
-
-				ForgeChunkManager.forceChunk(loaderTicket, new ChunkCoordIntPair(chunkCoordX, chunkCoordZ));
-			}
-		}
+		if(this.chunkLoader == null) this.chunkLoader = new EntityChunkLoader(this);
+		this.chunkLoader.setTicket(ticket);
 	}
 
-	List<ChunkCoordIntPair> loadedChunks = new ArrayList<ChunkCoordIntPair>();
-
 	public void loadNeighboringChunks(int newChunkX, int newChunkZ) {
-		if(!worldObj.isRemote && loaderTicket != null) {
+		if(this.chunkLoader == null) return;
 
-			for(ChunkCoordIntPair chunk : ImmutableSet.copyOf(loaderTicket.getChunkList())) {
-				ForgeChunkManager.unforceChunk(loaderTicket, chunk);
-			}
-
-			loadedChunks.clear();
-			for(int i = -1; i <= 1; i++) for(int j = -1; j <= 1; j++) loadedChunks.add(new ChunkCoordIntPair(newChunkX + i, newChunkZ + j));
-
-			for(ChunkCoordIntPair chunk : loadedChunks) {
-				ForgeChunkManager.forceChunk(loaderTicket, chunk);
-			}
-		}
+		Set<ChunkCoordIntPair> loadedChunks = new HashSet<ChunkCoordIntPair>();
+		for(int i = -1; i <= 1; i++) for(int j = -1; j <= 1; j++) loadedChunks.add(new ChunkCoordIntPair(newChunkX + i, newChunkZ + j));
+		this.chunkLoader.loadChunks(loadedChunks);
 	}
 
 	@Override
@@ -223,10 +201,7 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 	}
 
 	public void clearChunkLoader() {
-		if(!worldObj.isRemote && loaderTicket != null) {
-			ForgeChunkManager.releaseTicket(loaderTicket);
-			this.loaderTicket = null;
-		}
+		if(this.chunkLoader != null) this.chunkLoader.clear();
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package com.hbm.entity.logic;
 import com.hbm.main.MainRegistry;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -11,8 +10,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 
 public abstract class EntityExplosionChunkloading extends Entity implements IChunkLoader {
 
-	private Ticket loaderTicket;
-	private ChunkCoordIntPair loadedChunk;
+	private EntityChunkLoader chunkLoader;
 
 	public EntityExplosionChunkloading(World world) {
 		super(world);
@@ -25,28 +23,21 @@ public abstract class EntityExplosionChunkloading extends Entity implements IChu
 
 	@Override
 	public void init(Ticket ticket) {
-		if(!worldObj.isRemote && ticket != null) {
-			if(loaderTicket == null) {
-				loaderTicket = ticket;
-				loaderTicket.bindEntity(this);
-				loaderTicket.getModData();
-			}
-			ForgeChunkManager.forceChunk(loaderTicket, new ChunkCoordIntPair(chunkCoordX, chunkCoordZ));
-		}
+		if(this.chunkLoader == null) this.chunkLoader = new EntityChunkLoader(this);
+		this.chunkLoader.setTicket(ticket);
 	}
 
 	public void loadChunk(int x, int z) {
-		
-		if(this.loadedChunk == null) {
-			this.loadedChunk = new ChunkCoordIntPair(x, z);
-			ForgeChunkManager.forceChunk(loaderTicket, loadedChunk);
-		}
+		if(this.chunkLoader != null) this.chunkLoader.loadChunk(x, z);
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		this.clearChunkLoader();
 	}
 	
 	public void clearChunkLoader() {
-		if(!worldObj.isRemote && loaderTicket != null) {
-			ForgeChunkManager.releaseTicket(loaderTicket);
-			this.loaderTicket = null;
-		}
+		if(this.chunkLoader != null) this.chunkLoader.clear();
 	}
 }

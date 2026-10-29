@@ -203,6 +203,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 
 	@Override
 	public void onChunkUnload() {
+		super.onChunkUnload();
 		if(audio != null) {
 			audio.stopSound();
 			audio = null;
@@ -259,7 +260,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 	public void generate() {
 		
 		if(!this.isOn) return;
-		if(this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) return;
+		if(isRedstonePowered()) return;
 		if(!hasAcceptableFuel()) return;
 		if(tank.getFill() <= 0) return;
 		if(!breatheAir(1)) return;

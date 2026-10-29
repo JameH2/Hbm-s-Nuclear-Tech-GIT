@@ -1,5 +1,7 @@
 package com.hbm.blocks.network;
 
+import com.hbm.tileentity.TileEntityLoadedBase;
+
 import com.hbm.tileentity.network.TileEntityDroneWaypointRequest;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -76,6 +78,7 @@ public class DroneWaypointRequest extends BlockContainer {
 
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
 
 		int meta = world.getBlockMetadata(x, y, z);
 		ForgeDirection dir = ForgeDirection.getOrientation(meta);

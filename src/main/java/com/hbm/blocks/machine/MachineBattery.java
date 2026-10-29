@@ -1,5 +1,7 @@
 package com.hbm.blocks.machine;
 
+import com.hbm.tileentity.TileEntityLoadedBase;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -37,6 +39,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 
 public class MachineBattery extends BlockContainer implements ILookOverlay, IPersistentInfoProvider, ITooltipProvider {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
+	}
 
 	private final Random field_149933_a = new Random();
 	private static boolean keepInventory;

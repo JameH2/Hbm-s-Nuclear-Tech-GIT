@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.interfaces.IMultiblock;
+import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.FluidDebug;
 import api.ntm1of90.compat.fluid.registry.ForgeFluidAdapterRegistry;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +20,10 @@ public class TileEntityDummy extends TileEntity implements IFluidHandler {
 	public int targetX;
 	public int targetY;
 	public int targetZ;
+
+	public void invalidateTargetRedstone() {
+		if(worldObj != null) TileEntityLoadedBase.invalidateRedstone(worldObj, targetX, targetY, targetZ);
+	}
 
 	private IFluidHandler cachedHandler;
 	private boolean handlerResolved = false;

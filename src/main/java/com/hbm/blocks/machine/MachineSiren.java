@@ -1,5 +1,7 @@
 package com.hbm.blocks.machine;
 
+import com.hbm.tileentity.TileEntityLoadedBase;
+
 import java.util.Random;
 
 import com.hbm.lib.RefStrings;
@@ -23,6 +25,12 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 public class MachineSiren extends BlockContainer {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
+	}
 	
 	@SideOnly(Side.CLIENT)
 	private IIcon iconTop;

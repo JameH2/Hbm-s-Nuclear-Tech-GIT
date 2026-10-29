@@ -21,6 +21,9 @@ import com.hbm.util.i18n.I18nUtil;
 
 public class MachineTurbofan extends BlockDummyable implements ITooltipProvider {
 
+	@Override
+	protected boolean usesRedstoneCache() { return true; }
+
 	public MachineTurbofan(Material mat) {
 		super(mat);
 	}

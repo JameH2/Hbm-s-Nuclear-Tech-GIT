@@ -399,11 +399,12 @@ public class MainRegistry {
 				for(Ticket ticket : tickets) {
 					if(ticket.getType() == ForgeChunkManager.Type.NORMAL) {
 						ChunkLoaderManager.loadTicket(world, ticket);
-						return;
-					}
-
-					if(ticket.getEntity() instanceof IChunkLoader) {
+					} else if(ticket.getType() == ForgeChunkManager.Type.ENTITY
+					       && ticket.getEntity() instanceof IChunkLoader) {
 						((IChunkLoader) ticket.getEntity()).init(ticket);
+					} else {
+						// Release orphaned tickets (only triggers for ENTITY tickets since theres no way to check NORMAL tickets)
+						ForgeChunkManager.releaseTicket(ticket);
 					}
 				}
 			}

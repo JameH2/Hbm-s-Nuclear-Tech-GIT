@@ -226,7 +226,7 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 	private short modeCache = 0;
 	public short getRelevantMode(boolean useCache) {
 		if(useCache) return this.modeCache;
-		this.modeCache = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) ? this.redHigh : this.redLow;
+		this.modeCache = isRedstonePowered() ? this.redHigh : this.redLow;
 		return this.modeCache;
 	}
 

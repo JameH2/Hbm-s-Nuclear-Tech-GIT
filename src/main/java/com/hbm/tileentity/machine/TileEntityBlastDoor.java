@@ -22,6 +22,13 @@ public class TileEntityBlastDoor extends TileEntityLockableBase {
 	public long sysTime;
 	private int timer = 0;
 	public boolean redstoned = false;
+	private boolean topRedstonePowered;
+
+	@Override
+	protected boolean queryRedstonePower() {
+		topRedstonePowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 6, zCoord);
+		return super.queryRedstonePower();
+	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
@@ -39,7 +46,8 @@ public class TileEntityBlastDoor extends TileEntityLockableBase {
 
 		if(!worldObj.isRemote) {
 
-			if(!isLocked() && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 6, zCoord)) {
+			boolean bottomRedstonePowered = isRedstonePowered();
+			if(!isLocked() && bottomRedstonePowered || topRedstonePowered) {
 
 				if(!redstoned) {
 					this.tryToggle();

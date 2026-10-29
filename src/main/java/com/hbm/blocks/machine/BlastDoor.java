@@ -1,5 +1,8 @@
 package com.hbm.blocks.machine;
 
+import com.hbm.tileentity.TileEntityLoadedBase;
+import net.minecraft.block.Block;
+
 import com.hbm.interfaces.IBomb;
 import com.hbm.interfaces.IMultiblock;
 import com.hbm.items.ModItems;
@@ -16,6 +19,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class BlastDoor extends BlockContainer implements IBomb, IMultiblock {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
+	}
 
 	public BlastDoor(Material p_i45386_1_) {
 		super(p_i45386_1_);

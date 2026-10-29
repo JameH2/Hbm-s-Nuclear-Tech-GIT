@@ -1,10 +1,12 @@
 package com.hbm.blocks.machine;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.tileentity.TileEntityLoadedBase;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
@@ -12,6 +14,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class WatzPump extends BlockDummyable {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		if(!world.isRemote) {
+			int[] core = findCore(world, x, y, z);
+			if(core != null) TileEntityLoadedBase.invalidateRedstone(world, core[0], core[1] - 3, core[2]);
+		}
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+	}
 
 	public WatzPump() {
 		super(Material.iron);

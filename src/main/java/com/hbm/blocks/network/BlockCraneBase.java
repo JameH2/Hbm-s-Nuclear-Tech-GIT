@@ -63,6 +63,15 @@ public abstract class BlockCraneBase extends BlockContainer implements IBlockSid
 	public abstract TileEntityCraneBase createNewTileEntity(World p_149915_1_, int p_149915_2_);
 
 	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntity te = world.getTileEntity(x, y, z);
+		if(te instanceof TileEntityCraneBase) {
+			((TileEntityCraneBase) te).invalidateRedstone();
+		}
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister) {
 		this.blockIcon = iconRegister.registerIcon(RefStrings.MODID + ":crane_top");

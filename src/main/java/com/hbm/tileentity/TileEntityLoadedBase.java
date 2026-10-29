@@ -24,9 +24,51 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBufPacketReceiver {
+
+	private boolean redstoneDirty = true;
+	private boolean redstonePowered;
+
+	/**
+	 * Only checks for power when invalidated by {@link #invalidateRedstone()}, which should be called from neighbor updates.
+	 * Multiblocks can override {@link #queryRedstonePower()} to check multiple input positions.
+	 */
+	public boolean isRedstonePowered() {
+		if(redstoneDirty && hasWorldObj()) {
+			redstonePowered = queryRedstonePower();
+			redstoneDirty = false;
+		}
+		return redstonePowered;
+	}
+
+	protected boolean queryRedstonePower() {
+		return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+	}
+
+	public void invalidateRedstone() {
+		redstoneDirty = true;
+	}
+
+	public static void invalidateRedstone(World world, int x, int y, int z) {
+		if(!world.blockExists(x, y, z)) return;
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile instanceof TileEntityLoadedBase) ((TileEntityLoadedBase) tile).invalidateRedstone();
+	}
+
+	@Override
+	public void validate() {
+		super.validate();
+		invalidateRedstone();
+	}
+
+	@Override
+	public void updateContainingBlockInfo() {
+		super.updateContainingBlockInfo();
+		invalidateRedstone();
+	}
 
 	public boolean isLoaded = true;
 	public boolean muffled = false;
@@ -141,6 +183,7 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
+		invalidateRedstone();
 		this.isLoaded = false;
 		
 		if(powerPorts != null) for(TilePort port : powerPorts) port.disableIfPresent(worldObj);
@@ -174,6 +217,7 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		invalidateRedstone();
 		this.muffled = nbt.getBoolean("muffled");
 		this.tilted = nbt.getBoolean("tilted");
 	}

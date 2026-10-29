@@ -1,9 +1,6 @@
 package com.hbm.entity.projectile;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.common.collect.ImmutableSet;
+import com.hbm.entity.logic.EntityChunkLoader;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.items.weapon.ItemAmmoArty;
 import com.hbm.items.weapon.ItemAmmoArty.ArtilleryShell;
@@ -19,7 +16,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -27,7 +23,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 
 public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoader, IRadarDetectable {
 
-	private Ticket loaderTicket;
+	private EntityChunkLoader chunkLoader;
 	
 	private int turnProgress;
 	private double syncPosX;
@@ -199,33 +195,18 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
 
 	@Override
 	public void init(Ticket ticket) {
-		if(!worldObj.isRemote && ticket != null) {
-			if(loaderTicket == null) {
-				loaderTicket = ticket;
-				loaderTicket.bindEntity(this);
-				loaderTicket.getModData();
-			}
-			ForgeChunkManager.forceChunk(loaderTicket, new ChunkCoordIntPair(chunkCoordX, chunkCoordZ));
-		}
+		if(this.chunkLoader == null) this.chunkLoader = new EntityChunkLoader(this);
+		this.chunkLoader.setTicket(ticket);
 	}
 
-	List<ChunkCoordIntPair> loadedChunks = new ArrayList<ChunkCoordIntPair>();
-
 	public void loadNeighboringChunks(int newChunkX, int newChunkZ) {
-		if(!worldObj.isRemote && loaderTicket != null) {
+		if(this.chunkLoader != null) this.chunkLoader.loadChunk(newChunkX, newChunkZ);
+	}
 
-			for(ChunkCoordIntPair chunk : ImmutableSet.copyOf(loaderTicket.getChunkList())) {
-				ForgeChunkManager.unforceChunk(loaderTicket, chunk);
-			}
-
-			loadedChunks.clear();
-			loadedChunks.add(new ChunkCoordIntPair(newChunkX, newChunkZ));
-			//loadedChunks.add(new ChunkCoordIntPair(newChunkX + (int) Math.floor((this.posX + this.motionX) / 16D), newChunkZ + (int) Math.floor((this.posZ + this.motionZ) / 16D)));
-
-			for(ChunkCoordIntPair chunk : loadedChunks) {
-				ForgeChunkManager.forceChunk(loaderTicket, chunk);
-			}
-		}
+	@Override
+	public void setDead() {
+		super.setDead();
+		this.clearChunkLoader();
 	}
 	
 	public void killAndClear() {
@@ -234,10 +215,7 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
 	}
 	
 	public void clearChunkLoader() {
-		if(!worldObj.isRemote && loaderTicket != null) {
-			ForgeChunkManager.releaseTicket(loaderTicket);
-			this.loaderTicket = null;
-		}
+		if(this.chunkLoader != null) this.chunkLoader.clear();
 	}
 
 	@Override

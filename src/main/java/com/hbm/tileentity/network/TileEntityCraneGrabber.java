@@ -75,7 +75,7 @@ public class TileEntityCraneGrabber extends TileEntityCraneBase implements IGUIP
 				}
 			}
 
-			if(worldObj.getTotalWorldTime() >= lastGrabbedTick + delay && !this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {
+			if(worldObj.getTotalWorldTime() >= lastGrabbedTick + delay && !isRedstonePowered()) {
 				int amount = 1;
 
 				if(slots[9] != null && slots[9].getItem() == ModItems.upgrade_stack) {

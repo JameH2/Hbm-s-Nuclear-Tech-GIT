@@ -53,7 +53,7 @@ public class TileEntityCraneUnboxer extends TileEntityCraneBase implements IGUIP
 				}
 			}*/
 			
-			if(worldObj.getTotalWorldTime() % delay == 0 && !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {
+			if(worldObj.getTotalWorldTime() % delay == 0 && !isRedstonePowered()) {
 				int amount = 1;
 				
 				if(slots[21] != null && slots[21].getItem() == ModItems.upgrade_stack) {

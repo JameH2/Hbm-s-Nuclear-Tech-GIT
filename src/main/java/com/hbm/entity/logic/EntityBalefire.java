@@ -63,6 +63,7 @@ public class EntityBalefire extends EntityExplosionChunkloading {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		if(!worldObj.isRemote) loadChunk((int) Math.floor(posX / 16D), (int) Math.floor(posZ / 16D));
 
 		if(!this.did) {
 			if(GeneralConfig.enableExtendedLogging && !worldObj.isRemote)

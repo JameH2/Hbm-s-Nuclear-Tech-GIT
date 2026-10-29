@@ -1,5 +1,7 @@
 package com.hbm.blocks.network.pneumatic;
 
+import com.hbm.tileentity.TileEntityLoadedBase;
+
 import api.hbm.block.IToolable;
 
 import java.util.List;
@@ -36,6 +38,12 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class PneumoTubePaintableBlock extends BlockContainer implements IToolable, IBlockMultiPass, ITooltipProvider {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
+	}
 
 	@SideOnly(Side.CLIENT) public IIcon overlay;
 	@SideOnly(Side.CLIENT) public IIcon overlayIn;

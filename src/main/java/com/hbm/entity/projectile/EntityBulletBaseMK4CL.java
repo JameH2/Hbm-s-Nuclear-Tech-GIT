@@ -1,15 +1,11 @@
 package com.hbm.entity.projectile;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.common.collect.ImmutableSet;
+import com.hbm.entity.logic.EntityChunkLoader;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.main.MainRegistry;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -17,8 +13,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 
 public class EntityBulletBaseMK4CL extends EntityBulletBaseMK4 implements IChunkLoader {
 
-	private Ticket loaderTicket;
-	private List<ChunkCoordIntPair> loadedChunks = new ArrayList<ChunkCoordIntPair>();
+	private EntityChunkLoader chunkLoader;
 
 	public EntityBulletBaseMK4CL(World world) {
 		super(world);
@@ -36,14 +31,8 @@ public class EntityBulletBaseMK4CL extends EntityBulletBaseMK4 implements IChunk
 
 	@Override
 	public void init(Ticket ticket) {
-		if(!worldObj.isRemote && ticket != null) {
-			if(loaderTicket == null) {
-				loaderTicket = ticket;
-				loaderTicket.bindEntity(this);
-				loaderTicket.getModData();
-			}
-			ForgeChunkManager.forceChunk(loaderTicket, new ChunkCoordIntPair(chunkCoordX, chunkCoordZ));
-		}
+		if(this.chunkLoader == null) this.chunkLoader = new EntityChunkLoader(this);
+		this.chunkLoader.setTicket(ticket);
 	}
 	
 	@Override
@@ -60,25 +49,10 @@ public class EntityBulletBaseMK4CL extends EntityBulletBaseMK4 implements IChunk
 	}
 	
 	public void clearChunkLoader() {
-		if(!worldObj.isRemote && loaderTicket != null) {
-			ForgeChunkManager.releaseTicket(loaderTicket);
-			this.loaderTicket = null;
-		}
+		if(this.chunkLoader != null) this.chunkLoader.clear();
 	}
 
 	public void loadNeighboringChunks(int newChunkX, int newChunkZ) {
-		if(!worldObj.isRemote && loaderTicket != null) {
-
-			for(ChunkCoordIntPair chunk : ImmutableSet.copyOf(loaderTicket.getChunkList())) {
-				ForgeChunkManager.unforceChunk(loaderTicket, chunk);
-			}
-			
-			loadedChunks.clear();
-			loadedChunks.add(new ChunkCoordIntPair(newChunkX, newChunkZ));
-
-			for(ChunkCoordIntPair chunk : loadedChunks) {
-				ForgeChunkManager.forceChunk(loaderTicket, chunk);
-			}
-		}
+		if(this.chunkLoader != null) this.chunkLoader.loadChunk(newChunkX, newChunkZ);
 	}
 }

@@ -18,6 +18,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockPADipole extends BlockDummyable implements ITooltipProvider {
 
+	@Override
+	protected boolean usesRedstoneCache() { return true; }
+
 	public BlockPADipole() {
 		super(Material.iron);
 		this.setCreativeTab(MainRegistry.machineTab);

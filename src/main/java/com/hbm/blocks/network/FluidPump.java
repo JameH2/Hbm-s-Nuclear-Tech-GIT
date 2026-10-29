@@ -1,5 +1,7 @@
 package com.hbm.blocks.network;
 
+import net.minecraft.block.Block;
+
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -25,6 +27,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 @Deprecated
 public class FluidPump extends BlockContainer implements INBTBlockTransformable {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
+	}
 
 	public FluidPump(Material mat) {
 		super(mat);
@@ -93,7 +101,7 @@ public class FluidPump extends BlockContainer implements INBTBlockTransformable 
 					this.tank[0].changeTankSize(nextBuffer);
 				}
 
-				this.redstone = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+				this.redstone = isRedstonePowered();
 
 				this.networkPackNT(15);
 			}

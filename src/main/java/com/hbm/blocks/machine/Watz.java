@@ -22,6 +22,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class Watz extends BlockDummyable {
 
+	@Override
+	protected boolean usesRedstoneCache() { return true; }
+
 	public Watz() {
 		super(Material.iron);
 	}

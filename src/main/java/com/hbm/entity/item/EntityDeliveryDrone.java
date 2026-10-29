@@ -1,6 +1,8 @@
 package com.hbm.entity.item;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.HashSet;
+
+import com.hbm.entity.logic.EntityChunkLoader;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
@@ -27,7 +29,7 @@ public class EntityDeliveryDrone extends EntityDroneBase implements IInventory, 
 	public FluidStack fluid;
 
 	protected boolean chunkLoading = false;
-	private Ticket loaderTicket;
+	private EntityChunkLoader chunkLoader;
 
 	public EntityDeliveryDrone(World world) {
 		super(world);
@@ -193,17 +195,18 @@ public class EntityDeliveryDrone extends EntityDroneBase implements IInventory, 
 
 	@Override
 	protected void loadNeighboringChunks() {
-		if(!worldObj.isRemote && loaderTicket != null) {
+		if(this.chunkLoader == null) return;
 
-			for(ChunkCoordIntPair chunk : ImmutableSet.copyOf(loaderTicket.getChunkList())) {
-				ForgeChunkManager.unforceChunk(loaderTicket, chunk);
-			}
-			
-			// This is the lowest padding that worked with my drone waypoint path. if they stop getting loaded crank up paddingSize
-			for (ChunkCoordIntPair chunk : ChunkShapeHelper.getChunksAlongLineSegment((int) Math.floor(this.posX), (int) Math.floor(this.posZ), (int) Math.floor(this.posX + this.motionX), (int) Math.floor(this.posZ + this.motionZ), 8)){
-				ForgeChunkManager.forceChunk(loaderTicket, chunk);
-			}
-		}
+		// This is the lowest padding that worked with my drone waypoint path. if they stop getting loaded crank up paddingSize
+		this.chunkLoader.loadChunks(new HashSet<ChunkCoordIntPair>(
+			ChunkShapeHelper.getChunksAlongLineSegment(
+				(int) Math.floor(this.posX),
+				(int) Math.floor(this.posZ),
+				(int) Math.floor(this.posX + this.motionX),
+				(int) Math.floor(this.posZ + this.motionZ),
+				8
+			)
+		));
 	}
 
 	@Override
@@ -213,21 +216,12 @@ public class EntityDeliveryDrone extends EntityDroneBase implements IInventory, 
 	}
 
 	public void clearChunkLoader() {
-		if(!worldObj.isRemote && loaderTicket != null) {
-			ForgeChunkManager.releaseTicket(loaderTicket);
-			this.loaderTicket = null;
-		}
+		if(this.chunkLoader != null) this.chunkLoader.clear();
 	}
 
 	@Override
 	public void init(Ticket ticket) {
-		if(!worldObj.isRemote && ticket != null) {
-			if(loaderTicket == null) {
-				loaderTicket = ticket;
-				loaderTicket.bindEntity(this);
-				loaderTicket.getModData();
-			}
-			this.loadNeighboringChunks();
-		}
+		if(this.chunkLoader == null) this.chunkLoader = new EntityChunkLoader(this);
+		this.chunkLoader.setTicket(ticket);
 	}
 }

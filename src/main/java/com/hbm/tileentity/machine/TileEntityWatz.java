@@ -54,6 +54,11 @@ import net.minecraft.world.World;
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
 public class TileEntityWatz extends TileEntityMachineBase implements IFluidStandardTransceiverMK2, IControlReceiver, IGUIProvider, IFluidCopiable, CompatHandler.OCComponent, IRORValueProvider {
 
+	@Override
+	protected boolean queryRedstonePower() {
+		return worldObj.getIndirectPowerLevelTo(xCoord, yCoord + 5, zCoord, 0) > 0;
+	}
+
 	public FluidTank[] tanks;
 	public FluidTank[] sharedTanks;
 	public int heat;
@@ -122,7 +127,7 @@ public class TileEntityWatz extends TileEntityMachineBase implements IFluidStand
 
 		if(!worldObj.isRemote && !updateLock()) {
 
-			boolean turnedOn = worldObj.getBlock(xCoord, yCoord + 3, zCoord) == ModBlocks.watz_pump && worldObj.getIndirectPowerLevelTo(xCoord, yCoord + 5, zCoord, 0) > 0;
+			boolean turnedOn = worldObj.getBlock(xCoord, yCoord + 3, zCoord) == ModBlocks.watz_pump && isRedstonePowered();
 			List<TileEntityWatz> segments = new ArrayList();
 			segments.add(this);
 

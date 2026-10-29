@@ -1,5 +1,6 @@
 package com.hbm.blocks.machine;
 
+
 import java.util.List;
 
 import com.hbm.blocks.ITooltipProvider;
@@ -39,6 +40,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class MachineFan extends BlockContainer implements IToolable, ITooltipProvider, IBlockSealable {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
+	}
 
 	public MachineFan() {
 		super(Material.iron);
@@ -95,7 +102,7 @@ public class MachineFan extends BlockContainer implements IToolable, ITooltipPro
 
 			this.prevSpin = this.spin;
 
-			if(worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {
+			if(isRedstonePowered()) {
 				if(!worldObj.isRemote) {
 					CBT_Atmosphere atmosphere = ChunkAtmosphereManager.proxy.getAtmosphere(worldObj, xCoord, yCoord, zCoord);
 					hasAtmosphere = atmosphere != null && atmosphere.getPressure() > 0.01D;

@@ -1,5 +1,8 @@
 package com.hbm.blocks.bomb;
 
+import com.hbm.tileentity.TileEntityLoadedBase;
+import net.minecraft.block.Block;
+
 import org.apache.logging.log4j.Level;
 
 import com.hbm.config.GeneralConfig;
@@ -26,6 +29,12 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 public class BlockFireworks extends BlockContainer {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
+	}
 	
 	@SideOnly(Side.CLIENT)
 	private IIcon iconTop;

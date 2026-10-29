@@ -73,8 +73,9 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
 		}
 
 		ItemStack toAdd = entity.getItemStack().copy();
+		TileEntityCraneInserter inserter = (TileEntityCraneInserter) world.getTileEntity(x, y, z);
 
-		if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
+		if (!inserter.isRedstonePowered()) {
 			int[] access = null;
 
 			if(te instanceof ISidedInventory) {
@@ -90,7 +91,6 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
 		}
 
 		if(toAdd.stackSize > 0) {
-			TileEntityCraneInserter inserter = (TileEntityCraneInserter) world.getTileEntity(x, y, z);
 			addToInventory(inserter, null, toAdd, outputDirection.getOpposite().ordinal());
 		}
 	}
@@ -193,7 +193,7 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
 
 		ItemStack[] outputContents = outputInventory == null ? null : copyContents(outputInventory);
 		ItemStack[] inserterContents = copyContents(inserter);
-		boolean canUseOutput = outputInventory != null && !world.isBlockIndirectlyGettingPowered(x, y, z);
+		boolean canUseOutput = outputInventory != null && !inserter.isRedstonePowered();
 		int side = outputDirection.getOpposite().ordinal();
 
 		for(ItemStack stack : stacks) {
@@ -229,8 +229,9 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
 		}
 		
 		ItemStack[] toAdd = entity.getItemStacks();
+		TileEntityCraneInserter inserter = (TileEntityCraneInserter) world.getTileEntity(x, y, z);
 
-		if(!world.isBlockIndirectlyGettingPowered(x, y, z)) {
+		if(!inserter.isRedstonePowered()) {
 			int[] access = null;
 
 			if(te instanceof ISidedInventory) {
@@ -249,7 +250,6 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
 			if(stack == null) continue;
 
 			if(stack.stackSize > 0) {
-				TileEntityCraneInserter inserter = (TileEntityCraneInserter) world.getTileEntity(x, y, z);
 				addToInventory(inserter, null, stack, outputDirection.getOpposite().ordinal());
 			}
 		}

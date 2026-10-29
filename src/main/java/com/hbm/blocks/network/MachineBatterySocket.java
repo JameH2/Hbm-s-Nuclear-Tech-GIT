@@ -21,6 +21,9 @@ import com.hbm.util.i18n.I18nUtil;
 
 public class MachineBatterySocket extends BlockDummyable implements ITooltipProvider, ILookOverlay {
 
+	@Override
+	protected boolean usesRedstoneCache() { return true; }
+
 	public MachineBatterySocket() {
 		super(Material.iron);
 	}

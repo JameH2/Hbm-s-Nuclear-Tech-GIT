@@ -1,9 +1,8 @@
 package com.hbm.entity.missile;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.ImmutableSet;
+import com.hbm.entity.logic.EntityChunkLoader;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.projectile.EntityThrowableInterp;
 import com.hbm.explosion.ExplosionLarge;
@@ -27,7 +26,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -44,7 +42,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 	public double decelY;
 	public double accelXZ;
 	public boolean isCluster = false;
-	private Ticket loaderTicket;
+	private EntityChunkLoader chunkLoader;
 	public int health = 50;
 
 	public EntityMissileBaseNT(World world) {
@@ -308,33 +306,12 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 
 	@Override
 	public void init(Ticket ticket) {
-		if(!worldObj.isRemote) {
-
-			if(ticket != null) {
-
-				if(loaderTicket == null) {
-
-					loaderTicket = ticket;
-					loaderTicket.bindEntity(this);
-					loaderTicket.getModData();
-				}
-
-				ForgeChunkManager.forceChunk(loaderTicket, new ChunkCoordIntPair(chunkCoordX, chunkCoordZ));
-			}
-		}
+		if(this.chunkLoader == null) this.chunkLoader = new EntityChunkLoader(this);
+		this.chunkLoader.setTicket(ticket);
 	}
 
 	public void loadNeighboringChunks(int newChunkX, int newChunkZ) {
-		if(!worldObj.isRemote && loaderTicket != null) {
-			ChunkCoordIntPair newChunk = new ChunkCoordIntPair(newChunkX, newChunkZ);
-
-			for(ChunkCoordIntPair chunk : loaderTicket.getChunkList()) {
-				if(chunk.equals(newChunk)) return; // cancel everything, we're already loaded
-				ForgeChunkManager.unforceChunk(loaderTicket, chunk);
-			}
-
-			ForgeChunkManager.forceChunk(loaderTicket, newChunk);
-		}
+		if(this.chunkLoader != null) this.chunkLoader.loadChunk(newChunkX, newChunkZ);
 	}
 
 	@Override
@@ -344,10 +321,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 	}
 
 	public void clearChunkLoader() {
-		if(!worldObj.isRemote && loaderTicket != null) {
-			ForgeChunkManager.releaseTicket(loaderTicket);
-			this.loaderTicket = null;
-		}
+		if(this.chunkLoader != null) this.chunkLoader.clear();
 	}
 
 	public void explodeStandard(float strength, int resolution, boolean fire) {

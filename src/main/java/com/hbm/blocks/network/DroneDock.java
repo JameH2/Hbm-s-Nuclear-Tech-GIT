@@ -1,5 +1,7 @@
 package com.hbm.blocks.network;
 
+import com.hbm.tileentity.TileEntityLoadedBase;
+
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.main.MainRegistry;
@@ -26,6 +28,12 @@ import java.util.List;
 import java.util.Random;
 
 public class DroneDock extends BlockContainer implements ITooltipProvider {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
+	}
 
 	@SideOnly(Side.CLIENT) private IIcon iconTop;
 	@SideOnly(Side.CLIENT) private IIcon iconBottom;

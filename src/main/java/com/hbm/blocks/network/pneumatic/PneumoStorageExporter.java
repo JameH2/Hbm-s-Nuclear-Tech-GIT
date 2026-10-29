@@ -1,5 +1,7 @@
 package com.hbm.blocks.network.pneumatic;
 
+import com.hbm.tileentity.TileEntityLoadedBase;
+
 import com.hbm.blocks.machine.BlockMachineBase;
 import com.hbm.tileentity.network.pneumatic.TileEntityPneumoStorageExporter;
 
@@ -13,6 +15,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class PneumoStorageExporter extends BlockMachineBase {
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
+		super.onNeighborBlockChange(world, x, y, z, neighbor);
+		TileEntityLoadedBase.invalidateRedstone(world, x, y, z);
+	}
 
 	public PneumoStorageExporter() {
 		super(Material.iron, 0);
