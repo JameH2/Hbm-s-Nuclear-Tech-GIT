@@ -1643,6 +1643,7 @@ public class ModItems {
 	public static Item gun_autoshotgun_sexy;
 	public static Item gun_autoshotgun_heretic;
 	public static Item gun_quadro;
+	public static Item gun_fliegerfaust;
 	public static Item gun_lag;
 	public static Item gun_minigun;
 	public static Item gun_minigun_dual;
@@ -6459,6 +6460,7 @@ public class ModItems {
 		GameRegistry.registerItem(gun_fatman, gun_fatman.getUnlocalizedName());
 		GameRegistry.registerItem(gun_lasrifle, gun_lasrifle.getUnlocalizedName());
 		GameRegistry.registerItem(gun_stinger, gun_stinger.getUnlocalizedName());
+		GameRegistry.registerItem(gun_fliegerfaust, gun_fliegerfaust.getUnlocalizedName());
 		GameRegistry.registerItem(gun_coilgun, gun_coilgun.getUnlocalizedName());
 		GameRegistry.registerItem(gun_hangman, gun_hangman.getUnlocalizedName());
 		GameRegistry.registerItem(gun_mas36, gun_mas36.getUnlocalizedName());

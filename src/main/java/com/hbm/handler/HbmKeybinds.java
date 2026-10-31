@@ -1,6 +1,6 @@
 package com.hbm.handler;
 
-import com.hbm.inventory.gui.GUICalculator;
+import com.hbm.inventory.gui.GUIScreenCalculator;
 import com.hbm.items.IKeybindReceiver;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 
@@ -108,7 +108,7 @@ public class HbmKeybinds {
 		/// CALCULATOR ///
 		if(calculatorKey.getIsKeyPressed()) {
 			MainRegistry.proxy.me().closeScreen();
-			FMLCommonHandler.instance().showGuiScreen(new GUICalculator());
+			FMLCommonHandler.instance().showGuiScreen(new GUIScreenCalculator());
 		}
 	}
 
