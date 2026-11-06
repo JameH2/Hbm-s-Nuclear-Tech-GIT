@@ -97,7 +97,6 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
 					if(toBurn > 0 && breatheAir(toBurn)) {
 						tank.setFill(tank.getFill() - toBurn);
 
-						int heat = (int)(type.getHeatEnergy() / 1000);
 
 						this.heatEnergy += heat * toBurn;
 
