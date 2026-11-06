@@ -143,7 +143,7 @@ public class TileEntityMachineHTR3 extends TileEntityMachineBase implements IPro
 			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getRotation(ForgeDirection.UP);
 	
 			cachedPorts = new PortDef[] {
-				PortDef.make(xCoord - dir.offsetX * 5, yCoord, zCoord - dir.offsetZ * 5, dir)
+				PortDef.make(xCoord - dir.offsetX * 5, yCoord, zCoord - dir.offsetZ * 5, dir.getOpposite())
 			};
 		}
 
