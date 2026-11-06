@@ -93,9 +93,9 @@ public class TileEntityXenonThruster extends TileEntityMachineBase implements IP
 			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 	
 			cachedPorts = new PortDef[] {
-				PortDef.make(xCoord - rot.offsetX, yCoord, zCoord - rot.offsetZ, dir),
-				PortDef.make(xCoord, yCoord, zCoord, dir),
-				PortDef.make(xCoord + rot.offsetX, yCoord, zCoord + rot.offsetZ, dir),
+				PortDef.make(xCoord - rot.offsetX, yCoord, zCoord - rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord, yCoord, zCoord, dir.getOpposite()),
+				PortDef.make(xCoord + rot.offsetX, yCoord, zCoord + rot.offsetZ, dir.getOpposite()),
 			};
 		}
 
