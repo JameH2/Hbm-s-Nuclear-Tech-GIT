@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.blocks.BlockDummyable;
 import com.hbm.dim.CelestialBody;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerDriveProcessor;
@@ -26,6 +27,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityMachineDriveProcessor extends TileEntityMachineBase implements IGUIProvider, IControlReceiver, IEnergyReceiverMK2 {
 
@@ -50,8 +52,24 @@ public class TileEntityMachineDriveProcessor extends TileEntityMachineBase imple
 	}
 	
 	protected PortDef[] cachedPorts;
-	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.around(xCoord, yCoord, zCoord); return cachedPorts; }
 
+
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
+			cachedPorts = new PortDef[] {
+					
+
+				PortDef.make(xCoord + rot.offsetX, yCoord, zCoord + rot.offsetZ, dir.getOpposite(), rot),
+				PortDef.make(xCoord, yCoord, zCoord, dir.getOpposite(), rot.getOpposite()),
+
+
+			};
+		}
+
+		return cachedPorts;
+	}
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote) {
