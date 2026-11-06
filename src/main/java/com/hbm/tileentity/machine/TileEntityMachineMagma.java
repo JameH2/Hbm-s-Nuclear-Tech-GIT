@@ -154,12 +154,12 @@ public class TileEntityMachineMagma extends TileEntityMachineBase implements IEn
 			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 
 			cachedPorts = new PortDef[] {
-				PortDef.make(xCoord - dir.offsetX * 3, yCoord - 1, zCoord - dir.offsetZ * 3, dir),
-				PortDef.make(xCoord - dir.offsetX * 3, yCoord - 2, zCoord - dir.offsetZ * 3, dir),
-				PortDef.make(xCoord - dir.offsetX * 3 + rot.offsetX, yCoord - 1, zCoord - dir.offsetZ * 3 + rot.offsetZ, dir),
-				PortDef.make(xCoord - dir.offsetX * 3 + rot.offsetX, yCoord - 2, zCoord - dir.offsetZ * 3 + rot.offsetZ, dir),
-				PortDef.make(xCoord - dir.offsetX * 3 - rot.offsetX, yCoord - 1, zCoord - dir.offsetZ * 3 - rot.offsetZ, dir),
-				PortDef.make(xCoord - dir.offsetX * 3 - rot.offsetX, yCoord - 2, zCoord - dir.offsetZ * 3 - rot.offsetZ, dir),
+				PortDef.make(xCoord - dir.offsetX * 3, yCoord - 1, zCoord - dir.offsetZ * 3, dir.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX * 3, yCoord - 2, zCoord - dir.offsetZ * 3, dir.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX * 3 + rot.offsetX, yCoord - 1, zCoord - dir.offsetZ * 3 + rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX * 3 + rot.offsetX, yCoord - 2, zCoord - dir.offsetZ * 3 + rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX * 3 - rot.offsetX, yCoord - 1, zCoord - dir.offsetZ * 3 - rot.offsetZ, dir.getOpposite()),
+				PortDef.make(xCoord - dir.offsetX * 3 - rot.offsetX, yCoord - 2, zCoord - dir.offsetZ * 3 - rot.offsetZ, dir.getOpposite()),
 			};
 		}
 
