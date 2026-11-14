@@ -349,11 +349,10 @@ public class AtmosphereBlob implements Runnable {
 	 */
 	protected void runEffectOnWorldBlocks(World world, Collection<ThreeInts> blocks) {
 		ThreeInts root = handler.getRootPosition();
-		CBT_Atmosphere newAtmosphere = ChunkAtmosphereManager.proxy.getAtmosphere(world, root.x, root.y, root.z, this);
 
 		for(ThreeInts pos : blocks) {
 			final Block block = world.getBlock(pos.x, pos.y, pos.z);
-			ChunkAtmosphereManager.proxy.runEffectsOnBlock(newAtmosphere, world, block, pos.x, pos.y, pos.z);
+			ChunkAtmosphereManager.proxy.runEffectsOnBlock(world, block, pos.x, pos.y, pos.z);
 		}
 	}
 
