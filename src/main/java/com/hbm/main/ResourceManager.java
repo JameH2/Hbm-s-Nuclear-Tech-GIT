@@ -347,7 +347,7 @@ public class ResourceManager {
 
 	//SatDock
 	public static final IModelCustom satDock = new HFRWavefrontObject("models/machines/cargo_pad.obj").noSmooth().asVBO();
-
+	public static final IModelCustom gasDock = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/sat_dock.obj"));
 	//Solar Tower
 	public static final IModelCustom solar_boiler = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/solar_boiler.obj")).asVBO();
 	public static final IModelCustom solar_mirror = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/solar_mirror.obj")).noSmooth();

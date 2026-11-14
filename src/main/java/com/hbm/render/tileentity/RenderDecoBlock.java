@@ -126,10 +126,10 @@ public class RenderDecoBlock extends TileEntitySpecialRenderer {
 			GL11.glTranslatef(0, -1.5F, 0);
 			if(b == ModBlocks.gas_dock) {
 				bindTexture(ResourceManager.gasdock_tex);
+				ResourceManager.gasDock.renderAll();
 			} else {
 				bindTexture(ResourceManager.satdock_tex);
 			}
-			ResourceManager.satDock.renderAll();
 
 			if(b == ModBlocks.gas_dock) {
 				if(tileentity instanceof TileEntityMachineGasDock && ((TileEntityMachineGasDock)tileentity).launchTicks < 100) {
