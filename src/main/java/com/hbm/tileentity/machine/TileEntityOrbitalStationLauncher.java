@@ -242,13 +242,13 @@ public class TileEntityOrbitalStationLauncher extends TileEntityMachineBase impl
 	public PortDef[] getPorts() {
 		if(cachedPorts == null) {
 			cachedPorts = new PortDef[] {
-				PortDef.make(xCoord - 1, yCoord + 1, zCoord + 2, ForgeDirection.NORTH),
-				PortDef.make(xCoord + 0, yCoord + 1, zCoord + 2, ForgeDirection.NORTH),
-				PortDef.make(xCoord + 1, yCoord + 1, zCoord + 2, ForgeDirection.NORTH),
+				PortDef.make(xCoord - 1, yCoord + 1, zCoord + 2, ForgeDirection.SOUTH),
+				PortDef.make(xCoord + 0, yCoord + 1, zCoord + 2, ForgeDirection.SOUTH),
+				PortDef.make(xCoord + 1, yCoord + 1, zCoord + 2, ForgeDirection.SOUTH),
 	
-				PortDef.make(xCoord - 1, yCoord + 1, zCoord - 2, ForgeDirection.SOUTH),
-				PortDef.make(xCoord + 0, yCoord + 1, zCoord - 2, ForgeDirection.SOUTH),
-				PortDef.make(xCoord + 1, yCoord + 1, zCoord - 2, ForgeDirection.SOUTH),
+				PortDef.make(xCoord - 1, yCoord + 1, zCoord - 2, ForgeDirection.NORTH),
+				PortDef.make(xCoord + 0, yCoord + 1, zCoord - 2, ForgeDirection.NORTH),
+				PortDef.make(xCoord + 1, yCoord + 1, zCoord - 2, ForgeDirection.NORTH),
 	
 				PortDef.make(xCoord + 2, yCoord + 1, zCoord - 1, ForgeDirection.EAST),
 				PortDef.make(xCoord + 2, yCoord + 1, zCoord + 0, ForgeDirection.EAST),

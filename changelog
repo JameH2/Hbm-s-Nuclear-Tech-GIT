@@ -15,4 +15,4 @@ Includes all changes and bugfixes from the latest 3 upstream NTMain updates - [X
 * Fixed assembly factory and chemical factory RoR reader index offset
 
 ## Fixed
-* Solar panel ports inconsistent and don't match model
+* Conk oredict missing on some recipes
